@@ -7,7 +7,7 @@ This section describes how to upgrade existing filesystems from earlier versions
 
 ## Running migration
 
-Since the structure of `File` dataobjects has changed between 3.x and 4.x, a new task `MigrateFileTask`
+Since the structure of `File` objects has changed between 3.x and 4.x, a new task `MigrateFileTask`
 has been added to assist in migration of legacy files.
 
 You can run this task on the command line:
@@ -16,28 +16,22 @@ You can run this task on the command line:
 $ ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
-This task will also support migration of existing File objects to file versioning. Any
-pre-existing File objects will be automatically published to the live stage, to ensure
-that previously visible assets remain visible to the public site.
-If additional security or visibility rules should be applied to File dataobjects, then
-make sure to correctly extend `canView` via extensions.
+This task will perform a number of subtasks:
 
-Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0.
-Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI.
-If the task fails or times out, run it again and it will start where it left off.
-
-Arguments:
-
- - `only`: Comma separated list of tasks to run on the multi-step migration (see "Available subtasks").
-   Example: `only=move-files,move-thumbnails`
-
-Availabile subtasks:
-
- - `move-files`: The main task, moves database and filesystem data
+ - `move-files`: Migrates existing `File` objects by adding required metadata to the database (incl. versioning).
+   By default, it will not move files on the filesystem (starting with [4.4.0](/changelogs/4.4.0)).
+   Publishes to the live stage to ensure
+   that previously visible assets remain visible to the public site.
+   If additional security or visibility rules should be applied to `File`, then
+   make sure to correctly extend `canView` via extensions.
  - `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
-    This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
+   This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
  - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
-    This can be a CPU and memory intensive task for large asset stores.
+   This can be a CPU and memory intensive task for large asset stores.
+   See [Migrating substantial number of files](#performance)
+
+One or more subtasks can be run individually through the `only` argument.
+Example: `only=move-files,move-thumbnails`
 
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
 
@@ -77,9 +71,10 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   keep_archived_assets: true
 ```
 
-## Migrating substantial number of files
+## Migrating substantial number of files {#performance}
 
 The time it takes to run the file migration will depend on the number of files and their size. The generation of thumbnails will depend on the number and dimension of your images.
+In general, the migration task can be restarted if it times out, and will continue where it left off. 
 
 If you are migrating a substantial number of files, you should run file migration task either as a queued job or on the command line. If the migration task fails or times out, you can start it again and it will pick up where it left off.
 
