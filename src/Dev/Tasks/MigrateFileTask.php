@@ -21,7 +21,7 @@ class MigrateFileTask extends BuildTask
 {
     private static $segment = 'MigrateFileTask';
 
-    protected $title = 'Migrate File dataobjects from 3.x';
+    protected $title = 'Migrate File dataobjects from 3.x and successive iterations in 4.x';
 
     protected $defaultSubtasks = [
         'move-files',
