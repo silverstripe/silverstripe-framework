@@ -182,9 +182,11 @@ class ClassInfo
      * </code>
      *
      * @param string|object $nameOrObject The classname or object
+     * @param bool $includeBaseClass Whether to include the base class or not. Defaults to true.
      * @return array List of class names with lowercase keys and correct-case values
+     * @throws \ReflectionException
      */
-    public static function subclassesFor($nameOrObject)
+    public static function subclassesFor($nameOrObject, $includeBaseClass = true)
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
             return [];
@@ -197,7 +199,7 @@ class ClassInfo
         // Merge with descendants
         $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
         return array_merge(
-            [$lowerClassName => $className],
+            $includeBaseClass ? [$lowerClassName => $className] : [],
             $descendants
         );
     }
