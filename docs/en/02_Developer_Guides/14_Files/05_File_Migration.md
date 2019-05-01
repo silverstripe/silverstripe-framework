@@ -29,6 +29,8 @@ This task will perform a number of subtasks:
  - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
    This can be a CPU and memory intensive task for large asset stores.
    See [Migrating substantial number of files](#performance)
+ - `fix-folder-permissions`: Fixes folder permissions which might have been broken by
+   previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
 
 One or more subtasks can be run individually through the `only` argument.
 Example: `only=move-files,move-thumbnails`

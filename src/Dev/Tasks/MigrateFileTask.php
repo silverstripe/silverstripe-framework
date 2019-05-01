@@ -27,7 +27,7 @@ class MigrateFileTask extends BuildTask
         'move-files',
         'move-thumbnails',
         'generate-cms-thumbnails',
-        'fix-file-permissions'
+        'fix-folder-permissions'
     ];
 
     private static $dependencies = [
@@ -94,17 +94,21 @@ class MigrateFileTask extends BuildTask
             ImageThumbnailHelper::singleton()->run();
         }
 
-        if (in_array('fix-file-permissions', $subtasks)) {
-            if (!class_exists(FixFilePermissionsHelper::class)) {
-                $this->logger->error("FixFilePermissionsHelper not found");
+        if (in_array('fix-folder-permissions', $subtasks)) {
+            if (!class_exists(FixFolderPermissionsHelper::class)) {
+                $this->logger->error("FixFolderPermissionsHelper not found");
                 return;
             }
 
-            $this->logger->info('### Fixing file permissions (fix-file-permissions)');
+            $this->logger->info('### Fixing folder permissions (fix-folder-permissions)');
 
-            $updated = FixFilePermissionsHelper::singleton()->run();
+            $updated = FixFolderPermissionsHelper::singleton()->run();
 
-            $this->logger->info("Repaired $updated folders with broken CanViewType settings");
+            if ($updated > 0) {
+                $this->logger->info("Repaired {$updated} folders with broken CanViewType settings");
+            } else {
+                $this->logger->info("No folders required fixes");
+            }
         }
     }
 
