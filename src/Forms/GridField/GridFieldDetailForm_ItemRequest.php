@@ -289,16 +289,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
         $gridState = $this->getRequest()->requestVar('gridState');
         if ($component && $paginator && $component->getShowPagination()) {
+            $previousIsDisabled = !$this->getPreviousRecordID();
+            $nextIsDisabled = !$this->getNextRecordID();
+
             $previousAndNextGroup->push(
                 LiteralField::create(
                     'previous-record',
-                    HTML::createTag('a', [
-                        'href' => $this->getEditLink($this->getPreviousRecordID()),
+                    HTML::createTag($previousIsDisabled ? 'span' : 'a', [
+                        'href' => $previousIsDisabled ? '#' : $this->getEditLink($this->getPreviousRecordID()),
                         'data-grid-state' => $gridState,
-                        'disabled' => !$this->getPreviousRecordID(),
                         'title' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
                         'aria-label' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
-                        'class' => 'btn btn-secondary font-icon-left-open action--previous discard-confirmation',
+                        'class' => 'btn btn-secondary font-icon-left-open action--previous discard-confirmation'
+                            . ($previousIsDisabled ? ' disabled' : ''),
                     ])
                 )
             );
@@ -306,13 +309,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $previousAndNextGroup->push(
                 LiteralField::create(
                     'next-record',
-                    HTML::createTag('a', [
-                        'href' => $this->getEditLink($this->getNextRecordID()),
+                    HTML::createTag($nextIsDisabled ? 'span' : 'a', [
+                        'href' => $nextIsDisabled ? '#' : $this->getEditLink($this->getNextRecordID()),
                         'data-grid-state' => $gridState,
-                        'disabled' => !$this->getNextRecordID(),
                         'title' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
                         'aria-label' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
-                        'class' => 'btn btn-secondary font-icon-right-open action--next discard-confirmation',
+                        'class' => 'btn btn-secondary font-icon-right-open action--next discard-confirmation'
+                            . ($nextIsDisabled ? ' disabled' : ''),
                     ])
                 )
             );
