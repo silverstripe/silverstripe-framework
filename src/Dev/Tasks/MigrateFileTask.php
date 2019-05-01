@@ -26,7 +26,8 @@ class MigrateFileTask extends BuildTask
     protected $defaultSubtasks = [
         'move-files',
         'move-thumbnails',
-        'generate-cms-thumbnails'
+        'generate-cms-thumbnails',
+        'fix-file-permissions'
     ];
 
     private static $dependencies = [
@@ -92,6 +93,19 @@ class MigrateFileTask extends BuildTask
 
             ImageThumbnailHelper::singleton()->run();
         }
+
+        if (in_array('fix-file-permissions', $subtasks)) {
+            if (!class_exists(FixFilePermissionsHelper::class)) {
+                $this->logger->error("FixFilePermissionsHelper not found");
+                return;
+            }
+
+            $this->logger->info('### Fixing file permissions (fix-file-permissions)');
+
+            $updated = FixFilePermissionsHelper::singleton()->run();
+
+            $this->logger->info("Repaired $updated folders with broken CanViewType settings");
+        }
     }
 
     public function getDescription()
@@ -99,7 +113,9 @@ class MigrateFileTask extends BuildTask
         return <<<TXT
 Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0.
 Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI.
+Fixes file permissions.
 If the task fails or times out, run it again and it will start where it left off.
+You need to flush your cache after running this task via CLI.
 See https://docs.silverstripe.org/en/4/developer_guides/files/file_migration/.
 TXT;
     }
