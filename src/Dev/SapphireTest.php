@@ -24,9 +24,11 @@ use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
+use SilverStripe\Dev\i18n\TestMessageProvider;
 use SilverStripe\Dev\State\FixtureTestState;
 use SilverStripe\Dev\State\SapphireTestState;
 use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -85,6 +87,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @var bool
      */
     protected $usesTransactions = true;
+
+    /**
+     * Indicates that the translation catalogue should be loaded for this test class.
+     *
+     * @var bool
+     */
+    protected $usesTranslations = false;
 
     /**
      * @var bool
@@ -268,6 +277,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 'Missing constants, did you remember to include the test bootstrap in your phpunit.xml file?',
                 E_USER_WARNING
             );
+        }
+
+        // Disable translation service. This specifically happens before any other test state start up
+        if (!$this->usesTranslations) {
+            Injector::inst()->registerService(new TestMessageProvider, MessageProvider::class);
         }
 
         // Call state helpers

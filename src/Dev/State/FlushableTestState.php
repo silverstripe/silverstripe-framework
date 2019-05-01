@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\SapphireTest;
