@@ -286,8 +286,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
         $gridState = $this->getRequest()->requestVar('gridState');
-        if ($component && $component->getShowPagination()) {
+        if ($component && $paginator && $component->getShowPagination()) {
             $previousAndNextGroup->push(FormAction::create('doPrevious')
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $gridState)
