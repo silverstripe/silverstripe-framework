@@ -293,12 +293,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $gridState)
                 ->setDisabled(!$this->getPreviousRecordID())
+                ->setDescription(_t(__CLASS__ . '.PREVIOUS', 'Go to previous record'))
+                ->setAttribute('aria-label', _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'))
                 ->addExtraClass('btn btn-secondary font-icon-left-open action--previous discard-confirmation'));
 
             $previousAndNextGroup->push(FormAction::create('doNext')
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $gridState)
                 ->setDisabled(!$this->getNextRecordID())
+                ->setDescription(_t(__CLASS__ . '.NEXT', 'Go to next record'))
+                ->setAttribute('aria-label', _t(__CLASS__ . '.NEXT', 'Go to next record'))
                 ->addExtraClass('btn btn-secondary font-icon-right-open action--next discard-confirmation'));
         }
 
@@ -308,6 +312,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $rightGroup->push(FormAction::create('doNew')
                 ->setUseButtonTag(true)
                 ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
+                ->setDescription(_t(__CLASS__ . '.NEW', 'Add new record'))
+                ->setAttribute('aria-label', _t(__CLASS__ . '.NEW', 'Add new record'))
                 ->addExtraClass('btn btn-primary font-icon-plus-thin circular action--new discard-confirmation'));
         }
 
