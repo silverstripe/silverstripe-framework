@@ -13,6 +13,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
 
 /**
  * Migrates all 3.x file dataobjects to use the new DBFile field.
@@ -27,7 +28,8 @@ class MigrateFileTask extends BuildTask
         'move-files',
         'move-thumbnails',
         'generate-cms-thumbnails',
-        'fix-folder-permissions'
+        'fix-folder-permissions',
+        'fix-secureassets',
     ];
 
     private static $dependencies = [
@@ -109,6 +111,19 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->logger->info("No folders required fixes");
             }
+        }
+
+        if (in_array('fix-secureassets', $subtasks)) {
+            if (!class_exists(SecureAssetsMigrationHelper::class)) {
+                $this->logger->error("SecureAssetsMigrationHelper not found");
+                return;
+            }
+
+            $this->logger->info('### Fixing secure-assets (fix-secureassets)');
+
+            $moved = SecureAssetsMigrationHelper::singleton()
+                ->setLogger($this->logger)
+                ->run($this->getStore());
         }
     }
 

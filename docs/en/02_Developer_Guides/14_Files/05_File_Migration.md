@@ -27,10 +27,12 @@ This task will perform a number of subtasks:
  - `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
    This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
  - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
-   This can be a CPU and memory intensive task for large asset stores.
-   See [Migrating substantial number of files](#performance)
+    This can be a CPU and memory intensive task for large asset stores.
+    See [Migrating substantial number of files](#performance)
+ - `fix-secureassets`: Migrates files secured through the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets) module.
+    Ensures that previous `.htaccess` folder protections don't interfere with 4.x-style asset protections.
  - `fix-folder-permissions`: Fixes folder permissions which might have been broken by
-   previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
+    previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
 
 One or more subtasks can be run individually through the `only` argument.
 Example: `only=move-files,move-thumbnails`
