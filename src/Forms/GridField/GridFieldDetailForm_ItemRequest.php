@@ -525,9 +525,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     private function getAdjacentRecordID($offset)
     {
         $gridField = $this->getGridField();
-        $gridStateStr = $this->getRequest()->requestVar('gridState');
+        $list = $gridField->getManipulatedList();
         $state = $gridField->getState(false);
-        $state->setValue($gridStateStr);
+        $gridStateStr = $this->getRequest()->requestVar('gridState');
+        if (!empty($gridStateStr)) {
+            $state->setValue($gridStateStr);
+        }
         $data = $state->getData();
         $paginator = $data->getData('GridFieldPaginator');
         if (!$paginator) {
@@ -540,7 +543,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $limit = $itemsPerPage + 2;
         $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
 
-        $map = $gridField->getManipulatedList()->limit($limit, $limitOffset)->column('ID');
+        $map = $list->limit($limit, $limitOffset)->column('ID');
         $index = array_search($this->record->ID, $map);
         return isset($map[$index+$offset]) ? $map[$index+$offset] : false;
     }
