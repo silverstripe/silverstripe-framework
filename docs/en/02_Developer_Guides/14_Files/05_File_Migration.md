@@ -7,7 +7,7 @@ This section describes how to upgrade existing filesystems from earlier versions
 
 ## Running migration
 
-Since the structure of `File` dataobjects has changed between 3.x and 4.x, a new task `MigrateFileTask`
+Since the structure of `File` objects has changed between 3.x and 4.x, a new task `MigrateFileTask`
 has been added to assist in migration of legacy files.
 
 You can run this task on the command line:
@@ -16,35 +16,35 @@ You can run this task on the command line:
 $ ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
-This task will also support migration of existing File objects to file versioning. Any
-pre-existing File objects will be automatically published to the live stage, to ensure
-that previously visible assets remain visible to the public site.
+This task will perform a number of subtasks:
 
-If additional security or visibility rules should be applied to File dataobjects, then
-make sure to correctly extend `canView` via extensions.
+ - `move-files`: Migrates existing `File` objects by adding required metadata to the database (incl. versioning).
+   By default, it will not move files on the filesystem (starting with [4.4.0](/changelogs/4.4.0)).
+   Publishes to the live stage to ensure
+   that previously visible assets remain visible to the public site.
+   If additional security or visibility rules should be applied to `File`, then
+   make sure to correctly extend `canView` via extensions.
+ - `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
+   This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
+ - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
+    This can be a CPU and memory intensive task for large asset stores.
+    See [Migrating substantial number of files](#performance)
+ - `fix-secureassets`: Migrates files secured through the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets) module.
+    Ensures that previous `.htaccess` folder protections don't interfere with 4.x-style asset protections.
+ - `fix-folder-permissions`: Fixes folder permissions which might have been broken by
+    previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
 
-## Automatic migration
-
-Migration can be invoked by either this task, or can be configured to automatically run during dev build
-by setting the `File.migrate_legacy_file` config to true. However, it's recommended that this task is
-run manually during an explicit migration process, as this process could potentially consume large
-amounts of memory and run for an extended time.
-
-```yml
-SilverStripe\Assets\File:
-  migrate_legacy_file: true
-```
+One or more subtasks can be run individually through the `only` argument.
+Example: `only=move-files,move-thumbnails`
 
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
 
-## Migration of thumbnails
+## Migration of existing thumbnails
 
-If you have the [asset admin](https://github.com/silverstripe/silverstripe-asset-admin) module installed
-this will also ensure that thumbnails for these images are generated when running 'MigrateFileTask'.
-Existing thumbnails will not be migrated however, and must be re-generated for use in the CMS.
-
-Note: Thumbnails can be regenerated on a one-by-one basis within the CMS by re-saving it
-within the file edit details form.
+Thumbnails generated through SilverStripe's image manipulation layer can be created by authors
+resizing images in the rich text editor, through template or PHP code, or by SilverStripe's built-in CMS logic.
+They are now called "variants", and are placed in a different folder structure. In order to avoid re-generating those thumbnails,
+and cluttering up your asset store with orphaned files, the task will move them to the new location by default.
 
 ## Discarded files during migration
 
@@ -75,9 +75,10 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   keep_archived_assets: true
 ```
 
-## Migrating substantial number of files
+## Migrating substantial number of files {#performance}
 
 The time it takes to run the file migration will depend on the number of files and their size. The generation of thumbnails will depend on the number and dimension of your images.
+In general, the migration task can be restarted if it times out, and will continue where it left off. 
 
 If you are migrating a substantial number of files, you should run file migration task either as a queued job or on the command line. If the migration task fails or times out, you can start it again and it will pick up where it left off.
 
