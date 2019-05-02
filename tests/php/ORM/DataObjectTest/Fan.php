@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests\DataObjectTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBVarchar;
 
 class Fan extends DataObject implements TestOnly
 {
@@ -11,7 +12,7 @@ class Fan extends DataObject implements TestOnly
 
     private static $db = array(
         'Name' => 'Varchar(255)',
-        'Email' => 'Varchar',
+        'Email' => DBVarchar::class
     );
 
     private static $has_one = array(

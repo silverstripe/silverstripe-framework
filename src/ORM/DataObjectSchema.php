@@ -1261,7 +1261,8 @@ class DataObjectSchema
      *
      * @param string|object $baseClass
      * @param bool $includeBaseClass Whether to include fields in the base class or not
-     * @param string|array $fieldNames The field to get mappings for, for example 'HTMLText'. Can also be an array.
+     * @param string|string[] $fieldNames The field to get mappings for, for example 'HTMLText'. Can also be an array.
+     * Subclasses of DBFields must be defined explicitely.
      * @return array An array of fields that derivec from $baseClass.
      * @throws \ReflectionException
      */
@@ -1269,12 +1270,29 @@ class DataObjectSchema
     {
         $mapping = [];
 
+        // Normalise $fieldNames to a string array
+        if (is_string($fieldNames)) {
+            $fieldNames = [$fieldNames];
+        }
+
+        // Add the FQNS classnames of the DBFields
+        $extraFieldNames = [];
+        foreach ($fieldNames as $fieldName) {
+            $dbField = Injector::inst()->get($fieldName);
+            if ($dbField && $dbField instanceof DBField) {
+                $extraFieldNames[] = get_class($dbField);
+            }
+        }
+
+        $fieldNames = array_merge($fieldNames, $extraFieldNames);
+
         foreach (ClassInfo::subclassesFor($baseClass, $includeBaseClass) as $class) {
             /** @var DataObjectSchema $schema */
             $schema = singleton($class)->getSchema();
             /** @var DataObject $fields */
             $fields = $schema->fieldSpecs($class);
             foreach ($fields as $field => $type) {
+                $type = preg_replace('/\(.*\)$/', '', $type);
                 if (in_array($type, $fieldNames)) {
                     $table = $schema->tableForField($class, $field);
                     if (!isset($mapping[$class])) {
