@@ -1229,10 +1229,18 @@ This should migrate your existing data (non-destructively) to the new SilverStri
 #### Migrating files
 
 Since the structure of the `File` DataObject has changed, a new task `MigrateFileTask`
-has been added to assist in migration of legacy files (see [file migration documentation](/developer_guides/files/file_migration)).
+has been added to assist in migration of existing files (see [file migration documentation](/developer_guides/files/file_migration)).
 
 ```bash
 ./vendor/bin/sake dev/tasks/MigrateFileTask
+```
+
+##### Rewriting asset references
+
+Your `img` and `a` tag references to your assets may now be pointing to a location in your assets folder that has been moved. There is a task available which will look through all your tables containing `HTMLText` and `HTMLVarchar` fields looking for broken references and then rewrite them to the new location of the file.
+
+```bash
+./vendor/bin/sake dev/tasks/TagsToShortcodeTask
 ```
 
 ### Any other script that needs running.

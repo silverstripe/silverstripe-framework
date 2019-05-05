@@ -178,6 +178,46 @@ public function Link($action = null)
 }
 ``` 
 
+## Connecting Pages to Controllers
+By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to overide SiteTree::getControllerName().
+
+Example controller:
+```php
+namespace App\Controller;
+
+use SilverStripe\Control\Controller;
+
+class TeamPageController extends Controller 
+{
+    public function getExample()
+    {
+        return 'example';
+    }
+}
+```
+
+Example page:
+```php
+namespace App\Page;
+
+use App\Controller\TeamPageController;
+use Page;
+
+class TeamPage extends Page
+{
+    public function getControllerName()
+    {
+        return TeamPageController::class;
+    }
+}
+```
+You'd now be able to access methods of the controller in the pages template
+
+```html
+<!-- TeamPage.ss -->
+<p>{$getExample}</p>
+```
+
 ## Related Lessons
 * [Controller actions/DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
 * [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)

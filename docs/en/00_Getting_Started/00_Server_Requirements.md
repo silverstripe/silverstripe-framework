@@ -8,6 +8,8 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
+SilverStripe 4 has the following server requirements:
+
  * PHP 7.1 or higher
  * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),
    we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 7.1 support may be dropped in a 5.x minor release after December 2019.
@@ -49,6 +51,20 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
    * Linux/Unix/BSD
    * Windows
    * Mac OS X
+
+### PHP Requirements for older SilverStripe releases
+
+SilverStripe's PHP support has changed over time and if you are looking to upgrade PHP on your SilverStripe site, this table may be of use:
+
+| SilverStripe Version | PHP Version | More information |
+| -------------------- | ----------- | ---------------- |
+| 3.0 - 3.5            | 5.3 - 5.6   | [requirements docs](https://docs.silverstripe.org/en/3.4/getting_started/server_requirements/)
+| 3.6                  | 5.3 - 7.1   | |
+| 3.7                  | 5.3 - 7.3   | [changelog](https://docs.silverstripe.org/en/3/changelogs/3.7.0/) |
+| 4.0 - 4.4            | 5.6+        | |
+| 4.5+ (unreleased)    | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
+| 5.0+ (unreleased)    | 7.1+        | |
+
 
 ## Web server hardware requirements
 

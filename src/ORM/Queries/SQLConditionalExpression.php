@@ -287,6 +287,13 @@ abstract class SQLConditionalExpression extends SQLExpression
                     continue;
                 }
 
+                if (preg_match('/AS\s+(?:"[^"]+"|[A-Z0-9_]+)\s*$/i', $join)) {
+                    // custom aliases override the ones defined through array keys
+                    // this is only meant to keep backward compatibility with SS <= 4.3,
+                    // to be removed in SS5
+                    continue;
+                }
+
                 $trimmedAlias = trim($alias, '"');
 
                 if ($trimmedAlias !== trim($join, '"')) {
