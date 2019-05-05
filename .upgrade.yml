@@ -1327,9 +1327,9 @@ warnings:
       message: 'FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.'
     'SilverStripe\Security\LoginForm->authenticator_class':
       message: 'authenticator_class is deprecated. Use getAuthenticatorClass/setAuthenticatorClass.'
-    'SilverStripe\Security\Permission::$declared_permissions':
+    'SilverStripe\Security\Permission->declared_permissions':
       message: 'Deprecated'
-    'SilverStripe\Security\Permission::$declared_permissions_list':
+    'SilverStripe\Security\Permission->declared_permissions_list':
       message: 'Deprecated'
   functions:
     'file_get_contents()':

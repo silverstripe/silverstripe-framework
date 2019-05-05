@@ -7,7 +7,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -23,6 +22,7 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
@@ -281,34 +281,61 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $rightGroup->setFieldHolderTemplate(get_class($rightGroup) . '_holder_buttongroup');
 
         $previousAndNextGroup = CompositeField::create()->setName('PreviousAndNextGroup');
-        $previousAndNextGroup->addExtraClass('circular-group mr-2');
-        $previousAndNextGroup->setFieldHolderTemplate(get_class($previousAndNextGroup) . '_holder_buttongroup');
+        $previousAndNextGroup->addExtraClass('btn-group--circular mr-2');
+        $previousAndNextGroup->setFieldHolderTemplate(CompositeField::class . '_holder_buttongroup');
 
         /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
         $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
         $gridState = $this->getRequest()->requestVar('gridState');
         if ($component && $paginator && $component->getShowPagination()) {
-            $previousAndNextGroup->push(FormAction::create('doPrevious')
-                ->setUseButtonTag(true)
-                ->setAttribute('data-grid-state', $gridState)
-                ->setDisabled(!$this->getPreviousRecordID())
-                ->addExtraClass('btn btn-secondary font-icon-left-open action--previous discard-confirmation'));
+            $previousIsDisabled = !$this->getPreviousRecordID();
+            $nextIsDisabled = !$this->getNextRecordID();
 
-            $previousAndNextGroup->push(FormAction::create('doNext')
-                ->setUseButtonTag(true)
-                ->setAttribute('data-grid-state', $gridState)
-                ->setDisabled(!$this->getNextRecordID())
-                ->addExtraClass('btn btn-secondary font-icon-right-open action--next discard-confirmation'));
+            $previousAndNextGroup->push(
+                LiteralField::create(
+                    'previous-record',
+                    HTML::createTag($previousIsDisabled ? 'span' : 'a', [
+                        'href' => $previousIsDisabled ? '#' : $this->getEditLink($this->getPreviousRecordID()),
+                        'data-grid-state' => $gridState,
+                        'title' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
+                        'aria-label' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
+                        'class' => 'btn btn-secondary font-icon-left-open action--previous discard-confirmation'
+                            . ($previousIsDisabled ? ' disabled' : ''),
+                    ])
+                )
+            );
+
+            $previousAndNextGroup->push(
+                LiteralField::create(
+                    'next-record',
+                    HTML::createTag($nextIsDisabled ? 'span' : 'a', [
+                        'href' => $nextIsDisabled ? '#' : $this->getEditLink($this->getNextRecordID()),
+                        'data-grid-state' => $gridState,
+                        'title' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
+                        'aria-label' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
+                        'class' => 'btn btn-secondary font-icon-right-open action--next discard-confirmation'
+                            . ($nextIsDisabled ? ' disabled' : ''),
+                    ])
+                )
+            );
         }
 
         $rightGroup->push($previousAndNextGroup);
 
         if ($component && $component->getShowAdd()) {
-            $rightGroup->push(FormAction::create('doNew')
-                ->setUseButtonTag(true)
-                ->setAttribute('data-grid-state', $this->getRequest()->getVar('gridState'))
-                ->addExtraClass('btn btn-primary font-icon-plus-thin circular action--new discard-confirmation'));
+            $rightGroup->push(
+                LiteralField::create(
+                    'new-record',
+                    HTML::createTag('a', [
+                        'href' => Controller::join_links($this->gridField->Link('item'), 'new'),
+                        'data-grid-state' => $gridState,
+                        'title' => _t(__CLASS__ . '.NEW', 'Add new record'),
+                        'aria-label' => _t(__CLASS__ . '.NEW', 'Add new record'),
+                        'class' => 'btn btn-primary font-icon-plus-thin btn--circular action--new discard-confirmation',
+                    ])
+                )
+            );
         }
 
         return $rightGroup;
@@ -321,7 +348,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     protected function getFormActions()
     {
-        $actions = new FieldList();
+        $actions = FieldList::create();
 
         if ($this->record->ID !== 0) { // existing record
             if ($this->record->canEdit()) {
@@ -461,45 +488,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
-    }
-
-    /**
-     * Goes to the previous record
-     * @param  array $data The form data
-     * @param  Form $form The Form object
-     * @return HTTPResponse
-     */
-    public function doPrevious($data, $form)
-    {
-        $this->getToplevelController()->getResponse()->addHeader('X-Pjax', 'Content');
-        $link = $this->getEditLink($this->getPreviousRecordID());
-        return $this->redirect($link);
-    }
-
-    /**
-     * Goes to the next record
-     * @param  array $data The form data
-     * @param  Form $form The Form object
-     * @return HTTPResponse
-     */
-    public function doNext($data, $form)
-    {
-        $this->getToplevelController()->getResponse()->addHeader('X-Pjax', 'Content');
-        $link = $this->getEditLink($this->getNextRecordID());
-        return $this->redirect($link);
-    }
-
-    /**
-     * Creates a new record. If you're already creating a new record,
-     * this forces the URL to change.
-     *
-     * @param  array $data The form data
-     * @param  Form $form The Form object
-     * @return HTTPResponse
-     */
-    public function doNew($data, $form)
-    {
-        return $this->redirect(Controller::join_links($this->gridField->Link('item'), 'new'));
     }
 
     /**

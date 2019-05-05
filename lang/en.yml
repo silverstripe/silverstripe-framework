@@ -98,6 +98,10 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    PREVIOUS: 'Go to previous record'
+    NEXT: 'Go to next record'
+    NEW: 'Add new record'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
