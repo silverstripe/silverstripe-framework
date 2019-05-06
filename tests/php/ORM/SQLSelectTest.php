@@ -855,15 +855,18 @@ class SQLSelectTest extends SapphireTest
             $sql
         );
 
+        // This feature is a bug that used to exist in SS4 and was removed in SS5
+        // so now we test it does not exist and we end up with incorrect SQL because of that
+        // In SS4 the "explicitAlias" would be ignored
         $query = SQLSelect::create('*', [
             'MyTableAlias' => '"MyTable"',
-            'ignoredAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
+            'explicitAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
         ]);
         $sql = $query->sql();
 
         $this->assertSQLEquals(
             'SELECT * FROM "MyTable" AS "MyTableAlias" , '.
-            '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"',
+            '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin" AS "explicitAlias"',
             $sql
         );
     }
