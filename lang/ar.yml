@@ -35,12 +35,12 @@ ar:
     PlaceHolderWithLabels: 'البحث {نوع} بواسطة {اسم}'
     Print: طباعة
     RelationSearch: 'ابحث عن علاقة'
-    ResetFilter: إعادة تعيين
+    ResetFilter: 'إعادة تعيين'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: حذف
     DeletePermissionsFailure: 'لا يوجد أية تصريحات حذف'
     EditPermissionsFailure: 'لا يوجد تصريح لإلغاء الربط بين السجلات'
-    UnlinkRelation: إلغاء الربط
+    UnlinkRelation: 'إلغاء الربط'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: إلغاء
     Create: إنشاء
@@ -52,7 +52,7 @@ ar:
     FIELDLABELAMOUNT: الكمية
     FIELDLABELCURRENCY: العملة
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'باطل'
+    IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
   SilverStripe\Forms\TimeField:
@@ -83,7 +83,7 @@ ar:
     NoRoles: 'لا يوجد أدوار'
     Parent: 'المجموعة الرئيسة'
     RolesAddEditLink: 'قوانين التعديل/الإضافة'
-    Sort: 'ترتيب'
+    Sort: ترتيب
     has_many_Permissions: الصلاحيات
     many_many_Members: الأعضاء
   SilverStripe\Security\LoginAttempt:
@@ -92,12 +92,12 @@ ar:
   SilverStripe\Security\Member:
     ADDGROUP: 'إضافة مجموعة'
     BUTTONCHANGEPASSWORD: 'تغيير رقم المرور'
-    BUTTONLOGIN: 'دخول'
+    BUTTONLOGIN: دخول
     BUTTONLOGINOTHER: 'الدخول بحساب آخر'
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
-    EMAIL: البريد الإلكتروني
+    EMAIL: 'البريد الإلكتروني'
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
     ERRORLOCKEDOUT2: 'حسابك قد تم تعطيله مؤقتاً بسبب الكثير من المحاولات الفاشلة في تسجيل الدخول. يرجى المحاولة مرة أخرى في  {عدد} دقيقة.'
@@ -108,17 +108,17 @@ ar:
     INTERFACELANG: 'لغة الواجهة'
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
-    PASSWORD: رقم المرور
+    PASSWORD: 'رقم المرور'
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
-    SURNAME: اسم العائلة
+    SURNAME: 'اسم العائلة'
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     WELCOMEBACK: 'مرحبا بك مرة أخرى، {الاسم الأول}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
     belongs_many_many_Groups: المجموعات
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
-    db_Password: الرقم السري
+    db_Password: 'الرقم السري'
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
@@ -147,7 +147,7 @@ ar:
     CHANGEPASSWORDHEADER: 'تغيير كلمة المرور'
     ENTERNEWPASSWORD: 'فضلاً أدخل كلمة المرور الجديدة'
     ERRORPASSWORDPERMISSION: 'يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور'
-    LOGIN: 'دخول'
+    LOGIN: دخول
     LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
     NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '

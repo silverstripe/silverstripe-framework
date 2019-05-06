@@ -1,7 +1,7 @@
 fa_IR:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'خیر'
-    YESANSWER: 'بله'
+    NOANSWER: خیر
+    YESANSWER: بله
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'گذرواژه باید حداقل {min} کاراکتر باشد.'
     BETWEEN: 'گذرواژه باید بین {min} تا {max} کاراکتر باشد.'
@@ -46,12 +46,12 @@ fa_IR:
     PlaceHolderWithLabels: 'یافتن {type} از روی {name}'
     Print: چاپ
     RelationSearch: 'جستجوی رابط'
-    ResetFilter: از نو
+    ResetFilter: 'از نو'
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: حذف
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     EditPermissionsFailure: 'دسترسی‌های حذف لینک وجود ندارد'
-    UnlinkRelation: حذف لینک
+    UnlinkRelation: 'حذف لینک'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: لغو
     Create: ایجاد
@@ -61,15 +61,15 @@ fa_IR:
     Save: ذخیره
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: مقدار
-    FIELDLABELCURRENCY: واحد پول
+    FIELDLABELCURRENCY: 'واحد پول'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'خالی است'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'لطفاً یک قالب زمان معتبر وارد نمایید ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: هر
-    NOANSWER: 'خیر'
-    YESANSWER: 'بله'
+    NOANSWER: خیر
+    YESANSWER: بله
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'کمتر از یک دقیقه'
     TIMEDIFFAGO: '{difference} پیش'
@@ -94,7 +94,7 @@ fa_IR:
     Description: توضحیات
     GroupReminder: 'اگر یک گروه مادر را برگزینید،‌ این گروه تمامی وظایف آن را می‌پذیرد'
     HierarchyPermsError: 'با دسترسی‌های داده‌شده نمی‌توان گروه مادر "{group}" را تخصیص داد (نیازمند دسترسی مدید ارشد)'
-    Locked: 'قفل‌شده؟'
+    Locked: قفل‌شده؟
     NoRoles: 'هیچ وظیفه‌ای پیدا نشد'
     PLURALNAME: گروه‌ها
     Parent: 'گروه مادر'
@@ -111,19 +111,19 @@ fa_IR:
   SilverStripe\Security\Member:
     ADDGROUP: 'افزودن گروه'
     BUTTONCHANGEPASSWORD: 'تغییر گذرواژه'
-    BUTTONLOGIN: 'ورود'
+    BUTTONLOGIN: ورود
     BUTTONLOGINOTHER: 'ورود به عنوان شخصی دیگر'
     BUTTONLOSTPASSWORD: 'من گذرواژه خود را فراموش کرده‌ام'
     CONFIRMNEWPASSWORD: 'تکرار گذرواژه جدید'
     CONFIRMPASSWORD: 'تکرار گذرواژه'
     CURRENT_PASSWORD: 'گذرواژه کنونی'
     EDIT_PASSWORD: 'گذرواژه جدید'
-    EMAIL: پست الکترونیک
+    EMAIL: 'پست الکترونیک'
     EMPTYNEWPASSWORD: 'رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید'
     ENTEREMAIL: 'لطفاً یک نشانی ایمیل وارد نمایید تا لینک ازنوسازی گذرواژه را دریافت کنید.'
     ERRORNEWPASSWORD: 'شما گذرواژه جدید خود را متفاوت وارد کرده‌اید، دوباره امتحان نمایید'
     ERRORPASSWORDNOTMATCH: 'گذرواژه کنونی همانند نیست، لطفاً مجدداً تلاش نمایید'
-    FIRSTNAME: 'نام'
+    FIRSTNAME: نام
     INTERFACELANG: 'زبان برنامه'
     KEEPMESIGNEDIN: 'مرا واردشده نگه‌دار'
     LOGGEDINAS: 'شما به {name} عنوان وارد شده‌اید.'
@@ -134,7 +134,7 @@ fa_IR:
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما تغییر یافته است'
     SUBJECTPASSWORDRESET: 'لینک ازنوسازی گذرواژه شما'
-    SURNAME: نام خانوادگی
+    SURNAME: 'نام خانوادگی'
     WELCOMEBACK: 'خوش آمدید، {firstname}'
     YOUROLDPASSWORD: 'گذرواژه قدیمی شما'
     belongs_many_many_Groups: گروه‌ها
@@ -147,7 +147,7 @@ fa_IR:
   SilverStripe\Security\PasswordValidator:
     TOOSHORT: 'گذرواژه بسیار کوتاه است، باید {minimum} کاراکتر یا بیشتر باشد'
   SilverStripe\Security\Permission:
-    AdminGroup: مدیر کل
+    AdminGroup: 'مدیر کل'
     CONTENT_CATEGORY: 'دسترسی محتوا'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     PLURALNAME: مجوز‌ها
@@ -166,5 +166,5 @@ fa_IR:
     CHANGEPASSWORDHEADER: 'تغییر گذرواژه'
     ENTERNEWPASSWORD: 'لطفاً گذرواژه جدید را وارد کنید.'
     ERRORPASSWORDPERMISSION: 'جهت تغییر گذرواژه خود باید وارد شده باشید!'
-    LOGIN: 'ورود'
+    LOGIN: ورود
     LOSTPASSWORDHEADER: 'فراموشی گذرواژه'

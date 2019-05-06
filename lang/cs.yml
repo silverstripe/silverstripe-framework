@@ -1,7 +1,7 @@
 cs:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Ano'
+    NOANSWER: Ne
+    YESANSWER: Ano
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Hesla musí být nejméně {min} znaků dlouhé.'
     BETWEEN: 'Hesla musí být {min} až {max} znaků dlouhé.'
@@ -42,7 +42,7 @@ cs:
     NewRecord: 'Nový {type}'
     NoItemsFound: 'Žádné položky'
     PRINTEDAT: 'Vytištěno v'
-    PRINTEDBY: 'Vytištěno'
+    PRINTEDBY: Vytištěno
     PlaceHolder: 'Hledat {type}'
     PlaceHolderWithLabels: 'Hledat {type} podle {name}'
     Print: Tisk
@@ -76,8 +76,8 @@ cs:
     SINGULARNAME: 'Datový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakkýkoliv
-    NOANSWER: 'Ne'
-    YESANSWER: 'Ano'
+    NOANSWER: Ne
+    YESANSWER: Ano
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'méně než minuta'
     TIMEDIFFAGO: 'před {difference}'
@@ -110,7 +110,7 @@ cs:
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Spravovat role'
     SINGULARNAME: Skupina
-    Sort: 'Řazení'
+    Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
   SilverStripe\Security\LoginAttempt:
@@ -191,7 +191,7 @@ cs:
     CHANGEPASSWORDHEADER: 'Změnit heslo'
     ENTERNEWPASSWORD: 'Prosím zadejte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pro změnu hesla musíte být přihlášení!'
-    LOGIN: 'Přihlásit'
+    LOGIN: Přihlásit
     LOSTPASSWORDHEADER: 'Zapomenuté heslo'
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
