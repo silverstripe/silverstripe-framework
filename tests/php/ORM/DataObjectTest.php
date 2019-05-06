@@ -2409,27 +2409,4 @@ class DataObjectTest extends SapphireTest
 
         $do->write();
     }
-
-    public function testGetFieldMap()
-    {
-        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, 'HTMLVarchar');
-        $this->assertEquals('DatabaseField', $classes[Team::class]['DataObjectTest_Team'][0]);
-
-        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, ['HTMLVarchar', 'Varchar']);
-
-        $this->assertEquals(
-            'SubclassDatabaseField',
-            $classes[SubTeam::class]['DataObjectTest_SubTeam'][0]
-        );
-        $this->assertEquals(
-            ['Name', 'Email'],
-            $classes[Fan::class]['DataObjectTest_Fan'],
-            'Parametrised DB Field and explicitely declare DB Field should be returned'
-        );
-
-        $classes = DataObjectSchema::getFieldMap(SubTeam::class, true, ['HTMLVarchar']);
-
-        $this->assertFalse(isset($classes[Team::class]));
-        $this->assertEquals('DatabaseField', $classes[SubTeam::class]['DataObjectTest_Team'][0]);
-    }
 }
