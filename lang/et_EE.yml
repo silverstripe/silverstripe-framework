@@ -1,7 +1,7 @@
 et_EE:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ei'
-    YESANSWER: 'Jah'
+    NOANSWER: Ei
+    YESANSWER: Jah
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Parool peab olema vähemalt {min} märki pikk.'
     BETWEEN: 'Parooli pikkus peab olema vahemikus {min}–{max} märki.'
@@ -27,13 +27,13 @@ et_EE:
     Add: 'Lisa {name}'
     CSVEXPORT: 'Ekspordi CSV-vormingusse'
     Filter: Filtreeri
-    FilterBy: 'Filtreerimisalus'
+    FilterBy: Filtreerimisalus
     Find: Otsi
     LinkExisting: 'Lingi olemasolev'
     NewRecord: 'Uus {type}'
     NoItemsFound: 'Üksusi ei leitud'
     PRINTEDAT: 'Printimiskoht:'
-    PRINTEDBY: 'Printis'
+    PRINTEDBY: Printis
     PlaceHolder: 'Leia {type}'
     Print: Prindi
     RelationSearch: 'Seose otsing'
@@ -41,7 +41,7 @@ et_EE:
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Kustuta
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
-    UnlinkRelation: Tühista linkimine
+    UnlinkRelation: 'Tühista linkimine'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Loobu
     Create: Loo
@@ -60,11 +60,11 @@ et_EE:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Kõik
-    NOANSWER: 'Ei'
-    YESANSWER: 'Jah'
+    NOANSWER: Ei
+    YESANSWER: Jah
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'vähem kui minut'
-    TIMEDIFFAGO: 'tagasi'
+    TIMEDIFFAGO: tagasi
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Kõik
   SilverStripe\Security\BasicAuth:
@@ -82,7 +82,7 @@ et_EE:
     NoRoles: 'Ühtegi rolli ei leitud'
     Parent: 'Vanem grupp'
     RolesAddEditLink: 'Halda rolle'
-    Sort: 'Järjesta'
+    Sort: Järjesta
     has_many_Permissions: Õigused
     many_many_Members: Liikmed
   SilverStripe\Security\LoginAttempt:
@@ -101,7 +101,7 @@ et_EE:
     ENTEREMAIL: 'Palun sisesta email, et saada paooli tühistamise link'
     ERRORNEWPASSWORD: 'Te sisestasite oma parooli erinevalt, proovige uuesti'
     ERRORPASSWORDNOTMATCH: 'Sisestatud paroolid ei kattu, palun proovi uuesti'
-    FIRSTNAME: 'Eesnimi'
+    FIRSTNAME: Eesnimi
     INTERFACELANG: 'Kasutajaliidese keel'
     LOGGEDINAS: 'Olete logitud sisse kui {name}.'
     NEWPASSWORD: 'Uus parool'

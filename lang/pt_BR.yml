@@ -22,14 +22,14 @@ pt_BR:
     Description: Descrição
     Locked: 'Travado?'
     Parent: 'Grupo pai'
-    Sort: 'Ordenação'
+    Sort: Ordenação
     has_many_Permissions: Permissões
     many_many_Members: Membros
   SilverStripe\Security\LoginAttempt:
     IP: 'Endereço IP'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Senha'
-    BUTTONLOGIN: 'Entrar'
+    BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Entrar com outro usuário'
     BUTTONLOSTPASSWORD: 'Esqueci minha senha'
     CONFIRMNEWPASSWORD: 'Confirme Nova Senha'
@@ -38,7 +38,7 @@ pt_BR:
     ENTEREMAIL: 'Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha'
     ERRORNEWPASSWORD: 'Você digitou sua nova senha incorretamente, tente novamente'
     ERRORPASSWORDNOTMATCH: 'Sua senha atual não confere, por favor tente novamente'
-    FIRSTNAME: 'Nome'
+    FIRSTNAME: Nome
     INTERFACELANG: 'Idioma da interface'
     NEWPASSWORD: 'Nova Senha'
     PASSWORD: Senha
@@ -60,6 +60,6 @@ pt_BR:
     CHANGEPASSWORDHEADER: 'Alterar sua senha'
     ENTERNEWPASSWORD: 'Por favor entre uma nova senha.'
     ERRORPASSWORDPERMISSION: 'Você precisa estar logado para alterar sua senha!'
-    LOGIN: 'Entrar'
+    LOGIN: Entrar
     NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
     NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'

@@ -10,9 +10,9 @@ pl:
     CHANGEPASSWORDFOREMAIL: 'Hasło do konta o adresie e-mail {email} zostało zmienione. Jeśli nie zmieniłeś swojego hasła, zmień hasło, korzystając z poniższego linku'
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT3: 'Zmień hasło'
-    HELLO: Witaj,
+    HELLO: 'Witaj,'
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: Witaj,
+    HELLO: 'Witaj,'
     TEXT1: 'Oto twój'
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
@@ -22,8 +22,8 @@ pl:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Nieznany
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nie'
-    YESANSWER: 'Tak'
+    NOANSWER: Nie
+    YESANSWER: Tak
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Brak dostępnych opcji'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -87,7 +87,7 @@ pl:
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
-    UnlinkRelation: Usuń łącze
+    UnlinkRelation: 'Usuń łącze'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Anuluj
     Create: Stwórz
@@ -123,8 +123,8 @@ pl:
     SINGULARNAME: 'Obiekt danych'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakikolwiek
-    NOANSWER: 'Nie'
-    YESANSWER: 'Tak'
+    NOANSWER: Nie
+    YESANSWER: Tak
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} dzień'
@@ -199,9 +199,9 @@ pl:
     PERMISSIONS: Uprawnienia
     PLURALNAME: Grupy
     PLURALS:
-      one: 'Grupa'
-      few: 'Grup'
-      many: 'Grup'
+      one: Grupa
+      few: Grup
+      many: Grup
       other: '{count} grup'
     Parent: 'Grupa nadrzędna'
     ROLES: Role
@@ -226,7 +226,7 @@ pl:
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
-    BUTTONLOGIN: 'Zaloguj'
+    BUTTONLOGIN: Zaloguj
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOGOUT: 'Wyloguj się'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
@@ -241,7 +241,7 @@ pl:
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
     ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
-    FIRSTNAME: 'Imię'
+    FIRSTNAME: Imię
     INTERFACELANG: 'Język interfejsu'
     KEEPMESIGNEDIN: 'Zapamiętaj mnie'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
@@ -250,7 +250,7 @@ pl:
     PASSWORDEXPIRED: 'Twoje hasło wygasło. Prosimy ustawić nowe.'
     PLURALNAME: Użytkownicy
     PLURALS:
-      one: 'Użytkownik'
+      one: Użytkownik
       few: '{count} użytkowników'
       many: '{count} użytkowników'
       other: '{count} użytkowników'
@@ -299,9 +299,9 @@ pl:
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
     PLURALNAME: Uprawnienia
     PLURALS:
-      one: 'Uprawnienie'
-      few: 'Uprawnień'
-      many: 'Uprawnień'
+      one: Uprawnienie
+      few: Uprawnień
+      many: Uprawnień
       other: '{count} uprawnień'
     SINGULARNAME: Uprawnienie
     UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
@@ -314,9 +314,9 @@ pl:
     OnlyAdminCanApply: 'Tylko administrator może to zastosować'
     PLURALNAME: Role
     PLURALS:
-      one: 'Rola'
-      few: 'ról'
-      many: 'ról'
+      one: Rola
+      few: ról
+      many: ról
       other: '{count} ról'
     SINGULARNAME: Rola
     Title: Tytuł
@@ -345,7 +345,7 @@ pl:
     CONFIRMLOGOUT: 'Kliknij przycisk poniżej, aby potwierdzić, że chcesz się wylogować.'
     ENTERNEWPASSWORD: 'Proszę wprowadż nowe hasło'
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
-    LOGIN: 'Logowanie'
+    LOGIN: Logowanie
     LOGOUT: 'Wyloguj się'
     LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'

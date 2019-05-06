@@ -22,8 +22,8 @@ sk:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Neznáma
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nie'
-    YESANSWER: 'Áno'
+    NOANSWER: Nie
+    YESANSWER: Áno
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Žiadne dostupné možnosti'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -41,7 +41,7 @@ sk:
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
   SilverStripe\Forms\DropdownField:
-    CHOOSE: (Vyberte si)
+    CHOOSE: '(Vyberte si)'
     CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
@@ -69,7 +69,7 @@ sk:
     NewRecord: 'Nový {type}'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Vytlačené v'
-    PRINTEDBY: 'Vytlačené'
+    PRINTEDBY: Vytlačené
     PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     Print: Tlačiť
@@ -105,8 +105,8 @@ sk:
     SINGULARNAME: 'Dátový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ktorýkoľvek
-    NOANSWER: 'Nie'
-    YESANSWER: 'Áno'
+    NOANSWER: Nie
+    YESANSWER: Áno
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'menej ako minúta'
     TIMEDIFFAGO: '{difference} pred'
@@ -169,7 +169,7 @@ sk:
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
-    FIRSTNAME: 'Meno'
+    FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
     KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
@@ -225,7 +225,7 @@ sk:
     CHANGEPASSWORDHEADER: 'Zmeniť heslo'
     ENTERNEWPASSWORD: 'Prosím zadajte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
-    LOGIN: 'Prihlásiť'
+    LOGIN: Prihlásiť
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'

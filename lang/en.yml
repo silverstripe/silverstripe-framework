@@ -34,8 +34,6 @@ en:
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -99,9 +97,9 @@ en:
     Deleted: 'Deleted {type} {name}'
     Save: Save
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
-    PREVIOUS: 'Go to previous record'
-    NEXT: 'Go to next record'
     NEW: 'Add new record'
+    NEXT: 'Go to next record'
+    PREVIOUS: 'Go to previous record'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:

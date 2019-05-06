@@ -18,8 +18,8 @@ ru:
     INVALID_REQUEST: 'Неверный запрос'
     REQUEST_ABORTED: 'Запрос отменён'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Нет'
-    YESANSWER: 'Да'
+    NOANSWER: Нет
+    YESANSWER: Да
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Нет доступных опций'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -59,7 +59,7 @@ ru:
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'Пример заполнения {format}'
-    NONE: не выбрано
+    NONE: 'не выбрано'
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Главная
   SilverStripe\Forms\GridField\GridField:
@@ -69,7 +69,7 @@ ru:
     Filter: Фильтр
     FilterBy: 'Фильтр по'
     Find: Найти
-    LinkExisting: 'Связать'
+    LinkExisting: Связать
     NewRecord: 'Новый(-ая) {type}'
     NoItemsFound: 'Элементов не найдено'
     PRINTEDAT: 'Когда распечатано:'
@@ -83,7 +83,7 @@ ru:
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
-    UnlinkRelation: Отменить связь
+    UnlinkRelation: 'Отменить связь'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Отмена
     Create: Создать
@@ -102,23 +102,23 @@ ru:
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение(я): {value}'
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Недействительно'
+    IsNullLabel: Недействительно
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Объекты'
+    PLURALNAME: Объекты
     PLURALS:
-      one: 'Объект'
+      one: Объект
       few: '{count} объекта'
       many: '{count} объектов'
       other: '{count} объектов'
-    SINGULARNAME: 'Объект'
+    SINGULARNAME: Объект
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Все
-    NOANSWER: 'Нет'
-    YESANSWER: 'Да'
+    NOANSWER: Нет
+    YESANSWER: Да
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} день'
@@ -187,13 +187,13 @@ ru:
     GroupReminder: 'При назначении группы верхнего уровня все роли будут переняты из нее'
     HierarchyPermsError: 'У Вас недостаточно прав для назначения родительской группы "{group}" (необходимы права администратора)'
     Locked: 'Блокировано?'
-    MEMBERS: Члены группы
+    MEMBERS: 'Члены группы'
     NEWGROUP: 'Новая группа'
     NoRoles: 'Ролей не найдено'
-    PERMISSIONS: Права доступа
+    PERMISSIONS: 'Права доступа'
     PLURALNAME: Группы
     PLURALS:
-      one: 'Группа'
+      one: Группа
       few: '{count} группы'
       many: '{count} групп'
       other: '{count} групп'
@@ -203,11 +203,11 @@ ru:
     RolesAddEditLink: 'Добавить/редактировать роли'
     SINGULARNAME: Группа
     Sort: 'Порядок сортировки'
-    has_many_Permissions: Права групп пользователей
-    many_many_Members: Члены группы
+    has_many_Permissions: 'Права групп пользователей'
+    many_many_Members: 'Члены группы'
   SilverStripe\Security\LoginAttempt:
-    Email: 'Email'
-    IP: 'IP-адрес'
+    Email: Email
+    IP: IP-адрес
     PLURALNAME: 'Попыток входа в систему'
     PLURALS:
       one: 'Попытка входа в систему'
@@ -219,9 +219,9 @@ ru:
   SilverStripe\Security\Member:
     ADDGROUP: 'Добавить группу'
     BUTTONCHANGEPASSWORD: 'Изменить пароль'
-    BUTTONLOGIN: 'Войти'
+    BUTTONLOGIN: Войти
     BUTTONLOGINOTHER: 'Войти под другим именем'
-    BUTTONLOGOUT: 'Выйти'
+    BUTTONLOGOUT: Выйти
     BUTTONLOSTPASSWORD: 'Я забыл пароль'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
@@ -234,7 +234,7 @@ ru:
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
     ERRORPASSWORDNOTMATCH: 'Введенный пароль неверен, попробуйте снова'
     ERRORWRONGCRED: 'Похоже, что указанные данные не верны. Пожалуйста, повторите попытку позже.'
-    FIRSTNAME: 'Имя'
+    FIRSTNAME: Имя
     INTERFACELANG: 'Язык интерфейса'
     KEEPMESIGNEDIN: 'Запомните меня'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
@@ -243,7 +243,7 @@ ru:
     PASSWORDEXPIRED: 'Срок действия Вашего пароля истек. Пожалуйста установите новый.'
     PLURALNAME: Пользователи
     PLURALS:
-      one: 'Участник'
+      one: Участник
       few: '{count} участника'
       many: '{count} участников'
       other: '{count} участников'
@@ -264,18 +264,18 @@ ru:
     AUTHENTICATORNAME: 'Форма входа в систему'
     BUTTONFORGOTPASSWORD: 'Я забыл пароль'
     BUTTONLOGIN: 'Хочу назад'
-    BUTTONLOGOUT: 'Выйти'
+    BUTTONLOGOUT: Выйти
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Вы указали неверные данные. Попробуйте ещё раз.'
     NoPassword: 'У этого пользователя отсутствует пароль.'
   SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Пароли'
+    PLURALNAME: Пароли
     PLURALS:
-      one: 'Пароль'
+      one: Пароль
       few: '{count} пароля'
       many: '{count} паролей'
       other: '{count} паролей'
-    SINGULARNAME: 'Пароль'
+    SINGULARNAME: Пароль
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: {chars}'
     PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
@@ -287,13 +287,13 @@ ru:
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Отменяет все другие предоставленные права доступа.'
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
-    PLURALNAME: Права доступа
+    PLURALNAME: 'Права доступа'
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       few: '{count} разрешения'
       many: '{count} разрешений'
       other: '{count} разрешений'
-    SINGULARNAME: Право доступа
+    SINGULARNAME: 'Право доступа'
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
@@ -304,7 +304,7 @@ ru:
     OnlyAdminCanApply: 'Может применяться только администратором'
     PLURALNAME: Роли
     PLURALS:
-      one: 'Роль'
+      one: Роль
       few: '{count} роли'
       many: '{count} ролей'
       other: '{count} ролей'
@@ -335,8 +335,8 @@ ru:
     CONFIRMLOGOUT: 'Нажмите кнопку ниже чтобы подтвердить что вы хотите выйти из системы.'
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
-    LOGIN: 'Вход'
-    LOGOUT: 'Выйти'
+    LOGIN: Вход
+    LOGOUT: Выйти
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'

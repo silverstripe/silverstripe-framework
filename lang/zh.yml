@@ -1,12 +1,12 @@
 zh:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: '不是'
-    YESANSWER: '是'
+    NOANSWER: 不是
+    YESANSWER: 是
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: '密码长度必须至少 {min} 个字符。'
     BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
     MAXIMUM: '密码长度必须至多 {max} 个字符。'
-    SHOWONCLICKTITLE: '更改密码'
+    SHOWONCLICKTITLE: 更改密码
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: 货币字符
   SilverStripe\Forms\DateField:
@@ -17,59 +17,59 @@ zh:
     CHOOSE: （选择）
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   SilverStripe\Forms\EmailField:
-    VALIDATION: '请输入一个电子邮件地址'
+    VALIDATION: 请输入一个电子邮件地址
   SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: '似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。'
-    VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
-    VALIDATIONPASSWORDSNOTEMPTY: '密码不得为空'
-    VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
+    CSRF_FAILED_MESSAGE: 似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。
+    VALIDATIONPASSWORDSDONTMATCH: 密码不匹配
+    VALIDATIONPASSWORDSNOTEMPTY: 密码不得为空
+    VALIDATIONSTRONGPASSWORD: 密码必须至少有一个数字和一个字母数字字符
     VALIDATOR: 验证器
-    VALIDCURRENCY: '请输入一个有效的货币'
+    VALIDCURRENCY: 请输入一个有效的货币
   SilverStripe\Forms\FormField:
     NONE: 无
   SilverStripe\Forms\GridField\GridField:
     Add: '添加 {name}'
     CSVEXPORT: '导出到 CSV'
     Filter: 过滤器
-    FilterBy: '过滤条件'
+    FilterBy: 过滤条件
     Find: 查找
-    LinkExisting: '链接已存在'
+    LinkExisting: 链接已存在
     NewRecord: '新 {type}'
-    NoItemsFound: '没有找到任何项目'
-    PRINTEDAT: '印刷地'
-    PRINTEDBY: '印刷人'
+    NoItemsFound: 没有找到任何项目
+    PRINTEDAT: 印刷地
+    PRINTEDBY: 印刷人
     PlaceHolder: '查找 {type}'
     PlaceHolderWithLabels: '通过 {name} 查找 {type}'
     Print: 打印
-    RelationSearch: '关系搜索'
+    RelationSearch: 关系搜索
     ResetFilter: 重设
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: 删除
-    DeletePermissionsFailure: '没有删除权限'
-    EditPermissionsFailure: '没有解除记录链接的权限'
+    DeletePermissionsFailure: 没有删除权限
+    EditPermissionsFailure: 没有解除记录链接的权限
     UnlinkRelation: 解除链接
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: 取消
     Create: 创建
     Delete: 删除
-    DeletePermissionsFailure: '没有删除权限'
+    DeletePermissionsFailure: 没有删除权限
     Deleted: '已删除的 {type} {name}'
     Save: 保存
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 金额
     FIELDLABELCURRENCY: 货币
   SilverStripe\Forms\NullableField:
-    IsNullLabel: '为空'
+    IsNullLabel: 为空
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 任何
-    NOANSWER: '不是'
-    YESANSWER: '是'
+    NOANSWER: 不是
+    YESANSWER: 是
   SilverStripe\ORM\FieldType\DBDate:
-    LessThanMinuteAgo: '少于一分钟'
+    LessThanMinuteAgo: 少于一分钟
     TIMEDIFFAGO: '{difference} 以前'
     TIMEDIFFIN: '在 {difference} 中'
   SilverStripe\ORM\FieldType\DBEnum:
@@ -77,8 +77,8 @@ zh:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: '请输入一个用户名和密码。'
-    ERRORNOTADMIN: '那个用户不是一名管理员。'
+    ENTERINFO: 请输入一个用户名和密码。
+    ERRORNOTADMIN: 那个用户不是一名管理员。
     ERRORNOTREC: '那个用户名 / 密码无法被辨认'
   SilverStripe\Security\CMSMemberLoginForm:
     PASSWORDEXPIRED: '<p>您的密码已过期。 <a target="_top" href="{link}">请选择一个新的。</a></ P>'
@@ -87,83 +87,83 @@ zh:
     SUCCESS: 成功
     SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
   SilverStripe\Security\Group:
-    AddRole: '在这个小组中添加一个角色'
-    Code: '小组代码'
+    AddRole: 在这个小组中添加一个角色
+    Code: 小组代码
     DefaultGroupTitleAdministrators: 管理员
-    DefaultGroupTitleContentAuthors: '内容作者'
+    DefaultGroupTitleContentAuthors: 内容作者
     Description: 描述
-    GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
+    GroupReminder: 如果您选择了某父组，该组别将会承担起所有功能角色
     HierarchyPermsError: '无法为父组 "{group}" 分配特权权限（要求具备 ADMIN 访问）'
-    Locked: '锁定？'
-    NoRoles: '没有找到角色'
-    Parent: '父组'
-    RolesAddEditLink: '管理角色'
-    Sort: '排序'
+    Locked: 锁定？
+    NoRoles: 没有找到角色
+    Parent: 父组
+    RolesAddEditLink: 管理角色
+    Sort: 排序
     has_many_Permissions: 权限
     many_many_Members: 成员
   SilverStripe\Security\LoginAttempt:
     IP: 'IP 地址'
     Status: 状态
   SilverStripe\Security\Member:
-    ADDGROUP: '添加组别'
-    BUTTONCHANGEPASSWORD: '更改密码'
-    BUTTONLOGIN: '登录'
-    BUTTONLOGINOTHER: '以不同身份登录'
-    BUTTONLOSTPASSWORD: '我丢失了密码'
-    CONFIRMNEWPASSWORD: '确认新密码'
-    CONFIRMPASSWORD: '确认密码'
+    ADDGROUP: 添加组别
+    BUTTONCHANGEPASSWORD: 更改密码
+    BUTTONLOGIN: 登录
+    BUTTONLOGINOTHER: 以不同身份登录
+    BUTTONLOSTPASSWORD: 我丢失了密码
+    CONFIRMNEWPASSWORD: 确认新密码
+    CONFIRMPASSWORD: 确认密码
     EMAIL: 电子邮件
-    EMPTYNEWPASSWORD: '新密码不能为空，请重试'
-    ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
+    EMPTYNEWPASSWORD: 新密码不能为空，请重试
+    ENTEREMAIL: 请输入电子邮件地址以获取密码重置链接
     ERRORLOCKEDOUT2: '由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。'
-    ERRORNEWPASSWORD: '您输入的新密码不同，请重试'
-    ERRORPASSWORDNOTMATCH: '您的现有密码不匹配，请重试'
-    ERRORWRONGCRED: '所提供的资料似乎是不正确的。请再试一次。'
-    FIRSTNAME: '名字'
-    INTERFACELANG: '界面语言'
+    ERRORNEWPASSWORD: 您输入的新密码不同，请重试
+    ERRORPASSWORDNOTMATCH: 您的现有密码不匹配，请重试
+    ERRORWRONGCRED: 所提供的资料似乎是不正确的。请再试一次。
+    FIRSTNAME: 名字
+    INTERFACELANG: 界面语言
     LOGGEDINAS: '您以 {name} 身份登录。'
-    NEWPASSWORD: '新密码'
+    NEWPASSWORD: 新密码
     PASSWORD: 密码
     PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
-    SUBJECTPASSWORDCHANGED: '您的密码已更改'
-    SUBJECTPASSWORDRESET: '您的密码重设链接'
+    SUBJECTPASSWORDCHANGED: 您的密码已更改
+    SUBJECTPASSWORDRESET: 您的密码重设链接
     SURNAME: 姓氏
     ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
     WELCOMEBACK: '欢迎回来， {firstname}'
-    YOUROLDPASSWORD: '您的旧密码'
+    YOUROLDPASSWORD: 您的旧密码
     belongs_many_many_Groups: 群组
-    db_Locale: '界面区域设置'
-    db_LockedOutUntil: '保持锁定直到'
+    db_Locale: 界面区域设置
+    db_LockedOutUntil: 保持锁定直到
     db_Password: 密码
-    db_PasswordExpiry: '密码失效日期'
+    db_PasswordExpiry: 密码失效日期
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
-    PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
+    PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
     TOOSHORT: '密码长度过短，必须为 {minimum} 个字符或更长'
   SilverStripe\Security\Permission:
     AdminGroup: 管理员
-    CONTENT_CATEGORY: '内容权限'
-    FULLADMINRIGHTS: '完全管理权'
-    FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
-    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
+    CONTENT_CATEGORY: 内容权限
+    FULLADMINRIGHTS: 完全管理权
+    FULLADMINRIGHTS_HELP: 包含并支配其它所有已分配权限
+    UserPermissionsIntro: 把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
     FromRole: '从角色 "{title}"继承'
     FromRoleOnGroup: '从 "{roletitle}" 小组的 "{grouptitle}" 角色继承'
   SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: '只有管理员可以应用'
+    OnlyAdminCanApply: 只有管理员可以应用
     Title: 标题
   SilverStripe\Security\PermissionRoleCode:
     PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
-    BUTTONSEND: '将密码重设链接发送给我'
-    CHANGEPASSWORDBELOW: '您可以在下面更改您的密码。'
-    CHANGEPASSWORDHEADER: '更改您的密码'
-    ENTERNEWPASSWORD: '请输入一个新密码。'
-    ERRORPASSWORDPERMISSION: '您必须登录才能更改您的密码！'
-    LOGIN: '登录'
-    LOSTPASSWORDHEADER: '忘记密码'
-    NOTEPAGESECURED: '该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。'
-    NOTERESETPASSWORD: '请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码'
+    ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
+    BUTTONSEND: 将密码重设链接发送给我
+    CHANGEPASSWORDBELOW: 您可以在下面更改您的密码。
+    CHANGEPASSWORDHEADER: 更改您的密码
+    ENTERNEWPASSWORD: 请输入一个新密码。
+    ERRORPASSWORDPERMISSION: 您必须登录才能更改您的密码！
+    LOGIN: 登录
+    LOSTPASSWORDHEADER: 忘记密码
+    NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
+    NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码

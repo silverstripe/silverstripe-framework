@@ -1,7 +1,7 @@
 id_ID:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Tidak'
-    YESANSWER: 'Ya'
+    NOANSWER: Tidak
+    YESANSWER: Ya
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Kata kunci harus setidaknya terdiri dari {min} karakter.'
     BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
@@ -27,7 +27,7 @@ id_ID:
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
   SilverStripe\Forms\FormField:
-    NONE: tidak ada
+    NONE: 'tidak ada'
   SilverStripe\Forms\GridField\GridField:
     Add: 'Tambah {name}'
     CSVEXPORT: 'Ekspor ke CSV'
@@ -58,17 +58,17 @@ id_ID:
     Save: Simpan
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Jumlah
-    FIELDLABELCURRENCY: Mata Uang
+    FIELDLABELCURRENCY: 'Mata Uang'
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'N/A'
+    IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Semua
-    NOANSWER: 'Tidak'
-    YESANSWER: 'Ya'
+    NOANSWER: Tidak
+    YESANSWER: Ya
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'kurang dari semenit'
     TIMEDIFFAGO: '{difference} yang lalu'
@@ -99,7 +99,7 @@ id_ID:
     NoRoles: 'Tidak ada peran'
     Parent: 'Kelompok Induk'
     RolesAddEditLink: 'Kelola peran'
-    Sort: 'Urutkan'
+    Sort: Urutkan
     has_many_Permissions: Perijinan
     many_many_Members: Pengguna
   SilverStripe\Security\LoginAttempt:
@@ -108,7 +108,7 @@ id_ID:
   SilverStripe\Security\Member:
     ADDGROUP: 'Tambah kelompok'
     BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
-    BUTTONLOGIN: 'Masuk'
+    BUTTONLOGIN: Masuk
     BUTTONLOGINOTHER: 'Masuk dengan akun lain'
     BUTTONLOSTPASSWORD: 'Saya lupa kata kuncinya'
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
@@ -124,18 +124,18 @@ id_ID:
     INTERFACELANG: 'Bahasa Antarmuka'
     LOGGEDINAS: 'Anda masuk sebagai {name}.'
     NEWPASSWORD: 'Kata Kunci Baru'
-    PASSWORD: Kata kunci
+    PASSWORD: 'Kata kunci'
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
     SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
-    SURNAME: Nama Belakang
+    SURNAME: 'Nama Belakang'
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
     WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
     YOUROLDPASSWORD: 'Kata kunci lama'
     belongs_many_many_Groups: Kelompok
     db_Locale: 'Lokal Antarmuka'
     db_LockedOutUntil: 'Kunci sampai'
-    db_Password: Kata kunci
+    db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
@@ -163,7 +163,7 @@ id_ID:
     CHANGEPASSWORDHEADER: 'Ganti kata kunci'
     ENTERNEWPASSWORD: 'Mohon isikan kata kunci yang baru.'
     ERRORPASSWORDPERMISSION: 'Anda harus masuk untuk bisa mengganti kata kunci!'
-    LOGIN: 'Masuk'
+    LOGIN: Masuk
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
     NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'

@@ -1,7 +1,7 @@
 es:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
-    YESANSWER: 'Sí'
+    YESANSWER: Sí
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'No hay opciones disponibles'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -85,7 +85,7 @@ es:
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
     NOANSWER: 'No'
-    YESANSWER: 'Sí'
+    YESANSWER: Sí
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} día'
@@ -128,7 +128,7 @@ es:
     AddRole: 'Agregar un rol para este grupo'
     Code: 'Código de grupo'
     DefaultGroupTitleAdministrators: Administradores
-    DefaultGroupTitleContentAuthors: 'Editores'
+    DefaultGroupTitleContentAuthors: Editores
     Description: Descripción
     GroupReminder: 'Si Ud elige un grupo padre, este grupo tomará todos sus roles'
     HierarchyPermsError: 'No se puede asignar permisos privilegiados al grupo "% s"  (requiere acceso de administrador)'
@@ -169,7 +169,7 @@ es:
     ERRORNEWPASSWORD: 'Ha introducido su nueva contraseña de distinta manera, intente de nuevo'
     ERRORPASSWORDNOTMATCH: 'Su contraseña actual no concuerda, por favor intente de nuevo.'
     ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
-    FIRSTNAME: 'Nombre(s)'
+    FIRSTNAME: Nombre(s)
     INTERFACELANG: 'Idioma de la Interfaz'
     KEEPMESIGNEDIN: 'Manténme conectado'
     LOGGEDINAS: 'Estás conectado como {name}.'
@@ -246,7 +246,7 @@ es:
     CHANGEPASSWORDHEADER: 'Modifique su contraseña'
     ENTERNEWPASSWORD: 'Por favor introduzca una nueva contraseña.'
     ERRORPASSWORDPERMISSION: 'Debe iniciar una sesión para poder cambiar su contraseña!'
-    LOGIN: 'Entrar'
+    LOGIN: Entrar
     LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'

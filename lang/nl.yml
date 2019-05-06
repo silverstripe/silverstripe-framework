@@ -22,8 +22,8 @@ nl:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Onbekend
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Geen keuze mogelijk'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -73,7 +73,7 @@ nl:
     CSVEXPORT: 'Exporteer naar CSV'
     CSVIMPORT: 'CSV importeren'
     Filter: Filter
-    FilterBy: 'Filteren'
+    FilterBy: Filteren
     Find: Zoeken
     LinkExisting: 'Koppel een bestaand item'
     NewRecord: 'Nieuw {type}'
@@ -131,8 +131,8 @@ nl:
     SINGULARNAME: 'Data object'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Elke
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} dag'
@@ -165,7 +165,7 @@ nl:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
     LIMITED_TITLE: 'Teveel onderliggende items ({count})'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Validatiefout'
+    DEFAULT_ERROR: Validatiefout
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Voer een gebruikersnaam en wachtwoord in.'
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
@@ -204,25 +204,25 @@ nl:
     ROLESDESCRIPTION: 'Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.<br />Rollen worden automatisch overgenomen van bovenliggende groepen.'
     RolesAddEditLink: 'Rollen beheren'
     SINGULARNAME: Groep
-    Sort: 'Sorteer-richting'
+    Sort: Sorteer-richting
     has_many_Permissions: Rechten
     many_many_Members: Leden
   SilverStripe\Security\LoginAttempt:
     Email: 'E-mailadres '
     EmailHashed: 'E-mailadres (versleuteld)'
     IP: 'IP adres'
-    PLURALNAME: 'Inlogpogingen'
+    PLURALNAME: Inlogpogingen
     PLURALS:
       one: 'Een inlogpoging'
       other: '{count} inlogpogingen'
-    SINGULARNAME: 'Inlogpogingen'
+    SINGULARNAME: Inlogpogingen
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
-    BUTTONLOGIN: 'Inloggen'
+    BUTTONLOGIN: Inloggen
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
-    BUTTONLOGOUT: 'Uitloggen'
+    BUTTONLOGOUT: Uitloggen
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
     CONFIRMPASSWORD: 'Bevestig wachtwoord'
@@ -235,7 +235,7 @@ nl:
     ERRORNEWPASSWORD: 'De nieuwe wachtwoorden komen niet overeen, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord is niet correct, probeer het nogmaals'
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
-    FIRSTNAME: 'Voornaam'
+    FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
     KEEPMESIGNEDIN: 'Houd mij ingelogd'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
@@ -261,21 +261,21 @@ nl:
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
-    AUTHENTICATORNAME: 'Inlogformulier'
+    AUTHENTICATORNAME: Inlogformulier
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten'
     BUTTONLOGIN: 'Opnieuw inloggen'
-    BUTTONLOGOUT: 'Uitloggen'
+    BUTTONLOGOUT: Uitloggen
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'E-mail & wachtwoord'
   SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Gebruikerswachtwoorden'
+    PLURALNAME: Gebruikerswachtwoorden
     PLURALS:
       one: 'Een gebruikerswachtwoord'
       other: '{count} Gebruikerswachtwoorden'
-    SINGULARNAME: 'Gebruikerswachtwoord'
+    SINGULARNAME: Gebruikerswachtwoord
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
     PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
@@ -283,13 +283,13 @@ nl:
   SilverStripe\Security\Permission:
     AdminGroup: Beheerder
     CMS_ACCESS_CATEGORY: 'CMS toegang'
-    CONTENT_CATEGORY: 'Inhoudsrechten'
+    CONTENT_CATEGORY: Inhoudsrechten
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
     PERMISSIONS_CATEGORY: 'Rollen en toegangsrechten'
     PLURALNAME: Rechten
     PLURALS:
-      one: 'Machtiging'
+      one: Machtiging
       other: '{count} rechten'
     SINGULARNAME: Machtiging
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
@@ -312,7 +312,7 @@ nl:
       one: 'Een permissiecode'
       other: '{count} permissiecodes'
     PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
-    SINGULARNAME: 'Permissiecode'
+    SINGULARNAME: Permissiecode
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Versleutelde logins'
     PLURALS:
@@ -328,10 +328,10 @@ nl:
     ENTERNEWPASSWORD: 'Voer een nieuw wachtwoord in.'
     ERRORPASSWORDPERMISSION: 'U moet ingelogd zijn om uw wachtwoord te kunnen veranderen!'
     LOGIN: 'Meld aan'
-    LOGOUT: 'Uitloggen'
+    LOGOUT: Uitloggen
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
     NOTERESETLINKINVALID: '<p>De reset link is ongeldig of verlopen.</p><p>Je kan <a href="{link1}">hier</a> een nieuwe link aanvragen of het wachtwoord veranderen nadat je bent <a href="{link2}">ingelogd</a>.</p>'
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
-    PASSWORDRESETSENTHEADER: 'Verzonden'
+    PASSWORDRESETSENTHEADER: Verzonden
     PASSWORDRESETSENTTEXT: 'Bedankt! Er is een link verstuurd om uw wachtwoord opnieuw in te stellen (mits het e-mailadres reeds bekend is bij ons).'

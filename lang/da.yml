@@ -22,8 +22,8 @@ da:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Ukendt
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nej'
-    YESANSWER: 'Ja'
+    NOANSWER: Nej
+    YESANSWER: Ja
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Ingen tilgængelige muligheder'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -81,7 +81,7 @@ da:
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} på {name}'
     Print: Print
-    RelationSearch: 'Relationssøgning'
+    RelationSearch: Relationssøgning
     ResetFilter: Nulstil
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Slet
@@ -114,15 +114,15 @@ da:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Indtats venligst et gyldigt tidsformat ({format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Dataobjekter'
+    PLURALNAME: Dataobjekter
     PLURALS:
       one: 'Et dataobjekt'
       other: '{count} dataobjekter'
-    SINGULARNAME: 'Dataobjekt'
+    SINGULARNAME: Dataobjekt
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Enhver
-    NOANSWER: 'Nej'
-    YESANSWER: 'Ja'
+    NOANSWER: Nej
+    YESANSWER: Ja
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} dag'
@@ -153,7 +153,7 @@ da:
     InfiniteLoopNotAllowed: 'Uendeligt løkke fundet i "{type}" hierarkiet. Ændre venligst det overliggende element for at løse dette'
     LIMITED_TITLE: 'For mange underelementer ({count})'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Valideringsfejl'
+    DEFAULT_ERROR: Valideringsfejl
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Indtast venligst et brugernavn og kodeord.'
     ERRORNOTADMIN: 'Den bruger er ikke en administrator.'
@@ -173,9 +173,9 @@ da:
     AddRole: 'Tilføj en rolle for denne gruppe'
     Code: 'Gruppe kode'
     DefaultGroupTitleAdministrators: Administratorer
-    DefaultGroupTitleContentAuthors: 'Indholdsforfattere'
+    DefaultGroupTitleContentAuthors: Indholdsforfattere
     Description: Beskrivelse
-    GROUPNAME: 'Gruppenavn'
+    GROUPNAME: Gruppenavn
     GroupReminder: 'Hvis du vælger en overliggende gruppe, får denne gruppe alle dens roller'
     HierarchyPermsError: 'Kan ikke tildele overliggende gruppe "{group}" med fortrinsrettigheder (kræver ADMIN adgang)'
     Locked: 'Låst?'
@@ -192,14 +192,14 @@ da:
     ROLESDESCRIPTION: 'Roller er et prædefineret sæt af rettigheder, som kan tildeles grupper.<br />De bliver nedarvet fra en overliggende grupper hvis krævet.'
     RolesAddEditLink: 'Administrer roller'
     SINGULARNAME: Gruppe
-    Sort: 'Sortering'
+    Sort: Sortering
     has_many_Permissions: Rettigheder
     many_many_Members: Brugere
   SilverStripe\Security\LoginAttempt:
     Email: 'Email adresse'
     EmailHashed: 'Email adresse (hashed)'
     IP: 'IP addresse'
-    PLURALNAME: 'Loginforsøg'
+    PLURALNAME: Loginforsøg
     PLURALS:
       one: 'Et loginforsøg'
       other: '{count} loginforsøg'
@@ -223,7 +223,7 @@ da:
     ERRORNEWPASSWORD: 'Du har indtastet dit nye kodeord forskelligt, forsøg igen'
     ERRORPASSWORDNOTMATCH: 'Dit nuværende kodeord matcher ikke, forsøg venligst igen'
     ERRORWRONGCRED: 'De indtastede værdier ser ikke ud til at være korrekte. Forsøg venligst igen.'
-    FIRSTNAME: 'Fornavn'
+    FIRSTNAME: Fornavn
     INTERFACELANG: 'Sprog i brugerfladen'
     KEEPMESIGNEDIN: 'Hold mig logget ind'
     LOGGEDINAS: 'Du er logget ind som {name}.'
@@ -247,7 +247,7 @@ da:
     db_Locale: 'Sprog i brugerfladen'
     db_LockedOutUntil: 'Låst ude indtil'
     db_Password: Kodeord
-    db_PasswordExpiry: 'Kodeordsudløbsdato'
+    db_PasswordExpiry: Kodeordsudløbsdato
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS bruger loginform'
     BUTTONFORGOTPASSWORD: 'Glemt kodeord'
@@ -271,7 +271,7 @@ da:
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Adgang'
-    CONTENT_CATEGORY: 'Indholdsrettigheder'
+    CONTENT_CATEGORY: Indholdsrettigheder
     FULLADMINRIGHTS: 'Fuld administrator rettighed'
     FULLADMINRIGHTS_HELP: 'Indebærer og overskriver alle andre tildelte rettigheder.'
     PERMISSIONS_CATEGORY: 'Roller og adgangsrettigheder'
