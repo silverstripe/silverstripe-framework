@@ -361,6 +361,7 @@ class DataQuery
                 // don't touch functions in the ORDER BY or public function calls
                 // selected as fields
                 if (strpos($k, '(') !== false) {
+                    $i++;
                     continue;
                 }
 
@@ -372,7 +373,7 @@ class DataQuery
                     if (isset($originalSelect[$col])) {
                         $query->selectField($originalSelect[$col], $col);
                     }
-
+                    $i++;
                     continue;
                 }
 
