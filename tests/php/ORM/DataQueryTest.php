@@ -308,6 +308,14 @@ class DataQueryTest extends SapphireTest
             true
         );
         $query->sort('SortOrder', 'ASC', false);
+        $query->sort(
+            sprintf(
+                '(case when "Title" = %s then 0 else 1 end)',
+                DB::get_conn()->quoteString('Fourth')
+            ),
+            'DESC',
+            false
+        );
         $this->assertEquals(
             $query->execute()->column('Title'),
             $query->column('Title')

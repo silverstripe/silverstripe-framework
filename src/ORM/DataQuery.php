@@ -354,14 +354,12 @@ class DataQuery
     {
         if ($orderby = $query->getOrderBy()) {
             $newOrderby = array();
-            $i = 0;
             foreach ($orderby as $k => $dir) {
                 $newOrderby[$k] = $dir;
 
                 // don't touch functions in the ORDER BY or public function calls
                 // selected as fields
                 if (strpos($k, '(') !== false) {
-                    $i++;
                     continue;
                 }
 
@@ -373,7 +371,6 @@ class DataQuery
                     if (isset($originalSelect[$col])) {
                         $query->selectField($originalSelect[$col], $col);
                     }
-                    $i++;
                     continue;
                 }
 
@@ -403,10 +400,15 @@ class DataQuery
                     if (!in_array($qualCol, $query->getSelect())) {
                         unset($newOrderby[$k]);
 
-                        $newOrderby["\"_SortColumn$i\""] = $dir;
-                        $query->selectField($qualCol, "_SortColumn$i");
+                        // Find the first free "_SortColumnX" slot
+                        // and assign it to $key
+                        $i = 0;
+                        while (isset($orderby[$key = "\"_SortColumn$i\""])) {
+                            ++$i;
+                        }
 
-                        $i++;
+                        $newOrderby[$key] = $dir;
+                        $query->selectField($qualCol, "_SortColumn$i");
                     }
                 }
             }
