@@ -1609,9 +1609,11 @@ class FormField extends RequestHandler
      */
     public function getSchemaValidation()
     {
+        $validationList = [];
         if ($this->Required()) {
-            return [ 'required' => true ];
+            $validationList['required'] = true;
         }
-        return [];
+        $this->extend('updateSchemaValidation', $validationList);
+        return $validationList;
     }
 }
