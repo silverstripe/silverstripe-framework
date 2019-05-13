@@ -52,6 +52,15 @@ matrix:
         - DB=MYSQL
         - PHPUNIT_TEST=framework
 
+    - php: 7.4snapshot
+      env:
+        - DB=MYSQL
+        - PHPUNIT_TEST=framework
+      addons:
+        apt:
+          packages:
+            - libonig-dev
+
 before_script:
 # Extra $PATH
   - export PATH=~/.composer/vendor/bin:$PATH
