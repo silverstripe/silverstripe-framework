@@ -8,6 +8,7 @@ use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
@@ -100,7 +101,7 @@ class TestSession
             $url,
             null,
             $session ?: $this->session,
-            null,
+            'GET',
             null,
             $headers,
             $cookies ?: $this->cookies
@@ -123,6 +124,7 @@ class TestSession
      * @param string $body
      * @param array $cookies
      * @return HTTPResponse
+     * @throws HTTPResponse_Exception
      */
     public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null)
     {
@@ -135,7 +137,7 @@ class TestSession
             $url,
             $data,
             $session ?: $this->session,
-            null,
+            'POST',
             $body,
             $headers,
             $cookies ?: $this->cookies
@@ -144,6 +146,47 @@ class TestSession
         if (!$this->lastResponse) {
             user_error("Director::test($url) returned null", E_USER_WARNING);
         }
+        return $this->lastResponse;
+    }
+
+    /**
+     * Submit a request of any type
+     *
+     * @uses Director::test()
+     * @param string $method
+     * @param string $url
+     * @param array $data
+     * @param array $headers
+     * @param Session $session
+     * @param string $body
+     * @param array $cookies
+     * @return HTTPResponse
+     * @throws HTTPResponse_Exception
+     */
+    public function sendRequest($method, $url, $data, $headers = null, $session = null, $body = null, $cookies = null)
+    {
+        $this->extend('updateRequestURL', $method, $url, $data, $headers, $session, $body, $cookies);
+
+        $headers = (array) $headers;
+        if ($this->lastUrl && !isset($headers['Referer'])) {
+            $headers['Referer'] = $this->lastUrl;
+        }
+
+        $this->lastResponse = Director::test(
+            $url,
+            $data,
+            $session ?: $this->session,
+            $method,
+            $body,
+            $headers,
+            $cookies ?: $this->cookies
+        );
+
+        $this->lastUrl = $url;
+        if (!$this->lastResponse) {
+            user_error("Director::test($url) returned null", E_USER_WARNING);
+        }
+
         return $this->lastResponse;
     }
 
