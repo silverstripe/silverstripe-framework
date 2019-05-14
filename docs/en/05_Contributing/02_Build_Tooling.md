@@ -39,7 +39,7 @@ yarn
 
 ## The Basics: ES6, Webpack and Babel
 
-[ECMAScript 6](https://github.com/lukehoban/es6features](https://github.com/lukehoban/es6features) (ES6)
+[ECMAScript 6](https://github.com/lukehoban/es6features) (ES6)
 is the newest version of the ECMAScript standard. It has some great new
 features, but the browser support is still patchy, so we use Babel to transform ES6 source
 files back to ES5 files for distribution. 
