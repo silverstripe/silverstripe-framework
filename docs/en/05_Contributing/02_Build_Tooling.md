@@ -57,7 +57,7 @@ Babel to transform our JavaScript in two ways.
 ## Build Commands
 
 The `script` property of a `package.json` file can be used to define command line 
-[scripts](https://docs.npmjs.com/misc/scripts](https://docs.npmjs.com/misc/scripts).
+[scripts](https://docs.npmjs.com/misc/scripts).
 A nice thing about running commands from an npm script is binaries located in
 `node_modules/.bin/` are temporally added to your `$PATH`. This means we can use dependencies
 defined in `package.json` for things like compiling JavaScript and SCSS, and not require
