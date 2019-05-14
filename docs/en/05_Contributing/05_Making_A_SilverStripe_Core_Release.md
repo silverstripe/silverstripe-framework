@@ -113,7 +113,9 @@ is available, or within a reasonable period of time of such a release.
    * Use the [CVSS Calculator](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator) to determine the issue severity
    * Once the issue is confirmed, [request a CVE identifier](https://cveform.mitre.org/) under the security@silverstripe.org contact email (see "Acknowledgement and disclosure").
    * Once a CVE has been assigned, respond to issue reporter and add it to the Github issue 
-   * Clarify who picks up owns the issue resolution (assign in Github)
+   * Clarify who picks up and owns the issue (assign in Github).
+     The owner can be separate from the developer resolving the issue,
+     their primary responsibility is to ensure the issue keeps moving through the process correctly.
 
 ### When developing a fix
 
@@ -148,6 +150,9 @@ is available, or within a reasonable period of time of such a release.
 
    * Publish silverstripe.org security release page
    * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
+   * File a [CVE Publication Request](https://cveform.mitre.org/), and add a link to the security release
+     through the "Link to the advisory" field. Note on the security issue thread
+     that you've requested publication (to avoid double ups)
    * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
 
 
@@ -202,6 +207,24 @@ Note:
 It's important that you re-run `satis build` step after EVERY change that is pushed upstream; E.g. between
 each release, if making multiple releases.
 </div>
+
+### Detailed CVE and CVSS Guidance
+
+ * In the [CVE Request Form](https://cveform.mitre.org/), we follow certain conventions on fields:
+   * Request with the `security@silverstripe.org` group email
+   * **Vendor of the product(s):** SilverStripe
+   * **Affected product(s)/code base - Product:** Composer module name (e.g. `silverstripe/framework`).
+     Indirectly affected dependencies of the module should not be listed here.
+   * **Affected product(s)/code base - Version:** Use Composer constraint notation,
+     with one entry per major release line.
+     Example for an issue affecting all framework releases: First line `^3.0`, second line `^4.0`.
+     We don't know the target release version at this point, so can't set an upper constraint yet.
+     It should include all affected versions, including any unsupported release lines.
+   * **Affected component(s):** E.g. ORM, Template layer
+   * **Suggested description of the vulnerability:** Keep this short, usually the issue title only.
+     We want to retain control over editing the description in our own systems without going
+     through lengthy CVE change processes.
+   * **Reference(s):** Leave this blank. We'll send through a "Link to the advisory" as part of the publication request
 
 ## Standard release process
 
