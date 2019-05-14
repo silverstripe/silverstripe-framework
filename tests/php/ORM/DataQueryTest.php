@@ -296,6 +296,32 @@ class DataQueryTest extends SapphireTest
         static::resetDBSchema(true);
     }
 
+    public function testSurrogateFieldSort()
+    {
+        $query = new DataQuery(DataQueryTest\ObjectE::class);
+        $query->sort(
+            sprintf(
+                '(case when "Title" = %s then 1 else 0 end)',
+                DB::get_conn()->quoteString('Second')
+            ),
+            'DESC',
+            true
+        );
+        $query->sort('SortOrder', 'ASC', false);
+        $query->sort(
+            sprintf(
+                '(case when "Title" = %s then 0 else 1 end)',
+                DB::get_conn()->quoteString('Fourth')
+            ),
+            'DESC',
+            false
+        );
+        $this->assertEquals(
+            $query->execute()->column('Title'),
+            $query->column('Title')
+        );
+    }
+
     public function testComparisonClauseDateStartsWith()
     {
         DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
