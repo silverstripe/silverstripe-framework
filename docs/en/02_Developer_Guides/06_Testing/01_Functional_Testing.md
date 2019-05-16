@@ -24,6 +24,18 @@ $page = $this->post($url);
 Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
 of the response.
 
+<div class="notice" markdown="1">
+**Compatibility Notice:** Previous versions of SilverStripe would send a GET request if `post()` was called with no POST variables supplied in the second argument.
+SilverStripe 4.6 and later always sends a POST request for consistency.
+</div>
+
+## Other Requests
+```php
+$page = $this->sendRequest('PUT', $url);
+```
+
+Performs a request on $url with the HTTP method provided (useful for PUT, PATCH, DELETE, etc.). This also changes the current page to the value of the response.
+
 ## Submit
 
 
