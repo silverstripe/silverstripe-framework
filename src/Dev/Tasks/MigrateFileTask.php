@@ -7,8 +7,9 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
 use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
-use SilverStripe\Assets\FileMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\FileMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Storage\FileHashingService;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
@@ -45,6 +46,8 @@ class MigrateFileTask extends BuildTask
 
         $args = $request->getVars();
         $this->validateArgs($args);
+
+        Injector::inst()->get(FileHashingService::class)->enableCache();
 
         $subtasks = !empty($args['only']) ? explode(',', $args['only']) : $this->defaultSubtasks;
 
