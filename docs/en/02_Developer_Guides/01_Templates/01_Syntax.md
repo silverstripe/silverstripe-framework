@@ -168,7 +168,7 @@ Conditionals can also provide the `else` case.
 
 ```ss
 <% if $MyDinner == "quiche" %>
-    Real men don't eat quiche
+    I don't like quiche
 <% else_if $MyDinner == $YourDinner %>
     We both have good taste
 <% else %>
