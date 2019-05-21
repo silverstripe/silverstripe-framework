@@ -27,9 +27,17 @@ Release dates are usually not published prior to the release, but you can get a 
 reviewing the release milestone on github.com. Releases will be
 announced on the ["releases" forum category](https://forum.silverstripe.org/c/releases).
 
-## Release Numbering
+## Release numbering {#release-numbering}
 
 SilverStripe follows [Semantic Versioning](http://semver.org).
+
+All SilverStripe modules (including silverstripe/framework) may have patch releases created at any time, and will
+not necessarily match other core module patch release numbers. For example, your project may be using
+silverstripe/cms 4.3.1 with silverstripe/versioned 4.3.9.
+
+All SilverStripe recipes are released in lock step with each other. For example, silverstripe/installer 4.3.1 will
+contain silverstripe/recipe-cms 4.3.1 and silverstripe/recipe-core 4.3.1. These recipes may contain various patch
+versions of its modules within the same minor release line (4.3 in this example).
 
 ## Supported versions {#supported-versions}
 
