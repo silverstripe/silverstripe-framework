@@ -125,6 +125,8 @@ class MigrateFileTask extends BuildTask
                 ->setLogger($this->logger)
                 ->run($this->getStore());
         }
+
+        $this->logger->info("Done!");
     }
 
     public function getDescription()
