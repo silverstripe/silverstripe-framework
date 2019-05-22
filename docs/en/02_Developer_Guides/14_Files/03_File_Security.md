@@ -23,7 +23,7 @@ Versioning stage:
  
 Access restrictions:
 
- * "Unprotected file" (default): A file without access restrictions
+ * "Unprotected file" (default): A file without access restrictions.
  * "Protected file": A file with access restrictions.
    Note that draft files are always protected, and even published files
    can be protected if they have access restrictions.
@@ -35,10 +35,10 @@ for example `canView()` (see [permissions](/developer_guides/security/permission
 
 The permission model defines the following actions:
 
- * View: Access file metadata in the database
- * Edit: Edit file metadata as well as replacing the file content
- * Create: Create file metadata and upload file content
- * Delete: Delete file metadata and the file content
+ * View: Access file metadata in the database.
+ * Edit: Edit file metadata as well as replacing the file content.
+ * Create: Create file metadata and upload file content.
+ * Delete: Delete file metadata and the file content.
  * Download: Access the file content, but not the file metadata.
    Usually treated the same as "View".
 
@@ -48,7 +48,7 @@ There's a few rules guiding their access, in descending order of priority:
    They bypass any SilverStripe permission checks (served directly by the webserver). 
  * Access can be restricted by custom `can*()` method implementations on `File`
    (through [extensions](/developer_guides/extending/extensions)).
-   This logic can overrule any further restrictions below.  
+   This logic can overrule any further restrictions below.
  * Users with "Full administrative rights" (`ADMIN` permission code)
    have view and edit access by default, regardless of further restrictions below.
  * Users with "Edit any file" permissions (`FILE_EDIT_ALL` permission code)
