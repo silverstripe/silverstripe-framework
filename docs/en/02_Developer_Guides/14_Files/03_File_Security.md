@@ -59,7 +59,14 @@ Note that even if the permissions above allow access,
 you need to have access to a mechanism to view or edit file information. 
 Most commonly this is through the "Access to Files section" permission.
 Custom implementations (e.g. APIs or custom file viewers) can have
-further restrictions in your project.  
+further restrictions in your project. 
+
+<div class="warning" markdown="1">
+When implenting your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
+existing unprotected files are not retroactively moved to the protected asset store.
+While those new permissions are honoured in the CMS, protected files through custom `canView()`
+can still be downloaded through a public URL until they a `write()` operation is triggered on them.
+</div>  
 
 ## Asset stores
 
