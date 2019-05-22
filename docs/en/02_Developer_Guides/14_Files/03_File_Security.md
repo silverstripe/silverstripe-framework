@@ -32,19 +32,30 @@ Access restrictions:
 
 Like all other objects in SilverStripe, permissions are generally controlled via `can*()` methods,
 for example `canView()` (see [permissions](/developer_guides/security/permissions)).
+
+The permission model defines the following actions:
+
+ * View: Access file metadata in the database
+ * Edit: Edit file metadata as well as replacing the file content
+ * Create: Create file metadata and upload file content
+ * Delete: Delete file metadata and the file content
+ * Download: Access the file content, but not the file metadata.
+   Usually treated the same as "View".
+
 There's a few rules guiding their access, in descending order of priority:
 
- * Published files can be viewed (downloaded) by anyone knowing the URL
- * Access can determined by custom `can*()` method implementations on `File`
+ * Published and unprotected files can be downloaded by anyone knowing the URL.
+   They bypass any SilverStripe permission checks (served directly by the webserver). 
+ * Access can be restricted by custom `can*()` method implementations on `File`
    (through [extensions](/developer_guides/extending/extensions)).
+   This logic can overrule any further restrictions below.  
  * Users with "Full administrative rights" (`ADMIN` permission code)
    have view and edit access by default, regardless of further restrictions below.
  * Users with "Edit any file" permissions (`FILE_EDIT_ALL` permission code)
    have edit access by default, regardless of further restrictions below.
  * View or edit access can be restricted per file or folder through
    an inherited permissions model similar to page content (through [api:SilverStripe\Security\InheritedPermissionsExtension]).
-   There are four types: "Inherit from parent" (default), "Anyone", "Logged-in users",
-   or "Only these groups".
+   There are four types: "Inherit from parent" (default), "Anyone", "Logged-in users", or "Only these groups".
  * Protected files (incl. draft files) allow view/edit access when `File::$non_live_permissions` is satisfied.
    By default, that's configured for anyone with access to any CMS section, or
    the ability to "view draft content".
@@ -65,7 +76,7 @@ further restrictions in your project.
 When implenting your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
 existing unprotected files are not retroactively moved to the protected asset store.
 While those new permissions are honoured in the CMS, protected files through custom `canView()`
-can still be downloaded through a public URL until they a `write()` operation is triggered on them.
+can still be downloaded through a public URL until a `write()` operation is triggered on them.
 </div>  
 
 ## Asset stores
