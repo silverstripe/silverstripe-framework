@@ -2,12 +2,66 @@ summary: Manage access permission to assets
 
 # File Security
 
-## Security overview
+## Overview
 
 File security is an important concept, and is as essential as managing any other piece of data that exists 
 in your system. As pages and dataobjects can be either versioned, or restricted to view by authenticated
 members, it is necessary at times to apply similar logic to any files which are attached to these objects
 in the same way.
+
+## Definitions
+
+There's two dimensions in which to classify how a file can be accessed.
+
+Versioning stage:
+
+ * "Draft file" (default): A file which hasn't been published (default after upload).
+   A subset of "protected file". See [versioning](/developer_guides/model/versioning).
+ * "Published file": A published file (can be protected by further access restrictions).
+   Files are often published indirectly as part
+   of the objects who own them (see [File Ownership](file_management#ownership)).
+ 
+Access restrictions:
+
+ * "Unprotected file" (default): A file without access restrictions
+ * "Protected file": A file with access restrictions.
+   Note that draft files are always protected, and even published files
+   can be protected if they have access restrictions.
+
+## Permission Model
+
+Like all other objects in SilverStripe, permissions are generally controlled via `can*()` methods,
+for example `canView()` (see [permissions](/developer_guides/security/permissions)).
+There's a few rules guiding their access, in descending order of priority:
+
+ * Published files can be viewed (downloaded) by anyone knowing the URL
+ * Access can determined by custom `can*()` method implementations on `File`
+   (through [extensions](/developer_guides/extending/extensions)).
+ * Users with "Full administrative rights" (`ADMIN` permission code)
+   have view and edit access by default, regardless of further restrictions below.
+ * Users with "Edit any file" permissions (`FILE_EDIT_ALL` permission code)
+   have edit access by default, regardless of further restrictions below.
+ * View or edit access can be restricted per file or folder through
+   an inherited permissions model similar to page content (through [api:SilverStripe\Security\InheritedPermissionsExtension]).
+   There are four types: "Inherit from parent" (default), "Anyone", "Logged-in users",
+   or "Only these groups".
+ * Protected files (incl. draft files) allow view/edit access when `File::$non_live_permissions` is satisfied.
+   By default, that's configured for anyone with access to any CMS section, or
+   the ability to "view draft content".
+ * Protected files need an "access grant" for the current session
+   in order to download the file (see [User access control](#user-access-control)).
+   While you can technically allow viewing or editing a file without granting
+   access to download it, those aspects are usually bundled together by the file viewing logic. 
+
+Access to create or delete files generally aligns with the edit access described above.
+
+Note that even if the permissions above allow access,
+you need to have access to a mechanism to view or edit file information. 
+Most commonly this is through the "Access to Files section" permission.
+Custom implementations (e.g. APIs or custom file viewers) can have
+further restrictions in your project.  
+
+## Asset stores
 
 Out of the box, SilverStripe comes with two asset stores: a public and a protected one.
 Most operations which act on assets work independently of this mechanism,
@@ -25,7 +79,7 @@ $store->setFromString('My protected content', 'my-folder/my-file.jpg', null, nul
 ]);
 ```
 
-## User access control
+## User access control {#user-access-control}
 
 Access for files is granted on a per-session basis, rather than on a per-member basis, via
 whitelisting accessed assets. This means that access to any protected asset must be made prior to the user
