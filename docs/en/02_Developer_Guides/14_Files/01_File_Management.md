@@ -50,6 +50,10 @@ UploadField options include:
  - setFolderName() - Name of folder to upload into
  - getValidator() - Get instance of validator to specify custom validation rules
 
+## File permissions {#permissions}
+
+See [File Security](file_security). 
+
 ## File visibility
 
 In order to ensure that assets are made public you should check the following:
@@ -223,7 +227,7 @@ To support this feature the [api:SilverStripe\Assets\AssetControlExtension] prov
 references to physical files, ensuring published assets are accessible, protecting non-published assets,
 and archiving / deleting assets after the final reference has been deleted.
 
-### Configuring file ownership
+### File ownership {#ownership}
 
 When working with files attached to other versioned dataobjects it is necessary to configure ownership
 of these assets from the parent record. This ensures that whenever a Page (or other record type)
@@ -245,6 +249,8 @@ class Page extends SiteTree
     private static $owns = ['Banner'];
 }
 ```
+
+See [Versioned: Ownership](/developer_guides/model/versioned#ownership) for details.
 
 ### Avoid exclusive relationships
 
