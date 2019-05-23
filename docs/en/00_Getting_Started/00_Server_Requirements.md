@@ -8,11 +8,9 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
-SilverStripe 4 has the following server requirements:
+SilverStripe 4.5 has the following server requirements:
 
- * PHP 5.6, 7.0, 7.1 or 7.2
-   * Note: Although we do our best to support 5.6 and 7.0, they are deprecated and [unsupported by the PHP Project](http://php.net/supported-versions.php).
-     If you are using these, we strongly recommend you to upgrade.
+ * PHP 7.1+ (5.6+ was supported 4.0 - 4.4, we dropped support for these 6 months after PHP EOL'd them)
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * PHP requires a suitable CSPRNG (random number generator) source for generating random tokens, password salts etc. This can be any of the following, and most operating systems will have at least one source available:
    * PHP 7 `random_bytes()`:

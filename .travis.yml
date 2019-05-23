@@ -18,38 +18,22 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 5.6
+    - php: 7.1
       env:
         - DB=PGSQL
         - PHPCS_TEST=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.0
+    - php: 7.2
       env:
         - DB=PGSQL
         - PDO=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.1
-      if: type IN (cron)
-      env:
-        - DB=MYSQL
-        - PHPUNIT_COVERAGE_TEST=framework
-
-    - php: 7.2
-      env:
-        - DB=MYSQL
-        - PDO=1
-        - PHPUNIT_TEST=framework
-
-    - php: 7.0
-      env:
-        - DB=MYSQL
-        - PHPUNIT_TEST=cms
-
     - php: 7.3
       env:
         - DB=MYSQL
+        - PDO=1
         - PHPUNIT_TEST=framework
 
     - php: 7.4snapshot
@@ -60,6 +44,17 @@ matrix:
         apt:
           packages:
             - libonig-dev
+
+    - php: 7.3
+      if: type IN (cron)
+      env:
+        - DB=MYSQL
+        - PHPUNIT_COVERAGE_TEST=framework
+
+    - php: 7.3
+      env:
+        - DB=MYSQL
+        - PHPUNIT_TEST=cms
 
 before_script:
 # Extra $PATH
