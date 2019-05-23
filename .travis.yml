@@ -24,33 +24,37 @@ matrix:
         - PHPCS_TEST=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.1
+    - php: 7.2
       env:
         - DB=PGSQL
         - PDO=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.1
-      if: type IN (cron)
-      env:
-        - DB=MYSQL
-        - PHPUNIT_COVERAGE_TEST=framework
-
-    - php: 7.2
+    - php: 7.3
       env:
         - DB=MYSQL
         - PDO=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.1
+    - php: 7.4snapshot
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=cms
+        - PHPUNIT_TEST=framework
+      addons:
+        apt:
+          packages:
+            - libonig-dev
+
+    - php: 7.3
+      if: type IN (cron)
+      env:
+        - DB=MYSQL
+        - PHPUNIT_COVERAGE_TEST=framework
 
     - php: 7.3
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=framework
+        - PHPUNIT_TEST=cms
 
 before_script:
 # Extra $PATH

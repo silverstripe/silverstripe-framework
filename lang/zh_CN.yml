@@ -1,48 +1,48 @@
 zh_CN:
   SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: '更改密码'
+    SHOWONCLICKTITLE: 更改密码
   SilverStripe\Forms\DropdownField:
     CHOOSE: （选择）
   SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: '（密码相互不匹配）'
-    VALIDATIONPASSWORDSNOTEMPTY: '密码不能空白'
+    VALIDATIONPASSWORDSDONTMATCH: （密码相互不匹配）
+    VALIDATIONPASSWORDSNOTEMPTY: 密码不能空白
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: '请输入用户名和密码'
-    ERRORNOTADMIN: '此用户没有管理员权限。'
-    ERRORNOTREC: '没有找到此用户名/密码'
+    ENTERINFO: 请输入用户名和密码
+    ERRORNOTADMIN: 此用户没有管理员权限。
+    ERRORNOTREC: 没有找到此用户名/密码
   SilverStripe\Security\Group:
-    Code: '团队代码'
-    Locked: '锁定？'
-    Parent: '主团队'
+    Code: 团队代码
+    Locked: 锁定？
+    Parent: 主团队
     has_many_Permissions: 权限
     many_many_Members: 成员
   SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: '更改密码'
-    BUTTONLOGIN: '登录'
-    BUTTONLOGINOTHER: '使用其他帐户登录'
-    BUTTONLOSTPASSWORD: '忘记密码'
-    CONFIRMNEWPASSWORD: '确认新密码'
-    CONFIRMPASSWORD: '确认密码'
+    BUTTONCHANGEPASSWORD: 更改密码
+    BUTTONLOGIN: 登录
+    BUTTONLOGINOTHER: 使用其他帐户登录
+    BUTTONLOSTPASSWORD: 忘记密码
+    CONFIRMNEWPASSWORD: 确认新密码
+    CONFIRMPASSWORD: 确认密码
     EMAIL: 电子邮件
-    ERRORNEWPASSWORD: '您输入了一个不同的新密码，请重新输入'
-    ERRORPASSWORDNOTMATCH: '您当前的密码不正确，请再次输入'
-    FIRSTNAME: '名'
-    INTERFACELANG: '界面语言'
-    NEWPASSWORD: '新密码'
+    ERRORNEWPASSWORD: 您输入了一个不同的新密码，请重新输入
+    ERRORPASSWORDNOTMATCH: 您当前的密码不正确，请再次输入
+    FIRSTNAME: 名
+    INTERFACELANG: 界面语言
+    NEWPASSWORD: 新密码
     PASSWORD: 密码
-    SUBJECTPASSWORDCHANGED: '您的密码已更改'
-    SUBJECTPASSWORDRESET: '重设您的密码链接'
+    SUBJECTPASSWORDCHANGED: 您的密码已更改
+    SUBJECTPASSWORDRESET: 重设您的密码链接
     SURNAME: 姓
-    YOUROLDPASSWORD: '您的旧密码'
+    YOUROLDPASSWORD: 您的旧密码
     belongs_many_many_Groups: 团队
-    db_LockedOutUntil: '禁止直至'
-    db_PasswordExpiry: '密码过期日期'
+    db_LockedOutUntil: 禁止直至
+    db_PasswordExpiry: 密码过期日期
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: '您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。'
-    BUTTONSEND: '给我发送密码重设链接'
-    CHANGEPASSWORDBELOW: '您可在下面更改您的密码'
-    CHANGEPASSWORDHEADER: '更改您的密码'
-    ENTERNEWPASSWORD: '请输入新密码'
-    ERRORPASSWORDPERMISSION: '您必需登录以更改您的密码'
-    NOTEPAGESECURED: '此页是受安全保护的。输入您的登录信息，我们会将您送达。'
-    NOTERESETPASSWORD: '输入您的电邮地址，我们会给您发送一个您可重设密码的链接'
+    ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
+    BUTTONSEND: 给我发送密码重设链接
+    CHANGEPASSWORDBELOW: 您可在下面更改您的密码
+    CHANGEPASSWORDHEADER: 更改您的密码
+    ENTERNEWPASSWORD: 请输入新密码
+    ERRORPASSWORDPERMISSION: 您必需登录以更改您的密码
+    NOTEPAGESECURED: 此页是受安全保护的。输入您的登录信息，我们会将您送达。
+    NOTERESETPASSWORD: 输入您的电邮地址，我们会给您发送一个您可重设密码的链接

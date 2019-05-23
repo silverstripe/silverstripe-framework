@@ -8,7 +8,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
-SilverStripe 4 has the following server requirements:
+SilverStripe 5 has the following server requirements:
 
  * PHP 7.1 or higher
  * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),

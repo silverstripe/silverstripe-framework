@@ -1,7 +1,7 @@
 lt:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
+    NOANSWER: Ne
+    YESANSWER: Taip
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Slaptažodžiai privalo būti bent {min} simbolių ilgio.'
     BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
@@ -37,8 +37,8 @@ lt:
     LinkExisting: 'Pasirinkti esamą'
     NewRecord: 'Naujas {type}'
     NoItemsFound: 'Įrašų nerasta'
-    PRINTEDAT: 'Atspausdinta'
-    PRINTEDBY: 'Atspausdino'
+    PRINTEDAT: Atspausdinta
+    PRINTEDBY: Atspausdino
     PlaceHolder: 'Rasti {type}'
     PlaceHolderWithLabels: 'Rasti {type} pagal {name}'
     Print: Spausdinti
@@ -60,21 +60,21 @@ lt:
     FIELDLABELAMOUNT: Kiekis
     FIELDLABELCURRENCY: Valiuta
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Tuščias'
+    IsNullLabel: Tuščias
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Bet koks
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
+    ANY: 'Bet koks'
+    NOANSWER: Ne
+    YESANSWER: Taip
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mažiau nei min.'
     TIMEDIFFAGO: 'prieš {difference}'
     TIMEDIFFIN: 'po {difference}'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Bet koks
+    ANY: 'Bet koks'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
   SilverStripe\Security\BasicAuth:
@@ -108,20 +108,20 @@ lt:
   SilverStripe\Security\Member:
     ADDGROUP: 'Pridėti grupę'
     BUTTONCHANGEPASSWORD: 'Pakeisti slaptažodį'
-    BUTTONLOGIN: 'Prisijungti'
+    BUTTONLOGIN: Prisijungti
     BUTTONLOGINOTHER: 'Prisijungti kitu vardu'
     BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
     CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
-    EMAIL: E. paštas
+    EMAIL: 'E. paštas'
     EMPTYNEWPASSWORD: 'Naujas slaptažodis negali būti tuščias, bandykite iš naujo'
     ENTEREMAIL: 'Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą.'
     ERRORLOCKEDOUT2: 'Jūsų paskyra laikinai sustabdyta dėl per didelio klaidingų bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau {count} min. laikotarpyje.'
     ERRORNEWPASSWORD: 'Nesutampa naujas slaptažodis, bandykite dar kartą'
     ERRORPASSWORDNOTMATCH: 'Blogas senas slaptažodis, bandykite dar kartą'
     ERRORWRONGCRED: 'Pateikti duomenys blogi, bandykite dar kartą.'
-    FIRSTNAME: 'Vardas'
-    INTERFACELANG: 'Kalba'
+    FIRSTNAME: Vardas
+    INTERFACELANG: Kalba
     LOGGEDINAS: 'Prisijungėte kaip {name}.'
     NEWPASSWORD: 'Naujas slaptažodis'
     PASSWORD: Slaptažodis
@@ -164,7 +164,7 @@ lt:
     CHANGEPASSWORDHEADER: 'Pasikeiskite savo slaptažodį'
     ENTERNEWPASSWORD: 'Įveskite naują slaptažodį.'
     ERRORPASSWORDPERMISSION: 'Norėdami pakeisti savo slaptažodį, turite būti prisijungęs!'
-    LOGIN: 'Prisijungti'
+    LOGIN: Prisijungti
     LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
     NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'

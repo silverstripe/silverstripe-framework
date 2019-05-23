@@ -35,14 +35,14 @@ nb:
     PRINTEDBY: 'Skrevet ut av'
     PlaceHolder: 'Finn {type}'
     PlaceHolderWithLabels: 'Finn {type} ved {name}'
-    Print: Skriv ut
-    RelationSearch: 'Relasjonssøk'
+    Print: 'Skriv ut'
+    RelationSearch: Relasjonssøk
     ResetFilter: Tilbakestille
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     EditPermissionsFailure: 'Ikke tilgang til å fjerne oppføringer'
-    UnlinkRelation: Koble fra
+    UnlinkRelation: 'Koble fra'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Opprett
@@ -60,7 +60,7 @@ nb:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Sann eller usann
+    ANY: 'Sann eller usann'
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'mindre enn ett minutt'
     TIMEDIFFAGO: '{difference} siden'
@@ -75,9 +75,9 @@ nb:
     ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
   SilverStripe\Security\Group:
     AddRole: 'Legg til en rolle for denne gruppen'
-    Code: 'Gruppekode'
+    Code: Gruppekode
     DefaultGroupTitleAdministrators: Administratorer
-    DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
+    DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     HierarchyPermsError: 'Kan ikke angi overordnet gruppe "{group}" med administratorrettigheter (krever ADMIN-tilgang)'
@@ -85,11 +85,11 @@ nb:
     NoRoles: 'Ingen roller funnet'
     Parent: 'Overordnet gruppe'
     RolesAddEditLink: 'Administrer roller'
-    Sort: 'Sorteringsrekkefølge'
+    Sort: Sorteringsrekkefølge
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
   SilverStripe\Security\LoginAttempt:
-    IP: 'IP-adresse'
+    IP: IP-adresse
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Legg til en gruppe'
@@ -106,7 +106,7 @@ nb:
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
     ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
-    FIRSTNAME: 'Fornavn'
+    FIRSTNAME: Fornavn
     INTERFACELANG: 'Språk på grensesnitt'
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
@@ -128,7 +128,7 @@ nb:
     TOOSHORT: 'Passordet er for kort, det må være {minimum} eller flere tegn langt'
   SilverStripe\Security\Permission:
     AdminGroup: Administratorer
-    CONTENT_CATEGORY: 'Innholdstillatelser'
+    CONTENT_CATEGORY: Innholdstillatelser
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
     UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'

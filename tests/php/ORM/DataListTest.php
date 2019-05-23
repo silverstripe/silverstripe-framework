@@ -1853,4 +1853,11 @@ class DataListTest extends SapphireTest
             $list->column("Title")
         );
     }
+
+    public function testShuffle()
+    {
+        $list = Team::get()->shuffle();
+
+        $this->assertSQLContains(DB::get_conn()->random() . ' AS "_SortColumn', $list->dataQuery()->sql());
+    }
 }

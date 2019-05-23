@@ -20,6 +20,7 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
+use SilverStripe\ORM\Tests\DataObjectTest\Fan;
 use SilverStripe\ORM\Tests\DataObjectTest\OtherSubclassWithSameField;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
@@ -2423,21 +2424,5 @@ class DataObjectTest extends SapphireTest
         $do->DynamicField = false;
 
         $do->write();
-    }
-
-    public function testGetFieldMap()
-    {
-        $classes = DataObjectSchema::getFieldMap(DataObject::class, false, ['HTMLVarchar', 'Varchar']);
-
-        $this->assertEquals('Title', $classes[Team::class]['DataObjectTest_Team'][1]);
-        $this->assertEquals(
-            'SubclassDatabaseField',
-            $classes[SubTeam::class]['DataObjectTest_SubTeam'][0]
-        );
-
-        $classes = DataObjectSchema::getFieldMap(SubTeam::class, true, ['HTMLVarchar']);
-
-        $this->assertFalse(isset($classes[Team::class]));
-        $this->assertEquals('DatabaseField', $classes[SubTeam::class]['DataObjectTest_Team'][0]);
     }
 }

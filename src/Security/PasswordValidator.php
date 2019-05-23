@@ -236,7 +236,7 @@ class PasswordValidator
             $error = _t(
                 __CLASS__ . '.TOOSHORT',
                 'Password is too short, it must be {minimum} or more characters long',
-                ['minimum' => $this->minLength]
+                ['minimum' => $minLength]
             );
 
             $valid->addError($error, 'bad', 'TOO_SHORT');

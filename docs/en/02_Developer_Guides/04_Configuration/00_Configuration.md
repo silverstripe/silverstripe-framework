@@ -57,7 +57,7 @@ $config = Config::inst()->get('MyClass', 'property');
 Or through the `config()` method on the class.
 
 ```php
-$config = $this->config()->get('property')';
+$config = $this->config()->get('property');
 ```
 
 You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` method.
