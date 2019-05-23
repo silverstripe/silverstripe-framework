@@ -376,6 +376,48 @@ When you have more than one rule for a nested fragment, they're joined like
 That is, the fragment will be included if all Only rules match, except if all Except rules match.
 </div>
 
+## Unit tests
+
+Sometimes, it's necessary to change a configuration value in your unit tests.
+One of the ways to do this is to use the `withConfig` method.
+This is very handy especially when using data providers.
+Example below shows one unit test using a data provider.
+This unit test changes configuration before testing functionality.
+The test will run three times, each run with different configuration value.
+Note that the configuration change is active only within the callback function.
+
+```
+/**
+ * @dataProvider testValuesProvider
+ * @param string $value
+ * @param string $expected
+ */
+public function testConfigValues($value, $expected)
+{
+    $result = Config::withConfig(function(MutableConfigCollectionInterface $config) use ($value) {
+        // update your config
+        $config->set(MyService::class, 'some_setting', $value);
+
+        // your test code goes here and it runs with your changed config
+        return MyService::singleton()->executeSomeFunction();
+    });
+
+    // your config change no longer applies here as it's outside of callback
+
+    // assertions can be done here but also inside the callback function
+    $this->assertEquals($expected, $result);
+}
+
+public function testValuesProvider(): array
+{
+    return [
+        ['test value 1', 'expected value 1'],
+        ['test value 2', 'expected value 2'],
+        ['test value 3', 'expected value 3'],
+    ];
+}
+```
+
 ## API Documentation
 
 * [Config](api:SilverStripe\Core\Config\Config)
