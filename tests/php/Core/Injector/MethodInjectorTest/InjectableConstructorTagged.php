@@ -19,7 +19,7 @@ class InjectableConstructorTagged extends InjectableConstructor implements TestO
      * @param TestDependency $protectedDependency
      * @param array $additionalParams
      * @Injectable
-     * @Inject TestDependency testTag
+     * @Inject(TestDependency,testTag)
      */
     public function __construct(TestDependency $protectedDependency, ...$additionalParams)
     {

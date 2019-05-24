@@ -2,6 +2,7 @@
 namespace SilverStripe\Core\Injector;
 
 use ReflectionMethod;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Parses method reflections and attempts to auro-wire parameters for injection
@@ -32,7 +33,7 @@ class MethodInjector
      */
     public function isMarkedInjectable()
     {
-        return preg_match('/^\s*\*\s*@' . static::TAG_INJECTABLE . '\s*$/m', $this->method->getDocComment()) > 0;
+        return (bool) Config::inst()->get($this->method->getDeclaringClass()->getName(), 'injectable');
     }
 
     public function provideMethodParams(array $providedParams = [])
@@ -60,7 +61,10 @@ class MethodInjector
             // Do we have a specific key for this?
             $key = '';
             foreach ($attributes as $attribute) {
-                if (false !== strpos($class, $attribute['class'])) {
+                // Check if the definition matches the _end_ of the class name
+                $classLength = strlen($attribute['class']);
+
+                if ($attribute['class'] === substr($class, -$classLength)) {
                     $key = '.' . $attribute['key'];
                 }
             }
@@ -77,32 +81,6 @@ class MethodInjector
 
     protected function getInjectorAttributes()
     {
-        $docblock = $this->method->getDocComment();
-
-        preg_match_all('/^\s*\*\s*@' . static::TAG_ATTRIBUTE . '\s(.+)$/m', $docblock, $matches);
-
-        if (!isset($matches[1])) {
-            return [];
-        }
-
-        $attributes = [];
-        foreach ($matches[1] as $definition) {
-            if (false !== ($attribute = $this->parseAttributeDefinition($definition))) {
-                $attributes[] = $attribute;
-            }
-        }
-
-        return $attributes;
-    }
-
-    protected function parseAttributeDefinition($definition)
-    {
-        $parts = explode(' ', $definition);
-
-        if (count($parts) !== 2) {
-            return false;
-        }
-
-        return array_combine(['class', 'key'], $parts);
+        return Config::inst()->get($this->method->getDeclaringClass()->getName(), 'named_injections') ?: [];
     }
 }
