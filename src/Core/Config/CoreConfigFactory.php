@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace SilverStripe\Core\Config;
 
@@ -6,9 +6,13 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
 use SilverStripe\Config\Collections\DeltaConfigCollection;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
+use SilverStripe\Config\Transformer\AnnotationTransformer;
+use SilverStripe\Config\Transformer\AnnotationTransformer\AnnotationDefinitionInterface;
 use SilverStripe\Config\Transformer\PrivateStaticTransformer;
 use SilverStripe\Config\Transformer\YamlTransformer;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\AnnotationTransformer\InjectableDefinition;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Config\Middleware\InheritanceMiddleware;
 use SilverStripe\Core\Environment;
@@ -88,7 +92,8 @@ class CoreConfigFactory
         // Transform
         $config->transform([
             $this->buildStaticTransformer(),
-            $this->buildYamlTransformer()
+            $this->buildYamlTransformer(),
+            $this->buildAnnotationTransformer(),
         ]);
 
         return $config;
@@ -118,11 +123,7 @@ class CoreConfigFactory
      */
     public function buildStaticTransformer()
     {
-        return new PrivateStaticTransformer(function () {
-            return ClassLoader::inst()
-                ->getManifest()
-                ->getClassNames();
-        });
+        return new PrivateStaticTransformer($this->getClassResolver());
     }
 
     /**
@@ -183,5 +184,35 @@ class CoreConfigFactory
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::inst()->getManifest()->moduleExists($module);
             });
+    }
+
+    public function buildAnnotationTransformer(): AnnotationTransformer
+    {
+        return new AnnotationTransformer(
+            $this->getClassResolver(),
+            $this->getAnnotationDefinitions()
+        );
+    }
+
+    /**
+     * @return callable
+     */
+    protected function getClassResolver(): callable
+    {
+        return function () {
+            return ClassLoader::inst()
+                ->getManifest()
+                ->getClassNames();
+        };
+    }
+
+    /**
+     * @return AnnotationDefinitionInterface[]
+     */
+    protected function getAnnotationDefinitions(): array
+    {
+        return array_map(function($className) {
+            return new $className;
+        }, ClassInfo::implementorsOf(AnnotationDefinitionInterface::class));
     }
 }
