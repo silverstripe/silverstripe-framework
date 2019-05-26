@@ -6,7 +6,7 @@ summary: Learn how how data is stored going in and coming out of the ORM and how
 Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [Field](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
+A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -29,21 +29,21 @@ class Player extends DataObject
 
 ## Available Types
 
-*  [Boolean](api:SilverStripe\ORM\FieldType\DBBoolean): A boolean field.
-*  [Currency](api:SilverStripe\ORM\FieldType\DBCurrency): A number with 2 decimal points of precision, designed to store currency values.
-*  [Date](api:SilverStripe\ORM\FieldType\DBDate): A date field
-*  [Decimal](api:SilverStripe\ORM\FieldType\DBDecimal): A decimal number.
-*  [Enum](api:SilverStripe\ORM\FieldType\DBEnum): An enumeration of a set of strings
-*  [HTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText): A variable-length string of up to 2MB, designed to store HTML
-*  [HTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar): A variable-length string of up to 255 characters, designed to store HTML
-*  [Int](api:SilverStripe\ORM\FieldType\DBInt): An integer field.
-*  [Percentage](api:SilverStripe\ORM\FieldType\DBPercentage): A decimal number between 0 and 1 that represents a percentage.
-*  [Datetime](api:SilverStripe\ORM\FieldType\DBDatetime): A date / time field
-*  [Text](api:SilverStripe\ORM\FieldType\DBText): A variable-length string of up to 2MB, designed to store raw text
-*  [Time](api:SilverStripe\ORM\FieldType\DBTime): A time field
-*  [Varchar](api:SilverStripe\ORM\FieldType\DBVarchar): A variable-length string of up to 255 characters, designed to store raw text.
+*  `'Boolean'`: A boolean field (see: [DBBoolean](api:SilverStripe\ORM\FieldType\DBBoolean)).
+*  `'Currency'`: A number with 2 decimal points of precision, designed to store currency values (see: [DBCurrency](api:SilverStripe\ORM\FieldType\DBCurrency)).
+*  `'Date'`: A date field (see: [DBDate](api:SilverStripe\ORM\FieldType\DBDate)).
+*  `'Decimal'`: A decimal number (see: [DBDecimal](api:SilverStripe\ORM\FieldType\DBDecimal)).
+*  `'Enum'`: An enumeration of a set of strings (see: [DBEnum](api:SilverStripe\ORM\FieldType\DBEnum)).
+*  `'HTMLText'`: A variable-length string of up to 2MB, designed to store HTML (see: [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText)).
+*  `'HTMLVarchar'`: A variable-length string of up to 255 characters, designed to store HTML (see: [DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar)).
+*  `'Int'`: An integer field (see: [DBInt](api:SilverStripe\ORM\FieldType\DBInt)).
+*  `'Percentage'`: A decimal number between 0 and 1 that represents a percentage (see: [DBPercentage](api:SilverStripe\ORM\FieldType\DBPercentage)).
+*  `'Datetime'`: A date / time field (see: [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime)).
+*  `'Text'`: A variable-length string of up to 2MB, designed to store raw text (see: [DBText](api:SilverStripe\ORM\FieldType\DBText)).
+*  `'Time'`: A time field (see: [DBTime](api:SilverStripe\ORM\FieldType\DBTime)).
+*  `'Varchar'`: A variable-length string of up to 255 characters, designed to store raw text (see: [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)).
 
-See the [API documentation](api:SilverStripe\ORM\FieldType\DBField) for a full list of available Data Types. You can define your own [Field](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
+See the [API documentation](api:SilverStripe\ORM\FieldType\DBField) for a full list of available Data Types. You can define your own [DBField](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
 
 ## Default Values
 
