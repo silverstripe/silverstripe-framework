@@ -55,7 +55,7 @@ but will no longer be attached to a dataobject anymore, and should be cleaned up
 To disable this, set the following config:
 
 ```yaml
-SilverStripe\Assets\FileMigrationHelper:
+SilverStripe\Assets\Dev\Tasks\FileMigrationHelper:
   delete_invalid_files: false
 ```
 
@@ -113,3 +113,71 @@ Use the following estimates to decide how you will run your file migration:
 | 10000+ | Command Line or contact support | n/a | n/a |
 
 Your exact experience will vary based on your host server, the size of your files and other conditions. If your site is hosted on a managed environement (e.g.: [Common Web Platform](https://www.cwp.govt.nz/service-desk) or [SilverStripe Platform](https://docs.platform.silverstripe.com/support/)), you may not have access to the command line to manually run the migration task. Contact your hosting provider's helpdesk if that's your case.
+
+## Customise the File Migration Task (Advanced)
+
+In some context, you may want to disable some other process when the file migration is running. For example, if you have a module that indexes files when they get modified, you'll probably want to wait until the file migration is done to reindex.
+
+The `MigrateFileTask` exposes 4 extension point that can be use to detect the progress of the migration.
+* `preFileMigration` that gets fired at the start of the task
+* `postFileMigration` that gets fired at the end of the task
+* `preFileMigrationSubtask`  that gets fired at the start of each subtasks
+* `postFileMigrationSubtask` that gets fired at the end of each subtasks.
+
+`preFileMigrationSubtask` and `postFileMigrationSubtask` will provide a single string parameter matching the name of the subtask (e.g.: `move-files`)
+
+### Example migrate file task extension
+```php
+<?php
+
+use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Extension;
+
+class MigrateFileTaskExtension extends Extension
+{
+
+    private static $dependencies = [
+        'logger' => '%$' . LoggerInterface::class . '.quiet',
+    ];
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function preFileMigration()
+    {
+        $this->logger->info('Run some extension code BEFORE the Migrate File Task');
+    }
+
+    public function postFileMigration()
+    {
+        $this->logger->info('Run some extension code AFTER the Migrate File Task');
+    }
+
+    public function preFileMigrationSubtask($subtaskName)
+    {
+        $this->logger->info(sprintf('Run some extension code BEFORE the %s subtask', $subtaskName));
+    }
+
+    public function postFileMigrationSubtask($subtaskName)
+    {
+        $this->logger->info(sprintf('Run some extension code AFTER the %s subtask', $subtaskName));
+    }
+
+}
+```
+
+Add the following snippet to your YML config to enable the extension.
+
+```yaml
+SilverStripe\Dev\Tasks\MigrateFileTask:
+  extensions:
+    - MigrateFileTaskExtension
+```
