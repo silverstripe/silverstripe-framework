@@ -276,6 +276,11 @@ abstract class MultiSelectField extends SelectField
         $field->setSource($this->getSource());
         $field->setReadonly(true);
 
+        // Pass through default items
+        if (!$this->getValueArray() && $this->getDefaultItems()) {
+            $field->setValue($this->getDefaultItems());
+        }
+
         return $field;
     }
 }

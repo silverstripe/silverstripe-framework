@@ -40,7 +40,7 @@
         "symfony/config": "^3.2",
         "symfony/translation": "^2.8",
         "symfony/yaml": "~3.2",
-        "php": ">=5.6.0",
+        "php": ">=7.1.0",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-hash": "*",
@@ -60,6 +60,9 @@
         "psr/container-implementation": "1.0.0"
     },
     "extra": {
+        "branch-alias": {
+            "4.x-dev": "4.5.x-dev"
+        },
         "expose": [
             "client/images",
             "client/styles",

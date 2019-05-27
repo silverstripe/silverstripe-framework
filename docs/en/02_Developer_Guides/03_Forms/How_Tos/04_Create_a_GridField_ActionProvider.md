@@ -22,6 +22,7 @@ below:
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Control\Controller;
 
 class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider 
@@ -176,20 +177,20 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
         }
     }
 
-    public function getTitle($gridField, $record)
+    public function getTitle($gridField, $record, $columnName)
     {
         return _t(__CLASS__ . '.Delete', "Delete");
     }
 
-    public function getGroup($gridField, $record)
+    public function getGroup($gridField, $record, $columnName)
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
 
     public function getExtraData($gridField, $record, $columnName)
     {
-        if ($field) {
-            return $field->getAttributes();
+        if ($gridField) {
+            return $gridField->getAttributes();
         }
 
         return null;

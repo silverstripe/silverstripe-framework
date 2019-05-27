@@ -573,6 +573,18 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
+     * Shuffle the items in this array list
+     *
+     * @return $this
+     */
+    public function shuffle()
+    {
+        shuffle($this->items);
+
+        return $this;
+    }
+
+    /**
      * Returns true if the given column can be used to filter the records.
      *
      * It works by checking the fields available in the first record of the list.

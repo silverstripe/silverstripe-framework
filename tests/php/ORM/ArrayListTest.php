@@ -1236,4 +1236,19 @@ class ArrayListTest extends SapphireTest
         $list->setDataClass(DataObject::class);
         $this->assertEquals(DataObject::class, $list->dataClass());
     }
+
+    public function testShuffle()
+    {
+        $upperLimit = 50;
+
+        $list = new ArrayList(range(1, $upperLimit));
+
+        $list->shuffle();
+
+        for ($i = 1; $i <= $upperLimit; $i++) {
+            $this->assertContains($i, $list);
+        }
+
+        $this->assertNotEquals(range(1, $upperLimit), $list->toArray());
+    }
 }

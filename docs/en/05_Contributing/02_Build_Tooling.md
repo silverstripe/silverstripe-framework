@@ -39,7 +39,7 @@ yarn
 
 ## The Basics: ES6, Webpack and Babel
 
-[ECMAScript 6](https://github.com/lukehoban/es6features](https://github.com/lukehoban/es6features) (ES6)
+[ECMAScript 6](https://github.com/lukehoban/es6features) (ES6)
 is the newest version of the ECMAScript standard. It has some great new
 features, but the browser support is still patchy, so we use Babel to transform ES6 source
 files back to ES5 files for distribution. 
@@ -57,7 +57,7 @@ Babel to transform our JavaScript in two ways.
 ## Build Commands
 
 The `script` property of a `package.json` file can be used to define command line 
-[scripts](https://docs.npmjs.com/misc/scripts](https://docs.npmjs.com/misc/scripts).
+[scripts](https://docs.npmjs.com/misc/scripts).
 A nice thing about running commands from an npm script is binaries located in
 `node_modules/.bin/` are temporally added to your `$PATH`. This means we can use dependencies
 defined in `package.json` for things like compiling JavaScript and SCSS, and not require

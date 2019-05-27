@@ -1134,6 +1134,16 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * Shuffle the datalist using a random function provided by the SQL engine
+     *
+     * @return $this
+     */
+    public function shuffle()
+    {
+        return $this->sort(DB::get_conn()->random());
+    }
+
+    /**
      * Remove every element in this DataList.
      *
      * @return $this
