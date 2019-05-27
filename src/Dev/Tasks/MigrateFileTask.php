@@ -144,6 +144,8 @@ class MigrateFileTask extends BuildTask
             }
         }
 
+        $this->logger->info("Done!");
+
         $this->extend('postFileMigration');
     }
 
