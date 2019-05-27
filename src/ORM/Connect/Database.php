@@ -22,7 +22,17 @@ abstract class Database
 
     const PARTIAL_QUERY = 'partial_query';
     const FULL_QUERY = 'full_query';
+
     /**
+     * To use, call from _config.php
+     * Example:
+     * <code>
+     * Database::setWhitelistQueryArray([
+     *      'Qualmark' => 'partial_query',
+     *      'SELECT "Version" FROM "SiteTree_Live" WHERE "ID" = ?' => 'full_query',
+     * ])
+     * </code>
+     * @internal
      * @var array
      */
     protected static $whitelist_array = [];
@@ -225,17 +235,19 @@ abstract class Database
                 $sql = DB::inline_parameters($sql, $parameters);
             } elseif (strtolower($_REQUEST['showqueries']) === 'whitelist') {
                 $displaySql = false;
-                foreach (static::$whitelist_array as $query => $searchType) {
-                    if (($searchType === static::FULL_QUERY && $query === $sql) ||
-                        ($searchType === static::PARTIAL_QUERY && mb_strpos($sql, $query) !== false)) {
-                        $sql = DB::inline_parameters($sql, $parameters);
-                        $this->displayQuery($this->queryCount, $sql, $endtime);
+                foreach (self::$whitelist_array as $query => $searchType) {
+                    $fullQuery = ($searchType === self::FULL_QUERY && $query === $sql);
+                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql, $query) !== false);
+                    if (!$fullQuery && !$partialQuery) {
+                        continue;
                     }
+                    $sql = DB::inline_parameters($sql, $parameters);
+                    $this->displayQuery($sql, $endtime);
                 }
             }
 
             if ($displaySql) {
-                $this->displayQuery($this->queryCount, $sql, $endtime);
+                $this->displayQuery($sql, $endtime);
             }
 
             // Show a backtrace if ?showqueries=backtrace
@@ -251,13 +263,12 @@ abstract class Database
     /**
      * Display query message
      *
-     * @param int $queryCount
      * @param mixed $query
      * @param float $endtime
      */
-    private function displayQuery($queryCount, $query, $endtime)
+    private function displayQuery($query, $endtime)
     {
-        $queryCount = sprintf("%04d", $queryCount);
+        $queryCount = sprintf("%04d", $this->queryCount);
         Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
     }
 
@@ -265,11 +276,10 @@ abstract class Database
      * Add the sql queries that need to be partially or fully matched
      *
      * @param array $whitelistArray
-     * @return mixed Result of query
      */
     public static function setWhitelistQueryArray($whitelistArray)
     {
-        static::$whitelist_array = $whitelistArray;
+        self::$whitelist_array = $whitelistArray;
     }
 
     /**
