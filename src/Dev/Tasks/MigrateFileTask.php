@@ -56,7 +56,7 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("No file migration helper detected");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info('### Migrating filesystem and database records (move-files)');
+                $this->logger->info("### Migrating filesystem and database records ({$subtask})");
                 $this->logger->info('If the task fails or times out, run it again and it will start where it left off.');
 
                 $migrated = FileMigrationHelper::singleton()->run();
@@ -75,7 +75,7 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("LegacyThumbnailMigrationHelper not found");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info('### Migrating existing thumbnails (move-thumbnails)');
+                $this->logger->info("### Migrating existing thumbnails ({$subtask})");
 
                 $moved = LegacyThumbnailMigrationHelper::singleton()
                     ->setLogger($this->logger)
@@ -97,7 +97,7 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("ImageThumbnailHelper not found");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info('### Generating new CMS UI thumbnails (generate-cms-thumbnails)');
+                $this->logger->info("### Generating new CMS UI thumbnails ({$subtask})");
                 ImageThumbnailHelper::singleton()->run();
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
@@ -112,7 +112,7 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->info('### Fixing folder permissions (fix-folder-permissions)');
+                $this->logger->info("### Fixing folder permissions ({$subtask})");
                 $updated = FixFolderPermissionsHelper::singleton()->run();
 
                 if ($updated > 0) {
@@ -132,7 +132,7 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->info('### Fixing secure-assets (fix-secureassets)');
+                $this->logger->info("### Fixing secure-assets ({$subtask})");
                 $moved = SecureAssetsMigrationHelper::singleton()
                     ->setLogger($this->logger)
                     ->run($this->getStore());
