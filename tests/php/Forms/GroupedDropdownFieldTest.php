@@ -14,16 +14,16 @@ class GroupedDropdownFieldTest extends SapphireTest
         $field = GroupedDropdownField::create(
             'Test',
             'Testing',
-            array(
-            "1" => "One",
-            "Group One" => array(
-                "2" => "Two",
-                "3" => "Three"
-            ),
-            "Group Two" => array(
-                "4" => "Four"
-            )
-            )
+            [
+                "1" => "One",
+                "Group One" => [
+                    "2" => "Two",
+                    "3" => "Three"
+                ],
+                "Group Two" => [
+                    "4" => "Four"
+                ],
+            ]
         );
 
         $this->assertEquals(array("1", "2", "3", "4"), $field->getValidValues());
@@ -58,5 +58,75 @@ class GroupedDropdownFieldTest extends SapphireTest
         $this->assertEquals(array("1"), $field->getDisabledItems());
 
         $this->assertFalse($field->validate($validator));
+    }
+
+    /**
+     * Test that empty-string values are supported by GroupDropdownTest
+     */
+    public function testEmptyString()
+    {
+        // Case A: empty value in the top level of the source
+        $field = GroupedDropdownField::create(
+            'Test',
+            'Testing',
+            [
+                "" => "(Choose A)",
+                "1" => "One",
+                "Group One" => [
+                    "2" => "Two",
+                    "3" => "Three"
+                ],
+                "Group Two" => [
+                    "4" => "Four"
+                ],
+            ]
+        );
+
+        $this->assertRegExp(
+            '/<option value="" selected="selected" >\(Choose A\)<\/option>/',
+            preg_replace('/\s+/', ' ', (string)$field->Field())
+        );
+
+        // Case B: empty value in the nested level of the source
+        $field = GroupedDropdownField::create(
+            'Test',
+            'Testing',
+            [
+                "1" => "One",
+                "Group One" => [
+                    "" => "(Choose B)",
+                    "2" => "Two",
+                    "3" => "Three"
+                ],
+                "Group Two" => [
+                    "4" => "Four"
+                ],
+            ]
+        );
+        $this->assertRegExp(
+            '/<option value="" selected="selected" >\(Choose B\)<\/option>/',
+            preg_replace('/\s+/', ' ', (string)$field->Field())
+        );
+
+        // Case C: setEmptyString
+        $field = GroupedDropdownField::create(
+            'Test',
+            'Testing',
+            [
+                "1" => "One",
+                "Group One" => [
+                    "2" => "Two",
+                    "3" => "Three"
+                ],
+                "Group Two" => [
+                    "4" => "Four"
+                ],
+            ]
+        );
+        $field->setEmptyString('(Choose C)');
+        $this->assertRegExp(
+            '/<option value="" selected="selected" >\(Choose C\)<\/option>/',
+            preg_replace('/\s+/', ' ', (string)$field->Field())
+        );
     }
 }
