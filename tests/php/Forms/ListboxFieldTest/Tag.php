@@ -12,4 +12,8 @@ class Tag extends DataObject implements TestOnly
     private static $belongs_many_many = array(
         'Articles' => Article::class
     );
+
+    private static $db = [
+        'Title' => 'Varchar',
+    ];
 }
