@@ -251,4 +251,38 @@ class ListboxFieldTest extends SapphireTest
             'Does not validate values not within source map'
         );
     }
+
+    public function testFieldWithDefaultItems()
+    {
+        $articleWithTags = $this->objFromFixture(Article::class, 'articlewithtags');
+        $tag1 = $this->objFromFixture(Tag::class, 'tag1');
+        $tag2 = $this->objFromFixture(Tag::class, 'tag2');
+        $tag3 = $this->objFromFixture(Tag::class, 'tag3');
+        $field = new ListboxField("Tags", "Test field", DataObject::get(Tag::class)->map()->toArray());
+        $field->setDefaultItems([$tag1->ID, $tag2->ID]);
+
+
+        $field->setValue(null, $articleWithTags);
+        $field->setDisabledItems(array($tag1->ID, $tag3->ID));
+
+        // Confirm that tag1 and tag2 are selected
+        $p = new CSSContentParser($field->Field());
+        $tag1xml = $p->getByXpath('//option[@value=' . $tag1->ID . ']');
+        $tag2xml = $p->getByXpath('//option[@value=' . $tag2->ID . ']');
+        $tag3xml = $p->getByXpath('//option[@value=' . $tag3->ID . ']');
+        $this->assertEquals('selected', (string)$tag1xml[0]['selected']);
+        $this->assertEquals('selected', (string)$tag2xml[0]['selected']);
+        $this->assertNull($tag3xml[0]['selected']);
+
+        // Confirm that tag1 and tag2 are listed in the readonly variation
+        $p = new CSSContentParser($field->performReadonlyTransformation()->Field());
+        $this->assertEquals(
+            'Tag 1, Tag 2',
+            trim(preg_replace('/\s+/', ' ', $p->getByXpath('//span')[0]))
+        );
+        $this->assertEquals(
+            '1, 2',
+            '' . $p->getByXpath('//input')[0]['value']
+        );
+    }
 }
