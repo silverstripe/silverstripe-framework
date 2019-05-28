@@ -15,6 +15,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
+use \Bramus\Monolog\Formatter\ColoredLineFormatter;
 
 /**
  * Migrates all 3.x file dataobjects to use the new DBFile field.
@@ -51,6 +52,11 @@ class MigrateFileTask extends BuildTask
 
         $this->extend('preFileMigration');
 
+        $this->logger->warn(
+            'Please read https://docs.silverstripe.org/en/4/developer_guides/files/file_migration/ ' .
+            'before running this task.'
+        );
+
         $subtasks = !empty($args['only']) ? explode(',', $args['only']) : $this->defaultSubtasks;
 
         $subtask = 'move-files';
@@ -59,15 +65,23 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("No file migration helper detected");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info("### Migrating filesystem and database records ({$subtask})");
-                $this->logger->info('If the task fails or times out, run it again and it will start where it left off.');
 
-                $migrated = FileMigrationHelper::singleton()->run();
-                if ($migrated) {
-                    $this->logger->info("{$migrated} File DataObjects upgraded");
-                } else {
-                    $this->logger->info("No File DataObjects need upgrading");
-                }
+                $this->logger->notice("######################################################");
+                $this->logger->notice("Migrating filesystem and database records ({$subtask})");
+                $this->logger->notice("######################################################");
+
+                FileMigrationHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
+
+                // TODO Split file migration helper into two tasks,
+                // and report back on their process counts consistently here
+                // if ($count) {
+                //     $this->logger->info("{$count} File objects upgraded");
+                // } else {
+                //     $this->logger->info("No File objects needed upgrading");
+                // }
+
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
         }
@@ -78,16 +92,19 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("LegacyThumbnailMigrationHelper not found");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info("### Migrating existing thumbnails ({$subtask})");
 
-                $moved = LegacyThumbnailMigrationHelper::singleton()
+                $this->logger->notice("#############################################################");
+                $this->logger->notice("Migrating existing thumbnails to new file format ({$subtask})");
+                $this->logger->notice("#############################################################");
+
+                $paths = LegacyThumbnailMigrationHelper::singleton()
                     ->setLogger($this->logger)
                     ->run($this->getStore());
 
-                if ($moved) {
-                    $this->logger->info(sprintf("%d thumbnails moved", count($moved)));
+                if ($paths) {
+                    $this->logger->info(sprintf("%d thumbnails moved", count($paths)));
                 } else {
-                    $this->logger->info("No thumbnails moved");
+                    $this->logger->info("No thumbnails needed to be moved");
                 }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
@@ -100,8 +117,21 @@ class MigrateFileTask extends BuildTask
                 $this->logger->error("ImageThumbnailHelper not found");
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
-                $this->logger->info("### Generating new CMS UI thumbnails ({$subtask})");
-                ImageThumbnailHelper::singleton()->run();
+
+                $this->logger->notice("#############################################");
+                $this->logger->notice("Generating new CMS UI thumbnails ({$subtask})");
+                $this->logger->notice("#############################################");
+
+                $count = ImageThumbnailHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
+
+                if ($count > 0) {
+                    $this->logger->info("Created {$count} CMS UI thumbnails");
+                } else {
+                    $this->logger->info("No CMS UI thumbnails needed to be created");
+                }
+
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
         }
@@ -113,11 +143,17 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->info("### Fixing folder permissions ({$subtask})");
-                $updated = FixFolderPermissionsHelper::singleton()->run();
+                $this->logger->notice("####################################################");
+                $this->logger->notice("Fixing secure-assets folder permissions ({$subtask})");
+                $this->logger->notice("####################################################");
+                $this->logger->debug('Only required if the 3.x project included silverstripe/secure-assets');
 
-                if ($updated > 0) {
-                    $this->logger->info("Repaired {$updated} folders with broken CanViewType settings");
+                $count = FixFolderPermissionsHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
+
+                if ($count > 0) {
+                    $this->logger->info("Repaired {$count} folders with broken CanViewType settings");
                 } else {
                     $this->logger->info("No folders required fixes");
                 }
@@ -133,10 +169,20 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->info("### Fixing secure-assets ({$subtask})");
-                $moved = SecureAssetsMigrationHelper::singleton()
+                $this->logger->notice("#####################################################");
+                $this->logger->notice("Fixing secure-assets folder restrictions ({$subtask})");
+                $this->logger->notice("#####################################################");
+                $this->logger->debug('Only required if the 3.x project included silverstripe/secure-assets');
+
+                $paths = SecureAssetsMigrationHelper::singleton()
                     ->setLogger($this->logger)
                     ->run($this->getStore());
+
+                if (count($paths) > 0) {
+                    $this->logger->info(sprintf("Repaired %d folders broken folder restrictions", count($paths)));
+                } else {
+                    $this->logger->info("No folders required fixes");
+                }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
@@ -151,9 +197,8 @@ class MigrateFileTask extends BuildTask
     {
         return <<<TXT
 Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0.
-Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI.
-Fixes file permissions.
-If the task fails or times out, run it again and it will start where it left off.
+Moves existing thumbnails, and generates new thumbnail sizes for the CMS UI. Fixes file permissions.
+If the task fails or times out, run it again and if possible the tasks will start where they left off.
 You need to flush your cache after running this task via CLI.
 See https://docs.silverstripe.org/en/4/developer_guides/files/file_migration/.
 TXT;
@@ -198,13 +243,26 @@ TXT;
      */
     protected function addLogHandlers()
     {
-        if ($logger = Injector::inst()->get(LoggerInterface::class)) {
-            if (Director::is_cli()) {
-                $logger->pushHandler(new StreamHandler('php://stdout'));
-                $logger->pushHandler(new StreamHandler('php://stderr', Logger::WARNING));
-            } else {
-                $logger->pushHandler(new PreformattedEchoHandler());
-            }
+        // Create a default logger with a custom name (less misleading than "error-log")
+        $logger = Injector::inst()->create(LoggerInterface::class, 'log');
+
+        if (Director::is_cli()) {
+            $formatter = new ColoredLineFormatter();
+            $formatter->ignoreEmptyContextAndExtra();
+
+            // Don't double process WARNING or higher levels in other handlers (bubble=false)
+            $errorHandler = new StreamHandler('php://stderr', Logger::ERROR, false);
+            $errorHandler->setFormatter($formatter);
+
+            $standardHandler = new StreamHandler('php://stdout');
+            $standardHandler->setFormatter($formatter);
+
+            $logger->pushHandler($standardHandler);
+            $logger->pushHandler($errorHandler);
+        } else {
+            $logger->pushHandler(new PreformattedEchoHandler());
         }
+
+        $this->logger = $logger;
     }
 }
