@@ -32,7 +32,6 @@ abstract class Database
      *      'SELECT "Version" FROM "SiteTree_Live" WHERE "ID" = ?' => 'full_query',
      * ])
      * </code>
-     * @internal
      * @var array
      */
     protected static $whitelist_array = [];
@@ -266,7 +265,7 @@ abstract class Database
      * @param mixed $query
      * @param float $endtime
      */
-    private function displayQuery($query, $endtime)
+    protected function displayQuery($query, $endtime)
     {
         $queryCount = sprintf("%04d", $this->queryCount);
         Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
@@ -280,6 +279,16 @@ abstract class Database
     public static function setWhitelistQueryArray($whitelistArray)
     {
         self::$whitelist_array = $whitelistArray;
+    }
+
+    /**
+     * Get the sql queries that need to be partially or fully matched
+     *
+     * @return array
+     */
+    public static function getWhitelistQueryArray()
+    {
+        return self::$whitelist_array;
     }
 
     /**
