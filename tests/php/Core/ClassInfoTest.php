@@ -54,6 +54,10 @@ class ClassInfoTest extends SapphireTest
             'silverstripe\\core\\tests\\classinfotest\\childclass' => ChildClass::class,
             'silverstripe\\core\\tests\\classinfotest\\grandchildclass' => GrandChildClass::class,
         ];
+        $subclassesWithoutBase = [
+            'silverstripe\\core\\tests\\classinfotest\\childclass' => ChildClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\grandchildclass' => GrandChildClass::class,
+        ];
         $this->assertEquals(
             $subclasses,
             ClassInfo::subclassesFor(BaseClass::class),
@@ -64,6 +68,11 @@ class ClassInfoTest extends SapphireTest
             $subclasses,
             ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass'),
             'ClassInfo::subclassesFor() is acting in a case sensitive way when it should not'
+        );
+        ClassInfo::reset_db_cache();
+        $this->assertEquals(
+            $subclassesWithoutBase,
+            ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass', false)
         );
     }
 

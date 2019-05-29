@@ -11,6 +11,7 @@ use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest3;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest4;
+use SilverStripe\Core\Tests\ObjectTest\ExtendTest5;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionRemoveTest;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest2;
@@ -288,6 +289,13 @@ class ObjectTest extends SapphireTest
         $this->assertTrue(
             $objectTest_ExtensionTest->hasExtension(ExtendTest3::class),
             "Extensions are detected with instance hasExtension() when added through add_extension()"
+        );
+        
+        // load in a custom implementation
+        Injector::inst()->registerService(new ExtendTest5(), ExtendTest4::class);
+        $this->assertTrue(
+            ExtensionTest3::has_extension(ExtendTest5::class),
+            "Injected sub-extensions are detected with static has_extension() when added through add_extension()"
         );
 
         // @todo At the moment, this does NOT remove the extension due to parameterized naming,

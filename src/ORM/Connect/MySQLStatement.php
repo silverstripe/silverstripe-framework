@@ -6,7 +6,7 @@ use mysqli_result;
 use mysqli_stmt;
 
 /**
- * Provides a record-view for mysqli statements
+ * Provides a record-view for mysqli prepared statements
  *
  * By default streams unbuffered data, but seek(), rewind(), or numRecords() will force the statement to
  * buffer itself and sacrifice any potential performance benefit.
@@ -41,6 +41,13 @@ class MySQLStatement extends Query
      * @var array
      */
     protected $columns = array();
+
+    /**
+     * Map of column types, keyed by column name
+     *
+     * @var array
+     */
+    protected $types = array();
 
     /**
      * List of bound variables in the current row
@@ -79,6 +86,7 @@ class MySQLStatement extends Query
         // Bind each field
         while ($field = $this->metadata->fetch_field()) {
             $this->columns[] = $field->name;
+            $this->types[$field->name] = $field->type;
             // Note that while boundValues isn't initialised at this point,
             // later calls to $this->statement->fetch() Will populate
             // $this->boundValues later with the next result.
@@ -96,12 +104,7 @@ class MySQLStatement extends Query
 
     public function getIterator()
     {
-        while ($this->statement->fetch()) {
-            // Dereferenced row
-            $row = array();
-            foreach ($this->boundValues as $key => $value) {
-                $row[$key] = $value;
-            }
+        while ($row = $this->nextRecord()) {
             yield $row;
         }
     }
@@ -109,5 +112,24 @@ class MySQLStatement extends Query
     public function numRecords()
     {
         return $this->statement->num_rows();
+    }
+
+    public function nextRecord()
+    {
+        // Skip data if out of data
+        if (!$this->statement->fetch()) {
+            return false;
+        }
+
+        // Dereferenced row
+        $row = array();
+        foreach ($this->boundValues as $key => $value) {
+            $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
+            if (in_array($this->types[$key], $floatTypes)) {
+                $value = (float)$value;
+            }
+            $row[$key] = $value;
+        }
+        return $row;
     }
 }

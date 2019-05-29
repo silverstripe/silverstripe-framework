@@ -50,6 +50,10 @@ UploadField options include:
  - setFolderName() - Name of folder to upload into
  - getValidator() - Get instance of validator to specify custom validation rules
 
+## File permissions {#permissions}
+
+See [File Security](file_security). 
+
 ## File visibility
 
 In order to ensure that assets are made public you should check the following:
@@ -66,7 +70,7 @@ of a page with a shortcode image:
 
 ```html
 <p>Welcome to SilverStripe! This is the default homepage.</p>
-<p>[image src="/assets/e43fb87dc0/12824172.jpeg" id="27" width="400" height="400" class="leftAlone ss-htmleditorfield-file image" title="My Image"]</p>
+<p>[image src="/assets/12824172.jpeg" id="27" width="400" height="400" class="leftAlone ss-htmleditorfield-file image" title="My Image"]</p>
 ```
 
 File shortcodes have the following properties:
@@ -120,10 +124,24 @@ As with storage, there are also different ways of loading the content (or proper
 | `File::getAbsoluteURL`   | Gets the absolute URL to this resource                     |
 | `File::getMimeType`      | Get the mime type of this file                             |
 | `File::getMetaData`      | Gets other metadata from the file as an array              |
+| `File::getFileType`      | Return the type of file for the given extension            |
+
+### Additional file types
+
+SilverStripe has a pre-defined list of common file types. `File::getFileType` will return "unknown" for files outside that list.
+
+You can add your own file extensions and its description with the following configuration.
+
+```yml
+SilverStripe\Assets\File:
+  file_types:
+    ai: 'Adobe Illustrator'
+    psd: 'Adobe Photoshop File'
+```
 
 ## Modifying files
 
-In order to move or rename a file you can simply update the Name property, or assign the ParentID to a new
+In order to move or rename a file you can simply update the `Name` property, or assign the `ParentID` to a new
 folder. Please note that these modifications are made simply on the draft stage, and will not be copied
 to live until a publish is made (either on this object, or cascading from a parent).
 
@@ -209,7 +227,7 @@ To support this feature the [api:SilverStripe\Assets\AssetControlExtension] prov
 references to physical files, ensuring published assets are accessible, protecting non-published assets,
 and archiving / deleting assets after the final reference has been deleted.
 
-### Configuring file ownership
+### File ownership {#ownership}
 
 When working with files attached to other versioned dataobjects it is necessary to configure ownership
 of these assets from the parent record. This ensures that whenever a Page (or other record type)
@@ -231,6 +249,8 @@ class Page extends SiteTree
     private static $owns = ['Banner'];
 }
 ```
+
+See [Versioned: Ownership](/developer_guides/model/versioned#ownership) for details.
 
 ### Avoid exclusive relationships
 

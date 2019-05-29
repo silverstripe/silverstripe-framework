@@ -26,7 +26,8 @@ session variables, used templates and much more.
  | URL Variable  | | Values | | Description                                                | 
  | ------------  | | ------ | | -----------                                                | 
  | debug         | | 1      | | Show a collection of debugging information about the director / controller operation        |
- | debug_request | | 1      | | Show all steps of the request from initial [HTTPRequest](api:SilverStripe\Control\HTTPRequest) to [Controller](api:SilverStripe\Control\Controller) to Template Rendering  | 
+ | debug_request | | 1      | | Show all steps of the request from initial [HTTPRequest](api:SilverStripe\Control\HTTPRequest) to [Controller](api:SilverStripe\Control\Controller) to Template Rendering  |
+ | execmetric    | | 1      | | Display the execution time and peak memory usage for the request |  
 
 ## Classes and Objects
 
@@ -56,7 +57,7 @@ Redirections](/developer_guides/controllers/redirection) for more information an
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
  | http://localhost**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://localhost**/admin/pages/publishall/**        | | Publish all pages on the site
+ | http://localhost**/admin/pages/publishall/**        | | Publish all pages on the site. Only works reliably on smaller sites.
 
 ###  /dev/build
 

@@ -318,6 +318,15 @@ class ShortcodeParserTest extends SapphireTest
         $this->assertEquals($this->extra['element']->tagName, 'a');
     }
 
+    public function testShortcodeWithAnchorAndQuerystring()
+    {
+        $result = $this->parser->parse('<a href="[test_shortcode]?my-string=this&thing=2#my-anchor">Link</a>');
+
+        $this->assertContains('my-string=this', $result);
+        $this->assertContains('thing=2', $result);
+        $this->assertContains('my-anchor', $result);
+    }
+
     public function testNoParseAttemptIfNoCode()
     {
         $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(array('replaceElementTagsWithMarkers'))

@@ -202,7 +202,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getAuthenticators()
     {
-        return $this->authenticators;
+        return array_filter($this->authenticators);
     }
 
     /**
@@ -244,7 +244,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function getAuthenticator($name = 'default')
     {
-        $authenticators = $this->authenticators;
+        $authenticators = $this->getAuthenticators();
 
         if (isset($authenticators[$name])) {
             return $authenticators[$name];
@@ -286,7 +286,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function hasAuthenticator($authenticator)
     {
-        $authenticators = $this->authenticators;
+        $authenticators = $this->getAuthenticators();
 
         return !empty($authenticators[$authenticator]);
     }

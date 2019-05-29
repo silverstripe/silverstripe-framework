@@ -8,6 +8,10 @@ use Serializable;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 
+/**
+ * Abstraction of a PHP Package. Can be used to retrieve information about SilverStripe modules, and other packages
+ * managed via composer, by reading their `composer.json` file.
+ */
 class Module implements Serializable
 {
     /**
@@ -122,6 +126,20 @@ class Module implements Serializable
 
         // Base name of directory
         return basename($this->path);
+    }
+
+    /**
+     * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resources-dir`
+     * key in the composer file. A blank string will will be returned if the key is undefined.
+     *
+     * Only applicable when reading the composer file for the main project.
+     * @return string
+     */
+    public function getResourcesDir()
+    {
+        return isset($this->composerData['extra']['resources-dir'])
+            ? $this->composerData['extra']['resources-dir']
+            : '';
     }
 
     /**

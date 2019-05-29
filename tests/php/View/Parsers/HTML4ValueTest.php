@@ -80,4 +80,19 @@ class HTML4ValueTest extends SapphireTest
         $value->setContent('<a href="&quot;"></a>');
         $this->assertEquals('<a href="&quot;"></a>', $value->getContent(), "'\"' character is escaped");
     }
+
+    public function testGetContent()
+    {
+        $value = new HTML4Value();
+
+        $value->setContent('<p>This is valid</p>');
+        $this->assertEquals('<p>This is valid</p>', $value->getContent(), "Valid content is returned");
+
+        $value->setContent('<p?< This is not really valid but it will get parsed into something valid');
+        // can sometimes get a this state where HTMLValue->valid is false
+        // for instance if a content editor saves something really weird in a LiteralField
+        // we can manually get to this state via ->setInvalid()
+        $value->setInvalid();
+        $this->assertEquals('', $value->getContent(), "Blank string is returned when invalid");
+    }
 }

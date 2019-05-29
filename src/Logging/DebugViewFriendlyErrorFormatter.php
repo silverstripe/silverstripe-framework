@@ -48,10 +48,12 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * Set default status code
      *
      * @param int $statusCode
+     * @return $this
      */
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
+        return $this;
     }
 
     /**
@@ -68,10 +70,12 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * Set friendly title
      *
      * @param string $title
+     * @return $this
      */
     public function setTitle($title)
     {
         $this->friendlyErrorMessage = $title;
+        return $this;
     }
 
     /**
@@ -88,10 +92,12 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * Set default error body
      *
      * @param string $body
+     * @return $this
      */
     public function setBody($body)
     {
         $this->friendlyErrorDetail = $body;
+        return $this;
     }
 
     public function format(array $record)

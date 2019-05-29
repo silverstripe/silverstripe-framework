@@ -18,20 +18,17 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "VersionProvider_composerlock"
-      args:
-        disable-container: true
+      disable-container: true
   Psr\SimpleCache\CacheInterface.RateLimiter:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: 'ratelimiter'
-      args:
-        disable-container: true
+      disable-container: true
   Psr\SimpleCache\CacheInterface.InheritedPermissions:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "InheritedPermissions"
-      args:
-        disable-container: true
+      disable-container: true
   Psr\SimpleCache\CacheInterface.ThemeResourceLoader:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:

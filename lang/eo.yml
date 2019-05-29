@@ -37,6 +37,8 @@ eo:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
+    NOTSET: 'ne agordita'
+    TODAY: hodiaŭ
     VALIDDATEFORMAT2: 'Bonvole enigu validan datan formaton ({format})'
     VALIDDATEMAXDATE: 'Necesas ke via dato estu pli aĝa ol, aŭ egala al la maksimuma permesita dato ({date})'
     VALIDDATEMINDATE: 'Necesas ke via dato estu pli nova ol, aŭ egala al la minimuma permesita dato ({date})'
@@ -76,6 +78,7 @@ eo:
     LinkExisting: 'Ligi ekzistantajn'
     NewRecord: 'Novaj {type}'
     NoItemsFound: 'Neniu elemento troviĝis'
+    OpenFilter: 'Malfermi serĉon kaj filtrilon'
     PRINTEDAT: 'Presita ĉe'
     PRINTEDBY: 'Presita de'
     PlaceHolder: 'Serĉi je {type}'
@@ -84,7 +87,6 @@ eo:
     RelationSearch: 'Serĉi rilatojn'
     ResetFilter: Restartigi
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Forigi
     Delete: Forigi
     DeletePermissionsFailure: 'Mankas permeso forigi'
     EditPermissionsFailure: 'Mankas permeso malligi rikordon'
@@ -96,23 +98,19 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita {type} {name}'
     Save: Konservi
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Redakti
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Serĉi por {name}'
+    SearchFormFaliure: 'Ne eblis generi serĉan formularon'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Paĝo
     View: Vido
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Ero ankoraŭ estas ne publikigita'
-    ADDEDTODRAFTSHORT: Malneto
-    ARCHIVEDPAGEHELP: 'Ero estas forigita el malneta kaj publika'
-    ARCHIVEDPAGESHORT: Enarkivigita
-    MODIFIEDONDRAFTHELP: 'Ero enhavas nepublikigitajn ŝanĝojn'
-    MODIFIEDONDRAFTSHORT: Ŝanĝita
-    ONLIVEONLYSHORT: 'Nur ĉe publika'
-    ONLIVEONLYSHORTHELP: 'Ero estas publikigita, sed ĝi estas forigita el malneto'
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vido
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
@@ -159,6 +157,8 @@ eo:
       other: '{count} jaroj'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Ajna
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Tro multaj rilataj objektoj; retropaŝa kampo uzata'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Tro da idoj ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -333,5 +333,5 @@ eo:
     NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
     NOTERESETLINKINVALID: '<p>La pasvorta reagorda ligilo estas malvalida aŭ finiĝis.</p><p>Vi povas peti novan <a href="{link1}">ĉi tie</a> aŭ ŝanĝi vian pasvorton post <a href="{link2}">vi ensalutis</a>.</p>'
     NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
-    PASSWORDSENTHEADER: 'Pasvorta reagorda ligilo sendiĝis al ''{email}'''
-    PASSWORDSENTTEXT: 'Dankon! Reagordita ligilo sendiĝis al ''{email}'', kondiĉe ke konto ekzistas por tiu retadreso.'
+    PASSWORDRESETSENTHEADER: 'Pasvorta reagorda ligilo sendiĝis'
+    PASSWORDRESETSENTTEXT: 'Dankon. Reagorda ligilo sendiĝis, kondiĉe ke konto ekzistas por ĉi tiu retadreso.'

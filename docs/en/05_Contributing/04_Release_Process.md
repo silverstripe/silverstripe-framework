@@ -27,9 +27,17 @@ Release dates are usually not published prior to the release, but you can get a 
 reviewing the release milestone on github.com. Releases will be
 announced on the ["releases" forum category](https://forum.silverstripe.org/c/releases).
 
-## Release Numbering
+## Release numbering {#release-numbering}
 
 SilverStripe follows [Semantic Versioning](http://semver.org).
+
+All SilverStripe modules (including silverstripe/framework) may have patch releases created at any time, and will
+not necessarily match other core module patch release numbers. For example, your project may be using
+silverstripe/cms 4.3.1 with silverstripe/versioned 4.3.9.
+
+All SilverStripe recipes are released in lock step with each other. For example, silverstripe/installer 4.3.1 will
+contain silverstripe/recipe-cms 4.3.1 and silverstripe/recipe-core 4.3.1. These recipes may contain various patch
+versions of its modules within the same minor release line (4.3 in this example).
 
 ## Supported versions {#supported-versions}
 
@@ -41,8 +49,9 @@ At any point in time, the core development team will support a set of releases t
  * API changes and major new features are applied to the master branch, to be included in the next major release
  * New APIs can be applied to the current minor release of major releases in "active development", but should usually be marked as "internal" APIs until they're considered stable
  * Enhancements are applied to the next minor release of major releases in "active development"
- * Non-critical bugfixes are applied to all supported minor releases of major releases in "active development" or "full support"
- * Critical bugfixes and security fixes are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
+ * Non-critical bugfixes and all security fixes are applied to all supported minor releases of major releases in "active development" or "full support"
+ * Critical bugfixes and [critical security fixes](#severity-rating) are applied to the all minor releases of major releases in "active development", "full support" or "limited support"
+ * [Non-critical security fixes](#severity-rating) are backported to releases in "limited support" on a best effort basis
  * Any patches applied to older minor releases are merged up regularly to newer minor releases (in the same major release)
  * Any patches applied to older major releases are merged up regularly to newer major releases
 
@@ -119,7 +128,7 @@ SS_DEPRECATION_ENABLED="0"
 ### Reporting an issue
 
 Report security issues in our [commercially supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
-to [security@silverstripe.com](mailto:security@silverstripe.com). 
+to [security@silverstripe.com](mailto:security@silverstripe.org). 
 Please don't file security issues in our [bugtracker](issues_and_bugs). 
 
 ### Acknowledgment and disclosure
@@ -128,16 +137,11 @@ In the event of a confirmed vulnerability in our
 [supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/),
 we will take the following actions:
 
-*  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
-timeline and ask the reporter to keep the issue confidential until we announce it.
-*  Assign a unique identifier to the issue in the format `SS-<year>-<count>`, 
-   where `<count>` is a padded three digit number counting issues for the year. 
-   Example: `SS-2013-001` would be the first of the year `2013`.
-   Additionally, [CVE](http://cve.mitre.org) numbers are accepted.
-*  Halt all other development as long as is needed to develop a fix, including patches against the current and one
-previous major release (if applicable).
-* Pre-announce the upcoming security release to aprivate pre-announcement mailing list of important stakeholders (see below).
-*  We will inform you about resolution and [announce](https://forum.silverstripe.org/c/releases) a 
+* Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming.
+  We’ll give a rough timeline and ask the reporter to keep the issue confidential until we announce it.
+* Assign a [CVE identifier](https://cve.mitre.org) to the issue.
+* For "high" and "critical" issues (CVSS of >=7.0): Pre-announce the upcoming security release to aprivate pre-announcement mailing list of important stakeholders (see below).
+* We will inform you about resolution and [announce](https://forum.silverstripe.org/c/releases) a 
 [new release](http://silverstripe.org/security-releases/) publically.
 
 You can help us determine the problem and speed up responses by providing us with more information on how to reproduce
@@ -147,52 +151,26 @@ webserver access logs (if a hack is suspected), any other services and web packa
 ### Severity rating
 
 Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for 
-each vulnerability. The rating indicates how important an update is:
+each vulnerability. The rating indicates how important an update is.
+It follows the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss). 
+This rating determines which release lines are targetd with security fixes.
 
-| Severity      | Description |
-|---------------|-------------|
-| **Critical**  | Critical releases require immediate action. Such vulnerabilities allow attackers to take control of your site and you should upgrade on the day of release. *Example: Directory traversal, privilege escalation* |
-| **Important** | Important releases should be evaluated immediately. These issues allow an attacker to compromise a site's data and should be fixed within days. *Example: SQL injection.* |
-| **Moderate**  | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content. *Examples: Cross Site Scripting (XSS) in template helpers.* |
-| **Low**       | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. *Example: Exposure of the core version number, Cross Site Scripting (XSS) limited to the admin interface.* |
+| Severity      | CVSS | Description |
+|---------------|------|-------------|
+| **Critical**  | 9.0 to 10.0 | Critical releases require immediate action. Such vulnerabilities allow attackers to take control of your site and you should upgrade on the day of release. *Example: Directory traversal, privilege escalation* |
+| **High**      | 7.0 to 8.9 | Important releases should be evaluated immediately. These issues allow an attacker to compromise a site's data and should be fixed within days. *Example: SQL injection.* |
+| **Medium**    | 4.0 to 6.9 | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content. *Examples: Cross Site Scripting (XSS) in template helpers.* |
+| **Low**       | 0.1 to 3.9 | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. *Example: Exposure of the core version number, Cross Site Scripting (XSS) limited to the admin interface.* |
 
 ### Internal Security Process
 
-Follow these instructions in sequence as much as possible:
-
- * When receiving a report:
-   * Perform initial criticality assessment, and ensure that the reporter is given a justification for all issues we classify or demote as non-security vulnerabilities.
-   * Assign a unique identifier (see "Acknowledgement and disclosure").
-     Identifiers are based on reported year and order reported in JIRA (Example: `SS-2017-001`)
-   * Respond to issue reporter with this identifier on the same discussion thread (cc security@silverstripe.org). Clarify issue if required.
-   * If encrypted information is provided, add pass phrases into the SilverStripe Ltd. LastPass account. Keep encrypted documents in Google Drive and only share directly with relevant participants
-   * Add a new issue in the "Backlog" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1).
-     Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
-   * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794) on silverstripe.org. Describe the issue in a readable way, make the impact clear. Credit the author if applicable. 
-   * Clarify who picks up owns the issue resolution
- * When developing a fix:
-   * Ensure you're working on the oldest supported minor release branch of every supported major release (see [Supported Versions](#supported-versions))
-   * Move the issue into "In Progress" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-   * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo
-   * Ensure that all security commit messages are prefixed with the CVE. E.g. "[ss-2015-001] Fixed invalid XSS"
-   * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
- * Before release (or release candidate)
-   * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
-   * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
-   * Send out a note on the pre-announcement mailing list with a highlevel description of the issue and impact (usually a copy of the yet unpublished security release page on silverstripe.org)
-   * Link to silverstripe.org security release page in the changelog.
-   * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
- * Perform release
-   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
- * After release
-   * Publish silverstripe.org security release page
-   * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
-   * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
+See [SilverStripe Core Release Process](making-a-silverstripe-core-release).
 
 ### Pre-announcement mailing list
 
-In addition to our public disclosure process, we maintain a private mailing list where upcoming security releases
-are pre-announced. Members of this list will receive a security pre-announcement, as soon as it has been
+In addition to our public disclosure process, we maintain a private mailing list where upcoming
+"high" or "critical" security releases are pre-announced.
+Members of this list will receive a security pre-announcement, as soon as it has been
 sufficiently researched, with a timeline for the upcoming release. 
 This will happen a few days before the announcement goes public alongside a new release, 
 and most likely before a patch has been developed.

@@ -324,6 +324,13 @@ class Session
                 }
 
                 session_start();
+
+                // Session start emits a cookie, but only if there's no existing session. If there is a session timeout
+                // tied to this request, make sure the session is held for the entire timeout by refreshing the cookie
+                // age.
+                if ($timeout && $this->requestContainsSessionId($request)) {
+                    Cookie::set(session_name(), session_id(), $timeout / 86400, $path, $domain ?: null, $secure, true);
+                }
             } else {
                 // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
                 session_cache_limiter(null);

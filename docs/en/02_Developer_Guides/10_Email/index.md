@@ -18,7 +18,7 @@ SilverStripe\Core\Injector\Injector:
   Swift_Transport: Swift_SendmailTransport
 ```
 
-For example, to use SMTP, create a file app/_config/email.yml:
+For example, to use SMTP, create a file `app/_config/email.yml`:
 
 ```yml
 ---
@@ -34,10 +34,12 @@ SilverStripe\Core\Injector\Injector:
       Port: <port>
       Encryption: tls
     calls:
-      Username: [ setUsername, ['<username>'] ]
-      Password: [ setPassword, ['<password>'] ]
+      Username: [ setUsername, ['`APP_SMTP_USERNAME`'] ]
+      Password: [ setPassword, ['`APP_SMTP_PASSWORD`'] ]
       AuthMode: [ setAuthMode, ['login'] ]
 ```
+
+Note the usage of backticks to designate environment variables for the credentials - ensure you set these in your `.env` file or in your webserver configuration.
 
 ## Usage
 
@@ -197,6 +199,22 @@ $email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValu
 <div class="info" markdown="1">
 See this [Wikipedia](http://en.wikipedia.org/wiki/E-mail#Message_header) entry for a list of header names.
 </div>
+
+## Disabling Emails
+
+If required, you can also disable email sending entirely. This is useful for testing and staging servers where
+you do not wish to send emails out.
+
+```yaml
+---
+Name: myemailconfig
+Only:
+  Environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport:
+    class: Swift_NullTransport
+```
 
 ## SwiftMailer Documentation
 

@@ -64,7 +64,7 @@ class ViewableDataContains extends Constraint implements TestOnly
         $success = true;
 
         foreach ($this->match as $fieldName => $value) {
-            if ($other->getField($fieldName) != $value) {
+            if ($other->$fieldName != $value) {
                 $success = false;
                 break;
             }

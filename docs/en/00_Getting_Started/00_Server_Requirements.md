@@ -8,6 +8,8 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
+SilverStripe 5 has the following server requirements:
+
  * PHP 7.1 or higher
  * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),
    we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 7.1 support may be dropped in a 5.x minor release after December 2019.
@@ -30,9 +32,16 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
  * One of the following databases: 
-   * MySQL 5.0+
-   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
-   * [SQL Server 2008+](http://silverstripe.org/microsoft-sql-server-database/), [Oracle](https://github.com/smindel/silverstripe-oracle) and [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
+   * MySQL 5.6+
+   * PostgreSQL 9.4+ (requires ["silverstripe/postgresql" module](http://silverstripe.org/postgresql-module))
+     * Warning: PostgreSQL has some known issues with collations when installed on Alpine, MacOS X and BSD derivatives
+     (see [PostgreSQL FAQ](https://wiki.postgresql.org/wiki/FAQ#Why_do_my_strings_sort_incorrectly.3F)).  
+     We do not support such installations, although they still may work correctly for you.  
+     As a workaround for PostgreSQL 10+ you could manually switch to ICU collations (e.g. und-x-icu).
+     There are no known workarounds for PostgreSQL <10.
+   * [SQL Server](http://silverstripe.org/microsoft-sql-server-database/),
+     [Oracle](https://github.com/smindel/silverstripe-oracle) and
+     [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
  * One of the following web server products: 
    * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
    * IIS 7+
@@ -42,6 +51,20 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
    * Linux/Unix/BSD
    * Windows
    * Mac OS X
+
+### PHP Requirements for older SilverStripe releases
+
+SilverStripe's PHP support has changed over time and if you are looking to upgrade PHP on your SilverStripe site, this table may be of use:
+
+| SilverStripe Version | PHP Version | More information |
+| -------------------- | ----------- | ---------------- |
+| 3.0 - 3.5            | 5.3 - 5.6   | [requirements docs](https://docs.silverstripe.org/en/3.4/getting_started/server_requirements/)
+| 3.6                  | 5.3 - 7.1   | |
+| 3.7                  | 5.3 - 7.3   | [changelog](https://docs.silverstripe.org/en/3/changelogs/3.7.0/) |
+| 4.0 - 4.4            | 5.6+        | |
+| 4.5+ (unreleased)    | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
+| 5.0+ (unreleased)    | 7.1+        | |
+
 
 ## Web server hardware requirements
 

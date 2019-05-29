@@ -37,6 +37,8 @@ nl:
   SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
+    NOTSET: 'niet ingesteld'
+    TODAY: vandaag
     VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
     VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
     VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
@@ -76,6 +78,7 @@ nl:
     LinkExisting: 'Koppel een bestaand item'
     NewRecord: 'Nieuw {type}'
     NoItemsFound: 'Geen items gevonden.'
+    OpenFilter: 'Zoeken en filteren openen'
     PRINTEDAT: 'Geprint op'
     PRINTEDBY: 'Geprint door'
     PlaceHolder: 'Zoek {type}'
@@ -84,7 +87,6 @@ nl:
     RelationSearch: 'Zoek relatie'
     ResetFilter: Resetten
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Verwijder
     Delete: Verwijder
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     EditPermissionsFailure: 'Geen toelating om te ontkoppelen'
@@ -96,23 +98,19 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '{type} {name} verwijderd'
     Save: Opslaan
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Bewerken
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Zoek naar "{name}"'
+    SearchFormFaliure: 'Er kon geen zoekformulier worden aangemaakt'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'U kunt uzelf niet verwijderen van deze groep, omdat u dan geen admin-rechten meer heeft.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: van
     Page: Pagina
     View: Bekijk
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Item is nog niet gepubliceerd'
-    ADDEDTODRAFTSHORT: Concept
-    ARCHIVEDPAGEHELP: 'Het item is verwijderd van de concept- en de live site'
-    ARCHIVEDPAGESHORT: Gearchiveerd
-    MODIFIEDONDRAFTHELP: 'Item heeft wijzigingen die nog niet gepubliceerd zijn'
-    MODIFIEDONDRAFTSHORT: Aangepast
-    ONLIVEONLYSHORT: 'Alleen op de live site'
-    ONLIVEONLYSHORTHELP: 'Item is gepubliceerd, maar verwijderd van de concept site'
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Bekijk
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
@@ -159,6 +157,8 @@ nl:
       other: '{count} jaren'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Elke
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Teveel keuzes in de lijst; een alternatief veld wordt getoond.'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Teveel onderliggende items ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -174,8 +174,8 @@ nl:
     PASSWORDEXPIRED: '<p>Uw wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
-    LOGIN_MESSAGE: 'Sessie is verlopen'
-    LOGIN_TITLE: '<p>U kunt verder met wat u aan het doen was, door opnieuw in te loggen.</p>'
+    LOGIN_MESSAGE: '<p>De browsersessie is verlopen wegens inactiviteit</p>'
+    LOGIN_TITLE: 'Log opnieuw in om verder te gaan.'
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>U bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als u niet automatisch wordt doorgestuurd.</p>'
     SUCCESS_TITLE: 'Inloggen is gelukt'
@@ -232,8 +232,8 @@ nl:
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
     ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten opnieuw.'
-    ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen, probeer het nogmaals'
-    ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord kom niet overeen, probeer het nogmaals'
+    ERRORNEWPASSWORD: 'De nieuwe wachtwoorden komen niet overeen, probeer het nogmaals'
+    ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord is niet correct, probeer het nogmaals'
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
@@ -331,7 +331,7 @@ nl:
     LOGOUT: Uitloggen
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
-    NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt <a href="{link1}">een nieuwe link aanvragen</a> of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
+    NOTERESETLINKINVALID: '<p>De reset link is ongeldig of verlopen.</p><p>Je kan <a href="{link1}">hier</a> een nieuwe link aanvragen of het wachtwoord veranderen nadat je bent <a href="{link2}">ingelogd</a>.</p>'
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
-    PASSWORDSENTHEADER: 'Wachtwoord herstel link verzonden naar {email}'
-    PASSWORDSENTTEXT: 'Bedankt! Er is een link verstuurd naar {email} om uw wachtwoord opnieuw in te stellen, in de veronderstelling dat er een account bestaat voor dit e-mailadres.'
+    PASSWORDRESETSENTHEADER: Verzonden
+    PASSWORDRESETSENTTEXT: 'Bedankt! Er is een link verstuurd om uw wachtwoord opnieuw in te stellen (mits het e-mailadres reeds bekend is bij ons).'

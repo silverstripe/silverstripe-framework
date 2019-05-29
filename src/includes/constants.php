@@ -28,6 +28,7 @@ use SilverStripe\Core\TempFolder;
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
+ * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_ressources"
  */
 
 require_once __DIR__ . '/functions.php';
@@ -42,11 +43,13 @@ if (!defined('BASE_PATH')) {
     define('BASE_PATH', call_user_func(function () {
         // Determine BASE_PATH based on the composer autoloader
         foreach (debug_backtrace() as $backtraceItem) {
-            if (isset($backtraceItem['file']) && preg_match(
-                '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
-                $backtraceItem['file'],
-                $matches
-            )) {
+            if (isset($backtraceItem['file'])
+                && preg_match(
+                    '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
+                    $backtraceItem['file'],
+                    $matches
+                )
+            ) {
                 return realpath($matches['base']) ?: DIRECTORY_SEPARATOR;
             }
         }
@@ -133,23 +136,24 @@ if (!defined('BASE_URL')) {
 
         // When htaccess redirects from /base to /base/public folder, we need to only include /public
         // in the BASE_URL if it's also present in the request
-        if ($baseURL
-            && PUBLIC_DIR
-            && isset($_SERVER['REQUEST_URI'])
-            && substr($baseURL, -strlen(PUBLIC_DIR)) === PUBLIC_DIR
+        if (!$baseURL
+            || !PUBLIC_DIR
+            || !isset($_SERVER['REQUEST_URI'])
+            || substr($baseURL, -strlen(PUBLIC_DIR)) !== PUBLIC_DIR
         ) {
-            $requestURI = $_SERVER['REQUEST_URI'];
-            // Check if /base/public or /base are in the request
-            foreach ([$baseURL, dirname($baseURL)] as $candidate) {
-                if (stripos($requestURI, $candidate) === 0) {
-                    return $candidate;
-                }
-            }
-            // Ambiguous
-            return '';
+            return $baseURL;
         }
 
-        return $baseURL;
+        $requestURI = $_SERVER['REQUEST_URI'];
+        // Check if /base/public or /base are in the request
+        foreach ([$baseURL, dirname($baseURL)] as $candidate) {
+            if (stripos($requestURI, $candidate) === 0) {
+                return $candidate;
+            }
+        }
+
+        // Ambiguous
+        return '';
     }));
 }
 
@@ -198,4 +202,19 @@ if (!defined('TEMP_PATH')) {
 // Define the temporary folder for backwards compatibility
 if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', TEMP_PATH);
+}
+
+// Define the Ressource Dir constant that will be use to exposed vendor assets
+if (!defined('RESOURCES_DIR')) {
+    $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
+    $resourcesDir = $project->getResourcesDir() ?: 'resources';
+    if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir)) {
+        define('RESOURCES_DIR', $resourcesDir);
+    } else {
+        throw new LogicException(sprintf(
+            'Resources dir error: "%s" is not a valid resources directory name. Update the ' .
+            '`extra.resources-dir` key in your composer.json file',
+            $resourcesDir
+        ));
+    }
 }

@@ -1735,7 +1735,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function extraClass()
     {
-        return implode(array_unique($this->extraClasses), ' ');
+        return implode(' ', array_unique($this->extraClasses));
     }
 
     /**

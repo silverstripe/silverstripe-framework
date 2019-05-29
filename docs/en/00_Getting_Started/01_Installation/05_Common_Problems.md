@@ -65,7 +65,7 @@ handle the new code.  Here are some specifics situations:
 
 If you've set up your site and it used to be working, but now it's suddenly totally broken, you may have forgotten to
 publish your draft content.  Go to the CMS and use the "publish" button.  You can visit `admin/pages/publishall` to publish
-every page on the site, if that's easier.
+every page on the site, if that's easier. Note that this will only work on smaller websites.
 
 ## I can see unparsed PHP output in my browser
 

@@ -2,13 +2,13 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\Dev\Debug;
-use SilverStripe\View\ArrayData;
-use SilverStripe\View\ViewableData;
 use ArrayIterator;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\ViewableData;
 
 /**
  * A list object that wraps around an array of objects or arrays.
@@ -45,16 +45,38 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
+     * Underlying type class for this list
+     *
+     * @var string
+     */
+    protected $dataClass = null;
+
+    /**
      * Return the class of items in this list, by looking at the first item inside it.
      *
      * @return string
      */
     public function dataClass()
     {
+        if ($this->dataClass) {
+            return $this->dataClass;
+        }
         if (count($this->items) > 0) {
             return get_class($this->items[0]);
         }
         return null;
+    }
+
+    /**
+     * Hint this list to a specific type
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function setDataClass($class)
+    {
+        $this->dataClass = $class;
+        return $this;
     }
 
     /**
@@ -257,6 +279,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * field. This is especially useful when combining lists.
      *
      * @param string $field
+     * @return $this
      */
     public function removeDuplicates($field = 'ID')
     {
@@ -548,6 +571,18 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $multisortArgs[] = &$list->items;
         call_user_func_array('array_multisort', $multisortArgs);
         return $list;
+    }
+
+    /**
+     * Shuffle the items in this array list
+     *
+     * @return $this
+     */
+    public function shuffle()
+    {
+        shuffle($this->items);
+
+        return $this;
     }
 
     /**

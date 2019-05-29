@@ -831,4 +831,43 @@ class SQLSelectTest extends SapphireTest
         $this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
         $query->execute();
     }
+
+    public function testBaseTableAliases()
+    {
+        $query = SQLSelect::create('*', ['"MyTableAlias"' => '"MyTable"']);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['MyTableAlias' => '"MyTable"']);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['"MyTableAlias"' => '"MyTable"']);
+        $query->addLeftJoin('OtherTable', '"Thing" = "OtherThing"', 'OtherTableAlias');
+        $sql = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT *
+              FROM "MyTable" AS "MyTableAlias"
+              LEFT JOIN "OtherTable" AS "OtherTableAlias" ON "Thing" = "OtherThing"',
+            $sql
+        );
+
+        // This feature is a bug that used to exist in SS4 and was removed in SS5
+        // so now we test it does not exist and we end up with incorrect SQL because of that
+        // In SS4 the "explicitAlias" would be ignored
+        $query = SQLSelect::create('*', [
+            'MyTableAlias' => '"MyTable"',
+            'explicitAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
+        ]);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT * FROM "MyTable" AS "MyTableAlias" , '.
+            '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin" AS "explicitAlias"',
+            $sql
+        );
+    }
 }

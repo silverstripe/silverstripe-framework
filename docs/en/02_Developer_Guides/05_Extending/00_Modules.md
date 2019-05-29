@@ -8,7 +8,7 @@ framework.
 
 A module is a collection of classes, templates, and other resources that is loaded into a directory.
 Usually this directory is a [Composer package](https://getcomposer.org/), which is placed in the `vendor/` folder.
-SilverStripe modulies are just Composer packages with a toplevel `_config` directory or `_config.php` file.
+SilverStripe modules are just Composer packages with a toplevel `_config` directory or `_config.php` file.
 
 ```
 app/

@@ -7,10 +7,16 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\TreeMultiselectField;
+use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
+use SilverStripe\View\SSViewer;
 
 class TreeMultiselectFieldTest extends SapphireTest
 {
     protected static $fixture_file = 'TreeMultiselectFieldTest.yml';
+
+    protected static $extra_dataobjects = [
+        TestObject::class,
+    ];
 
     protected $formId = 'TheFormID';
     protected $fieldName = 'TestTree';
@@ -53,6 +59,9 @@ class TreeMultiselectFieldTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
+
+        // Don't let other themes interfere with these tests
+        SSViewer::set_themes([]);
 
         $this->form = $this->buildFormMock();
         $this->field = $this->buildField($this->form);
@@ -148,7 +157,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]
@@ -225,7 +234,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]
@@ -275,7 +284,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                 'data' => [
                     'urlTree' => 'field/TestTree/tree',
                     'showSearch' => true,
-                    'emptyString' => '(Choose File)',
+                    'emptyString' => '(Search or choose File)',
                     'hasEmptyDefault' => false,
                     'multiple' => true
                 ]

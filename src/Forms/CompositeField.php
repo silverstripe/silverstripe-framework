@@ -380,9 +380,17 @@ class CompositeField extends FormField
         $this->children->removeByName($fieldName, $dataFieldOnly);
     }
 
-    public function replaceField($fieldName, $newField)
+    /**
+     * @param $fieldName
+     * @param $newField
+     * @param boolean $dataFieldOnly If this is true, then a field will only
+     * be replaced if it's a data field.  Dataless fields, such as tabs, will
+     * not be considered for replacement.
+     * @return bool
+     */
+    public function replaceField($fieldName, $newField, $dataFieldOnly = true)
     {
-        return $this->children->replaceField($fieldName, $newField);
+        return $this->children->replaceField($fieldName, $newField, $dataFieldOnly);
     }
 
     public function rootFieldList()

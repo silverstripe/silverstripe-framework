@@ -43,6 +43,13 @@ class DBForeignKey extends DBInt
 
     private static $default_search_filter_class = 'ExactMatchFilter';
 
+    /**
+     * Cache for multiple subsequent calls to scaffold form fields with the same foreign key object
+     *
+     * @var array
+     */
+    protected static $foreignListCache = [];
+
     public function __construct($name, $object = null)
     {
         $this->object = $object;
@@ -65,6 +72,9 @@ class DBForeignKey extends DBInt
             if ($hasOneSingleton instanceof Image) {
                 $field->setAllowedFileCategories('image/supported');
             }
+            if ($field->hasMethod('setAllowedMaxFileNumber')) {
+                $field->setAllowedMaxFileNumber(1);
+            }
             return $field;
         }
 
@@ -74,8 +84,38 @@ class DBForeignKey extends DBInt
         // Don't scaffold a dropdown for large tables, as making the list concrete
         // might exceed the available PHP memory in creating too many DataObject instances
         $threshold = self::config()->get('dropdown_field_threshold');
-        if ($list->count() < $threshold) {
-            $field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
+
+        // Add the count of the list to a cache for subsequent calls
+        if (!isset(static::$foreignListCache[$hasOneClass])) {
+            // Let the DB do the threshold check as it will be faster - depending on the SQL engine it might only have
+            // to count indexes
+            $dataQuery = $list->dataQuery()->getFinalisedQuery();
+
+            // Clear order-by as it's not relevant for counts
+            $dataQuery->setOrderBy(false);
+            // Remove distinct. Applying distinct shouldn't be required provided relations are not applied.
+            $dataQuery->setDistinct(false);
+
+            $dataQuery->setSelect(['over_threshold' => 'count(*) > ' . (int) $threshold]);
+            $result = $dataQuery->execute()->column('over_threshold');
+
+            // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
+            $overThreshold = !empty($result) && ($result[0] === 't' ||  (int) $result[0] === 1);
+
+            static::$foreignListCache[$hasOneClass] = [
+                'overThreshold' => $overThreshold,
+            ];
+        }
+
+        $overThreshold = static::$foreignListCache[$hasOneClass]['overThreshold'];
+
+        if (!$overThreshold) {
+            // Add the mapped list for the cache
+            if (!isset(static::$foreignListCache[$hasOneClass]['map'])) {
+                static::$foreignListCache[$hasOneClass]['map'] = $list->map('ID', $titleField);
+            }
+
+            $field = new DropdownField($this->name, $title, static::$foreignListCache[$hasOneClass]['map']);
             $field->setEmptyString(' ');
         } else {
             $field = new NumericField($this->name, $title);

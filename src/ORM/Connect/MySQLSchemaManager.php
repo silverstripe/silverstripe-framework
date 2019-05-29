@@ -220,7 +220,7 @@ class MySQLSchemaManager extends DBSchemaManager
     public function databaseExists($name)
     {
         // MySQLi doesn't like parameterised queries for some queries
-        $sqlName = $this->database->quoteString($name);
+        $sqlName = addcslashes($this->database->quoteString($name), '%_');
         return !!($this->query("SHOW DATABASES LIKE $sqlName")->value());
     }
 
@@ -284,7 +284,7 @@ class MySQLSchemaManager extends DBSchemaManager
                 $fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
             }
 
-            if ($field['Default'] || $field['Default'] === "0") {
+            if ($field['Default'] || $field['Default'] === "0" || $field['Default'] === '') {
                 $fieldSpec .= " default " . $this->database->quoteString($field['Default']);
             }
             if ($field['Extra']) {

@@ -143,6 +143,27 @@ $MetaTags(false)
 <title>$Title - Bob's Fantasy Football</title>
 ```
 
+### Modifying Meta Tags
+
+You can override the `MetaComponents()` method on your `SiteTree` sub-classes or make use of the `MetaComponents` extension point to manipulate the underlying data that is rendered by `$MetaTags`. Example (for `Page` class):
+
+```php
+public function MetaComponents()
+{
+    $tags = parent::MetaComponents();
+    // Override the content of the Title tag (needs to be html)
+    if ($this->MetaTitle) {
+        $tags['title']['content'] = $this->obj('MetaTitle')->forTemplate();
+    }
+    // Provide a default Meta Description
+    if (!$tags['description']['attributes']['content']) {
+        // provide raw text as attributes will be escaped later
+        $tags['description']['attributes']['content'] = $this->dbObject('Content')->LimitCharactersToClosestWord(300);
+    }
+    return $tags;
+}
+```
+
 ## Links
 
 ```ss

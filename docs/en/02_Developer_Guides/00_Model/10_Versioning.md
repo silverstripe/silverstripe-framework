@@ -27,7 +27,7 @@ Publishing a versioned `DataObject` is equivalent to copying the version from th
 
 You can disable stages if your DataObject doesn't require a published version. This will allow you to keep track of all changes that have been applied to a DataObject and who made them.
 
-### Ownership and relations between DataObject
+### Ownership and relations between DataObject {#ownership}
 
 Typically when publishing versioned DataObjects, it is necessary to ensure that some linked components
 are published along with it. Unless this is done, site content can appear incorrectly published.
@@ -1014,6 +1014,7 @@ SilverStripe\GraphQL\Manager:
             fields: [ID, LastEdited]
             operations:
               readOne: true
+              rollback: true
           SilverStripe\Security\Member:
             fields: [ID, FirstName, Surname]
             operations:
@@ -1087,7 +1088,7 @@ const config = {
       variables: {
         limit,
         offset: ((page || 1) - 1) * limit,
-        block_id: recordId,
+        id: recordId,
       }
     };
   },
@@ -1125,7 +1126,7 @@ const config = {
             refetch({
               offset: ((page || 1) - 1) * limit,
               limit,
-              block_id: recordId,
+              id: recordId,
             });
           }
         },
