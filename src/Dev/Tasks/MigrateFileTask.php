@@ -104,8 +104,6 @@ class MigrateFileTask extends BuildTask
                 ImageThumbnailHelper::singleton()->run();
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
-
-
         }
 
         $subtask = 'fix-folder-permissions';
@@ -145,6 +143,8 @@ class MigrateFileTask extends BuildTask
         }
 
         $this->extend('postFileMigration');
+
+        $this->logger->info("Done!");
     }
 
     public function getDescription()
