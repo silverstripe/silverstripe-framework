@@ -854,7 +854,7 @@ class SQLSelectTest extends SapphireTest
         $sql = $query->sql();
 
         $this->assertSQLEquals(
-            'SELECT * FROM "MyTable" AS "MyTableAlias" , '.
+            'SELECT * FROM "MyTable" AS "MyTableAlias" , ' .
             '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"',
             $sql
         );
