@@ -2,13 +2,13 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\SQLite\SQLite3Database;
-use SilverStripe\PostgreSQL\PostgreSQLDatabase;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\PostgreSQL\PostgreSQLDatabase;
+use SilverStripe\SQLite\SQLite3Database;
 
 class SQLSelectTest extends SapphireTest
 {
@@ -865,7 +865,7 @@ class SQLSelectTest extends SapphireTest
         $sql = $query->sql();
 
         $this->assertSQLEquals(
-            'SELECT * FROM "MyTable" AS "MyTableAlias" , '.
+            'SELECT * FROM "MyTable" AS "MyTableAlias" , ' .
             '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin" AS "explicitAlias"',
             $sql
         );

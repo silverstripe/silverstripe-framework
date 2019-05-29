@@ -7,8 +7,9 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
 use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
-use SilverStripe\Assets\FileMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\FileMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Storage\FileHashingService;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
@@ -46,85 +47,104 @@ class MigrateFileTask extends BuildTask
         $args = $request->getVars();
         $this->validateArgs($args);
 
+        Injector::inst()->get(FileHashingService::class)->enableCache();
+
+        $this->extend('preFileMigration');
+
         $subtasks = !empty($args['only']) ? explode(',', $args['only']) : $this->defaultSubtasks;
 
-        if (in_array('move-files', $subtasks)) {
+        $subtask = 'move-files';
+        if (in_array($subtask, $subtasks)) {
             if (!class_exists(FileMigrationHelper::class)) {
                 $this->logger->error("No file migration helper detected");
-                return;
-            }
-
-            $this->logger->info('### Migrating filesystem and database records (move-files)');
-
-            $this->logger->info('If the task fails or times out, run it again and it will start where it left off.');
-
-            $migrated = FileMigrationHelper::singleton()->run();
-            if ($migrated) {
-                $this->logger->info("{$migrated} File DataObjects upgraded");
             } else {
-                $this->logger->info("No File DataObjects need upgrading");
+                $this->extend('preFileMigrationSubtask', $subtask);
+                $this->logger->info("### Migrating filesystem and database records ({$subtask})");
+                $this->logger->info('If the task fails or times out, run it again and it will start where it left off.');
+
+                $migrated = FileMigrationHelper::singleton()->run();
+                if ($migrated) {
+                    $this->logger->info("{$migrated} File DataObjects upgraded");
+                } else {
+                    $this->logger->info("No File DataObjects need upgrading");
+                }
+                $this->extend('postFileMigrationSubtask', $subtask);
             }
         }
 
-        if (in_array('move-thumbnails', $subtasks)) {
+        $subtask = 'move-thumbnails';
+        if (in_array($subtask, $subtasks)) {
             if (!class_exists(LegacyThumbnailMigrationHelper::class)) {
                 $this->logger->error("LegacyThumbnailMigrationHelper not found");
-                return;
-            }
-
-            $this->logger->info('### Migrating existing thumbnails (move-thumbnails)');
-
-            $moved = LegacyThumbnailMigrationHelper::singleton()
-                ->setLogger($this->logger)
-                ->run($this->getStore());
-
-            if ($moved) {
-                $this->logger->info(sprintf("%d thumbnails moved", count($moved)));
             } else {
-                $this->logger->info("No thumbnails moved");
+                $this->extend('preFileMigrationSubtask', $subtask);
+                $this->logger->info("### Migrating existing thumbnails ({$subtask})");
+
+                $moved = LegacyThumbnailMigrationHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run($this->getStore());
+
+                if ($moved) {
+                    $this->logger->info(sprintf("%d thumbnails moved", count($moved)));
+                } else {
+                    $this->logger->info("No thumbnails moved");
+                }
+
+                $this->extend('postFileMigrationSubtask', $subtask);
             }
         }
 
-        if (in_array('generate-cms-thumbnails', $subtasks)) {
+        $subtask = 'generate-cms-thumbnails';
+        if (in_array($subtask, $subtasks)) {
             if (!class_exists(ImageThumbnailHelper::class)) {
                 $this->logger->error("ImageThumbnailHelper not found");
-                return;
+            } else {
+                $this->extend('preFileMigrationSubtask', $subtask);
+                $this->logger->info("### Generating new CMS UI thumbnails ({$subtask})");
+                ImageThumbnailHelper::singleton()->run();
+                $this->extend('postFileMigrationSubtask', $subtask);
             }
-
-            $this->logger->info('### Generating new CMS UI thumbnails (generate-cms-thumbnails)');
-
-            ImageThumbnailHelper::singleton()->run();
         }
 
-        if (in_array('fix-folder-permissions', $subtasks)) {
+        $subtask = 'fix-folder-permissions';
+        if (in_array($subtask, $subtasks)) {
             if (!class_exists(FixFolderPermissionsHelper::class)) {
                 $this->logger->error("FixFolderPermissionsHelper not found");
-                return;
-            }
-
-            $this->logger->info('### Fixing folder permissions (fix-folder-permissions)');
-
-            $updated = FixFolderPermissionsHelper::singleton()->run();
-
-            if ($updated > 0) {
-                $this->logger->info("Repaired {$updated} folders with broken CanViewType settings");
             } else {
-                $this->logger->info("No folders required fixes");
+                $this->extend('preFileMigrationSubtask', $subtask);
+
+                $this->logger->info("### Fixing folder permissions ({$subtask})");
+                $updated = FixFolderPermissionsHelper::singleton()->run();
+
+                if ($updated > 0) {
+                    $this->logger->info("Repaired {$updated} folders with broken CanViewType settings");
+                } else {
+                    $this->logger->info("No folders required fixes");
+                }
+
+                $this->extend('postFileMigrationSubtask', $subtask);
             }
         }
 
-        if (in_array('fix-secureassets', $subtasks)) {
+        $subtask = 'fix-secureassets';
+        if (in_array($subtask, $subtasks)) {
             if (!class_exists(SecureAssetsMigrationHelper::class)) {
                 $this->logger->error("SecureAssetsMigrationHelper not found");
-                return;
+            } else {
+                $this->extend('preFileMigrationSubtask', $subtask);
+
+                $this->logger->info("### Fixing secure-assets ({$subtask})");
+                $moved = SecureAssetsMigrationHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run($this->getStore());
+
+                $this->extend('postFileMigrationSubtask', $subtask);
             }
-
-            $this->logger->info('### Fixing secure-assets (fix-secureassets)');
-
-            $moved = SecureAssetsMigrationHelper::singleton()
-                ->setLogger($this->logger)
-                ->run($this->getStore());
         }
+
+        $this->extend('postFileMigration');
+
+        $this->logger->info("Done!");
     }
 
     public function getDescription()

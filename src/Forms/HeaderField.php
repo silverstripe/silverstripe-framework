@@ -30,7 +30,7 @@ class HeaderField extends DatalessField
      * @param string $title
      * @param int $headingLevel
      */
-    public function __construct($name, $title, $headingLevel = 2)
+    public function __construct($name, $title = null, $headingLevel = 2)
     {
         $this->setHeadingLevel($headingLevel);
         parent::__construct($name, $title);
