@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev\Install;
 
-use BadMethodCallException;
 use Exception;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPApplication;
