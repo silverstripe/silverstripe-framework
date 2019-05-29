@@ -89,17 +89,20 @@ class Environment
             return true;
         }
 
-        // Check hard maximums
-        $max = static::getMemoryLimitMax();
-        if ($max > 0 && ($memoryLimit < 0 || $memoryLimit > $max)) {
-            $memoryLimit = $max;
-        }
 
         // Increase the memory limit if it's too low
         if ($memoryLimit < 0) {
             ini_set('memory_limit', '-1');
-        } elseif ($memoryLimit > $curLimit) {
-            ini_set('memory_limit', Convert::bytes2memstring($memoryLimit));
+        } else {
+            // Check hard maximums
+            $max = static::getMemoryLimitMax();
+            if ($max > 0 && ($memoryLimit < 0 || $memoryLimit > $max)) {
+                $memoryLimit = $max;
+            }
+
+            if ($memoryLimit > $curLimit) {
+                ini_set('memory_limit', Convert::bytes2memstring($memoryLimit));
+            }
         }
 
         return true;
