@@ -60,7 +60,9 @@ class MigrateFileTask extends BuildTask
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
                 $this->logger->info("### Migrating filesystem and database records ({$subtask})");
-                $this->logger->info('If the task fails or times out, run it again and it will start where it left off.');
+                $this->logger->info(
+                    'If the task fails or times out, run it again and it will start where it left off.'
+                );
 
                 $migrated = FileMigrationHelper::singleton()->run();
                 if ($migrated) {
