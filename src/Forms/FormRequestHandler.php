@@ -262,7 +262,7 @@ class FormRequestHandler extends RequestHandler
             );
         }
 
-        return $this->httpError(404);
+        return $this->httpError(404, "Could not find a suitable form-action callback function");
     }
 
     /**
