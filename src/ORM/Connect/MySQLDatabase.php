@@ -6,6 +6,7 @@ use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;

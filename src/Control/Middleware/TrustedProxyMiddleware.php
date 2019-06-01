@@ -3,7 +3,7 @@
 namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Util\IPUtils;
+use SilverStripe\Control\IPUtils;
 
 /**
  * This middleware will rewrite headers that provide IP and host details from an upstream proxy.

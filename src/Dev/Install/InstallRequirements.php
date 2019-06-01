@@ -315,7 +315,7 @@ class InstallRequirements
             // in addition to the temp folder being available, check it is writable
             $this->requireWriteable($tempFolder, array(
                 "File permissions",
-                sprintf("Is the temporary directory writeable?", $tempFolder),
+                sprintf("Is the temporary directory (%s) writeable?", $tempFolder),
                 null
             ), true);
         }

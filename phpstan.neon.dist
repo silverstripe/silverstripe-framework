@@ -1,0 +1,29 @@
+parameters:
+    level: 0
+    paths:
+        - %currentWorkingDirectory%/src/
+    excludes_analyse:
+        # PHPStan bug?? https://github.com/phpstan/phpstan/issues/2171
+        - %currentWorkingDirectory%/src/View/SSTemplateParser.php
+        # tidy ext.
+        - %currentWorkingDirectory%/src/View/Parsers/TidyHTMLCleaner.php
+        - %currentWorkingDirectory%/src/Dev/CSSContentParser.php
+        # ezyang/htmlpurifier
+        - %currentWorkingDirectory%/src/View/Parsers/PurifierHTMLCleaner.php
+        # Memcached ext.
+        - %currentWorkingDirectory%/src/Core/Cache/MemcachedCacheFactory.php
+        # symfony/console
+        - %currentWorkingDirectory%/src/Dev/Upgrade/UpgradeBootstrap.php
+        # Previous version
+        - %currentWorkingDirectory%/src/Dev/Tasks/MigrateFileTask.php
+        - %currentWorkingDirectory%/src/Forms/GridField/GridFieldVersionedState.php
+        # npm package tinymce_compressor
+        - %currentWorkingDirectory%/src/Forms/HTMLEditor/TinyMCEGZIPGenerator.php
+    autoload_files:
+        - %currentWorkingDirectory%/thirdparty/php-peg/Parser.php
+        - %currentWorkingDirectory%/thirdparty/difflib/difflib.php
+        - %currentWorkingDirectory%/thirdparty/simpletest/selector.php
+        - %currentWorkingDirectory%/thirdparty/simpletest/page.php
+    ignoreErrors:
+#        # Where is TransactionalDBConnector?
+#        - '#^Class SilverStripe\\ORM\\Connect\\TransactionalDBConnector not found\.$#'

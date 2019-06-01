@@ -38,10 +38,6 @@ class DebugView
             'title' => 'Alert',
             'class' => 'error'
         ),
-        2 => array(
-            'title' => 'Critical',
-            'class' => 'error'
-        ),
         3 => array(
             'title' => 'Error',
             'class' => 'error'
@@ -85,10 +81,6 @@ class DebugView
         E_USER_DEPRECATED => array(
             'title' => 'User Deprecated',
             'class' => 'notice'
-        ),
-        E_CORE_ERROR => array(
-            'title' => 'Core Error',
-            'class' => 'error'
         ),
         E_WARNING => array(
             'title' => 'Warning',

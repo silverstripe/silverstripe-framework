@@ -82,23 +82,23 @@ class MySQLSchemaManager extends DBSchemaManager
 
         if ($newFields) {
             foreach ($newFields as $k => $v) {
-                $alterList[] .= "ADD \"$k\" $v";
+                $alterList[] = "ADD \"$k\" $v";
             }
         }
         if ($newIndexes) {
             foreach ($newIndexes as $k => $v) {
-                $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
+                $alterList[] = "ADD " . $this->getIndexSqlDefinition($k, $v);
             }
         }
         if ($alteredFields) {
             foreach ($alteredFields as $k => $v) {
-                $alterList[] .= "CHANGE \"$k\" \"$k\" $v";
+                $alterList[] = "CHANGE \"$k\" \"$k\" $v";
             }
         }
         if ($alteredIndexes) {
             foreach ($alteredIndexes as $k => $v) {
-                $alterList[] .= "DROP INDEX \"$k\"";
-                $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
+                $alterList[] = "DROP INDEX \"$k\"";
+                $alterList[] = "ADD " . $this->getIndexSqlDefinition($k, $v);
             }
         }
 

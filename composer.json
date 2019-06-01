@@ -53,6 +53,7 @@
         "ext-xml": "*"
     },
     "require-dev": {
+        "phpstan/phpstan-shim": "^0.11.8",
         "phpunit/phpunit": "^5.7",
         "silverstripe/versioned": "^1"
     },
