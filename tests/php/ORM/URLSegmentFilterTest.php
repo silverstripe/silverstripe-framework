@@ -113,6 +113,6 @@ class URLSegmentFilterTest extends SapphireTest
     {
         $filter = new URLSegmentFilter();
         $filter->setAllowMultibyte(true);
-        $this->assertEquals('url-with-bad-characters', $filter->filter('url?-with/-bad#-characters='));
+        $this->assertEquals('url-with-some-bad-characters', $filter->filter('url?-with/-some:-bad#-characters='));
     }
 }
