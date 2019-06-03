@@ -580,7 +580,7 @@ class FormField extends RequestHandler
         //
         // CSS class needs to be different from the one rendered through {@link FieldHolder()}.
         if ($this->getMessage()) {
-            $classes[] .= 'holder-' . $this->getMessageType();
+            $classes[] = 'holder-' . $this->getMessageType();
         }
 
         return implode(' ', $classes);
