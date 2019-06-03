@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * Allows GridField_ActionMenuItem to act as a link
  */

@@ -445,7 +445,7 @@ class ClassManifest
             'name_regex' => '/^[^_].*\\.php$/',
             'ignore_files' => array('index.php', 'cli-script.php'),
             'ignore_tests' => !$includeTests,
-            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
+            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
         ));

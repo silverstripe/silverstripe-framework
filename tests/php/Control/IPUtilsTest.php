@@ -12,7 +12,7 @@ namespace SilverStripe\Control\Tests;
  * file that was distributed with this source code.
  */
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Util\IPUtils;
+use SilverStripe\Control\IPUtils;
 
 class IPUtilsTest extends SapphireTest
 {

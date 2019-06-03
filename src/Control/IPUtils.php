@@ -7,7 +7,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-namespace SilverStripe\Control\Util;
+namespace SilverStripe\Control;
 
 /**
  * Http utility functions.
