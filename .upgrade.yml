@@ -888,6 +888,7 @@ mappings:
   CheckboxSetField_ss: SilverStripe\Forms\CheckboxSetField_ss
   ForgotPasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
   GridFieldEditButton_ss: SilverStripe\Forms\GridField\GridFieldEditButton_ss
+  SilverStripe\Control\Util\IPUtils: SilverStripe\Control\IPUtils
 skipYML:
   - MySQLPDODatabase
   - MySQLDatabase
