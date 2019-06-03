@@ -563,7 +563,7 @@ class ClassManifest
             'ignore_files' => ['index.php', 'cli-script.php'],
             'ignore_tests' => !$includeTests,
             'ignored_ci_configs' => $ignoredCIConfigs,
-            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
+            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
         ]);

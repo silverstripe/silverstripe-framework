@@ -124,7 +124,7 @@ class ThemeManifest implements ThemeList
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getThemes()
     {
