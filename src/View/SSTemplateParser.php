@@ -3052,9 +3052,11 @@ class SSTemplateParser extends Parser implements TemplateParser
         $condition = isset($res['condition']) ? $res['condition'] : '';
 
         $res['php'] .= 'if ('.$condition.'($partial = $cache->get('.$key.'))) $val .= $partial;' . PHP_EOL;
-        $res['php'] .= 'else { $oldval = $val; $val = "";' . PHP_EOL;
+        $res['php'] .= 'else { $oldval = $val; $val = ""; $oldrewritehash = \\SilverStripe\\View\\SSViewer::getRewriteHashLinksDefault();' . PHP_EOL;
+        $res['php'] .= '\\SilverStripe\\View\\SSViewer::setRewriteHashLinksDefault(false);' . PHP_EOL;
         $res['php'] .= $sub['php'] . PHP_EOL;
         $res['php'] .= $condition . ' $cache->set('.$key.', $val); $val = $oldval . $val;' . PHP_EOL;
+        $res['php'] .= '\\SilverStripe\\View\\SSViewer::setRewriteHashLinksDefault($oldrewritehash);' . PHP_EOL;
         $res['php'] .= '}';
     }
 
