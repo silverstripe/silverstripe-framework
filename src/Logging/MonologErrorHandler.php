@@ -18,13 +18,13 @@ class MonologErrorHandler implements ErrorHandler
      * Set the PSR-3 logger to send errors & exceptions to. Will overwrite any previously configured
      * loggers
      *
-     * @deprecated 4.4.0:5.0.0 Use pushHandler() instead
+     * @deprecated 4.4.0:5.0.0 Use pushLogger() instead
      * @param LoggerInterface $logger
      * @return $this
      */
     public function setLogger(LoggerInterface $logger)
     {
-        Deprecation::notice('4.4.0', 'Please use pushHandler() instead');
+        Deprecation::notice('4.4.0', 'Please use pushLogger() instead');
 
         $this->loggers = [$logger];
         return $this;
@@ -33,12 +33,12 @@ class MonologErrorHandler implements ErrorHandler
     /**
      * Get the first registered PSR-3 logger to send errors & exceptions to
      *
-     * @deprecated 4.4.0:5.0.0 Use getHandlers() instead
+     * @deprecated 4.4.0:5.0.0 Use getLoggers() instead
      * @return LoggerInterface
      */
     public function getLogger()
     {
-        Deprecation::notice('4.4.0', 'Please use getHandlers() instead');
+        Deprecation::notice('4.4.0', 'Please use getLoggers() instead');
 
         return reset($this->loggers);
     }
