@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tasks;
 
+use Monolog\Handler\FilterHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -243,25 +244,28 @@ TXT;
      */
     protected function addLogHandlers()
     {
-        // Create a default logger with a custom name (less misleading than "error-log")
-        $logger = Injector::inst()->create(LoggerInterface::class, 'log');
+        // Using a global service here so other systems can control and redirect log output,
+        // for example when this task is run as part of a queuedjob
+        $logger = Injector::inst()->get(LoggerInterface::class)->withName('log');
 
-        if (Director::is_cli()) {
             $formatter = new ColoredLineFormatter();
             $formatter->ignoreEmptyContextAndExtra();
 
-            // Don't double process WARNING or higher levels in other handlers (bubble=false)
-            $errorHandler = new StreamHandler('php://stderr', Logger::ERROR, false);
+        $errorHandler = new StreamHandler('php://stderr', Logger::ERROR);
             $errorHandler->setFormatter($formatter);
 
             $standardHandler = new StreamHandler('php://stdout');
             $standardHandler->setFormatter($formatter);
 
-            $logger->pushHandler($standardHandler);
+        // Avoid double logging of errors
+        $standardFilterHandler = new FilterHandler(
+            $standardHandler,
+            Logger::DEBUG,
+            Logger::WARNING
+        );
+
+        $logger->pushHandler($standardFilterHandler);
             $logger->pushHandler($errorHandler);
-        } else {
-            $logger->pushHandler(new PreformattedEchoHandler());
-        }
 
         $this->logger = $logger;
     }
