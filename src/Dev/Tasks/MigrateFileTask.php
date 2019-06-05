@@ -12,6 +12,7 @@ use SilverStripe\Assets\Dev\Tasks\FileMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Storage\FileHashingService;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\Dev\BuildTask;
@@ -50,6 +51,10 @@ class MigrateFileTask extends BuildTask
         $this->validateArgs($args);
 
         Injector::inst()->get(FileHashingService::class)->enableCache();
+
+        // Set max time and memory limit
+        Environment::increaseTimeLimitTo();
+        Environment::increaseMemoryLimitTo();
 
         $this->extend('preFileMigration');
 
@@ -248,14 +253,14 @@ TXT;
         // for example when this task is run as part of a queuedjob
         $logger = Injector::inst()->get(LoggerInterface::class)->withName('log');
 
-            $formatter = new ColoredLineFormatter();
-            $formatter->ignoreEmptyContextAndExtra();
+        $formatter = new ColoredLineFormatter();
+        $formatter->ignoreEmptyContextAndExtra();
 
         $errorHandler = new StreamHandler('php://stderr', Logger::ERROR);
-            $errorHandler->setFormatter($formatter);
+        $errorHandler->setFormatter($formatter);
 
-            $standardHandler = new StreamHandler('php://stdout');
-            $standardHandler->setFormatter($formatter);
+        $standardHandler = new StreamHandler('php://stdout');
+        $standardHandler->setFormatter($formatter);
 
         // Avoid double logging of errors
         $standardFilterHandler = new FilterHandler(
@@ -265,7 +270,7 @@ TXT;
         );
 
         $logger->pushHandler($standardFilterHandler);
-            $logger->pushHandler($errorHandler);
+        $logger->pushHandler($errorHandler);
 
         $this->logger = $logger;
     }
