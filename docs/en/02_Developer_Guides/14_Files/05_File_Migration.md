@@ -37,7 +37,26 @@ This task will perform a number of subtasks:
 One or more subtasks can be run individually through the `only` argument.
 Example: `only=move-files,move-thumbnails`
 
+The output is quite verbose by default. Look for `WARNING` and `ERROR` in the log files.
+When executing the task on CLI, you'll get colour coded error messages.
+
+## Background migration through the Queuedjobs module
+
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
+Open up `admin/queuedjobs`, then create a job of type `RunBuildTaskJob`.
+The only constructor parameter allowed is the full name of the task: `SilverStripe\Dev\Tasks\MigrateFileTask`.
+The task output will be progressively written to the job record, and can be inspected via the "Messages" tab within the job in the CMS.
+It attempts to continue running to "complete" status even if it encounters errors, so you'll need to review the logs
+to ensure if everything went smoothly. Note that it's currently not possible to run specific subtasks via a queuedjob.
+
+While you can run the job directly through the CMS, it'll usually be more constrained by PHP `max_execution_time` settings.
+Many platforms such as the New Zealand Government Common Web Platform or SilverStripe Platform
+are configured to run jobs automatically without time limits
+([1](https://docs.platform.silverstripe.com/development/platform-yml-file/#cron-tasks),
+[2](https://www.cwp.govt.nz/developer-docs/en/2/working_with_projects/infrastructural_considerations/)).
+It is not recommended to run
+[multiple processes](https://github.com/symbiote/silverstripe-queuedjobs/blob/master/docs/en/configuring-multi-process-execution.md)
+when executing the file migration job. 
 
 ## Migration of existing thumbnails
 
