@@ -54,7 +54,8 @@ class MigrateFileTask extends BuildTask
 
         // Set max time and memory limit
         Environment::increaseTimeLimitTo();
-        Environment::increaseMemoryLimitTo();
+        Environment::setMemoryLimitMax(-1);
+        Environment::increaseMemoryLimitTo(-1);
 
         $this->extend('preFileMigration');
 
