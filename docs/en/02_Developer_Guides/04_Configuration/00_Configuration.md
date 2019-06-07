@@ -51,8 +51,6 @@ This can be done by calling the static method [Config::inst()](api:SilverStripe\
 
 
 ```php
-use SilverStripe\Core\Config\Config;
-
 $config = Config::inst()->get('MyClass', 'property');
 ```
 
