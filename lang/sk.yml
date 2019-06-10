@@ -34,15 +34,12 @@ sk:
     LOGGED_IN_ERROR: 'Pre zmenu vášho hesla musíte byť prihlásený.'
     MAXIMUM: 'Heslá musia byť najviac {max} znakov dlhé.'
     SHOWONCLICKTITLE: 'Zmeniť heslo'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: '(Vyberte si)'
-    CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosím zadajte platnú e-mailovú adresu'

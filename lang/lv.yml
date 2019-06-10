@@ -1,8 +1,6 @@
 lv:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mainīt paroli'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: Ls
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izvēlieties)
   SilverStripe\Forms\Form:

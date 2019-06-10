@@ -7,8 +7,6 @@ lt:
     BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
     MAXIMUM: 'Slaptažodžiai privalo būti ne ilgesni nei {max} simbolių ilgio.'
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Prašome suvesti datą reikiamu formatu ({format})'
     VALIDDATEMAXDATE: 'Data privalo būti senesnė arba lygi vėliausiai galimai datai ({date})'

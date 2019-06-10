@@ -1,8 +1,6 @@
 gl_ES:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar Contrasinal'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoller)
   SilverStripe\Forms\Form:

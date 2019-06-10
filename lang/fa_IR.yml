@@ -10,8 +10,6 @@ fa_IR:
     LOGGED_IN_ERROR: 'جهت تغییر گذرواژه خود باید وارد شده باشید.'
     MAXIMUM: 'گذرواژه باید حداکثر {max} کاراکتر باشد.'
     SHOWONCLICKTITLE: 'تغییر گذرواژه'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: ﷼
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'لطفاً یک قالب تاریخ معتبر وارد نمایید ({format})'
     VALIDDATEMAXDATE: 'تاریخ شما باید قدیمی‌تر یا برابر با حداکثر تاریخ مجاز ({date}) باشد'

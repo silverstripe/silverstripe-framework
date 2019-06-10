@@ -7,8 +7,6 @@ id:
     BETWEEN: 'Kata kunci harus terdiri dari minimal {min} sampai {max} karakter.'
     MAXIMUM: 'Kata kunci tidak boleh lebih dari {max} karakter.'
     SHOWONCLICKTITLE: 'Ganti Kata Kunci'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
     VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'

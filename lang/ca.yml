@@ -1,8 +1,6 @@
 ca:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Canvia la contrasenya'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €E
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Trieu)
   SilverStripe\Forms\Form:

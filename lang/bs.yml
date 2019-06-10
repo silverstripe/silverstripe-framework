@@ -2,8 +2,6 @@ bs:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: KM
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izaberite)
   SilverStripe\Forms\Form:

@@ -34,8 +34,6 @@ nl:
     LOGGED_IN_ERROR: 'U moet ingelogd zijn om uw wachtwoord te kunnen veranderen!'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
@@ -48,7 +46,6 @@ nl:
     VALIDDATETIMEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Kies)
-    CHOOSE_MODEL: '(Selecteer {name})'
     SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
