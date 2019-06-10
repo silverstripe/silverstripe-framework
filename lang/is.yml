@@ -1,8 +1,6 @@
 is:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Breyta lykliorði'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: kr
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Veldu)
   SilverStripe\Forms\Form:
@@ -31,7 +29,7 @@ is:
     Description: Lýsing
     Locked: 'Læst?'
     Parent: 'Yfir hópur'
-    Sort: 'Röðun'
+    Sort: Röðun
     has_many_Permissions: Leyfi
     many_many_Members: Félagar
   SilverStripe\Security\LoginAttempt:
@@ -39,7 +37,7 @@ is:
     Status: Staða
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
-    BUTTONLOGIN: 'Innskrá'
+    BUTTONLOGIN: Innskrá
     BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
     BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
     CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
@@ -49,7 +47,7 @@ is:
     ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
     ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
     ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
-    FIRSTNAME: 'Fornafn'
+    FIRSTNAME: Fornafn
     INTERFACELANG: 'Tungumál viðmóts'
     NEWPASSWORD: 'Nýtt lykilorð'
     PASSWORD: Lykilorð
@@ -70,6 +68,6 @@ is:
     CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
     ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
     ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
-    LOGIN: 'Innskrá'
+    LOGIN: Innskrá
     NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
     NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'

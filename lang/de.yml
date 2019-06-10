@@ -21,8 +21,8 @@ de:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Unbekannt
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nein'
-    YESANSWER: 'Ja'
+    NOANSWER: Nein
+    YESANSWER: Ja
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Keine Optionen verfügbar'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -33,8 +33,6 @@ de:
     LOGGED_IN_ERROR: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
@@ -45,7 +43,6 @@ de:
     VALIDDATETIMEMINDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({datetime}) liegen oder gleich sein'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSE_MODEL: '({name} auswählen)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -79,13 +76,13 @@ de:
     PlaceHolder: '{type} suchen'
     PlaceHolderWithLabels: 'Suche {type} über {name}'
     Print: Drucken
-    RelationSearch: 'Relationssuche'
+    RelationSearch: Relationssuche
     ResetFilter: Zurücksetzen
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Löschen
     DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
     EditPermissionsFailure: 'Sie haben keine Berechtigung, die Verknüpfung zu lösen'
-    UnlinkRelation: Verbindung entfernen
+    UnlinkRelation: 'Verbindung entfernen'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Abbrechen
     Create: Erstellen
@@ -110,15 +107,15 @@ de:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: 'DatenObjekte'
+    PLURALNAME: DatenObjekte
     PLURALS:
       one: 'Ein DatenObjekt'
       other: '{count} DatenObjekte'
-    SINGULARNAME: 'DatenObjekt'
+    SINGULARNAME: DatenObjekt
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: alle
-    NOANSWER: 'Nein'
-    YESANSWER: 'Ja'
+    NOANSWER: Nein
+    YESANSWER: Ja
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} Tag'
@@ -149,7 +146,7 @@ de:
     InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern Sie die übergeordnete Seite, um den Fehler zu beheben'
     LIMITED_TITLE: 'Zu viele Kindelemente ({count})'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Validierungsfehler'
+    DEFAULT_ERROR: Validierungsfehler
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Bitte geben Sie einen Nutzernamen und ein Passwort ein'
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
@@ -163,14 +160,14 @@ de:
     SUCCESSCONTENT: '<p>Login erfolgreich. Falls Sie nicht automatisch weitergeleitet werden, bitte <a target="_top" href="{link}">hier klicken</a></p>'
     SUCCESS_TITLE: 'Login erfolgreich'
   SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Standardadmin'
+    DefaultAdminFirstname: Standardadmin
   SilverStripe\Security\Group:
     AddRole: 'Rolle zur Gruppe hinzufügen'
     Code: 'Gruppen Code'
     DefaultGroupTitleAdministrators: Administratoren
-    DefaultGroupTitleContentAuthors: 'Inhaltsautoren'
+    DefaultGroupTitleContentAuthors: Inhaltsautoren
     Description: Beschreibung
-    GROUPNAME: 'Gruppenname'
+    GROUPNAME: Gruppenname
     GroupReminder: 'Diese Gruppe übernimmt automatisch die Rollen der Elterngruppe'
     HierarchyPermsError: 'Kann Berechtigungen der Eltern-Gruppe "{group}" nicht hinzufügen (erfordert Administratorrechte)'
     Locked: 'Gesperrt?'
@@ -182,30 +179,30 @@ de:
     PLURALS:
       one: 'Eine Gruppe'
       other: '{count} Gruppen'
-    Parent: 'Elterngruppe'
+    Parent: Elterngruppe
     ROLES: Rollen
     ROLESDESCRIPTION: 'Hier können Sie der Gruppe Rollen zuweisen.<br />Rollen sind logische Gruppierungen von Berechtigungen.'
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
     SINGULARNAME: Gruppe
-    Sort: 'Sortierreihenfolge'
+    Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
   SilverStripe\Security\LoginAttempt:
-    Email: 'E-Mail-Adresse'
+    Email: E-Mail-Adresse
     EmailHashed: 'E-Mail-Adresse (gehashed)'
-    IP: 'IP-Adresse'
-    PLURALNAME: 'Loginversuche'
+    IP: IP-Adresse
+    PLURALNAME: Loginversuche
     PLURALS:
       one: 'Ein Loginversuch'
       other: '{count} Loginversuche'
-    SINGULARNAME: 'Loginversuch'
+    SINGULARNAME: Loginversuch
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
-    BUTTONLOGIN: 'Einloggen'
+    BUTTONLOGIN: Einloggen
     BUTTONLOGINOTHER: 'Als jemand anderes einloggen'
-    BUTTONLOGOUT: 'Abmelden'
+    BUTTONLOGOUT: Abmelden
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
@@ -218,8 +215,8 @@ de:
     ERRORNEWPASSWORD: 'Sie haben Ihr neues Passwort unterschiedlich eingegeben, bitte versuchen Sie es erneut.'
     ERRORPASSWORDNOTMATCH: 'Das Passwort stimmt nicht mit dem hinterlegten Passwort überein, bitte versuchen Sie es noch einmal'
     ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
-    FIRSTNAME: 'Vorname'
-    INTERFACELANG: 'CMS-Sprache'
+    FIRSTNAME: Vorname
+    INTERFACELANG: CMS-Sprache
     KEEPMESIGNEDIN: 'Eingeloggt bleiben'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
@@ -246,18 +243,18 @@ de:
     AUTHENTICATORNAME: 'CMS Benutzer Login Formular'
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
     BUTTONLOGIN: 'Wieder einloggen'
-    BUTTONLOGOUT: 'Abmelden'
+    BUTTONLOGOUT: Abmelden
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
     NoPassword: 'Dieser Benutzer hat kein Passwort.'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'E-Mail & Passwort'
   SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Benutzerpasswörter'
+    PLURALNAME: Benutzerpasswörter
     PLURALS:
       one: 'Ein Benutzerpasswort'
       other: '{count} Benutzerpasswörter'
-    SINGULARNAME: 'Benutzerpasswort'
+    SINGULARNAME: Benutzerpasswort
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: {chars}'
     PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
@@ -265,7 +262,7 @@ de:
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
-    CONTENT_CATEGORY: 'Inhaltsberechtigungen'
+    CONTENT_CATEGORY: Inhaltsberechtigungen
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
@@ -289,12 +286,12 @@ de:
     SINGULARNAME: Rolle
     Title: Titel
   SilverStripe\Security\PermissionRoleCode:
-    PLURALNAME: 'Berechtigungsrollencodes'
+    PLURALNAME: Berechtigungsrollencodes
     PLURALS:
       one: 'Ein Berechtigungsrollencode'
       other: '{count} Berechtigungsrollencodes'
     PermsError: 'Kann Berechtigungen dem Code "{code}" nicht hinzufügen (erfordert Administratorrechte)'
-    SINGULARNAME: 'Berechtigungsrollencode'
+    SINGULARNAME: Berechtigungsrollencode
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Login Hashes'
     PLURALS:
@@ -308,8 +305,8 @@ de:
     CHANGEPASSWORDHEADER: 'Passwort ändern'
     ENTERNEWPASSWORD: 'Bitte geben Sie ein neues Passwort ein'
     ERRORPASSWORDPERMISSION: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
-    LOGIN: 'Anmelden'
-    LOGOUT: 'Abmelden'
+    LOGIN: Anmelden
+    LOGOUT: Abmelden
     LOSTPASSWORDHEADER: 'Passwort vergessen'
     NOTEPAGESECURED: 'Diese Seite ist geschützt. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.'
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'

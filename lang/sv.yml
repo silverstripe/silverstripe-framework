@@ -5,7 +5,7 @@ sv:
     Dimensions: Dimensioner
     EDIT: Redigera
     EDITINFO: 'Redigera filen'
-    REMOVE: Ta bort
+    REMOVE: 'Ta bort'
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Lösenordet för kontot med e-postadressen {email} har ändrats. Om du inte ändrade ditt lösenord, vänligen ändra lösenordet via länken nedan.'
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
@@ -22,8 +22,8 @@ sv:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Okänd
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Nej'
-    YESANSWER: 'Ja'
+    NOANSWER: Nej
+    YESANSWER: Ja
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Inga tillgängliga val'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -34,8 +34,6 @@ sv:
     LOGGED_IN_ERROR: 'Du måste vara inloggad för att ändra ditt lösenord'
     MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
     SHOWONCLICKTITLE: 'Ändra lösenord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
@@ -46,7 +44,6 @@ sv:
     VALIDDATETIMEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigast godkända datumet ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Välj)
-    CHOOSE_MODEL: '(Välj {name})'
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'
@@ -74,12 +71,12 @@ sv:
     LinkExisting: 'Länk finns'
     NewRecord: 'Ny {type}'
     NoItemsFound: 'Inget hittades'
-    PRINTEDAT: 'Utskrivet'
+    PRINTEDAT: Utskrivet
     PRINTEDBY: 'Utskrivet av'
     PlaceHolder: 'Hitta {type}'
     PlaceHolderWithLabels: 'Hitta {type} efter {name}'
-    Print: Skriv ut
-    RelationSearch: 'Relationssökning'
+    Print: 'Skriv ut'
+    RelationSearch: Relationssökning
     ResetFilter: Rensa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Radera
@@ -112,15 +109,15 @@ sv:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Dataobjekt'
+    PLURALNAME: Dataobjekt
     PLURALS:
       one: 'Ett dataobjekt'
       other: '{count} Dataobjekt'
-    SINGULARNAME: 'Dataobjekt'
+    SINGULARNAME: Dataobjekt
   SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Vilken som helst
-    NOANSWER: 'Nej'
-    YESANSWER: 'Ja'
+    ANY: 'Vilken som helst'
+    NOANSWER: Nej
+    YESANSWER: Ja
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} dag'
@@ -144,14 +141,14 @@ sv:
       one: '{count} år'
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Vilken som helst
+    ANY: 'Vilken som helst'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'För många barn ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Oändlig loop hittades i hierarkin "{type}". Var vänlig ändra föräldern för att lösa detta'
     LIMITED_TITLE: 'För många barn ({count})'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Valideringsfel'
+    DEFAULT_ERROR: Valideringsfel
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Var god ange användarnamn och lösenord'
     ERRORNOTADMIN: 'Den användaren är inte administratör'
@@ -167,11 +164,11 @@ sv:
     SUCCESS_TITLE: 'Inloggning lyckades'
   SilverStripe\Security\Group:
     AddRole: 'Lägg till roll för den här gruppen'
-    Code: 'Gruppkod'
+    Code: Gruppkod
     DefaultGroupTitleAdministrators: Administratörer
-    DefaultGroupTitleContentAuthors: 'Författare'
+    DefaultGroupTitleContentAuthors: Författare
     Description: Beskrivning
-    GROUPNAME: 'Gruppnamn'
+    GROUPNAME: Gruppnamn
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
     HierarchyPermsError: 'Den överordnade gruppen "{group}" kan inte ges priviligerad tillgång (adminrättigheter krävs)'
     Locked: 'Låst?'
@@ -188,18 +185,18 @@ sv:
     ROLESDESCRIPTION: 'Roller är fördefinierade samlingar med behörigheter och kan tilldelas grupper. <br /> De ärvs från föräldragrupper om det krävs.'
     RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
-    Sort: 'Sorteringsordning'
+    Sort: Sorteringsordning
     has_many_Permissions: Behörigheter
     many_many_Members: Medlemmar
   SilverStripe\Security\LoginAttempt:
-    Email: 'E-postadress'
+    Email: E-postadress
     EmailHashed: 'E-postadress (hash)'
-    IP: 'IP-adress'
-    PLURALNAME: 'Inloggningsförsök'
+    IP: IP-adress
+    PLURALNAME: Inloggningsförsök
     PLURALS:
       one: 'Ett inloggningsförsök'
       other: '{count} inloggningsförsök'
-    SINGULARNAME: 'Inloggningsförsök'
+    SINGULARNAME: Inloggningsförsök
     Status: Status
   SilverStripe\Security\Member:
     ADDGROUP: 'Lägg till grupp'
@@ -219,8 +216,8 @@ sv:
     ERRORNEWPASSWORD: 'Du har angett ditt nya lösenord annorlunda, försök igen'
     ERRORPASSWORDNOTMATCH: 'Ditt nuvarande lösenord matchar inte, var god försök igen'
     ERRORWRONGCRED: 'Antingen e-postadressen eller lösenordet är fel. Försök igen.'
-    FIRSTNAME: 'Förnamn'
-    INTERFACELANG: 'Gränssnittsspråk'
+    FIRSTNAME: Förnamn
+    INTERFACELANG: Gränssnittsspråk
     KEEPMESIGNEDIN: 'Håll mig inloggad'
     LOGGEDINAS: 'Du är inloggad som {name}.'
     NEWPASSWORD: 'Nytt lösenord'
@@ -240,7 +237,7 @@ sv:
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'
     belongs_many_many_Groups: Grupper
-    db_Locale: 'Gränssnittsspråk'
+    db_Locale: Gränssnittsspråk
     db_LockedOutUntil: 'Utelåst till'
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
@@ -260,8 +257,8 @@ sv:
     TOOSHORT: 'Lösenordet är för kort, det måste innehålla {minimum} eller fler tecken.'
   SilverStripe\Security\Permission:
     AdminGroup: Administratör
-    CMS_ACCESS_CATEGORY: 'CMS-åtkomst'
-    CONTENT_CATEGORY: 'Innehållsåtkomst'
+    CMS_ACCESS_CATEGORY: CMS-åtkomst
+    CONTENT_CATEGORY: Innehållsåtkomst
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
     PERMISSIONS_CATEGORY: 'Roller och åtkomstbehörigheter'

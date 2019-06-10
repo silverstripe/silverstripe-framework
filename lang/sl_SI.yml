@@ -1,11 +1,9 @@
 sl_SI:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
   SilverStripe\Forms\DropdownField:
@@ -23,7 +21,7 @@ sl_SI:
     ResetFilter: Resetiraj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Izbriši
-    UnlinkRelation: Odstrani povezavo
+    UnlinkRelation: 'Odstrani povezavo'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -32,8 +30,8 @@ sl_SI:
     Deleted: 'Izbrisano {type} {name}'
     Save: Shrani
   SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\ORM\FieldType\DBDate:
     LessThanMinuteAgo: 'manj kot minuto'
   SilverStripe\Security\BasicAuth:
@@ -54,7 +52,7 @@ sl_SI:
   SilverStripe\Security\Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
@@ -74,5 +72,5 @@ sl_SI:
   SilverStripe\Security\Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     LOSTPASSWORDHEADER: 'Pozabljeno geslo'

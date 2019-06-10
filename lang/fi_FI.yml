@@ -22,8 +22,8 @@ fi_FI:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Tuntematon
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ei'
-    YESANSWER: 'Kyllä'
+    NOANSWER: Ei
+    YESANSWER: Kyllä
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Ei vaihtoehtoja tarjolla'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -34,8 +34,6 @@ fi_FI:
     LOGGED_IN_ERROR: 'Sinun täytyy olla kirjautuneena vaihtaaksesi salasanasi.'
     MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'ei asetettu'
     TODAY: tänään
@@ -48,7 +46,6 @@ fi_FI:
     VALIDDATETIMEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun päivämäärän ja ajan minimiarvoon  ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Valitse)
-    CHOOSE_MODEL: '(Valitse {name})'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -65,7 +62,7 @@ fi_FI:
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'esim. {format}'
-    NONE: Ei yhtään
+    NONE: 'Ei yhtään'
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Yleiset
   SilverStripe\Forms\GridField\GridField:
@@ -79,18 +76,18 @@ fi_FI:
     NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
     OpenFilter: 'Avaa haku ja suodatus'
-    PRINTEDAT: 'Tulostettu'
-    PRINTEDBY: 'Tulostaja'
+    PRINTEDAT: Tulostettu
+    PRINTEDBY: Tulostaja
     PlaceHolder: 'Etsi {type}'
     PlaceHolderWithLabels: 'Etsi {type} &raquo; {name}'
     Print: Tulosta
-    RelationSearch: 'Relaatiohaku'
+    RelationSearch: Relaatiohaku
     ResetFilter: Nollaa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     EditPermissionsFailure: 'Ei oikeuksia purkaa linkitystä tietueeseen'
-    UnlinkRelation: Pura linkitys
+    UnlinkRelation: 'Pura linkitys'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Peruuta
     Create: Luo
@@ -124,15 +121,15 @@ fi_FI:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Dataobjektit'
+    PLURALNAME: Dataobjektit
     PLURALS:
-      one: 'Dataobjekti'
+      one: Dataobjekti
       other: '{count} Dataobjektia'
-    SINGULARNAME: 'Dataobjekti'
+    SINGULARNAME: Dataobjekti
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Yhtään
-    NOANSWER: 'Ei'
-    YESANSWER: 'Kyllä'
+    NOANSWER: Ei
+    YESANSWER: Kyllä
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} päivä'
@@ -165,7 +162,7 @@ fi_FI:
     InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
     LIMITED_TITLE: 'Liian monta lapsiobjektia ({count}}'
   SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Validointivirhe'
+    DEFAULT_ERROR: Validointivirhe
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Anna käyttäjänimi ja salasana'
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
@@ -180,12 +177,12 @@ fi_FI:
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
     SUCCESS_TITLE: 'Kirjautuminen onnistui'
   SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Oletusylläpitäjä'
+    DefaultAdminFirstname: Oletusylläpitäjä
   SilverStripe\Security\Group:
     AddRole: 'Lisää ryhmälle rooli'
     Code: 'Ryhmän koodi'
     DefaultGroupTitleAdministrators: Järjestelmänvalvojat
-    DefaultGroupTitleContentAuthors: 'Sisällöntuottajat'
+    DefaultGroupTitleContentAuthors: Sisällöntuottajat
     Description: Kuvaus
     GROUPNAME: 'Ryhmän nimi'
     GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
@@ -197,25 +194,25 @@ fi_FI:
     PERMISSIONS: Oikeudet
     PLURALNAME: Ryhmät
     PLURALS:
-      one: 'Ryhmä'
+      one: Ryhmä
       other: '{count} Ryhmää'
-    Parent: 'Isäntäryhmä'
+    Parent: Isäntäryhmä
     ROLES: Roolit
     ROLESDESCRIPTION: 'Tässä osiossa voit lisätä rooleja tähän ryhmään.<br />Roolit ovat käyttöoikeuksien loogisia ryhmittymiä, joita voidaan muokata Roolit-välilehdellä.'
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
     SINGULARNAME: Ryhmä
-    Sort: 'Järjestys'
+    Sort: Järjestys
     has_many_Permissions: Oikeudet
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
-    Email: 'Sähköpostiosoite'
+    Email: Sähköpostiosoite
     EmailHashed: 'Sähköpostiosoite (tiivistetty)'
-    IP: 'IP-osoite'
-    PLURALNAME: 'Kirjautumisyritykset'
+    IP: IP-osoite
+    PLURALNAME: Kirjautumisyritykset
     PLURALS:
-      one: 'Kirjautumisyritys'
+      one: Kirjautumisyritys
       other: '{count} Kirjautumisyritystä'
-    SINGULARNAME: 'Kirjautumisyritys'
+    SINGULARNAME: Kirjautumisyritys
     Status: Tila
   SilverStripe\Security\Member:
     ADDGROUP: 'Lisää ryhmä'
@@ -235,7 +232,7 @@ fi_FI:
     ERRORNEWPASSWORD: 'Syötit uuden salasanasi erilailla, yritä uudelleen.'
     ERRORPASSWORDNOTMATCH: 'Nykyiset salasanasi eivät täsmää, yritä uudelleen.'
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
-    FIRSTNAME: 'Etunimi'
+    FIRSTNAME: Etunimi
     INTERFACELANG: 'Käyttöliittymän kieli'
     KEEPMESIGNEDIN: 'Pidä minut kirjautuneena'
     LOGGEDINAS: 'Olet kirjautuneena nimellä {name}.'
@@ -244,7 +241,7 @@ fi_FI:
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Käyttäjät
     PLURALS:
-      one: 'Käyttäjä'
+      one: Käyttäjä
       other: '{count} Käyttäjää'
     REMEMBERME: 'Muista minut? ({days} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
@@ -282,14 +279,14 @@ fi_FI:
     TOOSHORT: 'Salasanan on oltava vähintään {minimum} merkkiä'
   SilverStripe\Security\Permission:
     AdminGroup: Järjestelmänvalvoja
-    CMS_ACCESS_CATEGORY: 'CMS-pääsy'
+    CMS_ACCESS_CATEGORY: CMS-pääsy
     CONTENT_CATEGORY: 'Sisällön käyttöoikeudet'
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
     PLURALNAME: Oikeudet
     PLURALS:
-      one: 'Oikeus'
+      one: Oikeus
       other: '{count} Oikeutta'
     SINGULARNAME: Oikeus
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
@@ -302,10 +299,10 @@ fi_FI:
     OnlyAdminCanApply: 'Vain järjestelmänvalvojalla on oikeudet asettaa'
     PLURALNAME: Roolit
     PLURALS:
-      one: 'Rooli'
+      one: Rooli
       other: '{count} Roolia'
     SINGULARNAME: Rooli
-    Title: Roolin nimi
+    Title: 'Roolin nimi'
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
     PLURALS:
@@ -314,11 +311,11 @@ fi_FI:
     PermsError: 'Ei voida asettaa koodia "{code}" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
   SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Kirjautumistarkisteet'
+    PLURALNAME: Kirjautumistarkisteet
     PLURALS:
       one: 'Kirjautumisen tarkiste'
       other: '{count} Kirjautumisen takistetta'
-    SINGULARNAME: 'Kirjautumistarkiste'
+    SINGULARNAME: Kirjautumistarkiste
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua sillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'

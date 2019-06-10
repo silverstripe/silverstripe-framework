@@ -22,8 +22,8 @@ bg:
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Непозната
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Не'
-    YESANSWER: 'Да'
+    NOANSWER: Не
+    YESANSWER: Да
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Няма опции'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -34,8 +34,6 @@ bg:
     LOGGED_IN_ERROR: 'Трябва да сте влезли в системата, за да промените паролата си.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
@@ -46,7 +44,6 @@ bg:
     VALIDDATETIMEMINDATE: 'Датата и времето трябва да бъдат същите или след ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Избери)
-    CHOOSE_MODEL: '(Избери {name})'
     SOURCE_VALIDATION: 'Изберете стойност от списъка. {value} не е валидна опция'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
@@ -87,7 +84,7 @@ bg:
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     EditPermissionsFailure: 'Нямате права за премахване на връзката'
-    UnlinkRelation: Премахване на връзката
+    UnlinkRelation: 'Премахване на връзката'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Отказ
     Create: Създай
@@ -98,7 +95,7 @@ bg:
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: от
     Page: Страница
-    View: Преглед на
+    View: 'Преглед на'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
@@ -119,8 +116,8 @@ bg:
     SINGULARNAME: 'Обект с данни'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Всички
-    NOANSWER: 'Не'
-    YESANSWER: 'Да'
+    NOANSWER: Не
+    YESANSWER: Да
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} ден'
@@ -166,7 +163,7 @@ bg:
     SUCCESSCONTENT: '<p>Успешно влизане. Ако страницата не се зареди автоматично, <a target="_top" href="{link}">кликнете тук</a></p>'
     SUCCESS_TITLE: 'Успешно влизане'
   SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Администратор'
+    DefaultAdminFirstname: Администратор
   SilverStripe\Security\Group:
     AddRole: 'Добавяне на роля към групата'
     Code: 'Код на група'
@@ -183,14 +180,14 @@ bg:
     PERMISSIONS: Разрешения
     PLURALNAME: Групи
     PLURALS:
-      one: 'Група'
+      one: Група
       other: '{count} групи'
     Parent: 'Група източник'
     ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
     RolesAddEditLink: 'Управление на ролите'
     SINGULARNAME: Група
-    Sort: 'Сортиране'
+    Sort: Сортиране
     has_many_Permissions: Разрешения
     many_many_Members: Потребители
   SilverStripe\Security\LoginAttempt:
@@ -205,9 +202,9 @@ bg:
   SilverStripe\Security\Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
-    BUTTONLOGIN: 'Влез'
+    BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
-    BUTTONLOGOUT: 'Изход'
+    BUTTONLOGOUT: Изход
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
@@ -220,8 +217,8 @@ bg:
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
     ERRORWRONGCRED: 'Детайлите не са коректни. Моля, опитайте отново.'
-    FIRSTNAME: 'Име'
-    INTERFACELANG: 'Език'
+    FIRSTNAME: Име
+    INTERFACELANG: Език
     KEEPMESIGNEDIN: 'Нека да остана логнат'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
@@ -229,7 +226,7 @@ bg:
     PASSWORDEXPIRED: 'Паролата ви е изтекла. Моля, изберете друга.'
     PLURALNAME: Потребители
     PLURALS:
-      one: 'Потребител'
+      one: Потребител
       other: '{count} потребителя'
     REMEMBERME: 'Запомни ме следващия път? (за {count} ден/дни на това устройство)'
     SINGULARNAME: Потребител
@@ -248,7 +245,7 @@ bg:
     AUTHENTICATORNAME: 'Форма за вход в CMS'
     BUTTONFORGOTPASSWORD: 'Забравена парола'
     BUTTONLOGIN: 'Влизане обратно'
-    BUTTONLOGOUT: 'Излизане'
+    BUTTONLOGOUT: Излизане
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Предоставените данни не са коректни. Моля, опитайте отново.'
     NoPassword: 'Този потребител няма парола.'
@@ -271,7 +268,7 @@ bg:
     PERMISSIONS_CATEGORY: 'Роли и права за достъп'
     PLURALNAME: Разрешения
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       other: '{count} разрешения'
     SINGULARNAME: Разрешение
     UserPermissionsIntro: 'Присвояването на групи на този потребител ще коригира разрешенията, които има. Вижте раздела за групи за подробности относно разрешенията на отделните групи.'
@@ -284,7 +281,7 @@ bg:
     OnlyAdminCanApply: 'Може да се приложи само от администратор'
     PLURALNAME: Роли
     PLURALS:
-      one: 'Роля'
+      one: Роля
       other: '{count} роли'
     SINGULARNAME: Роля
     Title: Заглавие
@@ -310,7 +307,7 @@ bg:
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
     LOGIN: 'Влезте в системата'
-    LOGOUT: 'Изход'
+    LOGOUT: Изход
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'

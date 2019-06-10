@@ -23,7 +23,7 @@ it:
     VERSIONUNKNOWN: Sconosciuto
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
-    YESANSWER: 'Sì'
+    YESANSWER: Sì
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Nessuna opzione disponibile'
   SilverStripe\Forms\ConfirmedPasswordField:
@@ -34,8 +34,6 @@ it:
     LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
@@ -48,7 +46,6 @@ it:
     VALIDDATETIMEMINDATE: 'La tua data deve essere più recente o uguale alla data e ora minima consentita ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Scegli)
-    CHOOSE_MODEL: '(Scegliere {name})'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -132,7 +129,7 @@ it:
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualsiasi
     NOANSWER: 'No'
-    YESANSWER: 'Sì'
+    YESANSWER: Sì
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
       one: '{count} giorno'
@@ -220,9 +217,9 @@ it:
   SilverStripe\Security\Member:
     ADDGROUP: 'Aggiungi gruppo'
     BUTTONCHANGEPASSWORD: 'Cambia password'
-    BUTTONLOGIN: 'Accedi'
+    BUTTONLOGIN: Accedi
     BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
-    BUTTONLOGOUT: 'Scollegati'
+    BUTTONLOGOUT: Scollegati
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
@@ -235,7 +232,7 @@ it:
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
-    FIRSTNAME: 'Nome'
+    FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
     KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
@@ -264,7 +261,7 @@ it:
     AUTHENTICATORNAME: 'Form di Login Utente CMS'
     BUTTONFORGOTPASSWORD: 'Password dimenticata'
     BUTTONLOGIN: 'Accedi nuovamente'
-    BUTTONLOGOUT: 'Scollegati'
+    BUTTONLOGOUT: Scollegati
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     NoPassword: 'Manca la password per questo utente.'
@@ -327,8 +324,8 @@ it:
     CONFIRMLOGOUT: 'Per cortesia premere il pulsante sottostante per confermare la disconnesione.'
     ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
-    LOGIN: 'Entra'
-    LOGOUT: 'Scollegati'
+    LOGIN: Entra
+    LOGOUT: Scollegati
     LOSTPASSWORDHEADER: 'Password smarrita'
     NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'

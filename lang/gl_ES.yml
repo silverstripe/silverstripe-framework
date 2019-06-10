@@ -1,8 +1,6 @@
 gl_ES:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar Contrasinal'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoller)
   SilverStripe\Forms\Form:
@@ -65,7 +63,7 @@ gl_ES:
     ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
     ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
     ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
-    FIRSTNAME: 'Nome'
+    FIRSTNAME: Nome
     INTERFACELANG: 'Idioma da Interface'
     NEWPASSWORD: 'Novo Contrasinal'
     PASSWORD: Contrasinal

@@ -18,7 +18,7 @@ si:
     many_many_Members: සාමාජිකයින්
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
-    BUTTONLOGIN: 'ඇතුල්වන්න'
+    BUTTONLOGIN: ඇතුල්වන්න
     BUTTONLOGINOTHER: 'වෙනත් නමකින් ඇතුල්වන්න'
     BUTTONLOSTPASSWORD: 'මුර පදය නැති වී ඇත'
     CONFIRMNEWPASSWORD: 'අලුත් මුර පදය හරිද'
@@ -27,9 +27,9 @@ si:
     ERRORNEWPASSWORD: 'අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න'
     ERRORPASSWORDNOTMATCH: 'ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න'
     FIRSTNAME: 'මුල් නම'
-    INTERFACELANG: 'භාෂා'
+    INTERFACELANG: භාෂා
     NEWPASSWORD: 'අලුත් මුර පදයක්'
-    PASSWORD: මුර පදය
+    PASSWORD: 'මුර පදය'
     SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'
     SUBJECTPASSWORDRESET: 'මුර පදය අලුත් කරන ලිපිනය'
     SURNAME: වාසගම

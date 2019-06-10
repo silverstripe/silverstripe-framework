@@ -70,12 +70,12 @@ es_MX:
   SilverStripe\Security\Member:
     ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: 'Ingresar'
+    BUTTONLOGIN: Ingresar
     BUTTONLOGINOTHER: 'Ingresar como alguien más'
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
-    EMAIL: Correo electrónico
+    EMAIL: 'Correo electrónico'
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
     ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
     ERRORNEWPASSWORD: 'Usted ha ingresado su nueva contraseña diferentemente, intenta de nuevo'
@@ -110,6 +110,6 @@ es_MX:
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber firmado para cambiar la contraseña!'
-    LOGIN: 'Ingresar'
+    LOGIN: Ingresar
     NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'
