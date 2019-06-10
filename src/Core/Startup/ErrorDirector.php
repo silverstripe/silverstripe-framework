@@ -14,6 +14,8 @@ use SilverStripe\Security\Security;
  * Specialised Director class used by ErrorControlChain to handle error and redirect conditions
  *
  * @internal This class is experimental API and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ErrorDirector extends Director
 {
