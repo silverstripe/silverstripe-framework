@@ -148,12 +148,34 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $form->loadDataFrom([
             'Password' => [
                 '_Password' => '123',
-                '_ConfirmPassword' => '999',
+                '_ConfirmPassword' => '',
             ],
         ]);
 
         $this->assertEquals('123', $field->children->first()->Value());
-        $this->assertEquals('999', $field->children->last()->Value());
+        $this->assertEmpty($field->children->last()->Value());
+        $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+
+        $form->loadDataFrom([
+            'Password' => [
+                '_Password' => '123',
+                '_ConfirmPassword' => 'abc',
+            ],
+        ]);
+
+        $this->assertEquals('123', $field->children->first()->Value());
+        $this->assertEquals('abc', $field->children->last()->Value());
+        $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
+
+        $form->loadDataFrom([
+            'Password' => [
+                '_Password' => '',
+                '_ConfirmPassword' => 'abc',
+            ],
+        ]);
+
+        $this->assertEmpty($field->children->first()->Value());
+        $this->assertEquals('abc', $field->children->last()->Value());
         $this->assertNotEquals($field->children->first()->Value(), $field->children->last()->Value());
     }
 
