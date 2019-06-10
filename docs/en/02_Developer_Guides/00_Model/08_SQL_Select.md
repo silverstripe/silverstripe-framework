@@ -10,7 +10,7 @@ It is easier to deal with object-wrappers than string-parsing a raw SQL-query.
 This object is used by the SilverStripe ORM internally.
 
 Dealing with low-level SQL is not encouraged, since the ORM provides
-powerful abstraction APIs (see [datamodel](/developer_guides/data_model_and_orm). 
+powerful abstraction APIs (see [datamodel](/developer_guides/model/data_model_and_orm)). 
 Starting with SilverStripe 3, records in collections are lazy loaded,
 and these collections have the ability to run efficient SQL
 such as counts or returning a single column.
@@ -38,7 +38,7 @@ If you do use raw SQL, you'll run the risk of breaking
 various assumptions the ORM and code based on it have:
 
 *  Custom getters/setters (object property can differ from database column)
-*  DataObject hooks like onBeforeWrite() and onBeforeDelete()
+*  DataObject hooks like `onBeforeWrite()` and `onBeforeDelete()`
 *  Automatic casting
 *  Default values set through objects
 *  Database abstraction
@@ -59,7 +59,7 @@ Selection can be done by creating an instance of `SQLSelect`, which allows
 management of all elements of a SQL SELECT query, including columns, joined tables,
 conditional filters, grouping, limiting, and sorting.
 
-E.g.
+E.g.:
 
 ```php
 $sqlQuery = new SQLSelect();
@@ -95,7 +95,7 @@ Deletion can be done either by calling `DB::query`/`DB::prepared_query` directly
 by creating a `SQLDelete` object, or by transforming a `SQLSelect` into a `SQLDelete`
 object instead.
 
-For example, creating a `SQLDelete` object
+For example, creating a `SQLDelete` object:
 
 ```php
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -106,7 +106,7 @@ $query = SQLDelete::create()
 $query->execute();
 ```
 
-Alternatively, turning an existing `SQLSelect` into a delete
+Alternatively, turning an existing `SQLSelect` into a delete:
 
 ```php
 use SilverStripe\ORM\Queries\SQLSelect;
@@ -118,7 +118,7 @@ $query = SQLSelect::create()
 $query->execute();
 ```
 
-Directly querying the database
+Directly querying the database:
 
 ```php
 use SilverStripe\ORM\DB;
@@ -138,36 +138,36 @@ query construction is now done by the `DBQueryBuilder` object.
 
 Each of these classes implements the interface `SQLWriteExpression`, noting that each
 accepts write key/value pairs in a number of similar ways. These include the following
-api methods:
+API methods:
 
  * `addAssignments` - Takes a list of assignments as an associative array of key -> value pairs,
-   but also supports SQL expressions as values if necessary.
+   but also supports SQL expressions as values if necessary
  * `setAssignments` - Replaces all existing assignments with the specified list
  * `getAssignments` - Returns all currently given assignments, as an associative array
    in the format `array('Column' => array('SQL' => array('parameters)))`
- * `assign` - Singular form of addAssignments, but only assigns a single column value.
+ * `assign` - Singular form of addAssignments, but only assigns a single column value
  * `assignSQL` - Assigns a column the value of a specified SQL expression without parameters
    `assignSQL('Column', 'SQL)` is shorthand for `assign('Column', array('SQL' => array()))`
 
-SQLUpdate also includes the following api methods:
+SQLUpdate also includes the following API methods:
 
  * `clear` - Clears all assignments
  * `getTable` - Gets the table to update
- * `setTable` - Sets the table to update. This should be ANSI quoted.
-   E.g. `$query->setTable('"SiteTree"');`
+ * `setTable` - Sets the table to update (this should be ANSI-quoted)
+   e.g. `$query->setTable('"SiteTree"');`
 
-SQLInsert also includes the following api methods:
+SQLInsert also includes the following API methods:
  * `clear` - Clears all rows
  * `clearRow` - Clears all assignments on the current row
  * `addRow` - Adds another row of assignments, and sets the current row to the new row
  * `addRows` - Adds a number of arrays, each representing a list of assignment rows,
-   and sets the current row to the last one.
+   and sets the current row to the last one
  * `getColumns` - Gets the names of all distinct columns assigned
  * `getInto` - Gets the table to insert into
- * `setInto` - Sets the table to insert into. This should be ANSI quoted.
-   E.g. `$query->setInto('"SiteTree"');`
+ * `setInto` - Sets the table to insert into (this should be ANSI-quoted),
+   e.g. `$query->setInto('"SiteTree"');`
 
-E.g.
+E.g.:
 
 ```php
 use SilverStripe\ORM\Queries\SQLUpdate;
@@ -201,7 +201,7 @@ In addition to assigning values, the SQLInsert object also supports multi-row
 inserts. For database connectors and API that don't have multi-row insert support
 these are translated internally as multiple single row inserts.
 
-For example,
+For example:
 
 ```php
 use SilverStripe\ORM\Queries\SQLInsert;
@@ -272,7 +272,7 @@ $field = new DropdownField('Birthdates', 'Birthdates', $map);
 
 Note that going through SQLSelect is just necessary here 
 because of the custom SQL value transformation (`YEAR()`). 
-An alternative approach would be a custom getter in the object definition.
+An alternative approach would be a custom getter in the object definition:
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -293,9 +293,9 @@ $map = $players->map('Name', 'NameWithBirthyear');
 
 ### Data types
 
-As of SilverStripe 4.4, the following PHP types will be used to return datbase content:
+As of SilverStripe 4.4, the following PHP types will be used to return database content:
 
- * booleans will be an integer 1 or 0, to ensure consistency with MySQL that doesn't have native booleans.
+ * booleans will be an integer 1 or 0, to ensure consistency with MySQL that doesn't have native booleans
  * integer types returned as integers
  * floating point / decimal types returned as floats
  * strings returned as strings
