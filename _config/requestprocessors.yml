@@ -32,6 +32,7 @@ SilverStripe\Core\Injector\Injector:
       RequestHandler: '%$SilverStripe\Security\Security'
       Middlewares:
         - '%$SecurityRateLimitMiddleware'
+
 ---
 Name: errorrequestprocessors
 After:
@@ -40,6 +41,8 @@ After:
 SilverStripe\Core\Injector\Injector:
   # Note: If Director config changes, take note it will affect this config too
   SilverStripe\Core\Startup\ErrorDirector: '%$SilverStripe\Control\Director'
+
+
 ---
 Name: canonicalurls
 ---
@@ -48,3 +51,94 @@ SilverStripe\Core\Injector\Injector:
     properties:
       ForceSSL: false
       ForceWWW: false
+
+
+---
+Name: url_specials-middleware
+After:
+  - 'requestprocessors'
+  - 'coresecurity'
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        URLSpecialsMiddleware: '%$SilverStripe\Control\Middleware\URLSpecialsMiddleware'
+
+  SilverStripe\Control\Middleware\URLSpecialsMiddleware:
+    class: SilverStripe\Control\Middleware\URLSpecialsMiddleware
+    properties:
+      ConfirmationStorageId: 'url-specials'
+      ConfirmationFormUrl: '/dev/confirm'
+      Bypasses:
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass'
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass("dev")'
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/confirm")'
+      EnforceAuthentication: true
+      AffectedPermissions:
+        - ADMIN
+
+
+---
+Name: dev_urls-confirmation-middleware
+After:
+  - 'url_specials-middleware'
+---
+# This middleware enforces confirmation (CSRF protection) for all URLs
+# that start with "dev/*", with the exception for "dev/build" which is handled
+# by url_specials-middleware
+
+# If you want to make exceptions for some URLs,
+# see "dev_urls-confirmation-exceptions" config
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        DevUrlsConfirmationMiddleware: '%$DevUrlsConfirmationMiddleware'
+
+  DevUrlsConfirmationMiddleware:
+    class: SilverStripe\Control\Middleware\PermissionAwareConfirmationMiddleware
+    constructor:
+      - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev")'
+    properties:
+      ConfirmationStorageId: 'dev-urls'
+      ConfirmationFormUrl: '/dev/confirm'
+      Bypasses:
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass'
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass("dev")'
+      EnforceAuthentication: false
+      AffectedPermissions:
+        - ADMIN
+
+---
+Name: dev_urls-confirmation-exceptions
+After:
+  - 'dev_urls-confirmation-middleware'
+---
+# This config is the place to add custom bypasses for modules providing UIs
+# on top of DevelopmentAdmin (dev/*)
+
+# If the module has its own CSRF protection, the easiest way would be to
+# simply add UrlPathStartswith with the path to the mount point.
+# Example:
+#  # This will prevent confirmation for all URLs starting with "dev/custom-module-endpoint/"
+#  # WARNING: this won't prevent confirmation for "dev/custom-module-endpoint-suffix/"
+#  - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/custom-module-endpoint")'
+
+# If the module does not implement its own CSRF protection but exposes all
+# dangerous effects through POST, then you could simply exclude GET and HEAD requests
+# by using HttpMethodBypass("GET", "HEAD"). In that case GET/HEAD requests will not
+# trigger confirmation redirects.
+SilverStripe\Core\Injector\Injector:
+  DevUrlsConfirmationMiddleware:
+    properties:
+      Bypasses:
+        # dev/build is covered by URLSpecialsMiddleware
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/build")'
+
+        # The confirmation form is where people will be redirected for confirmation. We don't want to block it.
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/confirm")'
+
+        # Allows GET requests to the dev index page
+        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\Url("dev", ["GET", "HEAD"])'

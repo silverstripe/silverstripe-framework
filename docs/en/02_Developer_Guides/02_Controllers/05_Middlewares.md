@@ -33,7 +33,7 @@ class CustomMiddleware implements HTTPMiddleware
             return new HTTPResponse('You missed the special header', 400);
         }
 
-        // You can modify the request before 
+        // You can modify the request before
         // For example, this might force JSON responses
         $request->addHeader('Accept', 'application/json');
 
@@ -118,4 +118,5 @@ SilverStripe\Control\Director:
 
 ## API Documentation
 
+* [Built-in Middleware](./06_Builtin_Middlewares.md)
 * [HTTPMiddleware](api:SilverStripe\Control\Middleware\HTTPMiddleware)

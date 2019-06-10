@@ -3,6 +3,7 @@
 namespace SilverStripe\View\Tests;
 
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Core\TempFolder;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
@@ -153,6 +154,7 @@ class SSViewerCacheBlockTest extends SapphireTest
         $this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 3)), '1');
 
         // Test with flush
+        Injector::inst()->get(Kernel::class)->boot(true);
         Director::test('/?flush=1');
         $this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
     }
