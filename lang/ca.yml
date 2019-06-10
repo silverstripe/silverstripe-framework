@@ -1,8 +1,6 @@
 ca:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Canvia la contrasenya'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €E
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Trieu)
   SilverStripe\Forms\Form:
@@ -22,7 +20,7 @@ ca:
     Description: Descripció
     Locked: 'Bloquejat?'
     Parent: 'Grup precedent'
-    Sort: 'Ordre'
+    Sort: Ordre
     has_many_Permissions: Permisos
     many_many_Members: Membres
   SilverStripe\Security\LoginAttempt:
@@ -30,16 +28,16 @@ ca:
     Status: Estat
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
-    BUTTONLOGIN: 'Entrar'
+    BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Entreu com a algú diferent'
     BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
     CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
     CONFIRMPASSWORD: 'Confirmeu la contrasenya'
-    EMAIL: Correu electrònic
+    EMAIL: 'Correu electrònic'
     ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
     ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
     ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
-    FIRSTNAME: 'Nom'
+    FIRSTNAME: Nom
     INTERFACELANG: 'Interfície de llengua'
     NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
@@ -61,6 +59,6 @@ ca:
     CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
     ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
     ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
-    LOGIN: 'Entrar'
+    LOGIN: Entrar
     NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
     NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'

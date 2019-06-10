@@ -1,15 +1,13 @@
 bs:
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: KM
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izaberite)
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Šifre se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Polja za unos šifre ne smiju ostati prazna'
-    VALIDATOR: Provjera ispravnosti
+    VALIDATOR: 'Provjera ispravnosti'
   SilverStripe\Forms\FormField:
     NONE: ništa
   SilverStripe\Forms\GridField\GridField:
@@ -17,15 +15,15 @@ bs:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Kreiraj
   SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
     ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
     ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Promijeni šifru'
-    BUTTONLOGIN: 'Prijava'
+    BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se sa drugim korisnikom'
     BUTTONLOSTPASSWORD: 'Zaboravio sam šifru'
     CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
@@ -33,7 +31,7 @@ bs:
     EMAIL: E-mail
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu šifru, pokušajte ponovo'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna šifra se ne slaže, molimo pokušajte ponovo'
-    FIRSTNAME: 'Ime'
+    FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
     PASSWORD: Šifra
@@ -50,6 +48,6 @@ bs:
     CHANGEPASSWORDHEADER: 'Promijenite Vašu šifru'
     ENTERNEWPASSWORD: 'Molimo, unesite novu šifru.'
     ERRORPASSWORDPERMISSION: 'Morate se prijaviti kako bi promijenili Vašu šifru.'
-    LOGIN: 'Prijava'
+    LOGIN: Prijava
     NOTEPAGESECURED: 'Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj.'
     NOTERESETPASSWORD: 'Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre.'
