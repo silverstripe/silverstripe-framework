@@ -1,0 +1,35 @@
+---
+Name: confirmation_middleware-prototypes
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\AjaxBypass:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\AjaxBypass
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswithCaseInsensitive:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswithCaseInsensitive
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\HttpMethodBypass:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\HttpMethodBypass
+    type: prototype
+
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    class: SilverStripe\Control\Middleware\ConfirmationMiddleware\Url
+    type: prototype

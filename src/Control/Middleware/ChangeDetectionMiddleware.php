@@ -8,7 +8,7 @@ use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Handles internal change detection via etag / ifmodifiedsince headers,
- * conditonally sending a 304 not modified if possible.
+ * conditionally sending a 304 not modified if possible.
  */
 class ChangeDetectionMiddleware implements HTTPMiddleware
 {
