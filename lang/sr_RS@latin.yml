@@ -4,8 +4,6 @@ sr_RS@latin:
     BETWEEN: 'Lozinka mora sadržati najmanje {min}, a najviše {max} znakova.'
     MAXIMUM: 'Lozinka može sadržati najviše {max} znakova.'
     SHOWONCLICKTITLE: 'Promeni lozinku'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: din.
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Molimo Vas da unesete ispravan format datuma ({format})'
     VALIDDATEMAXDATE: 'Datum ne sme biti posle ({date})'

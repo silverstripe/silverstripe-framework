@@ -29,7 +29,6 @@ de_DE:
     SHOWONCLICKTITLE: 'Passwort ändern'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswählen)
-    CHOOSE_MODEL: '({name} auswählen)'
   SilverStripe\Forms\GridField\GridField:
     Add: '{name} hinzufügen'
     CSVEXPORT: 'Als CSV exportieren'

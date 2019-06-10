@@ -34,8 +34,6 @@ sv:
     LOGGED_IN_ERROR: 'Du måste vara inloggad för att ändra ditt lösenord'
     MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
     SHOWONCLICKTITLE: 'Ändra lösenord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
@@ -46,7 +44,6 @@ sv:
     VALIDDATETIMEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigast godkända datumet ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Välj)
-    CHOOSE_MODEL: '(Välj {name})'
     SOURCE_VALIDATION: 'Vänligen välj att värde i listan. {value} är inget giltigt val'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Var snäll och ange en epostadress'

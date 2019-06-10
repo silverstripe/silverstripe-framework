@@ -34,8 +34,6 @@ bg:
     LOGGED_IN_ERROR: 'Трябва да сте влезли в системата, за да промените паролата си.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
@@ -46,7 +44,6 @@ bg:
     VALIDDATETIMEMINDATE: 'Датата и времето трябва да бъдат същите или след ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Избери)
-    CHOOSE_MODEL: '(Избери {name})'
     SOURCE_VALIDATION: 'Изберете стойност от списъка. {value} не е валидна опция'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'

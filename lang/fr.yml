@@ -34,8 +34,6 @@ fr:
     LOGGED_IN_ERROR: 'Vous devez être connecté pour pouvoir changer votre mot de passe'
     MAXIMUM: 'Le mot de passe ne doit pas comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
@@ -46,7 +44,6 @@ fr:
     VALIDDATETIMEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choisir)
-    CHOOSE_MODEL: '(Choisir {name})'
     SOURCE_VALIDATION: 'Merci de choisir une valeur parmi celles proposées dans la liste. {value} n''est pas une option valide'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Merci de saisir une adresse email'

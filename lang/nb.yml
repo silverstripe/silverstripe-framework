@@ -4,8 +4,6 @@ nb:
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
     MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
     SHOWONCLICKTITLE: 'Endre passord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'

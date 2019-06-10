@@ -34,8 +34,6 @@ da:
     LOGGED_IN_ERROR: 'Du skal være logget ind for at skifte dit kodeord.'
     MAXIMUM: 'Kodeord må maks være {max} tegn lang'
     SHOWONCLICKTITLE: 'Skift kodeord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: DKK
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Indtats venligst et gyldigt datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato skal være ældre end eller matche den maksimalt tilladte dato ({date})'
@@ -46,7 +44,6 @@ da:
     VALIDDATETIMEMINDATE: 'Din dato skal være yngre end eller matche den minimum tilladte dato og tid ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Vælg)
-    CHOOSE_MODEL: '(Vælg {name})'
     SOURCE_VALIDATION: 'Venligst vælg en eksisterende værdi fra listen. {value} er ikke en tilladt mulighed'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Indtast venligst en emailadresse'

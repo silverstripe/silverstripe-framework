@@ -4,8 +4,6 @@ mi:
     BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
     MAXIMUM: 'Kaua i hipa i te {max} pūāhua te roa o ngā kupuhipa.'
     SHOWONCLICKTITLE: 'Huri Kupuhipa'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'

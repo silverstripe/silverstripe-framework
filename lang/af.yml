@@ -1,8 +1,6 @@
 af:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Verander Wagwoord'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: R
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Sleutel asseblief ''n geldige datum formaat in ({format})'
     VALIDDATEMAXDATE: 'Jou datum moet gelykstaande of ouer wees as die maksimum toelaatbare datum ({date})'

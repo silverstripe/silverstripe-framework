@@ -4,8 +4,6 @@ sr:
     BETWEEN: 'Лозинка мора садржати најмање {min}, а највише {max} знакова.'
     MAXIMUM: 'Лозинка може садржати највише {max} знакова.'
     SHOWONCLICKTITLE: 'Промени лозинку'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: дин.
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Молимо Вас да унесете исправан формат датума ({format})'
     VALIDDATEMAXDATE: 'Датум не сме бити после ({date})'

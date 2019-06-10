@@ -4,8 +4,6 @@ sl_SI:
     YESANSWER: Da
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
   SilverStripe\Forms\DropdownField:
