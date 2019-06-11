@@ -479,7 +479,7 @@ will need to be regularly updated.
 * Update the [Slack](https://www.silverstripe.org/community/slack-signup/) topic to include the new release version.
 * For major or minor releases: Work with SilverStripe marketing to get a blog post out.
   They might choose to announce the release on social media as well. 
-
+* If the minor or major release includes security fixes, follow the publication instructions in the [Security Release Process](#security-release-process) section.
 
 ## See also
 
