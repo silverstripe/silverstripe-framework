@@ -1235,7 +1235,7 @@ has been added to assist in migration of existing files (see [file migration doc
 ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
-##### Rewriting asset references
+##### Rewriting asset references{#tagtoshortcode}
 
 Your `img` and `a` tag references to your assets may now be pointing to a location in your assets folder that has been moved. There is a task available which will look through all your tables containing `HTMLText` and `HTMLVarchar` fields looking for broken references and then rewrite them to the new location of the file.
 
