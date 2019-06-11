@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use PDO;
 use PDOStatement;
 use InvalidArgumentException;
@@ -135,6 +136,9 @@ class PDOConnector extends DBConnector implements TransactionManager
 
     public function connect($parameters, $selectDB = false)
     {
+        Deprecation::notice('4.5', 'Use native database drivers in favour of PDO. '
+            . 'https://github.com/silverstripe/silverstripe-framework/issues/8598');
+
         $this->flushStatements();
 
         // Note that we don't select the database here until explicitly
