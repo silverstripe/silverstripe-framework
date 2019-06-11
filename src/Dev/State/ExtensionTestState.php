@@ -115,6 +115,7 @@ class ExtensionTestState implements TestState
                 $dataClass::remove_extension($extension);
             }
         }
+        $this->extensionsToRemove = [];
 
         // Reapply ones removed
         foreach ($this->extensionsToReapply as $dataClass => $extensions) {
@@ -122,5 +123,6 @@ class ExtensionTestState implements TestState
                 $dataClass::add_extension($extension);
             }
         }
+        $this->extensionsToReapply = [];
     }
 }
