@@ -42,7 +42,13 @@ When executing the task on CLI, you'll get colour coded error messages.
 
 ## Background migration through the Queuedjobs module
 
+In general, it's safest to run the file migration on a non-production environment,
+and switch over to the migrated assets and new database. That's not always feasible.
 You can also run this task without CLI access through the [queuedjobs](https://github.com/symbiote/silverstripe-queuedjobs) module.
+Due to the incremental nature of this migration, you need to consider how a partially migrated database
+and asset store will impact your own site's behaviour, or how you can recover from migration errors.
+When running a background migration in production, we recommend to put your site in maintenance mode to avoid inconsistent behaviour.
+
 Open up `admin/queuedjobs`, then create a job of type `RunBuildTaskJob`.
 The only constructor parameter allowed is the full name of the task: `SilverStripe\Dev\Tasks\MigrateFileTask`.
 The task output will be progressively written to the job record, and can be inspected via the "Messages" tab within the job in the CMS.
