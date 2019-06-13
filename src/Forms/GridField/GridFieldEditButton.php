@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -19,6 +20,8 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuLink
 {
+    use Injectable, GridFieldStateAware;
+
     /**
      * HTML classes to be added to GridField edit buttons
      *
@@ -62,12 +65,13 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getUrl($gridField, $record, $columnName)
     {
-        return Controller::join_links(
+        $link = Controller::join_links(
             $gridField->Link('item'),
             $record->ID,
-            'edit',
-            '?gridState=' . urlencode($gridField->getState(false)->Value())
+            'edit'
         );
+
+        return $this->getStateManager()->addStateToURL($gridField, $link);
     }
 
     /**

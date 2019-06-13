@@ -4,3 +4,5 @@ Name: gridfieldconfig
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\GridField\FormAction\StateStore:
     class: SilverStripe\Forms\GridField\FormAction\SessionStore
+  SilverStripe\Forms\GridField\GridFieldStateManagerInterface:
+    class: SilverStripe\Forms\GridField\GridFieldStateManager
