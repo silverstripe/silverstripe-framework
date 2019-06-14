@@ -15,7 +15,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
-class URLSegmentFilter
+class URLSegmentFilter implements FilterInterface
 {
     use Configurable;
     use Injectable;
@@ -59,6 +59,17 @@ class URLSegmentFilter
     public $replacements = array();
 
     /**
+     * @var Transliterator
+     */
+    protected $transliterator;
+
+
+    /**
+     * @var boolean
+     */
+    protected $allowMultibyte;
+
+    /**
      * Note: Depending on the applied replacement rules, this method might result in an empty string.
      *
      * @param string $name URL path (without domain or query parameters), in utf8 encoding
@@ -96,49 +107,43 @@ class URLSegmentFilter
     }
 
     /**
-     * @param array $r Map of find/replace used for preg_replace().
+     * @param string[] $replacements Map of find/replace used for preg_replace().
+     * @return $this
      */
-    public function setReplacements($r)
+    public function setReplacements($replacements)
     {
-        $this->replacements = $r;
+        $this->replacements = $replacements;
+        return $this;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getReplacements()
     {
-        return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
+        return $this->replacements ?: (array)$this->config()->get('default_replacements');
     }
 
     /**
-     * @var Transliterator
-     */
-    protected $transliterator;
-
-    /**
-     * @return Transliterator
+     * @return Transliterator|null
      */
     public function getTransliterator()
     {
-        if ($this->transliterator === null && $this->config()->default_use_transliterator) {
+        if ($this->transliterator === null && $this->config()->get('default_use_transliterator')) {
             $this->transliterator = Transliterator::create();
         }
         return $this->transliterator;
     }
 
     /**
-     * @param Transliterator $t
+     * @param Transliterator $transliterator
+     * @return $this
      */
-    public function setTransliterator($t)
+    public function setTransliterator($transliterator)
     {
-        $this->transliterator = $t;
+        $this->transliterator = $transliterator;
+        return $this;
     }
-
-    /**
-     * @var boolean
-     */
-    protected $allowMultibyte;
 
     /**
      * @param boolean
