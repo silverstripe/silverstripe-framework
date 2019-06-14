@@ -55,6 +55,8 @@ matrix:
       env:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
+  allow_failures:
+    - php: 7.4snapshot
 
 before_script:
 # Extra $PATH
