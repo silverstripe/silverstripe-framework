@@ -82,14 +82,14 @@ class Requirements_Backend
     protected $customScript = array();
 
     /**
-     * All custom CSS rules which are inserted directly at the bottom of the HTML <head> tag
+     * All custom CSS rules which are inserted directly at the bottom of the HTML `<head>` tag
      *
      * @var array
      */
     protected $customCSS = array();
 
     /**
-     * All custom HTML markup which is added before the closing <head> tag, e.g. additional
+     * All custom HTML markup which is added before the closing `<head>` tag, e.g. additional
      * metatags.
      *
      * @var array
@@ -148,8 +148,8 @@ class Requirements_Backend
     protected $combinedFilesFolder = null;
 
     /**
-     * Put all JavaScript includes at the bottom of the template before the closing <body> tag,
-     * rather than the default behaviour of placing them at the end of the <head> tag. This means
+     * Put all JavaScript includes at the bottom of the template before the closing `<body>` tag,
+     * rather than the default behaviour of placing them at the end of the `<head>` tag. This means
      * script downloads won't block other HTTP requests, which can be a performance improvement.
      *
      * @var bool
@@ -522,7 +522,7 @@ class Requirements_Backend
     /**
      * Register the given JavaScript code into the list of requirements
      *
-     * @param string $script The script content as a string (without enclosing <script> tag)
+     * @param string $script The script content as a string (without enclosing `<script>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public function customScript($script, $uniquenessID = null)
@@ -547,7 +547,7 @@ class Requirements_Backend
     /**
      * Register the given CSS styles into the list of requirements
      *
-     * @param string $script CSS selectors as a string (without enclosing <style> tag)
+     * @param string $script CSS selectors as a string (without enclosing `<style>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public function customCSS($script, $uniquenessID = null)
@@ -570,7 +570,7 @@ class Requirements_Backend
     }
 
     /**
-     * Add the following custom HTML code to the <head> section of the page
+     * Add the following custom HTML code to the `<head>` section of the page
      *
      * @param string $html Custom HTML code
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
@@ -868,9 +868,9 @@ class Requirements_Backend
 
     /**
      * Given a block of HTML, insert the given scripts at the bottom before
-     * the closing </body> tag
+     * the closing `</body>` tag
      *
-     * @param string $jsRequirements String containing one or more javascript <script /> tags
+     * @param string $jsRequirements String containing one or more javascript `<script />` tags
      * @param string $content HTML body
      * @return string Merged HTML
      */
@@ -887,9 +887,9 @@ class Requirements_Backend
     }
 
     /**
-     * Given a block of HTML, insert the given scripts inside the <body></body>
+     * Given a block of HTML, insert the given scripts inside the `<body></body>`
      *
-     * @param string $jsRequirements String containing one or more javascript <script /> tags
+     * @param string $jsRequirements String containing one or more javascript `<script />` tags
      * @param string $content HTML body
      * @return string Merged HTML
      */
@@ -924,7 +924,7 @@ class Requirements_Backend
     }
 
     /**
-     * Given a block of HTML, insert the given code inside the <head></head> block
+     * Given a block of HTML, insert the given code inside the `<head></head>` block
      *
      * @param string $jsRequirements String containing one or more html tags
      * @param string $content HTML body
