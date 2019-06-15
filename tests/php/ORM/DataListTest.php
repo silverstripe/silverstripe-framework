@@ -1876,23 +1876,23 @@ class DataListTest extends SapphireTest
         ], $productTitles);
     }
 
-    public function testChunk()
+    public function testChunkedFetch()
     {
         $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
         $expectedSize = sizeof($expectedIDs);
 
-        $this->chunkTester($expectedIDs, Team::get()->chunk());
-        $this->chunkTester($expectedIDs, Team::get()->chunk(1));
-        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize));
-        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize-1));
-        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize+1));
+        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch());
+        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch(1));
+        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize));
+        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize-1));
+        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize+1));
     }
 
     public function testFilteredChunk()
     {
         $this->chunkTester(
             Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
-            Team::get()->filter('ClassName', Team::class)->chunk(2)
+            Team::get()->filter('ClassName', Team::class)->chunkedFetch(2)
         );
     }
 
@@ -1900,19 +1900,19 @@ class DataListTest extends SapphireTest
     {
         $this->chunkTester(
             Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
-            Team::get()->sort('ID', 'Desc')->chunk(2)
+            Team::get()->sort('ID', 'Desc')->chunkedFetch(2)
         );
     }
 
     public function testEmptyChunk()
     {
-        $this->chunkTester([], Team::get()->filter('ClassName', 'non-sense')->chunk());
+        $this->chunkTester([], Team::get()->filter('ClassName', 'non-sense')->chunkedFetch());
     }
 
     public function testInvalidChunkSize()
     {
         $this->expectException(InvalidArgumentException::class);
-        foreach (Team::get()->chunk(0) as $item) {
+        foreach (Team::get()->chunkedFetch(0) as $item) {
             // You don't get the error until you iterate over the list
         };
     }
