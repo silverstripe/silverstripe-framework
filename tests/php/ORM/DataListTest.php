@@ -1875,4 +1875,71 @@ class DataListTest extends SapphireTest
             'Product B',
         ], $productTitles);
     }
+
+    public function testChunk()
+    {
+        $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
+        $expectedSize = sizeof($expectedIDs);
+
+        $this->chunkTester($expectedIDs, Team::get()->chunk());
+        $this->chunkTester($expectedIDs, Team::get()->chunk(1));
+        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize));
+        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize-1));
+        $this->chunkTester($expectedIDs, Team::get()->chunk($expectedSize+1));
+    }
+
+    public function testFilteredChunk()
+    {
+        $this->chunkTester(
+            Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
+            Team::get()->filter('ClassName', Team::class)->chunk(2)
+        );
+    }
+
+    public function testSortedChunk()
+    {
+        $this->chunkTester(
+            Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
+            Team::get()->sort('ID', 'Desc')->chunk(2)
+        );
+    }
+
+    public function testEmptyChunk()
+    {
+        $this->chunkTester([], Team::get()->filter('ClassName', 'non-sense')->chunk());
+    }
+
+    public function testInvalidChunkSize()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        foreach (Team::get()->chunk(0) as $item) {
+            // You don't get the error until you iterate over the list
+        };
+    }
+
+    /**
+     * Loop over a chunck list and make sure it matches our expected results
+     * @param int[] $expectedIDs
+     * @param iterable $chunkList
+     */
+    private function chunkTester(array $expectedIDs, iterable $chunkList)
+    {
+        foreach ($chunkList as $chunkedTeam) {
+            $this->assertInstanceOf(
+                Team::class,
+                $chunkedTeam,
+                'Chunk return the correct type of data object'
+            );
+
+            $expectedID = array_shift($expectedIDs);
+
+            $this->assertEquals(
+                $expectedID,
+                $chunkedTeam->ID,
+                'chunk returns the same results in the same order as the regular iterator'
+            );
+        }
+
+        $this->assertEmpty($expectedIDs, 'chunk returns all the results that the regular iterator does');
+    }    
 }

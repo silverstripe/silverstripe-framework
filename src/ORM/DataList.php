@@ -1286,4 +1286,44 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }
+
+    /**
+     * Iterate over this DataList in "chunks". This will break the query in smaller subsets and avoid loading the entire
+     * result set in memory at once. Beware not to perform any operations on the results that might alter the return
+     * order. Otherwise, you might break subsequent chunks.
+     *
+     * You also can not define a custom limit or offset when using the chunk method.
+     *
+     * @param int $chunkSize
+     * @throws InvalidArgumentException If `$chunkSize` has an invalid size.
+     * @return Generator|DataObject[]
+     */
+    public function chunk(int $chunkSize = 100): iterable
+    {
+        if ($chunkSize < 1) {
+            throw new InvalidArgumentException(sprintf(
+                '%s::%s: chunkSize must be greater than or equal to 1',
+                __CLASS__,
+                __METHOD__
+            ));
+        }
+
+        $currentChunk = 0;
+
+        // Keep looping until we run out of chunks
+        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)->getIterator()) {
+            // Loop over all the item in our chunk
+            foreach ($chunk as $item) {
+                yield $item;
+            }
+
+
+            if ($chunk->count() < $chunkSize) {
+                // If our last chunk had less item than our chunkSize, we've reach the end.
+                break;
+            }
+
+            $currentChunk++;
+        }
+    }
 }
