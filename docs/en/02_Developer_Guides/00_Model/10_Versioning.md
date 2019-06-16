@@ -12,7 +12,7 @@ from published content shown to your website visitors.
 Versioning in SilverStripe is handled through the [Versioned](api:SilverStripe\Versioned\Versioned) class. As a [DataExtension](api:SilverStripe\ORM\DataExtension) it is possible to be applied to any [DataObject](api:SilverStripe\ORM\DataObject) subclass. The extension class will automatically update read and write operations done via the ORM via the `augmentSQL` database hook.
 
 <div class="notice" markdown="1">
-There are two complementary modules that improve content editor experience around nested objects (e.g. elemental blocks).
+There are two complementary modules that improve content editor experience around "owned" nested objects (e.g. elemental blocks).
 Those are in experimental status right now, but we would appreciate any feedback and contributions.
 
 You can check them out on github:
@@ -21,6 +21,10 @@ You can check them out on github:
 
 The first one adds extra metadata to versions about object parents at the moment of version creation.
 The second module extends CMS History UI adding control over nested objects.
+
+<img width="600" src="../../_images/snapshot-admin.png" width="600">
+
+*Example screenshot from versioned-snapshot-admin*
 </div>
 
 ## Understanding versioning concepts
