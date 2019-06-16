@@ -11,6 +11,9 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
@@ -1881,32 +1884,78 @@ class DataListTest extends SapphireTest
         $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
         $expectedSize = sizeof($expectedIDs);
 
-        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch());
-        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch(1));
-        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize));
-        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize-1));
-        $this->chunkTester($expectedIDs, Team::get()->chunkedFetch($expectedSize+1));
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunk(),
+            $dataQuery,
+            1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunk(1),
+            $dataQuery,
+            $expectedSize+1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize-1),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize+1),
+            $dataQuery,
+            1
+        );
     }
 
     public function testFilteredChunk()
     {
+        $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
-            Team::get()->filter('ClassName', Team::class)->chunkedFetch(2)
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', Team::class)->chunk(),
+            $dataQuery,
+            1
         );
     }
 
     public function testSortedChunk()
     {
+        $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
-            Team::get()->sort('ID', 'Desc')->chunkedFetch(2)
+            Team::get()->setDataQuery($dataQuery)->sort('ID', 'Desc')->chunk(),
+            $dataQuery,
+            1
         );
     }
 
     public function testEmptyChunk()
     {
-        $this->chunkTester([], Team::get()->filter('ClassName', 'non-sense')->chunkedFetch());
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            [],
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', 'non-sense')->chunk(),
+            $dataQuery,
+            1
+        );
     }
 
     public function testInvalidChunkSize()
@@ -1922,8 +1971,12 @@ class DataListTest extends SapphireTest
      * @param int[] $expectedIDs
      * @param iterable $chunkList
      */
-    private function chunkTester(array $expectedIDs, iterable $chunkList)
-    {
+    private function chunkTester(
+        array $expectedIDs,
+        iterable $chunkList,
+        DataListQueryCounter $dataQuery,
+        int $expectedQueryCount
+    ) {
         foreach ($chunkList as $chunkedTeam) {
             $this->assertInstanceOf(
                 Team::class,
@@ -1941,5 +1994,6 @@ class DataListTest extends SapphireTest
         }
 
         $this->assertEmpty($expectedIDs, 'chunk returns all the results that the regular iterator does');
-    }    
+        $this->assertEquals($expectedQueryCount, $dataQuery->getCount());
+    }
 }
