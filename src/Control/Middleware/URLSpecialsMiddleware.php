@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Control\Middleware;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Middleware\URLSpecialsMiddleware\FlushScheduler;
 use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
 use SilverStripe\Control\HTTPRequest;
@@ -63,7 +65,12 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
             $request['urlspecialstoken'] = bin2hex(random_bytes(4));
 
             $result = new HTTPResponse();
-            $result->redirect('/' . $request->getURL(true));
+            $result->redirect(
+                Controller::join_links(
+                    Director::baseURL(),
+                    $request->getURL(true)
+                )
+            );
             return $result;
         }
     }
