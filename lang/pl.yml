@@ -34,8 +34,6 @@ pl:
     LOGGED_IN_ERROR: 'Musisz być zalogowany aby zmienić hasło'
     MAXIMUM: 'Hasła mogą mieć co najwyżej {max} znaków.'
     SHOWONCLICKTITLE: 'Zmiana Hasła'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Proszę wprowadź prawidłowy format daty ({format})'
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
@@ -46,7 +44,6 @@ pl:
     VALIDDATETIMEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (wybierz)
-    CHOOSE_MODEL: '(Wybierz {name})'
     SOURCE_VALIDATION: 'Wybierz wartość z podanej listy. {value} nie jest poprawną opcją'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'

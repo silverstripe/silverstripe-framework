@@ -4,8 +4,6 @@ hr:
     YESANSWER: Da
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Promjenite lozinku'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
   SilverStripe\Forms\DropdownField:

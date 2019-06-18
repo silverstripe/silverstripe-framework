@@ -34,8 +34,6 @@ it:
     LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
@@ -48,7 +46,6 @@ it:
     VALIDDATETIMEMINDATE: 'La tua data deve essere più recente o uguale alla data e ora minima consentita ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Scegli)
-    CHOOSE_MODEL: '(Scegliere {name})'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'

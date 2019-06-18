@@ -37,13 +37,13 @@ class Security extends Controller implements TemplateGlobalProvider
 {
 
     private static $allowed_actions = array(
+        'basicauthlogin',
+        'changepassword',
         'index',
         'login',
         'logout',
-        'basicauthlogin',
         'lostpassword',
         'passwordsent',
-        'changepassword',
         'ping',
     );
 
@@ -660,7 +660,6 @@ class Security extends Controller implements TemplateGlobalProvider
             ->getSession()
             ->clear("Security.Message");
     }
-
 
     /**
      * Show the "login" page

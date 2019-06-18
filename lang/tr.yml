@@ -4,8 +4,6 @@ tr:
     YESANSWER: Evet
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parola Değiştir'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: USD
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçiniz)
   SilverStripe\Forms\Form:

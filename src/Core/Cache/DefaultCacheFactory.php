@@ -56,8 +56,12 @@ class DefaultCacheFactory implements CacheFactory
         $directory = isset($args['directory']) ? $args['directory'] : null;
         $version = isset($args['version']) ? $args['version'] : null;
 
+        // In-memory caches are typically more resource constrained (number of items and storage space).
+        // Give cache consumers an opt-out if they are expecting to create large caches with long lifetimes.
+        $useInMemoryCache = isset($args['useInMemoryCache']) ? $args['useInMemoryCache'] : true;
+
         // Check support
-        $apcuSupported = $this->isAPCUSupported();
+        $apcuSupported = ($this->isAPCUSupported() && $useInMemoryCache);
         $phpFilesSupported = $this->isPHPFilesSupported();
 
         // If apcu isn't supported, phpfiles is the next best preference
@@ -72,8 +76,11 @@ class DefaultCacheFactory implements CacheFactory
         }
 
         // Chain this cache with ApcuCache
+        // Note that the cache lifetime will be shorter there by default, to ensure there's enough
+        // resources for "hot cache" items in APCu as a resource constrained in memory cache.
         $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
         $apcu = $this->createCache(ApcuCache::class, [$apcuNamespace, (int) $defaultLifetime / 5, $version]);
+
         return $this->createCache(ChainCache::class, [[$apcu, $fs]]);
     }
 

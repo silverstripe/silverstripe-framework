@@ -135,7 +135,7 @@ class Requirements implements Flushable
     /**
      * Register the given JavaScript code into the list of requirements
      *
-     * @param string     $script       The script content as a string (without enclosing <script> tag)
+     * @param string     $script       The script content as a string (without enclosing `<script>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public static function customScript($script, $uniquenessID = null)
@@ -156,7 +156,7 @@ class Requirements implements Flushable
     /**
      * Register the given CSS styles into the list of requirements
      *
-     * @param string     $script       CSS selectors as a string (without enclosing <style> tag)
+     * @param string     $script       CSS selectors as a string (without enclosing `<style>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public static function customCSS($script, $uniquenessID = null)
@@ -165,7 +165,7 @@ class Requirements implements Flushable
     }
 
     /**
-     * Add the following custom HTML code to the <head> section of the page
+     * Add the following custom HTML code to the `<head>` section of the page
      *
      * @param string     $html         Custom HTML code
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once

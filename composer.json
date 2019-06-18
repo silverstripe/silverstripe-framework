@@ -22,6 +22,7 @@
         "sake"
     ],
     "require": {
+        "bramus/monolog-colored-line-formatter": "~2.0",
         "composer/installers": "~1.0",
         "embed/embed": "^3.0",
         "league/csv": "^9",

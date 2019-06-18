@@ -21,6 +21,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\DebugView;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
@@ -28,7 +29,6 @@ use SilverStripe\View\PublicThemes;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -76,6 +76,21 @@ class CoreKernel implements Kernel
     protected $themeResourceLoader = null;
 
     protected $basePath = null;
+
+    /**
+     * Indicates whether the Kernel has been booted already
+     *
+     * @var bool
+     */
+    private $booted = false;
+
+    /**
+     * Indicates whether the Kernel has been flushed on boot
+     * Unitialized before boot
+     *
+     * @var bool
+     */
+    private $flush;
 
     /**
      * Create a new kernel for this application
@@ -126,6 +141,13 @@ class CoreKernel implements Kernel
         $this->setThemeResourceLoader($themeResourceLoader);
     }
 
+    /**
+     * Get the environment type
+     *
+     * @return string
+     *
+     * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if kernel overrides. No checking SESSION or Environment.
+     */
     public function getEnvironment()
     {
         // Check set
@@ -141,8 +163,27 @@ class CoreKernel implements Kernel
         return self::LIVE;
     }
 
+    /**
+     * Check or update any temporary environment specified in the session.
+     *
+     * @return null|string
+     *
+     * @deprecated 5.0 Use Director::get_session_environment_type() instead
+     */
+    protected function sessionEnvironment()
+    {
+        if (!$this->booted) {
+            // session is not initialyzed yet, neither is manifest
+            return null;
+        }
+
+        return Director::get_session_environment_type();
+    }
+
     public function boot($flush = false)
     {
+        $this->flush = $flush;
+
         $this->bootPHP();
         $this->bootManifests($flush);
         $this->bootErrorHandling();
@@ -150,6 +191,8 @@ class CoreKernel implements Kernel
         $this->bootConfigs();
         $this->bootDatabaseGlobals();
         $this->validateDatabase();
+
+        $this->booted = true;
     }
 
     /**
@@ -615,5 +658,15 @@ class CoreKernel implements Kernel
     {
         $this->themeResourceLoader = $themeResourceLoader;
         return $this;
+    }
+
+    /**
+     * Returns whether the Kernel has been flushed on boot
+     *
+     * @return bool|null null if the kernel hasn't been booted yet
+     */
+    public function isFlushed()
+    {
+        return $this->flush;
     }
 }

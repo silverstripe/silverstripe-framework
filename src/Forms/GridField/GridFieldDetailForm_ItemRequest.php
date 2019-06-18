@@ -323,7 +323,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $rightGroup->push($previousAndNextGroup);
 
-        if ($component && $component->getShowAdd()) {
+        if ($component && $component->getShowAdd() && $this->record->canCreate()) {
             $rightGroup->push(
                 LiteralField::create(
                     'new-record',

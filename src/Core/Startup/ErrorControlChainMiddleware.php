@@ -8,12 +8,15 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Application;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Security\Security;
 
 /**
  * Decorates application bootstrapping with errorcontrolchain
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ErrorControlChainMiddleware implements HTTPMiddleware
 {
@@ -23,13 +26,23 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
     protected $application = null;
 
     /**
+     * Whether to keep working (legacy mode)
+     *
+     * @var bool
+     */
+    private $legacy;
+
+    /**
      * Build error control chain for an application
      *
      * @param Application $application
+     * @param bool $legacy Keep working (legacy mode)
      */
-    public function __construct(Application $application)
+    public function __construct(Application $application, $legacy = false)
     {
         $this->application = $application;
+        $this->legacy = $legacy;
+        Deprecation::notice('5.0', 'ErrorControlChainMiddleware is deprecated and will be removed completely');
     }
 
     /**
@@ -50,6 +63,10 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
 
     public function process(HTTPRequest $request, callable $next)
     {
+        if (!$this->legacy) {
+            return call_user_func($next, $request);
+        }
+
         $result = null;
 
         // Prepare tokens and execute chain

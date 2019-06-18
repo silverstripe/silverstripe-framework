@@ -223,4 +223,14 @@ class Environment
     {
         static::$env[$name] = $value;
     }
+
+    /**
+     * Returns true if this script is being run from the command line rather than the web server
+     *
+     * @return bool
+     */
+    public static function isCli()
+    {
+        return in_array(strtolower(php_sapi_name()), ['cli', 'phpdbg']);
+    }
 }

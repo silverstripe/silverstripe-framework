@@ -13,6 +13,7 @@ use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\RequestProcessor;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
@@ -26,10 +27,14 @@ class DirectorTest extends SapphireTest
         TestController::class,
     ];
 
+    private $originalEnvType;
+
     protected function setUp()
     {
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
+
+        $this->originalEnvType = Environment::getEnv('SS_ENVIRONMENT_TYPE');
 
         // Ensure redirects enabled on all environments and global state doesn't affect the tests
         CanonicalURLMiddleware::singleton()
@@ -37,6 +42,12 @@ class DirectorTest extends SapphireTest
             ->setForceSSLPatterns([])
             ->setEnabledEnvs(true);
         $this->expectedRedirect = null;
+    }
+
+    protected function tearDown(...$args)
+    {
+        Environment::setEnv('SS_ENVIRONMENT_TYPE', $this->originalEnvType);
+        parent::tearDown(...$args);
     }
 
     protected function getExtraRoutes()
@@ -487,6 +498,52 @@ class DirectorTest extends SapphireTest
         $this->assertFalse(Director::is_site_url('http://google.com/@test.com'));
         $this->assertFalse(Director::is_site_url('http://google.com:pass\@test.com'));
         $this->assertFalse(Director::is_site_url('http://google.com:pass/@test.com'));
+    }
+
+    /**
+     * Tests isDev, isTest, isLive cannot be set from querystring
+     */
+    public function testQueryIsEnvironment()
+    {
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
+        // Reset
+        unset($_SESSION['isDev']);
+        unset($_SESSION['isLive']);
+        unset($_GET['isTest']);
+        unset($_GET['isDev']);
+
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        $kernel->setEnvironment(null);
+        Environment::setEnv('SS_ENVIRONMENT_TYPE', Kernel::LIVE);
+
+        $this->assertTrue(Director::isLive());
+
+        // Test isDev=1
+        $_GET['isDev'] = '1';
+        $this->assertFalse(Director::isDev());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
+
+        // Test persistence
+        unset($_GET['isDev']);
+        $this->assertFalse(Director::isDev());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
+
+        // Test change to isTest
+        $_GET['isTest'] = '1';
+        $this->assertFalse(Director::isDev());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
+
+        // Test persistence
+        unset($_GET['isTest']);
+        $this->assertFalse(Director::isDev());
+        $this->assertFalse(Director::isTest());
+        $this->assertTrue(Director::isLive());
     }
 
     public function testResetGlobalsAfterTestRequest()

@@ -13,8 +13,10 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 
 /**
- * Allows events to be registered and passed through middleware.
- * Useful for event registered prior to the beginning of a middleware chain.
+ * Implements the following URL normalisation rules
+ *  - redirect basic auth requests to HTTPS
+ *  - force WWW, redirect to the subdomain "www."
+ *  - force SSL, redirect to https
  */
 class CanonicalURLMiddleware implements HTTPMiddleware
 {

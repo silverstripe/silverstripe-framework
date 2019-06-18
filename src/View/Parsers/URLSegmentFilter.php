@@ -36,7 +36,7 @@ class URLSegmentFilter
         '/\s|\+/u' => '-', // remove whitespace/plus
         '/[_.]+/u' => '-', // underscores and dots to dashes
         '/[^A-Za-z0-9\-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric and dashes
-        '/[\/\?=#]+/u' => '-', // remove forward slashes, question marks, equal signs and hashes in case
+        '/[\/\?=#:]+/u' => '-', // remove forward slashes, question marks, equal signs and hashes in case
                                // multibyte is allowed (and non-ASCII chars aren't removed)
         '/[\-]{2,}/u' => '-', // remove duplicate dashes
         '/^[\-]+/u' => '', // Remove all leading dashes

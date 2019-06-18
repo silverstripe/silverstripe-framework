@@ -23,7 +23,7 @@ class MyMemberExtension extends DataExtension
         'NumVisit' => 'Int',
     ];
 
-    public function authenticationSucceeded() 
+    public function afterMemberLoggedIn() 
     {
         $this->logVisit();
     }

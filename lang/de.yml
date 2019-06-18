@@ -33,8 +33,6 @@ de:
     LOGGED_IN_ERROR: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: €
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
@@ -45,7 +43,6 @@ de:
     VALIDDATETIMEMINDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({datetime}) liegen oder gleich sein'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSE_MODEL: '({name} auswählen)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'

@@ -30,8 +30,6 @@ ru:
     LOGGED_IN_ERROR: 'Вы должны войти в систему, чтобы изменить Ваш пароль.'
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить пароль'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
@@ -42,7 +40,6 @@ ru:
     VALIDDATETIMEMINDATE: 'Установите дату не ранее ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Выберите)
-    CHOOSE_MODEL: '(Выберите {name})'
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'

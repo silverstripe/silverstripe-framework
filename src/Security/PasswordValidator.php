@@ -76,7 +76,7 @@ class PasswordValidator
     protected $historicalPasswordCount = null;
 
     /**
-     * @deprecated 5.0
+     * @deprecated 4.5.0
      * Minimum password length
      *
      * @param int $minLength
@@ -84,12 +84,12 @@ class PasswordValidator
      */
     public function minLength($minLength)
     {
-        Deprecation::notice('5.0', 'Use ->setMinLength($value) instead.');
+        Deprecation::notice('4.5.0', 'Use ->setMinLength($value) instead.');
         return $this->setMinLength($minLength);
     }
 
     /**
-     * @deprecated 5.0
+     * @deprecated 4.5.0
      * Check the character strength of the password.
      *
      * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
@@ -101,8 +101,8 @@ class PasswordValidator
     public function characterStrength($minScore, $testNames = null)
     {
         Deprecation::notice(
-            '5.0',
-            'Use ->setMinTestScore($score) and ->setTextNames($names) instead.'
+            '4.5.0',
+            'Use ->setMinTestScore($score) and ->setTestNames($names) instead.'
         );
         $this->setMinTestScore($minScore);
         if ($testNames) {
@@ -112,7 +112,7 @@ class PasswordValidator
     }
 
     /**
-     * @deprecated 5.0
+     * @deprecated 4.5.0
      * Check a number of previous passwords that the user has used, and don't let them change to that.
      *
      * @param int $count
@@ -120,7 +120,7 @@ class PasswordValidator
      */
     public function checkHistoricalPasswords($count)
     {
-        Deprecation::notice('5.0', 'Use ->setHistoricCount($value) instead.');
+        Deprecation::notice('4.5.0', 'Use ->setHistoricCount($value) instead.');
         return $this->setHistoricCount($count);
     }
 

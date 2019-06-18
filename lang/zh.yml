@@ -7,8 +7,6 @@ zh:
     BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
     MAXIMUM: '密码长度必须至多 {max} 个字符。'
     SHOWONCLICKTITLE: 更改密码
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: 货币字符
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
     VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'

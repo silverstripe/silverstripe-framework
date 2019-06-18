@@ -16,6 +16,8 @@ use Exception;
  * $chain->then($callback1)->then($callback2)->thenIfErrored($callback3)->execute();
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ErrorControlChain
 {

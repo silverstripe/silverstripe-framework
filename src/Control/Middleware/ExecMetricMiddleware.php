@@ -9,7 +9,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\Debug;
 
 /**
- * Display execution metricts for the current request if in dev mode and `execmetric` is provided as a request variable.
+ * Display execution metrics for the current request if in dev mode and `execmetric` is provided as a request variable.
  */
 class ExecMetricMiddleware implements HTTPMiddleware
 {
