@@ -511,6 +511,11 @@ If your object is versioned, cascade_deletes will also act as "cascade unpublish
 on a parent object will trigger unpublish on the child, similarly to how `owns` causes triggered publishing.
 See the [versioning docs](/developer_guides/model/versioning) for more information on ownership.
 
+<div class="alert" markdown="1">
+Declaring cascade_deletes implies delete permissions on the listed objects.
+Built-in controllers using delete operations check canDelete() on the owner, but not on the owned object.   
+</div>
+
 ## Cascading duplications
 
 Similar to `cascade_deletes` there is also a `cascade_duplicates` config which works in much the same way.

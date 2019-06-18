@@ -63,6 +63,12 @@ SilverStripe makes this possible by using the concept of _cascade publishing_. Y
 
 A non-recursive publish operation is also available if you want to publish a new version of a object without cascade publishing all its children.
 
+<div class="alert" markdown="1">
+Declaring ownership implies publish permissions on owned objects.
+Built-in controllers using cascading publish operations check canPublish()
+on the owner, but not on the owned object.   
+</div>
+
 #### Ownership of unversioned object
 
 An unversioned object can own other versioned object. An unversioned object can be configured to automatically publish children versioned objects on save.
