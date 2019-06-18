@@ -18,8 +18,8 @@ use SilverStripe\Core\Environment;
  * Examples:
  *
  *  - `SS_FLUSH_ON_DEPLOY=""` would check the BASE_PATH folder for modifications (not the files within)
- *  - `SS_FLUSH_ON_DEPLOY=true` would check BASE_PATH/vendor/silverstripe/framework/src/Core/Startup/DeployFlushDiscoverer.php
- *                              file modification
+ *  - `SS_FLUSH_ON_DEPLOY=true` would check
+ *    BASE_PATH/vendor/silverstripe/framework/src/Core/Startup/DeployFlushDiscoverer.php file modification
  *  - `SS_FLUSH_ON_DEPLOY=false` disable filesystem checks
  *  - `SS_FLUSH_ON_DEPLOY="public/index.php"` checks BASE_PATH/public/index.php file modification time
  */
