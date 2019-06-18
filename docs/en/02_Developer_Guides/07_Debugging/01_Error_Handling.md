@@ -195,7 +195,7 @@ Only:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface.errorhandler:
     calls:
-      pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
+      pushMyDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]]
   DisplayErrorHandler:
     class: SilverStripe\Logging\HTTPOutputHandler
     constructor:
@@ -221,7 +221,7 @@ SilverStripe\Core\Injector\Injector:
       # Save errors to file
       pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]]
       # Format and display errors in the browser/CLI 
-      pushDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]] 
+      pushMyDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]]
   
   # Custom handler to log to a file
   LogFileHandler:
