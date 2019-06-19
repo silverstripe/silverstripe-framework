@@ -128,7 +128,7 @@ To send emails, you can use Monolog's [NativeMailerHandler](https://github.com/S
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface: 
     calls:
-      MailHandler: [ pushHandler, [ %$MailHandler ] ]
+      MailHandler: [ pushHandler, [ '%$MailHandler' ] ]
   MailHandler:
       class: Monolog\Handler\NativeMailerHandler
       constructor:
@@ -155,7 +155,7 @@ To log to a file, you can use Monolog's [StreamHandler](https://github.com/Selda
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface: 
     calls:
-      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
+      LogFileHandler: [ pushHandler, [ '%$LogFileHandler' ] ]
   LogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
@@ -195,7 +195,7 @@ Only:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface.errorhandler:
     calls:
-      pushMyDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]]
+      pushMyDisplayErrorHandler: [ pushHandler, [ '%$DisplayErrorHandler' ]]
   DisplayErrorHandler:
     class: SilverStripe\Logging\HTTPOutputHandler
     constructor:
@@ -213,15 +213,15 @@ SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
       # Save system logs to file
-      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]]
+      pushFileLogHandler: [ pushHandler, [ '%$LogFileHandler' ]]
   
   # Core error handler for system use
   Psr\Log\LoggerInterface.errorhandler:
     calls:
       # Save errors to file
-      pushFileLogHandler: [ pushHandler, [ %$LogFileHandler ]]
+      pushFileLogHandler: [ pushHandler, [ '%$LogFileHandler' ]]
       # Format and display errors in the browser/CLI 
-      pushMyDisplayErrorHandler: [ pushHandler, [ %$DisplayErrorHandler ]]
+      pushMyDisplayErrorHandler: [ pushHandler, [ '%$DisplayErrorHandler' ]]
   
   # Custom handler to log to a file
   LogFileHandler:
