@@ -7,6 +7,7 @@ namespace SilverStripe\ORM\Tests\EagerLoading;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataQueryExecutorInterface;
+use SilverStripe\ORM\EagerLoading\DataListEagerLoader;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
@@ -26,14 +27,36 @@ class DataListEagerLoaderTest extends SapphireTest
         TeamComment::class,
     ];
 
-    public function testAddRelations()
+public function testRelations()
     {
+        $loader = new DataListEagerLoader();
+        $loader->addRelations([
+            'a1',
+            'a2',
+            'a3' => [
+                'a3b1',
+            ]
+        ]);
 
-    }
+        $loader->addRelations([
+            'a4',
+            'a3' => ['a3b2']
+        ]);
 
-    public function testGetRelations()
-    {
+        $loader->addRelations([
+            'a5' => ['a5b1']
+        ]);
 
+        $this->assertEquals([
+            'a1',
+            'a2',
+            'a3' => [
+                'a3b1',
+                'a3b2',
+            ],
+            'a4',
+            'a5' => ['a5b1'],
+        ], $loader->getRelations());
     }
 
     public function testExecute()
@@ -70,6 +93,8 @@ class DataListEagerLoaderTest extends SapphireTest
 
         // Prove that we're getting cached results by changing a comment
         $newCommentContent = '';
+        $teams = Team::get()->sort('Title ASC')->with('Comments');
+
         foreach ($teams as $team) {
             foreach ($team->Comments() as $comment) {
                 $newCommentContent .= $comment->Comment;
@@ -81,6 +106,8 @@ class DataListEagerLoaderTest extends SapphireTest
         $comment->write();
 
         $newCommentContent = '';
+        $teams = Team::get()->sort('Title ASC')->with('Comments');
+
         foreach ($teams as $team) {
             foreach ($team->Comments() as $comment) {
                 $newCommentContent .= $comment->Comment;
@@ -91,7 +118,7 @@ class DataListEagerLoaderTest extends SapphireTest
 
         $this->goNaive();
 
-        $teams = Team::get();
+        $teams = Team::get()->sort('Title ASC');
         $newCommentContent = '';
         foreach ($teams as $team) {
             foreach ($team->Comments() as $comment) {
@@ -100,10 +127,6 @@ class DataListEagerLoaderTest extends SapphireTest
         }
 
         $this->assertNotEquals($commentContent, $newCommentContent);
-
-
-
-
     }
 
     public function testManyManyEagerLoading()
@@ -133,8 +156,10 @@ class DataListEagerLoaderTest extends SapphireTest
         $eagerLoads = 1;
         $this->assertEquals($eagerLoads + 1, $this->getExecutor()->getQueries());
 
-        // Prove that we're getting cached results by changing a comment
+        // Prove that we're getting cached results by changing a player's name
         $newPlayerContent = '';
+        $teams = Team::get()->sort('Title ASC')->with('Players');
+
         foreach ($teams as $team) {
             foreach ($team->Players() as $player) {
                 $newPlayerContent .= $player->Surname;
@@ -146,6 +171,8 @@ class DataListEagerLoaderTest extends SapphireTest
         $player->write();
 
         $newPlayerContent = '';
+        $teams = Team::get()->sort('Title ASC')->with('Players');
+
         foreach ($teams as $team) {
             foreach ($team->Players() as $player) {
                 $newPlayerContent .= $player->Surname;
@@ -156,7 +183,7 @@ class DataListEagerLoaderTest extends SapphireTest
 
         $this->goNaive();
 
-        $teams = Team::get();
+        $teams = Team::get()->sort('Title ASC');
         $newPlayerContent = '';
         foreach ($teams as $team) {
             foreach ($team->Players() as $player) {
@@ -165,12 +192,62 @@ class DataListEagerLoaderTest extends SapphireTest
         }
 
         $this->assertNotEquals($playerContent, $newPlayerContent);
-
-
-
-
     }
 
+
+    public function testHasOneEagerLoading()
+    {
+        $this->buildState();
+        $playerCount = Player::get()->count();
+
+        $this->goNaive();
+
+        foreach (Player::get() as $player) {
+            $player->FavouriteTeam();
+        }
+
+        // N+1
+        $this->assertEquals($playerCount + 1, $this->getExecutor()->getQueries());
+
+        $this->goCached();
+
+        $players = Player::get()->sort('Surname ASC')->with('FavouriteTeam');
+        $playerContent = '';
+        foreach ($players as $player) {
+            $playerContent .= $player->FavouriteTeam()->Title;
+        }
+        $eagerLoads = 1;
+        $this->assertEquals($eagerLoads + 1, $this->getExecutor()->getQueries());
+
+        // Prove that we're getting cached results by changing a comment
+        $newPlayerContent = '';
+        foreach ($players as $player) {
+            $newPlayerContent .= $player->FavouriteTeam()->Title;
+        }
+        $this->assertEquals($playerContent, $newPlayerContent);
+        $player = Player::get()->filter('Surname', 'Edelman')->first();
+        $team = Team::get()->byID($player->FavouriteTeamID);
+        $team->Title = 'CHANGED';
+        $team->write();
+
+        $newPlayerContent = '';
+        $players = Player::get()->sort('Surname ASC')->with('FavouriteTeam');
+        foreach ($players as $player) {
+            $newPlayerContent .= $player->FavouriteTeam()->Title;
+        }
+
+        $this->assertEquals($playerContent, $newPlayerContent);
+
+        $this->goNaive();
+
+        $players = Player::get()->sort('Surname ASC');
+        $newPlayerContent = '';
+        foreach ($players as $player) {
+            $newPlayerContent .= $player->FavouriteTeam()->Title;
+        }
+
+        $this->assertNotEquals($playerContent, $newPlayerContent);
+    }
 
     protected function buildState()
     {
