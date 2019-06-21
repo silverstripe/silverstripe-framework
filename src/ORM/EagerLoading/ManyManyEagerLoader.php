@@ -11,7 +11,7 @@ use SilverStripe\ORM\DataList;
 
 class ManyManyEagerLoader implements RelationEagerLoaderInterface
 {
-    public function eagerLoadRelation(DataList $list, $relation, DataQueryStoreInterface $store)
+    public function eagerLoadRelation(DataList $list, string $relation, DataQueryStoreInterface $store): DataList
     {
         $parentClass = $list->dataClass();
         $schema = DataObject::getSchema();
@@ -26,7 +26,7 @@ class ManyManyEagerLoader implements RelationEagerLoaderInterface
         $childField = $mmData['childField'];
         $childClass = $mmData['childClass'];
         $extraFields = $schema->manyManyExtraFieldsForComponent($parentClass, $relation) ?: [];
-        $parentIDs = $list->map('ID', 'ID')->toArray();
+        $parentIDs = $list->columnUnique('ID');
 
         $placeholders = DB::placeholders($parentIDs);
         $query = new SQLSelect(

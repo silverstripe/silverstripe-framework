@@ -9,9 +9,9 @@ interface DataQueryStoreInterface
     /**
      * @param DataQuery $dataQuery
      * @param string $modifier
-     * @return array|null
+     * @return mixed
      */
-    public function getCachedResult(DataQuery $dataQuery, $modifier = null);
+    public function getCachedResult(DataQuery $dataQuery, string $modifier = null);
 
     /**
      * @param DataQuery $dataQuery
@@ -19,5 +19,5 @@ interface DataQueryStoreInterface
      * @param string $modifier
      * @return $this
      */
-    public function persist(DataQuery $dataQuery, $results, $modifier = null);
+    public function persist(DataQuery $dataQuery, $results, $modifier = null): DataQueryStoreInterface;
 }

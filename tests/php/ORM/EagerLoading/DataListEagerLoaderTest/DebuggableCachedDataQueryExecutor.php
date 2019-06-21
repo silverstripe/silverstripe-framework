@@ -13,7 +13,7 @@ class DebuggableCachedDataQueryExecutor extends CachedDataQueryExecutor
 
     protected $queries = 0;
 
-    public function execute(DataQuery $dataQuery, $modifier = null)
+    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable
     {
         if ($this->getCachedResult($dataQuery, $modifier) !== null) {
             $this->hits++;
@@ -34,7 +34,7 @@ class DebuggableCachedDataQueryExecutor extends CachedDataQueryExecutor
         return $this->hits;
     }
 
-    public function getQueries()
+    public function getQueries(): int
     {
         return $this->queries;
     }

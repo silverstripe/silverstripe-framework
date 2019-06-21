@@ -2,9 +2,9 @@
 
 namespace SilverStripe\ORM\QueryCache;
 
+use SebastianBergmann\CodeCoverage\Node\Iterator;
 use SilverStripe\ORM\DataQueryExecutorInterface;
 use SilverStripe\ORM\DataQuery;
-use Iterator;
 
 class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQueryStoreInterface
 {
@@ -27,9 +27,9 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
     /**
      * @param DataQuery $dataQuery
      * @param string $modifier
-     * @return array
+     * @return mixed
      */
-    public function execute(DataQuery $dataQuery, $modifier = null)
+    public function execute(DataQuery $dataQuery, ?string $modifier = null)
     {
         $results = $this->getCachedResult($dataQuery, $modifier);
         if ($results !== null) {
@@ -42,9 +42,9 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
-     * @return array
+     * @return iterable
      */
-    public function getFirstRow(DataQuery $dataQuery)
+    public function getFirstRow(DataQuery $dataQuery): iterable
     {
         $result = $this->getCachedResult($dataQuery, self::FIRST_ROW);
         if ($result) {
@@ -57,9 +57,9 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
-     * @return array
+     * @return iterable
      */
-    public function getLastRow(DataQuery $dataQuery)
+    public function getLastRow(DataQuery $dataQuery): iterable
     {
         $result = $this->getCachedResult($dataQuery, self::LAST_ROW);
         if ($result) {
@@ -72,9 +72,9 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
-     * @return int|string
+     * @return string
      */
-    public function getCount(DataQuery $dataQuery)
+    public function getCount(DataQuery $dataQuery): string
     {
         if ($count = $this->getCachedResult($dataQuery, self::COUNT)) {
             return $count;
@@ -97,7 +97,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
      * @param string $modifier
      * @return mixed
      */
-    public function getCachedResult(DataQuery $dataQuery, $modifier = null)
+    public function getCachedResult(DataQuery $dataQuery, ?string $modifier = null)
     {
         $key = $this->createKey($dataQuery, $modifier);
         if (isset($this->store[$key])) {
@@ -113,7 +113,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
      * @param string $modifier
      * @return $this
      */
-    public function persist(DataQuery $dataQuery, $value, $modifier = null)
+    public function persist(DataQuery $dataQuery, $value, $modifier = null): DataQueryStoreInterface
     {
         if ($value instanceof Iterator) {
             $value = iterator_to_array($value);
@@ -126,10 +126,10 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
-     * @param null $modifier
+     * @param string|null $modifier
      * @return string
      */
-    protected function createKey(DataQuery $dataQuery, $modifier = null)
+    protected function createKey(DataQuery $dataQuery, ?string $modifier = null): string
     {
         $prefix = $modifier ? $modifier . '__' : null;
 

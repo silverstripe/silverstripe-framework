@@ -13,6 +13,6 @@ interface RelationEagerLoaderInterface
      * @param DataQueryStoreInterface $store
      * @return DataList
      */
-    public function eagerLoadRelation(DataList $list, $relation, DataQueryStoreInterface $store);
+    public function eagerLoadRelation(DataList $list, string $relation, DataQueryStoreInterface $store): DataList;
 
 }

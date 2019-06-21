@@ -15,14 +15,21 @@ class DataListEagerLoader implements QueryEagerLoaderInterface
 
     protected $loaded = false;
 
-    public function addRelations($relations)
+    /**
+     * @param array $relations
+     * @return $this|QueryEagerLoaderInterface
+     */
+    public function addRelations(array $relations): QueryEagerLoaderInterface
     {
         $this->eagerLoad = array_merge_recursive($this->eagerLoad, $relations);
 
         return $this;
     }
 
-    public function getRelations()
+    /**
+     * @return array
+     */
+    public function getRelations(): array
     {
         return $this->eagerLoad;
     }
@@ -33,7 +40,7 @@ class DataListEagerLoader implements QueryEagerLoaderInterface
      * @return $this
      * @throws NotFoundExceptionInterface
      */
-    public function execute(DataList $parentList, DataQueryStoreInterface $store)
+    public function execute(DataList $parentList, DataQueryStoreInterface $store): QueryEagerLoaderInterface
     {
         if ($this->loaded) {
             return $this;
@@ -50,7 +57,7 @@ class DataListEagerLoader implements QueryEagerLoaderInterface
      * @return $this
      * @throws NotFoundExceptionInterface
      */
-    protected function applyEagerLoading(DataList $parentList, $relations, DataQueryStoreInterface $store)
+    protected function applyEagerLoading(DataList $parentList, $relations, DataQueryStoreInterface $store): self
     {
         $class = $parentList->dataClass();
         $dataObject = DataObject::singleton($class);

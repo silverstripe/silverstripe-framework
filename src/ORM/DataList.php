@@ -809,8 +809,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $this->performEagerLoading();
         $rows = $this->getDataQueryExecutor()->execute($this->dataQuery);
         $results = [];
-
-        foreach ($rows as $row) {
+        while($row = $rows->nextRecord()) {
             $results[] = $this->createDataObject($row);
         }
 

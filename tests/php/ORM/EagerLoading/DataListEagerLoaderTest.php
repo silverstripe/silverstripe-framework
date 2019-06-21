@@ -16,7 +16,7 @@ use SilverStripe\ORM\Tests\EagerLoading\DataListEagerLoaderTest\DebuggableNaiveD
 
 class DataListEagerLoaderTest extends SapphireTest
 {
-    // TODO: Doesn't work, why?!?!?!
+    // TODO: Why doesn't this load?
     //protected static $fixture_file = 'DataListEagerLoaderTest.yml';
 
     protected $usesDatabase = true;
@@ -27,7 +27,7 @@ class DataListEagerLoaderTest extends SapphireTest
         TeamComment::class,
     ];
 
-public function testRelations()
+    public function testRelations()
     {
         $loader = new DataListEagerLoader();
         $loader->addRelations([

@@ -9,7 +9,14 @@ use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
 
 class HasManyEagerLoader implements RelationEagerLoaderInterface
 {
-    public function eagerLoadRelation(DataList $list, $relation, DataQueryStoreInterface $store)
+    /**
+     * @param DataList $list
+     * @param string $relation
+     * @param DataQueryStoreInterface $store
+     * @return DataList
+     * @throws \Exception
+     */
+    public function eagerLoadRelation(DataList $list, string $relation, DataQueryStoreInterface $store): DataList
     {
         $parentClass = $list->dataClass();
         $schema = DataObject::getSchema();

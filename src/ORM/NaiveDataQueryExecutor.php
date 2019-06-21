@@ -6,37 +6,37 @@ class NaiveDataQueryExecutor implements DataQueryExecutorInterface
 {
     /**
      * @param DataQuery $dataQuery
-     * @param null $modifier
-     * @return \Iterator|Connect\Query
+     * @param string|null $modifier
+     * @return iterable
      */
-    public function execute(DataQuery $dataQuery, $modifier = null)
+    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable
     {
         return $dataQuery->query()->execute();
     }
 
     /**
      * @param DataQuery $dataQuery
-     * @return \Iterator|Connect\Query
+     * @return iterable
      */
-    public function getFirstRow(DataQuery $dataQuery)
+    public function getFirstRow(DataQuery $dataQuery): iterable
     {
         return $dataQuery->firstRow()->execute();
     }
 
     /**
      * @param DataQuery $dataQuery
-     * @return \Iterator|Connect\Query
+     * @return iterable
      */
-    public function getLastRow(DataQuery $dataQuery)
+    public function getLastRow(DataQuery $dataQuery): iterable
     {
         return $dataQuery->lastRow()->execute();
     }
 
     /**
      * @param DataQuery $dataQuery
-     * @return int|string
+     * @return string
      */
-    public function getCount(DataQuery $dataQuery)
+    public function getCount(DataQuery $dataQuery): string
     {
         return $dataQuery->count();
     }
