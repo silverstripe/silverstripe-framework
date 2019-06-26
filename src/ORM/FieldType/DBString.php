@@ -77,7 +77,7 @@ abstract class DBString extends DBField
      */
     public function getNullifyEmpty()
     {
-        return $this->options['nullifyEmpty'];
+        return !empty($this->options['nullifyEmpty']);
     }
 
     /**
@@ -99,7 +99,7 @@ abstract class DBString extends DBField
         }
 
         // Return "empty" value
-        if ($this->options['nullifyEmpty'] || $value === null) {
+        if ($this->getNullifyEmpty() || $value === null) {
             return null;
         }
         return '';
