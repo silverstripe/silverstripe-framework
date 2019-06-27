@@ -105,8 +105,12 @@ class MySQLStatement extends Query
     public function seek($row)
     {
         $this->rowNum = $row - 1;
+
+        // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
         $this->statement->data_seek($row);
-        return $this->next();
+        $result = $this->next();
+        $this->statement->data_seek($row);
+        return $result;
     }
 
     public function numRecords()
@@ -135,6 +139,6 @@ class MySQLStatement extends Query
 
     public function rewind()
     {
-        return $this->seek(0);
+        $this->seek(0);
     }
 }

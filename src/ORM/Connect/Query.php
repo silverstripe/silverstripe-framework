@@ -168,16 +168,15 @@ abstract class Query implements Iterator
      * Iterator function implementation. Rewind the iterator to the first item and return it.
      * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
      *
-     * @return array
+     * @return void
      */
     public function rewind()
     {
         if ($this->queryHasBegun && $this->numRecords() > 0) {
             $this->queryHasBegun = false;
             $this->currentRecord = null;
-            return $this->seek(0);
+            $this->seek(0);
         }
-        return null;
     }
 
     /**
