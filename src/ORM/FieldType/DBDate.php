@@ -257,6 +257,19 @@ class DBDate extends DBField
         return self::ISO_DATE;
     }
 
+
+    /**
+     * Return the date using a particular formatting string, using the PHP Native date function
+     *
+     * @param string $format Format code string. See https://www.php.net/manual/en/function.date.php
+     *
+     * @return string The date in the requested format
+     */
+    public function FormatPHPNative($format)
+    {
+        return date($format, $this->getTimestamp());
+    }    
+    
     /**
      * Return the date using a particular formatting string. Use {o} to include an ordinal representation
      * for the day of the month ("1st", "2nd", "3rd" etc)
