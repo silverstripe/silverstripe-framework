@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 use SilverStripe\i18n\i18nEntityProvider;
 

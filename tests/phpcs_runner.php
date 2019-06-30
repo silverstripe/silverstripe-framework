@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 if (php_sapi_name() != 'cli') {
     die("This script must be called from the command line\n");

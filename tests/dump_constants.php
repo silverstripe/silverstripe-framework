@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 // Helper for dumping the value of standard constants prior to test
 require __DIR__ . '/../src/includes/autoload.php';

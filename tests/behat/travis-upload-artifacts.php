@@ -1,5 +1,6 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * Creates an index.html with links to all files in a given directory structure, recursively.
  * This is useful for Amazon S3 uploads with static file hosting, since it doesn't list files by default.

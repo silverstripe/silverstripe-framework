@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;

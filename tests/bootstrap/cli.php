@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 // Fake the script name and base
 global $_SERVER;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace SilverStripe\i18n\Tests\i18nTextCollectorTest;
 

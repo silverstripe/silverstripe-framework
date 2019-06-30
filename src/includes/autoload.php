@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 // Init composer autoload
 call_user_func(function () {

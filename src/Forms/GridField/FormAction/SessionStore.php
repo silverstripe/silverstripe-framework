@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types = 1);
+
 namespace SilverStripe\Forms\GridField\FormAction;
 
 use SilverStripe\Control\HTTPRequest;

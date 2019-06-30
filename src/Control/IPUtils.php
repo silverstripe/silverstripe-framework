@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * These helpful functions were lifted from the Symfony library
  * https://github.com/symfony/http-foundation/blob/master/LICENSE
