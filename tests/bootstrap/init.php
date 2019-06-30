@@ -11,7 +11,7 @@ if (!defined('BASE_PATH')) {
  */
 
 // Make sure display_errors is on
-ini_set('display_errors', 1);
+ini_set('display_errors', '1');
 
 // Asset folder
 if (!file_exists(ASSETS_PATH)) {

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 /*
 WARNING: This file has been machine generated. Do not edit it, or your changes will be overwritten next time it is compiled.
