@@ -136,9 +136,4 @@ class MySQLStatement extends Query
         }
         return $row;
     }
-
-    public function rewind()
-    {
-        $this->seek(0);
-    }
 }
