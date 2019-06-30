@@ -172,7 +172,7 @@ abstract class Authenticator extends SS_Object {
 	/**
 	 * Set a default authenticator (shows first in tabs)
 	 *
-	 * @param string
+	 * @param string $authenticator
 	 */
 	public static function set_default_authenticator($authenticator) {
 		self::$default_authenticator = $authenticator;
