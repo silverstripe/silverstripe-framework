@@ -60,6 +60,10 @@ matrix:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
 
+    - php: 7.3
+      env:
+        - PHPSTAN_TEST=1
+
 before_script:
 # Extra $PATH
   - export PATH=~/.composer/vendor/bin:$PATH
@@ -76,8 +80,10 @@ before_script:
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.x-dev --no-update; fi
   - composer require silverstripe/recipe-testing:^1 silverstripe/recipe-core:4.x-dev silverstripe/admin:1.x-dev silverstripe/versioned:1.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]]; then composer require silverstripe/recipe-cms:4.x-dev --no-update; fi
+  - if [[ $PHPUNIT_TEST == cms || $PHPSTAN_TEST ]]; then composer require silverstripe/recipe-cms:4.x-dev --no-update; fi
   - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
+  - if [[ $PHPSTAN_TEST ]]; then composer config repositories.sminneephpstan vcs https://github.com/sminnee/silverstripe-phpstan.git; fi
+  - if [[ $PHPSTAN_TEST ]]; then composer require symbiote/silverstripe-phpstan:dev-phpstan011 phpstan/phpstan-shim:^0.11 --no-update; fi
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
@@ -90,6 +96,7 @@ script:
   - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
   - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
   - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
+  - if [[ $PHPSTAN_TEST ]]; then vendor/bin/phpstan analyse --memory-limit 1G; fi
 
 after_success:
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi

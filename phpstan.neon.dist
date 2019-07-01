@@ -1,0 +1,22 @@
+includes:
+  - vendor/symbiote/silverstripe-phpstan/phpstan.neon
+parameters:
+  bootstrap: vendor/symbiote/silverstripe-phpstan/bootstrap.php
+  level: 2
+  paths:
+    - src/
+  autoload_files:
+    - thirdparty/difflib/difflib.php
+    - thirdparty/simpletest/page.php
+  excludes_analyse:
+    # Too complex and machine generated
+    - src/View/SSTemplateParser.php
+    # Relies on symfony/console which isn't installed by default
+    - src/Dev/Upgrade/UpgradeBootstrap.php
+  ignoreErrors:
+    - '#invalid typehint type Memcached#'
+    - '#unknown class Memcached#'
+    - '#class HTMLPurifier not found#'
+    - '#unknown class HTMLPurifier#'
+    # https://github.com/phpstan/phpstan/issues/1299
+    - '#Variable \$_SESSION in isset\(\) always exists#'
