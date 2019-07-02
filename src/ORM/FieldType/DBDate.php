@@ -544,6 +544,24 @@ class DBDate extends DBField
     }
 
     /**
+     * Adjusts the current instance by the given adjustment, in a PHP `strtotime()` style date/time modifier.
+     *
+     * Example:
+     *
+     * <code>
+     * DBDatetime::now()->modify('+ 3 days')->Format()
+     * DBDatetime::now()->modify('-10 weeks')->Format()
+     * </code>
+     *
+     * @param string $adjustment PHP strtotime style
+     */
+    public function modify(string $adjustment): self
+    {
+        $modifiedTime = strtotime($adjustment, $this->getTimestamp());
+        return $this->setValue($modifiedTime);
+    }
+
+    /**
      * Returns a date suitable for insertion into a URL and use by the system.
      *
      * @return string

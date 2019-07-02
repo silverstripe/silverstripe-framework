@@ -232,4 +232,39 @@ class DBDatetimeTest extends SapphireTest
         $date = DBDatetime::create_field('Datetime', '2010-12-31 16:58:59');
         $this->assertEquals('2010-12-31T16:58:59+00:00', $date->Rfc3339());
     }
+
+    /**
+     * @param string $adjustment
+     * @param string $expected
+     * @dataProvider modifyProvider
+     */
+    public function testModify($adjustment, $expected)
+    {
+        DBDatetime::set_mock_now('2019-03-03 12:00:00');
+        $result = DBDatetime::now()->modify($adjustment)->Rfc2822();
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function modifyProvider()
+    {
+        return [
+            ['+1 day', '2019-03-04 12:00:00'],
+            ['-1 day', '2019-03-02 12:00:00'],
+            ['+24 hours', '2019-03-04 12:00:00'],
+            ['-24 hours', '2019-03-02 12:00:00'],
+            ['+2 weeks', '2019-03-17 12:00:00'],
+            ['-2 weeks', '2019-02-17 12:00:00'],
+            ['+2 years', '2021-03-03 12:00:00'],
+            ['-2 years', '2017-03-03 12:00:00'],
+            ['+35 minutes', '2019-03-03 12:35:00'],
+            ['-35 minutes', '2019-03-03 11:25:00'],
+            ['+3 hours', '2019-03-03 15:00:00'],
+            ['-3 hours', '2019-03-03 09:00:00'],
+            ['+59 seconds', '2019-03-03 12:00:59'],
+            ['-59 seconds', '2019-03-03 11:59:01'],
+        ];
+    }
 }
