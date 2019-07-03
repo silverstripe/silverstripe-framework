@@ -1,0 +1,28 @@
+---
+Only:
+  extensionloaded: "session"
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  ExtensionLoaded:
+    SessionExtLoaded: Yes
+---
+Only:
+  extensionloaded: "silverstripe_ext"
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  ExtensionLoaded:
+    DummyExtLoaded: Yes
+---
+Except:
+  extensionloaded: "session"
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  ExtensionLoaded:
+    SessionExtLoaded: No
+---
+Except:
+  extensionloaded: "silverstripe_ext"
+---
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
+  ExtensionLoaded:
+    DummyExtLoaded: No
