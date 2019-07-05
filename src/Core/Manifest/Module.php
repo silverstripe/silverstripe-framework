@@ -279,12 +279,14 @@ class Module implements Serializable
 
 /**
  * Scope isolated require - prevents access to $this, and prevents module _config.php
- * files potentially leaking variables. Required argument $file is commented out
- * to avoid leaking that into _config.php
+ * files potentially leaking variables.
  *
- * @param string $file
+ * Note that $requiredFilenameAasdawehjkrew will be available in _config.php. To avoid
+ * a collision, a random suffix has been added. The Previous implementation confused phpstan
+ *
+ * @param string $requiredFilenameAasdawehjkrew
  */
-function requireFile()
+function requireFile($requiredFilenameAasdawehjkrew)
 {
-    require_once func_get_arg(0);
+    require_once $requiredFilenameAasdawehjkrew;
 }
