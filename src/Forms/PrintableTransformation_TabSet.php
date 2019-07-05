@@ -13,7 +13,7 @@ class PrintableTransformation_TabSet extends TabSet
     public function __construct($tabs)
     {
         $this->children = $tabs;
-        CompositeField::__construct($tabs);
+        parent::__construct('', $tabs);
     }
 
     public function FieldHolder($properties = [])
