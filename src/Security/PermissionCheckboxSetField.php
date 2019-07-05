@@ -39,6 +39,16 @@ class PermissionCheckboxSetField extends FormField
     protected $source = null;
 
     /**
+     * @var string
+     */
+    protected $filterField;
+
+    /**
+     * @var string
+     */
+    protected $managedClass;
+
+    /**
      * @param String $name
      * @param String $title
      * @param String $managedClass
@@ -102,6 +112,10 @@ class PermissionCheckboxSetField extends FormField
                 && ($record instanceof Group || $record instanceof PermissionRole)
                 && !$records->find('ID', $record->ID)
             ) {
+                // Just in case it's an immutable SS_List
+                if (!method_exists($records, 'push')) {
+                    $records = new ArrayList($records->toArray());
+                }
                 $records->push($record);
             }
         }
