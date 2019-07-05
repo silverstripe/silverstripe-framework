@@ -201,7 +201,7 @@ class SSViewer implements Flushable
 
         $this->setTemplate($templates);
 
-        if (!$this->chosen) {
+        if ($this->templates && !$this->chosen) {
             $message = 'None of the following templates could be found: ';
             $message .= print_r($templates, true);
 

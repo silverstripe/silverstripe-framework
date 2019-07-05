@@ -89,7 +89,8 @@ class TabSet extends CompositeField
                 if ($tab instanceof Tab || $tab instanceof TabSet) {
                     $tab->setTabSet($this);
                 } else {
-                    throw new InvalidArgumentException("TabSet can only contain instances of other Tab or Tabsets");
+                    throw new InvalidArgumentException("TabSet can only contain instances of other Tab or Tabsets; "
+                        . (is_object($tab) ? get_class($tab) : json_encode($tab)) . " given");
                 }
             }
         }

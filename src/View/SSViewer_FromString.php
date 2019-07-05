@@ -37,9 +37,7 @@ class SSViewer_FromString extends SSViewer
      */
     public function __construct($content, TemplateParser $parser = null)
     {
-        if ($parser) {
-            $this->setParser($parser);
-        }
+        parent::__construct([], $parser);
 
         $this->content = $content;
     }
