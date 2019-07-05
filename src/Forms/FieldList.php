@@ -554,7 +554,7 @@ class FieldList extends ArrayList
     {
         if ($dataFields = $this->dataFields()) {
             foreach ($dataFields as $child) {
-                if (trim($name) == trim($child->getName()) || $name == $child->id) {
+                if (trim($name) == trim($child->getName()) || (method_exists($child, 'ID') && $name == $child->ID())) {
                     return $child;
                 }
             }

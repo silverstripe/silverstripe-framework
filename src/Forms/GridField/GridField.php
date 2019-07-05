@@ -610,11 +610,7 @@ class GridField extends FormField
 
         $fieldsetAttributes['data-name'] = $this->getName();
 
-        $tableId = null;
-
-        if ($this->id) {
-            $tableId = $this->id;
-        }
+        $tableId = $this->id() ?: null;
 
         $tableAttributes = [
             'id' => $tableId,
