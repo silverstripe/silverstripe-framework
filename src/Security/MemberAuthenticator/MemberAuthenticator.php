@@ -180,7 +180,8 @@ class MemberAuthenticator implements Authenticator
         /** @skipUpgrade */
         $email = isset($data['Email']) ? $data['Email'] : null;
         if (is_array($email)) {
-            throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): $email");
+            throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): "
+                . json_encode($email));
         }
 
         $attempt = LoginAttempt::create();
