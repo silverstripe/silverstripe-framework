@@ -88,6 +88,7 @@ class CsvBulkLoader extends BulkLoader
                 return $row;
             };
 
+            // Column map can optionally be used as a header map
             if ($this->columnMap) {
                 $headerMap = $this->getNormalisedColumnMap();
                 $remapper = function ($row, $rowOffset, $iterator) use ($headerMap, $tabExtractor) {
@@ -105,14 +106,15 @@ class CsvBulkLoader extends BulkLoader
                     }
                     return $row;
                 };
-            } else {
-                $remapper = $tabExtractor;
-            }
+                $rows = $csvReader->fetchAssoc($this->hasHeaderRow ? 0 : $headerMap, $remapper);
 
-            if ($this->hasHeaderRow) {
-                $rows = $csvReader->fetchAssoc(0, $remapper);
-            } elseif ($this->columnMap) {
-                $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+            // No column map, just a header row
+            } else if ($this->hasHeaderRow) {
+                $rows = $csvReader->fetchAssoc(0, $tabExtractor);
+
+            // Not sure what to do
+            } else {
+                throw new \LogicException("Neither hasHeaderRow nor columnMap specified on CsvBulkLoader");
             }
 
             foreach ($rows as $row) {
