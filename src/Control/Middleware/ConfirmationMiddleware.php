@@ -33,6 +33,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
 
     /**
      * Confirmation form URL
+     * WARNING: excluding SS_BASE_URL
      *
      * @var string
      */
@@ -81,8 +82,15 @@ class ConfirmationMiddleware implements HTTPMiddleware
      */
     protected function getConfirmationUrl(HTTPRequest $request, $confirmationStorageId)
     {
+        $url = $this->confirmationFormUrl;
+
+        if (substr($url, 0, 1) === '/') {
+            // add BASE_URL explicitly if not absolute
+            $url = Controller::join_links(Director::baseURL(), $url);
+        }
+
         return Controller::join_links(
-            $this->confirmationFormUrl,
+            $url,
             urlencode($confirmationStorageId)
         );
     }
