@@ -37,7 +37,7 @@ class LogoutForm extends Form
             $actions = $this->getFormActions();
         }
 
-        parent::__construct($controller, $name, $fields, $actions);
+        parent::__construct($controller, $name, $fields, $actions, $validator);
 
         $this->setFormAction(Security::logout_url());
     }
