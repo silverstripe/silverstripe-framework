@@ -485,7 +485,7 @@ class Requirements implements Flushable
      */
     public static function get_minify_combined_js_files()
     {
-        return self::backend()->getMinifyCombinedJSFiles();
+        return self::backend()->getMinifyCombinedFiles();
     }
 
     /**
@@ -495,7 +495,7 @@ class Requirements implements Flushable
      */
     public static function set_minify_combined_js_files($minify)
     {
-        self::backend()->setMinifyCombinedJSFiles($minify);
+        self::backend()->setMinifyCombinedFiles($minify);
     }
 
     /**
