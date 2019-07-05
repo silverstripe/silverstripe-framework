@@ -17,6 +17,8 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -280,7 +282,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         $searchField = $context->getSearchFields()->first();
         $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
 
-        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+        if (!empty($gridField->Title)) {
+            $name = $gridField->Title;
+        } else {
+            $name = singleton($gridField->getModelClass())->i18n_plural_name();
+        }
 
         // Prefix "Search__" onto the filters for the React component
         $filters = $context->getSearchParams();
@@ -350,7 +356,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             $field->addExtraClass('stacked');
         }
 
-        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+        if (!empty($gridField->Title)) {
+            $name = $gridField->Title;
+        } else {
+            $name = singleton($gridField->getModelClass())->i18n_plural_name();
+        }
 
         $this->searchForm = $form = new Form(
             $gridField,
