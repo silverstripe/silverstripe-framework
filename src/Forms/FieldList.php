@@ -155,22 +155,11 @@ class FieldList extends ArrayList
      */
     protected function fieldNameError(FormField $field, $functionName)
     {
-        if ($this->form) {
-            $errorSuffix = sprintf(
-                " in your '%s' form called '%s'",
-                get_class($this->form),
-                $this->form->getName()
-            );
-        } else {
-            $errorSuffix = '';
-        }
-
         user_error(
             sprintf(
-                "%s() I noticed that a field called '%s' appears twice%s",
+                "%s() I noticed that a field called '%s' appears twice",
                 $functionName,
-                $field->getName(),
-                $errorSuffix
+                $field->getName()
             ),
             E_USER_ERROR
         );
@@ -207,14 +196,8 @@ class FieldList extends ArrayList
             if ($isIncluded) {
                 $name = $field->getName();
                 if (isset($list[$name])) {
-                    if ($this->form) {
-                        $formClass = get_class($this->form);
-                        $errSuffix = " in your '{$formClass}' form called '" . $this->form->Name() . "'";
-                    } else {
-                        $errSuffix = '';
-                    }
                     user_error(
-                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.",
+                        "collateDataFields() I noticed that a field called '$name' appears twice.",
                         E_USER_ERROR
                     );
                 }
