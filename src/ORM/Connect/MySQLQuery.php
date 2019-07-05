@@ -4,7 +4,10 @@ namespace SilverStripe\ORM\Connect;
 
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
- * Note that this class is only used for the results of non-prepared statements
+ * Note that this class is only used for the results of non-prepared statements.
+ *
+ * @internal Use MySQLDatabase::query() or MySQLDatabase::preparedQuery to create these objects; constructor is not a
+ * public API.
  */
 class MySQLQuery extends Query
 {
@@ -26,11 +29,10 @@ class MySQLQuery extends Query
     /**
      * Hook the result-set given into a Query class, suitable for use by SilverStripe.
      *
-     * @param MySQLiConnector $database The database object that created this query.
      * @param mixed $handle the internal mysql handle that is points to the resultset.
      * Non-mysqli_result values could be given for non-select queries (e.g. true)
      */
-    public function __construct($database, $handle)
+    public function __construct($handle)
     {
         $this->handle = $handle;
         if (is_object($this->handle)) {

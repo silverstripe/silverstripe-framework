@@ -4,6 +4,8 @@ namespace SilverStripe\ORM\Connect;
 
 /**
  * A result-set from a PDO database.
+ *
+ * @internal Use PDOConnector to create these objects; constructor is not a public API.
  */
 class PDOQuery extends Query
 {

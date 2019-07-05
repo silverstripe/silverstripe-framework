@@ -183,7 +183,7 @@ class MySQLiConnector extends DBConnector
         }
 
         // Some non-select queries return true on success
-        return new MySQLQuery($this, $handle);
+        return new MySQLQuery($handle);
     }
 
     /**
@@ -310,7 +310,7 @@ class MySQLiConnector extends DBConnector
         }
 
         // Replicate normal behaviour of ->query() on non-select calls
-        return new MySQLQuery($this, true);
+        return new MySQLQuery(true);
     }
 
     public function selectDatabase($name)
