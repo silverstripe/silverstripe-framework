@@ -352,4 +352,34 @@ class DBDateTest extends SapphireTest
         $date = DBDate::create_field('Date', '2010-12-31');
         $this->assertEquals('2010-12-31T00:00:00+00:00', $date->Rfc3339());
     }
+
+    /**
+     * @param string $adjustment
+     * @param string $expected
+     * @dataProvider modifyProvider
+     */
+    public function testModify($adjustment, $expected)
+    {
+        /** @var DBDate $dateField */
+        $dateField = DBField::create_field('Date', '2019-03-03');
+        $result = $dateField->modify($adjustment)->URLDate();
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function modifyProvider()
+    {
+        return [
+            ['+1 day', '2019-03-04'],
+            ['-1 day', '2019-03-02'],
+            ['+24 hours', '2019-03-04'],
+            ['-24 hours', '2019-03-02'],
+            ['+2 weeks', '2019-03-17'],
+            ['-2 weeks', '2019-02-17'],
+            ['+2 years', '2021-03-03'],
+            ['-2 years', '2017-03-03'],
+        ];
+    }
 }
