@@ -109,7 +109,11 @@ abstract class SingleSelectField extends SelectField
     {
         // Inject default option
         if ($this->getHasEmptyDefault()) {
-            return ['' => $this->getEmptyString()] + $this->getSource();
+            $source = $this->getSource();
+            if (!is_array($source)) {
+                $source = iterator_to_array($source, true);
+            }
+            return ['' => $this->getEmptyString()] + $source;
         } else {
             return $this->getSource();
         }
