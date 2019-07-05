@@ -190,7 +190,7 @@ class FieldList extends ArrayList
     protected function collateDataFields(&$list, $saveableOnly = false)
     {
         Deprecation::notice('5.0', 'Please use dataFields or SaveableFields');
-        if (!isset($list)) {
+        if (!is_array($list)) {
             $list = [];
         }
         /** @var FormField $field */

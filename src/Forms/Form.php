@@ -342,13 +342,13 @@ class Form extends ViewableData implements HasRequestHandler
     {
         // Restore messages
         $result = $this->getSessionValidationResult();
-        if (isset($result)) {
+        if (is_array($result)) {
             $this->loadMessagesFrom($result);
         }
 
         // load data in from previous submission upon error
         $data = $this->getSessionData();
-        if (isset($data)) {
+        if (is_array($data)) {
             $this->loadDataFrom($data, self::MERGE_AS_INTERNAL_VALUE);
         }
         return $this;
