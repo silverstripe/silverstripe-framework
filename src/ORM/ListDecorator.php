@@ -99,7 +99,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     public function exists()
     {
-        return $this->list->exists();
+        if (method_exists($this->list, 'exists')) {
+            return $this->list->exists();
+        } else {
+            throw new \BadMethodCallException('exists() not found on the decorated list');
+        }
     }
 
     public function first()
@@ -124,7 +128,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     public function forTemplate()
     {
-        return $this->list->forTemplate();
+        if (method_exists($this->list, 'forTemplate')) {
+            return $this->list->forTemplate();
+        } else {
+            throw new \BadMethodCallException('forTemplate() not found on the decorated list');
+        }
     }
 
     public function map($index = 'ID', $titleField = 'Title')
@@ -144,7 +152,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     public function columnUnique($value = "ID")
     {
-        return $this->list->columnUnique($value);
+        if (method_exists($this->list, 'columnUnique')) {
+            return $this->list->columnUnique($value);
+        } else {
+            throw new \BadMethodCallException('columnUnique() not found on the decorated list');
+        }
     }
 
     public function each($callback)
@@ -154,12 +166,20 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     public function canSortBy($by)
     {
-        return $this->list->canSortBy($by);
+        if ($this->list instanceof Sortable) {
+            return $this->list->canSortBy($by);
+        } else {
+            throw new \BadMethodCallException('canSortBy() not found; the decorated list isn\'t Sortable');
+        }
     }
 
     public function reverse()
     {
-        return $this->list->reverse();
+        if ($this->list instanceof Sortable) {
+            return $this->list->reverse();
+        } else {
+            throw new \BadMethodCallException('reverse() not found; the decorated list isn\'t Sortable');
+        }
     }
 
     /**
@@ -171,14 +191,22 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      * @example $list->sort('Name', 'ASC');
      * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
      */
-    public function sort()
+    public function sort(...$arguments)
     {
-        return $this->list->sort(...func_get_args());
+        if ($this->list instanceof Sortable) {
+            return $this->list->sort(...$arguments);
+        } else {
+            throw new \BadMethodCallException('sort() not found; the decorated list isn\'t Sortable');
+        }
     }
 
     public function canFilterBy($by)
     {
-        return $this->list->canFilterBy($by);
+        if ($this->list instanceof Filterable) {
+            return $this->list->canFilterBy($by);
+        } else {
+            throw new \BadMethodCallException('canFilterBy() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     /**
@@ -189,9 +217,13 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob or someone with Age 21
      * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob or anyone with Age 21 or 43
      */
-    public function filter()
+    public function filter(...$arguments)
     {
-        return $this->list->filter(...func_get_args());
+        if ($this->list instanceof Filterable) {
+            return $this->list->filter(...$arguments);
+        } else {
+            throw new \BadMethodCallException('filter() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     /**
@@ -213,12 +245,16 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
      *
-     * @param string|array See {@link filter()}
+     * @param array<int,mixed> $arguments See {@link filter()}
      * @return DataList
      */
-    public function filterAny()
+    public function filterAny(...$arguments)
     {
-        return $this->list->filterAny(...func_get_args());
+        if ($this->list instanceof Filterable) {
+            return $this->list->filterAny(...$arguments);
+        } else {
+            throw new \BadMethodCallException('filterAny() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     /**
@@ -249,7 +285,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     public function limit($limit, $offset = 0)
     {
-        return $this->list->limit($limit, $offset);
+        if ($this->list instanceof Limitable) {
+            return $this->list->limit($limit, $offset);
+        } else {
+            throw new \BadMethodCallException('limit() not found; the decorated list isn\'t Limitable');
+        }
     }
 
     /**
@@ -260,7 +300,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function byID($id)
     {
-        return $this->list->byID($id);
+        if ($this->list instanceof Filterable) {
+            return $this->list->byID($id);
+        } else {
+            throw new \BadMethodCallException('byID() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     /**
@@ -271,7 +315,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function byIDs($ids)
     {
-        return $this->list->byIDs($ids);
+        if ($this->list instanceof Filterable) {
+            return $this->list->byIDs($ids);
+        } else {
+            throw new \BadMethodCallException('byIDs() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     /**
@@ -282,13 +330,21 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob or someone with Age 21
      * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or anyone with Age 21 or 43
      */
-    public function exclude()
+    public function exclude(...$arguments)
     {
-        return $this->list->exclude(...func_get_args());
+        if ($this->list instanceof Filterable) {
+            return $this->list->exclude(...$arguments);
+        } else {
+            throw new \BadMethodCallException('exclude() not found; the decorated list isn\'t Filterable');
+        }
     }
 
     public function debug()
     {
-        return $this->list->debug();
+        if ($this->list instanceof ViewableData) {
+            return $this->list->debug();
+        } else {
+            throw new \BadMethodCallException('exclude() not found; the decorated list isn\'t ViewableData');
+        }
     }
 }
