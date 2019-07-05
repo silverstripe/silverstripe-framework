@@ -96,13 +96,12 @@ trait UploadReceiver
      * See {@link File::$allowed_extensions} for details of allowed extensions
      * for each of these categories
      *
-     * @param string $category Category name
-     * @param string,... $categories Additional category names
+     * @param array<int,string> $categories Category names
      * @return $this
      */
-    public function setAllowedFileCategories($category)
+    public function setAllowedFileCategories(...$categories)
     {
-        $extensions = File::get_category_extensions(func_get_args());
+        $extensions = File::get_category_extensions($categories);
         return $this->setAllowedExtensions($extensions);
     }
 

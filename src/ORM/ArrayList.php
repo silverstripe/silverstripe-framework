@@ -505,10 +505,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->sort('Name', 'ASC');
      * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
      */
-    public function sort()
+    public function sort(...$args)
     {
-        $args = func_get_args();
-
         if (count($args)==0) {
             return $this;
         }
@@ -655,12 +653,12 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example // all bobs, phils or anyone aged 21 or 43 in the list
      *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *
-     * @param string|array See {@link filter()}
+     * @param array<int,mixed> $args See {@link filter()}
      * @return static
      */
-    public function filterAny()
+    public function filterAny(...$args)
     {
-        $keepUs = $this->normaliseFilterArgs(...func_get_args());
+        $keepUs = $this->normaliseFilterArgs(...$args);
 
         $itemsToKeep = [];
 

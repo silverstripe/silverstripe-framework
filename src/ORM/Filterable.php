@@ -53,10 +53,10 @@ interface Filterable extends SS_List
      *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
      *
-     * @param string|array See {@link filter()}
+     * @param array<int,mixed> $arguments See {@link filter()}
      * @return static
      */
-    public function filterAny();
+    public function filterAny(...$arguments);
 
     /**
      * Return a new instance of this list that excludes any items with these characteristics

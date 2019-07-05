@@ -31,7 +31,7 @@ interface Sortable extends SS_List
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
      */
-    public function sort();
+    public function sort(...$arguments);
 
 
     /**

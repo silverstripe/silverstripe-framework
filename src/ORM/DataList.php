@@ -307,14 +307,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort('Name'); // default ASC sorting
      * @example $list = $list->sort('Name DESC'); // DESC sorting
      * @example $list = $list->sort('Name', 'ASC');
-     * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
-     *
-     * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+     * @example $list = $list->sort(['Name'=>'ASC', 'Age'=>'DESC']);
+     * @param array<int,mixed> $arguments Escaped SQL statement. If passed as array, all keys and values are assumed
+     *                                    to be escaped.
      * @return static
      */
-    public function sort()
+    public function sort(...$arguments)
     {
-        $count = func_num_args();
+        $count = sizeof($arguments);
 
         if ($count == 0) {
             return $this;
@@ -327,7 +327,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         if ($count == 2) {
             $col = null;
             $dir = null;
-            list($col, $dir) = func_get_args();
+            list($col, $dir) = $arguments;
 
             // Validate direction
             if (!in_array(strtolower($dir), ['desc', 'asc'])) {
@@ -336,7 +336,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
             $sort = [$col => $dir];
         } else {
-            $sort = func_get_arg(0);
+            $sort = $arguments[0];
         }
 
         return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
@@ -380,13 +380,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @todo extract the sql from $customQuery into a SQLGenerator class
      *
-     * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
+     * @param array<int,mixed> $arguments Escaped SQL statement. If passed as array, all keys and values will be
+                                          escaped internally
      * @return $this
      */
-    public function filter()
+    public function filter(...$arguments)
     {
         // Validate and process arguments
-        $arguments = func_get_args();
         switch (sizeof($arguments)) {
             case 1:
                 $filters = $arguments[0];
@@ -442,18 +442,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @todo extract the sql from this method into a SQLGenerator class
      *
-     * @param string|array See {@link filter()}
+     * @param array<int,mixed> $arguments See {@link filter()}
      * @return static
      */
-    public function filterAny()
+    public function filterAny(...$arguments)
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($arguments);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($arguments[0])) {
+            $whereArguments = $arguments[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$arguments[0]] = $arguments[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to filterAny()');
         }
@@ -512,7 +512,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      *
      * @param string $field Name of field or relation to apply
-     * @param string &$columnName Quoted column name
+     * @param string $columnName Quoted column name
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return $this DataList with this relation applied
@@ -607,21 +607,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *          // bob age 21 or 43, phil age 21 or 43 would be excluded
      *
      * @todo extract the sql from this method into a SQLGenerator class
-     *
-     * @param string|array
-     * @param string [optional]
-     *
+     * @param array <int,mixed> $arguments
      * @return $this
      */
-    public function exclude()
+    public function exclude(...$arguments)
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($arguments);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($arguments[0])) {
+            $whereArguments = $arguments[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$arguments[0]] = $arguments[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
         }
@@ -646,20 +643,19 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // bob, phil, 21 or 43 would be excluded
      *
-     * @param string|array
-     * @param string [optional]
+     * @param array<int,mixed> $arguments
      *
      * @return $this
      */
-    public function excludeAny()
+    public function excludeAny(...$arguments)
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($arguments);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($arguments[0])) {
+            $whereArguments = $arguments[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$arguments[0]] = $arguments[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
         }
