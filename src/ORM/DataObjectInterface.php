@@ -47,4 +47,45 @@ interface DataObjectInterface
      * @return $this
      */
     public function setCastedField($fieldName, $val);
+
+    // The following are provided by ViewableData...
+
+    /**
+     * Return TRUE if a method exists on this object
+     *
+     * This should be used rather than PHP's inbuild method_exists() as it takes into account methods added via
+     * extensions
+     *
+     * @param string $method
+     * @return bool
+     */
+    public function hasMethod($method);
+
+    /**
+     * Check if a field exists on this object. This should be overloaded in child classes.
+     *
+     * @param string $field
+     * @return bool
+     */
+    public function hasField($field);
+
+    /**
+     * Get the value of a field on this object, automatically inserting the value into any available casting objects
+     * that have been specified.
+     *
+     * @param string $fieldName
+     * @param array $arguments
+     * @param bool $cache Cache this object
+     * @param string $cacheName a custom cache name
+     * @return Object|DBField
+     */
+    public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null);
+
+    /**
+     * Return the string-format type for the given field.
+     *
+     * @param string $field
+     * @return string 'xml'|'raw'
+     */
+    public function escapeTypeForField($field);
 }
