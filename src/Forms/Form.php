@@ -306,7 +306,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
         // method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
-        if (ClassInfo::hasMethod($controller, 'securityTokenEnabled')) {
+        if (method_exists($controller, 'securityTokenEnabled')) {
             $securityEnabled = $controller->securityTokenEnabled();
         } else {
             $securityEnabled = SecurityToken::is_enabled();
@@ -1807,7 +1807,12 @@ class Form extends ViewableData implements HasRequestHandler
 
         if ($this->validator) {
             /** @skipUpgrade */
-            $result .= '<h3>' . _t(__CLASS__ . '.VALIDATOR', 'Validator') . '</h3>' . $this->validator->debug();
+            $result .= '<h3>' . _t(__CLASS__ . '.VALIDATOR', 'Validator') . '</h3>';
+            if (method_exists($this->validator, 'debug')) {
+                $result .= $this->validator->debug();
+            } else {
+                $result .= get_class($this->validator);
+            }
         }
 
         return $result;
