@@ -301,7 +301,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     protected function escapeValue($gridField, $value)
     {
-        if (!$escape = $gridField->FieldEscape) {
+        if (!isset($gridField->FieldEscape) || !$escape = $gridField->FieldEscape) {
             return $value;
         }
 
