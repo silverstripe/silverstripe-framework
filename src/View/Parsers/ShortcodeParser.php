@@ -642,6 +642,8 @@ class ShortcodeParser
         $this->extend('onBeforeParse', $content);
 
         $continue = true;
+        $htmlvalue = null;
+        $tags = null;
 
         // If no shortcodes defined, don't try and parse any
         if (!$this->shortcodes) {

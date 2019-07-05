@@ -139,23 +139,24 @@ class VersionProvider
             return [];
         }
 
-        $lockData = [];
         $jsonData = file_get_contents($composerLockPath);
 
+        //  TODO: The benefit of this cache isn't clear
         if ($cache) {
             $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
             $cacheKey = md5($jsonData);
+
             if ($versions = $cache->get($cacheKey)) {
                 $lockData = json_decode($versions, true);
             }
-        }
 
-        if (empty($lockData) && $jsonData) {
             $lockData = json_decode($jsonData, true);
 
-            if ($cache) {
-                $cache->set($cacheKey, $jsonData);
-            }
+            $cache->set($cacheKey, $jsonData);
+        } elseif ($jsonData) {
+            $lockData = json_decode($jsonData, true);
+        } else {
+            $lockData = [];
         }
 
         return $lockData;

@@ -561,7 +561,7 @@ class SSViewer implements Flushable
     /**
      * Flag whether to include the requirements in this response.
      *
-     * @param bool
+     * @param bool $incl
      */
     public function includeRequirements($incl = true)
     {
@@ -752,6 +752,7 @@ PHP;
     public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
     {
         $v = SSViewer::create($template);
+        $origBackend = null;
 
         if ($globalRequirements) {
             $v->includeRequirements(false);
@@ -763,7 +764,7 @@ PHP;
         try {
             return $v->process($data, $arguments, $scope);
         } finally {
-            if (!$globalRequirements) {
+            if ($origBackend) {
                 Requirements::set_backend($origBackend);
             }
         }
@@ -784,6 +785,7 @@ PHP;
     public static function execute_string($content, $data, $arguments = null, $globalRequirements = false)
     {
         $v = SSViewer::fromString($content);
+        $origBackend = null;
 
         if ($globalRequirements) {
             $v->includeRequirements(false);
@@ -795,7 +797,7 @@ PHP;
         try {
             return $v->process($data, $arguments);
         } finally {
-            if (!$globalRequirements) {
+            if ($origBackend) {
                 Requirements::set_backend($origBackend);
             }
         }
