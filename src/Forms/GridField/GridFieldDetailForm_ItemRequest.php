@@ -274,8 +274,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 $form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
                 $form->addExtraClass('cms-tabset');
             }
-
-            $form->Backlink = $this->getBackLink();
         }
 
         $cb = $this->component->getItemEditFormCallback();
