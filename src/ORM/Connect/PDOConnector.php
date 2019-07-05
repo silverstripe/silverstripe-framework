@@ -233,7 +233,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         } else {
             // Set emulate prepares (unless null / default)
             $isEmulatePrepares = self::is_emulate_prepare();
-            if (isset($isEmulatePrepares)) {
+            if ($isEmulatePrepares !== null) {
                 $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
             }
 
