@@ -16,7 +16,7 @@ class PrintableTransformation extends ReadonlyTransformation
     public function transformTabSet($field)
     {
         $transformedField = new PrintableTransformation_TabSet($field->Tabs()->transform($this));
-        $transformedField->Title = $field->Title();
+        $transformedField->setTitle($field->Title());
         $transformedField->TabSet = $field->TabSet;
         return $transformedField;
     }
