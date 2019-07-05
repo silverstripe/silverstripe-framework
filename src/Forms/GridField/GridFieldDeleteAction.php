@@ -5,6 +5,8 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\SS_List;
 
 /**
  * This class is a {@link GridField} component that adds a delete action for
@@ -169,6 +171,25 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
     }
 
     /**
+     * Check that this dataList is of the right data type.
+     * Returns false if it's a bad data type, and if appropriate, throws an exception.
+     *
+     * @param SS_List $dataList
+     * @return bool
+     */
+    protected function checkDataType($dataList)
+    {
+        if ($dataList instanceof Filterable) {
+            return true;
+
+        } else {
+            throw new \LogicException(
+                static::class . " expects an SS_Filterable list to be passed to the GridField."
+            );
+        }
+    }
+
+    /**
      * Handle the actions and apply any changes to the GridField
      *
      * @param GridField $gridField
@@ -179,9 +200,16 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
+        /** @var Filterable&SS_List */
+        $list = $gridField->getList();
+
+        if (!$this->checkDataType($list)) {
+            return false;
+        }
+
         if ($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
             /** @var DataObject $item */
-            $item = $gridField->getList()->byID($arguments['RecordID']);
+            $item = $list->byID($arguments['RecordID']);
             if (!$item) {
                 return;
             }
