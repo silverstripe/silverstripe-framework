@@ -19,7 +19,10 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\RelationList;
+use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\Limitable;
+use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
@@ -562,7 +565,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     private function getAdjacentRecordID($offset)
     {
         $gridField = $this->getGridField();
-        $list = $gridField->getManipulatedList();
+        $list = $this->checkDataType($gridField->getManipulatedList());
         $state = $gridField->getState(false);
         $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
         if (!empty($gridStateStr)) {
@@ -616,7 +619,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $controller = $this->getToplevelController();
         if ($isNewRecord) {
             return $controller->redirect($this->Link());
-        } elseif ($this->gridField->getList()->byID($this->record->ID)) {
+        } elseif ($this->checkDataType($this->gridField->getList())->byID($this->record->ID)) {
             // Return new view, as we can't do a "virtual redirect" via the CMS Ajax
             // to the same URL (it assumes that its content is already current, and doesn't reload)
             return $this->edit($controller->getRequest());
@@ -667,7 +670,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $this->extend('onAfterSave', $this->record);
 
         $extraData = $this->getExtraSavedData($this->record, $list);
-        $list->add($this->record, $extraData);
+        if ($list instanceof ManyManyList || $list instanceof ManyManyThroughList) {
+            $list->add($this->record, $extraData);
+        } else {
+            $list->add($this->record);
+        }
 
         return $this->record;
     }
@@ -805,5 +812,23 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $this->extend('updateBreadcrumbs', $items);
         return $items;
+    }
+
+    /**
+     * Check that this dataList is of the right data type.
+     * Throws an exception if the data type is bad
+     *
+     * @param SS_List $dataList
+     * @return SS_List&Filterable&Limitable
+     */
+    protected function checkDataType($dataList)
+    {
+        if ($dataList instanceof Filterable && $dataList instanceof Limitable) {
+            return $dataList;
+        } else {
+            throw new \LogicException(
+                static::class . " expects an SS_Filterable list to be passed to the GridField."
+            );
+        }
     }
 }
