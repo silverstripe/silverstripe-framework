@@ -58,28 +58,17 @@ class Map_Iterator implements Iterator
     /**
      * Rewind the Iterator to the first element.
      *
-     * @return mixed
+     * @return void
      */
     public function rewind()
     {
+        $this->items->rewind();
+
         $this->firstItemIdx = 0;
         $this->endItemIdx = null;
 
-        $rewoundItem = $this->items->rewind();
-
-        if (isset($this->firstItems[$this->firstItemIdx])) {
-            return $this->firstItems[$this->firstItemIdx][1];
-        } else {
-            if ($rewoundItem) {
-                return $this->extractValue($rewoundItem, $this->titleField);
-            } else {
-                if (!$this->items->valid() && $this->lastItems) {
-                    $this->endItemIdx = 0;
-
-                    return $this->lastItems[0][1];
-                }
-            }
-        }
+        // If this->items is empty, start straight on endItems by setting this to 0 rather than null
+        $this->endItemIdx = $this->items->valid() ? null : 0;
     }
 
     /**
