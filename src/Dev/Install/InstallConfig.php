@@ -20,8 +20,8 @@ class InstallConfig
      * @var array
      */
     protected $preferredDatabases = [
-        'MySQLPDODatabase',
         'MySQLDatabase',
+        'MySQLPDODatabase',
     ];
 
     public function __construct($basePath = null)
