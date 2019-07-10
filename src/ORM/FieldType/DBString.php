@@ -26,8 +26,8 @@ abstract class DBString extends DBField
      */
     public function __construct($name = null, $options = [])
     {
-        $this->options['nullifyEmpty'] = true;
         parent::__construct($name, $options);
+        $this->options['nullifyEmpty'] = true;      
     }
 
     /**
