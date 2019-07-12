@@ -66,6 +66,7 @@ class MemoryLimitTest extends SapphireTest
 
         // No argument means unlimited (but only if originally allowed)
         if (is_numeric($this->origMemLimitMax) && $this->origMemLimitMax < 0) {
+            Environment::setMemoryLimitMax(-1);
             Environment::increaseMemoryLimitTo();
             $this->assertEquals(-1, ini_get('memory_limit'));
         }
