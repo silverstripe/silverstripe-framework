@@ -2318,6 +2318,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $fs->fieldClasses = $params['fieldClasses'];
         $fs->ajaxSafe = $params['ajaxSafe'];
 
+        $this->extend('updateFormScaffolder', $fs, $this);
+
         return $fs->getFieldList();
     }
 

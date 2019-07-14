@@ -792,10 +792,10 @@ class Email extends ViewableData
 
         // Do not interfere with emails styles
         Requirements::clear();
-        
+
         // Render plain part
         if ($plainTemplate && !$plainPart) {
-            $plainPart = $this->renderWith($plainTemplate, $this->getData());
+            $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
         }
 
         // Render HTML part, either if sending html email, or a plain part is lacking
@@ -809,7 +809,7 @@ class Email extends ViewableData
             $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
             $plainPart = $htmlPartObject->Plain();
         }
-        
+
         // Rendering is finished
         Requirements::restore();
 

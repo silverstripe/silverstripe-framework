@@ -272,4 +272,25 @@ class DatabaseTest extends SapphireTest
         $result = DB::query('SELECT TRUE')->first();
         $this->assertInternalType('int', reset($result));
     }
+
+    /**
+     * Test that repeated iteration of a query returns all records.
+     * See https://github.com/silverstripe/silverstripe-framework/issues/9097
+     */
+    public function testRepeatedIteration()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        $query = DB::query('SELECT "MyInt", "MyField" FROM "DatabaseTest_MyObject" ORDER BY "MyInt"');
+
+        $this->assertEquals($inputData, $query->map());
+        $this->assertEquals($inputData, $query->map());
+    }
 }

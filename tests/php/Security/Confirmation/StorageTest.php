@@ -69,7 +69,7 @@ class StorageTest extends SapphireTest
 
         // ensure the data is persisted within the session
         $storage = new Storage($session, 'test', false);
-        $this->assertEquals('dev/build?flush=all', $storage->getSuccessUrl());
+        $this->assertEquals('/dev/build?flush=all', $storage->getSuccessUrl());
         $this->assertEquals('GET', $storage->getHttpMethod());
     }
 

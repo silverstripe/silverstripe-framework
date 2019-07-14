@@ -48,8 +48,11 @@ class MySQLQuery extends Query
     public function seek($row)
     {
         if (is_object($this->handle)) {
+            // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
             $this->handle->data_seek($row);
-            return $this->nextRecord();
+            $result = $this->nextRecord();
+            $this->handle->data_seek($row);
+            return $result;
         }
         return null;
     }
