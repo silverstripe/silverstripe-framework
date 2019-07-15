@@ -1537,7 +1537,7 @@ class FormField extends RequestHandler
             'disabled' => $this->isDisabled(),
             'customValidationMessage' => $this->getCustomValidationMessage(),
             'validation' => $this->getSchemaValidation(),
-            'attributes' => [],
+            'attributes' => $this->getAttributes(),
             'autoFocus' => $this->isAutofocus(),
             'data' => [],
         ];
