@@ -6,6 +6,18 @@ summary: Explains SilverStripe's Authentication options and custom authenticator
 By default, SilverStripe provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
 authentication system.
 
+## User Interface
+
+SilverStripe comes with a default login form interface,
+that's embedded into your page templates through the `$Form` placeholder.
+Since it's embedded into your own site styling and behaviour,
+it can require adjustments to your particular context. 
+
+Starting with SilverStripe 4.5, the view logic may be handled through the
+[silverstripe/login-forms](https://github.com/silverstripe/silverstripe-login-forms) module (if present).
+
+## Controllers
+
 The main login system uses these controllers to handle the various security requests:
 
 [Security](api:SilverStripe\Security\Security) - Which is the controller which handles most front-end security requests, including logging in, logging out, resetting password, or changing password. This class also provides an interface to allow configured [Authenticator](api:SilverStripe\Security\Authenticator) classes to each display a custom login form.
