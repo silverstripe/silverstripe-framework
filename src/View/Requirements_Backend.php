@@ -631,13 +631,21 @@ class Requirements_Backend
      * @param string $file The CSS file to load, relative to site root
      * @param string $media Comma-separated list of media types to use in the link tag
      *                      (e.g. 'screen,projector')
+     * @param array $options List of options. Available options include:
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function css($file, $media = null)
+    public function css($file, $media = null, $options = [])
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
+        $integrity = isset($options['integrity']) ? $options['integrity'] : null;
+        $crossorigin = isset($options['crossorigin']) ? $options['crossorigin'] : null;
+
         $this->css[$file] = [
-            "media" => $media
+            "media" => $media,
+            "integrity" => $integrity,
+            "crossorigin" => $crossorigin,
         ];
     }
 
@@ -837,6 +845,12 @@ class Requirements_Backend
             ];
             if (!empty($params['media'])) {
                 $htmlAttributes['media'] = $params['media'];
+            }
+            if (!empty($params['integrity'])) {
+                $htmlAttributes['integrity'] = $params['integrity'];
+            }
+            if (!empty($params['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $params['crossorigin'];
             }
             $requirements .= HTML::createTag('link', $htmlAttributes);
             $requirements .= "\n";
@@ -1136,7 +1150,7 @@ class Requirements_Backend
             }
             switch ($type) {
                 case 'css':
-                    $this->css($path, (isset($options['media']) ? $options['media'] : null));
+                    $this->css($path, (isset($options['media']) ? $options['media'] : null), $options);
                     break;
                 case 'js':
                     $this->javascript($path, $options);
@@ -1283,7 +1297,11 @@ class Requirements_Backend
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
-                            $newCSS[$combinedURL] = array('media' => (isset($options['media']) ? $options['media'] : null));
+                            $newCSS[$combinedURL] = array(
+                                'media' => (isset($options['media']) ? $options['media'] : null),
+                                'integrity' => (isset($options['integrity']) ? $options['integrity'] : null),
+                                'crossorigin' => (isset($options['crossorigin']) ? $options['crossorigin'] : null),
+                            );
                             $included = true;
                         }
                         // If already included, or otherwise blocked, then don't add into CSS
