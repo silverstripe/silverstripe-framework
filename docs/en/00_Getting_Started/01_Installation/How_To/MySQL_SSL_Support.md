@@ -7,7 +7,7 @@ In a typical Silverstripe set up, you will only need to use a single host to fun
 
 In some cases, however, you may be required to connect to a database on a remote host. Connecting to a remote host without SSL encryption exposes your data to [packet sniffing](http://www.linuxjournal.com/content/packet-sniffing-basics) and may compromise the security of your Silverstripe instance.
 
-This article demonstrates how to generate SSL certificates using MySQL and implementing them in Silverstripe.
+This article demonstrates how to generate [SSL certificates](https://hosting.review/web-hosting-glossary/#12) using MySQL and implementing them in Silverstripe.
 
 <div class="notice" markdown='1'>
 This article assumes that you have `MySQL` and `OpenSSL` installed.
