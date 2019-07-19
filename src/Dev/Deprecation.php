@@ -126,13 +126,12 @@ class Deprecation
         if (!$level) {
             $level = 1;
         }
-        $called = $backtrace[$level];
+        $called = $backtrace ? $backtrace[$level] : [];
 
         if (isset($called['class'])) {
             return $called['class'] . $called['type'] . $called['function'];
-        } else {
-            return $called['function'];
         }
+        return $called['function'] ?? '';
     }
 
     /**
