@@ -32,7 +32,7 @@ matrix:
       env: DB=SQLITE
 
     - php: 7.4snapshot
-      env: DB=SQLITE
+      env: DB=SQLITE INSTALL_PHPUNIT_FORK=1
 
     # CMS test
     - php: 5.5
@@ -58,6 +58,7 @@ before_script:
  - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick; fi
  - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick-3.3.0; fi
  - composer self-update || true
+ - if [ $INSTALL_PHPUNIT_FORK ]; then composer require --no-update --dev sminnee/phpunit-mock-objects:^3.4.7; fi
  - phpenv rehash
  - phpenv config-rm xdebug.ini || true
  - echo 'memory_limit = 3G' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
