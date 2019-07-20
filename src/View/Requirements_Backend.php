@@ -434,7 +434,7 @@ class Requirements_Backend
             )
         );
         $integrity = $options['integrity'] ?? null;
-        $crossorigin = isset($options['crossorigin']) ? $options['crossorigin'] : null;
+        $crossorigin = $options['crossorigin'] ?? null;
 
         $this->javascript[$file] = array(
             'async' => $async,
