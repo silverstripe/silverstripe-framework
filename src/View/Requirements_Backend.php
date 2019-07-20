@@ -1313,7 +1313,7 @@ class Requirements_Backend
                             $newCSS[$combinedURL] = array(
                                 'media' => $options['media'] ?? null,
                                 'integrity' => $options['integrity'] ?? null,
-                                'crossorigin' => (isset($options['crossorigin']) ? $options['crossorigin'] : null),
+                                'crossorigin' => $options['crossorigin'] ?? null,
                             );
                             $included = true;
                         }
