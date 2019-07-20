@@ -1312,7 +1312,7 @@ class Requirements_Backend
                         } elseif (!$included && $combinedURL) {
                             $newCSS[$combinedURL] = array(
                                 'media' => $options['media'] ?? null,
-                                'integrity' => (isset($options['integrity']) ? $options['integrity'] : null),
+                                'integrity' => $options['integrity'] ?? null,
                                 'crossorigin' => (isset($options['crossorigin']) ? $options['crossorigin'] : null),
                             );
                             $included = true;
