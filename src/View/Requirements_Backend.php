@@ -647,7 +647,7 @@ class Requirements_Backend
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
         $integrity = $options['integrity'] ?? null;
-        $crossorigin = isset($options['crossorigin']) ? $options['crossorigin'] : null;
+        $crossorigin = $options['crossorigin'] ?? null;
 
         $this->css[$file] = [
             "media" => $media,
