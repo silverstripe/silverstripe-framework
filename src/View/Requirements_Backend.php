@@ -433,7 +433,7 @@ class Requirements_Backend
                 && $this->javascript[$file]['defer'] == true
             )
         );
-        $integrity = isset($options['integrity']) ? $options['integrity'] : null;
+        $integrity = $options['integrity'] ?? null;
         $crossorigin = isset($options['crossorigin']) ? $options['crossorigin'] : null;
 
         $this->javascript[$file] = array(
