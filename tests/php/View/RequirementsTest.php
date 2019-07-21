@@ -1183,4 +1183,29 @@ EOS
         $this->assertArrayHasKey('i18n/en-us.js', $actual);
         $this->assertArrayHasKey('i18n/fr.js', $actual);
     }
+
+    public function testSriAttributes()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+
+        $backend->javascript('javascript/RequirementsTest_a.js', ['integrity' => 'abc', 'crossorigin' => 'use-credentials']);
+        $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
+        $html = $backend->includeInHTML(self::$html_template);
+
+        /* Javascript has correct attributes */
+        $this->assertRegExp(
+            '#<script type="application/javascript" src=".*/javascript/RequirementsTest_a.js.*" integrity="abc" crossorigin="use-credentials"#',
+            $html,
+            'javascript has correct sri attributes'
+        );
+
+        /* CSS has correct attributes */
+        $this->assertRegExp(
+            '#<link .*href=".*/RequirementsTest_a\.css.*" integrity="def" crossorigin="anonymous"#',
+            $html,
+            'css has correct sri attributes'
+        );
+    }
 }

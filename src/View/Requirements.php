@@ -194,10 +194,13 @@ class Requirements implements Flushable
      * @param string $file  The CSS file to load, relative to site root
      * @param string $media Comma-separated list of media types to use in the link tag
      *                      (e.g. 'screen,projector')
+     * @param array $options List of options. Available options include:
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public static function css($file, $media = null)
+    public static function css($file, $media = null, $options = [])
     {
-        self::backend()->css($file, $media);
+        self::backend()->css($file, $media, $options);
     }
 
     /**
