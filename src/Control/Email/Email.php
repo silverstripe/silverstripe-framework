@@ -192,8 +192,9 @@ class Email extends ViewableData
                 return strtr($email, $obfuscated);
             case 'hex':
                 $encoded = '';
-                for ($x = 0; $x < strlen($email); $x++) {
-                    $encoded .= '&#x' . bin2hex($email{$x}) . ';';
+                $emailLength = strlen($email);
+                for ($x = 0; $x < $emailLength; $x++) {
+                    $encoded .= '&#x' . bin2hex($email[$x]) . ';';
                 }
 
                 return $encoded;
