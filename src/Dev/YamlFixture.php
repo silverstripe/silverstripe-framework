@@ -136,7 +136,7 @@ class YamlFixture
         if (isset($this->fixtureString)) {
             $fixtureContent = $parser->parse($this->fixtureString);
         } else {
-            if (!file_exists($this->fixtureFile)) {
+            if (!file_exists($this->fixtureFile) || is_dir($this->fixtureFile)) {
                 return;
             }
 
