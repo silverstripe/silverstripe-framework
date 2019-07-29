@@ -4,6 +4,7 @@ namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Core\Injector\Injectable;
 
 /**
@@ -67,6 +68,11 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
         $etag = $response->getHeader('ETag');
         if ($etag) {
             return $etag;
+        }
+
+        // Skip parsing the whole body of a stream
+        if ($response instanceof HTTPStreamResponse) {
+            return false;
         }
 
         // Generate etag from body
