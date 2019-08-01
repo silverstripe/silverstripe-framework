@@ -2201,7 +2201,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getDefaultSearchContext()
     {
-        return new SearchContext(
+        return SearchContext::create(
             static::class,
             $this->scaffoldSearchFields(),
             $this->defaultSearchFilters()
