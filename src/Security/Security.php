@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use BadMethodCallException;
 use LogicException;
 use Page;
 use ReflectionClass;
@@ -420,10 +421,14 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        list($messageText, $messageCast) = $parseMessage($message);
-        static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
+        try {
+            list($messageText, $messageCast) = $parseMessage($message);
+            static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
 
-        $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
+            $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
+        } catch (BadMethodCallException $ex) {
+            // noop, if session was not set yet
+        }
 
         // TODO AccessLogEntry needs an extension to handle permission denied errors
         // Audit logging hook
