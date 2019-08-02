@@ -883,11 +883,21 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
+     * Determines whether the request has a session
+     *
+     * @return bool
+     */
+    public function hasSession(): bool
+    {
+        return !empty($this->session);
+    }
+
+    /**
      * @return Session
      */
     public function getSession()
     {
-        if (empty($this->session)) {
+        if (!$this->hasSession()) {
             throw new BadMethodCallException("No session available for this HTTPRequest");
         }
         return $this->session;
