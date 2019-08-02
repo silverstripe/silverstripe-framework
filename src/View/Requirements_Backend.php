@@ -400,6 +400,8 @@ class Requirements_Backend
      * - 'async' : Boolean value to set async attribute to script tag
      * - 'defer' : Boolean value to set defer attribute to script tag
      * - 'type' : Override script type= value.
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
     public function javascript($file, $options = array())
     {
@@ -431,10 +433,15 @@ class Requirements_Backend
                 && $this->javascript[$file]['defer'] == true
             )
         );
+        $integrity = $options['integrity'] ?? null;
+        $crossorigin = $options['crossorigin'] ?? null;
+
         $this->javascript[$file] = array(
             'async' => $async,
             'defer' => $defer,
             'type' => $type,
+            'integrity' => $integrity,
+            'crossorigin' => $crossorigin,
         );
 
         // Record scripts included in this file
@@ -631,13 +638,21 @@ class Requirements_Backend
      * @param string $file The CSS file to load, relative to site root
      * @param string $media Comma-separated list of media types to use in the link tag
      *                      (e.g. 'screen,projector')
+     * @param array $options List of options. Available options include:
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function css($file, $media = null)
+    public function css($file, $media = null, $options = [])
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
+        $integrity = $options['integrity'] ?? null;
+        $crossorigin = $options['crossorigin'] ?? null;
+
         $this->css[$file] = [
-            "media" => $media
+            "media" => $media,
+            "integrity" => $integrity,
+            "crossorigin" => $crossorigin,
         ];
     }
 
@@ -814,6 +829,12 @@ class Requirements_Backend
             if (!empty($attributes['defer'])) {
                 $htmlAttributes['defer'] = 'defer';
             }
+            if (!empty($attributes['integrity'])) {
+                $htmlAttributes['integrity'] = $attributes['integrity'];
+            }
+            if (!empty($attributes['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $attributes['crossorigin'];
+            }
             $jsRequirements .= HTML::createTag('script', $htmlAttributes);
             $jsRequirements .= "\n";
         }
@@ -837,6 +858,12 @@ class Requirements_Backend
             ];
             if (!empty($params['media'])) {
                 $htmlAttributes['media'] = $params['media'];
+            }
+            if (!empty($params['integrity'])) {
+                $htmlAttributes['integrity'] = $params['integrity'];
+            }
+            if (!empty($params['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $params['crossorigin'];
             }
             $requirements .= HTML::createTag('link', $htmlAttributes);
             $requirements .= "\n";
@@ -1136,7 +1163,7 @@ class Requirements_Backend
             }
             switch ($type) {
                 case 'css':
-                    $this->css($path, (isset($options['media']) ? $options['media'] : null));
+                    $this->css($path, (isset($options['media']) ? $options['media'] : null), $options);
                     break;
                 case 'js':
                     $this->javascript($path, $options);
@@ -1283,7 +1310,11 @@ class Requirements_Backend
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
-                            $newCSS[$combinedURL] = ['media' => (isset($options['media']) ? $options['media'] : null)];
+                            $newCSS[$combinedURL] = [
+                                'media' => $options['media'] ?? null,
+                                'integrity' => $options['integrity'] ?? null,
+                                'crossorigin' => $options['crossorigin'] ?? null,
+                            ];
                             $included = true;
                         }
                         // If already included, or otherwise blocked, then don't add into CSS

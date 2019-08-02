@@ -182,6 +182,9 @@ class CoreConfigFactory
             })
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::inst()->getManifest()->moduleExists($module);
+            })
+            ->addRule('extensionloaded', function ($extension) {
+                return extension_loaded($extension);
             });
     }
 }

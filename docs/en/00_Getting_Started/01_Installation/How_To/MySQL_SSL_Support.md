@@ -146,7 +146,7 @@ Add or edit your `_ss_environment.php` configuration file. (See [Environment Man
 	<?php
 
 	// These four define set the database connection details.
-	define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
+	define('SS_DATABASE_CLASS', 'MySQLDatabase');
 
 	define('SS_DATABASE_SERVER', 'db1.example.com');
 	define('SS_DATABASE_USERNAME', 'dbuser');

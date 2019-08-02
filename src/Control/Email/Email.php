@@ -201,8 +201,9 @@ class Email extends ViewableData
                 return strtr($email, $obfuscated);
             case 'hex':
                 $encoded = '';
-                for ($x = 0; $x < strlen($email); $x++) {
-                    $encoded .= '&#x' . bin2hex($email{$x}) . ';';
+                $emailLength = strlen($email);
+                for ($x = 0; $x < $emailLength; $x++) {
+                    $encoded .= '&#x' . bin2hex($email[$x]) . ';';
                 }
 
                 return $encoded;
@@ -801,10 +802,10 @@ class Email extends ViewableData
 
         // Do not interfere with emails styles
         Requirements::clear();
-        
+
         // Render plain part
         if ($plainTemplate && !$plainPart) {
-            $plainPart = $this->renderWith($plainTemplate, $this->getData());
+            $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
         }
 
         // Render HTML part, either if sending html email, or a plain part is lacking
@@ -818,7 +819,7 @@ class Email extends ViewableData
             $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
             $plainPart = $htmlPartObject->Plain();
         }
-        
+
         // Rendering is finished
         Requirements::restore();
 

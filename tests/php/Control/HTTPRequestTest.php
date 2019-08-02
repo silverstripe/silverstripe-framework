@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Control\Tests;
 
-use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
 use ReflectionMethod;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
+use SilverStripe\Control\Session;
+use SilverStripe\Dev\SapphireTest;
 
 class HTTPRequestTest extends SapphireTest
 {
@@ -285,5 +286,14 @@ class HTTPRequestTest extends SapphireTest
         foreach ($headers as $header => $ip) {
             $this->assertEquals($ip, $reflectionMethod->invoke($req, $header));
         }
+    }
+
+    public function testHasSession()
+    {
+        $request = new HTTPRequest('GET', '/');
+        $this->assertFalse($request->hasSession());
+
+        $request->setSession($this->createMock(Session::class));
+        $this->assertTrue($request->hasSession());
     }
 }

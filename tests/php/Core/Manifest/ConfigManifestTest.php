@@ -225,4 +225,21 @@ class ConfigManifestTest extends SapphireTest
             'Fragment is included if both blocks succeed.'
         );
     }
+    
+    public function testExtensionLoaded()
+    {
+        $config = $this->getConfigFixtureValue('ExtensionLoaded');
+
+        $this->assertEquals(
+            'Yes',
+            @$config['SessionExtLoaded'],
+            'Only rule correctly detects loaded PHP extension'
+        );
+
+        $this->assertEquals(
+            'No',
+            @$config['DummyExtLoaded'],
+            'Except rule correctly detects not-loaded PHP extension'
+        );
+    }
 }

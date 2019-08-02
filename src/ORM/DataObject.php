@@ -2193,7 +2193,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getDefaultSearchContext()
     {
-        return new SearchContext(
+        return SearchContext::create(
             static::class,
             $this->scaffoldSearchFields(),
             $this->defaultSearchFilters()
@@ -2309,6 +2309,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $fs->restrictFields = $params['restrictFields'];
         $fs->fieldClasses = $params['fieldClasses'];
         $fs->ajaxSafe = $params['ajaxSafe'];
+
+        $this->extend('updateFormScaffolder', $fs, $this);
 
         return $fs->getFieldList();
     }

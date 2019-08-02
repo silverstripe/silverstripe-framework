@@ -416,14 +416,16 @@ class Security extends Controller implements TemplateGlobalProvider
             $controller->extend('permissionDenied', $member);
 
             return $response;
-        } else {
-            $message = $messageSet['default'];
         }
+        $message = $messageSet['default'];
 
-        list($messageText, $messageCast) = $parseMessage($message);
-        static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
+        $request = $controller->getRequest();
+        if ($request->hasSession()) {
+            list($messageText, $messageCast) = $parseMessage($message);
+            static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
 
-        $controller->getRequest()->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
+            $request->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
+        }
 
         // TODO AccessLogEntry needs an extension to handle permission denied errors
         // Audit logging hook

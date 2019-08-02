@@ -339,6 +339,7 @@ You then list any of the following rules as sub-keys, with informational values 
   - 'envvarset', in which case the value(s) should be environment variables that must be set
   - 'constantdefined', in which case the value(s) should be constants that must be defined
   - 'envorconstant' A variable which should be defined either via environment vars or constants
+  - 'extensionloaded', in which case the PHP extension(s) must be loaded
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 

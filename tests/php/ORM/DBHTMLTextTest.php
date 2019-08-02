@@ -333,6 +333,22 @@ class DBHTMLTextTest extends SapphireTest
                 'ate',
                 // it should highlight 3 letters or more.
                 'A dog <mark>ate</mark> a cat while looking at a Foobar',
+            ],
+            [
+                '<p>This is a lot of text before this but really, this is a test sentence</p>
+                 <p>with about more stuff after the line break</p>',
+                35,
+                'test',
+                '... really, this is a <mark>test</mark> sentence...'
+            ],
+            [
+                '<p>This is a lot of text before this but really, this is a test sentence</p>
+                 <p>with about more stuff after the line break</p>',
+                50,
+                'with',
+                '... sentence<br />
+<br />
+                 <mark>with</mark> about more stuff...'
             ]
         ];
     }

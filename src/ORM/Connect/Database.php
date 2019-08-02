@@ -20,6 +20,22 @@ use SilverStripe\Dev\Backtrace;
 abstract class Database
 {
 
+    const PARTIAL_QUERY = 'partial_query';
+    const FULL_QUERY = 'full_query';
+
+    /**
+     * To use, call from _config.php
+     * Example:
+     * <code>
+     * Database::setWhitelistQueryArray([
+     *      'Qualmark' => 'partial_query',
+     *      'SELECT "Version" FROM "SiteTree_Live" WHERE "ID" = ?' => 'full_query',
+     * ])
+     * </code>
+     * @var array
+     */
+    protected static $whitelist_array = [];
+
     /**
      * Database connector object
      *
@@ -208,6 +224,7 @@ abstract class Database
     protected function benchmarkQuery($sql, $callback, $parameters = array())
     {
         if (isset($_REQUEST['showqueries']) && Director::isDev()) {
+            $displaySql = true;
             $this->queryCount++;
             $starttime = microtime(true);
             $result = $callback($sql);
@@ -215,9 +232,22 @@ abstract class Database
             // replace parameters as closely as possible to what we'd expect the DB to put in
             if (in_array(strtolower($_REQUEST['showqueries']), ['inline', 'backtrace'])) {
                 $sql = DB::inline_parameters($sql, $parameters);
+            } elseif (strtolower($_REQUEST['showqueries']) === 'whitelist') {
+                $displaySql = false;
+                foreach (self::$whitelist_array as $query => $searchType) {
+                    $fullQuery = ($searchType === self::FULL_QUERY && $query === $sql);
+                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql, $query) !== false);
+                    if (!$fullQuery && !$partialQuery) {
+                        continue;
+                    }
+                    $sql = DB::inline_parameters($sql, $parameters);
+                    $this->displayQuery($sql, $endtime);
+                }
             }
-            $queryCount = sprintf("%04d", $this->queryCount);
-            Debug::message("\n$queryCount: $sql\n{$endtime}s\n", false);
+
+            if ($displaySql) {
+                $this->displayQuery($sql, $endtime);
+            }
 
             // Show a backtrace if ?showqueries=backtrace
             if ($_REQUEST['showqueries'] === 'backtrace') {
@@ -227,6 +257,38 @@ abstract class Database
         } else {
             return $callback($sql);
         }
+    }
+
+    /**
+     * Display query message
+     *
+     * @param mixed $query
+     * @param float $endtime
+     */
+    protected function displayQuery($query, $endtime)
+    {
+        $queryCount = sprintf("%04d", $this->queryCount);
+        Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
+    }
+
+    /**
+     * Add the sql queries that need to be partially or fully matched
+     *
+     * @param array $whitelistArray
+     */
+    public static function setWhitelistQueryArray($whitelistArray)
+    {
+        self::$whitelist_array = $whitelistArray;
+    }
+
+    /**
+     * Get the sql queries that need to be partially or fully matched
+     *
+     * @return array
+     */
+    public static function getWhitelistQueryArray()
+    {
+        return self::$whitelist_array;
     }
 
     /**
