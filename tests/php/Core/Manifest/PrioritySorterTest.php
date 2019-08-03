@@ -12,7 +12,7 @@ class PrioritySorterTest extends SapphireTest
      */
     protected $sorter;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $modules = [

@@ -13,7 +13,7 @@ class VersionProviderTest extends SapphireTest
      */
     protected $provider;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->provider = new VersionProvider;

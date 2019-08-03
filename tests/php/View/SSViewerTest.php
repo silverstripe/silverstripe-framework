@@ -50,7 +50,7 @@ class SSViewerTest extends SapphireTest
         SSViewerTest\TestObject::class,
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         SSViewer::config()->update('source_file_comments', false);
@@ -59,7 +59,7 @@ class SSViewerTest extends SapphireTest
         $this->oldServer = $_SERVER;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $_SERVER = $this->oldServer;
         TestAssetStore::reset();

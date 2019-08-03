@@ -24,13 +24,13 @@ class HierachyCacheTest extends SapphireTest
         HideTestSubObject::class,
     );
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         TestObject::singleton()->flushCache();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         HideTestObject::config()->update(

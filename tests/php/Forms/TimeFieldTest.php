@@ -11,7 +11,7 @@ use SilverStripe\i18n\i18n;
 
 class TimeFieldTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');

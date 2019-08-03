@@ -44,7 +44,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
         Team::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = DataList::create(Team::class);

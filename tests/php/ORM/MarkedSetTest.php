@@ -31,7 +31,7 @@ class MarkedSetTest extends SapphireTest
         return [];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

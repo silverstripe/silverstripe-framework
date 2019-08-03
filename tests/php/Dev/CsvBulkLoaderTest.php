@@ -30,7 +30,7 @@ class CsvBulkLoaderTest extends SapphireTest
      */
     protected $csvPath = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->csvPath = __DIR__ . '/CsvBulkLoaderTest/csv/';

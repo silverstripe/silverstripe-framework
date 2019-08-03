@@ -11,7 +11,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class DBDatetimeTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');

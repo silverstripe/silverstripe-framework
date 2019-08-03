@@ -17,7 +17,7 @@ class DatetimeFieldTest extends SapphireTest
 {
     protected $timezone = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -26,7 +26,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->timezone = date_default_timezone_get();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DBDatetime::clear_mock_now();
         date_default_timezone_set($this->timezone);

@@ -10,7 +10,7 @@ use SilverStripe\Control\Cookie;
 class CookieTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Injector::inst()->registerService(new CookieJar($_COOKIE), 'SilverStripe\\Control\\Cookie_Backend');

@@ -49,7 +49,7 @@ class GridFieldPaginatorTest extends FunctionalTest
         Cheerleader::class,
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);

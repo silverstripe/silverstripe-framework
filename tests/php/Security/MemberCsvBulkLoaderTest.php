@@ -14,7 +14,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 {
     protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

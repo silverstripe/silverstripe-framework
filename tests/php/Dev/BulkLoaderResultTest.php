@@ -13,7 +13,7 @@ class BulkLoaderResultTest extends SapphireTest
         Player::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Player::create(array('Name' => 'Vincent', 'Status' => 'Available'))->write();

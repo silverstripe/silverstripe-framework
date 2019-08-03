@@ -80,7 +80,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
         return $this->mainSession->session();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -112,7 +112,7 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
         SecurityToken::disable();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         SecurityToken::enable();
         unset($this->mainSession);

@@ -15,7 +15,7 @@ class ChangePasswordHandlerTest extends SapphireTest
 {
     protected static $fixture_file = 'ChangePasswordHandlerTest.yml';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

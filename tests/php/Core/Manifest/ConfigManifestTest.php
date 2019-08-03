@@ -13,7 +13,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class ConfigManifestTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ class ConfigManifestTest extends SapphireTest
         ModuleLoader::inst()->pushManifest($moduleManifest);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ModuleLoader::inst()->popManifest();
         parent::tearDown();

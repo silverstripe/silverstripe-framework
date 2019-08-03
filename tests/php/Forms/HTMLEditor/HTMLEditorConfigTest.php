@@ -18,7 +18,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 class HTMLEditorConfigTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

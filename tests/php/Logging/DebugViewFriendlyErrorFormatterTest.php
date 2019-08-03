@@ -11,7 +11,7 @@ use SilverStripe\Logging\DebugViewFriendlyErrorFormatter;
 
 class DebugViewFriendlyErrorFormatterTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Email::config()->set('admin_email', 'testy@mctest.face');

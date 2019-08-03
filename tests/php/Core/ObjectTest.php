@@ -31,7 +31,7 @@ use SilverStripe\Versioned\Versioned;
 class ObjectTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Injector::inst()->unregisterObjects([

@@ -56,7 +56,7 @@ class TreeMultiselectFieldTest extends SapphireTest
      */
     protected $fieldValue;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

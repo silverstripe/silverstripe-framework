@@ -12,7 +12,7 @@ use SilverStripe\Security\Tests\PasswordEncryptorTest\TestEncryptor;
 
 class PasswordEncryptorTest extends SapphireTest
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         PasswordEncryptor_Blowfish::set_cost(10);

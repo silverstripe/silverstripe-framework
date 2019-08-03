@@ -38,7 +38,7 @@ class MemberTest extends FunctionalTest
         Member::class => '*',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -62,7 +62,7 @@ class MemberTest extends FunctionalTest
     /**
      * @skipUpgrade
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

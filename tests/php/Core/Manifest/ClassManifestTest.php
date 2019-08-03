@@ -27,7 +27,7 @@ class ClassManifestTest extends SapphireTest
      */
     protected $manifestTests;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

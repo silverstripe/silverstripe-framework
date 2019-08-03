@@ -15,7 +15,7 @@ class DBDateTest extends SapphireTest
 {
     protected $oldError = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->oldError = error_reporting();
@@ -24,7 +24,7 @@ class DBDateTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->restoreNotices();
         parent::tearDown();

@@ -18,10 +18,10 @@ class SessionTest extends SapphireTest
      */
     protected $session = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->session = new Session([]);
-        return parent::setUp();
+        parent::setUp();
     }
 
     /**

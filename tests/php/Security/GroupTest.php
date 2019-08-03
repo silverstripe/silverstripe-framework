@@ -20,7 +20,7 @@ class GroupTest extends FunctionalTest
         TestMember::class
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

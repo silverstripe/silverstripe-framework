@@ -8,7 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class HTTPCacheControlMiddlewareTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // Set to disabled at null forcing level

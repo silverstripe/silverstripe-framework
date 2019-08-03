@@ -27,13 +27,13 @@ class ManyManyThroughListTest extends SapphireTest
         ManyManyThroughListTest\FallbackLocale::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         DataObject::reset();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DataObject::reset();
         parent::tearDown();

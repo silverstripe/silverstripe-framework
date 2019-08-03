@@ -14,14 +14,14 @@ class DBTextTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         // clear the previous locale setting
         $this->previousLocaleSetting = null;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         // If a test sets the locale, reset it on teardown

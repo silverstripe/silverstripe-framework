@@ -15,7 +15,7 @@ class CoreTest extends SapphireTest
 
     protected $tempPath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tempPath = Director::baseFolder() . DIRECTORY_SEPARATOR . 'silverstripe-cache';
@@ -52,7 +52,7 @@ class CoreTest extends SapphireTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $user = TempFolder::getTempFolderUsername();

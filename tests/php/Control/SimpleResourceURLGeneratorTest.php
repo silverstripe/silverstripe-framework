@@ -11,7 +11,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class SimpleResourceURLGeneratorTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Director::config()->set(

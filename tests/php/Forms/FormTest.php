@@ -56,7 +56,7 @@ class FormTest extends FunctionalTest
 
     protected static $disable_themes = true;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

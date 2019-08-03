@@ -20,7 +20,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         SortedObject::class,
     );
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Start tests
         static::start();

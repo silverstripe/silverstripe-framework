@@ -30,7 +30,7 @@ class ClassInfoTest extends SapphireTest
         WithRelation::class,
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ClassInfo::reset_db_cache();

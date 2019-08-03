@@ -29,7 +29,7 @@ class InheritedPermissionsTest extends SapphireTest
      */
     protected $rootPermissions = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rootPermissions = new TestDefaultPermissionChecker();
 
@@ -57,7 +57,7 @@ class InheritedPermissionsTest extends SapphireTest
         $permission2->clearCache();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.testpermissions');
         Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.unstagedpermissions');

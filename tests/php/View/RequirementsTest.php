@@ -31,7 +31,7 @@ class RequirementsTest extends SapphireTest
 
     static $html_template = '<html><head></head><body></body></html>';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Director::config()->set('alternate_base_folder', __DIR__ . '/SSViewerTest');
@@ -43,7 +43,7 @@ class RequirementsTest extends SapphireTest
         $this->oldThemeResourceLoader = ThemeResourceLoader::inst();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ThemeResourceLoader::set_instance($this->oldThemeResourceLoader);
         TestAssetStore::reset();

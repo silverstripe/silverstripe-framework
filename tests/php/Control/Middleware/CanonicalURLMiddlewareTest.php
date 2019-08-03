@@ -16,7 +16,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
      */
     protected $middleware;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

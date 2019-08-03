@@ -20,19 +20,19 @@ class TransactionTest extends SapphireTest
 
     private static $originalVersionInfo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         self::$originalVersionInfo = Deprecation::dump_settings();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Deprecation::restore_settings(self::$originalVersionInfo);
         parent::tearDown();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         if (!DB::get_conn()->supportsTransactions()) {

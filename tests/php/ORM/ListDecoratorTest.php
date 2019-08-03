@@ -23,7 +23,7 @@ class ListDecoratorTest extends SapphireTest
      */
     protected $decorator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

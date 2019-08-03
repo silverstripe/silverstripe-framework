@@ -11,7 +11,7 @@ class ShortcodeParserTest extends SapphireTest
     protected $arguments, $contents, $tagName, $parser;
     protected $extra = array();
 
-    protected function setUp()
+    protected function setUp(): void
     {
         ShortcodeParser::get('test')->register('test_shortcode', array($this, 'shortcodeSaver'));
         $this->parser = ShortcodeParser::get('test');
@@ -19,7 +19,7 @@ class ShortcodeParserTest extends SapphireTest
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ShortcodeParser::get('test')->unregister('test_shortcode');
 

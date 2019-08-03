@@ -14,7 +14,7 @@ class PasswordValidatorTest extends SapphireTest
      */
     protected $usesDatabase = true;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

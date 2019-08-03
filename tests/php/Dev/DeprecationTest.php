@@ -11,7 +11,7 @@ class DeprecationTest extends SapphireTest
 
     static $originalVersionInfo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -20,7 +20,7 @@ class DeprecationTest extends SapphireTest
         Deprecation::set_enabled(true);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Deprecation::restore_settings(self::$originalVersionInfo);
         parent::tearDown();

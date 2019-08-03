@@ -16,7 +16,7 @@ class SecurityDefaultAdminTest extends SapphireTest
 
     protected $defaultPassword = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class SecurityDefaultAdminTest extends SapphireTest
         Permission::reset();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DefaultAdminService::clearDefaultAdmin();
         if ($this->defaultUsername) {

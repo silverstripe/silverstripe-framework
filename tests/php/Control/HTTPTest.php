@@ -19,7 +19,7 @@ use SilverStripe\Dev\FunctionalTest;
  */
 class HTTPTest extends FunctionalTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // Set to disabled at null forcing level

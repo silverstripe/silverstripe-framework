@@ -99,7 +99,7 @@ class RSSFeedTest extends SapphireTest
         $this->assertNotContains('<title>Test Custom Template</title>', $content);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Config::modify()->set(Director::class, 'alternate_base_url', '/');
@@ -116,7 +116,7 @@ class RSSFeedTest extends SapphireTest
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $_SERVER['HTTP_HOST'] = self::$original_host;

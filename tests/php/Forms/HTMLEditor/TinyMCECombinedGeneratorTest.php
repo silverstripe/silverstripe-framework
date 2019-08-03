@@ -13,7 +13,7 @@ use SilverStripe\View\SSViewer;
 
 class TinyMCECombinedGeneratorTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -27,7 +27,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
             ->set('editor_css', [ 'mycode/editor.css' ]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // Flush test configs

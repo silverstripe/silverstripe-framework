@@ -12,7 +12,7 @@ class MemoryLimitTest extends SapphireTest
     protected $origMemLimit;
     protected $origTimeLimit;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +29,7 @@ class MemoryLimitTest extends SapphireTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (!in_array('suhosin', get_loaded_extensions())) {
             ini_set('memory_limit', $this->origMemLimit);

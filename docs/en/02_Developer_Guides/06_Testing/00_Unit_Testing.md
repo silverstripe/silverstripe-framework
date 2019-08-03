@@ -110,7 +110,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class PageTest extends SapphireTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

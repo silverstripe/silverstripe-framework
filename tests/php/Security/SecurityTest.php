@@ -42,7 +42,7 @@ class SecurityTest extends FunctionalTest
         SecurityTest\SecuredController::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Set to an empty array of authenticators to enable the default
         Config::modify()

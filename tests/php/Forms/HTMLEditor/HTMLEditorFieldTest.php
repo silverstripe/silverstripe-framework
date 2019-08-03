@@ -25,7 +25,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         TestObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         TestAssetStore::reset();
         parent::tearDown();

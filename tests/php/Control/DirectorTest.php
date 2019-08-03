@@ -29,7 +29,7 @@ class DirectorTest extends SapphireTest
 
     private $originalEnvType;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com:9090/');
@@ -44,10 +44,10 @@ class DirectorTest extends SapphireTest
         $this->expectedRedirect = null;
     }
 
-    protected function tearDown(...$args)
+    protected function tearDown(): void
     {
         Environment::setEnv('SS_ENVIRONMENT_TYPE', $this->originalEnvType);
-        parent::tearDown(...$args);
+        parent::tearDown();
     }
 
     protected function getExtraRoutes()

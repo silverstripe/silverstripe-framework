@@ -261,7 +261,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::setUp() before custom setup code
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!defined('FRAMEWORK_PATH')) {
             trigger_error(
@@ -373,7 +373,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * @throws Exception
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Start tests
         static::start();
@@ -402,7 +402,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::tearDownAfterClass() after custom tear down code
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         // Call state helpers
         static::$state->tearDownOnce(static::class);
@@ -567,7 +567,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::tearDown() after custom tear down code
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Reset mocked datetime
         DBDatetime::clear_mock_now();
