@@ -184,7 +184,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
         return 'Custom action';
     }
     
-    public function getCustomAction()
+    public function getCustomAction($gridField, $record)
     {
         if(!$record->canEdit()) return;
         
