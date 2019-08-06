@@ -145,6 +145,14 @@ class Session
     private static $sessionCacheLimiter = '';
 
     /**
+     * Invalidate the session if user agent header changes between request. Defaults to true. Disabling this checks is
+     * not recommended.
+     * @var bool
+     * @config
+     */
+    private static $strict_user_agent_check = true;
+
+    /**
      * Session data.
      * Will be null if session has not been started
      *
@@ -223,7 +231,7 @@ class Session
         }
 
         // Funny business detected!
-        if (isset($this->data['HTTP_USER_AGENT'])) {
+        if (self::config()->get('strict_user_agent_check') && isset($this->data['HTTP_USER_AGENT'])) {
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
                 $this->destroy();

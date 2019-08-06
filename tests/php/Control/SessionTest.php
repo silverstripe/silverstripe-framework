@@ -285,7 +285,31 @@ class SessionTest extends SapphireTest
         // Verify the new session reset our values
         $s2 = new Session($s);
         $s2->init($req2);
-        $this->assertNotEquals($s2->get('val'), 123);
+        $this->assertEmpty($s2->get('val'));
+    }
+
+    public function testDisabledUserAgentLockout()
+    {
+        Session::config()->set('strict_user_agent_check', false);
+
+        // Set a user agent
+        $req1 = new HTTPRequest('GET', '/');
+        $req1->addHeader('User-Agent', 'Test Agent');
+
+        // Generate our session
+        $s = new Session([]);
+        $s->init($req1);
+        $s->set('val', 123);
+        $s->finalize($req1);
+
+        // Change our UA
+        $req2 = new HTTPRequest('GET', '/');
+        $req2->addHeader('User-Agent', 'Fake Agent');
+
+        // Verify the new session reset our values
+        $s2 = new Session($s);
+        $s2->init($req2);
+        $this->assertEquals($s2->get('val'), 123);
     }
 
     public function testSave()
