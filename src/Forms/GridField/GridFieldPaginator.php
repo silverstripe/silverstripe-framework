@@ -128,6 +128,10 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         }
         $state = $this->getGridPagerState($gridField);
         $state->currentPage = (int)$arguments;
+
+        if ($state->currentPage < 1) {
+            $state->currentPage = 1;
+        }
     }
 
     protected $totalItems = 0;
