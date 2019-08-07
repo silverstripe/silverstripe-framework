@@ -27,12 +27,13 @@ use SilverStripe\View\SSViewer;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
+    use GridFieldStateAware;
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'edit',
         'view',
         'ItemEditForm'
-    );
+    ];
 
     /**
      *
@@ -70,10 +71,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     protected $template = null;
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action!' => '$Action',
         '' => 'edit',
-    );
+    ];
 
     /**
      *
@@ -287,7 +288,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
         $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
-        $gridState = $this->getRequest()->requestVar('gridState');
+        $gridState = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
         if ($component && $paginator && $component->getShowPagination()) {
             $previousIsDisabled = !$this->getPreviousRecordID();
             $nextIsDisabled = !$this->getNextRecordID();
@@ -349,7 +350,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     protected function getFormActions()
     {
         $actions = FieldList::create();
-
+        $manager = $this->getStateManager();
         if ($this->record->ID !== 0) { // existing record
             if ($this->record->canEdit()) {
                 $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
@@ -363,9 +364,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
             }
 
-            $gridState = $this->getRequest()->requestVar('gridState');
+            $gridState = $manager->getStateFromRequest($this->gridField, $this->getRequest());
             $this->gridField->getState(false)->setValue($gridState);
-            $actions->push(HiddenField::create('gridState', null, $gridState));
+            $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
 
             $actions->push($this->getRightGroupField());
         } else { // adding new record
@@ -498,12 +499,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function getEditLink($id)
     {
-        return Controller::join_links(
+        $link = Controller::join_links(
             $this->gridField->Link(),
             'item',
-            $id,
-            '?gridState=' . urlencode($this->gridField->getState(false)->Value())
+            $id
         );
+
+        return $this->getStateManager()->addStateToURL($this->gridField, $link);
     }
 
     /**
@@ -515,7 +517,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $gridField = $this->getGridField();
         $list = $gridField->getManipulatedList();
         $state = $gridField->getState(false);
-        $gridStateStr = $this->getRequest()->requestVar('gridState');
+        $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
         if (!empty($gridStateStr)) {
             $state->setValue($gridStateStr);
         }

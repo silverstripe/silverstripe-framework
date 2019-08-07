@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
@@ -30,7 +31,7 @@ use SilverStripe\ORM\Filterable;
 class GridFieldDetailForm implements GridField_URLHandler
 {
 
-    use Extensible;
+    use Extensible, Injectable, GridFieldStateAware;
 
     /**
      * @var string
@@ -106,15 +107,36 @@ class GridFieldDetailForm implements GridField_URLHandler
      */
     public function handleItem($gridField, $request)
     {
-        if ($gridStateStr = $request->getVar('gridState')) {
-            $gridField->getState(false)->setValue($gridStateStr);
-        }
-
         // Our getController could either give us a true Controller, if this is the top-level GridField.
         // It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
         // nested GridField.
         $requestHandler = $gridField->getForm()->getController();
+        $record = $this->getRecordFromRequest($gridField, $request);
+        if (!$record) {
+            return $requestHandler->httpError(404, 'That record was not found');
+        }
+        $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
+        $manager = $this->getStateManager();
+        if ($gridStateStr = $manager->getStateFromRequest($gridField, $request)) {
+            $gridField->getState(false)->setValue($gridStateStr);
+        }
 
+        // if no validator has been set on the GridField and the record has a
+        // CMS validator, use that.
+        if (!$this->getValidator() && ClassInfo::hasMethod($record, 'getCMSValidator')) {
+            $this->setValidator($record->getCMSValidator());
+        }
+
+        return $handler->handleRequest($request);
+    }
+
+    /**
+     * @param GridField $gridField
+     * @param HTTPRequest $request
+     * @return DataObject|null
+     */
+    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?DataObject
+    {
         /** @var DataObject $record */
         if (is_numeric($request->param('ID'))) {
             /** @var Filterable $dataList */
@@ -124,15 +146,7 @@ class GridFieldDetailForm implements GridField_URLHandler
             $record = Injector::inst()->create($gridField->getModelClass());
         }
 
-        $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
-
-        // if no validator has been set on the GridField and the record has a
-        // CMS validator, use that.
-        if (!$this->getValidator() && ClassInfo::hasMethod($record, 'getCMSValidator')) {
-            $this->setValidator($record->getCMSValidator());
-        }
-
-        return $handler->handleRequest($request);
+        return $record;
     }
 
     /**
