@@ -156,7 +156,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         }
 
         /** @var GridFieldDataColumns $dataCols */
-        $dataCols = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
+        $dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         if ($dataCols) {
             return $dataCols->getDisplayFields($gridField);
         }
@@ -223,12 +223,17 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $items = $gridField->getManipulatedList();
         $itemRows = new ArrayList();
 
+        /** @var GridFieldDataColumns $gridFieldColumnsComponent */
+        $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
             $itemRow = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
-                $value = $gridField->getDataFieldValue($item, $field);
+                $value = $gridFieldColumnsComponent
+                    ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
+                    : $gridField->getDataFieldValue($item, $field);
 
                 $itemRow->push(new ArrayData(array(
                     "CellString" => $value,
