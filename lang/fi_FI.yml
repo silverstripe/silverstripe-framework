@@ -34,6 +34,8 @@ fi_FI:
     LOGGED_IN_ERROR: 'Sinun täytyy olla kirjautuneena vaihtaaksesi salasanasi.'
     MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'ei asetettu'
     TODAY: tänään
@@ -46,6 +48,7 @@ fi_FI:
     VALIDDATETIMEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun päivämäärän ja ajan minimiarvoon  ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Valitse)
+    CHOOSE_MODEL: '(Valitse {name})'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -75,7 +78,7 @@ fi_FI:
     LinkExisting: 'Linkitä olemassaoleva'
     NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
-    OpenFilter: 'Avaa haku ja suodatus'
+    OpenFilter: 'Avaa haku ja suodin'
     PRINTEDAT: Tulostettu
     PRINTEDBY: Tulostaja
     PlaceHolder: 'Etsi {type}'
@@ -98,8 +101,8 @@ fi_FI:
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Muokkaa
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Haku "{name}"'
-    SearchFormFaliure: 'Hakulomaketta ei pystytty luomaan.'
+    Search: 'Hae "{name}"'
+    SearchFormFaliure: 'Hakulomaketta ei voitu luoda'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Et voi siirtää itseäsi pois tästä ryhmästä: menettäisit pääkäyttäjän oikeudet'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -107,7 +110,7 @@ fi_FI:
     Page: Sivu
     View: Näytä
   SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Näytä
+    VIEW: Näkymä
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
