@@ -58,7 +58,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
+        $c->disablePlugins(array_keys($c->getPlugins()));
         $c->enablePlugins(
             array(
                 'plugin1' => 'mypath/plugin1.js',
@@ -140,7 +140,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertNotContains('plugin1', array_keys($plugins));
         $this->assertNotContains('plugin2', array_keys($plugins));
     }
-    
+
     public function testRequireJSIncludesAllConfigs()
     {
         $a = HTMLEditorConfig::get('configA');

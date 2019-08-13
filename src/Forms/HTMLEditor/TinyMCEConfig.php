@@ -282,6 +282,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         'code' => null,
         'importcss' => null,
         'lists' => null,
+        'anchor' => null,
     );
 
     /**
@@ -329,7 +330,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         2 => [
             'formatselect', '|',
             'paste', 'pastetext', '|',
-            'table', 'sslink', 'unlink', '|',
+            'table', 'anchor', 'sslink', 'unlink', '|',
             'code'
         ],
         3 => []
