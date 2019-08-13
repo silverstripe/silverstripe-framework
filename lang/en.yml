@@ -34,7 +34,11 @@ en:
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
+  SilverStripe\Forms\CurrencyField:
+    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
+    NOTSET: 'not set'
+    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
@@ -44,7 +48,7 @@ en:
     VALIDDATETIMEMINDATE: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choose)
-    SEARCH_OR_CHOOSE_MODEL: '(Search or choose {name})'
+    CHOOSE_MODEL: '(Choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
@@ -74,6 +78,7 @@ en:
     LinkExisting: 'Link Existing'
     NewRecord: 'New {type}'
     NoItemsFound: 'No items found'
+    OpenFilter: 'Open search and filter'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
@@ -93,18 +98,19 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
-  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
-    NEW: 'Add new record'
-    NEXT: 'Go to next record'
-    PREVIOUS: 'Go to previous record'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Search "{name}"'
+    SearchFormFaliure: 'No search form could be generated'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: of
     Page: Page
     View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency

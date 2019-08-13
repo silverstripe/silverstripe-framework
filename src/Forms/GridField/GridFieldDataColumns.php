@@ -253,14 +253,14 @@ class GridFieldDataColumns implements GridField_ColumnProvider
             // If the value is an object, we do one of two things
             if (method_exists($value, 'Nice')) {
                 // If it has a "Nice" method, call that & make sure the result is safe
-                $value = Convert::raw2xml($value->Nice());
+                $value = nl2br(Convert::raw2xml($value->Nice()));
             } else {
                 // Otherwise call forTemplate - the result of this should already be safe
                 $value = $value->forTemplate();
             }
         } else {
             // Otherwise, just treat as a text string & make sure the result is safe
-            $value = Convert::raw2xml($value);
+            $value = nl2br(Convert::raw2xml($value));
         }
 
         return $value;

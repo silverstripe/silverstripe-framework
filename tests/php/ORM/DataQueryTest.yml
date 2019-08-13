@@ -8,3 +8,31 @@ SilverStripe\ORM\Tests\DataQueryTest\ObjectE:
   query3:
     Title: 'Second'
     SortOrder: 2
+
+SilverStripe\ORM\Tests\DataQueryTest\ObjectI:
+  query1:
+    Title: 'First'
+    SortOrder: 1
+  query2:
+    Title: 'Second'
+    SortOrder: 2
+  query3:
+    Title: 'Last'
+    SortOrder: 3
+
+SilverStripe\ORM\Tests\DataQueryTest\ObjectH:
+  query1:
+    Name: 'First'
+    SortOrder: 3
+    ManyTestEs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectE.query2
+    ManyTestIs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectI.query2
+  query2:
+    Name: 'Last'
+    SortOrder: 1
+    ManyTestEs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectE.query1
+    ManyTestIs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectI.query1
+  query3:
+    Name: 'Second'
+    SortOrder: 2
+    ManyTestEs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectE.query2
+    ManyTestIs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectI.query3

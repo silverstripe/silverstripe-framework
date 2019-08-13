@@ -209,6 +209,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
+        /** @var GridFieldDataColumns|null $gridFieldColumnsComponent */
+        $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
             if (!$item->hasMethod('canView') || $item->canView()) {
@@ -223,6 +226,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
 
                         $value = $columnHeader($relObj);
+                    } elseif ($gridFieldColumnsComponent) {
+                        $value = strip_tags(
+                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource)
+                        );
                     } else {
                         $value = $gridField->getDataFieldValue($item, $columnSource);
 
