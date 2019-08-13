@@ -24,6 +24,8 @@ class DataQueryTest extends SapphireTest
         DataQueryTest\ObjectE::class,
         DataQueryTest\ObjectF::class,
         DataQueryTest\ObjectG::class,
+        DataQueryTest\ObjectH::class,
+        DataQueryTest\ObjectI::class,
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
         SQLSelectTest\TestChild::class,
@@ -442,5 +444,26 @@ class DataQueryTest extends SapphireTest
         $this->assertCount(2, $result);
         $this->assertContains('Bar', $result);
         $this->assertContains('Foo', $result);
+    }
+
+    /**
+     * Tests that sorting against multiple relationships is working
+     */
+    public function testMultipleRelationSort()
+    {
+        $query = new DataQuery(DataQueryTest\ObjectH::class);
+        $query->applyRelation('ManyTestEs');
+        $query->applyRelation('ManyTestIs');
+        $query->sort([
+            '"manytestes_DataQueryTest_E"."SortOrder"',
+            '"manytestis_DataQueryTest_I"."SortOrder"',
+            '"SortOrder"',
+        ]);
+
+        $titles = $query->column('Name');
+
+        $this->assertEquals('First', $titles[0]);
+        $this->assertEquals('Second', $titles[1]);
+        $this->assertEquals('Last', $titles[2]);
     }
 }

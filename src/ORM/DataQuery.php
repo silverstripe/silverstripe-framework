@@ -403,7 +403,7 @@ class DataQuery
                         // Find the first free "_SortColumnX" slot
                         // and assign it to $key
                         $i = 0;
-                        while (isset($orderby[$key = "\"_SortColumn$i\""])) {
+                        while (isset($newOrderby[$key = "\"_SortColumn$i\""]) || isset($orderby[$key = "\"_SortColumn$i\""])) {
                             ++$i;
                         }
 
