@@ -35,8 +35,6 @@ nl:
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
   SilverStripe\Forms\DateField:
-    NOTSET: 'niet ingesteld'
-    TODAY: vandaag
     VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
     VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
     VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
@@ -75,7 +73,6 @@ nl:
     LinkExisting: 'Koppel een bestaand item'
     NewRecord: 'Nieuw {type}'
     NoItemsFound: 'Geen items gevonden.'
-    OpenFilter: 'Zoeken en filteren openen'
     PRINTEDAT: 'Geprint op'
     PRINTEDBY: 'Geprint door'
     PlaceHolder: 'Zoek {type}'
@@ -97,17 +94,12 @@ nl:
     Save: Opslaan
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Bewerken
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Zoek naar "{name}"'
-    SearchFormFaliure: 'Er kon geen zoekformulier worden aangemaakt'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'U kunt uzelf niet verwijderen van deze groep, omdat u dan geen admin-rechten meer heeft.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: van
     Page: Pagina
     View: Bekijk
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Bekijk
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid

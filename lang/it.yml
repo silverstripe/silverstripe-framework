@@ -35,8 +35,6 @@ it:
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
   SilverStripe\Forms\DateField:
-    NOTSET: 'non impostato'
-    TODAY: oggi
     VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
     VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
     VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
@@ -75,7 +73,6 @@ it:
     LinkExisting: 'Collega esistente'
     NewRecord: 'Nuovo {type}'
     NoItemsFound: 'Nessun elemento trovato'
-    OpenFilter: 'Apri ricerca e filtro'
     PRINTEDAT: 'Stampato alle'
     PRINTEDBY: 'Stampato da'
     PlaceHolder: 'Trova {type}'
@@ -97,17 +94,12 @@ it:
     Save: Salva
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Modifica
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Cerca "{name}"'
-    SearchFormFaliure: 'Nessun modulo di ricerca può essere generato'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Non è possibile rimuovere te stesso da questo gruppo, perderesti i diritti di admin'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: di
     Page: Pagina
     View: Visualizza
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Visualizza
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
