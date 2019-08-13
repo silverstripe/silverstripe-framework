@@ -53,7 +53,7 @@ switch between pages:
     <% if $PaginatedPages.NotFirstPage %>
         <a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
     <% end_if %>
-    <% loop $PaginatedPages.Pages %>
+    <% loop $PaginatedPages.PaginationSummary %>
         <% if $CurrentBool %>
             $PageNum
         <% else %>
