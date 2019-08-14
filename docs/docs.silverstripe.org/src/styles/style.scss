@@ -1,0 +1,14 @@
+.token.number {
+    background-color: transparent;
+    display: inline;
+    font-size: inherit;
+    margin-right: 0;
+    min-width: auto;
+    padding: 0;
+}
+
+:not(pre) > code[class*="language-"] {
+    background: #f6f6f6;
+    color: #ff2b64;
+    text-shadow: none;
+}
