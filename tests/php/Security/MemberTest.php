@@ -1572,7 +1572,7 @@ class MemberTest extends FunctionalTest
         $this->assertSame('en_US', $newMember->Locale, 'New members receive the default locale');
     }
 
-    public function testChangePasswordHashesPasswordsOnce()
+    public function testChangePasswordOnlyValidatesPlaintext()
     {
         // This validator requires passwords to be 17 characters long
         Member::set_password_validator(new MemberTest\VerySpecificPasswordValidator());
