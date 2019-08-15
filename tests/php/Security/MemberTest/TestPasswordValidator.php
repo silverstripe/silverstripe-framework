@@ -2,9 +2,10 @@
 
 namespace SilverStripe\Security\Tests\MemberTest;
 
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\Security\PasswordValidator;
 
-class TestPasswordValidator extends PasswordValidator
+class TestPasswordValidator extends PasswordValidator implements TestOnly
 {
     public function __construct()
     {
