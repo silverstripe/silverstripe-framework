@@ -922,10 +922,9 @@ class Member extends DataObject
         }
 
         // The test on $this->ID is used for when records are initially created. Note that this only works with
-        // cleartext passwords, as we can't rehash existing passwords. Checking passwordChangesToWrite prevents
-        // recursion between changePassword and this method.
-        if (!$this->ID || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
-            $this->changePassword($this->Password, false);
+        // cleartext passwords, as we can't rehash existing passwords.
+        if (!$this->ID || $this->isChanged('Password')) {
+            $this->encryptPassword();
         }
 
         // save locale
@@ -1703,11 +1702,11 @@ class Member extends DataObject
     }
 
     /**
-     * Change password. This will cause rehashing according to the `PasswordEncryption` property. This method will
-     * allow extensions to perform actions and augment the validation result if required before the password is written
-     * and can check it after the write also.
+     * Change password. This will cause rehashing according to the `PasswordEncryption` property via the
+     * `onBeforeWrite()` method. This method will allow extensions to perform actions and augment the validation
+     * result if required before the password is written and can check it after the write also.
      *
-     * This method will encrypt the password prior to writing.
+     * `onBeforeWrite()` will encrypt the password prior to writing.
      *
      * @param string $password Cleartext password
      * @param bool $write Whether to write the member afterwards
@@ -1716,24 +1715,21 @@ class Member extends DataObject
     public function changePassword($password, $write = true)
     {
         $this->Password = $password;
-        $valid = $this->validate();
+        $result = $this->validate();
 
-        $this->extend('onBeforeChangePassword', $password, $valid);
+        $this->extend('onBeforeChangePassword', $password, $result);
 
-        if ($valid->isValid()) {
+        if ($result->isValid()) {
             $this->AutoLoginHash = null;
 
-            $this->encryptPassword();
-
             if ($write) {
-                $this->passwordChangesToWrite = true;
                 $this->write();
             }
         }
 
-        $this->extend('onAfterChangePassword', $password, $valid);
+        $this->extend('onAfterChangePassword', $password, $result);
 
-        return $valid;
+        return $result;
     }
 
     /**
