@@ -279,7 +279,7 @@ class MemberTest extends FunctionalTest
     {
         /**
          * @var Member $member
-        */
+         */
         $member = $this->objFromFixture(Member::class, 'test');
         $this->assertNotNull($member);
 
@@ -1570,5 +1570,19 @@ class MemberTest extends FunctionalTest
         $newMember->write();
 
         $this->assertSame('en_US', $newMember->Locale, 'New members receive the default locale');
+    }
+
+    public function testChangePasswordOnlyValidatesPlaintext()
+    {
+        // This validator requires passwords to be 17 characters long
+        Member::set_password_validator(new MemberTest\VerySpecificPasswordValidator());
+
+        // This algorithm will never return a 17 character hash
+        Security::config()->set('password_encryption_algorithm', 'blowfish');
+
+        /** @var Member $member */
+        $member = $this->objFromFixture(Member::class, 'test');
+        $result = $member->changePassword('Password123456789'); // 17 characters long
+        $this->assertTrue($result->isValid());
     }
 }
