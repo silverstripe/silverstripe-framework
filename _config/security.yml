@@ -27,6 +27,7 @@ SilverStripe\Core\Injector\Injector:
       Middlewares:
         AuthenticationMiddleware: '%$SilverStripe\Security\AuthenticationMiddleware'
         BasicAuthMiddleware: '%$SilverStripe\Security\BasicAuthMiddleware'
+        PasswordExpirationMiddleware: '%$SilverStripe\Security\PasswordExpirationMiddleware'
   SilverStripe\Security\AuthenticationMiddleware:
     properties:
       AuthenticationHandler: '%$SilverStripe\Security\AuthenticationHandler'
@@ -42,3 +43,11 @@ SilverStripe\Core\Injector\Injector:
       Authenticators:
         cms: '%$SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator'
   SilverStripe\Security\IdentityStore: '%$SilverStripe\Security\AuthenticationHandler'
+
+SilverStripe\Security\PasswordExpirationMiddleware:
+  enable: true
+  default_redirect: /Security/changepassword
+  whitelisted_url_startswith:
+    - /Security/basicauthlogin
+    - /Security/login/
+    - /Security/logout

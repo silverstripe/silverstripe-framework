@@ -9,6 +9,7 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -263,7 +264,14 @@ class LoginHandler extends RequestHandler
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');
+        $changePasswordUrl = $this->addBackURLParam($changedPasswordLink);
+        $whitelistedUrl = Controller::join_links($changedPasswordLink, 'ChangePasswordForm');
 
-        return $this->redirect($this->addBackURLParam($changedPasswordLink));
+        $session = $this->getRequest()->getSession();
+        $passwordExpirationMiddleware = Injector::inst()->get(PasswordExpirationMiddleware::class);
+        $passwordExpirationMiddleware->setRedirect($session, $changePasswordUrl);
+        $passwordExpirationMiddleware->whitelistUrl($session, $whitelistedUrl);
+
+        return $this->redirect($changePasswordUrl);
     }
 }
