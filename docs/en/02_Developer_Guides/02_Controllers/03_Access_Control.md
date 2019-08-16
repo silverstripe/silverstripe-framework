@@ -1,5 +1,7 @@
+---
 title: Access Control
 summary: Define allowed behavior and add permission based checks to your Controllers.
+---
 
 # Access Control
 

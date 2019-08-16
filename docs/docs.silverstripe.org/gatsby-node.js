@@ -1,8 +1,56 @@
 const path = require('path');
 const { createFilePath } = require(`gatsby-source-filesystem`);
+const fileToTitle = require('./src/utils/fileToTitle');
+const buildBreadcrumbs = require('./src/utils/buildBreadcrumbs');
+const fs = require('fs');
 
-exports.onCreateNode = ({ node, getNode, actions }) => {
-    const { createNodeField } = actions;
+const createSlug = (path) => (
+  path
+  .split('/')
+  .map(part => part.replace(/^\d+_/, ''))
+  .join('/')
+  .toLowerCase()
+);
+exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
+    const { createNodeField, createParentChildLink } = actions;
+    if (node.internal.type === 'Directory') {
+        const filePath = createFilePath({
+          node,
+          getNode,
+          basePath: ``
+        });
+
+      const fileTitle = path.basename(node.absolutePath);
+
+      createNodeField({
+        node,
+        name: `fileTitle`,
+        value: fileTitle,
+      });
+
+      createNodeField({
+        node,
+        name: `title`,
+        value: fileToTitle(fileTitle)
+      });
+      createNodeField({
+        node,
+        name: `slug`,
+        value: createSlug(filePath),
+      })
+
+      const parentDirectory = path.normalize(node.dir + '/');
+      const parent = getNodesByType('Directory').find(
+        n => path.normalize(n.absolutePath + '/') === parentDirectory
+      );
+      if (parent) {
+        node.parent = parent.id
+        createParentChildLink({
+            child: node,
+            parent: parent
+        })
+      }            
+    }
     if (node.internal.type === 'MarkdownRemark') {
         const filePath = createFilePath({
             node,
@@ -10,43 +58,48 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
             basePath: ``
         });
         
-        const slug = filePath.split('/').map(part => part.replace(/^\d+_/, '')).join('/').toLowerCase();
+        const slug = createSlug(filePath);
+
         createNodeField({
             node,
             name: `slug`,
             value: slug
         });
-        createNodeField({
-          node,
-          name: `filePath`,
-          value: filePath,
-        });
-        let parts = filePath.split('/');
-        parts.pop();
-        const title = parts.pop();
-        parts = filePath.slice(0, -1).split('/');
-        parts.pop();
-        const dir = parts.join('/');
-        createNodeField({
-          node,
-          name: `dir`,
-          value: dir,
-        });
+
+        const fileTitle = path.basename(node.fileAbsolutePath, '.md');
+        const isIndex = fileTitle === 'index';
+        const title = node.frontmatter.title || fileToTitle(fileTitle);
+
         createNodeField({
             node,
             name: `fileTitle`,
-            value: title
+            value: fileTitle
         });
         createNodeField({
           node,
           name: `title`,
-          value: title.replace(/^\d+_/, '').replace(/_/g, ' '),
+          value: title,
         });
+        
         createNodeField({
           node,
-          name: `path`,
-          value: dir.split('/'),
+          name: `breadcrumbs`,
+          value: buildBreadcrumbs(slug),
         });
+        
+        let parentDirectory = path.dirname(node.fileAbsolutePath);
+        const parent = getNodesByType('Directory').find(
+          n => path.normalize(n.absolutePath + '/') === `${parentDirectory}/`
+        );
+        if (parent) {
+          node.parent = parent.id
+          createParentChildLink({
+              child: node,
+              parent: parent
+          })
+        }            
+
+
     }
 
 }
@@ -55,11 +108,23 @@ exports.createPages = async ({ actions, graphql }) => {
   const docTemplate = path.resolve(`src/templates/docs-template.tsx`);
   const result = await graphql(`
   {
-    allMarkdownRemark {
+    allDirectory {
       edges {
         node {
+          dir
+          absolutePath
+        }
+      }
+    }
+    allMarkdownRemark(filter: {fields: { fileTitle: { ne: "" } }}) {
+      edges {
+        node {
+          fileAbsolutePath
           fields {
             slug
+          }
+          frontmatter {
+            title
           }
         }
       }

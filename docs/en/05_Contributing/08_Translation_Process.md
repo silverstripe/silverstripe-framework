@@ -1,5 +1,7 @@
+---
 title: Implement Internationalisation
 summary: Implement SilverStripe's internationalisation system in your own modules.
+---
 
 # Implementing Internationalisation
 

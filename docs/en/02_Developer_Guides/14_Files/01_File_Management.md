@@ -1,5 +1,7 @@
+---
 title: File management
 summary: Learn how to work with File and Image records
+---
 
 # File management
 

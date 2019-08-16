@@ -1,5 +1,7 @@
+---
 title: Template Syntax
 summary: A look at the operations, variables and language controls you can use within templates.
+---
 
 # Template Syntax
 

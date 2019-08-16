@@ -1,5 +1,7 @@
+---
 title: Versioning
 summary: Add versioning to your database content through the Versioned extension.
+---
 
 # Versioning
 

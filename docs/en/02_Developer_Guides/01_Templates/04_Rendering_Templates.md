@@ -1,5 +1,7 @@
+---
 title: Rendering data to a template
 summary: Call and render SilverStripe templates manually.
+---
 
 # Rendering data to a template
 

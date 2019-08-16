@@ -1,5 +1,7 @@
+---
 title: Environment Types
 summary: Configure your SilverStripe environment to define how your web application behaves.
+---
 
 # Environment Types
 

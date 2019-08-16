@@ -1,5 +1,7 @@
+---
 title: Configuration API
 summary: SilverStripe's YAML based Configuration API for setting runtime configuration.
+---
 
 # Configuration API
 

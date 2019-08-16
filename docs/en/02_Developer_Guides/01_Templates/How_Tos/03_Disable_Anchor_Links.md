@@ -1,4 +1,6 @@
+---
 title: Disable Anchor Rewriting
+---
 
 # Disable Anchor Rewriting
 

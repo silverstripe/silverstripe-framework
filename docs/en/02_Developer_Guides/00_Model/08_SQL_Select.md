@@ -1,5 +1,7 @@
+---
 title: SQL Queries
 summary: Write and modify direct database queries through SQLExpression subclasses.
+---
 
 # SQLSelect
 

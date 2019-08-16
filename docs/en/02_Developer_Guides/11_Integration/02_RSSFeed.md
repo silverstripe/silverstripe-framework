@@ -1,5 +1,7 @@
+---
 title: RSS Feed
 summary: Output records from your database as an RSS Feed.
+---
 
 # RSS Feed
 

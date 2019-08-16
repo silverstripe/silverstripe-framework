@@ -1,5 +1,7 @@
+---
 title: Introduction to a Controller
 summary: A brief look at the definition of a Controller, creating actions and how to respond to requests.
+---
 
 # Introduction to Controllers
 

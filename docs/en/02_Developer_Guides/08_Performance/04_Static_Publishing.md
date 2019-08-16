@@ -1,5 +1,7 @@
+---
 title: Static Publishing
 summary: Export your web pages as static HTML and serve the web like it's 1999.
+---
 
 # Static Publishing
 

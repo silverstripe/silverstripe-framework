@@ -1,5 +1,7 @@
+---
 title: Personal Data
 summary: How the SilverStripe CMS deals with data privacy
+---
 
 # Personal Data
 

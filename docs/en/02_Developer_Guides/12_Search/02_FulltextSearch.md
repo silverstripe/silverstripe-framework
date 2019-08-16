@@ -1,5 +1,7 @@
+---
 title: Fulltext Search
 summary: Fulltext search allows sophisticated searching on text content.
+---
 
 # FulltextSearchable
 

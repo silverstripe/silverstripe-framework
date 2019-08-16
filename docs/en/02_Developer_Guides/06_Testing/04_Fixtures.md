@@ -1,5 +1,7 @@
+---
 title: Fixtures
 summary: Populate test databases with fake seed data.
+---
 
 # Fixtures
 

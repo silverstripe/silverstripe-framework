@@ -1,5 +1,7 @@
+---
 title: Flushable
 summary: Allows a class to define it's own flush functionality.
+---
 
 # Flushable
 

@@ -1,5 +1,7 @@
+---
 title: Building Model and Search Interfaces around Scaffolding
 summary: A Model-driven approach to defining your application UI.
+---
 
 # Scaffolding
 

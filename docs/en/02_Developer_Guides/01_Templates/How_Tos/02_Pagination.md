@@ -1,4 +1,6 @@
+---
 title: How to Create a Paginated List
+---
 
 # How to Create a Paginated List
 

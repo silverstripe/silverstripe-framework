@@ -1,5 +1,7 @@
+---
 title: Lessons
 introduction: The lessons take a step by step look at how to build a SilverStripe application.
+---
 
 * [How to set up a local development environment in SilverStripe](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
 * [Lesson 1: Creating your first project](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-project)

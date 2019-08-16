@@ -1,83 +1,70 @@
 import React, { StatelessComponent, ReactElement } from 'react';
-import { StaticQuery, graphql } from 'gatsby';
-import buildNavigationNode from '../utils/buildNavigationNode';
-import { NavigationItem, AllFilesQuery, AllFilesData } from '../types';
+
+import { NavigationItem, NavigationNode } from '../types';
 import { Menu, MenuLabel, MenuList } from 'bloomer';
 import { Link } from 'gatsby';
+import ToggleableMenuItem from './ToggleableMenuItem';
+import styled from 'styled-components';
+import useCurrentNode from '../hooks/useCurrentNode';
+import useNodeHierarchy from '../hooks/useNodeHierarchy';
+import sortFiles from '../utils/sortFiles';
 
-const query = graphql`
-query Navigation {
-  allMarkdownRemark(limit: 1000, sort: {fields: fields___title, order: ASC}) {
-    edges {
-      node {
-        fields {
-          slug
-          title
-          fileTitle
-          filePath
-          dir
-          path
+const StickyNav = styled(Menu)`
+  position: sticky;
+  top: 8rem;
+  height: calc(100vh - 14rem);
+  overflow: auto;
+`;
+
+
+
+const Nav: StatelessComponent<{}> = () => {
+    const nav = useNodeHierarchy();
+    const currentNode = useCurrentNode();
+    const innerMapFn = (item: NavigationNode): ReactElement => {
+        const { slug, children } = item.fields;
+        const isInHierarchy = currentNode && currentNode.fields.breadcrumbs.includes(slug.slice(0, -1));
+        return (
+            <MenuList key={slug}>
+                <ToggleableMenuItem
+                    item={item}
+                    active={!!isInHierarchy}
+                    mapFn={innerMapFn}
+                >
+                    {children}
+                </ToggleableMenuItem>
+            </MenuList>
+        );
+    };
+    
+    const outerMapFn = (item: NavigationItem): ReactElement[] => {
+        const { slug, title } = item.fields;
+        const childItems = item.children.filter(n => n.fields.title !== 'index').sort(sortFiles);
+        const items = [];
+        
+        if (childItems.length) {
+            items.push(
+                <MenuLabel key={slug}>{title}</MenuLabel>
+            );
+            return items.concat(
+                childItems.map(innerMapFn)
+            );
         }
-      }
-    }
-  }
-}
-`
-
-
-const innerMapFn = (item: NavigationItem): ReactElement => {
-  const { slug, title } = item.node.fields;
-  return (
-    <MenuList key={slug}>
-      <li>
-        <Link activeClassName={`is-active`} to={slug}>{title}</Link>
-        {!!item.children.length &&
-          <MenuList>
-            {item.children.map(innerMapFn)}
-          </MenuList>
-        }
-      </li>
-    </MenuList>
-  )
-};
-
-const outerMapFn = (item: NavigationItem): ReactElement[] => {
-  const { slug, title, dir } = item.node.fields;
-  const childItems = item.children;
-  const items = [];
-  if (dir === '') {
-      if (childItems.length) {
         items.push(
-            <MenuLabel key={slug}>{title}</MenuLabel>
-        );
-        return items.concat(
-            childItems.map(innerMapFn)
-        );
-      }
-      items.push(
-        <MenuList key={slug}>
-          <li><Link activeClassName={`is-active`} to={slug}>{title}</Link></li>
-        </MenuList>
-      )
-  }
-  return items;
-};
-
-const render = (data: AllFilesData) => {
-    const nodes = data.allMarkdownRemark.edges.map(edge => edge.node);
-    const nav = buildNavigationNode('', nodes);
-
+            <MenuList key={slug}>
+            <li><Link activeClassName={`is-active`} to={slug}>{title}</Link></li>
+            </MenuList>
+        )
+        
+        return items;
+    };
+    
     return (
-        <Menu>
-            <>
-                {nav.map(outerMapFn)}
-            </>
-        </Menu>
+        <StickyNav>
+            {nav.filter(n => n.fields.title !== 'index').sort(sortFiles).map(outerMapFn)}
+        </StickyNav>
 
     )
 }
-const Nav: StatelessComponent<{}> = () =>(
-    <StaticQuery query={query} render={render} />
-);
 
 export default Nav;

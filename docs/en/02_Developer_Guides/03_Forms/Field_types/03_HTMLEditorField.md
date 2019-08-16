@@ -1,5 +1,7 @@
+---
 title: Rich-text editing (WYSIWYG)
 summary: SilverStripe's use and configuration of TinyMCE html editor.
+---
 
 # Rich-text editing (WYSIWYG)
 

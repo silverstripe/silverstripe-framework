@@ -1,5 +1,7 @@
+---
 title: Requirements
 summary: How to include and require other assets in your templates such as javascript and CSS files.
+---
 
 # Requirements
 

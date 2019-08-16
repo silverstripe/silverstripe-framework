@@ -1,5 +1,7 @@
+---
 title: File storage
 summary: Describes the persistence layer of files
+---
 
 # File storage
 

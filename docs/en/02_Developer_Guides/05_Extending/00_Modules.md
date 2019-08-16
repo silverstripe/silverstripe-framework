@@ -1,5 +1,7 @@
+---
 title: Modules
 summary: Extend core functionality with modules.
+---
 
 # Modules
 

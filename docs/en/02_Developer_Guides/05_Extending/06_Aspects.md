@@ -1,5 +1,7 @@
+---
 title: Aspects
 summary: Introduction to using aspect-oriented programming with SilverStripe.
+---
 
 # Aspects
 

@@ -1,5 +1,7 @@
+---
 title: Upgrading to SilverStripe 4
 introduction: Upgrade your project SilverStripe 4 and keep it up to date with the latest fixes, security patches and new features.
+---
 
 # Upgrading a SilverStripe 3 project to SilverStripe 4
 

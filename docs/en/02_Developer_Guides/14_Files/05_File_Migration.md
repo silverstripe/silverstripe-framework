@@ -1,5 +1,7 @@
+---
 title: File migration
 summary: Manage migration of legacy files to the new database structure
+---
 
 # File migration
 

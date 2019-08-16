@@ -1,5 +1,7 @@
+---
 title: Functional Testing
 summary: Test controllers, forms and HTTP responses.
+---
 
 # Functional Testing
 

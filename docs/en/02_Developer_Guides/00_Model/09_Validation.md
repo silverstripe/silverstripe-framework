@@ -1,5 +1,7 @@
+---
 title: Model Validation and Constraints
 summary: Validate your data at the model level
+---
 
 # Validation and Constraints
 

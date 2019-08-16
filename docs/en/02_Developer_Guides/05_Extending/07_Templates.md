@@ -1,5 +1,7 @@
+---
 title: Custom Templates
 summary: Override templates from core and modules in your application
+---
 
 # Custom Templates
 

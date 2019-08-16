@@ -1,5 +1,7 @@
+---
 title: WYSIWYG Styles
 summary: Add custom CSS properties to the rich-text editor.
+---
 
 # WYSIWYG Styles
 

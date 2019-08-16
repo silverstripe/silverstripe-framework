@@ -1,5 +1,7 @@
+---
 title: Common Variables
 summary: Some of the common variables and methods your templates can use, including Menu, SiteConfig, and more.
+---
 
 # Common Variables
 

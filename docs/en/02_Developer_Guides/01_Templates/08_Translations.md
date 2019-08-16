@@ -1,5 +1,7 @@
+---
 title: Translations
 summary: Definition of the syntax for writing i18n compatible templates.
+---
 
 # Translations
 

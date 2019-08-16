@@ -1,5 +1,7 @@
+---
 title: Indexes
 summary: Add Indexes to your Data Model to optimize database queries.
+---
 
 # Indexes
 Indexes are a great way to improve performance in your application, especially as it grows. By adding indexes to your 

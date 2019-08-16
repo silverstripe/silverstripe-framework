@@ -1,4 +1,6 @@
+---
 title: Admin Layout
+---
 
 # CMS layout
 

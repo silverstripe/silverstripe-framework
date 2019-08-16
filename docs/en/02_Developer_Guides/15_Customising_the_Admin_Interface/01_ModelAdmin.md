@@ -1,5 +1,7 @@
+---
 title: ModelAdmin
 summary: Create admin UI's for managing your data records.
+---
 
 # ModelAdmin
 

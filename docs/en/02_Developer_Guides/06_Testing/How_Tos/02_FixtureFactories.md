@@ -1,4 +1,6 @@
+---
 title: How to use a FixtureFactory
+---
 
 # How to use a FixtureFactory
 

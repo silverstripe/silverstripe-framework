@@ -1,5 +1,7 @@
+---
 title: Profiling
 summary: Identify bottlenecks within your application.
+---
 
 # Profiling
 

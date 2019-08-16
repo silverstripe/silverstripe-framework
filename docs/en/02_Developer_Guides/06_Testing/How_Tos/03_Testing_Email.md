@@ -1,4 +1,6 @@
+---
 title: How to test emails within unit tests
+---
 
 # Testing Email within Unit Tests
 

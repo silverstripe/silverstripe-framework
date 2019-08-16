@@ -1,4 +1,6 @@
+---
 title: How to Encapsulate Forms
+---
 
 # How to Encapsulate Forms
 

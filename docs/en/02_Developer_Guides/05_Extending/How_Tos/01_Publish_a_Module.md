@@ -1,4 +1,6 @@
+---
 title: How to Publish a SilverStripe module
+---
 
 # How to Publish a SilverStripe module.
 

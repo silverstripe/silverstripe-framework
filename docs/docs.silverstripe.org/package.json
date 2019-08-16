@@ -6,6 +6,7 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "@types/react-helmet": "^5.0.8",
+    "@types/styled-components": "^4.1.18",
     "bloomer": "^0.6.5",
     "bulma": "^0.7.5",
     "gatsby": "^2.13.39",
@@ -28,7 +29,8 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-helmet": "^5.2.1"
+    "react-helmet": "^5.2.1",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
     "@types/react": "^16.8.23",

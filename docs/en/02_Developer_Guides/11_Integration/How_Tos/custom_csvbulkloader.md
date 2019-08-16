@@ -1,4 +1,6 @@
+---
 title: A custom CSVBulkLoader instance
+---
 
 # How to: A custom CSVBulkLoader instance
 

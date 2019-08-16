@@ -1,5 +1,7 @@
+---
 title: Cookies
 summary: A set of static methods for manipulating PHP cookies.
+---
 
 # Cookies
 ## Accessing and Manipulating Cookies

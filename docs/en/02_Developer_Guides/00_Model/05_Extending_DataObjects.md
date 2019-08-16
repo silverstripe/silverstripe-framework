@@ -1,5 +1,7 @@
+---
 title: Extending DataObjects
 summary: Modify the data model without using subclasses.
+---
 
 # Extending DataObjects
 

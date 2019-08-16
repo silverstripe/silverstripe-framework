@@ -2,38 +2,22 @@ import React, { StatelessComponent } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
-import { NavigationFields } from '../types';
+import { NavigationFields, SingleFileQuery } from '../types';
 import { Content } from 'bloomer/lib/elements/Content';
+import parseHTML from '../utils/parseHTML';
 
-interface FrontMatter {
-    path: string,
-    title: string,
-    baseline: string
-}
-interface MarkdownRemark {
-    markdownRemark: Page
-}
-interface PageType {
-    html: string,
-    frontmatter: FrontMatter
-}
-interface Page {
-    page: PageType,
-    html: string,
-    fields: NavigationFields,
-}
-interface Props {
-    data: MarkdownRemark
-}
-
-const Template: StatelessComponent<Props> = ({ data: { markdownRemark: { html, fields} }}) => (    
-    <Layout>
+const Template: StatelessComponent<SingleFileQuery> = (result) => {
+    const currentNode = result.data.markdownRemark;
+    const { html, fields } = currentNode;
+    return (
+    <Layout currentNode={result.data.markdownRemark}>
       <SEO title={fields.title} />
         <Content>
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <div dangerouslySetInnerHTML={{ __html: parseHTML(html, currentNode) }} />
         </Content>
     </Layout>
-);
+    );
+};
 
 export default Template;
 
@@ -43,7 +27,6 @@ export const pageQuery = graphql`
       html
       fields {
           title
-          slug
       }
     }
   }

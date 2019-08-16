@@ -1,5 +1,7 @@
+---
 title: Rate Limiting
 summary: SilverStripe's in built rate limiting features
+---
 
 # Rate Limiting
 

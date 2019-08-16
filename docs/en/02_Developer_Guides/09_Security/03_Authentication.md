@@ -1,5 +1,7 @@
+---
 title: Authentication
 summary: Explains SilverStripe's Authentication options and custom authenticators. 
+---
 
 # Authentication
 

@@ -1,6 +1,8 @@
 ---
 title: Server Requirements
 ---
+
+
 # Requirements
 
 SilverStripe CMS needs to be installed on a web server. Content authors and website administrators use their web browser

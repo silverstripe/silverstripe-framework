@@ -1,4 +1,6 @@
+---
 title: How to write a FunctionalTest
+---
 
 # How to Write a FunctionalTest
 

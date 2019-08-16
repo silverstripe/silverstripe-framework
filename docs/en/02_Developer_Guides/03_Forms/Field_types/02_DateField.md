@@ -1,5 +1,7 @@
+---
 title: DateField
 summary: How to format and use the DateField class.
+---
 
 # DateField
 

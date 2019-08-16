@@ -1,5 +1,7 @@
+---
 title: React, Redux, and GraphQL
 summary: Learn how to extend and customise the technologies we use for application state and client-rendered UI.
+---
 
 # Introduction to the "React" layer
 

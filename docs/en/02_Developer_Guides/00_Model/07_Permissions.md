@@ -1,5 +1,7 @@
+---
 title: Model-Level Permissions
 summary: Reduce risk by securing models.
+---
 
 # Model-Level Permissions
 

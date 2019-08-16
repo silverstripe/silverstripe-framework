@@ -1,5 +1,7 @@
+---
 title: Partial Caching
 summary: Cache SilverStripe templates to reduce database queries.
+---
 
 # Partial Caching
 

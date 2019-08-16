@@ -1,5 +1,7 @@
+---
 title: SiteConfig
 summary: Content author configuration through the SiteConfig module.
+---
 
 # SiteConfig
 

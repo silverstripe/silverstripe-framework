@@ -1,8 +1,9 @@
 import 'bulma/css/bulma.css';
 import '../styles/style.scss';
+import styled from 'styled-components';
 
 import React, { StatelessComponent } from "react";
-import { useStaticQuery, graphql } from "gatsby";
+import { useStaticQuery, graphql, Link } from "gatsby";
 import {
   Section,
   Container,
@@ -19,12 +20,25 @@ import {
 } from 'bloomer';
 import  Nav from './Nav';
 
+const TopLevel = styled(Level)`
+  padding: 2rem;
+  background: #005b94;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  .subtitle {
+    a {
+      color: #fff;
+    }
+  }
+`;
+
 interface LayoutProps {
   children: any[];
 
 }
 
-const Layout: StatelessComponent<LayoutProps> = ({ children }) => {
+const Layout: StatelessComponent<LayoutProps> = ({ children}) => {
   const siteData = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -35,12 +49,11 @@ const Layout: StatelessComponent<LayoutProps> = ({ children }) => {
     }
   `);
   return (
-    <Section>
-        <Container>
-          <Level>
+        <>
+          <TopLevel>
             <LevelLeft>
               <LevelItem>
-                <h1 className="subtitle is-5">{siteData.site.siteMetadata.title}</h1>
+                <h1 className="subtitle is-5"><Link to="/">{siteData.site.siteMetadata.title}</Link></h1>
               </LevelItem>
             </LevelLeft>
             <LevelRight>
@@ -57,17 +70,21 @@ const Layout: StatelessComponent<LayoutProps> = ({ children }) => {
                 </form>
               </LevelItem>
             </LevelRight>
-          </Level>
+          </TopLevel>
+          <Container isFluid>
+          <Section>      
           <Columns>
-            <Column isSize='1/3'>
+            <Column isSize='1/4'>
               <Nav />
             </Column>
             <Column>
               {children}
             </Column>
           </Columns>
-        </Container>
-    </Section>
+          </Section>
+          </Container>          
+      </>
+    
   );
 };
 export default Layout;
