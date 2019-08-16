@@ -4,8 +4,6 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use LogicException;
-use Page;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
@@ -20,11 +18,8 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
-use SilverStripe\ORM\Tests\DataObjectTest\Fan;
-use SilverStripe\ORM\Tests\DataObjectTest\OtherSubclassWithSameField;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
-use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
-use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
@@ -65,6 +60,19 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationChildSecond::class,
         DataObjectTest\MockDynamicAssignmentDataObject::class
     );
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $validator = Member::password_validator();
+        if ($validator) {
+            // Set low default password strength requirements so tests are not interfered with by user code
+            $validator
+                ->setMinTestScore(0)
+                ->setMinLength(6);
+        }
+    }
 
     public static function getExtraDataObjects()
     {
