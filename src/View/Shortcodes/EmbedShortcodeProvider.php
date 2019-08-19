@@ -5,6 +5,9 @@ namespace SilverStripe\View\Shortcodes;
 use Embed\Http\DispatcherInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
 use SilverStripe\View\Embed\Embeddable;
 use SilverStripe\View\Embed\EmbedResource;
 use SilverStripe\View\HTML;
@@ -138,16 +141,13 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $arguments['style'] = 'width: ' . intval($arguments['width']) . 'px;';
         }
 
-        // Convert caption to <p>
-        if (!empty($arguments['caption'])) {
-            $xmlCaption = Convert::raw2xml($arguments['caption']);
-            $content .= "\n<p class=\"caption\">{$xmlCaption}</p>";
-        }
-        unset($arguments['width']);
-        unset($arguments['height']);
-        unset($arguments['url']);
-        unset($arguments['caption']);
-        return HTML::createTag('div', $arguments, $content);
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
+            'Content' => DBField::create_field('HTMLFragment', $content)
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_video')->forTemplate();
     }
 
     /**
@@ -160,13 +160,14 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     protected static function linkEmbed($arguments, $href, $title)
     {
-        $title = !empty($arguments['caption']) ? ($arguments['caption']) : $title;
-        unset($arguments['caption']);
-        unset($arguments['width']);
-        unset($arguments['height']);
-        unset($arguments['url']);
-        $arguments['href'] = $href;
-        return HTML::createTag('a', $arguments, Convert::raw2xml($title));
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
+            'Href' => $href,
+            'Title' => !empty($arguments['caption']) ? ($arguments['caption']) : $title
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_link')->forTemplate();
     }
 
     /**
@@ -178,8 +179,37 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     protected static function photoEmbed($arguments, $src)
     {
-        $arguments['src'] = $src;
-        unset($arguments['url']);
-        return HTML::createTag('img', $arguments);
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['url']),
+            'Src' => $src
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_photo')->forTemplate();
+    }
+
+    /**
+     * Build a list of HTML attributes from embed arguments - used to preserve backward compatibility
+     *
+     * @deprecated 4.5.0 Use {$Arguments.name} directly in shortcode templates to access argument values
+     * @param array $arguments List of embed arguments
+     * @param array $exclude List of attribute names to exclude from the resulting list
+     * @return ArrayList
+     */
+    private static function buildAttributeListFromArguments(array $arguments, array $exclude = []): ArrayList
+    {
+        $attributes = ArrayList::create();
+        foreach ($arguments as $key => $value) {
+            if (in_array($key, $exclude)) {
+                continue;
+            }
+
+            $attributes->push(ArrayData::create([
+                'Name' => $key,
+                'Value' => Convert::raw2att($value)
+            ]));
+        }
+
+        return $attributes;
     }
 }

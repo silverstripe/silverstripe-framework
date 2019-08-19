@@ -25,6 +25,11 @@ class EmbedShortcodeProviderTest extends SapphireTest
      */
     protected static $test_soundcloud = 'http://soundcloud.com/napalmrecords/delain-suckerpunch';
 
+    public function assertEqualIgnoringWhitespace($a, $b, $message = '')
+    {
+        $this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
+    }
+
     public function testYoutube()
     {
         /** @var string $result */
@@ -51,7 +56,7 @@ class EmbedShortcodeProviderTest extends SapphireTest
                 'height' => 270,
             ]
         );
-        $this->assertEquals(
+        $this->assertEqualIgnoringWhitespace(
             <<<EOS
 <div style="width: 480px;"><iframe width="480" height="270" src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>
 <p class="caption">A nice video</p></div>
@@ -81,7 +86,7 @@ EOS
                 'author_url' => 'http://soundcloud.com/napalmrecords',
             ]
         );
-        $this->assertEquals(
+        $this->assertEqualIgnoringWhitespace(
             <<<EOS
 <div style="width: 100px;"><iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F242518079&show_artwork=true"></iframe></div>
 EOS
