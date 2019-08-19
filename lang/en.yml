@@ -16,11 +16,22 @@ en:
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET parameter'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'The URL is: "{url}"'
+    CONFIRMATION_NAME: 'URL is protected'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'The complete URL is: "{url}"'
+    CONFIRMATION_NAME: 'URL begins with "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Unknown
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
+    INFO_TITLE: 'Security Confirmation'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -34,8 +45,6 @@ en:
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -48,7 +57,7 @@ en:
     VALIDDATETIMEMINDATE: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choose)
-    CHOOSE_MODEL: '(Choose {name})'
+    SEARCH_OR_CHOOSE_MODEL: '(Search or choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
@@ -98,6 +107,10 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    NEW: 'Add new record'
+    NEXT: 'Go to next record'
+    PREVIOUS: 'Go to previous record'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -179,6 +192,12 @@ en:
     SUCCESS: Success
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
     SUCCESS_TITLE: 'Login successful'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Run the action'
+    EMPTY_TITLE: 'Nothing to confirm'
+    REFUSE: Cancel
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Confirm potentially dangerous action'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Default Admin'
   SilverStripe\Security\Group:
