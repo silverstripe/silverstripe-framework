@@ -1,121 +1,113 @@
 import { useStaticQuery } from 'gatsby';
 import { graphql } from 'gatsby';
-import { NavigationNode, AllFilesData } from '../types';
+import { HierarchyQuery, GenericHierarchyNode } from '../types';
+import { node } from 'prop-types';
 
-let nodes: NavigationNode[] | undefined;
-const useNodeHierarchy = (): NavigationNode[] => {
-    if (!nodes) {
-        const result:AllFilesData = useStaticQuery(graphql`
-        {
-            allDirectory(filter: {
-              relativeDirectory: {eq:""}
-            }) {
-              edges {
-                node {
-                  relativePath
-                  fields {
-                    slug
-                    title
-                    fileTitle
-                  }
+let nodes: GenericHierarchyNode[] | undefined;
+
+const useNodeHierarchy = (): GenericHierarchyNode[] => {
+  if (nodes) {
+    return nodes;
+  }
+  const result:HierarchyQuery = useStaticQuery(graphql`
+  fragment DirectoryFields on Directory {
+    relativeDirectory
+    fields {
+      slug
+      title
+      fileTitle
+      breadcrumbs
+    }
+    indexFile {
+      ...FileFields
+    }
+    parent {
+      id
+    }
+  }
+  fragment FileFields on MarkdownRemark {
+    id
+    fields {
+      slug
+      title
+      fileTitle
+      breadcrumbs
+    }
+    frontmatter {
+      summary
+    }
+    parent {
+      id
+    }
+  }  
+  {
+      allDirectory(filter: {
+        relativeDirectory: {eq: ".."},
+      }) {
+        
+        nodes {
+          ...DirectoryFields
+          children {
+            ... on MarkdownRemark {
+              ...FileFields
+            }
+            ... on Directory {
+              ...DirectoryFields
+              children {
+                ... on MarkdownRemark {
+                  ...FileFields
+                }
+                ... on Directory {
+                  ...DirectoryFields
                   children {
-                    internal {
-                      type
-                    }
                     ... on MarkdownRemark {
-                      fields {
-                        slug
-                        title
-                        fileTitle
-                        breadcrumbs
-                      }
-                      frontmatter {
-                        summary
-                      }
+                      ...FileFields
                     }
                     ... on Directory {
-                      relativePath
-                      fields {
-                        slug
-                        title
-                        fileTitle
-                      }
+                      ...DirectoryFields
                       children {
-                        internal {
-                          type
-                        }
                         ... on MarkdownRemark {
-                          fields {
-                            slug
-                            title
-                            fileTitle
-                            breadcrumbs
-                          }
-                          frontmatter {
-                            summary
-                          }
+                          ...FileFields
                         }
                         ... on Directory {
-                          relativePath
-                          fields {
-                            slug
-                            title
-                            fileTitle
-                          }
-                          children {
-                            internal {
-                              type
-                            }
-                            ... on MarkdownRemark {
-                              fields {
-                                slug
-                                title
-                                fileTitle
-                                breadcrumbs
-                              }
-                              frontmatter {
-                                summary
-                              }
-                            }
-                            ... on Directory {
-                              relativePath
-                              fields {
-                                slug
-                                title
-                                fileTitle
-                              }
-                              children {
-                                internal {
-                                  type
-                                }
-                                ... on MarkdownRemark {
-                                  fields {
-                                    slug
-                                    title
-                                    fileTitle
-                                    breadcrumbs
-                                  }
-                                  frontmatter {
-                                    summary
-                                  }
-                                }
-                              }                              
-                            }
-                          }                
+                          ...DirectoryFields
                         }
-                      }            
+                      }                              
                     }
-                  }
+                  }                
                 }
-              }
+              }            
             }
           }
-          
-        `
-        );
-        nodes = result.allDirectory.edges.map(e => e.node);
+        }
+        
+      }
     }
-    return nodes;
+  `
+  );
+  
+  nodes = result.allDirectory.nodes.map(node => ({
+    ...node,
+  }));
+
+  const mapFn = (node:GenericHierarchyNode): GenericHierarchyNode => {
+    const newNode = {
+      ...node,
+      children: node.children
+        ? node.children
+            .filter(c => !['_images', 'treeicons', 'index'].includes(c.fields.fileTitle))
+            .map(mapFn)
+        : [],
+      siblings: node.parent
+        ? nodes.filter(n => n.parent && n.parent.id === node.parent.id)
+        : [],
+    };
+
+    return newNode;
+  };
+  nodes = nodes.map(mapFn);
+
+  return nodes;
 };
 
 export default useNodeHierarchy;

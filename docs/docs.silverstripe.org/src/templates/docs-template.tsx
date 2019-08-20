@@ -13,7 +13,7 @@ const Template: StatelessComponent<SingleFileQuery> = (result) => {
     <Layout currentNode={result.data.markdownRemark}>
       <SEO title={fields.title} />
         <Content>
-            <div dangerouslySetInnerHTML={{ __html: parseHTML(html, currentNode) }} />
+            <div dangerouslySetInnerHTML={{ __html: parseHTML(html) }} />
         </Content>
     </Layout>
     );

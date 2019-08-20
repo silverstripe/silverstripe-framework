@@ -1,77 +1,26 @@
-import { useStaticQuery, graphql } from 'gatsby';
-import { NavigationItem } from '../types';
+import { GenericHierarchyNode } from '../types';
+import useNodeHierarchy from './useNodeHierarchy';
 
 let path: string | undefined;
-let node: NavigationItem | undefined;
+let currentNode: GenericHierarchyNode | null;
 
-const useCurrentNode = (): NavigationItem | null => {
-    if (!path || path !== window.location.pathname) {
-        path = window.location.pathname;
-        const result = useStaticQuery(graphql`
-            {
-                allMarkdownRemark {
-                    edges {
-                        node {
-                            html
-                            fields {
-                                title
-                                slug
-                                breadcrumbs
-                                fileTitle
-                            }
-                            frontmatter {
-                                summary
-                            }
-                            parent {
-                                ... on Directory {
-                                    fields {
-                                        title
-                                        slug
-                                        fileTitle
-                                    }
-                                    children {
-                                        ... on MarkdownRemark {
-                                            fields {
-                                                title
-                                                fileTitle
-                                                slug
-                                            }
-                                            frontmatter {
-                                                summary
-                                            }
-                                        }
-                                        ... on Directory {
-                                            fields {
-                                                title
-                                                slug
-                                                fileTitle
-                                            }
-                                            children {
-                                                ... on MarkdownRemark {
-                                                    fields {
-                                                        title
-                                                        fileTitle
-                                                        slug
-                                                    }
-                                                    frontmatter {
-                                                        summary
-                                                    }
-                                                }
-                                            }
-        
-                                        }
-                                    }
-                                }
-                            }
-                        }            
-                    }
-                }
+const useCurrentNode = (): GenericHierarchyNode | null => {
+    const browserPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+    if (!path || path !== browserPath) {
+        path = browserPath;
+        const nodes = useNodeHierarchy();
+        const finder = (node: GenericHierarchyNode): boolean => {
+            const { slug } = node.fields;
+            const { children } = node;
+            if (slug === path) {
+                currentNode = { ...node };
+                return true;
             }
-        `);
-        node = result.allMarkdownRemark.edges.find(e => e.node.fields.slug === path);
+            return children ? children.some(finder) : false;
+        }
+        nodes.some(finder);
     }
-
-    return node ? node.node : null;
+    return currentNode || null;
 };
 
 export default useCurrentNode;

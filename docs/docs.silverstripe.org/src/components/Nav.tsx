@@ -1,6 +1,6 @@
 import React, { StatelessComponent, ReactElement } from 'react';
 
-import { NavigationItem, NavigationNode } from '../types';
+import { GenericHierarchyNode } from '../types';
 import { Menu, MenuLabel, MenuList } from 'bloomer';
 import { Link } from 'gatsby';
 import ToggleableMenuItem from './ToggleableMenuItem';
@@ -21,9 +21,10 @@ const StickyNav = styled(Menu)`
 const Nav: StatelessComponent<{}> = () => {
     const nav = useNodeHierarchy();
     const currentNode = useCurrentNode();
-    const innerMapFn = (item: NavigationNode): ReactElement => {
-        const { slug, children } = item.fields;
-        const isInHierarchy = currentNode && currentNode.fields.breadcrumbs.includes(slug.slice(0, -1));
+    const innerMapFn = (item: GenericHierarchyNode): ReactElement => {
+        const { slug } = item.fields;
+        const { children } = item;
+        const isInHierarchy = currentNode ? currentNode.fields.breadcrumbs.includes(slug.slice(0, -1)) : false;
         return (
             <MenuList key={slug}>
                 <ToggleableMenuItem
@@ -37,9 +38,9 @@ const Nav: StatelessComponent<{}> = () => {
         );
     };
     
-    const outerMapFn = (item: NavigationItem): ReactElement[] => {
+    const outerMapFn = (item: GenericHierarchyNode): ReactElement[] => {
         const { slug, title } = item.fields;
-        const childItems = item.children.filter(n => n.fields.title !== 'index').sort(sortFiles);
+        const childItems = item.children.sort(sortFiles);
         const items = [];
         
         if (childItems.length) {
@@ -58,10 +59,10 @@ const Nav: StatelessComponent<{}> = () => {
         
         return items;
     };
-    
+    const top = nav.find(n => n.fields.slug === '/');
     return (
-        <StickyNav>
-            {nav.filter(n => n.fields.title !== 'index').sort(sortFiles).map(outerMapFn)}
+        <StickyNav className="is-hidden-mobile">
+            {top && top.children.sort(sortFiles).map(outerMapFn)}
         </StickyNav>
 
     )

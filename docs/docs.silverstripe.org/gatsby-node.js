@@ -33,11 +33,18 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
         name: `title`,
         value: fileToTitle(fileTitle)
       });
+      const slug = createSlug(filePath);
       createNodeField({
         node,
         name: `slug`,
-        value: createSlug(filePath),
-      })
+        value: slug,
+      });
+
+      createNodeField({
+        node,
+        name: `breadcrumbs`,
+        value: buildBreadcrumbs(slug),
+      });
 
       const parentDirectory = path.normalize(node.dir + '/');
       const parent = getNodesByType('Directory').find(
@@ -65,10 +72,21 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
             name: `slug`,
             value: slug
         });
+        let parentDirectory = path.dirname(node.fileAbsolutePath);
+        const parent = getNodesByType('Directory').find(
+          n => path.normalize(n.absolutePath + '/') === `${parentDirectory}/`
+        );
 
         const fileTitle = path.basename(node.fileAbsolutePath, '.md');
         const isIndex = fileTitle === 'index';
-        const title = node.frontmatter.title || fileToTitle(fileTitle);
+        let { title } = node.frontmatter;
+        if (!title) {
+          if (isIndex && parent) {
+            title = parent.fields.title
+          } else {
+            title = fileToTitle(fileTitle);
+          }
+        }
 
         createNodeField({
             node,
@@ -87,45 +105,37 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
           value: buildBreadcrumbs(slug),
         });
         
-        let parentDirectory = path.dirname(node.fileAbsolutePath);
-        const parent = getNodesByType('Directory').find(
-          n => path.normalize(n.absolutePath + '/') === `${parentDirectory}/`
-        );
         if (parent) {
           node.parent = parent.id
           createParentChildLink({
               child: node,
               parent: parent
-          })
+          });
+          if (isIndex) {
+            parent.indexFile___NODE = node.id;
+          }
         }            
-
-
     }
-
 }
 exports.createPages = async ({ actions, graphql }) => {
   const { createPage, createNode } = actions;
   const docTemplate = path.resolve(`src/templates/docs-template.tsx`);
   const result = await graphql(`
   {
-    allDirectory {
-      edges {
-        node {
-          dir
-          absolutePath
-        }
+    allDirectory(filter: { base: { ne: "_images" }}) {
+      nodes {
+        dir
+        absolutePath
       }
     }
     allMarkdownRemark(filter: {fields: { fileTitle: { ne: "" } }}) {
-      edges {
-        node {
-          fileAbsolutePath
-          fields {
-            slug
-          }
-          frontmatter {
-            title
-          }
+      nodes {
+        fileAbsolutePath
+        fields {
+          slug
+        }
+        frontmatter {
+          title
         }
       }
     }
@@ -136,8 +146,8 @@ exports.createPages = async ({ actions, graphql }) => {
         console.log(result.errors);
         throw new Error(result.errors);
     }
-    result.data.allMarkdownRemark.edges
-        .forEach(({ node }) => {
+    result.data.allMarkdownRemark.nodes
+        .forEach(node => {
             createPage({
                 path: node.fields.slug,
                 component: docTemplate,

@@ -1,72 +1,81 @@
 import { ReactElement } from 'react';
 
-export interface NavigationFields {
-    slug: string;
-    parentSlug: string;
-    fileTitle: string;
-    filePath: string;
-    relativeDirectory: string;    
-    title: string;
-    dir: string;
-    breadcrumbs: string[];
-    isFolder: boolean;
-}
-
-export interface NavigationNode {
-    html: string;
-    fileAbsoultePath: string;
-    fields: NavigationFields;
-    frontmatter: FrontMatter;
-}
-
-export interface AllFilesEdge {
-    node: NavigationNode;
-}
-
-export interface AllFilesResult {
-    edges: AllFilesEdge[];
-}
-
-export interface AllFilesData {
-    allMarkdownRemark: AllFilesResult;
-}
-
-export interface AllFilesQuery {
-    data: AllFilesData
-}
-
-export interface NavigationItem {
-    children: NavigationItem[];
-    node: NavigationNode;
-}
-
-export interface FrontMatter {
-    title: string,
-    summary: string,
-    introduction: string,
-}
-
-export interface MarkdownRemark {
-    markdownRemark: Page
-}
-
-export interface PageType {
-    html: string,
-    frontmatter: FrontMatter
-}
-
-export interface Page {
-    page: PageType,
-    html: string,
-    fields: NavigationFields,
-}
 
 export interface SingleFileQuery {
-    data: MarkdownRemark
-}
+    data: SingleFileResult
+};
+
+export interface SingleFileResult {
+    markdownRemark: SinglePage
+};
+
+export interface SinglePage {
+    html: string,
+    fields: SinglePageFields
+};
+
+export interface SinglePageFields {
+    title: string;
+};
+
+export interface HierarchyFields {
+    slug: string;
+    title: string;
+    fileTitle: string;
+    breadcrumbs: string[],
+};
+
+export interface HierarchyParentNode {
+    id: string;
+};
+
+export interface HierarchyFrontmatter {
+    summary?: string,
+};
+
+export interface HierarchyFileNode {
+    relativeDirectory: string;
+    id: string;
+    fields: HierarchyFields;
+    parent: HierarchyParentNode;
+    frontmatter: HierarchyFrontmatter;
+};
+
+export interface HierarchyDirectoryFields {
+    slug: string;
+    title: string;
+    fileTitle: string;
+};
+
+export interface HierarchyDirectoryNode {
+    relativeDirectory: string;
+    indexFile: HierarchyFileNode;
+    parent: HierarchyParentNode;
+    fields: HierarchyFields;
+};
+
+export interface GenericHierarchyNode extends HierarchyDirectoryNode, HierarchyFileNode {
+    __typename: string;
+    children: GenericHierarchyNode[];
+    siblings: GenericHierarchyNode[];
+};
+
+export interface HierarchyResult {
+    nodes: GenericHierarchyNode[]
+};
+
+export interface HierarchyQuery {
+    allDirectory: HierarchyResult;
+};
+
+export interface ChildrenOfProps {
+    folderName?: string;
+    exclude?: string;
+    currentNode: GenericHierarchyNode;
+};
 
 export interface MenuItemProps {
     active: boolean,
-    item: NavigationItem,
-    mapFn(item: NavigationItem): ReactElement,
+    item: GenericHierarchyNode,
+    mapFn(item: GenericHierarchyNode): ReactElement,
 }

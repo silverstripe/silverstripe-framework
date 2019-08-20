@@ -12,8 +12,8 @@ const Item = styled.li`
 `;
 
 const Toggle = styled.span`
-    position:absolute;
-    right: 4rem;
+    display: inline-block;
+    margin-left: 1rem;
 
 `;
 
@@ -23,13 +23,13 @@ const ToggleableMenuItem: StatelessComponent<MenuItemProps> = ({ item, mapFn, ac
     const { children } = item;
     return (
         <Item>
-        <Link activeClassName={`is-active`} to={slug}>
+            <Link activeClassName={`is-active`} to={item.indexFile ? slug : '#'}>
             <span>{title}</span>
-            {children &&
+            {!!children.length &&
                 <Toggle onClick={(e) => {e.preventDefault(); setOpen(!isOpen)}}>{isOpen ? '▼' : '▲'}</Toggle>
             }
         </Link>
-        {isOpen && children &&   
+        {isOpen && !!children.length &&   
             <MenuList>
                 {children.filter(n => n.fields.title !== 'index').sort(sortFiles).map(mapFn)}
             </MenuList>

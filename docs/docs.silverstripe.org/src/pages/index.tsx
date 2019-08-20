@@ -19,12 +19,15 @@ const IndexPage: StatelessComponent<SingleFileQuery> = ({ data: { markdownRemark
 export default IndexPage;
 
 export const pageQuery = graphql`
-query {
+query IndexPage {
   markdownRemark(fields: {
     slug: {
       eq: "/"
     }
   }) {
     html
-  }
+    fields {
+        title
+    }
+}
 }`;

@@ -14,9 +14,9 @@ const parseHTML = (html: string): string => {
     );
     
     parsed = parsed.replace(
-        /\[CHILDREN Folder="?([A-Za-z0-9_]+)"?\]/g,
-        function (match: string, folderName: string) {
-            console.log(match, folderName);
+        /\[CHILDREN Folder="?([A-Za-z0-9_<>\/]+)"?\]/g,
+        function (match: string, capture: string) {
+            const folderName = capture.replace(/<\/?em>/g, '_');            
             return ReactDOMServer.renderToStaticMarkup(
                 React.createElement(ChildrenOf, { folderName, currentNode })
             );     
