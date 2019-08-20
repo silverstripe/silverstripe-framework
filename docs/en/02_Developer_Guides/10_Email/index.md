@@ -1,4 +1,6 @@
+---
 summary: Send HTML and plain text email from your SilverStripe application.
+---
 
 # Email
 

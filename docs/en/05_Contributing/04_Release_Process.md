@@ -1,4 +1,6 @@
+---
 summary: Describes the process followed for "core" releases.
+---
 
 # Release Process
 
