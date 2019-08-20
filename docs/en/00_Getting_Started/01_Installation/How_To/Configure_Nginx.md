@@ -55,6 +55,11 @@ server {
       return 403;
   }
 
+  # Protect the .protected folder
+  location ~ ^/assets/.protected/ {
+      return 403;
+  }
+
   # Handle allowed file types (see caveats)
   # Pass unfound files to SilverStripe to check draft images
   location ~ ^/assets/.*\.(?i:css|js|ace|arc|arj|asf|au|avi|bmp|bz2|cab|cda|csv|dmg|doc|docx|dotx|flv|gif|gpx|gz|hqx|ico|jpeg|jpg|kml|m4a|m4v|mid|midi|mkv|mov|mp3|mp4|mpa|mpeg|mpg|ogg|ogv|pages|pcx|pdf|png|pps|ppt|pptx|potx|ra|ram|rm|rtf|sit|sitx|tar|tgz|tif|tiff|txt|wav|webm|wma|wmv|xls|xlsx|xltx|zip|zipx)$ {
