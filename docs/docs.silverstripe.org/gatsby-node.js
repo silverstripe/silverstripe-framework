@@ -113,6 +113,7 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
           });
           if (isIndex) {
             parent.indexFile___NODE = node.id;
+            parent.fields.title = title;
           }
         }            
     }

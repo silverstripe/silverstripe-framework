@@ -14,27 +14,31 @@ const ChildrenBlock = styled.div`
 const StretchContent = styled(CardContent)`
     flex-grow: 1;
 `;
+
+const FlexCard = styled(Card)`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+`
 const createChildren = (children: GenericHierarchyNode[]): ReactElement[] => {
     return children.map(child => {
         const content = child.indexFile && child.indexFile.frontmatter.summary;
         return (
-            <Card key={child.fields.slug}>
+            <FlexCard key={child.fields.slug}>
                 <CardHeader>
                     <CardHeaderTitle>
-                        {child.indexFile ? child.indexFile.fields.title : child.fields.slug}
+                        {child.fields.title}
                     </CardHeaderTitle>
                 </CardHeader>
-                {content && 
                 <StretchContent>
-                    {content}
-                </StretchContent>
-                }
+                    {content || ''}
+                </StretchContent>            
                 <CardFooter>
                     <CardFooterItem>   
                         <Link to={child.fields.slug}>View</Link>
                     </CardFooterItem>
                 </CardFooter>
-            </Card>
+            </FlexCard>
         );
     })
 
@@ -47,11 +51,9 @@ const ChildrenOf: StatelessComponent<ChildrenOfProps> = ({ folderName, exclude, 
     if (!folderName && !exclude) {
         children = createChildren((currentNode.siblings || []).filter(c => c.__typename === 'MarkdownRemark'));
     } else if (folderName) {
-        console.log('current node', currentNode);
         const targetFolder = currentNode.children.find(
             child => child.fields.fileTitle === folderName && child.__typename === 'Directory'
         );
-        console.log('the target folder is', targetFolder);
         children = targetFolder ? createChildren(targetFolder.children) : [];
     } else if (exclude) {
         children = createChildren(

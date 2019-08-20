@@ -2,7 +2,7 @@ import React, { StatelessComponent } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
-import { NavigationFields, SingleFileQuery } from '../types';
+import { SingleFileQuery } from '../types';
 import { Content } from 'bloomer/lib/elements/Content';
 import parseHTML from '../utils/parseHTML';
 

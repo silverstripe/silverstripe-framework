@@ -23,7 +23,7 @@ const ToggleableMenuItem: StatelessComponent<MenuItemProps> = ({ item, mapFn, ac
     const { children } = item;
     return (
         <Item>
-            <Link activeClassName={`is-active`} to={item.indexFile ? slug : '#'}>
+            <Link activeClassName={`is-active`} to={item.__typename === 'MarkdownRemark' || item.indexFile ? slug : '#'}>
             <span>{title}</span>
             {!!children.length &&
                 <Toggle onClick={(e) => {e.preventDefault(); setOpen(!isOpen)}}>{isOpen ? '▼' : '▲'}</Toggle>
