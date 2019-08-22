@@ -67,8 +67,7 @@
         },
         "expose": [
             "client/images",
-            "client/styles",
-            "src/Dev/Install/client"
+            "client/styles"
         ]
     },
     "autoload": {
