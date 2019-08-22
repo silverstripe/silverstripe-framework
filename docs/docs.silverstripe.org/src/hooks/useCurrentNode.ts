@@ -1,8 +1,8 @@
 import { GenericHierarchyNode } from '../types';
 import useNodeHierarchy from './useNodeHierarchy';
 
-let path: string | undefined;
-let currentNode: GenericHierarchyNode | null;
+let path: string | null = null;
+let currentNode: GenericHierarchyNode | null = null;
 
 const useCurrentNode = (): GenericHierarchyNode | null => {
     const browserPath = typeof window !== 'undefined' ? window.location.pathname : '/';

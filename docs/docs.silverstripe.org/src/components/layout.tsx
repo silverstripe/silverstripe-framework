@@ -74,10 +74,10 @@ const Layout: StatelessComponent<LayoutProps> = ({ children}) => {
           <Container isFluid>
           <Section>      
           <Columns>
-            <Column isSize='1/4'>
+            <Column isSize="1/4">
               <Nav />
             </Column>
-            <Column>
+            <Column isSize="3/4">
               {children}
             </Column>
           </Columns>

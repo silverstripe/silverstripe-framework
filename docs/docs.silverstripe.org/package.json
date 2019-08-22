@@ -33,6 +33,7 @@
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
     "react-spring": "^8.0.27",
+    "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {

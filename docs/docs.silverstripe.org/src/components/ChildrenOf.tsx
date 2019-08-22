@@ -22,7 +22,7 @@ const FlexCard = styled(Card)`
 `
 const createChildren = (children: GenericHierarchyNode[]): ReactElement[] => {
     return children.map(child => {
-        const content = child.indexFile && child.indexFile.frontmatter.summary;
+        const content = child.indexFile ? child.indexFile.frontmatter.summary : child.frontmatter && child.frontmatter.summary;
         return (
             <FlexCard key={child.fields.slug}>
                 <CardHeader>
@@ -49,15 +49,17 @@ const ChildrenOf: StatelessComponent<ChildrenOfProps> = ({ folderName, exclude, 
     }
     let children: ReactElement[] = [];
     if (!folderName && !exclude) {
-        children = createChildren((currentNode.siblings || []).filter(c => c.__typename === 'MarkdownRemark'));
+        const sourceNodes = currentNode.indexFile ? currentNode.children : currentNode.siblings;
+        children = createChildren(sourceNodes.filter(c => c.__typename === 'MarkdownRemark'));
     } else if (folderName) {
         const targetFolder = currentNode.children.find(
-            child => child.fields.fileTitle === folderName && child.__typename === 'Directory'
+            child => child.fields.fileTitle.toLowerCase() === folderName.toLowerCase() && child.__typename === 'Directory'
         );
         children = targetFolder ? createChildren(targetFolder.children) : [];
     } else if (exclude) {
+        const exclusions = exclude.split(',').map(e => e.toLowerCase());
         children = createChildren(
-            currentNode.children.filter(child => child.fields.fileTitle === exclude)
+            currentNode.children.filter(child => !exclusions.includes(child.fields.fileTitle.toLowerCase()))
         );
     }
 

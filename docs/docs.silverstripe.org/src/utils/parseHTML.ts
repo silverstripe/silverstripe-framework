@@ -23,7 +23,7 @@ const parseHTML = (html: string): string => {
         }
     );
     parsed = parsed.replace(
-        /\[CHILDREN Exclude="?([A-Za-z0-9_]+)"?\]/g,
+        /\[CHILDREN Exclude="?([A-Za-z0-9_,]+)"?\]/g,
         function (match: string, exclude: string) {
             return ReactDOMServer.renderToStaticMarkup(
                 React.createElement(ChildrenOf, { exclude, currentNode })

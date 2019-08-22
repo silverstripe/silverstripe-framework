@@ -1,39 +1,56 @@
-import React, { useState, StatelessComponent } from 'react';
-import { MenuList, Icon } from 'bloomer';
+import React, { useState, StatelessComponent, MouseEvent } from 'react';
 import { Link } from 'gatsby';
 import styled from 'styled-components';
 import { MenuItemProps } from '../types';
 import sortFiles from '../utils/sortFiles';
+import useMeasure from '../hooks/useMeasure';
+import usePrevious from '../hooks/usePrevious';
+import { useSpring, animated } from 'react-spring';
 
 const Item = styled.li`
-    a {
-        display: flex;
-    }
+    position: relative;
 `;
 
 const Toggle = styled.span`
-    display: inline-block;
-    margin-left: 1rem;
-
+    margin-left: 2rem;
 `;
 
 const ToggleableMenuItem: StatelessComponent<MenuItemProps> = ({ item, mapFn, active }) => {
-    const [ isOpen, setOpen ] = useState(active);    
+    const [bind, { height: viewHeight }] = useMeasure()  
+    const [ isOpen, setOpen ] = useState(active);  
+    const previous = usePrevious(isOpen)    
+    const { height, opacity } = useSpring({
+        from: { height: 0, opacity: 0 },
+        to: { height: isOpen ? viewHeight : 0, opacity: isOpen ? 1 : 0 }
+      })
+    
     const { slug, title } = item.fields;
     const { children } = item;
+    const toggle = (e: MouseEvent<HTMLAnchorElement>) => {
+
+        e.stopPropagation();
+        e.preventDefault();
+        console.log('set open', !isOpen);
+        setOpen(!isOpen)
+    };
+    const deadLink  = item.__typename === 'Directory' && !item.indexFile;
+    const onClick = deadLink ? toggle : undefined;
+    const to = deadLink ? '#' : slug;
     return (
         <Item>
-            <Link activeClassName={`is-active`} to={item.__typename === 'MarkdownRemark' || item.indexFile ? slug : '#'}>
+            <Link activeClassName={`is-active`} to={to} onClick={onClick}>
             <span>{title}</span>
             {!!children.length &&
-                <Toggle onClick={(e) => {e.preventDefault(); setOpen(!isOpen)}}>{isOpen ? '▼' : '▲'}</Toggle>
+                <Toggle onClick={toggle}>{isOpen ? '▼' : '▲'}</Toggle>
             }
-        </Link>
-        {isOpen && !!children.length &&   
-            <MenuList>
+
+        </Link>        
+
+            <animated.div style={{ opacity, height: isOpen && previous === isOpen ? 'auto' : height }}>
+                <animated.ul className="menu-list" {...bind}>
                 {children.filter(n => n.fields.title !== 'index').sort(sortFiles).map(mapFn)}
-            </MenuList>
-        }
+                </animated.ul>
+            </animated.div>        
       </Item>
     );
 };

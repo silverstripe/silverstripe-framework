@@ -71,7 +71,7 @@ export interface HierarchyQuery {
 export interface ChildrenOfProps {
     folderName?: string;
     exclude?: string;
-    currentNode: GenericHierarchyNode;
+    currentNode: GenericHierarchyNode | null;
 };
 
 export interface MenuItemProps {
