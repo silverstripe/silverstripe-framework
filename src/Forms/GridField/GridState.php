@@ -59,12 +59,24 @@ class GridState extends HiddenField
 
     public function setValue($value, $data = null)
     {
-        if (is_string($value)) {
-            $this->data = new GridState_Data(json_decode($value, true));
+        // Apply the value on top of the existing defaults
+        $data = json_decode($value, true);
+        if ($data) {
+            $this->mergeValues($this->getData(), $data);
         }
-
         parent::setValue($value);
         return $this;
+    }
+
+    private function mergeValues(GridState_Data $data, array $array): void
+    {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                $this->mergeValues($data->$k, $v);
+            } else {
+                $data->$k = $v;
+            }
+        }
     }
 
     /**
@@ -98,7 +110,7 @@ class GridState extends HiddenField
             return json_encode([]);
         }
 
-        return json_encode($this->data->toArray());
+        return json_encode($this->data->getChangesArray());
     }
 
     /**

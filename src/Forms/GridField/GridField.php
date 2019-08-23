@@ -156,8 +156,6 @@ class GridField extends FormField
 
         $this->setConfig($config);
 
-        $this->state = new GridState($this);
-
         $this->addExtraClass('grid-field');
     }
 
@@ -407,11 +405,29 @@ class GridField extends FormField
      */
     public function getState($getData = true)
     {
+        // Initialise state on first call. This ensures it's evaluated after components have been added
+        if (!$this->state) {
+            $this->initState();
+        }
+
         if ($getData) {
             return $this->state->getData();
         }
 
         return $this->state;
+    }
+
+    private function initState(): void
+    {
+        $this->state = new GridState($this);
+
+        $data = $this->state->getData();
+
+        foreach ($this->getComponents() as $item) {
+            if ($item instanceof GridField_StateProvider) {
+                $item->initDefaultState($data);
+            }
+        }
     }
 
     /**

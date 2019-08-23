@@ -79,4 +79,19 @@ class GridFieldStateManagerTest extends SapphireTest
 
         $this->assertEquals($state, $result);
     }
+
+    public function testDefaultStateLeavesURLUnchanged()
+    {
+        $manager = new GridFieldStateManager();
+        $grid = new GridField('TestGrid');
+        $grid->getState()->initDefaults(['testValue' => 'foo']);
+        $link = '/link-to/something';
+
+        $this->assertEquals('[]', $grid->getState(false)->Value());
+
+        $this->assertEquals(
+            '/link-to/something',
+            $manager->addStateToURL($grid, $link)
+        );
+    }
 }
