@@ -333,7 +333,7 @@ any requests to the assets directory. Invalid files will be blocked regardless o
 exist or not, and will not invoke any PHP processes.
 </div>
 
-### Configuring: Protected file headers
+### Configuring: Protected file headers {#protected_file_headers}
 
 In certain situations, it's necessary to customise HTTP headers required either by
 intermediary caching services, or by the client, or upstream caches.
