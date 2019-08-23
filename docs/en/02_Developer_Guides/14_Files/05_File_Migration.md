@@ -100,6 +100,23 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   keep_archived_assets: true
 ```
 
+## Review draft/protected files served through PHP
+
+In SilverStripe 3.x, files were always public. This allowed them to be served
+directly by your webserver without performing any checks in PHP logic (e.g. permissions).
+
+In SilverStripe 4.x, this behaviour is retained for public and unprotected files.
+If files are in draft, or are protected by additional permission checks,
+they are now served via PHP. Although those additional requests are fairly lightweight,
+you need to take them into account in your capacity planning (e.g. max workers configuration).
+
+Webserver environments handle HTTP responses for files,
+for example adding `Content-Type`, or adding cache headers configured
+via `.htaccess` or other webserver configuration options.
+These headers impact the behaviour of how browsers and intermediary layers
+such as proxies and CDNs. See [File Security: Allowed extensions](file_security#allowed_extensions)
+and [File Security: Protected file headers](file_security#protected_file_headers) for details.
+
 ## Migrating substantial numbers of files {#performance}
 
 The time it takes to run the file migration will depend on the number of files and their size. The generation of thumbnails will depend on the number and dimension of your images.
