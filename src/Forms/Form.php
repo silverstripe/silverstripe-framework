@@ -1462,16 +1462,29 @@ class Form extends ViewableData implements HasRequestHandler
             $val = null;
 
             if (is_object($data)) {
-                $exists = (
-                    isset($data->$name) ||
-                    $data->hasMethod($name) ||
-                    ($data->hasMethod('hasField') && $data->hasField($name))
-                );
+                // Allow dot-syntax traversal of has-one relations fields
+                if (strpos($name, '.') !== false && $data->hasMethod('relField')) {
+                    $val = $data->relField($name);
+                    $exists = true;
 
-                if ($exists) {
-                    $val = $data->__get($name);
+                // Regular ViewableData access
+                } else {
+                    $exists = (
+                        isset($data->$name) ||
+                        $data->hasMethod($name) ||
+                        ($data->hasMethod('hasField') && $data->hasField($name))
+                    );
+
+                    if ($exists) {
+                        $val = $data->__get($name);
+                    }
                 }
+
+            // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
+                // PHP turns the '.'s in POST vars into '_'s
+                $name = str_replace('.', '_', $name);
+
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
