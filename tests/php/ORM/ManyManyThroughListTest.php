@@ -6,6 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\Item;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
@@ -75,6 +76,14 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertNotNull($item2->getJoin());
         $this->assertEquals('join 2', $item2->getJoin()->Title);
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
+
+        // Check that the join record is set for new records added
+        $item3 = new Item;
+        $this->assertNull($item3->getJoin());
+        $parent->Items()->add($item3);
+        $expectedJoinObject = ManyManyThroughListTest\JoinObject::get()->filter(['ParentID' => $parent->ID, 'ChildID' => $item3->ID ])->first();
+        $this->assertEquals($expectedJoinObject->ID, $item3->getJoin()->ID);
+        $this->assertEquals(get_class($expectedJoinObject), get_class($item3->getJoin()));
     }
 
     /**
