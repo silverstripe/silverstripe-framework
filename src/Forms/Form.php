@@ -1482,12 +1482,14 @@ class Form extends ViewableData implements HasRequestHandler
 
             // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
-                // PHP turns the '.'s in POST vars into '_'s
-                $name = str_replace('.', '_', $name);
 
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
+                // PHP turns the '.'s in POST vars into '_'s
+                } elseif (array_key_exists($altName = str_replace('.', '_', $name), $data)) {
+                    $exists = true;
+                    $val = $data[$altName];
                 } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
                     // If field is in array-notation we need to access nested data
                     //discard first match which is just the whole string
