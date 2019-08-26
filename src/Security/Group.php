@@ -115,6 +115,11 @@ class Group extends DataObject
      */
     public function getCMSFields()
     {
+        $list = Group::get()->exclude('ID', $this->ID);
+        $groups = new ArrayList();
+        foreach($list as $grp){
+            $groups->push(['ID' => $grp->ID, 'Title' => html_entity_decode($grp->Breadcrumbs)]);
+        }
         $fields = new FieldList(
             new TabSet(
                 "Root",
@@ -125,7 +130,7 @@ class Group extends DataObject
                     $parentidfield = DropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+                        $groups
                     )->setEmptyString(' '),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),
