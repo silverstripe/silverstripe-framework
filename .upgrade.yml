@@ -180,6 +180,9 @@ mappings:
   ManifestFileFinder: SilverStripe\Core\Manifest\ManifestFileFinder
   ErrorControlChain: SilverStripe\Core\Startup\ErrorControlChain
   ParameterConfirmationToken: SilverStripe\Core\Startup\ParameterConfirmationToken
+  DatabaseAdapterRegistry: SilverStripe\Dev\Install\DatabaseAdapterRegistry
+  DatabaseConfigurationHelper: SilverStripe\Dev\Install\DatabaseConfigurationHelper
+  MySQLDatabaseConfigurationHelper: SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper
   SS_Backtrace: SilverStripe\Dev\Backtrace
   SilverStripe\Dev\SS_Backtrace: SilverStripe\Dev\Backtrace
   BehatFixtureFactory: SilverStripe\Dev\BehatFixtureFactory
