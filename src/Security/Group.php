@@ -117,7 +117,7 @@ class Group extends DataObject
     {
         $list = Group::get()->exclude('ID', $this->ID);
         $groups = new ArrayList();
-        foreach($list as $grp){
+        foreach ($list as $grp) {
             $groups->push(['ID' => $grp->ID, 'Title' => html_entity_decode($grp->Breadcrumbs)]);
         }
         $fields = new FieldList(
