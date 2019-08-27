@@ -106,7 +106,15 @@ class Group extends DataObject
         return $doSet;
     }
     
-    private function getGroups
+    private function getDecodedBreadcrumbs()
+    {
+        $list = Group::get()->exclude('ID', $this->ID);
+        $groups = ArrayList::create();
+        foreach ($list as $group) {
+            $groups->push(['ID' => $group->ID, 'Title' => Convert::xml2raw($group->Breadcrumbs)]);
+        }
+        return $groups;
+    }
 
     /**
      * Caution: Only call on instances, not through a singleton.
@@ -117,11 +125,7 @@ class Group extends DataObject
      */
     public function getCMSFields()
     {
-        $list = Group::get()->exclude('ID', $this->ID);
-        $groups = ArrayList::create();
-        foreach ($list as $group) {
-            $groups->push(['ID' => $group->ID, 'Title' => Convert::xml2raw($group->Breadcrumbs)]);
-        }
+        $groups = $this->getDecodedBreadcrumbs();
         $fields = new FieldList(
             new TabSet(
                 "Root",
