@@ -105,6 +105,8 @@ class Group extends DataObject
 
         return $doSet;
     }
+    
+    private function getGroups
 
     /**
      * Caution: Only call on instances, not through a singleton.
@@ -116,9 +118,9 @@ class Group extends DataObject
     public function getCMSFields()
     {
         $list = Group::get()->exclude('ID', $this->ID);
-        $groups = new ArrayList();
-        foreach ($list as $grp) {
-            $groups->push(['ID' => $grp->ID, 'Title' => html_entity_decode($grp->Breadcrumbs)]);
+        $groups = ArrayList::create();
+        foreach ($list as $group) {
+            $groups->push(['ID' => $group->ID, 'Title' => Convert::xml2raw($group->Breadcrumbs)]);
         }
         $fields = new FieldList(
             new TabSet(
