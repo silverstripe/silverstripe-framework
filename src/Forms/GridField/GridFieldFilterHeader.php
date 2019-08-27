@@ -494,6 +494,19 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         } else {
             $fieldSchema = $this->getSearchFieldSchema($gridField);
             $forTemplate->SearchFieldSchema = $fieldSchema;
+
+            // Coupling with React component. :-(
+            $parsed = json_decode($fieldSchema, true);
+            $key = sprintf(
+                '%s__%s',
+                $parsed['gridfield'] ?? '',
+                $parsed['name'] ?? ''
+            );
+            //
+
+            $shouldDisplay = (bool) Controller::curr()->getRequest()->getVar($key);
+            $forTemplate->ShouldDisplay = $shouldDisplay;
+
             $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', __CLASS__);
             return [
                 'before' => $forTemplate->renderWith($searchTemplates),

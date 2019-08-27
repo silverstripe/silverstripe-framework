@@ -1,1 +1,1 @@
-<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden" data-schema="$SearchFieldSchema"></div>
+<div class="search-holder grid-field__search-holder <% if not $ShouldDisplay %>grid-field__search-holder--hidden<% end_if %>" data-schema="$SearchFieldSchema" <% if $ShouldDisplay %>data-auto-submit="1"<% end_if %>></div>
