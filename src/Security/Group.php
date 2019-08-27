@@ -125,7 +125,6 @@ class Group extends DataObject
      */
     public function getCMSFields()
     {
-        $groups = $this->getDecodedBreadcrumbs();
         $fields = new FieldList(
             new TabSet(
                 "Root",
@@ -136,7 +135,7 @@ class Group extends DataObject
                     $parentidfield = DropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        $groups
+                        $this->getDecodedBreadcrumbs()
                     )->setEmptyString(' '),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),
