@@ -350,15 +350,23 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     {
         $actions = FieldList::create();
 
+        $majorActions = CompositeField::create()->setName('MajorActions');
+        $majorActions->setFieldHolderTemplate(get_class($majorActions) . '_holder_buttongroup');
+        $actions->push($majorActions);
+
         if ($this->record->ID !== 0) { // existing record
             if ($this->record->canEdit()) {
-                $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
+                $noChangesClasses = 'btn-outline-primary font-icon-tick';
+                $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
+                    ->addExtraClass($noChangesClasses)
+                    ->setAttribute('data-btn-alternate-add', 'btn-primary font-icon-save')
+                    ->setAttribute('data-btn-alternate-remove', $noChangesClasses)
                     ->setUseButtonTag(true)
-                    ->addExtraClass('btn-primary font-icon-save'));
+                    ->setAttribute('data-text-alternate', _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save')));
             }
 
             if ($this->record->canDelete()) {
-                $actions->push(FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
+                $actions->insertAfter('MajorActions', FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
             }
@@ -370,7 +378,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $actions->push($this->getRightGroupField());
         } else { // adding new record
             //Change the Save label to 'Create'
-            $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
+            $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)
                 ->addExtraClass('btn-primary font-icon-plus-thin'));
 
@@ -384,7 +392,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     $oneLevelUp->Link, // url
                     _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );
-                $actions->push(new LiteralField('cancelbutton', $text));
+                $actions->insertAfter('MajorActions', new LiteralField('cancelbutton', $text));
             }
         }
 
