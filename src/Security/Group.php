@@ -83,15 +83,6 @@ class Group extends DataObject
 
     private static $table_name = "Group";
 
-    public function populateDefaults()
-    {
-        parent::populateDefaults();
-
-        if (!$this->Title) {
-            $this->Title = _t(__CLASS__ . '.NEWGROUP', "New Group");
-        }
-    }
-
     public function getAllChildren()
     {
         $doSet = new ArrayList();
