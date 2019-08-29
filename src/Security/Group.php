@@ -111,7 +111,7 @@ class Group extends DataObject
         $list = Group::get()->exclude('ID', $this->ID);
         $groups = ArrayList::create();
         foreach ($list as $group) {
-            $groups->push(['ID' => $group->ID, 'Title' => Convert::xml2raw($group->Breadcrumbs)]);
+            $groups->push(['ID' => $group->ID, 'Title' => $group->getBreadcrumbs(' » ')]);
         }
         return $groups;
     }
