@@ -612,9 +612,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $this->record = $this->record->newClassInstance($newClassName);
         }
 
-        // Save form and any extra saved data into this dataobject
+        // Save form and any extra saved data into this dataobject.
+        // Set writeComponents = true to write has-one relations / join records
         $form->saveInto($this->record);
-        $this->record->write();
+        $this->record->write(false, false, false, true);
         $this->extend('onAfterSave', $this->record);
 
         $extraData = $this->getExtraSavedData($this->record, $list);
