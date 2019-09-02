@@ -96,7 +96,7 @@ class DBForeignKey extends DBInt
             // Remove distinct. Applying distinct shouldn't be required provided relations are not applied.
             $dataQuery->setDistinct(false);
 
-            $dataQuery->setSelect(['over_threshold' => 'count(*) > ' . (int) $threshold]);
+            $dataQuery->setSelect(['over_threshold' => '(CASE WHEN count(*) > ' . (int)$threshold . ' THEN 1 ELSE 0 END)']);
             $result = $dataQuery->execute()->column('over_threshold');
 
             // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
