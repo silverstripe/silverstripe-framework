@@ -22,7 +22,7 @@ You can check them out on github:
 The first one adds extra metadata to versions about object parents at the moment of version creation.
 The second module extends CMS History UI adding control over nested objects.
 
-<img width="600" src="../../_images/snapshot-admin.png" width="600">
+![](../../_images/snapshot-admin.png)
 
 *Example screenshot from versioned-snapshot-admin*
 </div>
@@ -53,7 +53,7 @@ whenever that page is.
 
 This is solved through the Ownership API, which declares a two-way relationship between
 objects along database relations. This relationship is similar to many_many/belongs_many_many
-and has_one/has_many, however it relies on a pre-existing relationship to function. 
+and has_one/has_many, however it relies on a pre-existing relationship to function.
 
 #### Cascade publishing
 
@@ -66,7 +66,7 @@ A non-recursive publish operation is also available if you want to publish a new
 <div class="alert" markdown="1">
 Declaring ownership implies publish permissions on owned objects.
 Built-in controllers using cascading publish operations check canPublish()
-on the owner, but not on the owned object.   
+on the owner, but not on the owned object.
 </div>
 
 #### Ownership of unversioned object
@@ -83,9 +83,9 @@ This behavior works both for versioned and unversioned objects.
 
 ### Grouping versioned DataObjects into a ChangeSet (aka Campaigns)
 
-Sometimes, multiple pages or records may be related in organic ways that can not be properly expressed through an ownership relation. There's still value in being able to publish those as a block. 
+Sometimes, multiple pages or records may be related in organic ways that can not be properly expressed through an ownership relation. There's still value in being able to publish those as a block.
 
-For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsors records, etc. All this content needs to become visible simultaneously. 
+For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsors records, etc. All this content needs to become visible simultaneously.
 
 Changes to many objects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet` through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
@@ -159,7 +159,7 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 You can use the `owns` static private property on a DataObject to specify which relationships are ownership relationships. The `owns` property should be defined on the _owner_ DataObject.
 
-For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn owns an `Image`. 
+For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn owns an `Image`.
 
 
 ```php
@@ -193,7 +193,7 @@ class Banner extends DataObject
 }
 ```
 
-If a `MyPage` gets published, all its related `Banners` will also be published, which will cause all `Image` DataObjects to be published. 
+If a `MyPage` gets published, all its related `Banners` will also be published, which will cause all `Image` DataObjects to be published.
 
 Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`.
 
@@ -369,7 +369,7 @@ To write your changes without creating new version, call `writeWithoutVersion()`
 <?php
 
 $record = MyRecord::get()->byID(99); // This wil retrieve the latest draft version of record ID 99.
-echo $record->Version; // This will output the version ID. Let's assume it's 13. 
+echo $record->Version; // This will output the version ID. Let's assume it's 13.
 
 
 $record->Title = "Foo Bar";
@@ -409,13 +409,13 @@ $record->publishRecursive();
 
 Archiving and unpublishing are similar operations, both will prevent a versioned DataObject from being publicly accessible. Archiving will also remove the record from the _Stage_ stage ; other ORMs may refer to this concept as _soft-deletion_.
 
-Use `doUnpublish()` to unpublish an item. Simply call `delete()` to archive an item. The SilverStripe ORM doesn't allow you to _hard-delete_ versioned DataObjects. 
+Use `doUnpublish()` to unpublish an item. Simply call `delete()` to archive an item. The SilverStripe ORM doesn't allow you to _hard-delete_ versioned DataObjects.
 
 ```php
 <?php
 $record = MyRecord::get()->byID(99);
 
-// Visitors to the site won't be able to see this record anymore, but editors can still edit it and re-publish it. 
+// Visitors to the site won't be able to see this record anymore, but editors can still edit it and re-publish it.
 $record->doUnpublish();
 
 
@@ -582,7 +582,7 @@ Example: Get the first 10 live records, filtered by creation date:
 
 ```php
 <?php
-use SilverStripe\Versioned\Versioned; 
+use SilverStripe\Versioned\Versioned;
 $records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
 ```
 
@@ -601,7 +601,7 @@ these are presented in might still contain dependant objects that are versioned.
 
 You can opt for a session base stage setting through the `Versioned.use_session` setting.
 Warning: This can lead to leaking of unpublished information, if a live URL is viewed in draft mode,
-and the result is cached due to agressive cache settings (not varying on cookie values).   
+and the result is cached due to agressive cache settings (not varying on cookie values).
 
 *app/src/MyObject.php*
 
@@ -848,7 +848,7 @@ SilverStripe will usually call these low level methods for you when you. However
 To move a saved version from one stage to another, call [writeToStage(<stage>)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
 
 `copyVersionToStage($versionID, $stage)` allow you to restore a previous version to a specific stage. This is used internally when performing a rollback.
-   
+
 The current stage is stored as global state on the `Versioned` object. It is usually modified by controllers, e.g. when a preview is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
 ```php
