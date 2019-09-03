@@ -424,16 +424,18 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Turns the given URL into an absolute URL. By default non-site root relative urls will be
-     * evaluated relative to the current base_url.
+     * Converts the given path or url into an absolute url. This method follows the below rules:
+     * - Absolute urls (e.g. `http://localhost`) are not modified
+     * - Relative urls (e.g. `//localhost`) have current protocol added (`http://localhost`)
+     * - Absolute paths (e.g. `/base/about-us`) are resolved by adding the current protocol and host (`http://localhost/base/about-us`)
+     * - Relative paths (e.g. `about-us/staff`) must be resolved using one of three methods, disambiguated via the $relativeParent argument:
+     *     - BASE - Append this path to the base url (i.e. behaves as though `<base>` tag is provided in a html document). This is the default.
+     *     - REQUEST - Resolve this path to the current url (i.e. behaves as though no `<base>` tag is provided in a html document)
+     *     - ROOT - Treat this as though it was an absolute path, and append it to the protocol and hostname.
      *
-     * @param string $url URL To transform to absolute.
-     * @param string $relativeParent Method to use for evaluating relative urls.
-     * Either one of BASE (baseurl), ROOT (site root), or REQUEST (requested page).
-     * Defaults to BASE, which is the same behaviour as template url resolution.
-     * Ignored if the url is absolute or site root.
-     *
-     * @return string
+     * @param string $url The url or path to resolve to absolute url.
+     * @param string $relativeParent Disambiguation method to use for evaluating relative paths
+     * @return string The absolute url
      */
     public static function absoluteURL($url, $relativeParent = self::BASE)
     {
