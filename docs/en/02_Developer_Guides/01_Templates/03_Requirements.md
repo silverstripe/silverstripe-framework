@@ -46,7 +46,8 @@ SilverStripe projects should not track the "resources" directory in their source
 
 ### Exposing assets in the web root
 
-SilverStripe projects ship with `silverstripe/vendor-plugin`. This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
+SilverStripe projects ship with [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
+This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
 
 Developers can explicitly expose static assets by calling `composer vendor-expose`. This is necessary after updating your `resources-dir` or `expose` configuration in your `composer.json` file.
 

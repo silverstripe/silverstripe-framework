@@ -4,56 +4,121 @@ SilverStripe CMS needs to be installed on a web server. Content authors and webs
 to access a web-based GUI to do their day-to-day work. Website designers and developers require access to the files on
 the server to update templates, website logic, and perform upgrades or maintenance.
 
-Our web-based [PHP installer](installation/) can check if you meet the requirements listed below.
+## PHP
 
-## Web server software requirements
+ * PHP >=7.1
+ * PHP extensions: `ctype`, `dom`, `fileinfo`, `hash`, `intl`, `mbstring`, `session`, `simplexml`, `tokenizer`, `xml`
+ * PHP configuration: `memory_limit` with at least `48M`
+ * PHP extension for image manipulation: Either `gd` or `imagick`
+ * PHP extension for a database connector (e.g. `pdo` or `mysqli`)
 
-SilverStripe 4.5 has the following server requirements:
+Our web-based [PHP installer](installation/) can check requirements.
+Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your configuration.
 
- * PHP 7.1+ (5.6+ was supported 4.0 - 4.4, we dropped support for these 6 months after PHP EOL'd them)
- * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
- * PHP requires a suitable CSPRNG (random number generator) source for generating random tokens, password salts etc. This can be any of the following, and most operating systems will have at least one source available:
-   * PHP 7 `random_bytes()`:
-     * `CryptGenRandom` (Windows only)
-     * `arc4random_buf` (OpenBSD & NetBSD only)
-     * `getrandom(2)` (Linux only)
-     * `/dev/urandom`
-   * PHP 5 [`random_compat`](https://github.com/paragonie/random_compat) polyfill:
-     * libsodium
-     * `/dev/urandom`
-     * [`mcrypt_create_iv()`](http://php.net/manual/en/function.mcrypt-create-iv.php)
-     * CAPICOM Utilities (`CAPICOM.Utilities.1`, Windows only)
- * Required modules: ctype, dom, fileinfo, hash, intl, mbstring, session, simplexml, tokenizer, xml.
- * At least one from each group of extensions:
-     * Image library extension (gd2, imagick)
-     * DB connector library (pdo, mysqli, pgsql)
- * Recommended configuration
-     * Dev (local development for running test framework): memory_limit 512MB
-     * Production: memory_limit = 64M
+## Database
 
- * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
- * One of the following databases: 
-   * MySQL 5.6+
-   * PostgreSQL 9.4+ (requires ["silverstripe/postgresql" module](http://silverstripe.org/postgresql-module))
-     * Warning: PostgreSQL has some known issues with collations when installed on Alpine, MacOS X and BSD derivatives
-     (see [PostgreSQL FAQ](https://wiki.postgresql.org/wiki/FAQ#Why_do_my_strings_sort_incorrectly.3F)).  
-     We do not support such installations, although they still may work correctly for you.  
-     As a workaround for PostgreSQL 10+ you could manually switch to ICU collations (e.g. und-x-icu).
-     There are no known workarounds for PostgreSQL <10.
-   * [SQL Server](http://silverstripe.org/microsoft-sql-server-database/),
-     [Oracle](https://github.com/smindel/silverstripe-oracle) and
-     [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
- * One of the following web server products: 
-   * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
-   * IIS 7+
-   * Support for Lighttpd, IIS 6, and other web servers may work if you are familiar with configuring those products.
- * We recommend enabling content compression (for example with mod_deflate) to speed up the delivery of HTML, CSS, and JavaScript.
- * One of the following operating systems:
-   * Linux/Unix/BSD
-   * Windows
-   * Mac OS X
+ * MySQL >=5.6 (built-in, [commercially supported](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/))
+ * PostgreSQL ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/postgresql), community supported)
+ * SQL Server ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/mssql), community supported)
+ * SQLite ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/sqlite3), community supported)
+ 
+## Webserver Configuration
 
-### PHP Requirements for older SilverStripe releases
+### Overview
+
+SilverStripe needs to handle a variety of HTTP requests,
+and relies on the hosting environment to be configured securely to
+enforce restrictions. There are secure default in place for Apache,
+but you should be aware of the configuration regardless of your webserver setup.
+
+### Filesystem permissions
+
+SilverStripe needs write access for the webserver user to `public/assets`,
+and read access for that user on everything else in your webroot.
+
+### Assets
+
+SilverStripe allows CMS authors to upload files into the `public/assets/` folder,
+which should be served by your webserver. **No PHP execution should be allowed in this folder**.
+This is configured for Apache by default via `public/assets/.htaccess`.
+The file is generated dynamically during the `dev/build` stage.
+
+Additionally, access is whitelisted by file extension through a
+dynamically generated whitelist based on the `File.allowed_extensions` setting
+(see [File Security](/developer_guides/files/file_security#file-types)).
+
+### Secure Assets
+
+Files can be kept in draft stage,
+and access restricted to certain user groups.
+These files are stored in a special `.protected` folder (defaulting to `public/assets/.protected`).
+**Requests to files in this folder should be denied by your webserver**.
+
+Requests to files in the `.protected` folder
+are routed to PHP by default when using Apache, through `public/assets/.htaccess`.
+If you are using another webserver, please follow our guides to ensure a secure setup.
+See [Developer Guides: File Security](/developer_guides/files/file_security) for details.
+
+### URL Rewriting
+
+SilverStripe expects URL paths to be rewritten to `public/index.php`.
+For Apache, this is preconfigured through `.htaccess` files,
+and expects using the `mod_rewrite` module.
+By default, these files are located in `public/.htaccess` and `public/assets/.htaccess`.
+
+### HTTP Headers
+
+SilverStripe can add HTTP headers to reponses it handles directly.
+These headers are often sensitive, for example preventing HTTP caching for responses
+displaying data based on user sessions, or when serving protected assets.
+You need to ensure those headers are kept in place in your webserver.
+For example, Apache allows this through `Header setifempty` (see [docs](https://httpd.apache.org/docs/current/mod/mod_headers.html#header)).
+See [Developer Guide: Performance](/developer_guides/performance/)
+and [Developer Guides: File Security](/developer_guides/files/file_security) for more details.
+
+### Symlinks
+
+SilverStripe is a modular system, with modules installed and updated
+via the `composer` PHP dependency manager. These are usually stored in `vendor/`,
+outside of the `public/` webroot. Since many modules rely on serving frontend assets
+such as CSS files or images, these are pulled over to the `public/` folder automatically.
+If the filesystem supports it, this is achieved through symlinks.
+Depending on your hosting and deployment mechanisms,
+you might want to enforce copying files instead.
+See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) for details.
+
+### Error pages
+
+The default installation includes [silverstripe/errorpage](https://addons.silverstripe.org/add-ons/silverstripe/errorpage),
+which generates static error pages that bypass PHP execution when those pages are published in the CMS.
+Once published, the static files are located in `public/assets/error-404.html` and `public/assets/error-500.html`.
+The default `public/.htaccess` file is configured to have Apache serve those pages based on their HTTP status code. 
+
+### Other webservers (Nginx, IIS, Lighttpd)
+
+Serving through webservers other than Apache requires more manual configuration,
+since the defaults configured through `.htaccess` don't apply.
+Please apply the considerations above to your webserver to ensure a secure hosting environment.
+In particular, configure protected assets correctly to avoid exposing draft or protected files uploaded through the CMS. 
+
+There are various community supported installation instructions for different environments.
+Nginx is a popular choice, see [Nginx webserver configuration](https://forum.silverstripe.org/t/nginx-webserver-configuration/2246).
+
+SilverStripe is known to work with Microsoft IIS, and generates `web.config` files by default
+(see [Microsoft IIS and SQL Server configuration](https://forum.silverstripe.org/t/microsoft-iis-webserver-and-sql-server-support/2245)).
+
+Additionally, there are community supported guides for installing SilverStripe
+on various environments:
+
+ * [Hosting via Bitnami](https://bitnami.com/stack/silverstripe/virtual-machine): In the cloud or as a locally hosted virtual machine
+ * [Vagrant/Virtualbox with CentOS](https://forum.silverstripe.org/t/installing-via-vagrant-virtualbox-with-centos/2248)
+ * [Mac OSX with Homebrew](https://forum.silverstripe.org/t/installing-on-osx-with-homebrew/2247)
+ * [MAC OSX with MAMP](https://forum.silverstripe.org/t/installing-on-osx-with-mamp/2249)
+ * [Windows with WAMP](https://forum.silverstripe.org/t/installing-on-windows-via-wamp/2250)
+ * [Vagrant with silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
+ * [Vagrant with BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
+
+## PHP Requirements for older SilverStripe releases {#php-support}
 
 SilverStripe's PHP support has changed over time and if you are looking to upgrade PHP on your SilverStripe site, this table may be of use:
 
@@ -66,26 +131,13 @@ SilverStripe's PHP support has changed over time and if you are looking to upgra
 | 4.5+ (unreleased)    | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
 
 
-## Web server hardware requirements
-
-Hardware requirements vary widely depending on the traffic to your website, the complexity of its logic (i.e., PHP), and
-its size (i.e., database.) By default, all pages are dynamic, and thus access both the database and execute PHP code to
-generate. SilverStripe can cache full pages and segments of templates to dramatically increase performance.
-
-A typical website page on a conservative single CPU machine (e.g., Intel 2Ghz) takes roughly 300ms to generate. This
-comfortably allows over a million page views per month. Caching and other optimisations can improve this by a factor of
-ten or even one hundred times. SilverStripe CMS can be used in multiple-server architectures to improve scalability and
-redundancy.
-
-For more information on how to scale SilverStripe see the [Performance](/developer_guides/performance/) Guide.
-
-## Client side (CMS) browser requirements
+## CMS browser requirements
 
 SilverStripe CMS supports the following web browsers:
 * Google Chrome
 * Internet Explorer 11
 * Microsoft Edge 
-* Mozilla Firefox.
+* Mozilla Firefox
  
 We aim to provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating systems.
 
