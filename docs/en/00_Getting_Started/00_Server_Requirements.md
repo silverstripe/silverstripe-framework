@@ -31,6 +31,15 @@ and relies on the hosting environment to be configured securely to
 enforce restrictions. There are secure default in place for Apache,
 but you should be aware of the configuration regardless of your webserver setup.
 
+### Public webroot
+
+The webroot of your webserver should be configured to the `public/` subfolder.
+Projects created prior to SilverStripe 4.1 might be running the main project
+folder as the webroot. In this case, you are responsible for ensuring
+access to system files such as configuration in `*.yml` is protected
+from public access. We strongly recommend switching to more secure
+hosting via the `public/`. See [4.1.0 upgrading guide](/changelogs/4.1.0).
+
 ### Filesystem permissions
 
 SilverStripe needs write access for the webserver user to `public/assets`,
