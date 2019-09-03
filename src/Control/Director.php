@@ -425,12 +425,12 @@ class Director implements TemplateGlobalProvider
 
     /**
      * Converts the given path or url into an absolute url. This method follows the below rules:
-     * - Absolute urls (e.g. http://localhost) are not modified
-     * - Relative urls (e.g. //localhost) have current protocol added (http://localhost)
-     * - Absolute paths (e.g. /base/about-us) are resolved by adding the current protocol and host (http://localhost/base/about-us)
-     * - Relative paths (e.g. about-us/staff) must be resolved using one of three methods, disambiguated via the $relativeParent argument:
+     * - Absolute urls (e.g. `http://localhost`) are not modified
+     * - Relative urls (e.g. `//localhost`) have current protocol added (`http://localhost`)
+     * - Absolute paths (e.g. `/base/about-us`) are resolved by adding the current protocol and host (`http://localhost/base/about-us`)
+     * - Relative paths (e.g. `about-us/staff`) must be resolved using one of three methods, disambiguated via the $relativeParent argument:
      *     - BASE - Append this path to the base url (i.e. behaves as though `<base>` tag is provided in a html document). This is the default.
-     *     - REQUEST - Resolve this path to the current url (i.e. behaves as though no <base> tag is provided in a html document)
+     *     - REQUEST - Resolve this path to the current url (i.e. behaves as though no `<base>` tag is provided in a html document)
      *     - ROOT - Treat this as though it was an absolute path, and append it to the protocol and hostname.
      *
      * @param string $url The url or path to resolve to absolute url.
