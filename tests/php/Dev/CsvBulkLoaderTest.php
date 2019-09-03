@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tests;
 
+use League\Csv\Writer;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CustomLoader;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\PlayerContract;
@@ -300,6 +301,20 @@ class CsvBulkLoaderTest extends SapphireTest
         $this->assertEquals($player->FirstName, "John. He's a good guy. ");
     }
 
+    public function testLoadWithByteOrderMark()
+    {
+        $loader = new CsvBulkLoader(Player::class);
+        $loader->load($this->csvPath . 'PlayersWithHeaderAndBOM.csv');
+
+        $players = Player::get();
+
+        $this->assertCount(3, $players);
+        $this->assertListContains([
+            ['FirstName' => 'Jamie', 'Birthday' => '1882-01-31'],
+            ['FirstName' => 'Järg', 'Birthday' => '1982-06-30'],
+            ['FirstName' => 'Jacob', 'Birthday' => '2000-04-30'],
+        ], $players);
+    }
 
     protected function getLineCount(&$file)
     {
