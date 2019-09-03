@@ -1,0 +1,4 @@
+﻿FirstName,Biography,Birthday,IsRegistered
+Jamie,"Pretty old\, with an escaped comma",1882-01-31,1
+Järg,"Unicode FTW",1982-06-30,1
+Jacob,"	Likes leading tabs in his biography",2000-04-30,0
