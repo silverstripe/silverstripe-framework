@@ -1123,6 +1123,12 @@ class Member extends DataObject
 
     //------------------- HELPER METHODS -----------------------------------//
 
+    /* a method to allow using $LastName as an alternative to $Surname in templates since it is a commonly made mistake */
+    
+    public function getLastName() {
+      return $this->Surname;
+    }
+    
     /**
      * Get the complete name of the member, by default in the format "<Surname>, <FirstName>".
      * Falls back to showing either field on its own.
