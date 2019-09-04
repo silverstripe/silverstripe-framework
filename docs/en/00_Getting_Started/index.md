@@ -16,7 +16,7 @@ Refer to our [server requirements](server_requirements) for details.
 
 If you're running Apache with MySQL/MariaDB already,
 and know your way around webservers, follow these steps to get started.
-SilverStripe is installed via [composer](composer), a package management tool for PHP that
+SilverStripe is installed via [Composer](composer), a package management tool for PHP that
 lets you install and upgrade the framework and other modules. 
 Assuming you've got this tool, run the following command to install SilverStripe:
 
