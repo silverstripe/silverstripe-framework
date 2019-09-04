@@ -28,13 +28,13 @@ Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your c
 
 SilverStripe needs to handle a variety of HTTP requests,
 and relies on the hosting environment to be configured securely to
-enforce restrictions. There are secure default in place for Apache,
+enforce restrictions. There are secure defaults in place for Apache,
 but you should be aware of the configuration regardless of your webserver setup.
 
 ### Public webroot
 
 The webroot of your webserver should be configured to the `public/` subfolder.
-Projects created prior to SilverStripe 4.1 might be running the main project
+Projects created prior to SilverStripe 4.1 might be using the main project
 folder as the webroot. In this case, you are responsible for ensuring
 access to system files such as configuration in `*.yml` is protected
 from public access. We strongly recommend switching to more secure
@@ -93,7 +93,7 @@ outside of the `public/` webroot. Since many modules rely on serving frontend as
 such as CSS files or images, these are mapped over to the `public/_resources/` folder automatically.
 If the filesystem supports it, this is achieved through symlinks.
 Depending on your hosting and deployment mechanisms,
-you might want to enforce copying files instead.
+you may need to configure the plugin to copy files instead.
 See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) for details.
 
 ### Error pages
@@ -122,7 +122,7 @@ on various environments:
  * [Hosting via Bitnami](https://bitnami.com/stack/silverstripe/virtual-machine): In the cloud or as a locally hosted virtual machine
  * [Vagrant/Virtualbox with CentOS](https://forum.silverstripe.org/t/installing-via-vagrant-virtualbox-with-centos/2248)
  * [macOS with Homebrew](https://forum.silverstripe.org/t/installing-on-osx-with-homebrew/2247)
- * [MAC OSX with MAMP](https://forum.silverstripe.org/t/installing-on-osx-with-mamp/2249)
+ * [macOS with MAMP](https://forum.silverstripe.org/t/installing-on-osx-with-mamp/2249)
  * [Windows with WAMP](https://forum.silverstripe.org/t/installing-on-windows-via-wamp/2250)
  * [Vagrant with silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
  * [Vagrant with BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
