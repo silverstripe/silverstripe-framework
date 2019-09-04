@@ -90,7 +90,7 @@ and [Developer Guides: File Security](/developer_guides/files/file_security) for
 SilverStripe is a modular system, with modules installed and updated
 via the `composer` PHP dependency manager. These are usually stored in `vendor/`,
 outside of the `public/` webroot. Since many modules rely on serving frontend assets
-such as CSS files or images, these are pulled over to the `public/` folder automatically.
+such as CSS files or images, these are mapped over to the `public/_resources/` folder automatically.
 If the filesystem supports it, this is achieved through symlinks.
 Depending on your hosting and deployment mechanisms,
 you might want to enforce copying files instead.
