@@ -121,7 +121,7 @@ on various environments:
 
  * [Hosting via Bitnami](https://bitnami.com/stack/silverstripe/virtual-machine): In the cloud or as a locally hosted virtual machine
  * [Vagrant/Virtualbox with CentOS](https://forum.silverstripe.org/t/installing-via-vagrant-virtualbox-with-centos/2248)
- * [Mac OSX with Homebrew](https://forum.silverstripe.org/t/installing-on-osx-with-homebrew/2247)
+ * [macOS with Homebrew](https://forum.silverstripe.org/t/installing-on-osx-with-homebrew/2247)
  * [MAC OSX with MAMP](https://forum.silverstripe.org/t/installing-on-osx-with-mamp/2249)
  * [Windows with WAMP](https://forum.silverstripe.org/t/installing-on-windows-via-wamp/2250)
  * [Vagrant with silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
