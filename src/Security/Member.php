@@ -1124,9 +1124,10 @@ class Member extends DataObject
     //------------------- HELPER METHODS -----------------------------------//
 
     /**
-     * Get the Surname of the member
+     * Simple prxoy method to get the Surname property of the member
+     *
+     * @return string
      */
-    
     public function getLastName()
     {
         return $this->owner->Surname;
