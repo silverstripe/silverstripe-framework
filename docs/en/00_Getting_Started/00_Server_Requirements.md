@@ -55,6 +55,8 @@ The file is generated dynamically during the `dev/build` stage.
 Additionally, access is whitelisted by file extension through a
 dynamically generated whitelist based on the `File.allowed_extensions` setting
 (see [File Security](/developer_guides/files/file_security#file-types)).
+This whitelist uses the same defaults configured through file upload
+through SilverStripe, so is considered a second line of defence.
 
 ### Secure Assets
 
@@ -67,6 +69,25 @@ Requests to files in the `.protected` folder
 are routed to PHP by default when using Apache, through `public/assets/.htaccess`.
 If you are using another webserver, please follow our guides to ensure a secure setup.
 See [Developer Guides: File Security](/developer_guides/files/file_security) for details.
+
+
+### Web Worker Concurrency
+
+It's generally a good idea to run multiple workers to serve multiple HTTP requests
+to SilverStripe concurrently. The exact number depends on your website needs.
+The CMS attempts to request multiple views concurrently.
+It also routes [protected and draft files](/developer_guides/files/file_security)
+through SilverStripe. This can increase your concurrency requirements,
+e.g. when authors batch upload and view dozens of draft files in the CMS.
+
+When allowing upload of large files through the CMS (through PHP settings),
+these files might be used as [protected and draft files](/developer_guides/files/file_security).
+Files in this state get served by SilverStripe rather than your webserver.
+Since the framework uses [PHP streams](https://www.php.net/manual/en/ref.stream.php),
+this allows serving of files larger than your PHP memory limit.
+Please be aware that streaming operations don't count towards
+PHP's [max_execution_time](https://www.php.net/manual/en/function.set-time-limit.php),
+which can risk exhaustion of web worker pools for long-running downloads.
 
 ### URL Rewriting
 
