@@ -1124,7 +1124,7 @@ class Member extends DataObject
     //------------------- HELPER METHODS -----------------------------------//
 
     /**
-     * Simple prxoy method to get the Surname property of the member
+     * Simple proxy method to get the Surname property of the member
      *
      * @return string
      */
