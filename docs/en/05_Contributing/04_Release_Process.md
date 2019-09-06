@@ -20,7 +20,7 @@ New features and API changes are discussed as
 [GitHub issues](https://docs.silverstripe.org/en/contributing/issues_and_bugs/)),
 as well as the [forum](https://forum.silverstripe.org). 
 They are prioritised by the core team as tickets on 
-github.com. In addition, we collect community feedback on [silverstripe.uservoice.com](https://silverstripe.uservoice.com).
+github.com. In addition, we collect community feedback as [feature ideas](https://forum.silverstripe.org/c/feature-ideas) on the forum.
 Any feature ideas we're planning to implement will be flagged there.
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by

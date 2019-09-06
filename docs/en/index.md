@@ -21,7 +21,7 @@ SilverStripe has an wide range of options for getting support:
 * Read the technical reference in our [API Documentation](http://api.silverstripe.org/)
 * Get a user-focused overview of the CMS features in our [User Help](http://userhelp.silverstripe.com)
 * Discuss new features, API changes and the development [roadmap](http://www.silverstripe.org/software/roadmap/)
-  on [UserVoice](http://silverstripe.uservoice.com/forums/251266-new-features)
+  on the ["feature ideas" category](https://forum.silverstripe.org/c/feature-ideas) in our forums
 
 
 ## Building your first SilverStripe Web application
