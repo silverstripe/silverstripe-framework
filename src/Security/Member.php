@@ -1124,6 +1124,16 @@ class Member extends DataObject
     //------------------- HELPER METHODS -----------------------------------//
 
     /**
+     * Simple proxy method to get the Surname property of the member
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->owner->Surname;
+    }
+    
+    /**
      * Get the complete name of the member, by default in the format "<Surname>, <FirstName>".
      * Falls back to showing either field on its own.
      *
