@@ -12,8 +12,8 @@ The [NodeJS](https://nodejs.org) JavaScript runtime is the foundation of our cli
 build tool chain. If you want to do things like upgrade dependencies, make changes to core
 JavaScript or SCSS files, you'll need Node installed on your dev environment.
 
-As of SilverStripe 4.5, our build tooling supports the v10.x (LTS as of Sept 2019) version
-of NodeJS. SilverStripe 4.0 - 4.4 used Node v6.x.
+As of SilverStripe 4.4, our build tooling supports the v10.x (LTS as of Sept 2019) version
+of NodeJS. SilverStripe 4.0 - 4.3 used Node v6.x.
  
 If you already have a newer version of Node.js installed, check out the
 [Node Version Manager](https://github.com/creationix/nvm) to run multiple versions
