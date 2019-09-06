@@ -1036,6 +1036,8 @@ class FormField extends RequestHandler
     {
         $context = $this;
 
+        $this->extend('onBeforeRenderHolder', $context, $properties);
+
         if (count($properties)) {
             $context = $this->customise($properties);
         }
