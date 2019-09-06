@@ -1130,9 +1130,9 @@ class Member extends DataObject
      */
     public function getLastName()
     {
-        return $this->owner->Surname;
+        return $this->Surname;
     }
-    
+
     /**
      * Get the complete name of the member, by default in the format "<Surname>, <FirstName>".
      * Falls back to showing either field on its own.
