@@ -218,9 +218,13 @@ class ThemeResourceLoader
             foreach ($themePaths as $themePath) {
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
-                $path = Path::join($pathParts) . '.ss';
-                if (file_exists($path)) {
-                    return $path;
+                try {
+                    $path = Path::join($pathParts) . '.ss';
+                    if (file_exists($path)) {
+                        return $path;
+                    }
+                } catch (InvalidArgumentException $e) {
+                    // No-op
                 }
             }
         }
