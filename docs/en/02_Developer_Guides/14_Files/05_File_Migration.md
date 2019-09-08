@@ -184,9 +184,9 @@ The format for image variants was changed in SilverStripe 3.3. In SilverStripe 3
 * `Uploads/_resampled/FitWzQwLDMwXQ-image.jpg` in SilverStripe 3.2 and below
 * `Uploads/_resampled/FitWzQwLDMwXQ/image.jpg` in SilverStripe 3.3 and above.
 
-The file migration task didn't account for this nuance until the SilverStripe 4.4.4 release. If you ran the file migration task using a prior version, your SilverStripe 3.2 thumbnails might not have been migrated ... or their path might have been appended as variants. e.g.: `FitWzQwLDMwXQ-image__Uploads__resampled.jpg`
+The file migration task didn't account for this nuance until the SilverStripe 4.4.4 release. If you ran the file migration task using a prior version, your SilverStripe 3.2 thumbnails might not have been migrated, or their paths might have been appended as variants. e.g.: `FitWzQwLDMwXQ-image__Uploads__resampled.jpg`
 
-Those variants will need to be regenarated. Thumbnails generated through templates or code will automatically be regenerated on the next uncached request to SilverStripe. Thumbnails embedded in HTML fields will be regenerated when the page is republished. Variants that got improperly renamed can be removed manually.
+Those variants will need to be regenarated. Thumbnails generated through templates or code will automatically be regenerated on the next uncached request to SilverStripe. Thumbnails embedded in HTML fields will be regenerated when the page is republished. Variants that were improperly renamed must be removed manually.
 
 If you are running SilverStripe 4.4.4 or greater, SilverStripe 3.2 variants will be migrated normally.
 
