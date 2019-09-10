@@ -56,6 +56,11 @@ matrix:
         - DB=MYSQL
         - PHPUNIT_TEST=cms
 
+    - php: 7.3
+      env:
+        - DB=SQLITE
+        - PHPUNIT_TEST=framework
+
 before_script:
 # Extra $PATH
   - export PATH=~/.composer/vendor/bin:$PATH
