@@ -12,7 +12,6 @@ the server to update templates, website logic, and perform upgrades or maintenan
  * PHP extension for image manipulation: Either `gd` or `imagick`
  * PHP extension for a database connector (e.g. `pdo` or `mysqli`)
 
-Our web-based [PHP installer](installation/) can check requirements.
 Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your configuration.
 
 ## Database

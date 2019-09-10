@@ -40,8 +40,7 @@ The CMS login can be accessed at `/admin`.
 
 ## Guided Installation
 
-If you are unsure on how this all works, or prefer to follow
-an installer wizard, please jump on our [lessons](https://www.silverstripe.org/learn/lessons/v4/).
+If you are unsure on how this all works, please jump on our [lessons](https://www.silverstripe.org/learn/lessons/v4/).
 Webserver setup is covered in
 [Lesson 4: Setting up a local dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1) 
 
