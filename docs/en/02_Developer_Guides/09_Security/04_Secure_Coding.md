@@ -697,9 +697,7 @@ following in your .htaccess to ensure this behaviour is activated.
 </IfModule>
 ```
 
-In a future release this behaviour will be changed to be on by default, and this environment
-variable will be no longer necessary, thus it will be necessary to always set
-`SS_TRUSTED_PROXY_IPS` if using a proxy.
+As of SilverStripe 4, this behaviour is on by default, and the environment variable is no longer required. For correct operation, it is necessary to always set `SS_TRUSTED_PROXY_IPS` if using a proxy.
 
 ## Secure Sessions, Cookies and TLS (HTTPS)
 
