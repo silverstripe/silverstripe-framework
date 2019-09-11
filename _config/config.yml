@@ -4,6 +4,9 @@ Name: coreconfig
 SilverStripe\Core\Manifest\VersionProvider:
   modules:
     silverstripe/framework: Framework
+SilverStripe\ORM\FieldType\DBFloat:
+  decimal_separator: '.'
+  thousands_separator: ','
 ---
 Name: httpconfig-dev
 Only:
