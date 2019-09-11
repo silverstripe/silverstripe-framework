@@ -19,6 +19,7 @@ import {
   Column 
 } from 'bloomer';
 import  Nav from './Nav';
+import SearchBox from './SearchBox';
 
 const TopLevel = styled(Level)`
   padding: 2rem;
@@ -61,7 +62,9 @@ const Layout: StatelessComponent<LayoutProps> = ({ children}) => {
                 <form>
                   <Field hasAddons>
                     <Control>
-                      <Input type="text" placeholder="Search the docs" />
+                      {process.env.GATSBY_DOCSEARCH_API_KEY && process.env.GATSBY_DOCSEARCH_INDEX && (
+                      <SearchBox />
+                      )}
                     </Control>
                     <Control>
                       <Button>Search</Button>
