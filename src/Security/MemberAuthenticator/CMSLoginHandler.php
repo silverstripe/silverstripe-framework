@@ -2,9 +2,12 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\CMSSecurity;
 use SilverStripe\Security\Security;
 
@@ -65,7 +68,15 @@ class CMSLoginHandler extends LoginHandler
         );
 
         // Get redirect url
-        $changePasswordURL = $this->addBackURLParam(Security::singleton()->Link('changepassword'));
+        $changedPasswordLink = Security::singleton()->Link('changepassword');
+        $changePasswordURL = $this->addBackURLParam($changedPasswordLink);
+
+        if (Injector::inst()->has(PasswordExpirationMiddleware::class)) {
+            $session = $this->getRequest()->getSession();
+            $passwordExpirationMiddleware = Injector::inst()->get(PasswordExpirationMiddleware::class);
+            $passwordExpirationMiddleware->allowCurrentRequest($session);
+        }
+
         $changePasswordURLATT = Convert::raw2att($changePasswordURL);
         $changePasswordURLJS = Convert::raw2js($changePasswordURL);
         $message = _t(

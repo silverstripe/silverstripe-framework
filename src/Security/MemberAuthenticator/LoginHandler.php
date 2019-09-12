@@ -9,6 +9,7 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -263,7 +264,8 @@ class LoginHandler extends RequestHandler
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');
+        $changePasswordUrl = $this->addBackURLParam($changedPasswordLink);
 
-        return $this->redirect($this->addBackURLParam($changedPasswordLink));
+        return $this->redirect($changePasswordUrl);
     }
 }
