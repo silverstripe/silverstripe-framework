@@ -7,6 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Tests\TransactionTest\TestObject;
+use SilverStripe\ORM\Tests\TransactionTest\ReadOnlyTestObject;
 
 class TransactionTest extends SapphireTest
 {
@@ -16,6 +17,7 @@ class TransactionTest extends SapphireTest
 
     protected static $extra_dataobjects = [
         TransactionTest\TestObject::class,
+        TransactionTest\ReadOnlyTestObject::class,
     ];
 
     private static $originalVersionInfo;
@@ -157,7 +159,7 @@ class TransactionTest extends SapphireTest
     public function testReadOnlyTransaction()
     {
         if (!DB::get_conn()->supportsTransactions()) {
-            $this->markTestSkipped('Current database is doesn\'t support transactions');
+            $this->markTestSkipped('Current database doesn\'t support transactions');
             return;
         }
 
@@ -168,10 +170,10 @@ class TransactionTest extends SapphireTest
         $page->Title = 'Read only success';
         $page->write();
 
-        DB::get_conn()->transactionStart('READ ONLY');
+        DB::get_conn()->transactionStart();
 
         try {
-            $page = new TestObject();
+            $page = new ReadOnlyTestObject();
             $page->Title = 'Read only page failed';
             $page->write();
             DB::get_conn()->transactionEnd();
@@ -184,7 +186,7 @@ class TransactionTest extends SapphireTest
         DataObject::flush_and_destroy_cache();
 
         $success = DataObject::get_one(TestObject::class, "\"Title\"='Read only success'");
-        $fail = DataObject::get_one(TestObject::class, "\"Title\"='Read only page failed'");
+        $fail = DataObject::get_one(ReadOnlyTestObject::class, "\"Title\"='Read only page failed'");
 
         //This page should be in the system
         $this->assertInternalType('object', $success);
