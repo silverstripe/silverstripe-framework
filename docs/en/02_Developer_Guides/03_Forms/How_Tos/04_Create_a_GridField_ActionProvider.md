@@ -39,7 +39,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function augmentColumns($gridField, &$columns) 
     {
-        if(!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns)) {
             $columns[] = 'Actions';
         }
     }
@@ -51,7 +51,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getColumnMetadata($gridField, $columnName) 
     {
-        if($columnName == 'Actions') {
+        if ($columnName === 'Actions') {
             return ['title' => ''];
         }
     }
@@ -63,7 +63,9 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getColumnContent($gridField, $record, $columnName) 
     {
-        if(!$record->canEdit()) return;
+        if (!$record->canEdit()) {
+            return;
+        }
 
         $field = GridField_FormAction::create(
             $gridField,
@@ -83,15 +85,16 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
     {
-        if($actionName == 'docustomaction') {
-            // perform your action here
-
-            // output a success message to the user
-            Controller::curr()->getResponse()->setStatusCode(
-                200,
-                'Do Custom Action Done.'
-            );
+        if ($actionName !== 'docustomaction') {
+            return;
         }
+        // perform your action here
+
+        // output a success message to the user
+        Controller::curr()->getResponse()->setStatusCode(
+            200,
+            'Do Custom Action Done.'
+        );
     }
 }
 ```
@@ -186,7 +189,9 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
     
     public function getCustomAction($gridField, $record)
     {
-        if(!$record->canEdit()) return;
+        if (!$record->canEdit()) {
+            return;
+        }
         
         return GridField_FormAction::create(
             $gridField,
@@ -215,7 +220,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function augmentColumns($gridField, &$columns) 
     {
-        if(!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns)) {
             $columns[] = 'Actions';
         }
     }
@@ -227,7 +232,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getColumnMetadata($gridField, $columnName) 
     {
-        if($columnName == 'Actions') {
+        if ($columnName === 'Actions') {
             return ['title' => ''];
         }
     }
@@ -255,15 +260,16 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
     {
-        if($actionName == 'docustomaction') {
-            // perform your action here
-
-            // output a success message to the user
-            Controller::curr()->getResponse()->setStatusCode(
-                200,
-                'Do Custom Action Done.'
-            );
+        if ($actionName !== 'docustomaction') {
+            return;
         }
+        // perform your action here
+
+        // output a success message to the user
+        Controller::curr()->getResponse()->setStatusCode(
+            200,
+            'Do Custom Action Done.'
+        );
     }
 }
 ```
