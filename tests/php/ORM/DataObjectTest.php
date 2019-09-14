@@ -19,6 +19,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
 use stdClass;
@@ -58,7 +59,8 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationParent::class,
         DataObjectTest\RelationChildFirst::class,
         DataObjectTest\RelationChildSecond::class,
-        DataObjectTest\MockDynamicAssignmentDataObject::class
+        DataObjectTest\MockDynamicAssignmentDataObject::class,
+        DataObjectTest\TreeNode::class,
     );
 
     protected function setUp()
@@ -2416,5 +2418,94 @@ class DataObjectTest extends SapphireTest
         $do->DynamicField = false;
 
         $do->write();
+    }
+
+    public function testRecursiveWrite()
+    {
+
+        $root = $this->objFromFixture(TreeNode::class, 'root');
+        $child = $this->objFromFixture(TreeNode::class, 'child');
+        $grandchild = $this->objFromFixture(TreeNode::class, 'grandchild');
+
+        // Create a cycle ... this will test that we can't create an infinite loop
+        $root->CycleID = $grandchild->ID;
+        $root->write();
+
+        // Our count will have been set while loading our fixtures, let's reset eveything back to 0
+        TreeNode::singleton()->resetCounts();
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+        $this->assertEquals(0, $root->WriteCount, 'Root node write count has been reset');
+        $this->assertEquals(0, $child->WriteCount, 'Child node write count has been reset');
+        $this->assertEquals(0, $grandchild->WriteCount, 'Grand Child node write count has been reset');
+
+        // Trigger a recursive write of the grand children
+        $grandchild->write(false, false, false, true);
+
+        // Reload the DataObject from the DB to get the new Write Counts
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+
+        $this->assertEquals(
+            1,
+            $grandchild->WriteCount,
+            'Grand child has been written once because write was directly called on it'
+        );
+        $this->assertEquals(
+            1,
+            $child->WriteCount,
+            'Child should has been written once because it is directly related to grand child'
+        );
+        $this->assertEquals(
+            1,
+            $root->WriteCount,
+            'Root should have been written once because it is indirectly related to grand child'
+        );
+    }
+
+    public function testShallowRecursiveWrite()
+    {
+        $root = $this->objFromFixture(TreeNode::class, 'root');
+        $child = $this->objFromFixture(TreeNode::class, 'child');
+        $grandchild = $this->objFromFixture(TreeNode::class, 'grandchild');
+
+        // Create a cycle ... this will test that we can't create an infinite loop
+        $root->CycleID = $grandchild->ID;
+        $root->write();
+
+        // Our count will have been set while loading our fixtures, let's reset eveything back to 0
+        TreeNode::singleton()->resetCounts();
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+        $this->assertEquals(0, $root->WriteCount);
+        $this->assertEquals(0, $child->WriteCount);
+        $this->assertEquals(0, $grandchild->WriteCount);
+
+        // Recursively only affect component that have been loaded
+        $grandchild->write(false, false, false, ['recursive' => false]);
+
+        // Reload the DataObject from the DB to get the new Write Counts
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+
+        $this->assertEquals(
+            1,
+            $grandchild->WriteCount,
+            'Grand child was written once because write was directly called on it'
+        );
+        $this->assertEquals(
+            1,
+            $child->WriteCount,
+            'Child was written once because it is directly related grand child'
+        );
+        $this->assertEquals(
+            0,
+            $root->WriteCount,
+            'Root is 2 step remove from grand children. It was not written on a shallow recursive write.'
+        );
     }
 }

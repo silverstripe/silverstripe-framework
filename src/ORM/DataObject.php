@@ -1507,12 +1507,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @uses DataExtension->augmentWrite()
      *
-     * @param boolean $showDebug Show debugging information
-     * @param boolean $forceInsert Run INSERT command rather than UPDATE, even if record already exists
-     * @param boolean $forceWrite Write to database even if there are no changes
-     * @param boolean $writeComponents Call write() on all associated component instances which were previously
-     *                                 retrieved through {@link getComponent()}, {@link getComponents()} or
-     *                                 {@link getManyManyComponents()} (Default: false)
+     * @param boolean       $showDebug Show debugging information
+     * @param boolean       $forceInsert Run INSERT command rather than UPDATE, even if record already exists
+     * @param boolean       $forceWrite Write to database even if there are no changes
+     * @param boolean|array $writeComponents Call write() on all associated component instances which were previously
+     *                      retrieved through {@link getComponent()}, {@link getComponents()} or
+     *                      {@link getManyManyComponents()}. Default to `false`. The parameter can also be provided in
+     *                      the form of an array: `['recursive' => true, skip => ['Page'=>[1,2,3]]`. This avoid infinite
+     *                      loops when one DataObject are components of each other.
      * @return int The ID of the record
      * @throws ValidationException Exception that can be caught and handled by the calling function
      */
@@ -1563,7 +1565,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         // Write relations as necessary
         if ($writeComponents) {
-            $this->writeComponents(true);
+            $recursive = true;
+            $skip = [];
+            if (is_array($writeComponents)) {
+                $recursive = isset($writeComponents['recursive']) && $writeComponents['recursive'];
+                $skip = isset($writeComponents['skip']) && is_array($writeComponents['skip'])
+                    ? $writeComponents['skip']
+                    : [];
+            }
+            $this->writeComponents($recursive, $skip);
         }
 
         // Clears the cache for this object so get_one returns the correct object.
@@ -1595,19 +1605,68 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * same record.
      *
      * @param bool $recursive Recursively write components
+     * @param array $skip List of DataObject references to skip
      * @return DataObject $this
      */
-    public function writeComponents($recursive = false)
+    public function writeComponents($recursive = false, $skip = [])
     {
+        // Make sure we add our current object to the skip list
+        $this->skipWriteComponents($recursive, $this, $skip);
+
+        // All our write calls have the same arguments ... just need make sure the skip list is pass by reference
+        $args = [
+            false, false, false,
+            $recursive ? ["recursive" => $recursive, "skip" => &$skip] : false
+        ];
+
         foreach ($this->components as $component) {
-            $component->write(false, false, false, $recursive);
+            if (!$this->skipWriteComponents($recursive, $component, $skip)) {
+                $component->write(...$args);
+            }
         }
 
         if ($join = $this->getJoin()) {
-            $join->write(false, false, false, $recursive);
+            if (!$this->skipWriteComponents($recursive, $join, $skip)) {
+                $join->write(...$args);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * Check if target is in the skip list and add it if it isn't.
+     * @param bool $recursive
+     * @param DataObject $target
+     * @param array $skip
+     * @return bool Whether the target is already in the list
+     */
+    private function skipWriteComponents($recursive, DataObject $target, array &$skip)
+    {
+        // We only care about the skip list if our call is meant to be recursive
+        if (!$recursive) {
+            return false;
+        }
+
+        // Get our Skip array keys
+        $classname = get_class($target);
+        $id = $target->ID;
+
+        // Check if the target is in the skip list
+        if (isset($skip[$classname])) {
+            if (in_array($id, $skip[$classname])) {
+                // Skip the object
+                return true;
+            }
+        } else {
+            // This is the first object of this class
+            $skip[$classname] = [];
+        }
+
+        // Add the target to our skip list
+        $skip[$classname][] = $id;
+
+        return false;
     }
 
     /**
