@@ -1,78 +1,52 @@
 title: Getting Started
 introduction: SilverStripe is a web application. This means that you will need to have a webserver and database. We will take you through the setup of the server environment as well the application itself.
 
+## Server Requirements
 
-## Installing SilverStripe
+SilverStripe requires PHP 7.2 or newer.
+It runs on many webservers and databases,
+but is most commonly served using Apache and MySQL/MariaDB.
 
-The best way to get SilverStripe is to [install with Composer](composer). Composer is a package management tool for PHP that
-lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org.
+If you are setting up your own environment,
+you'll need to consider a few configuration settings
+such as URL rewriting and protecting access to certain files.
+Refer to our [server requirements](server_requirements) for details.
 
-Other ways to get SilverStripe:
+## Quickstart Installation
 
- * If you just want to get the code as quickly as possible, you can [download SilverStripe from our website](http://www.silverstripe.org/software/download/).
- * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](/upgrading) guide.  Note that [Composer](composer) provides its own tools for upgrading.
+If you're running Apache with MySQL/MariaDB already,
+and know your way around webservers, follow these steps to get started.
+SilverStripe is installed via [Composer](composer), a package management tool for PHP that
+lets you install and upgrade the framework and other modules. 
+Assuming you've got this tool, run the following command to install SilverStripe:
 
-## Setting up a server
+```
+composer create-project silverstripe/installer my-project
+```
 
-### Linux/Unix
+Within the newly created `my-project` folder, point your webserver at the `public/` folder.
+Rename `.env.example` to `.env` in your project, and configure your database connection there.
+See [environment variables](environment_management) for available configuration options,
+e.g. to configure a default CMS login via `SS_DEFAULT_ADMIN_USERNAME`.
 
-To run SilverStripe on Linux/Unix, set up one of the following web servers: 
+Now you should be able to build your database by running this command:
 
-*  [Install using Apache](installation) - our preferred platform
-*  [Install using Lighttpd](installation/how_to/configure_lighttpd) - fast, but a bit trickier to get going
-*  [Install using Nginx](installation/how_to/configure_nginx) - Super fast at serving static files. Great for large traffic sites.
-*  [Install using nginx and HHVM](installation/how_to/setup_nginx_and_hhvm) - nginx and [HHVM](http://hhvm.com/) as a faster alternative to PHP.
+```
+vendor/bin/sake dev/build
+```
 
-### Windows
+Your website should be available on your domain now (e.g. `http://localhost`).
+The CMS login can be accessed at `/admin`.
 
-The most straightforward way to get SilverStripe running on Windows is with the [Microsoft Web Platform installer](installation/other_installation_options/windows_platform_installer).  You can skip the "getting the code" step.
+## Guided Installation
 
-For more flexibility, you can set up either of the following web servers, and use Composer to get the code:
+If you are unsure on how this all works, please jump on our [lessons](https://www.silverstripe.org/learn/lessons/v4/).
+Webserver setup is covered in
+[Lesson 4: Setting up a local dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1) 
 
- * [Install using IIS](installation/other_installation_options/windows_iis7)
- * [Install using Apache/WAMP](installation/windows)
-
-### Mac OS X
-
-Mac OS X comes with a built-in webserver, but there are a number of other options:
-
- * [Install using MAMP](installation/mac_osx)
- * [Install using Homebrew](installation/other_installation_options/mac_osx_homebrew)
-
-### Virtual Machines through Vagrant
-
-[Vagrant](https://www.vagrantup.com/) creates portable development environments
-which can be hosted on Linux, Windows and Mac OS X. The virtual machine
-usually runs a flavour of Linux. As a self-contained pre-configured environment,
-getting up an running with Vagrant tends to be easier than creating a complete
-development environment from scratch on your own machine.
-
- * [silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
- * [BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
-
-Note: These instructions are supported by the community.
-
-## Virtual Machines through Bitnami
-
-[Bitnami](https://bitnami.com) is an online service that makes it easy to get
-apps running on cloud providers like Amazon Web Services as well as local
-virtualised environments. Bitnami has a [SilverStripe Virtual Machine](https://bitnami.com/stack/silverstripe/virtual-machine)
-ready for download or installation on a cloud platform.
 
 ## Troubleshooting
 
-If you run into trouble, see [common-problems](installation/common_problems) or
+If you run into trouble, see [common-problems](common_problems) or
 check our [community help options](https://www.silverstripe.org/community/).
-
-
-## Related Lessons
-* [Up and running](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
-* [Creating your first project](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-project)
-* [Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
-* [Working with multiple templates](https://www.silverstripe.org/learn/lessons/v4/working-with-multiple-templates-1)
-
-## Related Documentation
-
- * [Module installation](/developer_guides/extending/modules)
-
 

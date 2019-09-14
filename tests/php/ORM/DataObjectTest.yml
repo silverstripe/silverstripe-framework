@@ -179,3 +179,13 @@ SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst:
     ManyNext:
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test1
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test3
+
+SilverStripe\ORM\Tests\DataObjectTest\TreeNode:
+  root:
+    Title: Root
+  child:
+    Title: Children
+    Parent: =>SilverStripe\ORM\Tests\DataObjectTest\TreeNode.root
+  grandchild:
+    Title: GrandChildren
+    Parent: =>SilverStripe\ORM\Tests\DataObjectTest\TreeNode.child

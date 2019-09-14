@@ -1589,4 +1589,12 @@ class MemberTest extends FunctionalTest
         $result = $member->changePassword('Password123456789'); // 17 characters long
         $this->assertTrue($result->isValid());
     }
+
+    public function testGetLastName()
+    {
+        $member = new Member();
+        $member->Surname = 'Johnson';
+
+        $this->assertSame('Johnson', $member->getLastName(), 'getLastName should proxy to Surname');
+    }
 }

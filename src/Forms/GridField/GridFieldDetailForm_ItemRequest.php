@@ -353,20 +353,31 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $canDelete = $this->record->canDelete();
         $actions = FieldList::create();
         $manager = $this->getStateManager();
+
+        $actions = FieldList::create();
+        $majorActions = CompositeField::create()->setName('MajorActions');
+        $majorActions->setFieldHolderTemplate(get_class($majorActions) . '_holder_buttongroup');
+        $actions->push($majorActions);
+
         if ($this->record->ID !== 0) { // existing record
             if ($canEdit) {
+                $noChangesClasses = 'btn-outline-primary font-icon-tick';
                 $actions->push(
                     FormAction::create(
                         'doSave',
                         _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save')
                     )
                         ->setUseButtonTag(true)
-                        ->addExtraClass('btn-primary font-icon-save')
-                );
+                        ->addExtraClass($noChangesClasses)
+                        ->setAttribute('data-btn-alternate-add', 'btn-primary font-icon-save')
+                        ->setAttribute('data-btn-alternate-remove', $noChangesClasses)
+                        ->setUseButtonTag(true)
+                        ->setAttribute('data-text-alternate', _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save')));
             }
 
             if ($canDelete) {
-                $actions->push(
+                $actions->insertAfter(
+                    'MajorActions',
                     FormAction::create(
                         'doDelete',
                         _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete')
@@ -383,7 +394,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $actions->push($this->getRightGroupField());
         } else { // adding new record
             // Change the Save label to 'Create'
-            $actions->push(
+            $majorActions->push(
                 FormAction::create(
                     'doSave',
                     _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create')
@@ -402,7 +413,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     $oneLevelUp->Link, // url
                     _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );
-                $actions->push(new LiteralField('cancelbutton', $text));
+                $actions->insertAfter('MajorActions', new LiteralField('cancelbutton', $text));
             }
         }
 
@@ -629,9 +640,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $this->record = $this->record->newClassInstance($newClassName);
         }
 
-        // Save form and any extra saved data into this dataobject
+        // Save form and any extra saved data into this dataobject.
+        // Set writeComponents = true to write has-one relations / join records
         $form->saveInto($this->record);
-        $this->record->write();
+        $this->record->write(false, false, false, true);
         $this->extend('onAfterSave', $this->record);
 
         $extraData = $this->getExtraSavedData($this->record, $list);

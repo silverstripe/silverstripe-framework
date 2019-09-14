@@ -39,7 +39,7 @@ Once complete submit the RFC in the prescribed format above as a GitHub issue as
 ## What next?
 The RFC will be raised and discussed by the core committers in the monthly Google Hangout sessions, a vote for accepting the RFC will be taken requiring a majority vote (with at least a quorum of more than half of the core committers present).
 
-Once approved it will be announced on the [developer list](https://groups.google.com/forum/#!forum/silverstripe-dev) and if relevant, [UserVoice](http://silverstripe.uservoice.com) and [Roadmap](https://www.silverstripe.org/software/roadmap) will be updated. This now means that if a pull request meeting the idea set out in the RFC was raised that it would be merged by the Core Committers (pending the usual code peer review).
+Once approved it will be announced on the [developer list](https://groups.google.com/forum/#!forum/silverstripe-dev) and if relevant, a related [feature idea](https://forum.silverstripe.org/c/feature-ideas) and [Roadmap](https://www.silverstripe.org/software/roadmap) will be updated. This now means that if a pull request meeting the idea set out in the RFC was raised that it would be merged by the Core Committers (pending the usual code peer review).
 
 ## RFC Archives
 

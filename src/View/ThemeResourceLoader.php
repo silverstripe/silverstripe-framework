@@ -236,10 +236,14 @@ class ThemeResourceLoader implements Flushable
             foreach ($themePaths as $themePath) {
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
-                $path = Path::join($pathParts) . '.ss';
-                if (file_exists($path)) {
-                    $this->getCache()->set($cacheKey, $path);
-                    return $path;
+                try {
+                    $path = Path::join($pathParts) . '.ss';
+                    if (file_exists($path)) {
+                        $this->getCache()->set($cacheKey, $path);
+                        return $path;
+                    }
+                } catch (InvalidArgumentException $e) {
+                    // No-op
                 }
             }
         }

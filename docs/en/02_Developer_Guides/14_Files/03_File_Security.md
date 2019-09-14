@@ -314,7 +314,7 @@ to put protected files into `/sites/myapp/protected` with the below `.env` setti
 SS_PROTECTED_ASSETS_PATH="/sites/myapp/protected"
 ```
 
-### Configuring: File types
+### Configuring: File types {#file-types}
 
 In addition to configuring file locations, it's also important to ensure that you have allowed the
 appropriate file extensions for your instance. This can be done by setting the `File.allowed_extensions`
@@ -333,7 +333,7 @@ any requests to the assets directory. Invalid files will be blocked regardless o
 exist or not, and will not invoke any PHP processes.
 </div>
 
-### Configuring: Protected file headers
+### Configuring: Protected file headers {#protected_file_headers}
 
 In certain situations, it's necessary to customise HTTP headers required either by
 intermediary caching services, or by the client, or upstream caches.

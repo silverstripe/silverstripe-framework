@@ -1101,6 +1101,32 @@ warnings:
     'SilverStripe\Control\Email\Email->setTemplate()':
       message: 'Renamed to setHTMLTemplate()'
       replacement: 'setHTMLTemplate'
+    'SilverStripe\Control\Email\Email->replyTo()':
+      message: 'Renamed to setReplyTo()'
+      replacement: 'setReplyTo'
+    'SilverStripe\Control\Email\Email->attachFile()':
+      message: 'Renamed to addAttachment()'
+      replacement: 'addAttachment'
+    'SilverStripe\Control\Email\Email->Subject()':
+      message: 'Renamed to getSubject()'
+      replacement: 'getSubject'
+    'SilverStripe\Control\Email\Email->Body()':
+      message: 'Renamed to getBody()'
+      replacement: 'getBody'
+    'SilverStripe\Control\Email\Email->From()':
+      message: 'Renamed to getFrom()'
+      replacement: 'getFrom'
+    'SilverStripe\Control\Email\Email->To()':
+      message: 'Renamed to getTo()'
+      replacement: 'getTo'
+    'SilverStripe\Control\Email\Email->Cc()':
+      message: 'Renamed to getCc()'
+      replacement: 'getCc'
+    'SilverStripe\Control\Email\Email->Bcc()':
+      message: 'Renamed to getBcc()'
+      replacement: 'getBcc'
+    'SilverStripe\Control\Email\Email->addCustomHeader()':
+      message: 'addCustomHeader() is removed'
     'SilverStripe\i18n\i18n::get_language_name()':
       message: 'moved to SilverStripe\i18n\Data\Locales::languageName()'
       replacement: 'getData()->languageName'

@@ -154,7 +154,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     {
         // Find the data column for the given named column
         $columns = $this->getDisplayFields($gridField);
-        $columnInfo = $columns[$columnName];
+        $columnInfo = array_key_exists($columnName, $columns) ? $columns[$columnName] : null;
 
         // Allow callbacks
         if (is_array($columnInfo) && isset($columnInfo['callback'])) {

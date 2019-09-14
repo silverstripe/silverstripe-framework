@@ -83,15 +83,6 @@ class Group extends DataObject
 
     private static $table_name = "Group";
 
-    public function populateDefaults()
-    {
-        parent::populateDefaults();
-
-        if (!$this->Title) {
-            $this->Title = _t(__CLASS__ . '.NEWGROUP', "New Group");
-        }
-    }
-
     public function getAllChildren()
     {
         $doSet = new ArrayList();
@@ -104,6 +95,16 @@ class Group extends DataObject
         }
 
         return $doSet;
+    }
+    
+    private function getDecodedBreadcrumbs()
+    {
+        $list = Group::get()->exclude('ID', $this->ID);
+        $groups = ArrayList::create();
+        foreach ($list as $group) {
+            $groups->push(['ID' => $group->ID, 'Title' => $group->getBreadcrumbs(' » ')]);
+        }
+        return $groups;
     }
 
     /**
@@ -125,7 +126,7 @@ class Group extends DataObject
                     $parentidfield = DropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+                        $this->getDecodedBreadcrumbs()
                     )->setEmptyString(' '),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),

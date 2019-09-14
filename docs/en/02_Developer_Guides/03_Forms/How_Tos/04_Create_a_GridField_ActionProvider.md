@@ -1,7 +1,9 @@
 # How to add a custom action to a GridField row
 
+You can add an action to the row(s) of a [GridField](/developer_guides/forms/field_types/gridfield), such as the built in edit or delete actions.
+
 In a [GridField](/developer_guides/forms/field_types/gridfield) instance each table row can have a
-number of actions located the end of the row such as edit or delete actions.
+number of actions located the end of the row.
 Each action is represented as a instance of a specific class
 (e.g [GridFieldEditButton](api:SilverStripe\Forms\GridField\GridFieldEditButton)) which has been added to the `GridFieldConfig`
 for that `GridField`
@@ -10,7 +12,14 @@ As a developer, you can create your own custom actions to be located alongside
 the built in buttons.
 
 For example let's create a custom action on the GridField to allow the user to
-perform custom operations on a row.
+perform custom operations on a row:
+
+1. Create a custom action
+2. [Add your custom action to the current GridFieldConfig](#add-the-gridfieldcustomaction-to-the-current-gridfieldconfig)
+
+_To create a custom action follow the [Basic GridFieldCustomAction boilerplate](#basic-gridfieldcustomaction-boilerplate) 
+below, and if you would like to create a custom action in the **GridField action menu** follow the 
+[Basic GridFieldCustomAction boilerplate implementing GridField_ActionMenuItem](#basic-gridfieldcustomaction-boilerplate-implementing-gridfield_actionmenuitem)_
 
 ## Basic GridFieldCustomAction boilerplate
 
@@ -30,7 +39,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function augmentColumns($gridField, &$columns) 
     {
-        if(!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns)) {
             $columns[] = 'Actions';
         }
     }
@@ -42,7 +51,7 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getColumnMetadata($gridField, $columnName) 
     {
-        if($columnName == 'Actions') {
+        if ($columnName === 'Actions') {
             return ['title' => ''];
         }
     }
@@ -54,7 +63,9 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function getColumnContent($gridField, $record, $columnName) 
     {
-        if(!$record->canEdit()) return;
+        if (!$record->canEdit()) {
+            return;
+        }
 
         $field = GridField_FormAction::create(
             $gridField,
@@ -74,15 +85,16 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
     {
-        if($actionName == 'docustomaction') {
-            // perform your action here
-
-            // output a success message to the user
-            Controller::curr()->getResponse()->setStatusCode(
-                200,
-                'Do Custom Action Done.'
-            );
+        if ($actionName !== 'docustomaction') {
+            return;
         }
+        // perform your action here
+
+        // output a success message to the user
+        Controller::curr()->getResponse()->setStatusCode(
+            200,
+            'Do Custom Action Done.'
+        );
     }
 }
 ```
@@ -167,36 +179,99 @@ use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Control\Controller;
 
-class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
+class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
 {
-
-    public function augmentColumns($gridField, &$columns) 
-    {
-        if(!in_array('Actions', $columns)) {
-            $columns[] = 'Actions';
-        }
-    }
 
     public function getTitle($gridField, $record, $columnName)
     {
-        return _t(__CLASS__ . '.Delete', "Delete");
+        return 'Custom action';
     }
+    
+    public function getCustomAction($gridField, $record)
+    {
+        if (!$record->canEdit()) {
+            return;
+        }
+        
+        return GridField_FormAction::create(
+            $gridField,
+            'CustomAction'.$record->ID,
+            'Custom action',
+            "docustomaction",
+            ['RecordID' => $record->ID]
+         );
+    }
+    
+    public function getExtraData($gridField, $record, $columnName)
+    {
+        $field = $this->getCustomAction($gridField, $record);
+        
+        if (!$field) {
+            return;
+        }
 
+        return $field->getAttributes();
+    }
+    
     public function getGroup($gridField, $record, $columnName)
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
 
-    public function getExtraData($gridField, $record, $columnName)
+    public function augmentColumns($gridField, &$columns) 
     {
-        if ($gridField) {
-            return $gridField->getAttributes();
+        if (!in_array('Actions', $columns)) {
+            $columns[] = 'Actions';
         }
-
-        return null;
     }
 
-    // ...rest of boilerplate code
+    public function getColumnAttributes($gridField, $record, $columnName) 
+    {
+        return ['class' => 'grid-field__col-compact'];
+    }
+
+    public function getColumnMetadata($gridField, $columnName) 
+    {
+        if ($columnName === 'Actions') {
+            return ['title' => ''];
+        }
+    }
+
+    public function getColumnsHandled($gridField) 
+    {
+        return ['Actions'];
+    }
+
+    public function getColumnContent($gridField, $record, $columnName) 
+    {
+        $field = $this->getCustomAction($gridField, $record);
+                
+        if (!$field) {
+            return;
+        }
+
+        return $field->Field();
+    }
+
+    public function getActions($gridField) 
+    {
+        return ['docustomaction'];
+    }
+
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data) 
+    {
+        if ($actionName !== 'docustomaction') {
+            return;
+        }
+        // perform your action here
+
+        // output a success message to the user
+        Controller::curr()->getResponse()->setStatusCode(
+            200,
+            'Do Custom Action Done.'
+        );
+    }
+}
 ```
 
 ## Related
