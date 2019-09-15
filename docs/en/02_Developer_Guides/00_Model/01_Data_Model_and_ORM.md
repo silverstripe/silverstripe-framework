@@ -471,7 +471,7 @@ Remove both Sam and Sig..
 
 ```php
 $players = Player::get()->exclude(
-    'FirstName', ['Sam','Sig']
+    'FirstName' => ['Sam','Sig']
 );
 ```
 
