@@ -207,7 +207,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *
      * @var array
      */
-    protected $unwantedButtons = null;
+    protected $unwantedButtons = [];
 
     /**
      * List of content css files to use for this instance, or null to default to editor_css config.
