@@ -100,6 +100,10 @@ SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode:
     Title: Child
     CanViewType: Inherit
     Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode.protected
+  restricted-page:
+    Title: Restricted Page
+    CanViewType: OnlyTheseUsers
+    ViewerGroups: =>SilverStripe\Security\Group.allsections
 
 SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode:
   about:
@@ -167,3 +171,7 @@ SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode:
     Title: Child
     CanViewType: Inherit
     Parent: =>SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode.protected
+  restricted-page:
+    Title: Restricted Page
+    CanViewType: OnlyTheseUsers
+    ViewerGroups: =>SilverStripe\Security\Group.allsections

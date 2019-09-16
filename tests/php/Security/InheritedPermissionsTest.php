@@ -151,6 +151,8 @@ class InheritedPermissionsTest extends SapphireTest
         $protected = $this->objFromFixture(TestPermissionNode::class, 'protected');
         $protectedChild = $this->objFromFixture(TestPermissionNode::class, 'protected-child');
         $editor = $this->objFromFixture(Member::class, 'editor');
+        $restricted = $this->objFromFixture(TestPermissionNode::class, 'restricted-page');
+        $admin = $this->objFromFixture(Member::class, 'admin');
 
         // Not logged in user can only access Inherit or Anyone pages
         Member::actAs(
@@ -182,6 +184,9 @@ class InheritedPermissionsTest extends SapphireTest
         $this->rootPermissions->setCanView(false);
 
         $this->assertFalse($history->canView($editor));
+
+        // Ensure admins can view everything, even if only a certain group is allowed to view it
+        $this->assertTrue($restricted->canView($admin));
     }
 
     public function testUnstagedViewPermissions()
