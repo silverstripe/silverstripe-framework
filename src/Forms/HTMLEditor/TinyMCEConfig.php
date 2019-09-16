@@ -201,6 +201,13 @@ class TinyMCEConfig extends HTMLEditorConfig
      * @var array
      */
     private static $editor_css = [];
+    
+    /**
+     * List of unwanted buttons to be removed from TinyMCE. List to be loaded from YAML file.
+     *
+     * @var array
+     */
+    protected $unwantedButtons = null;
 
     /**
      * List of content css files to use for this instance, or null to default to editor_css config.
@@ -602,6 +609,8 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     protected function getConfig()
     {
+        $this->removeButtons(static::config()->get('unwantedButtons'));
+        
         $settings = $this->getSettings();
 
         // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
