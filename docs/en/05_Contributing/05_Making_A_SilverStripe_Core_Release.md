@@ -144,7 +144,7 @@ is available, or within a reasonable period of time of such a release.
   containing security fixes. See below for setting up a temporary satis repository.
    * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
-   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
+   * Follow the steps for [making a core release](making_a_silverstripe_core_release)
  
 ### After release
 
