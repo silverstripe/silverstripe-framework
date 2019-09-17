@@ -166,13 +166,14 @@ class MemberAuthenticator implements Authenticator
      * @param HTTPRequest $request
      * @param Member $member
      * @param boolean $success
+     * @return LoginAttempt|null
      */
     protected function recordLoginAttempt($data, HTTPRequest $request, $member, $success)
     {
         if (!Security::config()->get('login_recording')
             && !Member::config()->get('lock_out_after_incorrect_logins')
         ) {
-            return;
+            return null;
         }
 
         // Check email is valid
@@ -206,7 +207,12 @@ class MemberAuthenticator implements Authenticator
 
         $attempt->Email = $email;
         $attempt->IP = $request->getIP();
+        
+        $member->extend('updateLoginAttempt', $attempt, $data, $request);
+        
         $attempt->write();
+        
+        return $attempt;
     }
 
     /**
