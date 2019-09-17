@@ -125,6 +125,8 @@ SS_DEPRECATION_ENABLED="0"
 
 ## Security Releases
 
+A security release is a [SilverStripe Core Release](making_a_silverstripe_core_release#standard-release-process) with patches for one or more security issues.
+
 ### Reporting an issue
 
 Report security issues in our [commercially supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
@@ -164,7 +166,7 @@ This rating determines which release lines are targetd with security fixes.
 
 ### Internal Security Process
 
-See [SilverStripe Core Release Process](making-a-silverstripe-core-release).
+See [SilverStripe Core Release Process](making_a_silverstripe_core_release).
 
 ### Pre-announcement mailing list
 
