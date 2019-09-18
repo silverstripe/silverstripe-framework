@@ -1148,6 +1148,26 @@ has been added to assist in migration of legacy files (see [file migration docum
 ./vendor/bin/sake dev/tasks/MigrateFileTask
 ```
 
+##### If you were using the versionedfiles on your 3.x site 
+
+SilverStripe 4 supersedes the `versionedfiles` module with its new support for
+properly versioned files. However, your file migration will leave all your old
+`_versions` folders as artefacts in the public filesystem, which means all the 
+unpublished versions of your old files are publicly accessible under a guessable URL.
+
+To work around this, you can use the `VersionedFilesMigrationTask`:
+
+`$ vendor/bin/sake dev/tasks/migrate-versionedfiles strategy=[delete|protect]`
+
+If you choose the `delete` strategy (default), the task will delete all `_versions`
+files for you. Be sure to take a snapshot of your `public/assets` folder before 
+doing so. If you choose the `protect` strategy, the task will drop an `.htaccess` file
+in your old `_versions` directories. **This method only works if you are using Apache
+to serve your static files**. If you are using another server such as Nginx, these files
+will remain publicly exposed. It is recommended you use the `delete` strategy if you are
+not using Apache.
+
+
 ### Any other script that needs running.
 
 Some third party modules may include their own migration tasks. Take a minute to consult the release notes of your third party dependencies to make sure you haven't missed anything.
