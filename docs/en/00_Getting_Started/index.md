@@ -16,7 +16,7 @@ Refer to our [server requirements](server_requirements) for details.
 
 If you're running Apache with MySQL/MariaDB already,
 and know your way around webservers, follow these steps to get started.
-SilverStripe is installed via [Composer](composer), a package management tool for PHP that
+SilverStripe is installed via [Composer](https://getcomposer.org), a package management tool for PHP that
 lets you install and upgrade the framework and other modules. 
 Assuming you've got this tool, run the following command to install SilverStripe:
 
@@ -25,9 +25,20 @@ composer create-project silverstripe/installer my-project
 ```
 
 Within the newly created `my-project` folder, point your webserver at the `public/` folder.
-Rename `.env.example` to `.env` in your project, and configure your database connection there.
-See [environment variables](environment_management) for available configuration options,
-e.g. to configure a default CMS login via `SS_DEFAULT_ADMIN_USERNAME`.
+
+Now create a `.env` file your project root (not the `public/` folder).
+It sets up the minimum required [environment variables](environment_management).
+Replace the placeholders as required:
+
+```
+SS_DATABASE_CLASS="MySQLDatabase"
+SS_DATABASE_NAME="<database>"
+SS_DATABASE_SERVER="localhost"
+SS_DATABASE_USERNAME="<user>"
+SS_DATABASE_PASSWORD="<password>"
+SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_PASSWORD="password"
+```
 
 Now you should be able to build your database by running this command:
 
@@ -38,11 +49,14 @@ vendor/bin/sake dev/build
 Your website should be available on your domain now (e.g. `http://localhost`).
 The CMS login can be accessed at `/admin`.
 
+For more information on how to maintain your installation or install projects,
+check out [Using SilverStripe with Composer](composer).
+
 ## Guided Installation
 
 If you are unsure on how this all works, please jump on our [lessons](https://www.silverstripe.org/learn/lessons/v4/).
 Webserver setup is covered in
-[Lesson 4: Setting up a local dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1) 
+[Lesson 4: Setting up a local dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1).
 
 
 ## Troubleshooting

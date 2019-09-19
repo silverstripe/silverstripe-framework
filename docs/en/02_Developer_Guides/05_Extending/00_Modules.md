@@ -8,7 +8,8 @@ framework.
 
 A module is a collection of classes, templates, and other resources that is loaded into a directory.
 Usually this directory is a [Composer package](https://getcomposer.org/), which is placed in the `vendor/` folder.
-SilverStripe modules are just Composer packages with a toplevel `_config` directory or `_config.php` file.
+SilverStripe modules are just Composer packages with a toplevel `_config` directory or `_config.php` file,
+as well as a special type in their `composer.json` file.
 
 ```
 app/
@@ -26,7 +27,7 @@ vendor/my_vendor/my_module/
 SilverStripe will automatically include any PHP classes and templates from within your module when you next flush your
 cache.
 
-Creating a module is a good way to re-use abstract code and templates across multiple projects. SilverStripe already
+Creating a module is a good way to re-use code and templates across multiple projects. SilverStripe already
 has certain modules included, for example the `cms` module and core functionality such as commenting and spam protection
 are also abstracted into modules allowing developers the freedom to choose what they want.
 
