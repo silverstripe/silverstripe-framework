@@ -9,7 +9,6 @@ This guide is intended to be followed by core contributors, allowing them to tak
 the latest development branch of each of the core modules, and building a release.
 The artifacts for this process are typically:
 
- * A downloadable tar / zip on silverstripe.org
  * A published announcement
  * A new composer installable stable tag for silverstripe/installer
 
@@ -36,9 +35,6 @@ As a core contributor it is necessary to have installed the following set of too
   `pip install transifex-client`
   If you're on OSX 10.10+, the standard Python installer is locked down.
   Use `brew install python; sudo easy_install pip` instead
-* [AWS CLI tools](https://aws.amazon.com/cli/):
-  `pip install awscli`
-* The `tar` and `zip` commands
 * A good `.env` setup in your localhost webroot.
 
 Example `.env`:
@@ -71,9 +67,6 @@ the [core committers](core_committers), who will assist with setting up your cre
 * Write permissions on the [silverstripe](https://github.com/silverstripe) organisation.
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
   Set up a [~/.transifexrc](https://docs.transifex.com/client/client-configuration) with your credentials.
-* AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket
-  ([add credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) via `aws configure`).
-* Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
 * Moderator permissions in the [Slack channel](https://www.silverstripe.org/community/slack-signup/)
 * Administrator account on [docs.silverstripe.org](https://docs.silverstripe.org) and
   [userhelp.silverstripe.org](https://userhelp.silverstripe.org).
@@ -87,6 +80,18 @@ For doing security releases the following additional setup tasks are necessary:
 * Permissions to write to the [security releases page](http://www.silverstripe.org/download/security-releases)
   and the [silverstripe.org CMS](http://www.silverstripe.org/admin).
 * Permission on [security pre-announcement mailing list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
+
+## Initiating a core release
+
+Releases are documented as issues in the [silverstripe/framework Github repository](https://github.com/silverstripe/silverstripe-framework). Create an issue
+using one of the three release templates. This will create a checklist for you to follow that will guide you through the release and ensure you don't miss
+any steps.
+
+Please note that there is a lot of duplication across the lists, so when making changes, be sure to make the update to all release types to which it applies.
+
+If a minor release contains security fixes, you will need to either create two issues, or simply reference the security checklist in parallel with the minor release checklist.
+
+When the release is complete, close the issue.
 
 ## Security release process
 
@@ -124,37 +129,6 @@ is available, or within a reasonable period of time of such a release.
    * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo. Don't forget to update branches from the upstream repo.
    * Ensure that all security commit messages are prefixed with the CVE. E.g. "[CVE-2019-001] Fixed invalid XSS"
    * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
-
-### Before release (or release candidate)
-
-   * For issues rated "high" or "critical" (CVSS of >=7.0), post a pre-announcement to the [security pre-announcement list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
-     It should include a basic "preannouncement description" which doesn't give away too much,
-     the CVSS score as well as the CVE identifier.
-   * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794).
-     Populate it with the information from the [Github project board](https://github.com/silverstripe-security/security-issues/projects/1).
-   * Link to silverstripe.org security release page in the changelog.
-   * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-
-### Perform release
-
-   * Public disclosure of security vulnerabilities need to happen in stable releases (not pre-releases)
-   * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
-   * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
-   * Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
-  containing security fixes. See below for setting up a temporary satis repository.
-   * Once release testing is completed and the release is ready for stabilisation, then these fixes
-  can then be pushed to the upstream module fork, and the release completed as per normal.
-   * Follow the steps for [making a core release](making_a_silverstripe_core_release)
- 
-### After release
-
-   * Publish silverstripe.org security release page
-   * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
-   * File a [CVE Publication Request](https://cveform.mitre.org/), and add a link to the security release
-     through the "Link to the advisory" field. Note on the security issue thread
-     that you've requested publication (to avoid double ups)
-   * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-
 
 ### Setting up satis for hosting private security releases
 
@@ -232,32 +206,9 @@ The release process, at a high level, involves creating a release, publishing it
 reviewing the need for either another pre-release or a final stable tag within a short period
 (normally within 3-5 business days).
 
-When creating a new pre-release or stable, the following process is broken down into two
-main sets of commands:
+### Using cow, the release tool
 
-### Stage 1: Release preparation:
-
-If you are managing a release, it's best to first make sure that SilverStripe marketing
-are aware of any impending release. This is so that they can ensure that a relevant blog
-post will appear on [www.silverstripe.org/blog](http://www.silverstripe.org/blog/), and
-cross-posted to other relevant channels such as social media.
-Blog posts should be prepared for each major, minor and security releases.
-Patch releases, alphas, betas and release candidates usually don't need blog posts,
-unless they're introducing important changes (e.g. for a new major release). 
-Sending an email to [marketing@silverstripe.com](mailto:marketing@silverstripe.com)
-with an overview of the release and a rough release timeline.
-
-Check all tickets assigned to that milestone are either closed or reassigned to another milestone.
-Use the [list of all issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
-as a starting point, and add a `milestone:"your-milestone"` filter.
-
-Merge up from other older [supported release branches](release-process#supported-versions) (e.g. merge `4.0`->`4.1`, `4.1`->`4.2`, `4.2`->`4`, `4`->`master`).
-
-This is the part of the release that prepares and tests everything locally, but
-doe not make any upstream changes (so it's safe to run without worrying about
-any mistakes migrating their way into the public sphere).
-
-Invoked by running `cow release` in the format as below:
+Releases are instantiated by running `cow release` in the format as below:
 
 `cow release <version> [recipe] -vvv`
 
@@ -321,40 +272,9 @@ and needs to be manually advanced):
   links to the security registrar (http://www.silverstripe.org/download/security-releases)
   match the pages saved in draft.
 
-Once the release task has completed, it may be ideal to manually test the site out
-by running it locally (e.g. `http://localhost/release-3.3.4`) to do some smoke-testing
-and make sure that there are no obvious issues missed.
+#### Publishing with cow
 
-Since `cow` will only run the unit test suite, you'll need to check
-the build status of Behat end-to-end tests manually on travis-ci.org.
-Check the badges on the various modules available on [github.com/silverstripe](http://github.com/silverstripe).
-
-It's also ideal to eyeball the Git changes generated by the release tool, making sure
-that no translation strings were unintentionally lost, and that the changelog was generated correctly.
-
-In particular, double check that all necessary information is included in the release notes,
-including:
-
-* Upgrading notes
-* Security fixes included
-* Major changes
-
-Before publication, ensure that the release plan has been peer reviewed by another member of the core team.
-
-Once this has been done, then the release is ready to be published live.
-
-### Stage 2: Release publication
-
-Once a release has been generated, has its translations updated, changelog generated,
-and tested, the next step is to publish the release. This involves tagging,
-building an archive, and uploading to
-[www.silverstripe.org](http://www.silverstripe.org/software/download/) download page.
-
-Invoked by running `cow release:publish` in the format as below:
-
-`cow release:publish <version> [<recipe>] -vvv`
-
-E.g.
+Publication of the release is initiated with:
 
 `cow release:publish 4.0.1 silverstripe/installer`
 
@@ -364,122 +284,7 @@ This command has these options:
 * `--directory <directory>` to specify the folder to look for the project created in the prior step. As with
   above, it will be guessed if omitted. You can run this command in the `./release-<version>` directory and
   omit this option.
-* `--aws-profile <profile>` to specify the AWS profile name for uploading releases to s3. Check with
-  damian@silverstripe.com if you don't have an AWS key setup.
-* `--skip-archive-upload` to disable both "archive" and "upload". This is useful if doing a private release and
-  you don't want to upload this file to AWS.
-* `--skip-upload` to disable the "upload" command (but not archive)
 
-As with the `cow release` command, this step is broken down into the following
-subtasks which are invoked in sequence:
-
-* `release:tag` Each module will have the appropriate tag applied (except the theme). All tags are pushed up to origin
-  on github.
-* `release:archive` This will generate a new tar.gz and zip archive, each for
-  cms and framework-only installations. These will be copied to the root folder
-  of the release directory, although the actual build will be created in temporary
-  directories (so any temp files generated during testing will not end up in the release).
-  If the tags generated in the prior step are not yet available on packagist (which can
-  take a few minutes at times) then this task will cycle through a retry-cycle,
-  which will re-attempt the archive creation periodically until these tags are available.
-* `release:upload` This will invoke the AWS CLI command to upload these archives to the
-  s3 bucket `silverstripe-ssorg-releases`. If you have setup your AWS profile
-  for silverstripe releases under a non-default name, you can specify this profile
-  on the command line with the `--aws-profile=<profile>` command.
-  See "Stage 3: Let the world know" to check if this worked correctly.
-
-Once all of these commands have completed there are a couple of final tasks left that
-aren't strictly able to be automated:
-
-* It will be necessary to perform a post-release merge
-  on open source. This normally will require you to merge the temporary release branch into the
-  source branch (e.g. merge 3.2.4 into 3.2), or sometimes create new branches if
-  releasing a new minor version, and bumping up the branch-alias in composer.json.
-  E.g. branching 3.3 from 3, and aliasing 3 as 3.4.x-dev. You can then delete
-  the temporary release branches. This will need to be done before updating the
-  release documentation in stage 3.
-* Merging up the changes in this release to newer branches, following the
-  SemVer pattern (e.g. 3.2.4 > 3.2 > 3.3 > 3 > master). The more often this is
-  done the easier it is, but this can sometimes be left for when you have
-  more free time. Branches not receiving regular stable versions anymore (e.g.
-  3.0 or 3.1) can be omitted.
-* Set the github milestones to completed, and create placeholders for the next
-  minor versions. It may be necessary to re-assign any issues assigned to the prior
-  milestones to these new ones.
-* Make sure that the [releases page](https://github.com/silverstripe/silverstripe-installer/releases)
-  on github shows the new tag.
-
-*Updating non-patch versions*
-
-If releasing a new major or minor version it may be necessary to update various SilverStripe portals. Normally a new
-minor version will require a new branch option to be made available on each site menu. These sites include:
-
-* [docs.silverstripe.org](https://docs.silverstripe.org):
-  * New branches (minor releases) require a code update. Changes are made to
-    [github](https://github.com/silverstripe/doc.silverstripe.org) and deployed via
-    [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-Developer-Docs/environment/Production/)
-  * The new version needs to be added to `app/_config/docs-repositories.yml`
-  * Update the version for the "contributing" rewrite rule in `.htaccess` (`RewriteRule ^(.*)/(.*)/contributing/?(.*)?$ ...`)
-  * Updates to markdown only can be made via the [build tasks](https://docs.silverstripe.org/dev/tasks).
-    See below for more details.
-* [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2):
-  * Updated similarly to docs.silverstripe.org: Code changes are made to
-    [github](https://github.com/silverstripe/userhelp.silverstripe.org) and deployed via
-    [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-User-Docs/environment/Production/).
-  * The content for this site is pulled from [silverstripe-userhelp-content](https://github.com/silverstripe/silverstripe-userhelp-content)
-  * Updates to markdown made via the [build tasks](https://userhelp.silverstripe.org/dev/tasks).
-    See below for more details.
-* [demo.silverstripe.org](http://demo.silverstripe.org/): Update code on
-  [github](https://github.com/silverstripe/demo.silverstripe.org/)
-  and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/ss3demo/environment/live).
-* [api.silverstripe.org](https://api.silverstripe.org): Update on [github](https://github.com/silverstripe/api.silverstripe.org)
-  and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/api/environment/live). Currently
-  the only way to rebuild the api docs is via SSH in and running the apigen task.
-
-Further manual work on major or minor releases:
-
- * Check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
-the right major version. This should match the major version of the current release. E.g. all versions of 4.x
-should be set to `4.0.0`.
- * Update the [userhelp.silverstripe.org](userhelp.silverstripe.org) version link in `LeftAndMain.help_links`
-
-*Updating markdown files*
-
-When updating markdown on sites such as userhelp.silverstripe.org or docs.silverstripe.org, the process is similar:
-
-* Run `RefreshMarkdownTask` to pull down new markdown files.
-* Then `RebuildLuceneDocsIndex` to update search indexes.
-
-Running either of these tasks may time out when requested, but will continue to run in the background. Normally
-only the search index rebuild takes a long period of time.
-
-Note that markdown is automatically updated daily, and this should only be done if an immediate refresh is necessary.
-
-### Stage 3: Let the world know
-
-Once a release has been published there are a few places where user documentation
-will need to be regularly updated.
-
-* Make sure that the [download page](http://www.silverstripe.org/download) on
-  silverstripe.org has the release available. If it's a stable, it will appear
-  at the top of the page. If it's a pre-release, it will be available under the
-  [development builds](http://www.silverstripe.org/download#download-releases)
-  section. If it's not available, you might need to check that the release was
-  properly uploaded to aws s3, or that you aren't viewing a cached version of
-  the download page. You can cache-bust this by adding `?release=<version>` to
-  the url. If things aren't working properly (and you have admin permissions)
-  you can run the [CoreReleaseUpdateTask](http://www.silverstripe.org/dev/tasks/CoreReleaseUpdateTask)
-  to synchronise with packagist.
-* Ensure that [docs.silverstripe.org](http://docs.silverstripe.org) has the
-  updated documentation and the changelog link in your announcement works.
-* Announce the release on the ["Releases" forum](https://forum.silverstripe.org/c/releases).
-  Needs to happen on every minor release for previous releases, see [supported versions](https://docs.silverstripe.org/en/4/contributing/release_process/#supported-versions)
-* Announce any new EOLs for minor versions on the ["Releases" forum](https://forum.silverstripe.org/c/releases).
-* Update the [roadmap](https://www.silverstripe.org/roadmap) with new dates for EOL versions ([CMS edit link](https://www.silverstripe.org/admin/pages/edit/EditForm/3103/field/TableComponentItems/item/670/edit))
-* Update the [Slack](https://www.silverstripe.org/community/slack-signup/) topic to include the new release version.
-* For major or minor releases: Work with SilverStripe marketing to get a blog post out.
-  They might choose to announce the release on social media as well. 
-* If the minor or major release includes security fixes, follow the publication instructions in the [Security Release Process](#security-release-process) section.
 
 ## See also
 

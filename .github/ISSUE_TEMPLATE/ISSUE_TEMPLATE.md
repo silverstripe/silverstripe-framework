@@ -1,3 +1,7 @@
+---
+name: Report a bug
+about: Standard bug report for an issue in the core release
+---
 ## Affected Version
 
 Show version numbers by pasting the output of `composer info --direct`.
