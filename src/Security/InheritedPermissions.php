@@ -737,6 +737,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      */
     protected function generateCacheKey($type, $memberID)
     {
-        return "{$type}-{$memberID}";
+        $classKey = str_replace('\\', '-', $this->baseClass);
+        return "{$type}-{$classKey}-{$memberID}";
     }
 }
