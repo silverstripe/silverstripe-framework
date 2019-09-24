@@ -268,6 +268,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         'menubar' => false,
         'language' => 'en',
         'branding' => false,
+        'upload_folder_id' => null, // Set folder ID for insert media dialog
     ];
 
     /**
