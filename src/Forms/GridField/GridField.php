@@ -247,6 +247,7 @@ class GridField extends FormField
         $copy = clone $this;
         $copy->setReadonly(true);
         $copyConfig = $copy->getConfig();
+        $hadEditButton = $copyConfig->getComponentByType(GridFieldEditButton::class) !== null;
 
         // get the whitelist for allowable readonly components
         $allowedComponents = $this->getReadonlyComponents();
@@ -257,8 +258,8 @@ class GridField extends FormField
             }
         }
 
-        // As the edit button may have been removed, add a view button if it doesn't have one
-        if (!$copyConfig->getComponentByType(GridFieldViewButton::class)) {
+        // If the edit button has been removed, replace it with a view button
+        if ($hadEditButton && !$copyConfig->getComponentByType(GridFieldViewButton::class)) {
             $copyConfig->addComponent(new GridFieldViewButton);
         }
 
