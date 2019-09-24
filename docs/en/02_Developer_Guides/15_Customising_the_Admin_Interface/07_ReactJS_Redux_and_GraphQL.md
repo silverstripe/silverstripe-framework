@@ -18,7 +18,8 @@ All of these pillars of the frontend application can be customised, giving you m
 <div class="alert" markdown="1">
 These technologies underpin the future of SilverStripe CMS development, but their current implementation is
 _experimental_. Our APIs are not expected to change drastically between releases, but they are excluded from
-our Semver commitments for the time being. Any breaking changes will be clearly signalled in release notes.
+our [semantic versioning](https://semver.org) commitments for the time being. Any breaking changes will be
+clearly signalled in release notes.
 </div>
 
 First, a brief summary of what each of these are:
