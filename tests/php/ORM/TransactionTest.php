@@ -157,7 +157,12 @@ class TransactionTest extends SapphireTest
     public function testReadOnlyTransaction()
     {
         if (!DB::get_conn()->supportsTransactions()) {
-            $this->markTestSkipped('Current database is doesn\'t support transactions');
+            $this->markTestSkipped('Current database doesn\'t support transactions');
+            return;
+        }
+
+        if (!DB::get_conn()->supportsTransactionMode('READ ONLY')) {
+            $this->markTestSkipped('Current database doesn\'t support READ ONLY transactions');
             return;
         }
 
