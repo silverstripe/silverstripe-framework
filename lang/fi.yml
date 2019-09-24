@@ -34,8 +34,6 @@ fi:
     LOGGED_IN_ERROR: 'Sinun täytyy olla kirjautuneena vaihtaaksesi salasanasi.'
     MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'ei asetettu'
     TODAY: tänään
@@ -48,7 +46,6 @@ fi:
     VALIDDATETIMEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun päivämäärän ja ajan minimiarvoon  ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Valitse)
-    CHOOSE_MODEL: '(Valitse {name})'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'

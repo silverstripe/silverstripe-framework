@@ -40,6 +40,16 @@ class HTML
     ];
 
     /**
+     * List of attributes that should be rendered even if they contain no value
+     *
+     * @config
+     * @var array
+     */
+    private static $legal_empty_attributes = [
+        'alt',
+    ];
+
+    /**
      * Construct and return HTML tag.
      *
      * @param string $tag
@@ -52,10 +62,13 @@ class HTML
         $tag = strtolower($tag);
 
         // Build list of arguments
+        $legalEmptyAttributes = static::config()->get('legal_empty_attributes');
         $preparedAttributes = '';
         foreach ($attributes as $attributeKey => $attributeValue) {
+            $whitelisted = in_array($attributeKey, $legalEmptyAttributes);
+
             // Only set non-empty strings (ensures strlen(0) > 0)
-            if (strlen($attributeValue) > 0) {
+            if (strlen($attributeValue) > 0 || $whitelisted) {
                 $preparedAttributes .= sprintf(
                     ' %s="%s"',
                     $attributeKey,

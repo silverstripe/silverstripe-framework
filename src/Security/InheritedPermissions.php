@@ -357,21 +357,25 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         $baseTable = DataObject::getSchema()->baseDataTable($this->getBaseClass());
 
         if ($member && $member->ID) {
-            // Determine if this member matches any of the group or other rules
-            $groupJoinTable = $this->getJoinTable($type);
-            $uninheritedPermissions = $stageRecords
-                ->where([
-                    "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
-                    => [
-                        self::ANYONE,
-                        self::LOGGED_IN_USERS,
-                        self::ONLY_THESE_USERS
-                    ]
-                ])
-                ->leftJoin(
-                    $groupJoinTable,
-                    "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
-                )->column('ID');
+            if (!Permission::checkMember($member, 'ADMIN')) {
+                // Determine if this member matches any of the group or other rules
+                $groupJoinTable = $this->getJoinTable($type);
+                $uninheritedPermissions = $stageRecords
+                    ->where([
+                        "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
+                        => [
+                            self::ANYONE,
+                            self::LOGGED_IN_USERS,
+                            self::ONLY_THESE_USERS
+                        ]
+                    ])
+                    ->leftJoin(
+                        $groupJoinTable,
+                        "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
+                    )->column('ID');
+            } else {
+                $uninheritedPermissions = $stageRecords->column('ID');
+            }
         } else {
             // Only view pages with ViewType = Anyone if not logged in
             $uninheritedPermissions = $stageRecords
@@ -748,6 +752,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      */
     protected function generateCacheKey($type, $memberID)
     {
-        return "{$type}-{$memberID}";
+        $classKey = str_replace('\\', '-', $this->baseClass);
+        return "{$type}-{$classKey}-{$memberID}";
     }
 }
