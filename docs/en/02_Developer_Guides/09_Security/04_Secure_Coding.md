@@ -506,9 +506,8 @@ you can bypass the rules for a specific directory.
 Here's an example for a `.htaccess` file used by the Apache web server:
 
 ```
-<Files *.yml>
-    Order allow,deny
-    Allow from all
+<Files ~ "\.ya?ml$">
+    Require all granted
 </Files>
 ```
 
