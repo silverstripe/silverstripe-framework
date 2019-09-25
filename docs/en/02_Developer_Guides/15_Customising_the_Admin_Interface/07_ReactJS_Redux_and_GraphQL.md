@@ -15,6 +15,13 @@ There are some several members of this ecosystem that all work together to provi
 
 All of these pillars of the frontend application can be customised, giving you more control over how the admin interface looks, feels, and behaves.
 
+<div class="alert" markdown="1">
+These technologies underpin the future of SilverStripe CMS development, but their current implementation is
+_experimental_. Our APIs are not expected to change drastically between releases, but they are excluded from
+our [semantic versioning](https://semver.org) commitments for the time being. Any breaking changes will be
+clearly signalled in release notes.
+</div>
+
 First, a brief summary of what each of these are:
 
 ## React
