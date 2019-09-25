@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 use DOMAttr;
 use DOMElement;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
@@ -17,7 +18,17 @@ use stdClass;
  */
 class HTMLEditorSanitiser
 {
+    use Configurable;
     use Injectable;
+
+    /**
+     * rel attribute to add to links which have a target attribute (usually "_blank")
+     * noopener includes the behaviour we want, though some browsers don't yet support it and rely
+     * upon using noreferrer instead - see https://caniuse.com/rel-noopener for current browser compatibility
+     *
+     * @var string
+     */
+    private static $link_noopener_value = 'noopener, noreferrer';
 
     /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
     protected $elements = array();
@@ -277,6 +288,7 @@ class HTMLEditorSanitiser
             return;
         }
 
+        $linkNoopenerValue = $this->config()->get('link_noopener_value');
         $doc = $html->getDocument();
 
         /** @var DOMElement $el */
@@ -329,6 +341,22 @@ class HTMLEditorSanitiser
                 // And any forced attributes
                 foreach ($elementRule->attributesForced as $attr => $forced) {
                     $el->setAttribute($attr, $forced);
+                }
+            }
+
+            // add rel="noopener, noreferrer" to <a> tags with target="_blank" to prevent reverse tabnabbing
+            // https://www.owasp.org/index.php/Reverse_Tabnabbing
+            echo "* " . $linkNoopenerValue . "\n";
+            if ($linkNoopenerValue && $el->tagName === 'a') {
+                // user has checked the checkbox 'open link in new window'
+                if ($el->getAttribute('target') && $el->getAttribute('rel') !== $linkNoopenerValue) {
+                    $el->setAttribute('rel', $linkNoopenerValue);
+                } else {
+                    // user previously checked 'open link in new window' and noopener was added,
+                    // now user has unchecked the checkbox so we can remove noopener
+                    if ($el->getAttribute('rel') === $linkNoopenerValue && !$el->getAttribute('target')) {
+                        $el->removeAttribute('rel');
+                    }
                 }
             }
         }

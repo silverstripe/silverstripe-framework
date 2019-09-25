@@ -43,6 +43,24 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 '<p default1="specific1" force1="specific1">Test</p>',
                 '<p default1="specific1" force1="force1" default2="default2" force2="force2">Test</p>',
                 'Default attributes are set when not present in input, forced attributes are always set'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" target="_blank">Test</a>',
+                '<a href="/test" target="_blank" rel="noopener, noreferrer">Test</a>',
+                'noopener rel attribute is added when target attribute is set'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" target="_top">Test</a>',
+                '<a href="/test" target="_top" rel="noopener, noreferrer">Test</a>',
+                'noopener rel attribute is added when target is _top instead of _blank'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" rel="noopener, noreferrer">Test</a>',
+                '<a href="/test">Test</a>',
+                'noopener rel attribute is removed when target is not set'
             )
         );
 
@@ -55,6 +73,7 @@ class HTMLEditorSanitiserTest extends FunctionalTest
             $sanitiser = new HtmlEditorSanitiser($config);
 
             $htmlValue = HTMLValue::create($input);
+            echo $htmlValue->getContent() . "\n";
             $sanitiser->sanitise($htmlValue);
 
             $this->assertEquals($output, $htmlValue->getContent(), $desc);
