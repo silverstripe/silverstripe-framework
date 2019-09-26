@@ -3,9 +3,9 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use Exception;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -844,5 +844,20 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
+    }
+
+
+    /**
+     * Sets the upload folder name used by the insert media dialog
+     *
+     * @param string $folderName
+     * @return $this
+     */
+    public function setFolderName($folderName)
+    {
+        $folder = Folder::find_or_make($folderName);
+        $folderID = $folder ? $folder->ID : null;
+        $this->setOption('upload_folder_id', $folderID);
+        return $this;
     }
 }
