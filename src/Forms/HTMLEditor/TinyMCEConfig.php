@@ -853,7 +853,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      * @param string $folderName
      * @return $this
      */
-    public function setFolderName($folderName)
+    public function setFolderName($folderName): self
     {
         $folder = Folder::find_or_make($folderName);
         $folderID = $folder ? $folder->ID : null;
