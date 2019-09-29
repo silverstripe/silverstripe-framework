@@ -288,8 +288,8 @@ trait CustomMethods
                 if (
                     // always check for property
                     (isset($methodInfo['property']) && $methodInfo['property'] === $property) &&
-                    // check for index only if provided (otherwise assume true)
-                    (($index && isset($methodInfo['index']) && $methodInfo['index'] === $index) || true)
+                    // check for index only if provided
+                    (!$index || ($index && isset($methodInfo['index']) && $methodInfo['index'] === $index))
                 ) {
                     unset(self::$extra_methods[$class][$method]);
                 }
