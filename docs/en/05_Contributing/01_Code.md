@@ -83,7 +83,7 @@ which gets automatically chosen when creating a new pull request. This ensures y
 gets into the next minor release of the current major release.
 
 If you are changing existing APIs, introducing new APIs or major new features,
-please review our guidance on [supported versions](release-process#supported-versions).
+please review our guidance on [supported versions](release_process#supported-versions).
 You will need to change the branch for your pull request accordingly.
 
 
@@ -112,7 +112,7 @@ The current GitHub labels are grouped into five sections:
 | change/major | A change for the next major release (eg: 4.0) |
 | change/minor | A change for the next minor release (eg: 3.x) |
 | change/patch | A change for the next patch release (eg: 3.1.x) |
-| impact/critical | Broken functionality without workarounds, affecting major usage flows. Should target all [supported minor releases](release-process#supported-versions) |
+| impact/critical | Broken functionality without workarounds, affecting major usage flows. Should target all [supported minor releases](release_process#supported-versions) |
 | impact/high | Broken functionality with workarounds available, affecting major usage flows |
 | impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
 | impact/low | A nuisance but doesn't break any functionality (typos, etc) |
@@ -124,8 +124,8 @@ The current GitHub labels are grouped into five sections:
 | type/ux | User experience impact |
 | feedback-required/core-team | Core team members need to give an in-depth consideration |
 | feedback-required/author | This issue is awaiting feedback from the original author of the PR |
-| rfc/draft | [RFC](request-for-comment) under discussion |
-| rfc/accepted | [RFC](request-for-comment) where agreement has been reached |
+| rfc/draft | [RFC](request_for_comment) under discussion |
+| rfc/accepted | [RFC](request_for_comment) where agreement has been reached |
 | affects/* | Issue has been observed on a specific release line |
 
 ### Quickfire Do's and Don't's
@@ -153,7 +153,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 ## Check List
 
 * Adhere to our [coding conventions](/contributing/coding_conventions)
-* If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
+* If your patch is extensive, discuss it first on the [SilverStripe Forums](https://forum.silverstripe.org/c/feature-ideas) (ideally before doing any serious coding)
 * When working on existing tickets, provide status updates through ticket comments
 * Check your patches against the "master" branch, as well as the latest release branch
 * Write [unit tests](../developer_guides/testing/unit_testing)
