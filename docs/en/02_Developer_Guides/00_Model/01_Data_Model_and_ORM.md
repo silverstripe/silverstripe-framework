@@ -470,9 +470,9 @@ $players = Player::get()->exclude('FirstName', 'Sam');
 Remove both Sam and Sig..
 
 ```php
-$players = Player::get()->exclude(
+$players = Player::get()->exclude([
     'FirstName' => ['Sam','Sig']
-);
+]);
 ```
 
 `Exclude` follows the same pattern as filter, so for removing only Sam Minnée from the list:
