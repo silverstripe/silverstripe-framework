@@ -140,7 +140,11 @@ class GDBackend extends SS_Object implements Image_Backend {
 		$bytesPerPixel = $bits * $channels;
 
 		// width * height * bytes per pixel
-		$memoryRequired = $imageInfo[0] * $imageInfo[1] * $bytesPerPixel;
+		if ($imageInfo) {
+			$memoryRequired = $imageInfo[0] * $imageInfo[1] * $bytesPerPixel;
+		} else {
+			$memoryRequired = 0;
+		}
 
 		return $memoryRequired + memory_get_usage() < $limit;
 	}

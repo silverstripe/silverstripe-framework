@@ -726,6 +726,12 @@ class Security extends Controller implements TemplateGlobalProvider {
 				$curMember->logOut();
 			}
 
+			if (!headers_sent()) {
+				// To avoid a potential session fixation attack
+				// we're refreshing the session id so that it's
+				// always new and random for every authentication
+				session_regenerate_id(true);
+			}
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
 			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
 

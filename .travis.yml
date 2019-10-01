@@ -28,14 +28,11 @@ matrix:
       services:
        - mysql
 
-    - php: 7.3.0RC1
+    - php: 7.3
       env: DB=SQLITE
-      sudo: required
-      dist: xenial
-      addons:
-        apt:
-          packages:
-            - libzip4
+
+    - php: 7.4snapshot
+      env: DB=SQLITE INSTALL_PHPUNIT_FORK=1
 
     # CMS test
     - php: 5.5
@@ -61,9 +58,10 @@ before_script:
  - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick; fi
  - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | travis_retry pecl install imagick-3.3.0; fi
  - composer self-update || true
+ - if [ $INSTALL_PHPUNIT_FORK ]; then composer require --no-update --dev sminnee/phpunit-mock-objects:^3.4.7; fi
  - phpenv rehash
  - phpenv config-rm xdebug.ini || true
- - echo 'memory_limit = 2G' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+ - echo 'memory_limit = 3G' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - "if [ \"$BEHAT_TEST\" = \"\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
