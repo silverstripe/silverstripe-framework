@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Logging;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -127,12 +128,36 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
         $output = $renderer->renderHeader();
         $output .= $renderer->renderInfo("Website Error", $this->getTitle(), $this->getBody());
 
-        if (Email::config()->admin_email) {
-            $mailto = Email::obfuscate(Email::config()->admin_email);
-            $output .= $renderer->renderParagraph('Contact an administrator: ' . $mailto . '');
+        if (!is_null($contactInfo = $this->addContactAdministratorInfo())) {
+            $output .= $renderer->renderParagraph($contactInfo);
         }
 
         $output .= $renderer->renderFooter();
         return $output;
+    }
+
+    /**
+     * Generate the line with admin contact info
+     *
+     * @return string|null
+     */
+    private function addContactAdministratorInfo()
+    {
+        if (!$adminEmail = Email::config()->admin_email) {
+            return null;
+        }
+
+        if (is_string($adminEmail)) {
+            return 'Contact an administrator: ' . Email::obfuscate($adminEmail);
+        }
+
+        if (!is_array($adminEmail) || !count($adminEmail)) {
+            return null;
+        }
+
+        $email = array_keys($adminEmail)[0];
+        $name = array_values($adminEmail)[0];
+
+        return sprintf('Contact %s: %s', Convert::raw2xml($name), Email::obfuscate($email));
     }
 }
