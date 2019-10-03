@@ -18,6 +18,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\RelationList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
@@ -177,26 +178,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return $controller->redirect($noActionURL, 302);
         }
 
-        $canView = $this->record->canView();
-        $canEdit = $this->record->canEdit();
-        $canDelete = $this->record->canDelete();
-        $canCreate = $this->record->canCreate();
-
-        if (!$canView) {
-            $controller = $this->getToplevelController();
-            // TODO More friendly error
-            return $controller->httpError(403);
-        }
-
-        // Build actions
-        $actions = $this->getFormActions();
-
         // If we are creating a new record in a has-many list, then
         // pre-populate the record's foreign key.
         if ($list instanceof HasManyList && !$this->record->isInDB()) {
             $key = $list->getForeignKey();
             $id = $list->getForeignID();
             $this->record->$key = $id;
+        }
+
+        if (!$this->record->canView()) {
+            $controller = $this->getToplevelController();
+            // TODO More friendly error
+            return $controller->httpError(403);
         }
 
         $fields = $this->component->getFields();
@@ -218,20 +211,23 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $this,
             'ItemEditForm',
             $fields,
-            $actions,
+            $this->getFormActions(),
             $this->component->getValidator()
         );
 
         $form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
-        if ($this->record->ID && !$canEdit) {
+        if ($this->record->ID && !$this->record->canEdit()) {
             // Restrict editing of existing records
             $form->makeReadonly();
             // Hack to re-enable delete button if user can delete
-            if ($canDelete) {
+            if ($this->record->canDelete()) {
                 $form->Actions()->fieldByName('action_doDelete')->setReadonly(false);
             }
-        } elseif (!$this->record->ID && !$canCreate) {
+        } elseif (
+            !$this->record->ID
+            && !$this->record->canCreate(null, $this->getCreateContext())
+        ) {
             // Restrict creation of new records
             $form->makeReadonly();
         }
@@ -269,6 +265,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
         $this->extend("updateItemEditForm", $form);
         return $form;
+    }
+
+    /**
+     * Build context for verifying canCreate
+     * @see GridFieldAddNewButton::getHTMLFragments()
+     *
+     * @return array
+     */
+    protected function getCreateContext()
+    {
+        $gridField = $this->gridField;
+        $context = [];
+        if ($gridField->getList() instanceof RelationList) {
+            $record = $gridField->getForm()->getRecord();
+            if ($record && $record instanceof DataObject) {
+                $context['Parent'] = $record;
+            }
+        }
+        return $context;
     }
 
     /**
