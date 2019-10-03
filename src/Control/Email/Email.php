@@ -49,9 +49,10 @@ class Email extends ViewableData
 
     /**
      * This will be set in the config on a site-by-site basis
+     * @see https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
      *
      * @config
-     * @var string The default administrator email address.
+     * @var string|array The default administrator email address or array of [email => name]
      */
     private static $admin_email = null;
 
@@ -792,7 +793,7 @@ class Email extends ViewableData
 
         // Do not interfere with emails styles
         Requirements::clear();
-        
+
         // Render plain part
         if ($plainTemplate && !$plainPart) {
             $plainPart = $this->renderWith($plainTemplate, $this->getData());
@@ -809,7 +810,7 @@ class Email extends ViewableData
             $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
             $plainPart = $htmlPartObject->Plain();
         }
-        
+
         // Rendering is finished
         Requirements::restore();
 
