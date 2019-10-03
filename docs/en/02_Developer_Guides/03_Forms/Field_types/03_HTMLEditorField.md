@@ -190,6 +190,52 @@ We use [shortcodes](/developer_guides/extending/shortcodes) to store information
 [ShortcodeParser](api:SilverStripe\View\Parsers\ShortcodeParser) API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
+### Image size pre-sets
+SilverStripe will suggest pre-set image size in the HTMLEditor. Editors can quickly switch between the pre-set size when interacting with images in the HTMLEditorField.
+
+The default values are "Best fit" (600 pixels width) and original size. Developers can customise the pre-set sizes by altering their HTMLEditorConfig.
+
+You can alter the defaults for all HTMLEditor in your YML configuration.
+
+```yaml
+SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+  image_size_presets:
+    - name: widesize
+      i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.WIDE_SIZE
+      text: Wide size
+      width: 900
+```
+
+You can edit the image size pre-sets for an individual configuration with this code snippet.
+
+```php
+<?php
+use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
+
+HtmlEditorConfig::get('cms')->setOption('image_size_presets', [
+    [
+        'width' => 300,
+        'text' => 'Small fit',
+        'name' => 'smallfit'
+    ],
+    [
+        'width' => 600,
+        'i18n' =>  TinyMCEConfig::class . '.BEST_FIT',
+        'text' => 'Best fit',
+        'name' => 'bestfit'
+    ],
+    [
+        'i18n' =>  TinyMCEConfig::class . '.ORIGINAL_SIZE',
+        'text' => 'Original size',
+        'name' => 'originalsize'
+    ]
+]);
+```
+
+
+
+
 ## oEmbed: Embedding media through external services
 
 The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media services around the web, allowing easy 
