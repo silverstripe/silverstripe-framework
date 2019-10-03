@@ -209,6 +209,31 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     protected $contentCSS = null;
 
+
+    /**
+     * List of image size preset that will appear when you select an image. Each preset can have the following:
+     * * `name` to store an internal name for the preset (required)
+     * * `i18n` to store a translation key (e.g.: `SilverStripe\Forms\HTMLEditor\TinyMCEConfig.BESTFIT`)
+     * * `text` that will appear in the button (should be the default English translation)
+     * * `width` which will define the horizontal size of the preset. If not provided, the preset will match the
+     *   original size of the image.
+     * @var array
+     * @config
+     */
+    private static $image_size_presets = [
+        [
+            'width' => 600,
+            'i18n' => self::class . '.BEST_FIT',
+            'text' => 'Best fit',
+            'name' => 'bestfit'
+        ],
+        [
+            'i18n' => self::class . '.ORIGINAL_SIZE',
+            'text' => 'Original size',
+            'name' => 'originalsize'
+        ]
+    ];
+
     /**
      * TinyMCE JS settings
      *
@@ -662,8 +687,31 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
         $settings['theme_url'] = $theme;
 
+        $this->initImageSizePresets($settings);
+
         // Send back
         return $settings;
+    }
+
+    /**
+     * Initialise the image preset on the settings array. This is a custom configuration option that asset-admin reads
+     * to provide some preset image sizes.
+     * @param array $settings
+     */
+    private function initImageSizePresets(array &$settings): void
+    {
+        if (empty($settings['image_size_presets'])) {
+            $settings['image_size_presets'] = self::config()->get('image_size_presets');
+        }
+
+        foreach($settings['image_size_presets'] as &$preset) {
+            if (isset($preset['i18n'])) {
+                $preset['text'] = i18n::_t(
+                    $preset['i18n'],
+                    isset($preset['text']) ? $preset['text'] : ''
+                );
+            }
+        }
     }
 
     /**
