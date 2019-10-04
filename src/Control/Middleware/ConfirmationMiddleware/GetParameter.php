@@ -61,7 +61,7 @@ class GetParameter implements Rule, Bypass
     {
         return new Confirmation\Item(
             $token,
-            _t(__CLASS__.'.CONFIRMATION_NAME', '"{key}" GET parameter', ['key' => $this->name]),
+            _t(__CLASS__ . '.CONFIRMATION_NAME', '"{key}" GET parameter', ['key' => $this->name]),
             sprintf('%s = "%s"', $this->name, $value)
         );
     }

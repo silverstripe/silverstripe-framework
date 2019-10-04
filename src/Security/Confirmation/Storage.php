@@ -125,7 +125,7 @@ class Storage
         $token = $item->getToken();
         $salt = $this->getSessionSalt();
 
-        $salted = $salt.$token;
+        $salted = $salt . $token;
 
         return hash(static::HASH_ALGO, $salted, true);
     }
@@ -139,7 +139,7 @@ class Storage
     {
         $salt = $this->getSessionSalt();
 
-        return bin2hex(hash(static::HASH_ALGO, $salt.'cookie key', true));
+        return bin2hex(hash(static::HASH_ALGO, $salt . 'cookie key', true));
     }
 
     /**
@@ -151,7 +151,7 @@ class Storage
     {
         $salt = $this->getSessionSalt();
 
-        return base64_encode(hash(static::HASH_ALGO, $salt.'csrf token', true));
+        return base64_encode(hash(static::HASH_ALGO, $salt . 'csrf token', true));
     }
 
     /**
@@ -441,7 +441,7 @@ class Storage
             '%s.%s%s',
             str_replace('\\', '.', __CLASS__),
             $this->id,
-            $key ? '.'.$key : ''
+            $key ? '.' . $key : ''
         );
     }
 }

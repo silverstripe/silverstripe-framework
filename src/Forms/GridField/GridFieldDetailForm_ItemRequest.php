@@ -224,8 +224,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($this->record->canDelete()) {
                 $form->Actions()->fieldByName('action_doDelete')->setReadonly(false);
             }
-        } elseif (
-            !$this->record->ID
+        } elseif (!$this->record->ID
             && !$this->record->canCreate(null, $this->getCreateContext())
         ) {
             // Restrict creation of new records

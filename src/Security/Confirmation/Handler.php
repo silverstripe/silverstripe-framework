@@ -47,7 +47,7 @@ class Handler extends RequestHandler
     public function index()
     {
         return [
-            'Title' => _t(__CLASS__.'.FORM_TITLE', 'Confirm potentially dangerous action'),
+            'Title' => _t(__CLASS__ . '.FORM_TITLE', 'Confirm potentially dangerous action'),
             'Form' => $this->Form()
         ];
         return $this;
