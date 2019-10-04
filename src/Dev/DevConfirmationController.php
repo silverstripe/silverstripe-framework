@@ -23,9 +23,9 @@ class DevConfirmationController extends Confirmation\Handler
         $renderer = DebugView::create();
         echo $renderer->renderHeader();
         echo $renderer->renderInfo(
-            _t(__CLASS__.".INFO_TITLE", "Security Confirmation"),
+            _t(__CLASS__ . ".INFO_TITLE", "Security Confirmation"),
             Director::absoluteBaseURL(),
-            _t(__CLASS__.".INFO_DESCRIPTION", "Confirm potentially dangerous operation")
+            _t(__CLASS__ . ".INFO_DESCRIPTION", "Confirm potentially dangerous operation")
         );
 
         return $response;

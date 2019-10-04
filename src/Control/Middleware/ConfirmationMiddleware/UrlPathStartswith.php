@@ -34,8 +34,8 @@ class UrlPathStartswith implements Rule, Bypass
     {
         return new Confirmation\Item(
             $token,
-            _t(__CLASS__.'.CONFIRMATION_NAME', 'URL begins with "{path}"', ['path' => $this->getPath()]),
-            _t(__CLASS__.'.CONFIRMATION_DESCRIPTION', 'The complete URL is: "{url}"', ['url' => $url])
+            _t(__CLASS__ . '.CONFIRMATION_NAME', 'URL begins with "{path}"', ['path' => $this->getPath()]),
+            _t(__CLASS__ . '.CONFIRMATION_DESCRIPTION', 'The complete URL is: "{url}"', ['url' => $url])
         );
     }
 
