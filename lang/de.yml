@@ -303,6 +303,7 @@ de:
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
     CHANGEPASSWORDBELOW: 'Sie können Ihr Passwort unten ändern.'
     CHANGEPASSWORDHEADER: 'Passwort ändern'
+    CONFIRMLOGOUT: 'Bitte betätigen Sie den Button "Ausloggen" um sich auszuloggen'
     ENTERNEWPASSWORD: 'Bitte geben Sie ein neues Passwort ein'
     ERRORPASSWORDPERMISSION: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     LOGIN: Anmelden
