@@ -17,6 +17,31 @@ class TextField extends FormField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
 
     /**
+     * @var bool Whether the Tip UI should be rendered
+     */
+    protected $tipEnabled = false;
+
+    /**
+     * @var string The contents of the Tip UI
+     */
+    protected $tipMessage = '';
+
+    /**
+     * @var bool Whether the Tip should open immediately
+     */
+    protected $tipOpenByDefault = false;
+
+    /**
+     * @var string The icon that should be used on the Tip button
+     */
+    protected $tipIcon = 'lamp';
+
+    /**
+     * @var string The Bootstrap color that the icon should be rendered in (e.g. warning, danger, success)
+     */
+    protected $tipIconColor = 'muted';
+
+    /**
      * Returns an input field.
      *
      * @param string $name
@@ -60,6 +85,46 @@ class TextField extends FormField
     }
 
     /**
+     * Enables the Tip UI, which shows a popover on the right side of the field
+     * to place additional context or explanation of the field's purpose in.
+     * Currently only supported in React-based TextFields.
+     *
+     * @param string $message
+     * @param boolean $openByDefault Whether the Tip should open immediately
+     * @param string $icon An icon from the SilverStripe icon font
+     * @param null $iconColor A text colour defined by Bootstrap (e.g. warning, danger, success)
+     * @return $this
+     */
+    public function enableTip($message, $openByDefault = false, $icon = null, $iconColor = null)
+    {
+        $this->tipEnabled = true;
+        $this->tipMessage = $message;
+        $this->tipOpenByDefault = $openByDefault;
+
+        if ($icon) {
+            $this->tipIcon = $icon;
+        }
+
+        if ($iconColor) {
+            $this->tipIconColor = $iconColor;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Disables the Tip UI. The previous configuration is retained.
+     *
+     * @return $this
+     */
+    public function disableTip()
+    {
+        $this->tipEnabled = false;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getAttributes()
@@ -83,6 +148,16 @@ class TextField extends FormField
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['maxlength'] =  $this->getMaxLength();
+
+        if ($this->tipEnabled) {
+            $data['tip'] = [
+                'icon' => $this->tipIcon,
+                'iconColor' => $this->tipIconColor,
+                'content' => $this->tipMessage,
+                'autoOpen' => $this->tipOpenByDefault,
+            ];
+        }
+
         return $data;
     }
 
