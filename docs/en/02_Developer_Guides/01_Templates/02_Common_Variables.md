@@ -5,19 +5,19 @@ summary: Some of the common variables and methods your templates can use, includ
 
 # Common Variables
 
-The page below describes a few of common variables and methods you'll see in a SilverStripe template. This is not an 
-exhaustive list. From your template you can call any method, database field, or relation on the object which is 
-currently in scope as well as its' subclasses or extensions. 
+The page below describes a few of common variables and methods you'll see in a SilverStripe template. This is not an
+exhaustive list. From your template you can call any method, database field, or relation on the object which is
+currently in scope as well as its' subclasses or extensions.
 
-Knowing what methods you can call can be tricky, but the first step is to understand the scope you're in. Scope is 
-explained in more detail on the [syntax](syntax#scope) page. Many of the methods listed below can be called from any 
-scope, and you can specify additional static methods to be available globally in templates by implementing the 
+Knowing what methods you can call can be tricky, but the first step is to understand the scope you're in. Scope is
+explained in more detail on the [syntax](syntax#scope) page. Many of the methods listed below can be called from any
+scope, and you can specify additional static methods to be available globally in templates by implementing the
 [TemplateGlobalProvider](api:SilverStripe\View\TemplateGlobalProvider) interface.
 
 [notice]
-Want a quick way of knowing what scope you're in? Try putting `$ClassName` in your template. You should see a string 
-such as `Page` of the object that's in scope. The methods you can call on that object then are any functions, database 
-properties or relations on the `Page` class, `PageController` class as well as anything from their subclasses **or** 
+Want a quick way of knowing what scope you're in? Try putting `$ClassName` in your template. You should see a string
+such as `Page` of the object that's in scope. The methods you can call on that object then are any functions, database
+properties or relations on the `Page` class, `PageController` class as well as anything from their subclasses **or**
 extensions.
 [/notice]
 
@@ -70,7 +70,7 @@ $MenuTitle
 Most objects within SilverStripe will respond to `$Title` (i.e they should have a `Title` database field or at least a
 `getTitle()` method).
 
-The CMS module in particular provides two fields to label a page: `Title` and `MenuTitle`. `Title` is the title 
+The CMS module in particular provides two fields to label a page: `Title` and `MenuTitle`. `Title` is the title
 displayed on the web page, while `MenuTitle` can be a shorter version suitable for size-constrained menus.
 
 [notice]
@@ -87,18 +87,18 @@ It returns the database content of the `Content` property. With the CMS Module, 
 but it is also the standard for any object that has a body of content to output.
 
 [info]
-Please note that this database content can be "versioned", meaning that draft content edited in the CMS can be different 
+Please note that this database content can be "versioned", meaning that draft content edited in the CMS can be different
 from published content shown to your website visitors. In templates, you don't need to worry about this distinction.
 
-The `$Content` variable contains the published content by default,and only preview draft content if explicitly 
-requested (e.g. by the "preview" feature in the CMS) (see the [versioning documentation](/../model/versioning) for 
+The `$Content` variable contains the published content by default,and only preview draft content if explicitly
+requested (e.g. by the "preview" feature in the CMS) (see the [versioning documentation](/../model/versioning) for
 more details).
 [/info]
 
 ### SiteConfig: Global settings
 
 [notice]
-`SiteConfig` is a module that is bundled with the CMS. If you wish to include `SiteConfig` in your framework only 
+`SiteConfig` is a module that is bundled with the CMS. If you wish to include `SiteConfig` in your framework only
 web pages. You'll need to install it via composer.
 [/notice]
 
@@ -106,10 +106,10 @@ web pages. You'll need to install it via composer.
 $SiteConfig.Title
 ```
 
-The [SiteConfig](../configuration/siteconfig) object allows content authors to modify global data in the CMS, rather 
+The [SiteConfig](../configuration/siteconfig) object allows content authors to modify global data in the CMS, rather
 than PHP code. By default, this includes a Website title and a Tagline.
 
-`SiteConfig` can be extended to hold other data, for example a logo image which can be uploaded through the CMS or 
+`SiteConfig` can be extended to hold other data, for example a logo image which can be uploaded through the CMS or
 global content such as your footer content.
 
 
@@ -117,7 +117,7 @@ global content such as your footer content.
 
 The `$MetaTags` placeholder in a template returns a segment of HTML appropriate for putting into the `<head>` tag. It
 will set up title, keywords and description meta-tags, based on the CMS content and is editable in the 'Meta-data' tab
-on a per-page basis. 
+on a per-page basis.
 
 [notice]
 If you don’t want to include the title tag use `$MetaTags(false)`.
@@ -172,8 +172,8 @@ public function MetaComponents()
 <a href="$Link">..</a>
 ```
 
-All objects that could be accessible in SilverStripe should define a `Link` method and an `AbsoluteLink` method. Link 
-returns the relative URL for the object and `AbsoluteLink` outputs your full website address along with the relative 
+All objects that could be accessible in SilverStripe should define a `Link` method and an `AbsoluteLink` method. Link
+returns the relative URL for the object and `AbsoluteLink` outputs your full website address along with the relative
 link.
 
 ```ss
@@ -192,7 +192,7 @@ $isCurrent
 ```
 
 When looping over a list of `SiteTree` instances through a `<% loop $Menu %>` or `<% loop $Children %>`, `$isSection` and `$isCurrent`
-will return true or false based on page being looped over relative to the currently viewed page. 
+will return true or false based on page being looped over relative to the currently viewed page.
 
 For instance, to only show the menu item linked if it's the current one:
 
@@ -222,7 +222,7 @@ An example for checking for `current` or `section` is as follows:
 
 ### URLSegment
 
-This returns the part of the URL of the page you're currently on. For example on the `/about-us/offices/` web page the 
+This returns the part of the URL of the page you're currently on. For example on the `/about-us/offices/` web page the
 `URLSegment` will be `offices`. `URLSegment` cannot be used to generate a link since it does not output the full path.
 It can be used within templates to generate anchors or other CSS classes.
 
@@ -236,8 +236,8 @@ It can be used within templates to generate anchors or other CSS classes.
 
 ##  ClassName
 
-Returns the class of the current object in [scope](syntax#scope) such as `Page` or `HomePage`. The `$ClassName` can be 
-handy for a number of uses. A common use case is to add to your `<body>` tag to influence CSS styles and JavaScript 
+Returns the class of the current object in [scope](syntax#scope) such as `Page` or `HomePage`. The `$ClassName` can be
+handy for a number of uses. A common use case is to add to your `<body>` tag to influence CSS styles and JavaScript
 behavior based on the page type used:
 
 ```ss
@@ -258,7 +258,7 @@ Will loop over all Children records of the current object context. Children are 
 the `CMS` or a custom list of data. This originates in the `Versioned` extension's `getChildren` method.
 
 [alert]
-For doing your website navigation most likely you'll want to use `$Menu` since its independent of the page 
+For doing your website navigation most likely you'll want to use `$Menu` since its independent of the page
 context.
 [/alert]
 
@@ -270,14 +270,14 @@ context.
 <% end_loop %>
 ```
 
-Will create a list of the children of the given page, as identified by its `URLSegment` value. This can come in handy 
-because it's not dependent on the context of the current page. For example, it would allow you to list all staff member 
+Will create a list of the children of the given page, as identified by its `URLSegment` value. This can come in handy
+because it's not dependent on the context of the current page. For example, it would allow you to list all staff member
 pages underneath a "staff" holder on any page, regardless if its on the top level or elsewhere.
 
 
 ### AllChildren
 
-Content authors have the ability to hide pages from menus by un-selecting the `ShowInMenus` checkbox within the CMS. 
+Content authors have the ability to hide pages from menus by un-selecting the `ShowInMenus` checkbox within the CMS.
 This option will be honored by `<% loop $Children %>` and `<% loop $Menu %>` however if you want to ignore the user
 preference, `AllChildren` does not filter by `ShowInMenus`.
 
@@ -309,7 +309,7 @@ Pages with the `ShowInMenus` property set to `false` will be filtered out.
 <% end_with %>
 ```
 
-Page will return a single page from site, looking it up by URL. 
+Page will return a single page from site, looking it up by URL.
 
 ## Access to Parent and Level Pages
 
@@ -321,7 +321,7 @@ Page will return a single page from site, looking it up by URL.
 <% end_with %>
 ```
 
-Will return a page in the current path, at the level specified by the numbers. It is based on the current page context, 
+Will return a page in the current path, at the level specified by the numbers. It is based on the current page context,
 looking back through its parent pages. `Level(1)` being the top most level.
 
 For example, imagine you're on the "bob marley" page, which is three levels in: "about us > staff > bob marley".
@@ -348,10 +348,10 @@ See [scope](syntax#scope).
 
 ## Breadcrumbs
 
-Breadcrumbs are the path of pages which need to be taken to reach the current page, and can be a great navigation aid 
+Breadcrumbs are the path of pages which need to be taken to reach the current page, and can be a great navigation aid
 for website users.
 
-While you can achieve breadcrumbs through the `$Level(<level>)` control manually, there's a nicer shortcut: The 
+While you can achieve breadcrumbs through the `$Level(<level>)` control manually, there's a nicer shortcut: The
 `$Breadcrumbs` variable.
 
 ```ss
@@ -370,9 +370,9 @@ of the `silverstripe/cms` module.
 ```
 
 [info]
-To customise the markup that the `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
- from the `silverstripe/cms` module to 
-`app/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
+To customise the markup that `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
+ from the `silverstripe/cms` module to your theme (e.g.: `themes/you-theme/templates/BreadcrumbsTemplate.ss`).
+ Modify the newly copied template and flush your Silverstripe CMS cache.
 [/info]
 
 ## Forms
@@ -382,7 +382,7 @@ $Form
 ```
 
 A page will normally contain some content and potentially a form of some kind. For example, the log-in page has a the
-SilverStripe log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form. 
+SilverStripe log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form.
 Placing it just below `$Content` is a good default.
 
 
