@@ -225,11 +225,12 @@ class TinyMCEConfig extends HTMLEditorConfig
             'width' => 600,
             'i18n' => self::class . '.BEST_FIT',
             'text' => 'Best fit',
-            'name' => 'bestfit'
+            'name' => 'bestfit',
+            'default' => true
         ],
         [
-            'i18n' => self::class . '.ORIGINAL_SIZE',
-            'text' => 'Original size',
+            'i18n' => self::class . '.ORIGINAL',
+            'text' => 'Original',
             'name' => 'originalsize'
         ]
     ];
