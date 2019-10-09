@@ -217,7 +217,8 @@ HtmlEditorConfig::get('cms')->setOption('image_size_presets', [
     [
         'width' => 300,
         'text' => 'Small fit',
-        'name' => 'smallfit'
+        'name' => 'smallfit',
+        'default' => true
     ],
     [
         'width' => 600,
