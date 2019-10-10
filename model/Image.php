@@ -894,7 +894,7 @@ class Image extends File implements Flushable {
 		$base64url_match = "[a-zA-Z0-9_~]*={0,2}";
 		return array(
 				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\/)+"
-									. preg_quote($filename) . "$/i",
+									. preg_quote($filename, '/') . "$/i",
 				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64url_match . ")\//i"
 		);
 	}
