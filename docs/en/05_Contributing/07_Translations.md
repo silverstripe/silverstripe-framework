@@ -134,9 +134,10 @@ This also applies for any modules staying compatible with SilverStripe 2.x.
 
 ## Contact
 
-Translators have their own [mailing list](https://groups.google.com/forum/#!forum/silverstripe-translators), but you can 
-also reach a core member on [IRC](https://irc.silverstripe.org). The transifex.com interface has a built-in discussion 
-board if you have specific comments on a translation.
+Get in touch with translators on our [community Slack](http://silverstripe.org/slack) - please join the `#translations` 
+channel. For generic translation and Transifex questions you might like to use 
+[Stack Overflow](https://stackoverflow.com/search?q=transifex). Alternatively you can start a discussion on 
+[our forum](https://forum.silverstripe.org).
 
 ## Related
 
