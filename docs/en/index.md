@@ -9,7 +9,7 @@ a web server. The [Getting Started](/getting_started) section will show you what
 [download and install SilverStripe](/getting_started/installation).
 
 To check out the features that SilverStripe offers without installing it, read the [Feature Overview](http://www.silverstripe.org/software/) 
-and play with the interactive [demo website](http://demo.silverstripe.org/).
+and play with our [interactive demos](http://silverstripe.org/try).
 
 ##  Getting support
 
