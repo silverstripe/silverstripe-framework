@@ -27,19 +27,14 @@ class TextField extends FormField
     protected $tipMessage = '';
 
     /**
-     * @var bool Whether the Tip should open immediately
+     * @var string How important the tip is (normal or high). Informs the color and description.
      */
-    protected $tipOpenByDefault = false;
+    protected $tipImportance = 'normal';
 
     /**
      * @var string The icon that should be used on the Tip button
      */
     protected $tipIcon = 'lamp';
-
-    /**
-     * @var string The Bootstrap color that the icon should be rendered in (e.g. warning, danger, success)
-     */
-    protected $tipIconColor = 'muted';
 
     /**
      * Returns an input field.
@@ -90,23 +85,21 @@ class TextField extends FormField
      * Currently only supported in React-based TextFields.
      *
      * @param string $message
-     * @param boolean $openByDefault Whether the Tip should open immediately
+     * @param null|string $importance How important the tip is (normal or high); Informs the color and description
      * @param string $icon An icon from the SilverStripe icon font
-     * @param null $iconColor A text colour defined by Bootstrap (e.g. warning, danger, success)
      * @return $this
      */
-    public function enableTip($message, $openByDefault = false, $icon = null, $iconColor = null)
+    public function enableTip($message, $importance = null, $icon = null)
     {
         $this->tipEnabled = true;
         $this->tipMessage = $message;
-        $this->tipOpenByDefault = $openByDefault;
+
+        if ($importance) {
+            $this->tipImportance = $importance;
+        }
 
         if ($icon) {
             $this->tipIcon = $icon;
-        }
-
-        if ($iconColor) {
-            $this->tipIconColor = $iconColor;
         }
 
         return $this;
@@ -151,10 +144,9 @@ class TextField extends FormField
 
         if ($this->tipEnabled) {
             $data['tip'] = [
-                'icon' => $this->tipIcon,
-                'iconColor' => $this->tipIconColor,
                 'content' => $this->tipMessage,
-                'autoOpen' => $this->tipOpenByDefault,
+                'importance' => $this->tipImportance,
+                'icon' => $this->tipIcon,
             ];
         }
 
