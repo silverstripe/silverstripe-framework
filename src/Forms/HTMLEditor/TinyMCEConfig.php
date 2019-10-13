@@ -705,7 +705,7 @@ class TinyMCEConfig extends HTMLEditorConfig
             $settings['image_size_presets'] = self::config()->get('image_size_presets');
         }
 
-        foreach($settings['image_size_presets'] as &$preset) {
+        foreach ($settings['image_size_presets'] as &$preset) {
             if (isset($preset['i18n'])) {
                 $preset['text'] = i18n::_t(
                     $preset['i18n'],
