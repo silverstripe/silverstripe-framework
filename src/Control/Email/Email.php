@@ -800,7 +800,7 @@ class Email extends ViewableData
         }
 
         // Render HTML part, either if sending html email, or a plain part is lacking
-        if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
+        if ($htmlTemplate && (!$plainOnly || empty($plainPart))) {
             $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
         }
 
