@@ -321,6 +321,14 @@ exact match.
 		'FirstName:StartsWith' => 'S'
 		'PlayerNumber:GreaterThan' => '10'
 	));
+	
+<div class="notice" markdown='1'>
+Please note that in SilverStripe 3.x it's not possible to filter a list based on a field containing a `null` value (see [this issue](https://github.com/silverstripe/silverstripe-framework/issues/3621) for context). You can workaround this with a `where` statement, for example:
+
+	:::php
+	$unsponsoredPlayers = Player::get()->where("\"MainSponsor\" IS NULL OR \"MainSponsor\" = ''");
+	
+</div>
 
 ### filterAny
 
