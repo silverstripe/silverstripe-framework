@@ -768,7 +768,7 @@ class Email extends ViewableData {
 				return strtr($email, $obfuscated);
 			case 'hex' :
 				$encoded = '';
-				for ($x=0; $x < strlen($email); $x++) $encoded .= '&#x' . bin2hex($email{$x}).';';
+				for ($x=0; $x < strlen($email); $x++) $encoded .= '&#x' . bin2hex($email[$x]).';';
 				return $encoded;
 			default:
 				user_error('Email::obfuscate(): Unknown obfuscation method', E_USER_NOTICE);
