@@ -92,4 +92,27 @@ TEXT
 
         $this->assertSame('The Diary of Anne Frank', $formatter->output(200));
     }
+
+    public function testAdminEmailWithName()
+    {
+        Email::config()->set('admin_email', ['testy@mctest.face' => 'The ad&min']);
+
+        $formatter = new DebugViewFriendlyErrorFormatter();
+        $formatter->setTitle("There has been an error");
+        $formatter->setBody("The website server has not been able to respond to your request");
+
+        $expected = <<<TEXT
+WEBSITE ERROR
+There has been an error
+-----------------------
+The website server has not been able to respond to your request
+
+Contact The ad&amp;min: testy [at] mctest [dot] face
+
+
+TEXT
+        ;
+
+        $this->assertEquals($expected, $formatter->output(404));
+    }
 }

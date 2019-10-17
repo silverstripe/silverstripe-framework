@@ -29,7 +29,7 @@ trait HttpRequestMockBuilder
         $request->method('getSession')->willReturn($session);
 
         $request->method('getURL')->will($this->returnCallback(static function ($addParams) use ($url, $getVars) {
-            return $addParams && count($getVars) ? $url.'?'.http_build_query($getVars) : $url;
+            return $addParams && count($getVars) ? $url . '?' . http_build_query($getVars) : $url;
         }));
 
         $request->method('getVars')->willReturn($getVars);
