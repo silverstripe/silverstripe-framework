@@ -61,7 +61,7 @@ documentation.
 
 ## Test Databases and Fixtures
 
-SilverStripe tests create their own database when the test starts. New `ss_tmp` databases are created using the same 
+SilverStripe tests create their own database when the test starts and fixture files are specified. New `ss_tmp` databases are created using the same 
 connection details you provide for the main website. The new `ss_tmp` database does not copy what is currently in your 
 application database. To provide seed data use a [Fixture](fixtures) file.
 
@@ -71,7 +71,7 @@ permissions to create new databases on your server.
 </div>
 
 <div class="notice" markdown="1">
-The test database is rebuilt every time one of the test methods is run. Over time, you may have several hundred test 
+The test database is rebuilt every time one of the test methods is run and cleaned up afterwards. If the test is interrupted the database is not cleaned up, over time, you may have several hundred test 
 databases on your machine. To get rid of them, run `sake dev/tasks/CleanupTestDatabasesTask`.
 </div>
 
