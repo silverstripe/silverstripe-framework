@@ -952,8 +952,6 @@ skipConfigs:
 excludedPaths:
   - '*fixtures*'
   - '*vendor*'
-doctorTasks:
-  SilverStripe\Dev\Upgrade\UpgradeBootstrap: src/Dev/Upgrade/UpgradeBootstrap.php
 warnings:
   classes:
     'Object':
