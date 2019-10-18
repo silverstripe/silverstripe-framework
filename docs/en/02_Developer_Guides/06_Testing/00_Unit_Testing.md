@@ -71,7 +71,7 @@ permissions to create new databases on your server.
 </div>
 
 <div class="notice" markdown="1">
-The test database is rebuilt every time one of the test methods is run and cleaned up afterwards. If the test is interrupted the database is not cleaned up, over time, you may have several hundred test 
+The test database is rebuilt every time one of the test methods is run and is removed afterwards. If the test is interrupted, the database will not be removed. Over time, you may have several hundred test 
 databases on your machine. To get rid of them, run `sake dev/tasks/CleanupTestDatabasesTask`.
 </div>
 
