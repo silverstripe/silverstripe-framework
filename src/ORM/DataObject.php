@@ -2102,12 +2102,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
         if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
-                $this->unsavedRelations[$componentName] =
-                    new UnsavedRelationList(
-                        $manyManyComponent['parentClass'],
-                        $componentName,
-                        $manyManyComponent['childClass']
-                    );
+                $this->unsavedRelations[$componentName] = new UnsavedRelationList(
+                    $manyManyComponent['parentClass'],
+                    $componentName,
+                    $manyManyComponent['childClass']
+                );
             }
             return $this->unsavedRelations[$componentName];
         }
