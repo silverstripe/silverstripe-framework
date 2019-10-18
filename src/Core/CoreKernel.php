@@ -291,18 +291,19 @@ class CoreKernel implements Kernel
 
         // Build error response
         $dv = new DebugView();
-        $body =
-            $dv->renderHeader() .
+        $body = implode([
+            $dv->renderHeader(),
             $dv->renderInfo(
                 "Configuration Error",
                 Director::absoluteBaseURL()
-            ) .
+            ),
             $dv->renderParagraph(
                 'You need to replace your _ss_environment.php file with a .env file, or with environment variables.<br><br>'
                 . 'See the <a href="https://docs.silverstripe.org/en/4/getting_started/environment_management/">'
                 . 'Environment Management</a> docs for more information.'
-            ) .
-            $dv->renderFooter();
+            ),
+            $dv->renderFooter()
+        ]);
 
         // Raise error
         $response = new HTTPResponse($body, 500);

@@ -42,13 +42,17 @@ if (!defined('BASE_PATH')) {
     define('BASE_PATH', call_user_func(function () {
         // Determine BASE_PATH based on the composer autoloader
         foreach (debug_backtrace() as $backtraceItem) {
-            if (isset($backtraceItem['file'])
-                && preg_match(
-                    '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
-                    $backtraceItem['file'],
-                    $matches
-                )
-            ) {
+            if (!isset($backtraceItem['file'])) {
+                continue;
+            }
+
+            $matched = preg_match(
+                '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
+                $backtraceItem['file'],
+                $matches
+            );
+
+            if ($matched) {
                 return realpath($matches['base']) ?: DIRECTORY_SEPARATOR;
             }
         }
