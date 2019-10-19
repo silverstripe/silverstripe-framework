@@ -695,9 +695,15 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
         foreach ($settings['image_size_presets'] as &$preset) {
             if (isset($preset['i18n'])) {
-                $preset['text'] = i18n::_t(
+                $preset['text'] = _t(
                     $preset['i18n'],
                     isset($preset['text']) ? $preset['text'] : ''
+                );
+            } elseif (empty($preset['text']) && isset($preset['width'])) {
+                $preset['text'] = _t(
+                    self::class . '.PIXEL_WIDTH',
+                    '{width} pixels',
+                    $preset
                 );
             }
         }
@@ -900,7 +906,9 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
     public function provideI18nEntities()
     {
-        $entities = [];
+        $entities = [
+            self::class . '.PIXEL_WIDTH' => '{width} pixels',
+        ];
         foreach (self::config()->get('image_size_presets') as $preset) {
             if (empty($preset['i18n']) || empty($preset['text'])) {
                 continue;

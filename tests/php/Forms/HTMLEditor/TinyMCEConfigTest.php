@@ -81,8 +81,13 @@ class TinyMCEConfigTest extends SapphireTest
         $config = TinyMCEConfig::create();
         $translations = $config->provideI18nEntities();
 
-        $this->assertEquals(2, sizeof($translations));
+        $this->assertEquals(
+            3,
+            sizeof($translations),
+            'Only two presets have valid translation + the generic PIXEL_WIDTH one'
+        );
         $this->assertEquals('Foo bar', $translations[TinyMCEConfig::class . '.TEST']);
         $this->assertEquals('Bar foo', $translations[TinyMCEConfig::class . '.TEST_TWO']);
+        $this->assertEquals('{width} pixels', $translations[TinyMCEConfig::class . '.PIXEL_WIDTH']);
     }
 }
