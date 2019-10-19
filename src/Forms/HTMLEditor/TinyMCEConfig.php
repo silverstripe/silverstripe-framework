@@ -13,6 +13,7 @@ use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
@@ -20,7 +21,7 @@ use SilverStripe\View\ThemeResourceLoader;
 /**
  * Default configuration for HtmlEditor specific to tinymce
  */
-class TinyMCEConfig extends HTMLEditorConfig
+class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 {
     /**
      * @config
@@ -908,5 +909,18 @@ class TinyMCEConfig extends HTMLEditorConfig
         $folderID = $folder ? $folder->ID : null;
         $this->setOption('upload_folder_id', $folderID);
         return $this;
+    }
+
+    public function provideI18nEntities()
+    {
+        $entities = [];
+        foreach (self::config()->get('image_size_presets') as $preset) {
+            if (empty($preset['i18n']) || empty($preset['text'])) {
+                continue;
+            }
+            $entities[$preset['i18n']] = $preset['text'];
+        }
+
+        return $entities;
     }
 }
