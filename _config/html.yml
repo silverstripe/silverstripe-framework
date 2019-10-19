@@ -13,3 +13,14 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator
     properties:
       AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler'
+
+SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+  image_size_presets:
+    - width: 600,
+      i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.BEST_FIT
+      text: Best fit
+      name: bestfit
+      default: true
+    - i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.ORIGINAL
+      text: Original
+      name: originalsize

@@ -218,23 +218,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * * `text` that will appear in the button (should be the default English translation)
      * * `width` which will define the horizontal size of the preset. If not provided, the preset will match the
      *   original size of the image.
-     * @var array
+     * @var array[]
      * @config
      */
-    private static $image_size_presets = [
-        [
-            'width' => 600,
-            'i18n' => self::class . '.BEST_FIT',
-            'text' => 'Best fit',
-            'name' => 'bestfit',
-            'default' => true
-        ],
-        [
-            'i18n' => self::class . '.ORIGINAL',
-            'text' => 'Original',
-            'name' => 'originalsize'
-        ]
-    ];
+    private static $image_size_presets = [ ];
 
     /**
      * TinyMCE JS settings
