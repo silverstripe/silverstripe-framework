@@ -7,7 +7,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Text input field.
  */
-class TextField extends FormField
+class TextField extends FormField implements TippableFieldInterface
 {
     /**
      * @var int
@@ -19,7 +19,7 @@ class TextField extends FormField
     /**
      * @var Tip|null A tip to render beside the input
      */
-    protected $tip;
+    private $tip;
 
     /**
      * Returns an input field.
@@ -67,7 +67,7 @@ class TextField extends FormField
     /**
      * @return Tip|null
      */
-    public function getTip()
+    public function getTip(): ?Tip
     {
         return $this->tip;
     }
@@ -80,7 +80,7 @@ class TextField extends FormField
      * @param Tip|null $tip The Tip to apply, or null to remove an existing one
      * @return $this
      */
-    public function setTip(Tip $tip = null)
+    public function setTip(?Tip $tip = null): self
     {
         $this->tip = $tip;
 
@@ -112,8 +112,8 @@ class TextField extends FormField
         $data = parent::getSchemaDataDefaults();
         $data['data']['maxlength'] =  $this->getMaxLength();
 
-        if ($this->tip instanceof Tip) {
-            $data['tip'] = $this->tip->getTipSchema();
+        if ($this->getTip() instanceof Tip) {
+            $data['tip'] = $this->getTip()->getTipSchema();
         }
 
         return $data;

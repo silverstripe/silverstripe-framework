@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SilverStripe\Forms;
 
@@ -7,22 +8,20 @@ use InvalidArgumentException;
 /**
  * Represents a Tip which can be rendered alongside a form field in the front-end.
  * See the Tip component in the silverstripe/admin module.
- *
- * @package SilverStripe\Forms
  */
 class Tip
 {
     /**
      * These map to levels in the front-end Tip component
      */
-    const IMPORTANCE_LEVELS = [
+    public const IMPORTANCE_LEVELS = [
         'NORMAL' => 'normal',
         'HIGH' => 'high',
     ];
 
-    const DEFAULT_ICON = 'lamp';
+    private const DEFAULT_ICON = 'lamp';
 
-    const DEFAULT_IMPORTANCE_LEVEL = self::IMPORTANCE_LEVELS['NORMAL'];
+    private const DEFAULT_IMPORTANCE_LEVEL = self::IMPORTANCE_LEVELS['NORMAL'];
 
     /**
      * @var string The icon that should be used on the Tip button
@@ -35,25 +34,24 @@ class Tip
     private $importance_level;
 
     /**
-     * @var string The contents of the Tip UI
+     * @var string The message to display in the tip
      */
     private $message;
 
+    /**
+     * @param string $message The message to display in the tip
+     * @param string $importance_level How important the tip is (normal or high). Informs the color and description.
+     * @param string $icon The icon that should be used on the Tip button
+     * @throws InvalidArgumentException
+     */
     public function __construct(
-        $message,
-        $importance_level = self::DEFAULT_IMPORTANCE_LEVEL,
-        $icon = self::DEFAULT_ICON
-    )
-    {
-        if (!in_array($importance_level, self::IMPORTANCE_LEVELS)) {
-            throw new InvalidArgumentException(
-                'Provided $importance_level must be defined in Tip::IMPORTANCE_LEVELS'
-            );
-        }
-
-        $this->message = $message;
-        $this->icon = $icon;
-        $this->importance_level = $importance_level;
+        string $message,
+        string $importance_level = self::DEFAULT_IMPORTANCE_LEVEL,
+        string $icon = self::DEFAULT_ICON
+    ) {
+        $this->setMessage($message);
+        $this->setIcon($icon);
+        $this->setImportanceLevel($importance_level);
     }
 
     /**
@@ -61,35 +59,39 @@ class Tip
      *
      * @return array
      */
-    public function getTipSchema()
+    public function getTipSchema(): array
     {
         return [
-            'content' => $this->message,
-            'icon' => $this->icon,
-            'importance' => $this->importance_level,
+            'content' => $this->getMessage(),
+            'icon' => $this->getIcon(),
+            'importance' => $this->getImportanceLevel(),
         ];
     }
 
     /**
      * @return string
      */
-    public function getImportanceLevel()
+    public function getImportanceLevel(): string
     {
         return $this->importance_level;
     }
 
     /**
      * @param string $importance_level
+     * @return Tip
+     * @throws InvalidArgumentException
      */
-    public function setImportanceLevel($importance_level)
+    public function setImportanceLevel(string $importance_level): self
     {
         if (!in_array($importance_level, self::IMPORTANCE_LEVELS)) {
             throw new InvalidArgumentException(
-                'Provided $importance_level must be defined in Tip::IMPORTANCE_LEVELS'
+                'Provided importance level must be defined in Tip::IMPORTANCE_LEVELS'
             );
         }
 
         $this->importance_level = $importance_level;
+
+        return $this;
     }
 
     /**
@@ -102,25 +104,31 @@ class Tip
 
     /**
      * @param string $icon
+     * @return Tip
      */
-    public function setIcon($icon)
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
      * @param string $message
+     * @return Tip
      */
-    public function setMessage($message)
+    public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
     }
 }

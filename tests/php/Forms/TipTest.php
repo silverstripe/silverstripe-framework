@@ -35,7 +35,7 @@ class TipTest extends SapphireTest
         $tip = new Tip(
             'message',
             Tip::IMPORTANCE_LEVELS['HIGH'],
-        'page'
+            'page'
         );
 
         $schema = $tip->getTipSchema();
@@ -54,7 +54,7 @@ class TipTest extends SapphireTest
      * Ensure passing an invalid importance level to the constructor fails
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Provided $importance_level must be defined in Tip::IMPORTANCE_LEVELS
+     * @expectedExceptionMessage Provided importance level must be defined in Tip::IMPORTANCE_LEVELS
      */
     public function testInvalidImportanceLevelInConstructorCausesException()
     {
@@ -65,7 +65,7 @@ class TipTest extends SapphireTest
      * Ensure setting an invalid importance level fails
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Provided $importance_level must be defined in Tip::IMPORTANCE_LEVELS
+     * @expectedExceptionMessage Provided importance level must be defined in Tip::IMPORTANCE_LEVELS
      */
     public function testInvalidImportanceLevelInSetterCausesException()
     {
