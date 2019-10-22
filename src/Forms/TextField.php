@@ -17,24 +17,9 @@ class TextField extends FormField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
 
     /**
-     * @var bool Whether the Tip UI should be rendered
+     * @var Tip|null A tip to render beside the input
      */
-    protected $tipEnabled = false;
-
-    /**
-     * @var string The contents of the Tip UI
-     */
-    protected $tipMessage = '';
-
-    /**
-     * @var string How important the tip is (normal or high). Informs the color and description.
-     */
-    protected $tipImportance = 'normal';
-
-    /**
-     * @var string The icon that should be used on the Tip button
-     */
-    protected $tipIcon = 'lamp';
+    protected $tip;
 
     /**
      * Returns an input field.
@@ -80,39 +65,24 @@ class TextField extends FormField
     }
 
     /**
-     * Enables the Tip UI, which shows a popover on the right side of the field
-     * to place additional context or explanation of the field's purpose in.
-     * Currently only supported in React-based TextFields.
-     *
-     * @param string $message
-     * @param null|string $importance How important the tip is (normal or high); Informs the color and description
-     * @param string $icon An icon from the SilverStripe icon font
-     * @return $this
+     * @return Tip|null
      */
-    public function enableTip($message, $importance = null, $icon = null)
+    public function getTip()
     {
-        $this->tipEnabled = true;
-        $this->tipMessage = $message;
-
-        if ($importance) {
-            $this->tipImportance = $importance;
-        }
-
-        if ($icon) {
-            $this->tipIcon = $icon;
-        }
-
-        return $this;
+        return $this->tip;
     }
 
     /**
-     * Disables the Tip UI. The previous configuration is retained.
+     * Applies a Tip to the field, which shows a popover on the right side of
+     * the input to place additional context or explanation of the field's
+     * purpose in. Currently only supported in React-based forms.
      *
+     * @param Tip|null $tip The Tip to apply, or null to remove an existing one
      * @return $this
      */
-    public function disableTip()
+    public function setTip(Tip $tip = null)
     {
-        $this->tipEnabled = false;
+        $this->tip = $tip;
 
         return $this;
     }
@@ -142,12 +112,8 @@ class TextField extends FormField
         $data = parent::getSchemaDataDefaults();
         $data['data']['maxlength'] =  $this->getMaxLength();
 
-        if ($this->tipEnabled) {
-            $data['tip'] = [
-                'content' => $this->tipMessage,
-                'importance' => $this->tipImportance,
-                'icon' => $this->tipIcon,
-            ];
+        if ($this->tip instanceof Tip) {
+            $data['tip'] = $this->tip->getTipSchema();
         }
 
         return $data;
