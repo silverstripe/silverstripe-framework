@@ -143,6 +143,16 @@ Put code into the classes in the following order (where applicable).
  *  Controller action methods
  *  Template data-access methods (methods that will be called by a `$MethodName` or `<% loop $MethodName %>` construct in a template somewhere)
  *  Object methods
+ 
+## Method/property visibility guidelines
+
+When adding new methods and properties, should you make them public, protected, or private?
+
+ * Public: Use this for public APIs. You should add tests and documentation for these.
+ * Protected: Use for extensibility APIs. Note that compatibility for such APIs should be maintained in minor releases, and so you'll probably want to cover them in tests (i.e. test that these methods can be called from within a subclass and/or overridden). If that seems like overkill, consider whether it's safer to leave these as private for now.
+ * Private: Use for class internals
+
+Above all, recognise that when you are making something public or protected, you are creating an API for other developers to use and rely on, and do so with care. Don't simply dump class internals in as protected members in the name of extensibility – doing so will be likely to break developers' projects in minor releases.
 
 ## SQL Format
 
