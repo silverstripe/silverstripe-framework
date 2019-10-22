@@ -37,6 +37,13 @@ SilverStripe\Security\BasicAuth:
   entire_site_protected: true
 ```
 
+The default password protection in this mode (Basic Auth) is an oudated security measure which passes credentials without encryption over the network.
+It is considered insecure unless this connection itself is secured (via HTTPS).
+It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
+
+When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` rewrite rule to your `.htaccess` file
+
 ### Live Mode
 
 All error messages are suppressed from the user and the application is in it's most *secure* state.
