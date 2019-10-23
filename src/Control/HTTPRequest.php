@@ -468,7 +468,7 @@ class HTTPRequest implements ArrayAccess
      * Construct an HTTPResponse that will deliver a file to the client.
      * Caution: Since it requires $fileData to be passed as binary data (no stream support),
      * it's only advisable to send small files through this method.
-     * this function needs to called inside the controllers response, eg
+     * This function needs to called inside the controller’s response, e.g.:
      * <code>$this->setResponse(HTTPRequest::send_file('the content', 'filename.txt'));</code>
      *
      * @static
