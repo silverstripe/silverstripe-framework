@@ -329,9 +329,9 @@ $players = Player::get()->filter('FirstName', 'Sam');
 Or if you want to find both Sam and Sig.
 
 ```php
-$players = Player::get()->filter(
-    'FirstName', ['Sam', 'Sig']
-);
+$players = Player::get()->filter([
+    'FirstName' => ['Sam', 'Sig']
+]);
 
 // SELECT * FROM Player WHERE FirstName IN ('Sam', 'Sig')
 ```
