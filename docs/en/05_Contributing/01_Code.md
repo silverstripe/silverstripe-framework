@@ -77,14 +77,21 @@ there are any problems they will follow up with you, so please ensure they have 
 ### Picking the right version
 
 The SilverStripe project follows the [Semantic Versioning](http://semver.org) (SemVer) specification for releases. 
-It clarifies what to expect from different releases, and also guides you in choosing the right branch
-to base your pull request on. In short, most pull requests should be based on the "default branch"
-which gets automatically chosen when creating a new pull request. This ensures your code
-gets into the next minor release of the current major release.
+It clarifies what to expect from different releases, and also guides you in choosing the right branch to base your pull request on.
+
+If you are unsure what branch your pull request should go to, consider asking in the GitHub issue that you address with your patch, or
+simply choose the "default branch" of the repository where you want to contribute to. That would usually target the next minor release of the module.
 
 If you are changing existing APIs, introducing new APIs or major new features,
 please review our guidance on [supported versions](release_process#supported-versions).
-You will need to change the branch for your pull request accordingly.
+You will need to choose the branch for your pull request accordingly.
+
+As we follow SemVer, we name the branches in repositories accordingly
+(using BNF rules defined by [semver.org](https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions)):
+ - `"master"` branch contains the next major and yet unreleased version
+ - `<positive digit>` branches contain released major versions and all changes for yet unreleased minor versions
+ - `<positive digit> "." <digits>` branches contain released minor versions and all changes for yet to be released patch versions
+
 
 
 ### The Pull Request Process
