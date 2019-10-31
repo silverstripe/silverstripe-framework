@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Config;
 
+use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
 use SilverStripe\Config\MergeStrategy\Priority;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -321,5 +322,45 @@ class ConfigTest extends SapphireTest
         $this->assertFalse(isset($config->bar));
         $this->assertTrue(empty($config->bar));
         $this->assertNull($config->bar);
+    }
+
+    public function testWithConfig()
+    {
+        $oldValue = 'test_1';
+        $newValue1 = 'new value 1';
+        $newValue2 = 'new value 2';
+        $property = 'third';
+
+        $this->assertEquals(
+            $oldValue,
+            Config::inst()->get(ConfigTest\First::class, $property)
+        );
+
+        Config::withConfig(function (MutableConfigCollectionInterface $config) use ($newValue1, $newValue2, $property) {
+            $config->set(ConfigTest\First::class, $property, $newValue1);
+
+            $this->assertEquals(
+                $newValue1,
+                Config::inst()->get(ConfigTest\First::class, $property)
+            );
+
+            $resultValue = Config::withConfig(function (MutableConfigCollectionInterface $config) use ($newValue2, $property) {
+                $config->set(ConfigTest\First::class, $property, $newValue2);
+
+                return Config::inst()->get(ConfigTest\First::class, $property);
+            });
+
+            $this->assertEquals($newValue2, $resultValue);
+
+            $this->assertEquals(
+                $newValue1,
+                Config::inst()->get(ConfigTest\First::class, $property)
+            );
+        });
+
+        $this->assertEquals(
+            $oldValue,
+            Config::inst()->get(ConfigTest\First::class, $property)
+        );
     }
 }
