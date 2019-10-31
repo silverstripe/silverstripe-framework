@@ -379,7 +379,7 @@ That is, the fragment will be included if all Only rules match, except if all Ex
 ## Unit tests
 
 Sometimes, it's necessary to change a configuration value in your unit tests.
-One of the ways to do this is to use the `withConfig` method.
+One way to do this is to use the `withConfig` method.
 This is very handy especially when using data providers.
 Example below shows one unit test using a data provider.
 This unit test changes configuration before testing functionality.
