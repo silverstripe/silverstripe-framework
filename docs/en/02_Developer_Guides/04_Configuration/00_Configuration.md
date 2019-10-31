@@ -380,13 +380,13 @@ That is, the fragment will be included if all Only rules match, except if all Ex
 
 Sometimes, it's necessary to change a configuration value in your unit tests.
 One way to do this is to use the `withConfig` method.
-This is very handy especially when using data providers.
+This is especially handy when using data providers.
 Example below shows one unit test using a data provider.
 This unit test changes configuration before testing functionality.
 The test will run three times, each run with different configuration value.
 Note that the configuration change is active only within the callback function.
 
-```
+```php
 /**
  * @dataProvider testValuesProvider
  * @param string $value
