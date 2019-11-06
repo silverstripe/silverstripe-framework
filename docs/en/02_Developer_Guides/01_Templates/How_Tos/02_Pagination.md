@@ -1,5 +1,6 @@
 ---
 title: How to Create a Paginated List
+summary: Break up the result of a database query into multiple pages
 ---
 
 # How to Create a Paginated List

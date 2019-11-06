@@ -16,7 +16,7 @@ export default function HTML(props) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
 
       </head>
-      <body {...props.bodyAttributes}>
+      <body {...props.bodyAttributes} className="docs-page">
         {props.preBodyComponents}
         <noscript key="noscript" id="gatsby-noscript">
           This app works best with JavaScript enabled.

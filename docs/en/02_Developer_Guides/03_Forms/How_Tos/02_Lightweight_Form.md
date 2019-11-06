@@ -1,5 +1,7 @@
 ---
 title: How to Create Lightweight Form
+summary: Create a simple search form with Silverstripe CMS
+icon: wpforms
 ---
 
 # How to Create Lightweight Form

@@ -1,6 +1,7 @@
 ---
 title: Indexes
 summary: Add Indexes to your Data Model to optimize database queries.
+icon: database
 ---
 
 # Indexes

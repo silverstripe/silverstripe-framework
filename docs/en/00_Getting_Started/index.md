@@ -1,6 +1,7 @@
 ---
 title: Getting Started
 introduction: SilverStripe is a web application. This means that you will need to have a webserver and database. We will take you through the setup of the server environment as well the application itself.
+icon: rocket
 ---
 
 ## Server Requirements
@@ -46,6 +47,11 @@ If you are unsure on how this all works, please jump on our [lessons](https://ww
 Webserver setup is covered in
 [Lesson 4: Setting up a local dev environment](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1) 
 
+
+
+## Keep learning
+
+[CHILDREN]
 
 ## Troubleshooting
 

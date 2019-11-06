@@ -1,6 +1,7 @@
 ---
 title: GridField
 summary: How to use the GridField class for managing tabular data.
+icon: table
 ---
 
 # GridField

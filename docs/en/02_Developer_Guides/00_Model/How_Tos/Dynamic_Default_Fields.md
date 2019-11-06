@@ -1,3 +1,8 @@
+---
+title: Dynamic Default Fields
+summary: Learn how to add default values to your models
+---
+
 # Default Values and Records
 
 ## Static Default Values

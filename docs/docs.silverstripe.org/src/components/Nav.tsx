@@ -1,126 +1,51 @@
-import React, { StatelessComponent, ReactElement, useState } from 'react';
-
-import { GenericHierarchyNode } from '../types';
-import { Menu, MenuLabel, MenuList } from 'bloomer';
-import { Link } from 'gatsby';
-import ToggleableMenuItem from './ToggleableMenuItem';
-import styled from 'styled-components';
-import useCurrentNode from '../hooks/useCurrentNode';
+import React from 'react';
 import useNodeHierarchy from '../hooks/useNodeHierarchy';
 import sortFiles from '../utils/sortFiles';
-import { animated, useSpring } from 'react-spring';
-import Chevron from './Chevron';
+import { GenericHierarchyNode } from '../types';
+import { Link } from 'gatsby';
+import useCurrentNode from '../hooks/useCurrentNode';
 
-const StickyNav = styled(Menu)`
-  position: sticky;
-  top: 8rem;
-  height: calc(100vh - 14rem);
-  overflow: auto;
-`;
-
-const MenuButton = styled.div`
-    position:fixed;
-    bottom: 44px;
-    right: 20px;
-    height: 4rem;
-    width: 4rem;
-    border-radius: 100px;
-    background: blue;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    z-index:2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-`;
-
-const MobileNav = styled(animated.aside)`
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    z-index: 50;
-    background: #fff;
-    right: 0;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    padding: 4rem;
-    overflow: auto;
-`
-
-
-const Nav: StatelessComponent<{}> = () => {
-    const nav = useNodeHierarchy();
+const Nav = () => {
+    const hierarchy = useNodeHierarchy();
     const currentNode = useCurrentNode();
-    const [showNav, setShowNav] = useState(false);
-    const mobileMenuStyles = useSpring({
-        from: { opacity: 0, transform: `translate3d(0, -100%, 0)`},
-        to: { opacity: showNav ? 1 : 0, transform: `translate3d(0, ${showNav ? 0 : '-100%'}, 0)`}
-    });
-    const innerMapFn = (item: GenericHierarchyNode): ReactElement => {
-        const { slug } = item.fields;
-        const { children } = item;
-        const isInHierarchy = currentNode ? currentNode.fields.breadcrumbs.includes(slug.slice(0, -1)) : false;
-        isInHierarchy && console.log(`${item.fields.title} is in the hierarchy`)
-        return (
-            <ToggleableMenuItem
-                key={slug}
-                item={item}
-                active={!!isInHierarchy}
-                mapFn={innerMapFn}
-            >
-                {children}
-            </ToggleableMenuItem>
-        );
-    };
-    
-    const outerMapFn = (item: GenericHierarchyNode): ReactElement[] => {
-        const { slug, title } = item.fields;
-        const childItems = item.children.sort(sortFiles);
-        const items = [];
-        
-        if (childItems.length) {
-            items.push(
-                <MenuLabel key={`${slug}-label`}>{title}</MenuLabel>
-            );
-            return items.concat(
-                <MenuList key={`${slug}-list`}>
-                    {childItems.map(innerMapFn)}
-                </MenuList>
-            );
-        }
-        items.push(
-            <MenuList className="outer-mapfn" key={slug}>
-            <li><Link activeClassName={`is-active`} to={slug}>{title}</Link></li>
-            </MenuList>
-        )
-        
-        return items;
-    };
-    
-    let navChildren: ReactElement[] = [];
-    const top = nav.find(n => n.fields.slug === '/');
-    if (top) {
-        navChildren = top.children.sort(sortFiles).map(outerMapFn);
-    }
-
+    const top = hierarchy.find(n => n.fields.slug === '/');
     return (
-        <>
-            <div className="is-hidden-tablet">
-                <MenuButton onClick={() => setShowNav(!showNav)}>
-                    <Chevron dir='up' />
-                    <Chevron dir='down' />
-                </MenuButton>
-                <MobileNav style={mobileMenuStyles} className="menu">
-                    {navChildren}                    
-                </MobileNav>
-            </div>
-            <StickyNav className="is-hidden-mobile">
-                {navChildren}
-            </StickyNav>
-        </>
-    )
-}
+        <nav id="docs-nav" className="docs-nav navbar">
+        <ul className="section-items list-unstyled nav flex-column pb-3">
+            {top.children.sort(sortFiles).map((node: GenericHierarchyNode) => {
+                const { slug, title } = node.fields;
+                const childItems = node.children.sort(sortFiles);
+                return (
+                    <React.Fragment key={slug}>
+                    <li className="nav-item section-title">
+                        <Link activeClassName='active' className="nav-link" to={slug}>{title}</Link>
+                    </li>
+                    {childItems.map((node: GenericHierarchyNode) => {
+                        const { slug, title } = node.fields;
+                        const shouldShowChildren = currentNode.fields.slug.startsWith(slug);
+                        return (
+                            <>
+                            <li key={slug} className="nav-item">
+                                <Link activeClassName='active' className="nav-link" to={slug}>{title}</Link>
+                            </li>
+                            {shouldShowChildren && node.children.map((child: GenericHierarchyNode) => {
+                                const { title, slug } = child.fields;
+                                return (
+                                    <li key={slug} className="nav-item third-level">
+                                        <Link activeClassName='active' className="nav-link" to={slug}>{title}</Link>
+                                    </li>
+                                );
+                            })}
+                            </>
+                        );
+                    })}
+                    </React.Fragment>
+                );
+                
+            })}
+        </ul>
+      </nav>
+    );
+};
 
 export default Nav;

@@ -1,5 +1,7 @@
 ---
 title: How to Encapsulate Forms
+summary: Learn how to move a form from a controller into its own class definition.
+icon: wpforms
 ---
 
 # How to Encapsulate Forms

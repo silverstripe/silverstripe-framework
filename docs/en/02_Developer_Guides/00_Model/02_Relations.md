@@ -1,6 +1,7 @@
 ---
 title: Relations between Records
 summary: Relate models together using the ORM using has_one, has_many, and many_many.
+icon: link
 ---
 
 # Relations between Records

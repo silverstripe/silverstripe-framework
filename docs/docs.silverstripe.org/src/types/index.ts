@@ -31,6 +31,9 @@ export interface HierarchyParentNode {
 
 export interface HierarchyFrontmatter {
     summary?: string,
+    icon?: string;
+    hideFromMenus?: boolean;
+
 };
 
 export interface HierarchyFileNode {
@@ -39,6 +42,7 @@ export interface HierarchyFileNode {
     fields: HierarchyFields;
     parent: HierarchyParentNode;
     frontmatter: HierarchyFrontmatter;
+    parentDirectory: HierarchyDirectoryNode;
 };
 
 export interface HierarchyDirectoryFields {
@@ -72,6 +76,7 @@ export interface ChildrenOfProps {
     folderName?: string;
     exclude?: string;
     currentNode: GenericHierarchyNode | null;
+    asList?: boolean;
 };
 
 export interface MenuItemProps {

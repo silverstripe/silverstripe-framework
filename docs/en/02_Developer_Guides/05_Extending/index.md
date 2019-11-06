@@ -2,6 +2,7 @@
 title: Extending SilverStripe
 summary: Understand the ways to modify the built-in functionality through Extensions, Subclassing and Dependency Injection.
 introduction: SilverStripe is easily extensible to meet custom application requirements. This guide covers the wide range of API's to modify built-in functionality and make your own code easily extensible.
+icon: code
 ---
 
 No two applications are ever going to be the same and SilverStripe is built with this in mind. The core framework 

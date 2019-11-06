@@ -1,6 +1,7 @@
 ---
 title: Form Transformations
 summary: Provide read-only and disabled views of your Form data.
+icon: random
 ---
 
 # Read-only and Disabled Forms

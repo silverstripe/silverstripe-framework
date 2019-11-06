@@ -1,20 +1,17 @@
-import React, { StatelessComponent } from 'react';
+import React, { StatelessComponent, ReactElement } from 'react';
 import { graphql } from 'gatsby';
-import Layout from '../components/layout';
-import SEO from '../components/seo';
+import Layout from '../components/Layout';
+import SEO from '../components/SEO';
 import { SingleFileQuery } from '../types';
-import { Content } from 'bloomer/lib/elements/Content';
 import parseHTML from '../utils/parseHTML';
 
-const Template: StatelessComponent<SingleFileQuery> = (result) => {
+const Template: StatelessComponent<SingleFileQuery> = (result): ReactElement => {
     const currentNode = result.data.markdownRemark;
     const { html, fields } = currentNode;
     return (
     <Layout currentNode={result.data.markdownRemark}>
       <SEO title={fields.title} />
-        <Content>
-            <div dangerouslySetInnerHTML={{ __html: parseHTML(html) }} />
-        </Content>
+      {parseHTML(html)}
     </Layout>
     );
 };

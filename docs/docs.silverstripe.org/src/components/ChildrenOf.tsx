@@ -1,69 +1,81 @@
 import React, { StatelessComponent, ReactElement } from 'react';
-import { Card, CardHeaderTitle, CardHeader, CardFooter, CardFooterItem } from 'bloomer';
-import { CardContent } from 'bloomer/lib/components/Card/CardContent';
 import { GenericHierarchyNode, ChildrenOfProps } from '../types';
 import { Link } from 'gatsby';
-import styled from 'styled-components';
 
-const ChildrenBlock = styled.div`
-    display: grid;
-    grid-gap: 4rem;
-    align-items: stretch;
-    grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
-`;
-const StretchContent = styled(CardContent)`
-    flex-grow: 1;
-`;
-
-const FlexCard = styled(Card)`
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-`
-const createChildren = (children: GenericHierarchyNode[]): ReactElement[] => {
+const createCards = (children: GenericHierarchyNode[]): ReactElement[] => {
     return children.map(child => {
-        const content = child.indexFile ? child.indexFile.frontmatter.summary : child.frontmatter && child.frontmatter.summary;
+        const frontmatter = child.indexFile ? child.indexFile.frontmatter : child.frontmatter;
+        const content = frontmatter && frontmatter.summary;
+        const icon = frontmatter && frontmatter.icon;
         return (
-            <FlexCard key={child.fields.slug}>
-                <CardHeader>
-                    <CardHeaderTitle>
-                        {child.fields.title}
-                    </CardHeaderTitle>
-                </CardHeader>
-                <StretchContent>
-                    {content || ''}
-                </StretchContent>            
-                <CardFooter>
-                    <CardFooterItem>   
-                        <Link to={child.fields.slug}>View</Link>
-                    </CardFooterItem>
-                </CardFooter>
-            </FlexCard>
+            <div className="col-12 col-lg-6 py-3" key={child.fields.slug}>
+                <div className="card shadow-sm">
+                    <div className="card-body">
+                        <h5 className="card-title mb-3">
+                            <span className="theme-icon-holder card-icon-holder mr-2">                                
+                                <i className={`fas fa-${icon || 'file-alt'}`}></i>                                
+                            </span>
+                            <span className="card-title-text">{child.fields.title}</span>
+                        </h5>
+                        <div className="card-text">
+                            {content || ''}
+                        </div>
+                        <Link className="card-link-mask" to={child.fields.slug}></Link>
+                    </div>
+                </div>
+            </div>
         );
     })
+};
 
-}
-const ChildrenOf: StatelessComponent<ChildrenOfProps> = ({ folderName, exclude, currentNode }) => {
+const createList= (children: GenericHierarchyNode[]): ReactElement[] => {
+    return children.map(child => {
+        const frontmatter = child.indexFile ? child.indexFile.frontmatter : child.frontmatter;
+        const content = frontmatter && frontmatter.summary;
+        return (
+            <React.Fragment key={child.fields.slug}>
+                <dt><Link to={child.fields.slug}>{child.fields.title}</Link></dt>
+                <dd>{content || ''}</dd>
+            </React.Fragment>
+        );
+    });
+};
+
+const ChildrenOf: StatelessComponent<ChildrenOfProps> = ({ folderName, exclude, currentNode, asList }) => {
     if (!currentNode) {
         return null;
     }
     let children: ReactElement[] = [];
     if (!folderName && !exclude) {
         const sourceNodes = currentNode.indexFile ? currentNode.children : currentNode.siblings;
-        children = createChildren(sourceNodes.filter(c => c.__typename === 'MarkdownRemark'));
+        children = asList ? createList(sourceNodes) : createCards(sourceNodes);
     } else if (folderName) {
         const targetFolder = currentNode.children.find(
             child => child.fields.fileTitle.toLowerCase() === folderName.toLowerCase() && child.__typename === 'Directory'
         );
-        children = targetFolder ? createChildren(targetFolder.children) : [];
+        if (targetFolder) {
+            children = asList ? createList(targetFolder.children) : createCards(targetFolder.children);
+        } else {
+            children = [];
+        }
     } else if (exclude) {
         const exclusions = exclude.split(',').map(e => e.toLowerCase());
-        children = createChildren(
-            currentNode.children.filter(child => !exclusions.includes(child.fields.fileTitle.toLowerCase()))
-        );
+        const nodes = currentNode.children.filter(child => !exclusions.includes(child.fields.fileTitle.toLowerCase()));
+        children = asList ? createList(nodes) : createCards(nodes);
     }
 
-    return <ChildrenBlock>{children}</ChildrenBlock>
+    return (
+        <div className="docs-overview py-5">
+            {asList &&
+                <dl>{children}</dl>
+            }
+            {!asList &&
+            <div className="row">
+                {children}
+            </div>
+            }
+        </div>
+    )
 
 };
 

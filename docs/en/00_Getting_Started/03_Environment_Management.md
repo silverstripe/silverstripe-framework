@@ -1,3 +1,8 @@
+---
+title: Environment Management
+summary: How to configure your server environment for Silverstripe CMS
+---
+
 # Environment management
 
 As part of website development and hosting it is natural for our sites to be hosted on several different environments.

@@ -1,7 +1,7 @@
 import { useStaticQuery } from 'gatsby';
 import { graphql } from 'gatsby';
 import { HierarchyQuery, GenericHierarchyNode } from '../types';
-import { node } from 'prop-types';
+import getFrontmatter from '../utils/getFrontmatter';
 
 let nodes: GenericHierarchyNode[] | undefined;
 
@@ -20,6 +20,11 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
     }
     indexFile {
       ...FileFields
+      frontmatter {
+        hideFromMenus
+        icon
+        summary
+      }
     }
     parent {
       id
@@ -27,6 +32,12 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
   }
   fragment FileFields on MarkdownRemark {
     id
+    parentDirectory {
+      fields {
+        slug
+      }
+    }
+
     fields {
       slug
       title
@@ -35,6 +46,7 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
     }
     frontmatter {
       summary
+      icon
     }
     parent {
       id
@@ -42,7 +54,7 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
   }  
   {
       allDirectory(filter: {
-        relativeDirectory: {eq: ".."},
+        relativeDirectory: {eq: ".."}
       }) {
         
         nodes {
@@ -85,7 +97,6 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
     }
   `
   );
-  
   nodes = result.allDirectory.nodes.map(node => ({
     ...node,
   }));
@@ -95,11 +106,16 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
       ...node,
       children: node.children
         ? node.children
-            .filter(c => !['_images', 'treeicons', 'index'].includes(c.fields.fileTitle))
+            .filter(c => !['_images', 'treeicons', 'index'].includes(c.fields.fileTitle))            
+            .filter(node => {
+              let shouldInclude = true;
+              const frontmatter = getFrontmatter(node);
+              if (frontmatter) {
+                shouldInclude = frontmatter.hideFromMenus !== true;
+              }
+              return shouldInclude;
+            })        
             .map(mapFn)
-        : [],
-      siblings: node.parent
-        ? nodes.filter(n => n.parent && n.parent.id === node.parent.id)
         : [],
     };
 

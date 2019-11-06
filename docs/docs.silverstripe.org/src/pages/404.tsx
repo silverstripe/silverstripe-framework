@@ -1,6 +1,6 @@
 import React, { StatelessComponent } from "react";
-import Layout from "../components/layout";
-import SEO from "../components/seo";
+import Layout from "../components/Layout";
+import SEO from "../components/SEO";
 const NotFoundPage: StatelessComponent<{}> = () => (
   <Layout>
     <SEO title="404: Not found" />

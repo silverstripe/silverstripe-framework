@@ -2,6 +2,7 @@
 title: Model and Databases
 summary: Learn how SilverStripe manages database tables, ways to query your database and how to publish data.
 introduction: This guide will cover how to create and manipulate data within SilverStripe and how to use the ORM (Object Relational Model) to query data.
+icon: database
 ---
 
 In SilverStripe, application data will be represented by a [DataObject](api:SilverStripe\ORM\DataObject) class. A `DataObject` subclass defines the

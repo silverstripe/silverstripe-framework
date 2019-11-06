@@ -1,8 +1,7 @@
 import React, { StatelessComponent } from "react";
 import { graphql } from "gatsby";
-import Layout from "../components/layout";
-import SEO from "../components/seo";
-import { Content } from "bloomer";
+import Layout from "../components/Layout";
+import SEO from "../components/SEO";
 import { SingleFileQuery } from '../types';
 import parseHTML from '../utils/parseHTML';
 
@@ -10,9 +9,9 @@ const IndexPage: StatelessComponent<SingleFileQuery> = ({ data: { markdownRemark
   return (
     <Layout>
       <SEO title="Home" />
-      <Content>
-        <div dangerouslySetInnerHTML={{__html: parseHTML(html)}} />
-      </Content>
+      <div>
+        {parseHTML(html)}
+      </div>
     </Layout>
   );
 };

@@ -1,6 +1,7 @@
 ---
 title: Template Syntax
 summary: A look at the operations, variables and language controls you can use within templates.
+icon: code
 ---
 
 # Template Syntax
@@ -475,7 +476,7 @@ When in a particular scope, `$Up` takes the scope back to the previous level.
 ```
 
 Given the following structure, it will output the text.
-
+```
 	My Page
 	|
 	+-+ Child 1
@@ -489,7 +490,7 @@ Given the following structure, it will output the text.
 	Page 'Child 1' is a child of 'My Page'
 	Page 'Grandchild 1' is a grandchild of 'My Page'
 	Page 'Child 2' is a child of 'MyPage'
-
+```
 <div class="notice" markdown="1">
 Additional selectors implicitely change the scope so you need to put additional `$Up` to get what you expect.
 </div>

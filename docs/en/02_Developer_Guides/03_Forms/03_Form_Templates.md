@@ -1,6 +1,7 @@
 ---
 title: Form Templates
 summary: Customize the generated HTML for a FormField or an entire Form.
+icon: file-code
 ---
 
 # Form Templates

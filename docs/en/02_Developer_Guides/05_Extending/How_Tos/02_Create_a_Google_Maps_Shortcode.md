@@ -1,5 +1,7 @@
 ---
 title: How to Create a Google Maps Shortcode
+summary: Learn how to embed a Google map in the WYSIWYG editor with a simple shortcode
+icon: map
 ---
 
 # How to Create a Google Maps Shortcode

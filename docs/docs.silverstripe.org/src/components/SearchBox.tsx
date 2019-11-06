@@ -1,26 +1,10 @@
 import React from 'react'
 import { StatelessComponent, ReactElement, useState, useEffect } from 'react';
-import styled from 'styled-components'
 import { navigateTo } from "gatsby-link"
 
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  input {
-    display: inline-block;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 2px;
-    height: 32px;
-    line-height: 20px;
-    vertical-align: baseline;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 8px 4px;
-    margin-bottom: 10px;
-  }
-`
+interface SearchBoxProps {
+  identifier: string;
+}
 
 const autocompleteSelected = (e) => {
     e.stopPropagation()
@@ -31,8 +15,7 @@ const autocompleteSelected = (e) => {
     navigateTo(`${a.pathname}${a.hash}`)
 };
 
-const SearchBox: StatelessComponent<{}> = (): ReactElement => {
-    const [ focused, setFocused ] = useState(false);
+const SearchBox: StatelessComponent<SearchBoxProps> = ({ identifier }): ReactElement|null => {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
@@ -41,11 +24,12 @@ const SearchBox: StatelessComponent<{}> = (): ReactElement => {
             autocompleteSelected,
             true
         );
+        console.log(process.env.GATSBY_DOCSEARCH_API_KEY)
         if(window.docsearch){
             window.docsearch({ 
               apiKey: process.env.GATSBY_DOCSEARCH_API_KEY, 
               indexName: process.env.GATSBY_DOCSEARCH_INDEX, 
-              inputSelector: '#docs-search',
+              inputSelector: `#${identifier}`,
               algoliaOptions: {
                 hitsPerPage: 5
               },
@@ -57,10 +41,10 @@ const SearchBox: StatelessComponent<{}> = (): ReactElement => {
 
     return (
             <input
-                id="docs-search"
+                id={identifier}
                 type="search"
                 placeholder="Search the docs..."
-                className="input"
+                className="form-control search-input"
             />
       )  
 };

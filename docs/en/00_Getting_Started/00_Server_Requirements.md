@@ -1,11 +1,13 @@
 ---
 title: Server Requirements
+icon: server
+summary: What you will need to run Silverstripe CMS on a web server 
 ---
 
 
 # Requirements
 
-SilverStripe CMS needs to be installed on a web server. Content authors and website administrators use their web browser
+Silverstripe CMS needs to be installed on a web server. Content authors and website administrators use their web browser
 to access a web-based GUI to do their day-to-day work. Website designers and developers require access to the files on
 the server to update templates, website logic, and perform upgrades or maintenance.
 

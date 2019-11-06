@@ -1,5 +1,7 @@
 ---
 title: How to Publish a SilverStripe module
+summary: Have you created some work you think others can use? Turn it into a module and share it.
+icon: rocket
 ---
 
 # How to Publish a SilverStripe module.

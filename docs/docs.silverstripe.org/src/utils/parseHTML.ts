@@ -1,37 +1,48 @@
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import ChildrenOf from '../components/ChildrenOf';
-import useCurrentNode from '../hooks/useCurrentNode';
+import parse, { DomElement } from 'html-react-parser';
+import cleanChildrenTags from './cleanChildrenTags';
+import cleanWhitespace from './cleanWhitespace';
+import rewriteLink from './rewriteLink';
+import parseChildrenOf from './parseChildrenOf';
+import rewriteCallout from './rewriteCallout';
+import { ReactElement } from 'react';
+import rewriteTable from './rewriteTable';
+import remark from 'remark';
+/**
+ * Replace all the [CHILDREN] with proper React components.
+ * @param html 
+ * @return ReactElement | ReactElement[] | string
+ */
+const parseHTML = (html: string): ReactElement | ReactElement[] | string => {
+    let cleanHTML = cleanChildrenTags(html);
+    cleanHTML = cleanWhitespace(cleanHTML);
+    const parseOptions = {
+        replace(domNode: DomElement): ReactElement | object | undefined | false {
+            const { name, attribs, children } = domNode;
+            const domChildren = children || [];
+            if (attribs) {
+                if (name === 'a') {
+                    return rewriteLink(attribs, domChildren, parseOptions);
+                }
+                if (name === 'div') {
+                    if (attribs && attribs.markdown) {
+                        return rewriteCallout(attribs.class, domChildren, parseOptions);                    
+                    }
+                }
+                if (name === 'table') {
+                    return rewriteTable(domChildren, parseOptions);
+                }
+            }
+            if (domNode.data) {
+                const { data } = domNode;
+                return parseChildrenOf(data);
+            }
 
-const parseHTML = (html: string): string => {
-    const currentNode = useCurrentNode();
-    let parsed = html;
-    parsed = parsed.replace(
-        /\[CHILDREN\]/g,
-        ReactDOMServer.renderToStaticMarkup(
-            React.createElement(ChildrenOf, { currentNode })
-        )
-    );
-    
-    parsed = parsed.replace(
-        /\[CHILDREN Folder="?([A-Za-z0-9_<>\/]+)"?\]/g,
-        function (match: string, capture: string) {
-            const folderName = capture.replace(/<\/?em>/g, '_');            
-            return ReactDOMServer.renderToStaticMarkup(
-                React.createElement(ChildrenOf, { folderName, currentNode })
-            );     
+            return false;
         }
-    );
-    parsed = parsed.replace(
-        /\[CHILDREN Exclude="?([A-Za-z0-9_,]+)"?\]/g,
-        function (match: string, exclude: string) {
-            return ReactDOMServer.renderToStaticMarkup(
-                React.createElement(ChildrenOf, { exclude, currentNode })
-            );    
-        }
-    );
+    };
+    const component = parse(cleanHTML, parseOptions);
 
-    return parsed;
+    return component;
 };
 
 export default parseHTML;

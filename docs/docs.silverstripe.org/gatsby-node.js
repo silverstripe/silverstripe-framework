@@ -2,7 +2,6 @@ const path = require('path');
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const fileToTitle = require('./src/utils/fileToTitle');
 const buildBreadcrumbs = require('./src/utils/buildBreadcrumbs');
-const fs = require('fs');
 
 const createSlug = (path) => (
   path
@@ -11,8 +10,9 @@ const createSlug = (path) => (
   .join('/')
   .toLowerCase()
 );
+
 exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
-    const { createNodeField, createParentChildLink } = actions;
+  const { createNodeField, createParentChildLink } = actions;
     if (node.internal.type === 'Directory') {
         const filePath = createFilePath({
           node,
@@ -106,6 +106,7 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
         });
         
         if (parent) {
+          node.parentDirectory___NODE = parent.id;
           node.parent = parent.id
           createParentChildLink({
               child: node,
@@ -119,7 +120,8 @@ exports.onCreateNode = ({ node, getNode, getNodesByType, actions }) => {
     }
 }
 exports.createPages = async ({ actions, graphql }) => {
-  const { createPage, createNode } = actions;
+  const { createPage } = actions;
+
   const docTemplate = path.resolve(`src/templates/docs-template.tsx`);
   const result = await graphql(`
   {
@@ -144,7 +146,6 @@ exports.createPages = async ({ actions, graphql }) => {
 
 
     if (result.errors) {
-        console.log(result.errors);
         throw new Error(result.errors);
     }
     result.data.allMarkdownRemark.nodes

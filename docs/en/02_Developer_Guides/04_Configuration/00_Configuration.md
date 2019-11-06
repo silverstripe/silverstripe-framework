@@ -1,6 +1,7 @@
 ---
 title: Configuration API
-summary: SilverStripe's YAML based Configuration API for setting runtime configuration.
+summary: Silverstripe CMS's YAML based Configuration API for setting runtime configuration.
+icon: laptop-code
 ---
 
 # Configuration API

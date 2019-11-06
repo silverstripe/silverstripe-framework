@@ -1,6 +1,7 @@
 ---
 title: Themes
 summary: What makes up a SilverStripe Theme. How to install one or write your own theme. 
+icon: paint-brush
 ---
 
 # Themes

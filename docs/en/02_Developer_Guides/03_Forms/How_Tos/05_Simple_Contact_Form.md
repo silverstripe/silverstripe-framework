@@ -1,3 +1,9 @@
+---
+title: Simple contact form
+summary: Create a form that submits a message via email
+icon: wpforms
+---
+
 # How to make a simple contact form
 
 In this how-to, we'll explain how to set up a specific page type

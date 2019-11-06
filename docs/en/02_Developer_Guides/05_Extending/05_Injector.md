@@ -1,6 +1,7 @@
 ---
 title: Injector
 summary: Introduction to using Dependency Injection within SilverStripe.
+icon: code
 ---
 
 # Injector

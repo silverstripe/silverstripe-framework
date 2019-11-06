@@ -1,6 +1,7 @@
 ---
 title: Rich-text editing (WYSIWYG)
-summary: SilverStripe's use and configuration of TinyMCE html editor.
+summary: Silverstripe CMS's use and configuration of TinyMCE html editor.
+icon: file-code
 ---
 
 # Rich-text editing (WYSIWYG)

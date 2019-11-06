@@ -40,14 +40,14 @@ functionality may not be included.
 </head>
 ```
 
-The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as <img
+The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as `<img
 src="someimage.jpg" />) will become relative to the URI specified in the base tag. This ensures the browser knows where
 to locate your site’s images and css files.
 
 It renders in the template as `<base href="http://www.yoursite.com" /><!--[if lte IE 6]></base><![endif]-->`
 
 <div class="alert" markdown="1">
-A `<% base_tag %>` is nearly always required or assumed by SilverStripe to exist.
+A <code>&lt;% base_tag %&gt;</code> is nearly always required or assumed by SilverStripe to exist.
 </div>
 
 ## CurrentMember
@@ -74,7 +74,7 @@ The CMS module in particular provides two fields to label a page: `Title` and `M
 displayed on the web page, while `MenuTitle` can be a shorter version suitable for size-constrained menus.
 
 <div class="notice" markdown="1">
-If `MenuTitle` is left blank by the CMS author, it'll just default to the value in `Title`.
+If <code>MenuTitle</code> is left blank by the CMS author, it'll just default to the value in `Title`.
 </div>
 
 ## Page Content
@@ -87,10 +87,10 @@ It returns the database content of the `Content` property. With the CMS Module, 
 but it is also the standard for any object that has a body of content to output.
 
 <div class="info" markdown="1">
-Please note that this database content can be `versioned`, meaning that draft content edited in the CMS can be different 
+Please note that this database content can be "versioned", meaning that draft content edited in the CMS can be different 
 from published content shown to your website visitors. In templates, you don't need to worry about this distinction.
 
-The `$Content` variable contains the published content by default,and only preview draft content if explicitly 
+The <code>$Content</code> variable contains the published content by default,and only preview draft content if explicitly 
 requested (e.g. by the "preview" feature in the CMS) (see the [versioning documentation](/../model/versioning) for 
 more details).
 </div>
@@ -98,8 +98,8 @@ more details).
 ### SiteConfig: Global settings
 
 <div class="notice" markdown="1">
-`SiteConfig` is a module that is bundled with the `CMS`. If you wish to include `SiteConfig` in your framework only 
-web pages. You'll need to install it via `composer`.
+<code>SiteConfig</code> is a module that is bundled with the CMS. If you wish to include <code>SiteConfig</code> in your framework only 
+web pages. You'll need to install it via composer.
 </div>
 
 ```ss
@@ -120,7 +120,7 @@ will set up title, keywords and description meta-tags, based on the CMS content 
 on a per-page basis. 
 
 <div class="notice" markdown="1">
-If you don’t want to include the title tag use `$MetaTags(false)`.
+If you don’t want to include the title tag use <code>$MetaTags(false)</code>.
 </div>
 
 By default `$MetaTags` renders:
@@ -258,7 +258,7 @@ Will loop over all Children records of the current object context. Children are 
 the `CMS` or a custom list of data. This originates in the `Versioned` extension's `getChildren` method.
 
 <div class="alert" markdown="1">
-For doing your website navigation most likely you'll want to use `$Menu` since its independent of the page 
+For doing your website navigation most likely you'll want to use <code>$Menu</code> since its independent of the page 
 context.
 </div>
 
@@ -298,7 +298,7 @@ preference, `AllChildren` does not filter by `ShowInMenus`.
 `$Menu(1)` returns the top-level menu of the website. You can also create a sub-menu using `$Menu(2)`, and so forth.
 
 <div class="notice" markdown="1">
-Pages with the `ShowInMenus` property set to `false` will be filtered out.
+Pages with the <code>ShowInMenus</code> property set to <code>false</code> will be filtered out.
 </div>
 
 ## Access to a specific Page
@@ -370,9 +370,9 @@ of the `silverstripe/cms` module.
 ```
 
 <div class="info" markdown="1">
-To customise the markup that the `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
- from the `silverstripe/cms` module to 
-`app/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
+To customise the markup that the <code>$Breadcrumbs</code> generates, copy <code>templates/BreadcrumbsTemplate.ss</code>
+ from the <code>silverstripe/cms</code> module to 
+<code>app/templates/BreadcrumbsTemplate.ss</code>, modify the newly copied template and flush your SilverStripe cache.
 </div>
 
 ## Forms
