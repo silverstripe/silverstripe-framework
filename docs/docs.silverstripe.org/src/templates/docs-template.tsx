@@ -9,7 +9,7 @@ const Template: StatelessComponent<SingleFileQuery> = (result): ReactElement => 
     const currentNode = result.data.markdownRemark;
     const { html, fields } = currentNode;
     return (
-    <Layout currentNode={result.data.markdownRemark}>
+    <Layout>
       <SEO title={fields.title} />
       {parseHTML(html)}
     </Layout>
