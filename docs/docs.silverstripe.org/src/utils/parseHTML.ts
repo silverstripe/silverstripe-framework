@@ -6,7 +6,7 @@ import parseChildrenOf from './parseChildrenOf';
 import rewriteCallout from './rewriteCallout';
 import { ReactElement } from 'react';
 import rewriteTable from './rewriteTable';
-import remark from 'remark';
+import rewriteHeader from './rewriteHeader';
 /**
  * Replace all the [CHILDREN] with proper React components.
  * @param html 
@@ -19,7 +19,7 @@ const parseHTML = (html: string): ReactElement | ReactElement[] | string => {
         replace(domNode: DomElement): ReactElement | object | undefined | false {
             const { name, attribs, children } = domNode;
             const domChildren = children || [];
-            if (attribs) {
+            if (name && attribs) {
                 if (name === 'a') {
                     return rewriteLink(attribs, domChildren, parseOptions);
                 }
@@ -30,6 +30,9 @@ const parseHTML = (html: string): ReactElement | ReactElement[] | string => {
                 }
                 if (name === 'table') {
                     return rewriteTable(domChildren, parseOptions);
+                }
+                if (name.match(/^h[0-9]$/)) {
+                    return rewriteHeader(domNode);
                 }
             }
             if (domNode.data) {

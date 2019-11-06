@@ -22,7 +22,7 @@ const Nav = () => {
                     </li>
                     {childItems.map((node: GenericHierarchyNode) => {
                         const { slug, title } = node.fields;
-                        const shouldShowChildren = currentNode.fields.slug.startsWith(slug);
+                        const shouldShowChildren = currentNode && currentNode.fields.slug.startsWith(slug);
                         return (
                             <>
                             <li key={slug} className="nav-item">

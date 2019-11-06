@@ -118,7 +118,6 @@ const useNodeHierarchy = (): GenericHierarchyNode[] => {
             .map(mapFn)
         : [],
     };
-
     return newNode;
   };
   nodes = nodes.map(mapFn);
