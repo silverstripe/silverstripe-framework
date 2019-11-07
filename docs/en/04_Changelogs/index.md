@@ -1,7 +1,7 @@
 ---
 title: Changelogs
 introduction: Key information on new features and improvements in each version.
-hideFromMenus: true
+hideChildren: true
 ---
 
 Keep up to date with new releases by reading [SilverStripe Forums](https://forum.silverstripe.org/c/releases),
