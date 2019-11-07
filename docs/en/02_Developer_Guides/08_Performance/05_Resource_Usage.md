@@ -1,6 +1,7 @@
 ---
 title: Resource Usage
 summary: Manage SilverStripe's memory footprint and CPU usage.
+icon: tachometer-alt
 ---
 
 # Resource Usage

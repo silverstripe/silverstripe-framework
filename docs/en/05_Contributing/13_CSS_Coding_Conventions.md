@@ -1,3 +1,8 @@
+---
+title: CSS coding conventions
+summary: The CSS style guidelines we follow in our open source software
+icon: css
+---
 # CSS and SCSS Coding Conventions
 
 ## Overview

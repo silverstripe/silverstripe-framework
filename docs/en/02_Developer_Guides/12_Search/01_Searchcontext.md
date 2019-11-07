@@ -1,6 +1,7 @@
 ---
 title: Scaffolding with SearchContext
 summary: Configure the search form within ModelAdmin using the SearchContext class.
+icon: search
 ---
 
 # SearchContext

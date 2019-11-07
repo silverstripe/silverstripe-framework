@@ -1,6 +1,7 @@
 ---
 title: Contributing Code
 summary: Fix bugs and add new features to help make SilverStripe better.
+icon: code
 ---
 
 # Contributing Code - Submitting Bugfixes and Enhancements

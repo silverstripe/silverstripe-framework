@@ -1,3 +1,8 @@
+---
+title: CMS form field help text
+summary: Add help text to the form fields in the CMS
+icon: help
+---
 # How to Show Help Text on CMS Form Fields
 
 Sometimes you need to express more context for a form field

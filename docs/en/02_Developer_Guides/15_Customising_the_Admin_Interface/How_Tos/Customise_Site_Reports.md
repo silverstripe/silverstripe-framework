@@ -1,8 +1,9 @@
 ---
 title: Customise site reports
 summary: Creating your own custom data or content reports.
-# Customise site reports
 ---
+
+# Customise site reports
 
 ## Introduction
 Reports are a useful feature in the CMS designed to provide a view of your data or content. You can access

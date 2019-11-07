@@ -2,6 +2,7 @@
 title: Customising the Admin Interface
 summary: Extend the admin view to provide custom behavior or new features for CMS and admin users.
 introduction: The Admin interface can be extended to provide additional functionality to users and custom interfaces for managing data.
+icon: react
 ---
 
 The Admin interface is bundled within the SilverStripe Framework but is most commonly used in conjunction with the `cms`

@@ -1,6 +1,7 @@
 ---
 title: Logging and Error Handling
 summary: Trap, fire and report diagnostic logs, user exceptions, warnings and errors.
+icon: exclamation-circle
 ---
 
 # Logging and Error Handling

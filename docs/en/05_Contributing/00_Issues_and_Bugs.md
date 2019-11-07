@@ -1,6 +1,7 @@
 ---
 title: Bug Reports
 summary: Report bugs or problems with SilverStripe, feature requests or other issues.
+icon: bug
 ---
 
 # Contributing Issues and Opinions

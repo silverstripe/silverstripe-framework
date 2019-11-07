@@ -1,5 +1,7 @@
 ---
 title: Import CSV Data through a Controller
+summary: Data importing through the frontend
+icon: upload
 ---
 
 # Import CSV Data through a Controller

@@ -1,5 +1,6 @@
 ---
 title: Admin Layout
+summary: Add interactivity enhancements to the admin with Javascript
 ---
 
 # CMS layout

@@ -1,3 +1,9 @@
+---
+title: Request for comment
+summary: Our approach to decision-making around impactful changes to the product
+icon: comments
+---
+
 # Request for comment (RFC)
 
 ## Why RFCs?

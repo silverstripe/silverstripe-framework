@@ -1,5 +1,7 @@
 ---
+title: Release process
 summary: Describes the process followed for "core" releases.
+icon: git-alt
 ---
 
 # Release Process

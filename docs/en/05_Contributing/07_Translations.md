@@ -1,6 +1,7 @@
 ---
 title: Translations
 summary: Translate interface components like button labels into multiple languages.
+icon: globe
 ---
 
 # Contributing Translations

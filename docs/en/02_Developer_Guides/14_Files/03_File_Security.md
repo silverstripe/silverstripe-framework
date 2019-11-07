@@ -1,5 +1,7 @@
 ---
+title: File security
 summary: Manage access permission to assets
+icon: lock
 ---
 
 # File Security

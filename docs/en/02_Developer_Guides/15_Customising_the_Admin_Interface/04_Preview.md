@@ -1,3 +1,8 @@
+---
+title: Preview
+summary: How content previews work in the CMS
+---
+
 # CMS preview
 
 ## Overview

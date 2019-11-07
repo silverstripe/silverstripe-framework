@@ -1,5 +1,7 @@
 ---
 title: A custom CSVBulkLoader instance
+summary: Customise your data importing
+icon: upload
 ---
 
 # How to: A custom CSVBulkLoader instance

@@ -1,5 +1,7 @@
 ---
+title: Email
 summary: Send HTML and plain text email from your SilverStripe application.
+icon: envelope-open
 ---
 
 # Email

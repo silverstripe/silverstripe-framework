@@ -1,5 +1,7 @@
 ---
 title: How to test emails within unit tests
+summary: Test email functionality without ever hitting an inbox
+icon: envelope
 ---
 
 # Testing Email within Unit Tests

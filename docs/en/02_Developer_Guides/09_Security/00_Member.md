@@ -1,5 +1,7 @@
 ---
 title: Members
+summary: Learn how logged in users are managed in Silverstripe CMS
+icon: user
 ---
 
 # Member

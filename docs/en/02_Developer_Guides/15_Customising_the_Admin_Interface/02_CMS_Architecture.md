@@ -1,3 +1,8 @@
+---
+title: CMS Architecture
+summary: An overview of the code architecture of the CMS
+icon: sitemap
+---
 # CMS Architecture
 
 ## Introduction

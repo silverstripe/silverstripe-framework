@@ -1,3 +1,9 @@
+---
+title: Javascript coding conventions
+summary: The Javascript style guidelines we follow in our open source software
+icon: js
+---
+
 # JavaScript Coding Conventions
 
 ## Overview

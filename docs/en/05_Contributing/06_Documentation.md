@@ -1,6 +1,7 @@
 ---
 title: Documentation
 summary: Writing guide for contributing to SilverStripe developer and CMS user help documentation. 
+icon: file-alt
 ---
 
 # Contributing documentation

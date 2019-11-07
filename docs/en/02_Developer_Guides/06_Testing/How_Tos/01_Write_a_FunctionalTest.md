@@ -1,5 +1,6 @@
 ---
 title: How to write a FunctionalTest
+summary: Expand your testing capabilities with integrations tests
 ---
 
 # How to Write a FunctionalTest

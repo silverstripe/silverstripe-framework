@@ -1,5 +1,6 @@
 ---
 title: Testing Glossary
+summary: All the jargon you need to be a bonafide testing guru
 ---
 
 <dl>
