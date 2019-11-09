@@ -3,8 +3,8 @@ summary: Content author configuration through the SiteConfig module.
 
 # SiteConfig
 
-The `SiteConfig` module provides a generic interface for managing site wide settings or functionality which is used 
-throughout the site. Out of the box this includes selecting the current site theme, site name and site wide access.
+The `SiteConfig` module provides a generic interface for managing site-wide settings or functionality which is used 
+throughout the site. Out of the box, this includes setting the site name and site-wide access.
 
 ## Accessing variables
 
