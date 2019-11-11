@@ -147,13 +147,13 @@ class VersionedModel extends DataObject
 ```
 
 [notice]
-The extension is automatically applied to <code>SiteTree</code> class. For more information on extensions see
+The extension is automatically applied to `SiteTree` class. For more information on extensions see
 <a href="../extending">extending</a> and the <a href="../configuration">Configuration</a> documentation.
 [/notice]
 
 [warning]
 Versioning only works if you are adding the extension to the base class. That is, the first subclass
-of <code>DataObject</code>. Adding this extension to children of the base class will have unpredictable behaviour.
+of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
 [/warning]
 
 
@@ -347,7 +347,7 @@ $historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>
 ```
 
 [alert]
-The record is retrieved as a <code>DataObject</code>, but saving back modifications via <code>write()</code> will create a new version,
+The record is retrieved as a `DataObject`, but saving back modifications via `write()` will create a new version,
 rather than modifying the existing one.
 [/alert]
 
@@ -685,8 +685,8 @@ SilverStripe\Control\Director:
 ```
 
 [alert]
-The <code>choose_site_stage()</code> call only deals with setting the default stage, and doesn't check if the user is
-authenticated to view it. As with any other controller logic, please use <code>DataObject->canView()</code> to determine
+The `choose_site_stage()` call only deals with setting the default stage, and doesn't check if the user is
+authenticated to view it. As with any other controller logic, please use `DataObject->canView()` to determine
 permissions, and avoid exposing unpublished content to your users.
 [/alert]
 
@@ -695,9 +695,9 @@ permissions, and avoid exposing unpublished content to your users.
 By default, `Versioned` will come out of the box with security extensions which restrict the visibility of objects in Draft (stage) or Archive viewing mode.
 
 [alert]
-As is standard practice, user code should always invoke <code>canView()</code> on any object before
-rendering it. DataLists do not filter on <code>canView()</code> automatically, so this must be
-done via user code. This be be achieved either by wrapping <code>&lt;% if $canView %&gt;</code> in
+As is standard practice, user code should always invoke `canView()` on any object before
+rendering it. DataLists do not filter on `canView()` automatically, so this must be
+done via user code. This be be achieved either by wrapping `<% if $canView %>;` in
 your template, or by implementing your visibility check in PHP.
 [/alert]
 

@@ -47,7 +47,7 @@ to locate your site’s images and css files.
 It renders in the template as `<base href="http://www.yoursite.com" /><!--[if lte IE 6]></base><![endif]-->`
 
 [alert]
-A <code>&lt;% base_tag %&gt;</code> is nearly always required or assumed by SilverStripe to exist.
+A `<% base_tag %>;` is nearly always required or assumed by SilverStripe to exist.
 [/alert]
 
 ## CurrentMember
@@ -74,7 +74,7 @@ The CMS module in particular provides two fields to label a page: `Title` and `M
 displayed on the web page, while `MenuTitle` can be a shorter version suitable for size-constrained menus.
 
 [notice]
-If <code>MenuTitle</code> is left blank by the CMS author, it'll just default to the value in `Title`.
+If `MenuTitle` is left blank by the CMS author, it'll just default to the value in `Title`.
 [/notice]
 
 ## Page Content
@@ -90,7 +90,7 @@ but it is also the standard for any object that has a body of content to output.
 Please note that this database content can be "versioned", meaning that draft content edited in the CMS can be different 
 from published content shown to your website visitors. In templates, you don't need to worry about this distinction.
 
-The <code>$Content</code> variable contains the published content by default,and only preview draft content if explicitly 
+The `$Content` variable contains the published content by default,and only preview draft content if explicitly 
 requested (e.g. by the "preview" feature in the CMS) (see the [versioning documentation](/../model/versioning) for 
 more details).
 [/info]
@@ -98,7 +98,7 @@ more details).
 ### SiteConfig: Global settings
 
 [notice]
-<code>SiteConfig</code> is a module that is bundled with the CMS. If you wish to include <code>SiteConfig</code> in your framework only 
+`SiteConfig` is a module that is bundled with the CMS. If you wish to include `SiteConfig` in your framework only 
 web pages. You'll need to install it via composer.
 [/notice]
 
@@ -120,7 +120,7 @@ will set up title, keywords and description meta-tags, based on the CMS content 
 on a per-page basis. 
 
 [notice]
-If you don’t want to include the title tag use <code>$MetaTags(false)</code>.
+If you don’t want to include the title tag use `$MetaTags(false)`.
 [/notice]
 
 By default `$MetaTags` renders:
@@ -258,7 +258,7 @@ Will loop over all Children records of the current object context. Children are 
 the `CMS` or a custom list of data. This originates in the `Versioned` extension's `getChildren` method.
 
 [alert]
-For doing your website navigation most likely you'll want to use <code>$Menu</code> since its independent of the page 
+For doing your website navigation most likely you'll want to use `$Menu` since its independent of the page 
 context.
 [/alert]
 
@@ -298,7 +298,7 @@ preference, `AllChildren` does not filter by `ShowInMenus`.
 `$Menu(1)` returns the top-level menu of the website. You can also create a sub-menu using `$Menu(2)`, and so forth.
 
 [notice]
-Pages with the <code>ShowInMenus</code> property set to <code>false</code> will be filtered out.
+Pages with the `ShowInMenus` property set to `false` will be filtered out.
 [/notice]
 
 ## Access to a specific Page
@@ -370,9 +370,9 @@ of the `silverstripe/cms` module.
 ```
 
 [info]
-To customise the markup that the <code>$Breadcrumbs</code> generates, copy <code>templates/BreadcrumbsTemplate.ss</code>
- from the <code>silverstripe/cms</code> module to 
-<code>app/templates/BreadcrumbsTemplate.ss</code>, modify the newly copied template and flush your SilverStripe cache.
+To customise the markup that the `$Breadcrumbs` generates, copy `templates/BreadcrumbsTemplate.ss`
+ from the `silverstripe/cms` module to 
+`app/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 [/info]
 
 ## Forms
