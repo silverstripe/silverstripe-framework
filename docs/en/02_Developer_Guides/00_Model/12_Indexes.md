@@ -1,6 +1,7 @@
+---
 title: Indexes
 summary: Add Indexes to your Data Model to optimize database queries.
-
+---
 # Indexes
 
 It is sometimes desirable to add indexes to your data model, whether to optimize queries or add a uniqueness constraint 

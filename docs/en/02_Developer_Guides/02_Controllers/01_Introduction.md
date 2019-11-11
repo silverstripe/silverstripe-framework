@@ -1,6 +1,7 @@
+---
 title: Introduction to a Controller
 summary: A brief look at the definition of a Controller, creating actions and how to respond to requests.
-
+---
 # Introduction to Controllers
 
 The following example is for a simple [api:Controller] class. When building off the SilverStripe Framework you will

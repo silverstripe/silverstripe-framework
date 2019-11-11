@@ -1,6 +1,7 @@
+---
 title: ModelAdmin
 summary: Create admin UI's for managing your data records.
-
+---
 # ModelAdmin
 
 [api:ModelAdmin] provides a simple way to utilize the SilverStripe Admin UI with your own data models. It can create

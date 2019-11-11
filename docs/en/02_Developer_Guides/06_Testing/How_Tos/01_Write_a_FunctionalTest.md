@@ -1,5 +1,6 @@
+---
 title: How to write a FunctionalTest
-
+---
 # How to Write a FunctionalTest
 
 [api:FunctionalTest] test your applications `Controller` instances and anything else which requires a web request. The 

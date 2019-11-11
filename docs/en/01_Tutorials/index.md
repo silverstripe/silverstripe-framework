@@ -1,6 +1,7 @@
+---
 title: Tutorials
 introduction: The tutorials below take a step by step look at how to build a SilverStripe application.
-
+---
 ## Written Tutorials
 [alert]
 These tutorials are deprecated, and have been replaced by the new [Lessons](http://silverstripe.org/learn/lessons) section.

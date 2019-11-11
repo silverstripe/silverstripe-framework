@@ -1,5 +1,6 @@
+---
 summary: An overview of the steps involved in delivering a SilverStripe web page.
-
+---
 # Execution Pipeline
 
 ## Introduction

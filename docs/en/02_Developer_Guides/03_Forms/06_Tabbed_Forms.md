@@ -1,6 +1,7 @@
+---
 title: Tabbed Forms
 summary: Find out how CMS interfaces use jQuery UI tabs to provide nested FormFields.
-
+---
 # Tabbed Forms
 
 SilverStripe's [api:FormScaffolder] can automatically generate [api:Form] instances for certain database models. In the

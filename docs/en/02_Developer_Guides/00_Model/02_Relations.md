@@ -1,6 +1,7 @@
+---
 title: Relations between Records
 summary: Relate models together using the ORM using has_one, has_many, and many_many.
-
+---
 # Relations between Records
 
 In most situations you will likely see more than one [api:DataObject] and several classes in your data model may relate

@@ -1,6 +1,7 @@
+---
 title: Environment Variables
 summary: Site configuration variables such as database connection details, environment type and remote login information.
-
+---
 # Environment Variables
 
 Environment specific variables like database connection details, API keys and other server configuration should be kept 

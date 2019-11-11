@@ -1,5 +1,6 @@
+---
 title: Embed an RSS Feed
-
+---
 # Embed an RSS Feed
 
 [api:RestfulService] can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 

@@ -1,5 +1,6 @@
+---
 summary: Describes the process followed for "core" releases.
-
+---
 # Release Process
 
 This page describes the process followed for "core" releases (mainly the `framework` and `cms` modules).

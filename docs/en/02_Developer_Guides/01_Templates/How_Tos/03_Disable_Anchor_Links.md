@@ -1,5 +1,6 @@
+---
 title: Disable Anchor Rewriting
-
+---
 # Disable Anchor Rewriting
 
 Anchor links are links with a "#" in them. A frequent use-case is to use anchor links to point to different sections of 

@@ -1,6 +1,7 @@
+---
 title: Introduction to Forms
 summary: An introduction to creating a Form instance and handling submissions.
-
+---
 # Forms
 
 The HTML `Form` is the most used way to interact with a user. SilverStripe provides classes to generate forms through 

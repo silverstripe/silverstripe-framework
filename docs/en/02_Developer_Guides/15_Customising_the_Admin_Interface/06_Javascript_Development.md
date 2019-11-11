@@ -1,6 +1,7 @@
+---
 title: Javascript Development
 summary: Advanced documentation about writing and customizing javascript within SilverStripe.
-
+---
 # Javascript Development
 
 The following document is an advanced guide on building rich javascript interactions within the SilverStripe CMS and

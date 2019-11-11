@@ -1,6 +1,7 @@
+---
 title: Versioning
 summary: Add versioning to your database content through the Versioned extension.
-
+---
 # Versioning
 
 Database content in SilverStripe can be "staged" before its publication, as well as track all changes through the 

@@ -1,6 +1,7 @@
+---
 title: Model-Level Permissions
 summary: Reduce risk by securing models.
-
+---
 # Model-Level Permissions
 
 Models can be modified in a variety of controllers and user interfaces, all of which can implement their own security 

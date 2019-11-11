@@ -1,6 +1,7 @@
+---
 title: Fixtures
 summary: Populate test databases with fake seed data.
-
+---
 # Fixtures
 
 To test functionality correctly, we must use consistent data. If we are testing our code with the same data each

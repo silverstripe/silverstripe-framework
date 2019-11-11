@@ -1,6 +1,7 @@
+---
 title: Modules
 summary: Extend core functionality with modules.
-
+---
 # Modules
 
 SilverStripe is designed to be a modular application system - even the CMS is simply a module that plugs into the core

@@ -1,6 +1,7 @@
+---
 title: Error Handling
 summary: Trap, fire and report user exceptions, warnings and errors.
-
+---
 # Error Handling
 
 SilverStripe has its own error trapping and handling support. On development sites, SilverStripe will deal harshly with 

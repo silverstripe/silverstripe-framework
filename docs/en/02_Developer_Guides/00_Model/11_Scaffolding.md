@@ -1,6 +1,7 @@
+---
 title: Building Model and Search Interfaces around Scaffolding
 summary: A Model-driven approach to defining your application UI.
-
+---
 # Scaffolding
 
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 

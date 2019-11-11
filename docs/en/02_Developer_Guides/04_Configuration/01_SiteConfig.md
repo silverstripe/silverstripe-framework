@@ -1,6 +1,7 @@
+---
 title: SiteConfig
 summary: Content author configuration through the SiteConfig module.
-
+---
 # SiteConfig
 
 The `SiteConfig` module provides a generic interface for managing site wide settings or functionality which is used 

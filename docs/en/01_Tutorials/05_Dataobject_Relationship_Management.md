@@ -1,6 +1,7 @@
+---
 title: DataObject Relationship Management
 summary: Learn how to create custom DataObjects and how to build interfaces for managing that data.
-
+---
 [alert]
 This tutorial is deprecated, and has been replaced by Lessons 7, 8, 9, and 10 in the [Lessons section](http://www.silverstripe.org/learn/lessons)
 [/alert]

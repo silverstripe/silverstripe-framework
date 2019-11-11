@@ -1,5 +1,6 @@
+---
 title: A custom CSVBulkLoader instance
-
+---
 # How to: A custom CSVBulkLoader instance
 
 A an implementation of a custom `CSVBulkLoader` loader. In this example. we're provided with a unique CSV file 

@@ -1,6 +1,7 @@
+---
 title: Translations
 summary: Translate interface components like button labels into multiple languages.
-
+---
 # Contributing Translations
 
 We are always looking for new translators. Even if a specific language already is translated and has an official 

@@ -1,6 +1,7 @@
+---
 title: Access Control
 summary: Define allowed behavior and add permission based checks to your Controllers.
-
+---
 # Access Control
 
 Within your controllers you should declare and restrict what people can see and do to ensure that users cannot run 

@@ -1,5 +1,6 @@
+---
 title: How to Create a Navigation Menu
-
+---
 # How to Create a Navigation Menu
 
 In this how-to, we'll create a simple menu which you can use as the primary navigation for your website. This outputs a

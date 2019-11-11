@@ -1,6 +1,7 @@
+---
 title: SearchFilter Modifiers
 summary: Use suffixes on your ORM queries.
-
+---
 # SearchFilter Modifiers
 
 The `filter` and `exclude` operations specify exact matches by default. However, there are a number of suffixes that

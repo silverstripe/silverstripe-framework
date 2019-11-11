@@ -1,6 +1,7 @@
+---
 title: Themes
 summary: What makes up a SilverStripe Theme. How to install one or write your own theme. 
-
+---
 # Themes
 
 Themes can be used to kick start your SilverStripe projects, can be stored outside of your application code and your

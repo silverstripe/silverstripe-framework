@@ -1,6 +1,7 @@
+---
 title: Partial Caching
 summary: Cache SilverStripe templates to reduce database queries.
-
+---
 # Partial Caching
 
 Partial caching is a feature that allows the caching of just a portion of a page. 

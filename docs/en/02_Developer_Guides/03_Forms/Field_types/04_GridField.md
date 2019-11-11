@@ -1,6 +1,7 @@
+---
 title: GridField
 summary: How to use the GridField class for managing tabular data.
-
+---
 # GridField
 
 [api:GridField] is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 

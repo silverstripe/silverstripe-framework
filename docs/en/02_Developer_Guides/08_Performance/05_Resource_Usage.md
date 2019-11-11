@@ -1,6 +1,7 @@
+---
 title: Resource Usage
 summary: Manage SilverStripe's memory footprint and CPU usage.
-
+---
 # Resource Usage
 
 SilverStripe tries to keep its resource usage within the documented limits 

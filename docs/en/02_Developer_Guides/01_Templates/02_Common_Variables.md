@@ -1,6 +1,7 @@
+---
 title: Common Variables
 summary: Some of the common variables and methods your templates can use, including Menu, SiteConfig, and more.
-
+---
 # Common Variables
 
 The page below describes a few of common variables and methods you'll see in a SilverStripe template. This is not an 

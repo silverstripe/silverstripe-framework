@@ -1,6 +1,7 @@
+---
 title: Rich-text editing (WYSIWYG)
 summary: SilverStripe's use and configuration of TinyMCE html editor.
-
+---
 # Rich-text editing (WYSIWYG)
 
 Editing and formatting content is the bread and butter of every content management system, which is why SilverStripe 

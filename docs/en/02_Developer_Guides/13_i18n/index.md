@@ -1,6 +1,7 @@
+---
 title: i18n
 summary: Display templates and PHP code in different languages based on the preferences of your website users.
-
+---
 # i18n
 
 The i18n class (short for "internationalization") in SilverStripe enables you to display templates and PHP code in

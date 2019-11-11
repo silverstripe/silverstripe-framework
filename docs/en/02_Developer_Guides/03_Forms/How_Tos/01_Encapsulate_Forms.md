@@ -1,5 +1,6 @@
+---
 title: How to Encapsulate Forms
-
+---
 # How to Encapsulate Forms
 
 Form definitions can often get long, complex and often end up cluttering up a `Controller` definition. We may also want

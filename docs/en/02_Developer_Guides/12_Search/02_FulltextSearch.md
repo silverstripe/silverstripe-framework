@@ -1,6 +1,7 @@
+---
 title: Fulltext Search
 summary: Fulltext search allows sophisticated searching on text content.
-
+---
 # FulltextSearchable
 
 Fulltext search allows advanced search criteria for searching words within a text based data column. While basic

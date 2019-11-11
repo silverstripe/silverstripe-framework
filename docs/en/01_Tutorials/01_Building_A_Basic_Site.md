@@ -1,6 +1,7 @@
+---
 title: Building a basic site
 summary: An overview of the SilverStripe installation and an introduction to creating a web page.
-
+---
 [alert]
 This tutorial is deprecated, and has been replaced by Lessons 1, 2, 3, and 4 in the [Lessons section](http://www.silverstripe.org/learn/lessons)
 [/alert]

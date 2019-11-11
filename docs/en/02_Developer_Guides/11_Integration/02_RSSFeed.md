@@ -1,6 +1,7 @@
+---
 title: RSS Feed
 summary: Output records from your database as an RSS Feed.
-
+---
 # RSS Feed
 
 Generating RSS / Atom-feeds is a matter of rendering a [api:SS_List] instance through the [api:RSSFeed] class.

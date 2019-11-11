@@ -1,6 +1,7 @@
+---
 title: Form Validation
 summary: Validate form data through the server side validation API.
-
+---
 # Form Validation
 
 SilverStripe provides server-side form validation out of the box through the [api:Validator] class and its' child class

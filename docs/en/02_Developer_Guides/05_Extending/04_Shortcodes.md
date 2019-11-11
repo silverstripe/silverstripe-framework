@@ -1,6 +1,7 @@
+---
 title: Shortcodes
 summary: Flexible content embedding
-
+---
 # Shortcodes
 
 The [api:ShortcodeParser] API is simple parser that allows you to map specifically formatted content to a callback to 

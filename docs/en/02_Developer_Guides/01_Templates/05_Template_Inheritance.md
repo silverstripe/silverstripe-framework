@@ -1,6 +1,7 @@
+---
 title: Template Inheritance
 summary: Override and extend module and core markup templates from your application code.
-
+---
 # Template Inheritance
 
 Bundled within SilverStripe are default templates for any markup the framework outputs for things like Form templates,

@@ -1,6 +1,7 @@
+---
 title: Static Publishing
 summary: Export your web pages as static HTML and serve the web like it's 1999.
-
+---
 # Static Publishing
 
 One of the best ways to get the top performance out of SilverStripe is to bypass it completely. This saves on any loading

@@ -1,5 +1,6 @@
+---
 summary: Consume external data through their RESTFul interfaces.
-
+---
 # Restful Service
 
 [api:RestfulService] is used to enable connections to remote web services through PHP's `curl` command. It provides an

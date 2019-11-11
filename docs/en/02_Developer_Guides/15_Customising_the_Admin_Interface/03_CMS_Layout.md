@@ -1,5 +1,6 @@
+---
 title: Admin Layout
-
+---
 # CMS layout
 
 The CMS markup is structured into "panels", which are the base units containing interface components (or other panels),

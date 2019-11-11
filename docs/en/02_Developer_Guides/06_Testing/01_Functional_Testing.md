@@ -1,6 +1,7 @@
+---
 title: Functional Testing
 summary: Test controllers, forms and HTTP responses.
-
+---
 # Functional Testing
 
 [api:FunctionalTest] test your applications `Controller` logic and anything else which requires a web request. The 

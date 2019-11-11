@@ -1,6 +1,7 @@
+---
 title: Model Validation and Constraints
 summary: Validate your data at the model level
-
+---
 # Validation and Constraints
 
 Traditionally, validation in SilverStripe has been mostly handled on the controller through [form validation](../forms).

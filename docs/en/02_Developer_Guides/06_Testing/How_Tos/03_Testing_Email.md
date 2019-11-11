@@ -1,5 +1,6 @@
+---
 title: How to test emails within unit tests
-
+---
 # Testing Email within Unit Tests
 
 SilverStripe's test system has built-in support for testing emails sent using the [api:Email] class. If you are 

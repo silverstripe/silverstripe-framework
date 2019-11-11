@@ -1,6 +1,7 @@
+---
 title: Sessions
 summary: A set of static methods for manipulating PHP sessions.
-
+---
 # Sessions
 
 Session support in PHP consists of a way to preserve certain data across subsequent accesses such as logged in user

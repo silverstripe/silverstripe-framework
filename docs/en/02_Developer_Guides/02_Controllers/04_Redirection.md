@@ -1,6 +1,7 @@
+---
 title: Redirection
 summary: Move users around your site using automatic redirection.
-
+---
 # Redirection
 
 Controllers can facilitate redirecting users from one place to another using `HTTP` redirection using the `Location` 

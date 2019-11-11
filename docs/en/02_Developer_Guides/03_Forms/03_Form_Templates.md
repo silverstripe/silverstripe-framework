@@ -1,6 +1,7 @@
+---
 title: Form Templates
 summary: Customize the generated HTML for a FormField or an entire Form.
-
+---
 # Form Templates
 
 Most markup generated in SilverStripe can be replaced by custom templates. Both [api:Form] and [api:FormField] instances

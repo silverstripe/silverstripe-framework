@@ -1,5 +1,6 @@
+---
 title: How to write a SapphireTest
-
+---
 # How to write a SapphireTest
 
 Here is an example of a test which extends [api:SapphireTest] to test the URL generation of the page. It also showcases

@@ -1,6 +1,7 @@
+---
 title: Aspects
 summary: Introduction to using aspect-oriented programming with SilverStripe.
-
+---
 # Aspects
 
 Aspect oriented programming is the idea that some logic abstractions can be applied across various type hierarchies 

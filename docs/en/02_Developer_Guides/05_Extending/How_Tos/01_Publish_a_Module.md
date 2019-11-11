@@ -1,5 +1,6 @@
+---
 title: How to Publish a SilverStripe module
-
+---
 # How to Publish a SilverStripe module.
 
 If you wish to submit your module to our public directory, you take responsibility for a certain level of code quality, 

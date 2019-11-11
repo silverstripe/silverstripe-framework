@@ -1,5 +1,6 @@
+---
 summary: Learn how to identify errors in your application and best practice for logging application errors.
-
+---
 # Debugging
 
 SilverStripe can be a large and complex framework to debug, but there are ways to make debugging less painful. In this

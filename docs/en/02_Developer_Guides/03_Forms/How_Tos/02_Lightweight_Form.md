@@ -1,5 +1,6 @@
+---
 title: How to Create Lightweight Form
-
+---
 # How to Create Lightweight Form
 
 Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [api:FormFields], however this can 

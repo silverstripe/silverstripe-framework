@@ -1,6 +1,7 @@
+---
 title: Managing Lists
 summary: The SS_List interface allows you to iterate through and manipulate a list of objects.
-
+---
 # Managing Lists
 
 Whenever using the ORM to fetch records or navigate relationships you will receive an [api:SS_List] instance commonly as

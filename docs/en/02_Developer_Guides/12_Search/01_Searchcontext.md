@@ -1,6 +1,7 @@
+---
 title: Scaffolding with SearchContext
 summary: Configure the search form within ModelAdmin using the SearchContext class.
-
+---
 # SearchContext
 
 [api:SearchContext] manages searching of properties on one or more [api:DataObject] types, based on a given set of

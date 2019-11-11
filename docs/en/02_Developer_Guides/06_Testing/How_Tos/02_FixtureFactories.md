@@ -1,5 +1,6 @@
+---
 title: How to use a FixtureFactory
-
+---
 # How to use a FixtureFactory
 
 The [api:FixtureFactory] is used to manually create data structures for use with tests. For more information on fixtures

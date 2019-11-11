@@ -1,6 +1,7 @@
+---
 title: Extending DataObjects
 summary: Modify the data model without using subclasses.
-
+---
 # Extending DataObjects
 
 You can add properties and methods to existing [api:DataObject]s like [api:Member] without hacking core code or sub 

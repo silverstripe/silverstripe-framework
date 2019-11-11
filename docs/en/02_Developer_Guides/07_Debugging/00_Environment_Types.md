@@ -1,6 +1,7 @@
+---
 title: Environment Types
 summary: Configure your SilverStripe environment to define how your web application behaves.
-
+---
 # Environment Types
 
 SilverStripe knows three different environment types (or "modes"). Each of the modes gives you different tools

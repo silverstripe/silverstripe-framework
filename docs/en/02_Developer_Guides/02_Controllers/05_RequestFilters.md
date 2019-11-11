@@ -1,6 +1,7 @@
+---
 title: Request Filters
 summary: Create objects for modifying request and response objects across controllers.
-
+---
 # Request Filters
 
 [api:RequestFilter] is an interface that provides two key methods. `preRequest` and `postRequest`. These methods are 

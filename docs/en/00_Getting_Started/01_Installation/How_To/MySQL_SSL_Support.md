@@ -1,6 +1,7 @@
+---
 title: MySQL SSL Support
 summary: Setting up MySQL SSL certificates to work with Silverstripe
-
+---
 # MySQL SSL Support: Why do I need it?
 
 In a typical Silverstripe set up, you will only need to use a single host to function as the web server, email server, database server, among others.

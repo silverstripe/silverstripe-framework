@@ -1,5 +1,6 @@
+---
 title: How to Create a Paginated List
-
+---
 # How to Create a Paginated List
 
 In order to create a paginated list, create a method on your controller that first creates a `SS_List` that contains

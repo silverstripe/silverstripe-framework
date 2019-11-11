@@ -1,5 +1,6 @@
+---
 summary: Learn how to crop and resize images in templates and PHP code
-
+---
 # Image
 
 Represents an image object through the [api:Image] class, inheriting all base functionality from the [api:File] class with extra functionality including resizing.

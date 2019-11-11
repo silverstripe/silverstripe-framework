@@ -1,6 +1,7 @@
+---
 title: Injector
 summary: Introduction to using Dependency Injection within SilverStripe.
-
+---
 # Injector
 
 The [api:Injector] class is the central manager of inter-class dependencies in SilverStripe. It offers developers the 

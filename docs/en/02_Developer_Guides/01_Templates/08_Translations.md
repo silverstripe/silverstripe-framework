@@ -1,6 +1,7 @@
+---
 title: Translations
 summary: Definition of the syntax for writing i18n compatible templates.
-
+---
 # Translations
 
 Translations are easy to use with a template, and give access to SilverStripe's translation facilities. Here is an 

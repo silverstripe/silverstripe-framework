@@ -1,6 +1,7 @@
+---
 title: Extensions
 summary: Extensions and DataExtensions let you modify and augment objects transparently. 
-
+---
 # Extensions and DataExtensions
 
 An [api:Extension] allows for adding additional functionality to a [api:Object] or modifying existing functionality 

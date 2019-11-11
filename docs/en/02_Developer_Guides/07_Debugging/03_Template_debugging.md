@@ -1,6 +1,7 @@
+---
 title: Template debugging
 summary: Track down which template rendered a piece of html
-
+---
 # Debugging templates
 
 ## Source code comments

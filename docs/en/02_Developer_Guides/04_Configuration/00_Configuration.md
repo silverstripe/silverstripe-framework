@@ -1,6 +1,7 @@
+---
 title: Configuration API
 summary: SilverStripe's YAML based Configuration API for setting runtime configuration.
-
+---
 # Configuration API
 
 SilverStripe comes with a comprehensive code based configuration system through the [api:Config] class. It primarily 

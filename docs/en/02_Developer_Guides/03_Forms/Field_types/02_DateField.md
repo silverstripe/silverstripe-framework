@@ -1,6 +1,7 @@
+---
 title: DateField
 summary: How to format and use the DateField class.
-
+---
 # DateField
 
 This `FormField` subclass lets you display an editable date, either in a single text input field, or in three separate 

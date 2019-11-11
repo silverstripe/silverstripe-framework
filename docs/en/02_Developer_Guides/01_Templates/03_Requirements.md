@@ -1,6 +1,7 @@
+---
 title: Requirements
 summary: How to include and require other assets in your templates such as javascript and CSS files.
-
+---
 # Requirements
 
 The requirements class takes care of including CSS and JavaScript into your applications. This is preferred to hard 

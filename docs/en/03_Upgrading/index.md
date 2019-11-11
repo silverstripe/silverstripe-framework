@@ -1,6 +1,7 @@
+---
 title: Upgrading
 introduction: Keep your SilverStripe installations up to date with the latest fixes, security patches and new features.
-
+---
 # Upgrading to SilverStripe 3.2
 
 SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to your SilverStripe installation means overwriting files, flushing the cache and updating your database-schema. 

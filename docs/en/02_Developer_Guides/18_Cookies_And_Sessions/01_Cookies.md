@@ -1,6 +1,7 @@
+---
 title: Cookies
 summary: A set of static methods for manipulating PHP cookies.
-
+---
 # Cookies
 
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 

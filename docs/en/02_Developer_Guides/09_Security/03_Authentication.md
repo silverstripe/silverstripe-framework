@@ -1,6 +1,7 @@
+---
 title: Authentication
 summary: Explains SilverStripe's Authentication options and custom authenticators. 
-
+---
 # Authentication
 
 By default, SilverStripe provides a [api:MemberAuthenticator] class which hooks into its own internal
