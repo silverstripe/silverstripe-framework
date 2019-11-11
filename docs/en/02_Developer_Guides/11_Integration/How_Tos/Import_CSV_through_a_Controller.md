@@ -79,7 +79,7 @@ class MyController extends Controller
 }
 ```
 
-<div class="alert" markdown="1">
+[alert]
 This interface is not secured, consider using [Permission::check()](api:SilverStripe\Security\Permission::check()) to limit the controller to users with certain 
 access rights.
-</div>
+[/alert]

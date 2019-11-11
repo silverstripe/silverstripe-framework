@@ -13,9 +13,9 @@ Aspect oriented programming is the idea that some logic abstractions can be appl
 > functions from the main program's business logic. It aims to increase modularity by allowing the separation of 
 > cross-cutting concerns, forming a basis for aspect-oriented software development.
 
-<div class="notice" markdown="1">
+[notice]
 [Wikipedia](http://en.wikipedia.org/wiki/Aspect-oriented_programming) provides a much more in-depth explanation.
-</div>
+[/notice]
 
 In the context of the SilverStripe [Dependency Injector](injector), Aspects are achieved thanks to PHP's `__call` magic 
 method combined with the `Proxy` Design Pattern.
@@ -41,10 +41,10 @@ specific database server, whereas all read queries can be handled by slave serve
 
 A simplified implementation might look like the following.
 
-<div class="notice" markdown="1">
+[notice]
 This doesn't cover all cases used by SilverStripe so is not a complete solution, more just a guide to how it would be 
 used. 
-</div>
+[/notice]
 
 **app/code/MySQLWriteDbAspect.php**
 

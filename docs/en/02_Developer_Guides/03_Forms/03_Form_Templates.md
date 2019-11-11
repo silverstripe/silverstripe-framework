@@ -21,22 +21,22 @@ $field->setTemplate('MyCustomTextField');
 
 To override the template for CMS forms, the custom templates should be located in **/app/templates**. Front-end form templates can be located in **/app/templates** or in the active theme's **/templates** directory.
 
-<div class="notice" markdown="1">
+[notice]
 It's recommended to copy the contents of the template you're going to replace and use that as a start. For instance, if
 you want to create a `MyCustomFormTemplate` copy the contents of `Form.ss` to a `MyCustomFormTemplate.ss` file and 
 modify as you need.
 
 *The default Form.ss can be found in `/vendor/silverstripe/framework/templates/SilverStripe/Forms/Includes/`*
-</div>
+[/notice]
 
 By default, Form and Fields follow the SilverStripe Template convention and are rendered into templates of the same 
 class name (i.e EmailField will attempt to render into `EmailField.ss` and if that isn't found, `TextField.ss` or 
 finally `FormField.ss`).
 
-<div class="alert" markdown="1">
+[alert]
 While you can override all templates using normal view inheritance (i.e defining a `Form.ss`) other modules may rely on 
 the core template structure. It is recommended to use `setTemplate` and unique templates for specific forms.
-</div>
+[/alert]
 
 For [FormField](api:SilverStripe\Forms\FormField) instances, there are several other templates that are used on top of the main `setTemplate`.
 

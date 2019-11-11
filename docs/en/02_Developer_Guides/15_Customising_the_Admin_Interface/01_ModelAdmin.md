@@ -11,10 +11,10 @@ searchables list and edit views of [DataObject](api:SilverStripe\ORM\DataObject)
 It uses the framework's knowledge about the model to provide sensible defaults, allowing you to get started in a couple
 of lines of code, while still providing a solid base for customization.
 
-<div class="info" markdown="1">
+[info]
 The interface is mainly powered by the [GridField](api:SilverStripe\Forms\GridField\GridField) class ([documentation](../forms/field_types/gridfield)), which can
 also be used in other areas of your application.
-</div>
+[/info]
 
 Let's assume we want to manage a simple product listing as a sample data model: A product can have a name, price, and
 a category.
@@ -87,9 +87,9 @@ class MyAdmin extends ModelAdmin
 This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
 users will be able to upload and manage `Product` and `Category` instances through http://yoursite.com/admin/products.
 
-<div class="alert" markdown="1">
+[alert]
 After defining these classes, make sure you have rebuilt your SilverStripe database and flushed your cache.
-</div>
+[/alert]
 
 ## Permissions
 
@@ -97,9 +97,9 @@ Each new `ModelAdmin` subclass creates its' own [permission code](../security), 
 `CMS_ACCESS_MyAdmin`. Users with access to the Admin UI will need to have this permission assigned through
 `admin/security/` or have the `ADMIN` permission code in order to gain access to the controller.
 
-<div class="notice" markdown="1">
+[notice]
 For more information on the security and permission system see the [Security Documentation](../security)
-</div>
+[/notice]
 
 The [DataObject](api:SilverStripe\ORM\DataObject) API has more granular permission control, which is enforced in [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) by default.
 Available checks are `canEdit()`, `canCreate()`, `canView()` and `canDelete()`. Models check for administrator
@@ -174,9 +174,9 @@ class Product extends DataObject
 }
 ```
 
-<div class="hint" markdown="1">
+[hint]
 [SearchContext](../search/searchcontext) documentation has more information on providing the search functionality.
-</div>
+[/hint]
 
 ## Displaying Results
 

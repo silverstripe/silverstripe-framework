@@ -52,8 +52,8 @@ public function SearchForm()
 `SearchForm.ss` will be executed within the scope of the `Form` object so has access to any of the methods and 
 properties on [Form](api:SilverStripe\Forms\Form) such as `$Fields` and `$Actions`. 
 
-<div class="notice">
+[notice]
 To understand more about Scope or the syntax for custom templates, read the [Templates](../../templates) guide.
-</div>
+[/notice]
 
 

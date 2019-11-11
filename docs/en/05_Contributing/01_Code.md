@@ -17,17 +17,17 @@ For other modules, our [add-ons site](https://addons.silverstripe.org/add-ons/) 
 If you are modifying CSS or JavaScript files in core modules, you'll need to regenerate some files.
 Please check out our [client-side build tooling](build_tooling) guide for details.
 
-<div class="hint" markdown="1">
+[hint]
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
 
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
-</div>
+[/hint]
 
 ## Step-by-step: From forking to sending the pull request
 
-<div class="notice" markdown='1'>
+[notice]
 **Note:** Please adjust the commands below to the version of SilverStripe that you're targeting.
-</div>
+[/notice]
 
 1. Create a [fork](https://help.github.com/articles/about-forks/) of the module you want to contribute to (listed on [github.com/silverstripe/](https://github.com/silverstripe/)).
 

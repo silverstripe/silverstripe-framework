@@ -13,10 +13,10 @@ trait applied within core, modules or even their own code to make it more reusab
 Extensions are defined as subclasses of either [DataExtension](api:SilverStripe\ORM\DataExtension) for extending a [DataObject](api:SilverStripe\ORM\DataObject) subclass or 
 the [Extension](api:SilverStripe\Core\Extension) class for non DataObject subclasses (such as [Controller](api:SilverStripe\Control\Controller))
 
-<div class="info" markdown="1">
+[info]
 For performance reasons a few classes are excluded from receiving extensions, including `ViewableData` 
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
-</div>
+[/info]
 
 **app/code/extensions/MyMemberExtension.php**
 
@@ -39,9 +39,9 @@ class MyMemberExtension extends DataExtension
 }
 ```
 
-<div class="info" markdown="1">
+[info]
 Convention is for extension class names to end in `Extension`. This isn't a requirement but makes it clearer
-</div>
+[/info]
 
 After this class has been created, it does not yet apply it to any object. We need to tell SilverStripe what classes 
 we want to add the `MyMemberExtension` too. To activate this extension, add the following via the [Configuration API](../configuration).
@@ -176,9 +176,9 @@ class MyMemberExtension extends DataExtension
 }
 ```
 
-<div class="info" markdown="1">
+[info]
 The `$validator` parameter is passed by reference, as it is an object.
-</div>
+[/info]
 
 Another common example of when you will want to modify a method is to update the default CMS fields for an object in an 
 extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
@@ -210,10 +210,10 @@ class MyMemberExtension extends DataExtension
 }
 ```
 
-<div class="notice" markdown="1">
+[notice]
 If you're providing a module or working on code that may need to be extended by  other code, it should provide a *hook* 
 which allows an Extension to modify the results. 
-</div>
+[/notice]
 
 
 ```php
@@ -272,10 +272,10 @@ callback to be executed immediately before and after `extend()` is called on ext
 This is useful in many cases where working with modules such as `Translatable` which operate on `DataObject` fields 
 that must exist in the `FieldList` at the time that `$this->extend('UpdateCMSFields')` is called.
 
-<div class="notice" markdown='1'>
+[notice]
 Please note that each callback is only ever called once, and then cleared, so multiple extensions to the same function 
 require that a callback is registered each time, if necessary.
-</div>
+[/notice]
 
 Example: A class that wants to control default values during object  initialization. The code needs to assign a value 
 if not specified in `self::$defaults`, but before extensions have been called:
@@ -296,9 +296,9 @@ public function __construct()
 
 Example 2: User code can intervene in the process of extending cms fields.
 
-<div class="notice" markdown="1">
+[notice]
 This method is preferred to disabling, enabling, and calling field extensions manually.
-</div>
+[/notice]
 
 
 ```php
@@ -344,12 +344,12 @@ class CustomisedSomeExtension extends SomeExtension
 }
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Please note that modifications such as this should be done in YAML configuration only. It is not recommended
 to use `Config::modify()->set()` to adjust the implementation class name of an extension after the configuration
 manifest has been loaded, and may not work consistently due to the "extra methods" cache having already been
 populated.
-</div>
+[/notice]
 
 ## Related Lessons
 

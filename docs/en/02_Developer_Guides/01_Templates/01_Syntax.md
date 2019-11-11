@@ -153,9 +153,9 @@ A conditional can also check for a value other than falsy.
 <% end_if %>
 ```
 
-<div class="notice" markdown="1">
+[notice]
 When inside template tags variables should have a '$' prefix, and literals should have quotes. 
-</div>
+[/notice]
 
 Conditionals can also provide the `else` case.
 
@@ -283,13 +283,13 @@ collection.
 This snippet loops over the children of a page, and generates an unordered list showing the `Title` property from each 
 page. 
 
-<div class="notice" markdown="1">
+[notice]
 $Title inside the loop refers to the Title property on each object that is looped over, not the current page like
 the reference of `$Title` outside the loop. 
 
 This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the 
 object that is being looped over.
-</div>
+[/notice]
 
 ### Altering the list
 
@@ -373,10 +373,10 @@ iteration.
 </ul>
 ```
 
-<div class="info" markdown="1">
+[info]
 A common task is to paginate your lists. See the [Pagination](how_tos/pagination) how to for a tutorial on adding 
 pagination.
-</div>
+[/info]
 
 ### Modulus and MultipleOf
 
@@ -398,10 +398,10 @@ $MultipleOf(factor, offset)
 // returns <div class="column-3">, <div class="column-2">,
 ```
 
-<div class="hint" markdown="1">
+[hint]
 `$Modulus` is useful for floated grid CSS layouts. If you want 3 rows across, put $Modulus(3) as a class and add a 
 `clear: both` to `.column-1`.
-</div>
+[/hint]
 
 $MultipleOf(value, offset) can also be utilized to build column and grid layouts. In this case we want to add a `<br>` 
 after every 3rd item.
@@ -437,9 +437,9 @@ $Foo // returns "3"
 \$Foo // returns "$Foo"
 ```
 
-<div class="hint" markdown="1">
+[hint]
 For more information on formatting and casting variables see [Formating, Modifying and Casting Variables](casting)
-</div>
+[/hint]
 
 ## Scope
 
@@ -491,9 +491,9 @@ Given the following structure, it will output the text.
 	Page 'Grandchild 1' is a grandchild of 'My Page'
 	Page 'Child 2' is a child of 'MyPage'
 ```
-<div class="notice" markdown="1">
+[notice]
 Additional selectors implicitely change the scope so you need to put additional `$Up` to get what you expect.
-</div>
+[/notice]
 
 ```ss
 <h1>Children of '$Title'</h1>

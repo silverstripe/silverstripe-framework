@@ -72,10 +72,10 @@ class MyTestObject extends DataObject
 }
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Please note that if you have previously used the removed `value` key to define an index's contents, SilverStripe will
 now throw an error. Use `columns` instead.
-</div>
+[/alert]
 
 ## Complex/Composite Indexes
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 

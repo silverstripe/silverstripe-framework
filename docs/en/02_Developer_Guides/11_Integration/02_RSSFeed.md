@@ -13,10 +13,10 @@ your current staff members, comments or any other custom [DataObject](api:Silver
 logical limitation here is that every item in the RSS-feed should be accessible through a URL on your website, so it's 
 advisable to just create feeds from subclasses of [SiteTree](api:SilverStripe\CMS\Model\SiteTree).
 
-<div class="warning" markdown="1">
+[warning]
 If you wish to generate an RSS feed that contains a [DataObject](api:SilverStripe\ORM\DataObject), ensure you define a `AbsoluteLink` method on
 the object.
-</div>
+[/warning]
 
 ## Usage
 
@@ -102,9 +102,9 @@ class PageController extends ContentController
 DataObjects can be rendered in the feed as well, however, since they aren't explicitly [SiteTree](api:SilverStripe\CMS\Model\SiteTree) subclasses we 
 need to include a function `AbsoluteLink` to allow the RSS feed to link through to the item.
 
-<div class="info">
+[info]
 If the items are all displayed on a single page you may simply hard code the link to point to a particular page.
-</div>
+[/info]
 
 Take an example, we want to create an RSS feed of all the `Players` objects in our site. We make sure the `AbsoluteLink`
 method is defined and returns a string to the full website URL.
@@ -214,9 +214,9 @@ public function players()
 }
 ```
 
-<div class="warning">
+[warning]
 As we've added a new template (PlayersRss.ss) make sure you clear your SilverStripe cache.
-</div>
+[/warning]
 
 
 ## API Documentation

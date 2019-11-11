@@ -76,9 +76,9 @@ Before you begin the upgrade process, make sure you meet these pre-requisites.
 * Backup your database content.
 * Backup your codebase (use version control if possible).
 
-<div class="warning" markdown="1">
+[warning]
 Never update a website on the live server. Get it working on a development copy first!
-</div>
+[/warning]
 
 ### Install composer
 
@@ -123,9 +123,9 @@ Each command in the upgrader has somewhat different arguments. However, most of 
 * `--write` which tells the upgrader to apply changes to your code base
 * `--root-dir` which can be use to explicitly specify the root of your project. If this is not specified then the current working directory is assumed to be the root of the project.
 
-<div class="info" markdown="1">
+[info]
 Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
-</div>
+[/info]
 
 #### Install the upgrader globally with composer
 
@@ -908,9 +908,9 @@ class ProductService
 }
 ```
 
-<div class="warning" markdown="1">
+[warning]
 Avoid using `static::class` or `parent::class` to retrieve translated string. It will retrieve unpredictable values bases on the class inheritance. 
-</div>
+[/warning]
 
 If your template files contain translatable strings, they also need to be updated to referenced the namespaced classes.
 For example, `<%t Member.SINGULARNAME 'Member' %>` would become `<%t SilverStripe\Security\Member.SINGULARNAME 'Member' %>`.

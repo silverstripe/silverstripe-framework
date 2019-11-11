@@ -36,10 +36,10 @@ echo $arrayData->renderWith('Coach_Message');
 
 ```
 
-<div class="info" markdown="1">
+[info]
 Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
 includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:SilverStripe\Forms\FormField) and [DataObject](api:SilverStripe\ORM\DataObject) instances.
-</div>
+[/info]
 
 ```php
 $controller->renderWith(['MyController', 'MyBaseController']);

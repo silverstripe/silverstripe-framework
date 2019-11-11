@@ -244,16 +244,16 @@ Services can then be fetched using their respective `.get()` methods.
 const MyComponent = Injector.component.get('MyComponent');
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Because of the unique structure of the `form` middleware, you cannot register new services to `Injector.form`.
-</div>
+[/notice]
 
 
-<div class="alert" markdown="1">
+[alert]
 Overwriting components by calling `register()` multiple times for the same
 service name is discouraged, and will throw an error. Should you really need to do this,
 you can pass `{ force: true }` as the third argument to the `register()` function.
-</div>
+[/alert]
 
 
 ## Transforming services using middleware
@@ -340,12 +340,12 @@ Injector.transform(
   { after: '*' }
 );
 ```
-<div class="info" markdown="1">
+[info]
 This flag can only be used once per transformation.
 The following are not allowed:
 * `{ before: ['*', 'something-else'] }`
 * `{ after: '*', before: 'something-else' }`
-</div>
+[/info]
 
 ## Injector context
 
@@ -601,14 +601,14 @@ API using several helper methods, including:
 * `addFieldClass(fieldName:string, cssClassName:string)`
 * `removeFieldClass(fieldName:string, cssClassName:string)`
 
-<div class="info" markdown="1">
+[info]
 For a complete list of props that are available to update on a `Field` object,
 see http://redux-form.com/6.8.0/docs/api/Field.md/#props-you-can-pass-to-field-
-</div>
+[/info]
 
-<div class="notice" markdown="1">
+[notice]
 It is critical that you end series of mutation calls with `getState()`.
-</div>
+[/notice]
 
 In addition to mutation methods, several readonly methods are available on `FormSchemaManager` to read the current form state, including:
 

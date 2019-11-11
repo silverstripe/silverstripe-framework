@@ -37,10 +37,10 @@ $Content.FirstParagraph.NoHTML
 <!-- <div class="about-us"> -->
 ```
 
-<div class="notice" markdown="1">
+[notice]
 See the API documentation for [DBHtmlText](api:SilverStripe\ORM\FieldType\DBHtmlText), [FieldType](api:SilverStripe\ORM\FieldType), [DBText](api:SilverStripe\ORM\FieldType\DBText) for all the methods you can use to format 
 your text instances. For other objects such as [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime) objects see their respective API documentation pages.
-</div>
+[/notice]
 
 ## forTemplate
 
@@ -151,11 +151,11 @@ See [DBField](api:SilverStripe\ORM\FieldType\DBField) for the specific implement
   E.g. `<element>$Field.CDATA</element>` will ensure that the `<element>` body is safely escaped
   as a string.
 
-<div class="warning" markdown="1">
+[warning]
 Note: Take care when using `.XML` on `HTMLText` fields, as this will result in double-encoded
 html. To ensure that the correct encoding is used for that field in a template, simply use
 `$Field` by itself to allow the casting helper to determine the best encoding itself.
-</div>
+[/warning]
 
 ## Cast summary methods
 

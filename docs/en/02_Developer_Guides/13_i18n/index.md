@@ -274,9 +274,9 @@ _t(__CLASS__ . '.GREETING', 'Welcome!');
 
 #### Usage in Template Files
 
-<div class="hint" markdown='1'>
+[hint]
 The preferred template syntax has changed somewhat since [version 2.x](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#usage-2).
-</div>
+[/hint]
 
 In `.ss` template files, instead of `_t(params)` the syntax `<%t params %>` is used. The syntax for passing parameters to the function is quite different to
 the PHP version of the function.
@@ -320,9 +320,9 @@ underscore function, and tell you about the created files and any possible entit
 If you want to run the text collector for just one module you can use the 'module' parameter: 
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
-<div class="hint" markdown='1'>
+[hint]
 You'll need to install PHPUnit to run the text collector (see [testing-guide](/developer_guides/testing)).
-</div>
+[/hint]
 
 ## Module Priority
 

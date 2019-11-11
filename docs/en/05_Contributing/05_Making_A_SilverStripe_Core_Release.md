@@ -102,10 +102,10 @@ exactly the same for these.
 Standard practice is to produce a pre-release for any patched modules on the security 
 forks, e.g. for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
-<div class="warning" markdown="1">
+[warning]
 Security issues are never disclosed until a public stable release containing this fix
 is available, or within a reasonable period of time of such a release.
-</div>
+[/warning]
 
 ### When receiving a report
 
@@ -206,10 +206,10 @@ Note:
 * Test you can view the satis home page at `http://localhost/satis-security/public/`
 * When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below)
 
-<div class="warning" markdown="1">
+[warning]
 It's important that you re-run `satis build` step after EVERY change that is pushed upstream; E.g. between
 each release, if making multiple releases.
-</div>
+[/warning]
 
 ### Detailed CVE and CVSS Guidance
 

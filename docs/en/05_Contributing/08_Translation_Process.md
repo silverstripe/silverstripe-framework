@@ -83,9 +83,9 @@ git add lang/*
 git commit -m "Updated translations"
 ```
 
-<div class="notice" markdown="1">
+[notice]
 You can download your work right from Transifex in order to speed up the process for your desired language.
-</div>
+[/notice]
 
 ## JavaScript Translations
 

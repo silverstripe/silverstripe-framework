@@ -31,12 +31,12 @@ first segment has to match current _LeftAndMain_-derived class (e.g.
 
 We use `ss.preview` entwine namespace for all preview-related entwines.
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: `SilverStripeNavigator` and `CMSPreviewable` interface currently only
 support SiteTree objects that are _Versioned_.  They are not general enough for
 using on any other DataObject. That pretty much limits the extendability of the
 feature.
-</div>
+[/notice]
 
 ## Configuration and Defaults
 
@@ -175,13 +175,13 @@ internal states of the layout. You can reach it by calling:
 $('.cms-container').entwine('.ss').getLayoutOptions().mode;
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: the `.preview-mode-selector` appears twice, once in the preview and
 second time in the CMS actions area as `#preview-mode-dropdown-in-cms`. This is
 done because the user should still have access to the mode selector even if
 preview is not visible. Currently CMS Actions are a separate area to the preview
 option selectors, even if they try to appear as one horizontal bar.
-</div>
+[/notice]
 
 ## Preview API
 

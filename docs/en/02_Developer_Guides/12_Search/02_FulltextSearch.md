@@ -10,11 +10,11 @@ Fulltext search allows advanced search criteria for searching words within a tex
 Fulltext search can be achieved using the built-in [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase) class a more powerful wrapper for Fulltext
 search is provided through a module.
 
-<div class="notice" markdown="1">
+[notice]
 See the [FulltextSearch Module](https://github.com/silverstripe-labs/silverstripe-fulltextsearch/). This module provides
 a high level wrapper for running advanced search services such as Solr, Lucene or Sphinx in the backend rather than
 `MySQL` search.
-</div>
+[/notice]
 
 ## Adding Fulltext Support to MySQLDatabase
 
@@ -39,11 +39,11 @@ class MyDataObject extends DataObject
 
 The [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) extension will add the correct `Fulltext` indexes to the data model.
 
-<div class="alert" markdown="1">
+[alert]
 The [SearchForm](api:SilverStripe\CMS\Search\SearchForm) and [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) API's are currently hard coded to be specific to `Page` and `File`
 records and cannot easily be adapted to include custom `DataObject` instances. To include your custom objects in the
 default site search, have a look at those extensions and modify as required.
-</div>
+[/alert]
 
 ### Fulltext Filter
 
