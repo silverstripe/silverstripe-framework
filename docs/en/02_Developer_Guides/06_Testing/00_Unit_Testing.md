@@ -30,26 +30,26 @@ to ensure that it works as it should. A simple example would be to test the resu
 		}
 	}
 
-<div class="info" markdown="1">
+[info]
 Tests for your application should be stored in the `mysite/tests` directory. Test cases for add-ons should be stored in 
 the `(modulename)/tests` directory. 
 
 Test case classes should end with `Test` (e.g PageTest) and test methods must start with `test` (e.g testMyMethod).
-</div>
+[/info]
 
 A SilverStripe unit test is created by extending one of two classes, [api:SapphireTest] or [api:FunctionalTest]. 
 
 [api:SapphireTest] is used to test your model logic (such as a `DataObject`), and [api:FunctionalTest] is used when 
 you want to test a `Controller`, `Form` or anything that requires a web page.
 
-<div class="info" markdown="1">
+[info]
 `FunctionalTest` is a subclass of `SapphireTest` so will inherit all of the behaviors. By subclassing `FunctionalTest`
 you gain the ability to load and test web pages on the site. 
 
 `SapphireTest` in turn, extends `PHPUnit_Framework_TestCase`. For more information on `PHPUnit_Framework_TestCase` see 
 the [PHPUnit](http://www.phpunit.de) documentation. It provides a lot of fundamental concepts that we build on in this 
 documentation.
-</div>
+[/info]
 
 ## Running Tests
 
@@ -73,18 +73,18 @@ The `phpunit` binary should be used from the root directory of your website.
 	phpunit framework/tests '' flush=all
 	# Run tests with optional `$_GET` parameters (you need an empty second argument)
 
-<div class="alert" markdown="1">
+[alert]
 The manifest is not flushed when running tests. Add `flush=all` to the test command to do this (see above example.)
-</div>
+[/alert]
 
-<div class="alert" markdown="1">
+[alert]
 If phpunit is not installed globally on your machine, you may need to replace the above usage of `phpunit` with the full
 path (e.g `vendor/bin/phpunit framework/tests`)
-</div>
+[/alert]
 
-<div class="info" markdown="1">
+[info]
 All command-line arguments are documented on [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
-</div>
+[/info]
 	
 ### Via a Web Browser
 
@@ -163,15 +163,15 @@ SilverStripe tests create their own database when the test starts. New `ss_tmp` 
 connection details you provide for the main website. The new `ss_tmp` database does not copy what is currently in your 
 application database. To provide seed data use a [Fixture](fixtures) file.
 
-<div class="alert" markdown="1">
+[alert]
 As the test runner will create new databases for the tests to run, the database user should have the appropriate 
 permissions to create new databases on your server.
-</div>
+[/alert]
 
-<div class="notice" markdown="1">
+[notice]
 The test database is rebuilt every time one of the test methods is run. Over time, you may have several hundred test 
 databases on your machine. To get rid of them is a call to `http://yoursite.com/dev/tests/cleanupdb`
-</div>
+[/notice]
 
 ## Custom PHPUnit Configuration
 
@@ -200,9 +200,9 @@ needs.
 		</groups>
 	</phpunit>
 
-<div class="alert" markdown="1">
+[alert]
 This configuration file doesn't apply for running tests through the "sake" wrapper
-</div>
+[/alert]
 
 
 ### setUp() and tearDown()
@@ -298,10 +298,10 @@ by executing the following commands.
  	phpunit --coverage-html assets/coverage-report mysite/tests/
  	# Generate coverage report for the "mysite" module
 
-<div class="notice" markdown="1">
+[notice]
 These commands will output a report to the `assets/coverage-report/` folder. To view the report, open the `index.html`
 file within a web browser.
-</div>
+[/notice]
 
 Typically, only your own custom PHP code in your project should be regarded when producing these reports. To exclude 
 some `thirdparty/` directories add the following to the `phpunit.xml` configuration file.

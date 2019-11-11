@@ -26,10 +26,10 @@ If a theme has `composer` support you can require it directly through `composer`
 	:::bash
 	composer require "author/theme_name" "dev/master"
 
-<div class="alert" markdown="1">
+[alert]
 As you've added new files to your SilverStripe installation, make sure you clear the SilverStripe cache by appending
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
-</div>
+[/alert]
 
 After installing the files through either method, update the current theme in SilverStripe. This can be done by 
 either altering the `SSViewer.theme` setting in a [config.yml](../configuration) or by changing the current theme in 

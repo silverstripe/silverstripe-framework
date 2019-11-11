@@ -78,7 +78,7 @@ member is logged in who belongs to a group containing the permission "PLAYER_DEL
 
 
 
-<div class="notice" markdown='1'>
+[notice]
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 
 these two modes, as shown in the example above.
-</div>
+[/notice]

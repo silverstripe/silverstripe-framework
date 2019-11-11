@@ -30,10 +30,10 @@ instance with a template name or an array of templates to render.
 
 	// returns "<strong>John</strong> is the Head Coach on our team."
 
-<div class="info" markdown="1">
+[info]
 Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
 includes [api:Controller], [api:FormField] and [api:DataObject] instances.
-</div>
+[/info]
 
 	:::php
 	$controller->renderWith(array("MyController", "MyBaseController"));

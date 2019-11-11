@@ -22,25 +22,25 @@ denoting the different "stages", which map to different database tables.
 	  extensions:
 	    - Versioned("Stage","Live")
 
-<div class="notice" markdown="1">
+[notice]
 The extension is automatically applied to `SiteTree` class. For more information on extensions see 
 [Extending](../extending) and the [Configuration](../configuration) documentation.
-</div>
+[/notice]
 
-<div class="warning" markdown="1">
+[warning]
 Versioning only works if you are adding the extension to the base class. That is, the first subclass
 of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
-</div>
+[/warning]
 
 ## Database Structure
 
 Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
 will create a new `MyRecord_Live` table once you've rebuilt the database.
 
-<div class="notice" markdown="1">
+[notice]
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than 
 adding a suffix.
-</div>
+[/notice]
 
  * `MyRecord` table: Contains staged data
  * `MyRecord_Live` table: Contains live data
@@ -77,10 +77,10 @@ in the `<class>_versions` tables.
 	:::php
 	$historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
 
-<div class="alert" markdown="1">
+[alert]
 The record is retrieved as a `DataObject`, but saving back modifications via `write()` will create a new version, 
 rather than modifying the existing one.
-</div>
+[/alert]
 
 In order to get a list of all versions for a specific record, we need to generate specialized [api:Versioned_Version] 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
@@ -145,12 +145,12 @@ Example: Get the first 10 live records, filtered by creation date:
 By default, `Versioned` will come out of the box with security extensions which restrict
 the visibility of objects in Draft (stage) or Archive viewing mode.
 
-<div class="alert" markdown="1">
+[alert]
 As is standard practice, user code should always invoke `canView()` on any object before
 rendering it. DataLists do not filter on `canView()` automatically, so this must be
 done via user code. This be be achieved either by wrapping `<% if $canView %>` in
 your template, or by implementing your visibility check in PHP.
-</div>
+[/alert]
 
 Versioned object visibility can be customised in one of the following ways by editing your user code:
 
@@ -239,11 +239,11 @@ The current stage for each request is determined by `VersionedRequestFilter` bef
 `?stage=Stage` to your request. The setting is "sticky" in the PHP session, so any subsequent requests will also be in 
 draft stage.
 
-<div class="alert" markdown="1">
+[alert]
 The `choose_site_stage()` call only deals with setting the default stage, and doesn't check if the user is 
 authenticated to view it. As with any other controller logic, please use `DataObject->canView()` to determine 
 permissions, and avoid exposing unpublished content to your users.
-</div>
+[/alert]
 
 ## API Documentation
 

@@ -5,9 +5,9 @@ summary: Consume external data through their RESTFul interfaces.
 [api:RestfulService] is used to enable connections to remote web services through PHP's `curl` command. It provides an
 interface and utility functions for generating a valid request and parsing the response returned from the web service. 
 
-<div class="alert" markdown="1">
+[alert]
 RestfulService currently only supports XML. It has no JSON support at this stage.
-</div>
+[/alert]
 
 ## Examples
 

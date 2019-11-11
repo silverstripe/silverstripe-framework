@@ -7,17 +7,17 @@ SilverStripe's [api:FormScaffolder] can automatically generate [api:Form] instan
 CMS and other scaffolded interfaces, it will output [api:TabSet] and [api:Tab] objects and use jQuery Tabs to split 
 parts of the data model. 
 
-<div class="notice" markdown="1">
+[notice]
 All interfaces within the CMS such as [api:ModelAdmin] and [api:LeftAndMain] use tabbed interfaces by default.
-</div>
+[/notice]
 
 When dealing with tabbed forms, modifying the fields in the form has a few differences. Each [api:Tab] will be given a
 name, and normally they all exist under the `Root` [api:TabSet].
 
-<div class="notice" markdown="1">
+[notice]
 [api:TabSet] instances can contain child [api:Tab] and further [api:TabSet] instances, however the CMS UI will only 
 display up to two levels of tabs in the interface. If you want to group data further than that, try [api:ToggleField].
-</div>
+[/notice]
 
 ## Adding a field to a tab
 

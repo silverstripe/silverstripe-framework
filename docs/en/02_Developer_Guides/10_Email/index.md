@@ -30,11 +30,11 @@ to `*text*`).
 	$email = new Email($from, $to, $subject, $body);
 	$email->send();
 
-<div class="info" markdown="1">
+[info]
 The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/email/`. To 
 customise this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
 `Email` instance.
-</div>
+[/info]
 
 
 ### Templates
@@ -64,10 +64,10 @@ The PHP Logic..
 
 	$email->send();
 
-<div class="alert" markdown="1">
+[alert]
 As we've added a new template file (`MyCustomEmail`) make sure you clear the SilverStripe cache for your changes to
 take affect.
-</div>
+[/alert]
 
 ## Sub classing
 
@@ -119,10 +119,10 @@ You can set the default sender address of emails through the `Email.admin_email`
 	  admin_email: support@silverstripe.org
   
 
-<div class="alert" markdown="1">
+[alert]
 Remember, setting a `from` address that doesn't come from your domain (such as the users email) will likely see your
 email marked as spam. If you want to send from another address think about using the `setReplyTo` method.
-</div>
+[/alert]
 
 ## Redirecting Emails
 
@@ -162,9 +162,9 @@ $value)**
 	$email->addCustomHeader('HeaderName', 'HeaderValue');
 	..
 
-<div class="info" markdown="1">
+[info]
 See this [Wikipedia](http://en.wikipedia.org/wiki/E-mail#Message_header) entry for a list of header names.
-</div>
+[/info]
 
 ## Newsletters
 
@@ -176,10 +176,10 @@ SilverStripe supports changing out the underlying web server SMTP mailer service
 function. A `Mailer` subclass will commonly override the `sendPlain` and `sendHTML` methods to send emails through curl
 or some other process that isn't the built in `mail()` command. 
 
-<div class="info" markdown="1">
+[info]
 There are a number of custom mailer add-ons available like [Mandrill](https://github.com/lekoala/silverstripe-mandrill)
 and [Postmark](https://github.com/fullscreeninteractive/silverstripe-postmarkmailer).
-</div>
+[/info]
 
 In this example, `LocalMailer` will take any email's going while the site is in Development mode and save it to the 
 assets folder instead.

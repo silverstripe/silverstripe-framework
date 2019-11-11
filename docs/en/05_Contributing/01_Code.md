@@ -11,17 +11,17 @@ which creates a copy that you can commit to (see github's [guide to "forking"](h
 
 For other modules, our [add-ons site](https://addons.silverstripe.org/add-ons/) lists the repository locations, typically using the version control system like "git".
 
-<div class="hint" markdown="1">
+[hint]
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
 
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
-</div>
+[/hint]
 
 ## Step-by-step: From forking to sending the pull request
 
-<div class="notice" markdown='1'>
+[notice]
 **Note:** Please adjust the commands below to the version of SilverStripe that you're targeting.
-</div>
+[/notice]
 
 1. Install the project through composer. The process is described in detail in "[Installation through Composer](../getting_started/composer#contributing)".
 

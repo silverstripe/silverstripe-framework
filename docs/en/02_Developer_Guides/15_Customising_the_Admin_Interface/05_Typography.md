@@ -24,9 +24,9 @@ add the color 'red' as an option within the `WYSIWYG` add the following to the `
 		color: red;
 	}
 
-<div class="notice" markdown="1">
+[notice]
 After you have defined the `editor.css` make sure you clear your SilverStripe cache for it to take effect.
-</div>
+[/notice]
 
 ## API Documentation
 

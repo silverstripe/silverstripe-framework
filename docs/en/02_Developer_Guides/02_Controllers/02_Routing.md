@@ -6,11 +6,11 @@ summary: A more in depth look at how to map requests to particular controllers a
 Routing is the process of mapping URL's to [api:Controllers] and actions. In the introduction we defined a new custom route
 for our `TeamsController` mapping any `teams` URL to our `TeamsController`
 
-<div class="info" markdown="1">
+[info]
 If you're using the `cms` module with and dealing with `Page` objects then for your custom `Page Type` controllers you 
 would extend `ContentController` or `Page_Controller`. You don't need to define the routes value as the `cms` handles 
 routing.
-</div>
+[/info]
 
 These routes by standard, go into a `routes.yml` file in your applications `_config` folder alongside your other 
 [Configuration](../configuration) information.
@@ -28,9 +28,9 @@ These routes by standard, go into a `routes.yml` file in your applications `_con
 	    'player/': 'PlayerController'
 	    '': 'HomeController'
 
-<div class="notice" markdown="1">
+[notice]
 To understand the syntax for the `routes.yml` file better, read the [Configuration](../configuration) documentation.
-</div>
+[/notice]
 
 ## Parameters
 
@@ -43,9 +43,9 @@ It also contains 3 `parameters` or `params` for short. `$Action`, `$ID` and `$Na
 which will be filled when the user makes their request. Request parameters are available on the `SS_HTTPRequest` object 
 and able to be pulled out from a controller using `$this->getRequest()->param($name)`.
 
-<div class="info" markdown="1">
+[info]
 All Controllers have access to `$this->getRequest()` for the request object and `$this->getResponse()` for the response.
-</div>
+[/info]
 
 Here is what those parameters would look like for certain requests
 
@@ -98,9 +98,9 @@ You can also fetch one parameter at a time.
 The [api:RequestHandler] class will parse all rules you specify against the following patterns. The most specific rule
 will be the one followed for the response.
 
-<div class="alert">
+[alert]
 A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable declaration
-</div>
+[/alert]
 
  | Pattern     | Description | 
  | ----------- | --------------- | 
@@ -135,13 +135,13 @@ start parsing variables and the appropriate controller action AFTER the `//`).
 
 ## URL Handlers
 
-<div class="alert" markdown="1">
+[alert]
 You **must** use the **$url_handlers** static array described here if your URL
 pattern does not use the Controller class's default pattern of
 `$Action//$ID/$OtherID`. If you fail to do so, and your pattern has more than
 2 parameters, your controller will throw the error "I can't handle sub-URLs of
 a *class name* object" with HTTP status 404.
-</div>
+[/alert]
 
 In the above example the URLs were configured using the [api:Director] rules in the **routes.yml** file. Alternatively 
 you can specify these in your Controller class via the **$url_handlers** static array. This array is processed by the 

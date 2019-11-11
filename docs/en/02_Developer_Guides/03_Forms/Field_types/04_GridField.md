@@ -11,14 +11,14 @@ tabular data in a format that is easy to view and modify. It can be thought of a
 
 
 
-<div class="hint" markdown='1'>
+[hint]
 GridField can only be used with `$list` data sets that are of the type `SS_List` such as `DataList` or `ArrayList`.
-</div>
+[/hint]
 
-<div class="notice" markdown="1">
+[notice]
 [api:GridField] powers the automated data UI of [api:ModelAdmin]. For more information about `ModelAdmin` see the 
 [Customizing the CMS](/developer_guides/customising_the_admin_interface) guide.
-</div>
+[/notice]
 
 Each `GridField` is built from a number of components grouped into the [api:GridFieldConfig]. Without any components, 
 a `GridField` has almost no functionality. The `GridFieldConfig` instance and the attached [api:GridFieldComponent] are 
@@ -170,15 +170,15 @@ A simple read-only and paginated view of records with sortable and searchable he
 Similar to `GridFieldConfig_Base` with the addition support of the ability to view a `GridFieldDetailForm` containing
 a read-only view of the data record.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the read-only view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 The `DataObject` class displayed must define a `canView()` method that returns a boolean on whether the user can view 
 this record.
-</div>
+[/alert]
 
 	:::php
 	$config = GridFieldConfig_RecordViewer::create();
@@ -193,15 +193,15 @@ this record.
 
 Similar to `GridFieldConfig_RecordViewer` with the addition support to edit or delete each of the records.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the edit view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 Permission control for editing and deleting the record uses the `canEdit()` and `canDelete()` methods on the 
 `DataObject` object.
-</div>
+[/alert]
 
 	:::php
 	$config = GridFieldConfig_RecordEditor::create();
@@ -345,10 +345,10 @@ create an area rendered before the table wrapped in a simple `<div>`.
 		}
 	}
 
-<div class="notice" markdown="1">
+[notice]
 Please note that in templates, you'll need to escape the dollar sign on `\$DefineFragment`. These are specially 
 processed placeholders as opposed to native template syntax.
-</div>
+[/notice]
 
 Now you can add other components into this area by returning them as an array from your 
 [api:GridFieldComponent::getHTMLFragments()] implementation:

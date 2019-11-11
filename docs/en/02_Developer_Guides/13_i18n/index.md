@@ -188,9 +188,9 @@ to the translator.
 
 #### Usage in Template Files
 
-<div class="hint" markdown='1'>
+[hint]
 The preferred template syntax has changed somewhat since [version 2.x](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#usage-2).
-</div>
+[/hint]
 
 In `.ss` template files, instead of `_t(params)` the syntax `<%t params %>` is used. The syntax for passing parameters to the function is quite different to
 the PHP version of the function.
@@ -231,9 +231,9 @@ underscore function, and tell you about the created files and any possible entit
 If you want to run the text collector for just one module you can use the 'module' parameter: 
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
-<div class="hint" markdown='1'>
+[hint]
 You'll need to install PHPUnit to run the text collector (see [testing-guide](/developer_guides/testing)).
-</div>
+[/hint]
 
 ## Module Priority
 
@@ -297,9 +297,9 @@ Note that translations are cached across requests.
 The cache can be cleared through the `?flush=1` query parameter,
 or explicitly through `Zend_Translate::getCache()->clean(Zend_Cache::CLEANING_MODE_ALL)`.
 
-<div class="hint" markdown='1'>
+[hint]
 The format of language definitions has changed significantly in since version 2.x.
-</div>
+[/hint]
 
 In order to enable usage of [version 2.x style language definitions](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#language-tables-in-php) in 3.x, you need to register a legacy adapter
 in your `mysite/_config.php`:

@@ -39,9 +39,9 @@ A custom date format for a [api:DateField] can be provided through `setConfig`.
 	// will display a date in the following format: 31-06-2012
 	DateField::create('MyDate')->setConfig('dateformat', 'dd-MM-yyyy'); 
 
-<div class="info" markdown="1">
+[info]
 The formats are based on [Zend_Date constants](http://framework.zend.com/manual/1.12/en/zend.date.constants.html).
-</div>
+[/info]
  
 
 ## Min and Max Dates
@@ -65,9 +65,9 @@ placeholders 'day', 'month' and 'year' are enabled by default.
 		->setConfig('dmyseparator', '/') // set the separator
 		->setConfig('dmyplaceholders', 'true'); // enable HTML 5 Placeholders
 
-<div class="alert" markdown="1">
+[alert]
 Any custom date format settings will be ignored. 
-</div>
+[/alert]
 
 ## Calendar Picker
  
@@ -98,10 +98,10 @@ Unfortunately the day- and monthname values in Zend Date do not always match tho
 files, so constants like `EEE` or `MMM`, for day and month names could break validation. To fix this we had to slightly 
 alter the jQuery locale files, situated in */framework/thirdparty/jquery-ui/datepicker/i18n/*, to match Zend_Date. 
 
-<div class="info">
+[info]
 At this moment not all locale files may be present. If a locale file is missing, the DatePicker calendar will fallback 
 to 'yyyy-MM-dd' whenever day - and/or monthnames are used. After saving, the correct format will be displayed.  
-</div>
+[/info]
 
 ## Formatting Hints
 
@@ -121,9 +121,9 @@ field description as an example.
 	// Alternatively, set short format as a placeholder in the field
 	$dateField->setAttribute('placeholder', $dateField->getConfig('dateformat'));
 
-<div class="notice" markdown="1">
+[notice]
 Fields scaffolded through [api:DataObject::scaffoldCMSFields()] automatically have a description attached to them.
-</div>
+[/notice]
 
 ## API Documentation
 

@@ -5,9 +5,9 @@ introduction: Keep your SilverStripe installations up to date with the latest fi
 
 SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to your SilverStripe installation means overwriting files, flushing the cache and updating your database-schema. 
 
-<div class="info" markdown="1">
+[info]
 See our [upgrade notes and changelogs](/changelogs/3.2.0) for 3.2.0 specific information, bugfixes and API changes.
-</div>
+[/info]
 
 ## Composer 
 
@@ -36,9 +36,9 @@ This will also add extra dependencies, the `reports` and `siteconfig` modules. S
 *  Check if you need to adapt your code to changed PHP APIs
 *  Check if you have overwritten any core templates or styles which might need an update.
 
-<div class="warning" markdown="1">
+[warning]
 Never update a website on the live server without trying it on a development copy first.
-</div>
+[/warning]
 
 ##  Decision Helpers
 

@@ -71,10 +71,10 @@ If no file can be directly matched, control is handed off to `framework/main.php
 SilverStripe can also operate without this level of rewriting, in which case all dynamic requests go
 through an `index.php` script in the webroot.
 
-<div class="notice" markdown="1">
+[notice]
 Running SilverStripe without web server based rewriting is not recommended since it
 can leave sensitive files exposed to public access (the `RewriteRule` conditions from above don't apply).
-</div>
+[/notice]
 
 ## Bootstrap
 

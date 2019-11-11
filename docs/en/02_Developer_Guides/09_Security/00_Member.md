@@ -38,10 +38,10 @@ Returns the full *Member* Object for the current user, returns *null* if user is
 
 ## Subclassing
 
-<div class="warning" markdown="1">
+[warning]
 This is the least desirable way of extending the [api:Member] class. It's better to use [api:DataExtension]
 (see below).
-</div>
+[/warning]
 
 You can define subclasses of [api:Member] to add extra fields or functionality to the built-in membership system.
 

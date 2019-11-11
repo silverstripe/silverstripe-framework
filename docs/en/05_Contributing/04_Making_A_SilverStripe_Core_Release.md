@@ -97,10 +97,10 @@ exactly the same for these.
 Standard practice is to produce a pre-release for any patched modules on the security 
 forks for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
-<div class="warning" markdown="1">
+[warning]
 Security issues are never disclosed until a public stable release containing this fix
 is available, or within a reasonable period of time of such a release.
-</div>
+[/warning]
 
 Producing a security fix follows this general process:
 
@@ -128,11 +128,11 @@ Producing a security fix follows this general process:
 * After the final release has been published, close related JIRA issues 
   at [open source security jira](https://silverstripe.atlassian.net/secure/RapidBoard.jspa?rapidView=198&view=detail)
 
-<div class="warning" markdown="1">
+[warning]
 Note: It's not considered acceptable to disclose any security vulnerability until a fix exists in
 a public stable, not an RC or dev-branch. Security warnings that do not require a stable release
 can be published as soon as a workaround or usable resolution exists.
-</div>
+[/warning]
 
 ## Standard release process
 

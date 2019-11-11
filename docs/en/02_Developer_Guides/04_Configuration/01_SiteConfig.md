@@ -59,10 +59,10 @@ Then activate the extension.
 	  extensions:
 	    - CustomSiteConfig
 
-<div class="notice" markdown="1">
+[notice]
 After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
 You may also need to reload the screen with a `?flush=1` i.e http://yoursite.com/admin/settings?flush=1.
-</div>
+[/notice]
 
 You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and want to
 provide the users a place to configure settings then the `SiteConfig` panel is the place to go it.

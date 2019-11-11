@@ -50,11 +50,11 @@ You can indicate a log file relative to the site root.
 		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-notices.log'), SS_Log::NOTICE);
 	}
 
-<div class="info" markdown="1">
+[info]
 In addition to SilverStripe-integrated logging, it is advisable to fall back to PHPs native logging functionality. A
 script might terminate before it reaches the SilverStripe error handling, for example in the case of a fatal error. Make
 sure `log_errors` and `error_log` in your PHP ini file are configured.
-</div>
+[/info]
 
 ## Email Logs
 

@@ -27,17 +27,17 @@ This causes the framework to:
 to the layout manager)
 * trigger `redraw` on children which also cascades deeper into the hierarchy (this is framework activity)
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: `layout` is also triggered when a DOM element is replaced with AJAX in `LeftAndMain::handleAjaxResponse`. In
 this case it is triggered on the parent of the element being replaced so jLayout has a chance to rebuild its algorithms.
 Calling the top level `layout` is not enough as it will wrongly descend down the detached element's hierarchy.
-</div>
+[/notice]
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: invocation order of the `redraws` is crucial here, generally going from innermost to outermost elements.  For
 example, the tab panels have be applied in the CMS form before the form itself is layouted with its sibling panels to
 avoid incorrect dimensions.
-</div>
+[/notice]
 
 ![Layout variations](../../_images/cms-architecture.png)
 

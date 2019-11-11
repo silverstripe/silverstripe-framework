@@ -9,9 +9,9 @@ In some cases, however, you may be required to connect to a database on a remote
 
 This article demonstrates how to generate SSL certificates using MySQL and implementing them in Silverstripe.
 
-<div class="notice" markdown='1'>
+[notice]
 This article assumes that you have `MySQL` and `OpenSSL` installed.
-</div>
+[/notice]
 
 
 ## Generating Certificates
@@ -28,9 +28,9 @@ We also need to sign the certificates with our generated CA.
 
 The commands below illustrate how to do so on your MySQL host.
 
-<div class="notice" markdown='1'>
+[notice]
 The following commands will work on Linux/Unix based servers. For other servers such as windows, refer to the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/creating-ssl-files-using-openssl.html)
-</div>
+[/notice]
 
 
 	:::bash
@@ -61,11 +61,11 @@ The following commands will work on Linux/Unix based servers. For other servers 
 	# Verify validity of generated certificates
 	sudo openssl verify -CAfile ca-cert.pem server-cert.pem client-cert.pem
 	
-<div class="warning" markdown='1'>
+[warning]
 After generating the certificates, make sure to set the correct permissions to prevent unauthorized access to your keys! 
 
 It is critical that the key files (files ending in *key.pem) are kept secret. Once these files are exposed, you will need to regenerate the certificates to prevent exposing your data traffic. 
-</div>
+[/warning]
 
 	:::bash
 	# Set permissions readonly permissions and change owner to root
@@ -79,9 +79,9 @@ It is critical that the key files (files ending in *key.pem) are kept secret. On
 
 ## Setting up MySQL to use SSL certificates
 
-<div class="notice" markdown='1'>
+[notice]
 For Debian/Ubuntu instances, the configuration file is usually in `/etc/mysql/my.cnf`. Refer to your MySQL manual for more information
-</div>
+[/notice]
 
 We must edit the MySQL configuration to use the newly generated certificates.
 
@@ -97,9 +97,9 @@ Edit your MySQL configuration file as follows.
 	# IMPORTANT! When enabling MySQL remote connections, make sure to take adequate steps to secure your machine from unathorized access!
 	bind-address=0.0.0.0
 
-<div class="warning" markdown='1'>
+[warning]
 Enabling remote connections to your MySQL instance introduces various security risks. Make sure to take appropriate steps to secure your instance by using a strong password, disabling MySQL root access, and using a firewall to only accept qualified hosts, for example.
-</div>
+[/warning]
 
 Make sure to restart your MySQL instance to reflect the changes.
 
@@ -119,9 +119,9 @@ First we need to copy the client certificate files to the Silverstripe instance.
 - `client-cert.pem`
 - `ca-cert.pem`
 
-<div class="warning" markdown='1'>
+[warning]
 Make sure to only copy `client-key.pem`, `client-cert.pem`, and `ca-cert.pem` to avoid leaking your credentials!
-</div>
+[/warning]
 
 On your Silverstripe instance:
 
@@ -136,9 +136,9 @@ On your Silverstripe instance:
 
 ### Setting up _ss_environment.php to use SSL certificates
 
-<div class="notice" markdown='1'>
+[notice]
 `SS_DATABASE_SERVER does not accept IP-based hostnames. Also, if the domain name of the host does not match the common name you used to generate the server certificate, you will get an `SSL certificate mismatch error`.
-</div>
+[/notice]
 
 Add or edit your `_ss_environment.php` configuration file. (See [Environment Management](/getting_started/environment_management) for more information.) 
 

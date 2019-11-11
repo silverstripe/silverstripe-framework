@@ -18,9 +18,9 @@ page you want to edit. Alternatively, locate the appropriate .md file in the
  * After editing the documentation, describe your changes in the "commit summary" and "extended description" fields below then press "Commit Changes".
  * After committing you changes, you will see a form to submit a Pull Request: "[pull requests](http://help.github.com/pull-requests/)". You should be able to adjust the version to which your documentation changes apply before submitting the form. Any changes submitted in a pull request will be sent to the core committers for approval.
 
-<div class="warning" markdown='1'>
+[warning]
 You should make your changes in the lowest branch they apply to. For instance, if you fix a spelling issue that you found in the 3.2 documentation, submit your fix to that branch in Github and it'll be copied to the master (4.0) version of the documentation automatically. *Don't submit multiple pull requests*.
-</div>
+[/warning]
 
 ## Editing on your computer
 
@@ -30,9 +30,9 @@ If you prefer to edit content on your local machine, you can "[fork](http://help
 
 The documentation is kept alongside the source code in the `docs/` subfolder of any SilverStripe module, framework or CMS folder.
 
-<div class="warning" markdown='1'>
+[warning]
 If you submit a new feature or an API change, we strongly recommend that your patch includes updates to the necessary documentation. This helps prevent our documentation from getting out of date.
-</div>
+[/warning]
 
 ## Repositories
 
@@ -80,35 +80,35 @@ documenting, there shouldn't be any "frequently asked questions" left.
 There are several built-in block styles for highlighting a paragraph of text. Please use these graphical elements 
 sparingly.
 
-<div class="hint" markdown='1'>
+[hint]
 "Tip box": A tip box is great for adding, deepening or accenting information in the main text. They can be used for background knowledge, or to provide links to further information (ie, a "see also" link).
-</div>
+[/hint]
 
 Code for a Tip box:
 
-	<div class="hint" markdown='1'>
+	[hint]
 	...
-	</div>
+	[/hint]
 
-<div class="notice" markdown='1'>
+[notice]
 "Notification box": A notification box is good for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
-</div>
+[/notice]
 
 Code for a Notification box:
 
-	<div class="notice" markdown='1'>
+	[notice]
 	...
-	</div>
+	[/notice]
 
-<div class="warning" markdown='1'>
+[warning]
 "Warning box": A warning box is useful for highlighting a severe bug or a technical issue requiring a user's attention. For example, suppose a rare edge case sometimes leads to a variable being overwritten incorrectly. A warning box can be used to alert the user to this case so they can write their own code to handle it.  
-</div>
+[/warning]
 
 Code for a Warning box:
 
-	<div class="warning" markdown='1'>
+	[warning]
 	...
-	</div>
+	[/warning]
 
 See [markdown extra documentation](http://michelf.com/projects/php-markdown/extra/#html) for more restrictions
 on placing HTML blocks inside Markdown.

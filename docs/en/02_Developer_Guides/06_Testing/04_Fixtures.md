@@ -111,19 +111,19 @@ seen by the fields prefixed with `=>`.
 Each one of our Players has a relationship to a Team, this is shown with the `Team` field for each `Player` being set
 to `=>Team.` followed by a team name.
 
-<div class="info" markdown="1">
+[info]
 Take the player John in our example YAML, his team is the Hurricanes which is represented by `=>Team.hurricanes`. This
 sets the `has_one` relationship for John with with the `Team` object `hurricanes`.
-</div>
+[/info]
 
-<div class="hint" markdown='1'>
+[hint]
 Note that we use the name of the relationship (Team), and not the name of the
 database field (TeamID).
-</div>
+[/hint]
 
-<div class="hint" markdown='1'>
+[hint]
 Also be aware the target of a relationship must be defined before it is referenced, for example the `hurricanes` team must appear in the fixture file before the line `Team: =>Team.hurricanes`.
-</div>
+[/hint]
 
 This style of relationship declaration can be used for any type of relationship (i.e `has_one`, `has_many`, `many_many`).
 
@@ -161,10 +161,10 @@ writing:
 
 	$team->Players()->add($john);
 
-<div class="notice" markdown="1">
+[notice]
 As the YAML fixtures will call `write`, any `onBeforeWrite()` or default value logic will be executed as part of the
 test.
-</div>
+[/notice]
 
 ### Defining many_many_extraFields
 
@@ -232,9 +232,9 @@ While manually defined fixtures provide full flexibility, they offer very little
 Alternatively, you can use the [api:FixtureFactory] class, which allows you to set default values, callbacks on object
 creation, and dynamic/lazy value setting.
 
-<div class="hint" markdown='1'>
+[hint]
 SapphireTest uses FixtureFactory under the hood when it is provided with YAML based fixtures.
-</div>
+[/hint]
 
 The idea is that rather than instantiating objects directly, we'll have a factory class for them. This factory can have
 *blueprints* defined on it, which tells the factory how to instantiate an object of a specific type. Blueprints need a
@@ -255,10 +255,10 @@ In order to create an object with certain properties, just add a third argument:
 		'Name' => 'My Value'
 	));
 
-<div class="warning" markdown="1">
+[warning]
 It is important to remember that fixtures are referenced by arbitrary identifiers ('hurricanes'). These are internally
 mapped to their database identifiers.
-</div>
+[/warning]
 
 After we've created this object in the factory, `getId` is used to retrieve it by the identifier.
 

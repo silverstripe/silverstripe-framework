@@ -9,12 +9,12 @@ able to run PHP files via the FastCGI-wrapper from Nginx.
 Now you need to set up a virtual host in Nginx with configuration settings
 that are similar to those shown below.
 
-<div class="notice" markdown='1'>
+[notice]
 If you don't fully understand the configuration presented here, consult the
 [nginx documentation](http://nginx.org/en/docs/).
 
 Especially be aware of [accidental php-execution](https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/ "Don't trust the tutorials") when extending the configuration.
-</div>
+[/notice]
 
 But enough of the disclaimer, on to the actual configuration — typically in `nginx.conf`:
 

@@ -87,10 +87,10 @@ Example:
 	// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
 	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
-<div class="warning" markdown='1'>
+[warning]
 It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
-</div>
+[/warning]
 
 ### Manual escaping
 
@@ -168,10 +168,10 @@ XSS (Cross-Site-Scripting). With some basic guidelines, you can ensure your outp
 displaying a blog post in HTML from a trusted author, or escaping a search parameter from an untrusted visitor before
 redisplaying it).
 
-<div class="notice" markdown='1'>
+[notice]
 Note: SilverStripe templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
 or [sanitize](http://htmlpurifier.org/) it correctly.
-</div>
+[/notice]
 
 See [http://shiflett.org/articles/foiling-cross-site-attacks](http://shiflett.org/articles/foiling-cross-site-attacks)
 for in-depth information about "Cross-Site-Scripting".

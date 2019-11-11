@@ -20,10 +20,10 @@ If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL t
 	  # temporary debugging statement
 	  environment_type: 'dev'
 
-<div class="warning" markdown='1'>
+[warning]
 On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly
 (and potentially security sensitive) PHP errors as well.
-</div>
+[/warning]
 
 ## mod_rewrite isn't working but it's installed (prior to SilverStripe 3.1.11)
 

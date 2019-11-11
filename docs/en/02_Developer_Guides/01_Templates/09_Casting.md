@@ -32,10 +32,10 @@ Any public method from the object in scope can be called within the template. If
 	<div class="$URLSegment.LowerCase">
 	<!-- <div class="about-us"> -->
 
-<div class="notice" markdown="1">
+[notice]
 See the API documentation for [api:HtmlText], [api:StringField], [api:Text] for all the methods you can use to format 
 your text instances. For other objects such as [api:SS_Datetime] objects see their respective API documentation pages.
-</div>
+[/notice]
 
 ## forTemplate
 

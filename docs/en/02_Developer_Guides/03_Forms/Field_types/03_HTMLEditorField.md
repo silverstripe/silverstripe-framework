@@ -68,14 +68,14 @@ in the framework (and the `cms` module in case you've got that installed).
 There can be multiple configs, which should always be created / accessed using [api:HtmlEditorConfig::get()]. You can 
 then set the currently active config using `set_active()`.
 
-<div class="info" markdown="1">
-</div>
+[info]
+[/info]
 
-<div class="notice" markdown='1'>
+[notice]
 Currently the order in which the `_config.php` files are executed depends on the module directory names. Execution 
 order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.php`, this will be overridden in 
 `framework/admin/_config.php` and your modification will disappear.
-</div>
+[/notice]
 
 ## Adding and removing capabilities
 
@@ -88,11 +88,11 @@ transparently generate the relevant underlying TinyMCE code.
 	:::php
 	HtmlEditorConfig::get('cms')->enablePlugins('media');
 
-<div class="notice" markdown="1">
+[notice]
 This utilities the TinyMCE's `PluginManager::load` function under the hood (check the 
 [TinyMCE documentation on plugin loading](http://www.tinymce.com/wiki.php/API3:method.tinymce.AddOnManager.load) for 
 details).
-</div>
+[/notice]
 
 Plugins and advanced themes can provide additional buttons that can be added (or removed) through the
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
@@ -107,11 +107,11 @@ Buttons can also be removed:
 	:::php
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 
-<div class="notice" markdown="1">
+[notice]
 Internally [api:HtmlEditorConfig] uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
 [TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
 for more details.
-</div>
+[/notice]
 
 ### Setting options
 
@@ -137,10 +137,10 @@ from the HTML source by the editor.
 		'ol[start|type]'
 	);
 
-<div class="notice" markdown="1">
+[notice]
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
 `framework/admin/_config.php`.
-</div>
+[/notice]
 
 ## Writing custom plugins
 
@@ -212,9 +212,9 @@ queries to a list of external services if it finds a matching URL. These service
 `Oembed.providers` configuration. Since these requests are performed on page rendering, they typically have a long 
 cache time (multiple days). 
 
-<div class="info" markdown="1">
+[info]
 To refresh a oEmbed cache, append `?flush=1` to a URL.
-</div>
+[/info]
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
 

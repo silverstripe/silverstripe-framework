@@ -17,9 +17,9 @@ coding any references in the `<head>` tag of your template, as it enables a more
 <% require javascript("cms/javascript/LeftAndMain.js") %>
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Requiring assets from the template is restricted compared to the PHP API.
-</div>
+[/alert]
 
 ## PHP Requirements API
 
@@ -108,10 +108,10 @@ Requirements::combine_files(
 );
 ```
 
-<div class="alert" markdown='1'>
+[alert]
 To make debugging easier in your local environment, combined files is disabled when running your application in `dev`
 mode.
-</div>
+[/alert]
 
 By default it stores the generated file in the assets/ folder, but you can configure this by pointing the 
 `Requirements.combined_files_folder` configuration setting to a specific folder.
@@ -123,10 +123,10 @@ Requirements:
   combined_files_folder: '_combined'
 ```
 
-<div class="info" markdown='1'>
+[info]
 If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
 individually. SilverStripe **will not** rewrite your paths within the file.
-</div>
+[/info]
 
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
 the third paramter of the `combine_files` function:
@@ -155,9 +155,9 @@ Clears all defined requirements. You can also clear specific requirements.
 Requirements::clear(THIRDPARTY_DIR.'/prototype.js');
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Depending on where you call this command, a Requirement might be *re-included* afterwards.
-</div>
+[/alert]
 
 ## Blocking
 
@@ -172,20 +172,20 @@ version in a custom location. This assumes you have tested your application with
 Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
 ```
 
-<div class="alert" markdown="1">
+[alert]
 The CMS also uses the `Requirements` system, and its operation can be affected by `block()` calls. Avoid this by 
 limiting the scope of your blocking operations, e.g. in `init()` of your controller.
-</div>
+[/alert]
 
 ## Inclusion Order
 
 Requirements acts like a stack, where everything is rendered sequentially in the order it was included. There is no way
 to change inclusion-order, other than using *Requirements::clear* and rebuilding the whole set of requirements. 
 
-<div class="alert" markdown="1">
+[alert]
 Inclusion order is both relevant for CSS and Javascript files in terms of dependencies, inheritance and overlays - be 
 careful when messing with the order of requirements.
-</div>
+[/alert]
 
 ## Javascript placement
 

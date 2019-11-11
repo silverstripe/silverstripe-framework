@@ -106,9 +106,9 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 
 In some circumstances, like connecting to a database on a remote host for example, you may wish to enable SSL encryption to ensure the protection of sensitive information and database access credentials. The code below illustrates how to do so.
 
-<div class="notice" markdown='1'>
+[notice]
 SSL database connections are supported for `MySQLDatabase` and `MySQLPDODatabase` as of the moment.
-</div>
+[/notice]
 
 	:::php
 	<?php

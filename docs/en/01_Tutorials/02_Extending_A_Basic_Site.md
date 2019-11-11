@@ -1,9 +1,9 @@
 title: Extending a basic site
 summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
 
-<div class="alert" markdown="1">
+[alert]
 This tutorial is deprecated, and has been replaced by Lessons 4, 5, and 6 in the [Lessons section](http://www.silverstripe.org/learn/lessons)
-</div>
+[/alert]
 
 # Tutorial 2 - Extending a basic site
 
@@ -99,11 +99,11 @@ We will be introduced to other fields like this as we progress; there is a full 
 
 Now that we have created our page types, we need to let SilverStripe rebuild the database: [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build). SilverStripe should detect that there are two new page types, and add them to the list of page types in the database.
 
-<div class="hint" markdown="1">
+[hint]
 It is SilverStripe convention to suffix general page types with "Page", and page types that hold other page types with
 "Holder". This is to ensure that we don't have URLs with the same name as a page type; if we named our *ArticleHolder*
 page type "News", it would conflict with the page name also called "News".
-</div>
+[/hint]
 
 ## Adding date and author fields
 
@@ -125,10 +125,10 @@ it. Add a *$db* property definition in the *ArticlePage* class:
 
 Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See ["data types and casting"](/developer_guides/model/data_types_and_casting) for a complete list of types.
 
-<div class="hint" markdown="1">
+[hint]
 The names chosen for the fields you add must not already be used. Be careful using field names such as Title,
 Content etc. as these may already be defined in the page types your new page is extending from.
-</div>
+[/hint]
 
 When we rebuild the database, we will see that the *ArticlePage* table has been created. Even though we had an *ArticlePage* page type before, a table was not created because there were no fields unique to the article page type. There are now extra fields in the database, but still no way of changing them. 
 
@@ -172,10 +172,10 @@ returned is a [api:FieldList] object.
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
 "Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a [api:FormField] - see the documentation for more details. 
 
-<div class="hint" markdown="1">
+[hint]
 Note: By default, the CMS only has one tab. Creating new tabs is much like adding to existing tabs. For instance: `$fields->addFieldToTab('Root.NewTab', new TextField('Author'));`
 would create a new tab called "New Tab", and a single "Author" textfield inside.
-</div>
+[/hint]
 
 We have added two fields: A simple [api:TextField] and a [api:DateField]. 
 There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/field_types/common_subclasses).
@@ -357,9 +357,9 @@ This will change the icons for the pages in the CMS.
 
 ![](../_images/tutorial2_icons2.jpg)
 
-<div class="hint" markdown="1">
+[hint]
 Note: The `news-file` icon may not exist in a default SilverStripe installation. Try adding your own image or choosing a different one from the `treeicons` collection.
-</div>
+[/hint]
 
 ## Showing the latest news on the homepage
 

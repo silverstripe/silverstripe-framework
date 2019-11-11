@@ -172,9 +172,9 @@ disappeared, you can try manually flushing the image cache.
 
 	http://localhost/dev/tasks/RegenerateCachedImagesTask
 
-<div class="notice" markdown="1">
+[notice]
 This task was renamed to `RegenerateCachedImagesTask` (originally `FlushGeneratedImagesTask`) circa SilverStripe 3.2.
-</div>
+[/notice]
 
 ## API Documentation
 [api:Image]

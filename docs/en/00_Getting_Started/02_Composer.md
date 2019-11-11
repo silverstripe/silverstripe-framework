@@ -17,9 +17,9 @@ You can then run Composer commands by calling `composer`.  For example:
 
 	composer help
 
-<div class="hint" markdown="1">
+[hint]
 It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
-</div>	
+[/hint]	
 
 #### Updating composer
 
@@ -75,9 +75,9 @@ This will return a list of package names of the forum `vendor/package`.  If you 
 
 The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
 
-<div class="warning" markdown="1">
+[warning]
 `master` is not a legal version string - it's a branch name.  These are different things.  The version string that would get you the branch is `dev-master`.  The version string that would get you a numeric branch is a little different.  The version string for the `3.0` branch is `3.0.x-dev`. 
-</div>
+[/warning]
 
 ## Updating dependencies
 

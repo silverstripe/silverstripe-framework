@@ -10,9 +10,9 @@ search parameters and an object class it acts on.
 The default output of a [api:SearchContext] is either a [api:SQLQuery] object for further refinement, or a
 [api:DataObject] instance.
 
-<div class="notice" markdown="1">
+[notice]
 [api:SearchContext] is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
-</div>
+[/notice]
 
 ## Usage
 
@@ -64,15 +64,15 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 		}
 	}
 
-<div class="notice" markdown="1">
+[notice]
 See the [SearchFilter](../model/searchfilters) documentation for more information about filters to use such as the
 `GreaterThanFilter`.
-</div>
+[/notice]
 
-<div class="notice" markdown="1">
+[notice]
 In case you need multiple contexts, consider name-spacing your request parameters by using `FieldList->namespace()` on
 the `$fields` constructor parameter.
-</div>
+[/notice]
 
 ### Generating a search form from the context
 

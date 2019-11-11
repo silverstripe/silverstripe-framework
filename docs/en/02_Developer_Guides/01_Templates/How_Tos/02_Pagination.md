@@ -20,10 +20,10 @@ The `PaginatedList` will automatically set up query limits and read the request 
 		return new PaginatedList($list, $this->getRequest());
 	}
 
-<div class="notice" markdown="1">
+[notice]
 Note that the concept of "pages" used in pagination does not necessarily mean that we're dealing with `Page` classes, 
 it's just a term to describe a sub-collection of the list.
-</div>
+[/notice]
 
 There are two ways to generate pagination controls: [api:PaginatedList::Pages()] and 
 [api:PaginatedList::PaginationSummary()]. In this example we will use `PaginationSummary()`.

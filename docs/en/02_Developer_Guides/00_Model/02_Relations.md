@@ -93,22 +93,22 @@ Ideally, the associated has_many (or belongs_to) should be specified with dot no
 		);
 	}
 
-<div class="warning" markdown='1'>
+[warning]
 Note: The use of polymorphic relationships can affect query performance, especially
 on joins, and also increases the complexity of the database and necessary user code.
 They should be used sparingly, and only where additional complexity would otherwise
 be necessary. E.g. Additional parent classes for each respective relationship, or
 duplication of code.
-</div>
+[/warning]
 
 ## has_many
 
 Defines 1-to-many joins. As you can see from the previous example, `$has_many` goes hand in hand with `$has_one`.
 
-<div class="alert" markdown='1'>
+[alert]
 Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary accessors
 available on both ends.
-</div>
+[/alert]
 
 	:::php
 	<?php
@@ -215,10 +215,10 @@ This is not mandatory unless the relationship would be otherwise ambiguous.
 
 Defines many-to-many joins. A new table, (this-class)_(relationship-name), will be created with a pair of ID fields.
 
-<div class="warning" markdown='1'>
+[warning]
 Please specify a $belongs_many_many-relationship on the related class as well, in order to have the necessary accessors 
 available on both ends.
-</div>
+[/warning]
 
 	:::php
 	<?php
@@ -321,10 +321,10 @@ See [api:DataObject::$has_many] for more info on the described relations.
 	  }
 	}
 
-<div class="notice" markdown="1">
+[notice]
 Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the filtered 
 criteria on the added record.
-</div>
+[/notice]
 
 ## Relations on Unsaved Objects
 

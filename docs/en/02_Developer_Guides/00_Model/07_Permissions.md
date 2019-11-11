@@ -11,10 +11,10 @@ The API provides four methods for this purpose: `canEdit()`, `canCreate()`, `can
 Since they're PHP methods, they can contain arbitrary logic matching your own requirements. They can optionally receive 
 a `$member` argument, and default to the currently logged in member (through `Member::currentUser()`).
 
-<div class="notice" markdown="1">
+[notice]
 By default, all `DataObject` subclasses can only be edited, created and viewed by users with the 'ADMIN' permission 
 code.
-</div>
+[/notice]
 
 	:::php
 	<?php
@@ -38,11 +38,11 @@ code.
 		}
 	}
 
-<div class="alert" markdown="1">
+[alert]
 These checks are not enforced on low-level ORM operations such as `write()` or `delete()`, but rather rely on being 
 checked in the invoking code. The CMS default sections as well as custom interfaces like [api:ModelAdmin] or 
 [api:GridField] already enforce these permissions.
-</div>
+[/alert]
 
 ## API Documentation
 

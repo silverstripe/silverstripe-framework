@@ -14,9 +14,9 @@ properties API:
   - Configuration is normally set once during initialization and then not changed.
   - Configuration is normally set by a knowledgeable technical user, such as a developer, not the end user.
 
-<div class="notice" markdown="1">
+[notice]
 For providing content editors or CMS users a place to manage configuration see the [SiteConfig](siteconfig) module.
-</div>
+[/notice]
 
 ## Configuration Properties
 
@@ -58,10 +58,10 @@ Or through the `config()` object on the class.
 There are three public methods available on the instance. `get($class, $variable)`, `remove($class, $variable)` and
 `update($class, $variable, $value)`.
 
-<div class="notice" markdown="1">
+[notice]
 There is no "set" method. It is not possible to completely set the value of a classes' property. `update` adds new 
 values that are treated as the highest priority in the merge, and remove adds a merge mask that filters out values.
-</div>
+[/notice]
 
 To set those configuration options on our previously defined class we can define it in a `YAML` file.
 
@@ -105,10 +105,10 @@ To use those variables in your application code:
 	echo implode(', ', MyClass::config()->option_one);
 	// returns 'Qux'
 
-<div class="notice" markdown="1">
+[notice]
 There is no way currently to restrict read or write access to any configuration property, or influence/check the values 
 being read or written.
-</div>
+[/notice]
 
 ## Configuration Values
 
@@ -126,11 +126,11 @@ rules:
 - If the value is not an array, the highest priority value is used without any attempt to merge
 
 
-<div class="alert" markdown="1">
+[alert]
 The exception to this is "false-ish" values - empty arrays, empty strings, etc. When merging a non-false-ish value with 
 a false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-ish values
 the result will be the higher priority false-ish value.
-</div>
+[/alert]
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
 
@@ -141,10 +141,10 @@ order, where the item that is latest is highest priority)
 - Any static set on the class named the same as the name of the property
 - The composite configuration value of the parent class of this class
 
-<div class="notice">
+[notice]
 It is an error to have mixed types of the same named property in different locations. An error will not necessarily
 be raised due to optimizations in the lookup code.
-</div>
+[/notice]
 
 ## Configuration Masks
 
@@ -168,11 +168,11 @@ pair in the mask is removed
 Each module can have a directory immediately underneath the main module directory called `_config/`. Inside this 
 directory you can add YAML files that contain values for the configuration system. 
 
-<div class="info" markdown="1">
+[info]
 The name of the files within the applications `_config` directly are arbitrary. Our examples use 
 `mysite/_config/app.yml` but you can break this file down into smaller files, or clearer patterns like `extensions.yml`, 
 `email.yml` if you want. For add-on's and modules, it is recommended that you name them with `<module_name>.yml`.
-</div>
+[/info]
 
 The structure of each YAML file is a series of headers and values separated by YAML document separators. 
 
@@ -188,9 +188,9 @@ The structure of each YAML file is a series of headers and values separated by Y
 	    'admin': 'AdminRootController'
 	---
 
-<div class="info">
+[info]
 If there is only one set of values the header can be omitted.
-</div>
+[/info]
 
 Each value section of a YAML file has:
 
@@ -255,10 +255,10 @@ after value sections with a name of `rootroutes`. However because `\*` has three
 
 In this case `\*` means "every value section _except_ ones that have a fragment name of rootroutes".
 
-<div class="alert" markdown="1">
+[alert]
 It is possible to create chains that are unsolvable. For instance, A must be before B, B must be before C, C must be 
 before A. In this case you will get an error when accessing your site.
-</div>
+[/alert]
 
 ## Exclusionary rules
 
@@ -299,17 +299,17 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 	  property: 'bar'
 	---
 
-<div class="alert" markdown="1">
+[alert]
 When you have more than one rule for a nested fragment, they're joined like 
 `FRAGMENT_INCLUDED = (ONLY && ONLY) && !(EXCEPT && EXCEPT)`. 
 That is, the fragment will be included if all Only rules match, except if all Except rules match.
-</div>
+[/alert]
 
 
-<div class="alert" markdown="1">
+[alert]
 Due to YAML limitations, having multiple conditions of the same kind (say, two `EnvVarSet` in one "Only" block)
 will result in only the latter coming through.
-</div>
+[/alert]
 
 
 ## API Documentation

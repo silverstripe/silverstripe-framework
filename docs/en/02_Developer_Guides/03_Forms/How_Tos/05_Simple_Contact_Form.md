@@ -86,12 +86,12 @@ Now that we have a contact form, we need some way of collecting the data submitt
 		}
 	}
 
-<div class="hint" markdown="1">
+[hint]
 	Caution: This form is prone to abuse by spammers,
 	since it doesn't enforce a rate limitation, or checks for bots.
 	We recommend to use a validation service like the ["recaptcha" module](http://www.silverstripe.org/recaptcha-module/)
 	for better security.
-</div>
+[/hint]
 
 Any function that receives a form submission takes two arguments: the data passed to the form as an indexed array, and the form itself. In order to extract the data, you can either use functions on the form object to get the fields and query their values, or just use the raw data in the array. In the example above, we used the array, as it's the easiest way to get data without requiring the form fields to perform any special transformations.
 

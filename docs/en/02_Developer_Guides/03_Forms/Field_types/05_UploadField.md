@@ -82,9 +82,9 @@ Enable multiple fileuploads by using a many_many (or has_many) relation. Again, 
     extensions:
         - GalleryImageExtension
 ```
-<div class="notice" markdown='1'>
+[notice]
 In order to link both ends of the relationship together it's usually advisable to extend Image with the necessary $has_one, $belongs_to, $has_many or $belongs_many_many. In particular, a DataObject with $has_many Images will not work without this specified explicitly.
-</div>
+[/notice]
 
 ## Configuration
 ### Overview
@@ -224,9 +224,9 @@ Image:
     - GalleryImage
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Note: Although you can subclass the Image class instead of using a DataExtension, this is not advisable. For instance: when using a subclass, the 'From files' button will only return files that were uploaded for that subclass, it won't recognize any other images!
-</div>
+[/notice]
 
 ### Edit uploaded images
 By default the UploadField will let you edit the following fields: *Title, Filename, Owner and Folder*. The fileEditFields` configuration setting allows you you alter these settings. One way to go about this is create a `getCustomFields` function in your GalleryImage object like this:

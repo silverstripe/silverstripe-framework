@@ -13,21 +13,21 @@ rebuild from the command line, use this command:
 	cd your-webroot/
 	php framework/cli-script.php dev/build
 
-<div class="notice">
+[notice]
 Your command line php version is likely to use a different configuration as your webserver (run `php -i` to find out 
 more). This can be a good thing, your CLI can be configured to use higher memory limits than you would want your website
 to have.
-</div>
+[/notice]
 
 ## Sake - SilverStripe Make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one 
 are available.
 
-<div class="info" markdown='1'>
+[info]
 If you are using a Debian server: Check you have the php-cli package installed for sake to work. If you get an error 
 when running the command php -v, then you may not have php-cli installed so sake won't work.
-</div>
+[/info]
 
 ### Installation
 
@@ -36,9 +36,9 @@ when running the command php -v, then you may not have php-cli installed so sake
 	cd your-webroot/
 	sudo ./framework/sake installsake
 
-<div class="warning">
+[warning]
 This currently only works on UNIX like systems, not on Windows.
-</div>
+[/warning]
 
 ### Configuration
 
@@ -133,9 +133,9 @@ Then the process can be managed through `sake`
 
 
 
-<div class="notice">
+[notice]
 `sake` stores `pid` and log files in the site root directory.
-</div>
+[/notice]
 
 ## Arguments
 
