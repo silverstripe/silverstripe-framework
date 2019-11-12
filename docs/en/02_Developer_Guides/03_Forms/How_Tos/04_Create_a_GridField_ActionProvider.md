@@ -1,3 +1,8 @@
+---
+title: Create a GridField action provider
+summary: Handle custom actions on your GridField
+---
+
 # How to add a custom action to a GridField row
 
 In a [GridField](/developer_guides/forms/field_types/gridfield) instance each table row can have a

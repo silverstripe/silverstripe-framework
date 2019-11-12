@@ -1,3 +1,8 @@
+---
+title: CMS alternating button
+summary: Add an "active" and "neutral" state to the CMS buttons
+---
+
 # How to implement an alternating button
 
 ## Introduction

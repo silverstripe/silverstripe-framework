@@ -1,3 +1,8 @@
+---
+title: Windows
+summary: How to install Silverstripe CMS on a Windows environment
+icon: windows
+---
 # Windows with WAMPServer 2.5+
 
 An easy and reliable approach to getting SilverStripe running on Windows is to use Apache, which can be conveniently

@@ -1,5 +1,6 @@
 ---
 title: How to write a SapphireTest
+summary: Learn the basics of unit testing in Silverstripe
 ---
 # How to write a SapphireTest
 

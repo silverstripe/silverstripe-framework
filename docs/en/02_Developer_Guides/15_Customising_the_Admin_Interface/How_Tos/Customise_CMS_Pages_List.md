@@ -1,3 +1,7 @@
+---
+title: Customise the CMS pages list
+---
+
 # Howto: Customize the Pages List in the CMS
 
 The pages "list" view in the CMS is a powerful alternative to visualizing

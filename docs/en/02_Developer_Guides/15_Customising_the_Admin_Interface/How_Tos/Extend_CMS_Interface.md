@@ -1,3 +1,8 @@
+---
+title: Extend the CMS interface
+summary: Customise the UI of the CMS backend
+---
+
 # How to extend the CMS interface
 
 ## Introduction

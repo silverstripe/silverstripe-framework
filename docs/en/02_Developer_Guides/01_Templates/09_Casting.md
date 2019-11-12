@@ -1,6 +1,7 @@
 ---
 title: Formatting, Modifying and Casting Variables
 summary: Information on casting, security, modifying data before it's displayed to the user and how to format data within the template.
+icon: code
 ---
 # Formatting and Casting
 

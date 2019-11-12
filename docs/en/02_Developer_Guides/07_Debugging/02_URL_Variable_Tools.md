@@ -1,3 +1,8 @@
+---
+title: URL Variable tools
+summary: Useful debugging tools you can use right in the browser
+---
+
 # URL Variable Tools
 
 ## Introduction

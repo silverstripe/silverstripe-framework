@@ -1,3 +1,8 @@
+---
+title: Environment Management
+summary: How to configure your server environment for Silverstripe CMS
+---
+
 # Environment management
 
 As website developers, we noticed that we had a few problems.  You may have the same problems:

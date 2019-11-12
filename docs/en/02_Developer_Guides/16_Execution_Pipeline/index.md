@@ -1,5 +1,7 @@
 ---
+title: Execution pipeline
 summary: An overview of the steps involved in delivering a SilverStripe web page.
+icon: route
 ---
 # Execution Pipeline
 

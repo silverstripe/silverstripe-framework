@@ -1,6 +1,7 @@
 ---
 title: Form Security
 summary: Ensure Forms are secure against Cross-Site Request Forgery attacks, bots and other malicious intent.
+icon: shield-alt
 ---
 # Form Security
 

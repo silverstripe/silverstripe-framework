@@ -1,3 +1,9 @@
+---
+title: Caching
+summary: Optimise performance by caching expensive processes
+icon: tachometer-alt
+---
+
 # Caching
 
 ## Built-In Caches

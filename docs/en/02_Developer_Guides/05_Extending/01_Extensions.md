@@ -1,6 +1,7 @@
 ---
 title: Extensions
 summary: Extensions and DataExtensions let you modify and augment objects transparently. 
+icon: code
 ---
 # Extensions and DataExtensions
 

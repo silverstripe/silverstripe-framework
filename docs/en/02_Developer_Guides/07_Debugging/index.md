@@ -1,5 +1,7 @@
 ---
+title: Debugging
 summary: Learn how to identify errors in your application and best practice for logging application errors.
+icon: bug
 ---
 # Debugging
 

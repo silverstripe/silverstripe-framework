@@ -1,3 +1,8 @@
+---
+title: Dynamic Default Fields
+summary: Learn how to add default values to your models
+---
+
 # Dynamic Default Values
 
 The [api:DataObject::$defaults] array allows you to specify simple static values to be the default values when a

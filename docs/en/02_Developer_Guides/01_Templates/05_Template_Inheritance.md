@@ -1,6 +1,7 @@
 ---
 title: Template Inheritance
 summary: Override and extend module and core markup templates from your application code.
+icon: sitemap
 ---
 # Template Inheritance
 

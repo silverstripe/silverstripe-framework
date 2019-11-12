@@ -1,7 +1,9 @@
 ---
 title: Documentation
 summary: Writing guide for contributing to SilverStripe developer and CMS user help documentation. 
+icon: file-alt
 ---
+
 # Contributing documentation
 
 Documentation for a software project is a continuing, collaborative effort. We encourage everybody to contribute in any way they can, from simply fixing spelling mistakes, to writing recipes, reviewing existing documentation and translation to other languages.

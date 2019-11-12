@@ -1,3 +1,8 @@
+---
+title: Configure Lighttpd
+summary: Write a custom config for nginx
+---
+
 # Nginx
 
 These instructions are also covered on the

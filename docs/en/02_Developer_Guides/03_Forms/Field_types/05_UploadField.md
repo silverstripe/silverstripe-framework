@@ -1,3 +1,9 @@
+---
+title: UploadField
+summary: Use a highly configurable form field to upload files
+icon: upload
+---
+
 # UploadField
 
 ## Introduction

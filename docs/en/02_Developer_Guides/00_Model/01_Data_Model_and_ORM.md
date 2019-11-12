@@ -1,6 +1,7 @@
 ---
 title: Introduction to the Data Model and ORM
 summary: Introduction to creating and querying a database records through the ORM (object-relational model)
+icon: database
 ---
 # Introduction to the Data Model and ORM
 

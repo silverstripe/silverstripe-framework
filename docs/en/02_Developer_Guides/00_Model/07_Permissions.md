@@ -1,6 +1,7 @@
 ---
 title: Model-Level Permissions
 summary: Reduce risk by securing models.
+icon: lock
 ---
 # Model-Level Permissions
 

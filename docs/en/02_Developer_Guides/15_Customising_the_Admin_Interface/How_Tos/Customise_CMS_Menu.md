@@ -1,3 +1,8 @@
+---
+title: Customise the CMS Menu
+summary: Make custom changes to the left hand menu in the CMS
+---
+
 # How to customise the CMS Menu
 
 ## Adding an administration panel

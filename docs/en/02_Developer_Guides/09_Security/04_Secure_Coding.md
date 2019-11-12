@@ -1,3 +1,9 @@
+---
+title: Security
+summary: Learn how to minimise vulnerabilities in your code
+icon: user-secret
+---
+
 # Security
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: Extending an existing ModelAdmin
+summary: ModelAdmin interfaces that come with the core can be customised easily
+---
+
 ## Extending existing ModelAdmin
 
 Sometimes you'll work with ModelAdmins from other modules. To customise these interfaces, you can always subclass. But there's

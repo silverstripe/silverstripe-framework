@@ -1,3 +1,9 @@
+---
+title: Coding conventions
+summary: The style guidelines we follow in all of our open source code
+icon: code
+---
+ 
 # Coding Conventions
 
 This document provides guidelines for code formatting and documentation

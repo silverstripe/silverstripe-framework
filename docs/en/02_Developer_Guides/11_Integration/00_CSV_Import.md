@@ -1,3 +1,9 @@
+---
+title: CSV Import
+summary: Load data into your Silverstripe database in bulk
+icon: upload
+---
+
 # Import CSV data
 
 ## Introduction

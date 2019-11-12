@@ -1,6 +1,7 @@
 ---
 title: Introduction to Forms
 summary: An introduction to creating a Form instance and handling submissions.
+icon: wpforms
 ---
 # Forms
 

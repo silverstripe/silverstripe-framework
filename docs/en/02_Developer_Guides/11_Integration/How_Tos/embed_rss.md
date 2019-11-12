@@ -1,6 +1,9 @@
 ---
-title: Embed an RSS Feed
+title: RSS Feed
+summary: Output records from your database as an RSS Feed.
+icon: rss
 ---
+
 # Embed an RSS Feed
 
 [api:RestfulService] can be used to easily embed an RSS feed from a site. In this How to we'll embed the latest 

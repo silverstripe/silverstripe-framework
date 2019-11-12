@@ -1,6 +1,9 @@
 ---
+title: Release process
 summary: Describes the process followed for "core" releases.
+icon: git-alt
 ---
+
 # Release Process
 
 This page describes the process followed for "core" releases (mainly the `framework` and `cms` modules).

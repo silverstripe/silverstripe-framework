@@ -1,7 +1,9 @@
 ---
 title: Making a SilverStripe core release
-summary: Development guide for core contributors to build and publish a new release 
+summary: Development guide for core contributors to build and publish a new release
+icon: github-alt
 ---
+
 # Making a SilverStripe core release
 
 ## Introduction

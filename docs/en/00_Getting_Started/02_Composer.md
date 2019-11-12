@@ -1,3 +1,8 @@
+---
+title: Composer
+summary: What is composer and how to use it with Silverstripe CMS
+---
+
 # Installing and Upgrading with Composer
 
 Composer is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org. This is our recommended way of downloading SilverStripe and managing your code.

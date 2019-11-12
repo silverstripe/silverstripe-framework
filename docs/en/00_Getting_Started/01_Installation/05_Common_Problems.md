@@ -1,3 +1,9 @@
+---
+title: Common problems
+summary: Some things you can try when it's just not going your way
+icon: help
+---
+
 # Common Problems
 
 From time to time, things will go wrong.  Here's a few things to try when you're confused.

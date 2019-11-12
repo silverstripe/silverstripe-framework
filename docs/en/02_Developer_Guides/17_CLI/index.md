@@ -2,6 +2,7 @@
 title: Command Line Interface
 summary: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
 introduction: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
+icon: terminal
 ---
 SilverStripe can call [Controllers](../controllers) through a command line interface (CLI) just as easily as through a 
 web browser. This functionality can be used to automate tasks with cron jobs, run unit tests, or anything else that 

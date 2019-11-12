@@ -1,3 +1,8 @@
+---
+title: Configure Lighttpd
+summary: Write a custom config for Lighttpd
+---
+
 # Lightttpd
 
 1. Lighttpd works fine so long as you provide a custom config. Add the following to lighttpd.conf **BEFORE** installing

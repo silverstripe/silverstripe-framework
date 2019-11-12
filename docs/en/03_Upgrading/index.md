@@ -1,6 +1,6 @@
 ---
 title: Upgrading
-introduction: Keep your SilverStripe installations up to date with the latest fixes, security patches and new features.
+summary: The following guides will help you upgrade your project or module to SilverStripe 4.
 ---
 # Upgrading to SilverStripe 3.2
 

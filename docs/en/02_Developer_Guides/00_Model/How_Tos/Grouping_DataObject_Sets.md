@@ -1,3 +1,8 @@
+---
+title: Grouping DataObject sets
+summary: Learn how to split the results of a query into subgroups
+---
+
 # Grouping lists of records
 
 The [api:SS_List] class is designed to return a flat list of records.
