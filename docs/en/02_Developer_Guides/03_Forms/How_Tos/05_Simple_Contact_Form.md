@@ -1,7 +1,7 @@
 ---
 title: Simple contact form
 summary: Create a form that submits a message via email
-icon: wpforms
+iconBrand: wpforms
 ---
 
 # How to make a simple contact form

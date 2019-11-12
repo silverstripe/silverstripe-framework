@@ -1,7 +1,7 @@
 ---
 title: Coding conventions
 summary: The style guidelines we follow in all of our open source code
-icon: code
+iconBrand: php
 ---
  
 # Coding Conventions

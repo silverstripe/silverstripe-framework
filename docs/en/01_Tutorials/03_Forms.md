@@ -1,7 +1,7 @@
 ---
 title: Forms
 summary: Capture and store user information through web forms.
-icon: wpforms
+iconBrand: wpforms
 ---
 # Tutorial 3 - Forms
 
