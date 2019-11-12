@@ -42,10 +42,10 @@ An example of a SilverStripe template is below:
 		</body>
 	</html>
 
-<div class="note">
+[note]
 Templates can be used for more than HTML output. You can use them to output your data as JSON, XML, CSV or any other 
 text-based format.
-</div>
+[/note]
 
 ## Variables
 
@@ -75,10 +75,10 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its `forTemplate()` method. If the `forTemplate()` method has not 
 been defined, the system will return an error.
 
-<div class="note" markdown="1">
+[note]
 For more detail around how variables are inserted and formatted into a template see 
 [Formating, Modifying and Casting Variables](casting)
-</div>
+[/note]
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
@@ -117,17 +117,19 @@ record and any subclasses of those two.
 
 The simplest conditional block is to check for the presence of a value (does not equal 0, null, false).
 
-	:::ss
+```ss	
 	<% if $CurrentMember %>
 		<p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
 	<% end_if %>
+```
 
 A conditional can also check for a value other than falsy.
 
-	:::ss
+```ss
 	<% if $MyDinner == "kipper" %>
 		Yummy, kipper for tea.
 	<% end_if %>
+```
 
 [notice]
 When inside template tags variables should have a '$' prefix, and literals should have quotes. 
@@ -236,7 +238,7 @@ page.
 $Title inside the loop refers to the Title property on each object that is looped over, not the current page like
 the reference of `$Title` outside the loop. 
 
-This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the 
+This demonstrates the concept of [Scope](#scope). When inside a `<% loop %>` the scope of the template has changed to the 
 object that is being looped over.
 [/notice]
 

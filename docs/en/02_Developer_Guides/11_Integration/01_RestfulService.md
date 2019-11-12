@@ -114,9 +114,9 @@ To extract the values (the names) of the entries use:
 
 If you don't know the exact position of DOM tree where the node will appear you can use xpath to search for the node. 
 
-<div class="note">
+[note]
 This is the recommended method for retrieving values of name spaced nodes.
-</div>
+[/note]
 
 	:::xml
 	<media:guide>

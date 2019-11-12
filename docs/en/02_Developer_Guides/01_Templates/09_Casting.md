@@ -85,10 +85,10 @@ to a template, SilverStripe will ensure that the object is wrapped in the correc
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
 accordingly. 
 
-<div class="note" markdown="1">
+[note]
 By default, all content without a type explicitly defined in a `$casting` array will be assumed to be `Text` content 
 and HTML characters encoded.
-</div>
+[/note]
 
 ## Escaping
 
@@ -96,9 +96,9 @@ Properties are usually auto-escaped in templates to ensure consistent representa
 displaying un-escaped ampersands in HTML. By default, values are escaped as `XML`, which is equivalent to `HTML` for 
 this purpose. 
 
-<div class="note" markdown="1">
+[note]
 There's some exceptions to this rule, see the ["security" guide](../security).
-</div>
+[/note]
 
 In case you want to explicitly allow un-escaped HTML input, the property can be cast as [api:HTMLText]. The following 
 example takes the `Content` field in a `SiteTree` class, which is of this type. It forces the content into an explicitly 
