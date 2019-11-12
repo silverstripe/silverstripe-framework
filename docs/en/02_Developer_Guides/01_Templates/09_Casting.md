@@ -95,10 +95,10 @@ class Page extends SiteTree
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
 accordingly. 
 
-<div class="note" markdown="1">
+[note]
 By default, all content without a type explicitly defined in a `$casting` array will be assumed to be `Text` content 
 and HTML characters encoded.
-</div>
+[/note]
 
 ## Escaping
 
@@ -106,9 +106,9 @@ Properties are usually auto-escaped in templates to ensure consistent representa
 displaying un-escaped ampersands in HTML. By default, values are escaped as `XML`, which is equivalent to `HTML` for 
 this purpose. 
 
-<div class="note" markdown="1">
+[note]
 There's some exceptions to this rule, see the ["security" guide](../security).
-</div>
+[/note]
 
 For every field used in templates, a casting helper will be applied. This will first check for any
 `casting` helper on your model specific to that field, and will fall back to the `default_cast` config

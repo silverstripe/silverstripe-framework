@@ -43,10 +43,10 @@ An example of a SilverStripe template is below:
 </html>
 ```
 
-<div class="note">
+[note]
 Templates can be used for more than HTML output. You can use them to output your data as JSON, XML, CSV or any other 
 text-based format.
-</div>
+[/note]
 
 ## Template file location
 
@@ -94,10 +94,10 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its `forTemplate()` method. If the `forTemplate()` method has not 
 been defined, the system will return an error.
 
-<div class="note" markdown="1">
+[note]
 For more detail around how variables are inserted and formatted into a template see 
 [Formating, Modifying and Casting Variables](casting)
-</div>
+[/note]
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
