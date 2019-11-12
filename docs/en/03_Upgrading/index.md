@@ -66,9 +66,9 @@ Before you begin the upgrade process, make sure you meet these pre-requisites.
 * Backup your database content.
 * Backup your codebase (use version control if possible).
 
-<div class="warning" markdown="1">
+[warning]
 Never update a website on the live server. Get it working on a development copy first!
-</div>
+[/warning]
 
 ### Install composer
 
@@ -113,9 +113,9 @@ Each command in the upgrader has somewhat different arguments. However, most of 
 
 You can run `upgrade-code help` to get more information about the upgrader or `upgrade-code help command-name` to information about a specific command.
 
-<div class="info" markdown="1">
+[info]
 Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
-</div>
+[/info]
 
 #### Install the upgrader globally with composer
 
@@ -341,7 +341,7 @@ The most typical reason for a conflict is that the maintainer of a module hasn't
 
 If the maintainer of the module is in the process of upgrading to SilverStripe 4, a development version of the module might be available. In some cases, it can be worthwhile to look up the repository of the module or to reach out to the maintainer.
 
-<div class="info" markdown="1">
+[info]
 If you're going to install development version of third party modules, you should consider adding the following entries to your `composer.json` file.
 
 ```json
@@ -352,7 +352,7 @@ If you're going to install development version of third party modules, you shoul
   // ...
 } 
 ```
-</div>
+[/info]
 
 To resolve a conflict you can either:
 * fork the affected module and upgrade it yourself. Don't forget to send a pull request to the original module!
@@ -361,11 +361,11 @@ To resolve a conflict you can either:
 
 To integrate a third party module in your project, remove it from your `composer.json` file and from your `.gitignore` file. Then track the module's codebase in your project source control. You'll need to upgrade the module's code to be compatible with SilverStripe 4. 
 
-<div class="info" markdown="1">
+[info]
 If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work or releasing your fork as a seperate module.
 
 [Learn about how to publish a SilverStripe module](/developer_guides/extending/how_tos/publish_a_module)
-</div>
+[/info]
 
 ### Finalising your dependency upgrade
 
@@ -816,6 +816,7 @@ $translation = _t(CMSMain::class .'.ACCESS', "Access to ''{title}'' section", ['
 ```
 
 If you're calling `_t()` to retrieve a translation for the current class, you can also use `__CLASS__` or `self::class`. For example:
+
 ```php
 <?php
 namespace App\Web\Services;
@@ -832,9 +833,9 @@ class ProductService
 }
 ```
 
-<div class="warning" markdown="1">
+[warning]
 Avoid using `static::class` or `parent::class` to retrieve translated string. It will retrieve unpredictable values bases on the class inheritance. 
-</div>
+[/warning]
 
 If your template files contain translatable strings, they also need to be updated to referenced the namespaced classes.
 For example, `<%t Member.SINGULARNAME 'Member' %>` would become `<%t SilverStripe\Security\Member.SINGULARNAME 'Member' %>`.

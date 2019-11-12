@@ -2,7 +2,7 @@
 title: Forms
 summary: Capture user information through Forms. This guide will work through how to create SilverStripe forms, adding and modifying fields and how to handle form submissions.
 introduction: This guide will work through how to create SilverStripe forms, adding and modifying fields and how to handle form submissions.
-icon: wpforms
+iconBrand: wpforms
 ---
 
 The [Form](api:SilverStripe\Forms\Form) class provides a way to create interactive forms in your web application with very little effort. 

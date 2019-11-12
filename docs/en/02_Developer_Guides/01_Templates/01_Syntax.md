@@ -116,9 +116,9 @@ public function UsersIpAddress()
 <p>You are coming from $UsersIpAddress.</p>
 ```
 
-<div class="node" markdown="1">
+[note]
 	Method names that begin with `get` will automatically be resolved when their prefix is excluded. For example, the above method call `$UsersIpAddress` would also invoke a method named `getUsersIpAddress()`.
-</div>
+[/note]
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
 object the methods get called on. For the standard `Page.ss` template the scope is the current [PageController](api:SilverStripe\CMS\Controllers\ContentController\PageController) 
