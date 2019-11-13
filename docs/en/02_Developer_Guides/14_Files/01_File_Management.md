@@ -12,14 +12,14 @@ Management of files within the CMS is provided via the [silverstripe/asset-admin
 module. This is a rich and user friendly interface supporting most basic file operations, as well as
 control over the publishing and security of files.
 
-![asset admin](_images/asset-admin-demo.png)
+![asset admin](/_images/asset-admin-demo.png)
 
 ## UploadField
 
 If you have the [silverstripe/asset-admin](https://github.com/silverstripe/silverstripe-asset-admin)
 module installed then this provides a powerful component [api:SilverStripe\AssetAdmin\Forms\UploadField].
 
-![upload field](_images/upload-field.png)
+![upload field](/_images/upload-field.png)
 
 You can add it to a page as below:
 
@@ -253,7 +253,7 @@ class Page extends SiteTree
 }
 ```
 
-See [Versioned: Ownership](/developer_guides/model/versioned#ownership) for details.
+See [Versioned: Ownership](/developer_guides/model/versioning#ownership) for details.
 
 ### Avoid exclusive relationships
 
