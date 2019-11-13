@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\QueryCache;
 
-use SebastianBergmann\CodeCoverage\Node\Iterator;
+use Iterator;
 use SilverStripe\ORM\DataQueryExecutorInterface;
 use SilverStripe\ORM\DataQuery;
 
@@ -27,15 +27,16 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
     /**
      * @param DataQuery $dataQuery
      * @param string $modifier
-     * @return mixed
+     * @return iterable
      */
-    public function execute(DataQuery $dataQuery, ?string $modifier = null)
+    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable
     {
         $results = $this->getCachedResult($dataQuery, $modifier);
         if ($results !== null) {
             return $results;
         }
-        $this->persist($dataQuery, $dataQuery->query()->execute(), $modifier);
+        $records = $dataQuery->query()->execute();
+        $this->persist($dataQuery, $records, $modifier);
 
         return $this->getCachedResult($dataQuery, $modifier);
     }
@@ -52,7 +53,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
         }
         $this->persist($dataQuery, $dataQuery->firstRow()->execute(), self::FIRST_ROW);
 
-        return $this->getCachedResult($dataQuery, self::FIRST_ROW);
+        return $this->getCachedResult($dataQuery, self::FIRST_ROW) ?: [];
     }
 
     /**
@@ -67,7 +68,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
         }
         $this->persist($dataQuery, $dataQuery->lastRow()->execute(), self::LAST_ROW);
 
-        return $this->getCachedResult($dataQuery, self::LAST_ROW);
+        return $this->getCachedResult($dataQuery, self::LAST_ROW) ?: [];
     }
 
     /**
@@ -89,7 +90,7 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
         // If there is no list, cache this as a COUNT() query only.
         $this->persist($dataQuery, $dataQuery->count(), self::COUNT);
 
-        return $this->getCachedResult($dataQuery, self::COUNT);
+        return $this->getCachedResult($dataQuery, self::COUNT) ?: '0';
     }
 
     /**

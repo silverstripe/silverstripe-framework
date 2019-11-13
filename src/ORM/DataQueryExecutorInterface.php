@@ -9,21 +9,21 @@ interface DataQueryExecutorInterface
     /**
      * @param DataQuery $dataQuery
      * @param string $modifier
-     * @return mixed
+     * @return iterable
      */
-    public function execute(DataQuery $dataQuery, ?string $modifier = null);
+    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable;
 
     /**
      * @param DataQuery $dataQuery
-     * @return iterable
+     * @return iterable|null
      */
-    public function getFirstRow(DataQuery $dataQuery): iterable;
+    public function getFirstRow(DataQuery $dataQuery): ?iterable;
 
     /**
      * @param DataQuery $dataQuery
-     * @return iterable
+     * @return iterable|null
      */
-    public function getLastRow(DataQuery $dataQuery): iterable;
+    public function getLastRow(DataQuery $dataQuery): ?iterable;
 
     /**
      * @param DataQuery $dataQuery

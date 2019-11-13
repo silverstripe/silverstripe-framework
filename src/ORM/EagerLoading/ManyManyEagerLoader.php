@@ -19,31 +19,39 @@ class ManyManyEagerLoader implements RelationEagerLoaderInterface
         if (!$mmData) {
             return $list;
         }
-        $relatedRecords = $list->relation($relation);
-        $childrenMap = $relatedRecords->map('ID', 'Me')->toArray();
         $joinTable = $mmData['join'];
         $parentField = $mmData['parentField'];
         $childField = $mmData['childField'];
         $childClass = $mmData['childClass'];
         $extraFields = $schema->manyManyExtraFieldsForComponent($parentClass, $relation) ?: [];
         $parentIDs = $list->columnUnique('ID');
-
         $placeholders = DB::placeholders($parentIDs);
-        $query = new SQLSelect(
+        $relatedRecordsQuery = new SQLSelect(
             [$parentField, $childField],
             $joinTable,
             [
                 ["$parentField IN ($placeholders)" => $parentIDs]
             ]
         );
-        $result = $query->execute();
-        $map = [];
-        foreach ($list as $item) {
-            $map[$item->ID] = [];
+
+        $result = $relatedRecordsQuery->execute();
+        $childIDs = [];
+        foreach ($result as $row) {
+            $id = $row[$childField];
+            $childIDs[$id] = $id;
         }
-        while($row = $result->nextRecord()) {
+        $childRecords = $childClass::get()->byIDs(array_keys($childIDs));
+        $childrenMap = $childRecords->map('ID', 'Me')->toArray();
+        $map = [];
+        foreach ($parentIDs as $parentID) {
+            $map[$parentID] = [];
+        }
+        foreach ($result as $row) {
             $parentID = $row[$parentField];
             $childID = $row[$childField];
+            if (!isset($map[$parentID])) {
+                $map[$parentID] = [];
+            }
             $map[$parentID][] = $childrenMap[$childID];
         }
 
@@ -53,6 +61,6 @@ class ManyManyEagerLoader implements RelationEagerLoaderInterface
             $store->persist($query->dataQuery(), $children);
         }
 
-        return $relatedRecords;
+        return $childRecords;
     }
 }

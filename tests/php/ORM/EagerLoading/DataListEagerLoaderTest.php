@@ -4,6 +4,7 @@
 namespace SilverStripe\ORM\Tests\EagerLoading;
 
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataQueryExecutorInterface;
@@ -137,8 +138,7 @@ class DataListEagerLoaderTest extends SapphireTest
         $this->goNaive();
 
         foreach (Team::get() as $team) {
-            foreach ($team->Players() as $player) {
-            }
+            $team->Players()->toArray();
         }
 
         // N+1
@@ -153,13 +153,13 @@ class DataListEagerLoaderTest extends SapphireTest
                 $playerContent .= $player->Surname;
             }
         }
+
         $eagerLoads = 1;
         $this->assertEquals($eagerLoads + 1, $this->getExecutor()->getQueries());
 
         // Prove that we're getting cached results by changing a player's name
         $newPlayerContent = '';
         $teams = Team::get()->sort('Title ASC')->with('Players');
-
         foreach ($teams as $team) {
             foreach ($team->Players() as $player) {
                 $newPlayerContent .= $player->Surname;
@@ -249,6 +249,84 @@ class DataListEagerLoaderTest extends SapphireTest
         $this->assertNotEquals($playerContent, $newPlayerContent);
     }
 
+    public function testNestedEagerLoading()
+    {
+        Config::modify()->set(TeamComment::class, 'default_sort', 'ID ASC');
+        Config::modify()->set(Player::class, 'default_sort', 'ID ASC');
+        $this->buildState();
+
+        $this->goNaive();
+        $expectedQueryCount = 1;
+        $output = '';
+        foreach(Team::get()->sort('Title ASC') as $team) {
+            $output .= 'TEAM__' . $team->ID . '__' . $team->Title;
+            foreach ($team->Comments() as $comment) {
+                $output .= $comment->Comment;
+            }
+            $expectedQueryCount++;
+            $captain = $team->Captain();
+            if ($captain->exists()) {
+                $expectedQueryCount++;
+                $output .= 'CAPTAIN__' . $captain->ID;
+            }
+            $founder = $team->Founder();
+            if ($founder->exists()) {
+                $expectedQueryCount++;
+                $output .= 'FOUNDER__' . $founder->ID;
+            }
+            $players = $team->Players()->toArray();
+            $expectedQueryCount++;
+            foreach ($players as $player) {
+                $output .= 'PLAYER__' . $player->ID . '__' . $player->Surname . '__';
+                $favourite = $player->FavouriteTeam();
+                if ($favourite->exists()) {
+                    $expectedQueryCount++;
+                    $output .= $favourite->Title;
+                }
+            }
+        }
+
+        $this->assertEquals($expectedQueryCount, $this->getExecutor()->getQueries());
+
+        $this->goCached();
+
+        $teams = Team::get()->sort('Title ASC')->with([
+            'Comments',
+            'Captain',
+            'Founder',
+            'Players' => [
+                'FavouriteTeam',
+            ]
+        ]);
+        $newOutput = '';
+        foreach($teams as $team) {
+            $newOutput .= 'TEAM__' . $team->ID . '__' . $team->Title;
+            foreach ($team->Comments() as $comment) {
+                $newOutput .= $comment->Comment;
+            }
+            $captain = $team->Captain();
+            if ($captain->exists()) {
+                $newOutput .= 'CAPTAIN__' . $captain->ID;
+            }
+            $founder = $team->Founder();
+            if ($founder->exists()) {
+                $newOutput .= 'FOUNDER__' . $founder->ID;
+            }
+            $players = $team->Players()->toArray();
+            foreach ($players as $player) {
+                $newOutput .= 'PLAYER__' . $player->ID . '__' . $player->Surname .'__';
+                $favourite = $player->FavouriteTeam();
+                if ($favourite->exists()) {
+                    $newOutput .= $favourite->Title;
+                }
+            }
+        }
+
+        $expectedQueryCount = 7;
+        $this->assertEquals($output, $newOutput);
+        $this->assertEquals($expectedQueryCount, $this->getExecutor()->getQueries());
+    }
+
     protected function buildState()
     {
         $team1 = Team::create(['Title' => 'The Tuis']);
@@ -278,6 +356,8 @@ class DataListEagerLoaderTest extends SapphireTest
         $player1->write();
         $player1->Teams()->add($team1);
         $player1->Teams()->add($team3);
+        $team1->CaptainID = $player1->ID;
+        $team1->write();
 
         $player2 = Player::create([
             'FirstName' => 'Rob',
@@ -287,6 +367,9 @@ class DataListEagerLoaderTest extends SapphireTest
         $player2->write();
         $player2->Teams()->add($team1);
         $player2->Teams()->add($team3);
+        $team2->CaptainID = $player2->ID;
+        $team2->FounderID = $player1->ID;
+        $team2->write();
 
         $player3 = Player::create([
             'FirstName' => 'Sony',
@@ -297,6 +380,9 @@ class DataListEagerLoaderTest extends SapphireTest
         $player3->Teams()->add($team1);
         $player3->Teams()->add($team2);
         $player3->Teams()->add($team6);
+        $team3->CaptainID = $player3->ID;
+        $team3->FounderID = $player2->ID;
+        $team3->write();
 
         $player4 = Player::create([
             'FirstName' => 'Chris',
@@ -308,6 +394,9 @@ class DataListEagerLoaderTest extends SapphireTest
         $player4->Teams()->add($team3);
         $player4->Teams()->add($team5);
         $player4->Teams()->add($team7);
+        $team4->CaptainID = $player4->ID;
+        $team4->FounderID = $player3->ID;
+        $team4->write();
 
         $player5 = Player::create([
             'FirstName' => 'Stephon',
@@ -319,6 +408,9 @@ class DataListEagerLoaderTest extends SapphireTest
         $player5->Teams()->add($team3);
         $player5->Teams()->add($team5);
         $player5->Teams()->add($team4);
+        $team5->CaptainID = $player5->ID;
+        $team5->FounderID = $player4->ID;
+        $team5->write();
 
         $player6 = Player::create([
             'FirstName' => 'Devon',
@@ -329,6 +421,9 @@ class DataListEagerLoaderTest extends SapphireTest
         $player6->Teams()->add($team2);
         $player6->Teams()->add($team4);
         $player6->Teams()->add($team5);
+        $team6->CaptainID = $player6->ID;
+        $team6->FounderID = $player5->ID;
+        $team6->write();
 
         $comment1 = TeamComment::create([
             'Name' => 'Rob Ryan',
