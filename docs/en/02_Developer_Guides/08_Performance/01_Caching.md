@@ -151,6 +151,7 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 	);
 	SS_Cache::pick_backend('primary_memcached', 'any', 10);
 	
+
 If your Memcached instance is using a local Unix socket instead of a network port:
 
  	:::php

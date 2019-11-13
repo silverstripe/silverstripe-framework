@@ -375,10 +375,12 @@ First, we don't need the breadcrumbs and the secondary menu for the homepage. Le
 	:::ss
 	<% include SideBar %> 
 	
+
 We'll also replace the title text with an image. Find this line:
 
 	:::ss
 	<h1>$Title</h1>
+
 
  and replace it with:
 

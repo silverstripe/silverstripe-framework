@@ -227,6 +227,7 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"minimum-stability": "dev"
 	}
 	
+
 To add modules, you should add more entries into the `"require"` section.  For example, we might add the blog and forum modules.  Be careful with the commas at the end of the lines!
 
 Save your file, and then run the following command to refresh the installed packages:

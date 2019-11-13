@@ -133,6 +133,7 @@ Unless executing a coverage report there is no need to have xDebug enabled.
     # Enable xdebug
     sudo php5enmod xdebug
     
+
 ### Use SQLite In Memory
 SQLIte can be configured to run in memory as opposed to disk and this makes testing an order of magnitude faster.  To effect this change add the following to mysite/_config.php - this enables an optional flag to switch between MySQL and SQLite.  Note also that the package silverstripe/sqlite3 will need installed, version will vary depending on which version of SilverStripe is being tested.
 
@@ -152,6 +153,7 @@ To use SQLite append '' db=sqlite3 after the phpunit command.
     :::bash
     phpunit framework/tests '' db=sqlite3
     
+
 ### Speed Comparison
 Testing against a medium sized module with 93 tests:
 * SQLite - 16.15s
@@ -261,6 +263,7 @@ individual test case.
 		}
 	}
 	
+
 ### Config and Injector Nesting
 
 A powerful feature of both [`Config`](/developer_guides/configuration/configuration/) and [`Injector`](/developer_guides/extending/injector/) is the ability to "nest" them so that you can make changes that can easily be discarded without having to manage previous values.

@@ -97,6 +97,7 @@ manipulating the `GridFieldConfig` instance if required.
 	// option 2: adding the CustomAction to an exisitng GridField
 	$gridField->getConfig()->addComponent(new GridFieldCustomAction());
 	
+
 For documentation on adding a Component to a `GridField` created by `ModelAdmin` 
 please view the [GridField Customization](/developer_guides/forms/how_tos/create_a_gridfield_actionprovider) section.
 

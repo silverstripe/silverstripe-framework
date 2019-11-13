@@ -24,7 +24,7 @@ The poll we will be creating on our homepage will ask the user for their name an
 
 **mysite/code/HomePage.php**
 
-	```php
+```php
 	class HomePage_Controller extends Page_Controller {
 		private static $allowed_actions = array('BrowserPollForm');
 
@@ -83,7 +83,7 @@ argument is passed, as in this case, it is assumed the label is the same as the 
 The second field we create is an [api:OptionsetField]. This is a dropdown, and takes a third argument - an
 array mapping the values to the options listed in the dropdown.
 
-	```php
+```php
 	$actions = new FieldList(
 		new FormAction('doBrowserPoll', 'Submit');
 	);
@@ -109,7 +109,7 @@ Add the following code to the top of your home page template, just before `<div 
 
 **themes/simple/templates/Layout/HomePage.ss**
 
-	```ss
+```ss
 	...
 	<div id="BrowserPoll">
 		<h2>Browser Poll</h2>

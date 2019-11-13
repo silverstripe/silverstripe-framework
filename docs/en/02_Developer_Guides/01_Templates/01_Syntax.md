@@ -117,19 +117,19 @@ record and any subclasses of those two.
 
 The simplest conditional block is to check for the presence of a value (does not equal 0, null, false).
 
-```ss	
+	:::ss	
 	<% if $CurrentMember %>
 		<p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
 	<% end_if %>
-```
+
 
 A conditional can also check for a value other than falsy.
 
-```ss
+	:::ss
 	<% if $MyDinner == "kipper" %>
 		Yummy, kipper for tea.
 	<% end_if %>
-```
+	
 
 [notice]
 When inside template tags variables should have a '$' prefix, and literals should have quotes. 

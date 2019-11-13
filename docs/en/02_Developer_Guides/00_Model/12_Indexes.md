@@ -21,6 +21,7 @@ represent each index. There're several supported notations:
 		);
 	}
 	
+
 The `<index-name>` can be an arbitrary identifier in order to allow for more than one index on a specific database 
 column. The "advanced" notation supports more `<type>` notations. These vary between database drivers, but all of them 
 support the following:

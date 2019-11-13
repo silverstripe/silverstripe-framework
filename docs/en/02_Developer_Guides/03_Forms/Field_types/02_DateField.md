@@ -55,6 +55,7 @@ strtotime()).
 		->setConfig('min', '-7 days')
 		->setConfig('max', '2012-12-31')
 		
+
 ## Separate Day / Month / Year Fields
 
 The following setting will display your DateField as three input fields for day, month and year separately. HTML5 

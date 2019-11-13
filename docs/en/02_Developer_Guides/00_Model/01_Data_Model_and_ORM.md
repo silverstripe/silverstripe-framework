@@ -203,6 +203,7 @@ This also means that getting the count of a list of objects will be done with a 
 	// SELECT COUNT(*) FROM Player WHERE FirstName = 'Sam'
 	echo $players->Count();
 	
+
 ## Looping over a list of objects
 
 `get()` returns a `DataList` instance. You can loop over `DataList` instances in both PHP and templates.
@@ -324,12 +325,14 @@ exact match.
 		'PlayerNumber:GreaterThan' => '10'
 	));
 	
+
 [notice]
 Please note that in SilverStripe 3.x it's not possible to filter a list based on a field containing a `null` value (see [this issue](https://github.com/silverstripe/silverstripe-framework/issues/3621) for context). You can workaround this with a `where` statement, for example:
 
 	:::php
 	$unsponsoredPlayers = Player::get()->where("\"MainSponsor\" IS NULL OR \"MainSponsor\" = ''");
 	
+
 [/notice]
 
 ### filterAny

@@ -171,6 +171,7 @@ For instance, to only show the menu item linked if it's the current one:
 		<a href="$Link">$Title</a>
 	<% end_if %>
 	
+
 An example for checking for `current` or `section` is as follows:
 
     :::ss

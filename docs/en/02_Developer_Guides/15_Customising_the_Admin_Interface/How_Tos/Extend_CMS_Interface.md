@@ -219,6 +219,7 @@ applicable controller actions to it:
     	
     }
     
+
 The extension then needs to be registered:
 
 	:::yaml
@@ -226,6 +227,7 @@ The extension then needs to be registered:
 		extensions:
 			- CustomActionsExtension
 			
+
 You can now use these handlers with your buttons:
 
 	:::php

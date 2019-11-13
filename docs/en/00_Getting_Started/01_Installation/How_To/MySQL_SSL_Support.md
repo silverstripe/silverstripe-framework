@@ -61,12 +61,14 @@ The following commands will work on Linux/Unix based servers. For other servers 
 	
 	# Verify validity of generated certificates
 	sudo openssl verify -CAfile ca-cert.pem server-cert.pem client-cert.pem
+
 	
 [warning]
 After generating the certificates, make sure to set the correct permissions to prevent unauthorized access to your keys! 
 
 It is critical that the key files (files ending in *key.pem) are kept secret. Once these files are exposed, you will need to regenerate the certificates to prevent exposing your data traffic. 
 [/warning]
+
 
 	:::bash
 	# Set permissions readonly permissions and change owner to root

@@ -41,6 +41,7 @@ You can also use an array of fixture files, if you want to use parts of multiple
 		
 	}
 	
+
 Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
 
 Fixtures are defined in `YAML`. `YAML` is a markup language which is deliberately simple and easy to read, so it is

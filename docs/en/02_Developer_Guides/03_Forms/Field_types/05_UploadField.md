@@ -187,6 +187,7 @@ Alternatively, you can force the user to only specify already existing files in 
 	$uploadField->setCanUpload(false);
 ```
 	
+
 ### Automatic or manual upload
 By default, the UploadField will try to automatically upload all selected files. Setting the `autoUpload` property to false, will present you with a list of selected files that you can then upload manually one by one:
 

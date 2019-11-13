@@ -154,12 +154,12 @@ reusable and would not be possible within the `CMS` or other automated `UI` but 
 				return $this->redirectBack();
 			}
 
-
 			$form->sessionMessage("You have been added to our mailing list", 'good');
 			
 			return $this->redirectBack();
 		}
 	}
+
 
 ## Server-side validation messages
 
