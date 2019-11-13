@@ -9,6 +9,7 @@ summary: Write a custom config for Lighttpd
 Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 
 	
+```
 	$HTTP["host"] == "yoursite.com" {
 	    server.document-root = "/home/yoursite/public_html/"
 	
@@ -39,7 +40,7 @@ Silverstripe. Replace "yoursite.com" and "/home/yoursite/public_html/" below.
 	    server.error-handler-404 = "/framework/main.php" 
 	}
 
-
+```
 Rewrite rules do not check for file existence as they do on Apache. There is a ticket about it for Lighttpd:
 [http://redmine.lighttpd.net/issues/985](http://redmine.lighttpd.net/issues/985).
 
@@ -54,6 +55,7 @@ things a lot simpler, as you just use two of the above host example blocks. But 
 of Silverstripe on the same host, you can use something like this (be warned, it's quite nasty):
 
 	
+```
 	$HTTP["host"] == "yoursite.com" {
 	   url.rewrite-once = (
 	      "(?i)(/copy1/.*\.([A-Za-z0-9]+))(.*?)$" => "$0",
@@ -69,7 +71,7 @@ of Silverstripe on the same host, you can use something like this (be warned, it
 	   }
 	}
 
-
+```
 Note: It doesn't work properly if the directory name copy1 or copy2 on your server has a dot in it, and you then open
 the image editor inside admin, I found that out the hard way when using a directory name of silverstripe-v2.2.2 after
 directly unzipping the Silverstripe tarball leaving the name as is. I haven't found a solution for that yet, but for now

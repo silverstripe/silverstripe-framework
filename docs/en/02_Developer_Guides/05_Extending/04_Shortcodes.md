@@ -14,17 +14,17 @@ in their WYSIWYG editor. Shortcodes are a semi-technical solution for this. A go
 viewer or a Google Map at a certain location. 
 
 
-	:::php
+```php
 	$text = "<h1>My Map</h1>[map]"
 	
 	// Will output
 	// <h1>My Map</h1><iframe ..></iframe>
 
-
+```
 Here's some syntax variations:
 
 
-	:::php
+```php
 	[my_shortcode]
 	#
 	[my_shortcode /]
@@ -33,23 +33,23 @@ Here's some syntax variations:
 	#
 	[my_shortcode,myparameter="value"]Enclosed Content[/my_shortcode]
 
-Shortcodes are automatically parsed on any database field which is declared as [api:HTMLValue] or [api:HTMLText], 
+```
 when rendered into a template. This means you can use shortcodes on common fields like `SiteTree.Content`, and any 
 other [api:DataObject::$db] definitions of these types.
 
 Other fields can be manually parsed with shortcodes through the `parse` method.
 
-	:::php
+```php
 	$text = "My awesome [my_shortcode] is here.";
 	ShortcodeParser::get_active()->parse($text);
 
-## Defining Custom Shortcodes
+```
  
 First we need to define a callback for the shortcode.
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -63,7 +63,7 @@ First we need to define a callback for the shortcode.
 		}
 	}
 
-These parameters are passed to the `MyShortCodeMethod` callback:
+```
 
  - Any parameters attached to the shortcode as an associative array (keys are lower-case).
  - Any content enclosed within the shortcode (if it is an enclosing shortcode). Note that any content within this
@@ -79,12 +79,12 @@ To register a shortcode you call the following.
 
 **mysite/_config.php**
 
-	:::php
+```php
 	// ShortcodeParser::get('default')->register($shortcode, $callback);
 
 	ShortcodeParser::get('default')->register('my_shortcode', array('Page', 'MyShortCodeMethod'));
 
-
+```
 ## Built-in Shortcodes
 
 SilverStripe comes with several shortcode parsers already.
@@ -95,15 +95,15 @@ Internal page links keep references to their database IDs rather than the URL, i
 against moving the target page to a different location in the page tree. This is done through the `[sitetree_link]` 
 shortcode, which takes an `id` parameter. 
 
-	:::php
+```php
 	<a href="[sitetree_link,id=99]">
 
-Links to internal `File` database records work exactly the same, but with the `[file_link]` shortcode.
+```
 
-	:::php
+```php
 	<a href="[file_link,id=99]">
 
-### Media (Photo, Video and Rich Content)
+```
 
 Many media formats can be embedded into websites through the `<object>` tag, but some require plugins like Flash or 
 special markup and attributes. OEmbed is a standard to discover these formats based on a simple URL, for example a 
@@ -114,8 +114,9 @@ custom `[embed]` shortcode.
 
 
 [embed width=480 height=270 class=left thumbnail=http://i1.ytimg.com/vi/lmWeD-vZAMY/hqdefault.jpg?r=8767]
+```
 	http://www.youtube.com/watch?v=lmWeD-vZAMY
-[/embed]
+```
 
 
 ### Attribute and element scope
@@ -130,14 +131,15 @@ The first is called "element scope" use, the second "attribute scope"
 You may not use shortcodes in any other location. Specifically, you can not use shortcodes to generate attributes or 
 change the name of a tag. These usages are forbidden:
 
+```
 	<[paragraph]>Some test</[paragraph]>
 
 	<a [titleattribute]>link</a>
 
-You may need to escape text inside attributes `>` becomes `&gt;`, You can include HTML tags inside a shortcode tag, but 
+```
 you need to be careful of nesting to ensure you don't break the output.
     
-	:::ss
+```ss
 	<!-- Good -->
 	<div>
 		[shortcode]
@@ -154,33 +156,37 @@ you need to be careful of nesting to ensure you don't break the output.
 		[/shortcode]
 	</p>
 
-### Location
+```
 
 Element scoped shortcodes have a special ability to move the location they are inserted at to comply with HTML lexical 
 rules. Take for example this basic paragraph tag:
 
+```
 	<p><a href="#">Head [figure,src="assets/a.jpg",caption="caption"] Tail</a></p>
 	
-When converted naively would become:
+```
 
+```
 	<p><a href="#">Head <figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure> Tail</a></p>
 
-However this is not valid HTML - P elements can not contain other block level elements.
+```
 
 To fix this you can specify a "location" attribute on a shortcode. When the location attribute is "left" or "right"
 the inserted content will be moved to immediately before the block tag. The result is this:
 
+```
 	<figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#">Head  Tail</a></p>
 
-When the location attribute is "leftAlone" or "center" then the DOM is split around the element. The result is this:
+```
 
+```
 	<p><a href="#">Head </a></p><figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#"> Tail</a></p>
 
-### Parameter values
+```
 
 Here is a summary of the callback parameter values based on some example shortcodes.
 	
-	:::php
+```php
 	public function MyCustomShortCode($arguments, $content = null, $parser = null, $tagName) {
 		// ..
 	}
@@ -205,16 +211,17 @@ Here is a summary of the callback parameter values based on some example shortco
 	$parser          => ShortcodeParser instance
 	$tagName         => 'my_shortcode'
 
-## Limitations
+```
 
 Since the shortcode parser is based on a simple regular expression it cannot properly handle nested shortcodes. For
 example the below code will not work as expected:
 
+```
 	[shortcode]
 	[shortcode][/shortcode]
 	[/shortcode]
 
-The parser will raise an error if it can not find a matching opening tag for any particular closing tag
+```
 
 ## Related Documentation
 

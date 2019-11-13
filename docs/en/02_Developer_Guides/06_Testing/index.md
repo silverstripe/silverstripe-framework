@@ -81,6 +81,7 @@ Tutorials and recipes for creating tests using the SilverStripe framework:
 
 The `phpunit` binary should be used from the root directory of your website.
 
+```
 	# Runs all tests defined in phpunit.xml
 	phpunit
 
@@ -96,7 +97,7 @@ The `phpunit` binary should be used from the root directory of your website.
 	# Run tests with optional `$_GET` parameters (you need an empty second argument)
 	phpunit framework/tests '' flush=all
 
-All command-line arguments are documented on
+```
 [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
 
 ### Via the "sake" Wrapper on Command Line
@@ -106,6 +107,7 @@ The [sake](/developer_guides/cli/) executable that comes with SilverStripe can t
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.
 
+```
 	# Run all tests
 	sake dev/tests/all
 
@@ -121,9 +123,7 @@ particularly around formatting test output.
 	# Skip some tests
 	sake dev/tests/all SkipTests=MySkippedTest
 
-### Via Web Browser
+```
 
 Executing tests from the command line is recommended, since it most closely reflects
 test runs in any automated testing environments. However, you can also run tests through the browser:
-
-	http://localhost/dev/tests

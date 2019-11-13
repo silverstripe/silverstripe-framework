@@ -9,7 +9,7 @@ You can have more customised logic and interface feedback through a custom contr
 form (which is used for `MyDataObject` instances). You can access it through 
 `http://yoursite.com/MyController/?flush=all`.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -66,7 +66,7 @@ form (which is used for `MyDataObject` instances). You can access it through
 		}
 	}
 
-[alert]
+```
 This interface is not secured, consider using [api:Permission::check()] to limit the controller to users with certain 
 access rights.
 [/alert]

@@ -43,7 +43,7 @@ As a core contributor it is necessary to have installed the following set of too
 
 Example `_ss_environment.php`:
 
-    :::php
+```php
     <?php
     // Environent
     define('SS_TRUSTED_PROXY_IPS', '*');
@@ -66,7 +66,7 @@ Example `_ss_environment.php`:
     global $_FILE_TO_URL_MAPPING;
     $_FILE_TO_URL_MAPPING[__DIR__] = "http://localhost";
 
-
+```
 You will also need to be assigned the following permissions. Contact one of the SS staff from
 the [core committers](core_committers), who will assist with setting up your credentials.
 
@@ -173,9 +173,10 @@ any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
  
+```
     cow release <version> --from=<prior-version> --branch-auto -vvv
 
-This command has the following parameters:
+```
 
 * `<version>` The version that is to be released. E.g. 3.2.4 or 3.2.4-rc1
 * `<prior-version>` The version from which to compare to generate a changelog.
@@ -250,9 +251,10 @@ building an archive, and uploading to
 
 Invoked by running `cow release:publish` in the format as below:
 
+```
     cow release:publish <version> -vvv
 
-As with the `cow release` command, this step is broken down into the following
+```
 subtasks which are invoked in sequence:
 
 * `release:tag` Each module will have the appropriate tag applied (except the theme).
@@ -300,18 +302,22 @@ minor version will require a new branch option to be made available on each site
 
 * [docs.silverstripe.org](https://docs.silverstripe.org):
   * New branches (minor releases) require a code update. Changes are made to
+```
     [github](https://github.com/silverstripe/doc.silverstripe.org) and deployed via
     [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-Developer-Docs/environment/Production/)
-  * Updates to markdown only can be made via the [build tasks](https://docs.silverstripe.org/dev/tasks).
+```
+```
     See below for more details.
-* [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2):
+```
   * Updated similarly to docs.silverstripe.org: Code changes are made to
+```
     [github](https://github.com/silverstripe/userhelp.silverstripe.org) and deployed via
     [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-User-Docs/environment/Production/).
-  * The content for this site is pulled from [silverstripe-userhelp-content](https://github.com/silverstripe/silverstripe-userhelp-content)
+```
   * Updates to markdown made via the [build tasks](https://userhelp.silverstripe.org/dev/tasks).
+```
     See below for more details.
-* [demo.silverstripe.org](http://demo.silverstripe.org/): Update code on
+```
   [github](https://github.com/silverstripe/demo.silverstripe.org/)
   and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/ss3demo/environment/live).
 * [api.silverstripe.org](https://api.silverstripe.org): Update on [github](https://github.com/silverstripe/api.silverstripe.org)

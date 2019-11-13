@@ -11,7 +11,7 @@ response and modify the session within a test.
 
 **mysite/tests/HomePageTest.php**
 
-	:::php
+```php
 	<?php
 
 	class HomePageTest extends FunctionalTest {
@@ -48,7 +48,7 @@ response and modify the session within a test.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Functional Testing](../functional_testing)
 * [Unit Testing](../unit_testing)

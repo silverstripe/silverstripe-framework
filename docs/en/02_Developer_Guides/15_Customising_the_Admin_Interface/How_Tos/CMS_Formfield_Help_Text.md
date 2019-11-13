@@ -15,19 +15,19 @@ shown alongside the field, a tooltip which shows on demand, or toggleable descri
 The `FormField->setDescription()` method will add a `<span class="description">`
 at the last position within the field, and expects unescaped HTML content.
 
-	:::php
+```php
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help');
 
-To show the help text as a tooltip instead of inline,
+```
 add a `.cms-description-tooltip` class.
 
-	:::php
+```php
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-tooltip');
 
-Tooltips are only supported
+```
 for native, focusable input elements, which excludes
 more complex fields like `GridField`, `UploadField`
 or `DropdownField` with the chosen.js behaviour applied.
@@ -40,19 +40,19 @@ Another option you have available is making the field's description togglable. T
 the UI tidy by hiding the description until the user requests more information
 by clicking the 'info' icon displayed alongside the field.
 
-	:::php
+```php
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-toggle');
 
-If you want to provide a custom icon for toggling the description, you can do that
+```
 by setting an additional `RightTitle`.
 
-	:::php
+```php
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
 		->addExtraClass('cms-description-toggle')
 		->setRightTitle('<a class="cms-description-trigger">My custom icon</a>');
 
-Note: For more advanced help text we recommend using
+```
 [Custom form field templates](/developer_guides/forms/form_templates);

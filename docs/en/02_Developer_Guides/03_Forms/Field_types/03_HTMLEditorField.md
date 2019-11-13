@@ -17,7 +17,7 @@ functionality. It is usually added through the [api:DataObject::getCMSFields()] 
 
 **mysite/code/MyObject.php**
 
-	:::php
+```php
 	<?php
 
 	class MyObject extends DataObject {
@@ -33,7 +33,7 @@ functionality. It is usually added through the [api:DataObject::getCMSFields()] 
 		}
 	}
 
-### Specify which configuration to use
+```
 
 By default, a config named 'cms' is used in any new [api:HTMLEditorField].
 
@@ -44,7 +44,7 @@ will use the configuration with the name 'myConfig'.
 You can also specify which [api:HtmlEditorConfig] to use on a per field basis via the construct argument.
 This is particularly useful if you need different configurations for multiple [api:HTMLEditorField] on the same page or form.
 
-	:::php
+```php
 	class MyObject extends DataObject {
 		private static $db = array(
 			'Content' => 'HTMLText',
@@ -59,7 +59,7 @@ This is particularly useful if you need different configurations for multiple [a
 		}
 	}
 
-In the above example, the 'Content' field will use the default 'cms' config while 'OtherContent' will be using 'myConfig'.
+```
 
 ## Configuration
 
@@ -87,10 +87,10 @@ You can add plugins to the editor using the Framework's [api:HtmlEditorConfig::e
 transparently generate the relevant underlying TinyMCE code.
 
 **mysite/_config.php**
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->enablePlugins('media');
 
-[notice]
+```
 This utilities the TinyMCE's `PluginManager::load` function under the hood (check the 
 [TinyMCE documentation on plugin loading](http://www.tinymce.com/wiki.php/API3:method.tinymce.AddOnManager.load) for 
 details).
@@ -100,16 +100,16 @@ Plugins and advanced themes can provide additional buttons that can be added (or
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
 
 **mysite/_config.php**
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->insertButtonsAfter('charmap', 'ssmacron');
 
-Buttons can also be removed:
+```
 
 **mysite/_config.php**
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 
-[notice]
+```
 Internally [api:HtmlEditorConfig] uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
 [TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
 for more details.
@@ -125,7 +125,7 @@ tags](http://www.tinymce.com/wiki.php/Configuration:extended_valid_elements) - t
 from the HTML source by the editor.
 
 **mysite/_config.php**
-	:::php
+```php
 	// Add start and type attributes for <ol>, add <object> and <embed> with all attributes.
 	HtmlEditorConfig::get('cms')->setOption(
 		'extended_valid_elements',
@@ -139,7 +139,7 @@ from the HTML source by the editor.
 		'ol[start|type]'
 	);
 
-[notice]
+```
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
 `framework/admin/_config.php`.
 [/notice]
@@ -153,7 +153,7 @@ Here is how we can create a project-specific plugin. Create a `mysite/javascript
 button icon - here `myplugin.png` - and the source code - here `editor_plugin.js`. Here is a very simple example of a 
 plugin that adds a button to the editor:
 
-	:::js
+```js
 	(function() {
 		tinymce.create('tinymce.plugins.myplugin', {
 			
@@ -184,13 +184,13 @@ plugin that adds a button to the editor:
 		tinymce.PluginManager.add('myplugin', tinymce.plugins.myplugin);
 	})();
 
-You can then enable this plugin through the [api:HtmlEditorConfig::enablePlugins()]:
+```
 
 **mysite/_config.php**
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->enablePlugins(array('myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js'));
 
-For more complex examples see the [Creating a Plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) in TinyMCE
+```
 documentation, or browse through plugins that come with the Framework at `thirdparty/tinymce/plugins`.
 
 ## Image and media insertion
@@ -240,10 +240,10 @@ defaults to the stricter 'xhtml' setting, for example rendering self closing tag
 
 In case you want to adhere to HTML4 instead, use the following configuration:
 
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
 
-By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it will strip out HTML5 tags like 
+```
 `<article>` or `<figure>`. If you plan to use those, add them to the 
 [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
@@ -263,19 +263,11 @@ back and forth between a content representation the editor can understand, prese
 
 Example: Remove field for "image captions"
 
-	:::php
-	// File: mysite/code/MyToolbarExtension.php
-	class MyToolbarExtension extends Extension {
-		public function updateFieldsForImage(&$fields, $url, $file) {
-			$fields->removeByName('CaptionText');
-		}
-	}
-
-	:::php
+```php
 	// File: mysite/_config.php
 	HtmlEditorField_Toolbar::add_extension('MyToolbarExtension');
 
-Adding functionality is a bit more advanced, you'll most likely
+```
 need to add some fields to the PHP forms, as well as write some
 JavaScript to ensure the values from those fields make it into the content
 elements (and back out in case an existing element gets edited).
@@ -298,15 +290,7 @@ encapsulated in the [api:HtmlEditorField_Toolbar] class.
 In the CMS, those dialogs are automatically instantiate, but in your own interfaces outside
 of the CMS you have to take care of instantiate yourself:
 
-	:::php
-	// File: mysite/code/MyController.php
-	class MyObjectController extends Controller {
-		public function EditorToolbar() {
-			return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
-		}
-	}
-
-	:::ss
+```ss
 	// File: mysite/templates/MyController.ss
 	$Form
 	<% with $EditorToolbar %>
@@ -314,16 +298,16 @@ of the CMS you have to take care of instantiate yourself:
 		$LinkForm
 	<% end_with %>
 
-Note: The dialogs rely on CMS-access, e.g. for uploading and browsing files,
+```
 so this is considered advanced usage of the field.
 
-	:::php
+```php
 	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
 	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
 	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');
 
-### Developing a wrapper to use a different WYSIWYG editors with HTMLEditorField
+```
 
 WYSIWYG editors are complex beasts, so replacing it completely is a difficult task.
 The framework provides a wrapper implementation for the basic required functionality,
@@ -341,7 +325,7 @@ Most modern browsers support it, although Internet Explorer only has limited
 support in IE10. Alternatively, you can use the PSpell PHP module for server side checks.
 Assuming you have the module installed, here's how you enable its use in `mysite/_config.php`:
 
-	:::php
+```php
 	HtmlEditorConfig::get('cms')->enablePlugins('spellchecker', 'contextmenu');
 	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'spellchecker');
 	HtmlEditorConfig::get('cms')->setOption(
@@ -350,8 +334,4 @@ Assuming you have the module installed, here's how you enable its use in `mysite
 	);
 	HtmlEditorConfig::get('cms')->setOption('browser_spellcheck', false);
 
-Now change the default spellchecker in `framework/thirdparty/tinymce-spellchecker/config.php`:
-
-	:::php
-	// ...
-	$config['general.engine'] = 'PSpell';
+```

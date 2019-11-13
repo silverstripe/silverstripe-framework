@@ -23,7 +23,7 @@ storage engine.
 
 You can do so by adding this static variable to your class definition:
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -33,7 +33,7 @@ You can do so by adding this static variable to your class definition:
 		);
 	}
 
-The [api:FulltextSearchable] extension will add the correct `Fulltext` indexes to the data model.
+```
 
 [alert]
 The [api:SearchForm] and [api:FulltextSearchable] API's are currently hard coded to be specific to `Page` and `File`
@@ -48,7 +48,7 @@ SilverStripe provides a [api:FulltextFilter] which you can use to perform custom
 
 Example DataObject:
 
-	:::php
+```php
 	class SearchableDataObject extends DataObject {
 		
 		private static $db = array(
@@ -70,12 +70,12 @@ Example DataObject:
 
 	}
 
-Performing the search:
+```
 
-	:::php
+```php
 	SearchableDataObject::get()->filter('SearchFields:fulltext', 'search term');
 
-If your search index is a single field size, then you may also specify the search filter by the name of the
+```
 field instead of the index.
 
 ## API Documentation

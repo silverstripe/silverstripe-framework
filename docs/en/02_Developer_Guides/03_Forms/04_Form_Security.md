@@ -22,27 +22,27 @@ website.
 
 The `SecurityToken` automatically added looks something like:
 
-	:::php
+```php
 	$form = new Form(..);
 	echo $form->getSecurityToken()->getValue();
 
 	// 'c443076989a7f24cf6b35fe1360be8683a753e2c'
 
-This token value is passed through the rendered Form HTML as a [api:HiddenField].
+```
 	
-	:::html
+```html
 	<input type="hidden" name="SecurityID" value="c443076989a7f24cf6b35fe1360be8683a753e2c" class="hidden"  />
 
-The token should be present whenever a operation has a side effect such as a `POST` operation.
+```
 
 It can be safely disabled for `GET` requests as long as it does not modify the database (i.e a search form does not 
 normally require a security token).
 
-	:::php
+```php
 	$form = new Form(..);
 	$form->disableSecurityToken();
 
-[alert]
+```
 Do not disable the SecurityID for forms that perform some modification to the users session. This will open your 
 application up to `CSRF` security holes.
 [/alert]
@@ -53,7 +53,7 @@ Forms should be limited to the intended HTTP verb (mostly `GET` or `POST`) to fu
 this check, forms that rely on `GET` can be submitted via `POST` or `PUT` or vice-versa potentially leading to 
 application errors or edge cases.
 
-	:::php
+```php
 	$form = new Form(..);
 
 	$form->setFormMethod('POST');
@@ -62,7 +62,7 @@ application errors or edge cases.
 	// or alternative short notation..
 	$form->setFormMethod('POST', true);
 
-## Spam and Bot Attacks
+```
 
 SilverStripe has no built-in protection for detailing with bots, captcha or other spam protection methods. This 
 functionality is available as an additional [Spam Protection](https://github.com/silverstripe/silverstripe-spamprotection) 

@@ -21,10 +21,10 @@ We are going to add a search box on the top of the page. When a user types somet
 To enable the search engine you need to include the following code in your `mysite/_config.php` file. 
 This will enable fulltext search on page content as well as names of all files in the `/assets` folder.
 
-	:::php
+```php
 	FulltextSearchable::enable();
 
-After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
+```
 
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your `_config.php` you can add your form as `$SearchForm`.
 
@@ -37,7 +37,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 
 **themes/simple/templates/Includes/Header.ss**
 
-	:::ss
+```ss
 	...
 	<% if $SearchForm %>
 		<span class="search-dropdown-icon">L</span>
@@ -47,7 +47,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 	<% end_if %>
 	<% include Navigation %>
 
-This displays as:
+```
 
 ![](../_images/tutorial4_searchbox.jpg)
 
@@ -58,7 +58,7 @@ is applied via `FulltextSearchable::enable()`
 
 **cms/code/search/ContentControllerSearchExtension.php**
 
-	:::php
+```php
 	class ContentControllerSearchExtension extends Extension {
 		...	
 	
@@ -72,7 +72,7 @@ is applied via `FulltextSearchable::enable()`
 		}
 	}
 
-
+```
 The code populates an array with the data we wish to pass to the template - the search results, query and title of the page. The final line is a little more complicated.
 
 When we call a function by its url (eg http://localhost/home/results), SilverStripe will look for a template with the name `PageType_function.ss`. As we are implementing the *results* function on the *Page* page type, we create our
@@ -100,7 +100,7 @@ class.
 
 *themes/simple/templates/Layout/Page_results.ss*
 
-	:::ss
+```ss
 	<div id="Content" class="searchResults">
 	    <h1>$Title</h1>
 	     
@@ -152,7 +152,7 @@ class.
 	    <% end_if %>
 	</div>
 
-Then finally add ?flush=1 to the URL and you should see the new template.
+```
 
 
 ![](../_images/tutorial4_search.jpg)

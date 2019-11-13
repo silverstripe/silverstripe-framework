@@ -14,7 +14,7 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	public function SearchForm() {
@@ -32,9 +32,9 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 		return $form;
 	}
 
-**mysite/templates/Includes/SearchForm.ss**
+```
 
-	:::ss
+```ss
 	<form $FormAttributes>
 		<fieldset>
 			$Fields.dataFieldByName(q)
@@ -45,7 +45,7 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 		</div>
 	</form>
 
-`SearchForm.ss` will be executed within the scope of the `Form` object so has access to any of the methods and 
+```
 properties on [api:Form] such as `$Fields` and `$Actions`. 
 
 [notice]

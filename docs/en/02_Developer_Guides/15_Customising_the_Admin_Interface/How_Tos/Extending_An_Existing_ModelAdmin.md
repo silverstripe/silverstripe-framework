@@ -8,7 +8,7 @@ summary: ModelAdmin interfaces that come with the core can be customised easily
 Sometimes you'll work with ModelAdmins from other modules. To customise these interfaces, you can always subclass. But there's
 also another tool at your disposal: The [api:Extension] API.
 
-	:::php
+```php
 	class MyAdminExtension extends Extension {
 		// ...
 		public function updateEditForm(&$form) {
@@ -16,12 +16,12 @@ also another tool at your disposal: The [api:Extension] API.
 		}
 	}
 
-Now enable this extension through your `[config.yml](/topics/configuration)` file.
+```
 
-	:::yml
+```yml
 	MyAdmin:
 	  extensions:
 	    - MyAdminExtension
 
-The following extension points are available: `updateEditForm()`, `updateSearchContext()`,
+```
 `updateSearchForm()`, `updateList()`, `updateImportForm`.

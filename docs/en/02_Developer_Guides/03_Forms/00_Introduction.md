@@ -16,7 +16,7 @@ See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of c
 
 Creating a [api:Form] has the following signature.
 
-	:::php
+```php
 	$form = new Form(
 		$controller, // the Controller to render this form on 
 		$name, // name of the method that returns this form on the controller
@@ -25,11 +25,11 @@ Creating a [api:Form] has the following signature.
 		$required // optional use of RequiredFields object
 	);
 
-In practice, this looks like:
+```
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	class Page_Controller extends ContentController {
@@ -61,12 +61,12 @@ In practice, this looks like:
 		}
 	}
 
-**mysite/templates/Page.ss**
+```
 
-	:::ss
+```ss
 	$HelloForm
 
-
+```
 [info]
 The examples above use `FormField::create()` instead of the  `new` operator (`new FormField()`). These are functionally 
 equivalent, but allows PHP to chain operations like `setTitle()` without assigning the field instance to a temporary 
@@ -82,12 +82,12 @@ the [api:FormActions]. The URL is known as the `$controller` instance will know 
 Because the `HelloForm()` method will be the location the user is taken to, it needs to be handled like any other 
 controller action. To grant it access through URLs, we add it to the `$allowed_actions` array.
 
-	:::php
+```php
 	private static $allowed_actions = array(
 		'HelloForm'
 	);
 
-[notice]
+```
 Form actions (`doSayHello`), on the other hand, should _not_ be included in `$allowed_actions`; these are handled 
 separately through [api:Form::httpSubmission()].
 [/notice]
@@ -98,17 +98,17 @@ separately through [api:Form::httpSubmission()].
 Fields in a [api:Form] are represented as a single [api:FieldList] instance containing subclasses of [api:FormField]. 
 Some common examples are [api:TextField] or [api:DropdownField]. 
 
-	:::php
+```php
 	TextField::create($name, $title, $value);
 
-[info]
+```
 A list of the common FormField subclasses is available on the [Common Subclasses](field_types/common_subclasses/) page.
 [/info]
 
 The fields are added to the [api:FieldList] `fields` property on the `Form` and can be modified at up to the point the 
 `Form` is rendered.
 
-	:::php
+```php
 	$fields = new FieldList(
 		TextField::create('Name'),
 		EmailField::create('Email')
@@ -122,9 +122,9 @@ The fields are added to the [api:FieldList] `fields` property on the `Form` and 
 	// to fetch the current fields..
 	$fields = $form->getFields();
 
-A field can be appended to the [api:FieldList].
+```
 
-	:::php
+```php
 	$fields = $form->Fields();
 
 	// add a field
@@ -140,18 +140,18 @@ A field can be appended to the [api:FieldList].
 	$fields->insertBefore(Tab::create(...), 'Main');
 	// Note: you need to create and position the new tab prior to adding fields via addFieldToTab()
 
-Fields can be fetched after they have been added in.
+```
 	
-	:::php
+```php
 	$email = $form->Fields()->dataFieldByName('Email');
 	$email->setTitle('Your Email Address');
 
-Fields can be removed from the form.
+```
 	
-	:::php
+```php
 	$form->getFields()->removeByName('Email');
 
-[alert]
+```
 Forms can be tabbed (such as the CMS interface). In these cases, there are additional functions such as `addFieldToTab`
 and `removeFieldByTab` to ensure the fields are on the correct interface. See [Tabbed Forms](tabbed_forms) for more 
 information on the CMS interface.
@@ -166,7 +166,7 @@ default `FormField` object has several methods for doing common operations.
 Most of the `set` operations will return the object back so methods can be chained.
 [/notice]
 
-	:::php
+```php
 	$field = new TextField(..);
 
 	$field
@@ -174,13 +174,13 @@ Most of the `set` operations will return the object back so methods can be chain
 		->setAttribute('placeholder', 'Enter a value..')
 		->setTitle('');
 
-### Custom Templates
+```
 
 The [api:Form] HTML markup and each of the [api:FormField] instances are rendered into templates. You can provide custom
 templates by using the `setTemplate` method on either the `Form` or `FormField`. For more details on providing custom 
 templates see [Form Templates](form_templates)
 
-	:::php
+```php
 	$form = new Form(..);
 
 	$form->setTemplate('CustomForm');
@@ -191,18 +191,18 @@ templates see [Form Templates](form_templates)
 	$field->setTemplate('CustomTextField');
 	$field->setFieldHolderTemplate('CustomTextField_Holder');
 
-## Adding FormActions
+```
 
 [api:FormAction] objects are displayed at the bottom of the `Form` in the form of a `button` or `input` tag. When a
 user presses the button, the form is submitted to the corresponding method.
 
-	:::php
+```php
 	FormAction::create($action, $title);
 
-As with [api:FormField], the actions for a `Form` are stored within a [api:FieldList] instance in the `actions` property
+```
 on the form.
 	
-	:::php
+```php
 	public function MyForm() {
 		$fields = new FieldList(..);
 
@@ -236,7 +236,7 @@ on the form.
 		//
 	}
 
-The first `$action` argument for creating a `FormAction` is the name of the method to invoke when submitting the form 
+```
 with the particular button. In the previous example, clicking the 'Another Button' would invoke the 
 `doSecondaryFormAction` method. This action can be defined (in order) on either:
 
@@ -254,7 +254,7 @@ The `$action` method takes two arguments:
  * `$data` an array containing the values of the form mapped from `$name => $value`
  * `$form` the submitted [api:Form] instance.
 
-	:::php
+```php
 	<?php
 
 	class Page_Controller extends ContentController {
@@ -294,7 +294,7 @@ The `$action` method takes two arguments:
 		}
 	}
 
-## Validation
+```
 
 Form validation is handled by the [api:Validator] class and the `validator` property on the `Form` object. The validator 
 is provided with a name of each of the [api:FormField]s to validate and each `FormField` instance is responsible for 
@@ -302,14 +302,14 @@ validating its' own data value.
 
 For more information, see the [Form Validation](validation) documentation.
 
-	:::php
+```php
 	$validator = new RequiredFields(array(
 		'Name', 'Email'
 	));
 
 	$form = new Form($this, 'MyForm', $fields, $actions, $validator);
 
-## API Documentation
+```
 
 * [api:Form]
 * [api:FormField]

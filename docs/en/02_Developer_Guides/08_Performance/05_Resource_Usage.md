@@ -23,14 +23,3 @@ resources are required temporarily. In general, we recommend running resource in
 [info]
 SilverStripe can request more resources through `increase_memory_limit_to()` and `increase_time_limit_to()` functions.
 [/info]
-
-	:::php
-	function myBigFunction() {
-		increase_time_limit_to(400);
-
-		// or..
-		
-		set_increase_time_limit_max();
-
-		// ..
-	}

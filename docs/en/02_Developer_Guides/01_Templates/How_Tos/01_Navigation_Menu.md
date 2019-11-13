@@ -9,7 +9,7 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 
 **mysite/templates/Page.ss**
 
-	:::ss
+```ss
 	<ul>
 		<% loop $Menu(1) %>
 			<li>
@@ -30,7 +30,7 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 		<% end_loop %>
 	</ul>
 
-## Related
+```
 
 * [Template Syntax](../syntax)
 * [Common Variables](../common_variables)

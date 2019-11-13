@@ -50,7 +50,7 @@ Note how the configuration happens in different entwine namespaces
 ("ss.preview" and "ss"), as well as applies to different selectors
 (".cms-preview" and ".cms-container").
 
-	:::js
+```js
 	(function($) {
 		$.entwine('ss.preview', function($){
 			$('.cms-preview').entwine({
@@ -73,15 +73,15 @@ Note how the configuration happens in different entwine namespaces
 		});
 	}(jQuery));
 
-Load the file in the CMS via setting adding 'mysite/javascript/MyLeftAndMain.Preview.js'
+```
 to the `LeftAndMain.extra_requirements_javascript` [configuration value](../configuration)
 
-	:::yml
+```yml
 	LeftAndMain:
 	  extra_requirements_javascript:
 	    - mysite/javascript/MyLeftAndMain.Preview.js
 
-In order to find out which configuration values are available, the source code
+```
 is your best reference at the moment - have a look in `framework/admin/javascript/LeftAndMain.Preview.js`.
 To understand how layouts are handled in the CMS UI, have a look at the
 [CMS Architecture](cms_architecture) guide.
@@ -108,22 +108,20 @@ property.
 States are the site stages: _live_, _stage_ etc. Preview states are picked up
 from the `SilverStripeNavigator`. You can invoke the state change by calling:
 
-	```js
-	$('.cms-preview').entwine('.ss.preview').changeState('StageLink');
+```
 	```
 
-Note the state names come from `SilverStripeNavigatorItems` class names - thus
+```
 the _Link_ in their names. This call will also redraw the state selector to fit
 with the internal state. See `AllowedStates` in `.cms-preview` entwine for the
 list of supported states.
 
 You can get the current state by calling:
 
-	```js
-	$('.cms-preview').entwine('.ss.preview').getCurrentStateName();
+```
 	```
 
-## Preview sizes
+```
 
 This selector defines how the preview iframe is rendered, and try to emulate
 different device sizes. The options are hardcoded. The option names map directly
@@ -138,34 +136,30 @@ You can switch between different types of display sizes programmatically, which
 has the benefit of redrawing the related selector and maintaining a consistent
 internal state:
 
-	```js
-	$('.cms-preview').entwine('.ss.preview').changeSize('auto');
+```
 	```
 
-You can find out current size by calling:
+```
 
-	```js
-	$('.cms-preview').entwine('.ss.preview').getCurrentSizeName();
+```
 	```
 
-## Preview modes
+```
 
 Preview modes map to the modes supported by the _threeColumnCompressor_ layout
 algorithm, see [layout reference](cms_layout) for more details. You
 can change modes by calling:
 
-	```js
-	$('.cms-preview').entwine('.ss.preview').changeMode('preview');
+```
 	```
 
-Currently active mode is stored on the `.cms-container` along with related
+```
 internal states of the layout. You can reach it by calling:
 
-	```js
-	$('.cms-container').entwine('.ss').getLayoutOptions().mode;
+```
 	```
 
-[notice]
+```
 Caveat: the `.preview-mode-selector` appears twice, once in the preview and
 second time in the CMS actions area as `#preview-mode-dropdown-in-cms`. This is
 done because the user should still have access to the mode selector even if

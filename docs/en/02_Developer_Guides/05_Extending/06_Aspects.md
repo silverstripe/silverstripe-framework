@@ -47,7 +47,7 @@ used.
 
 **mysite/code/MySQLWriteDbAspect.php**
 
-	:::php
+```php
 	<?php
 
 	class MySQLWriteDbAspect implements BeforeCallAspect {
@@ -61,7 +61,8 @@ used.
 			'insert','update','delete','replace'
 		);
 
-
+```
+```
 		public function beforeCall($proxied, $method, $args, &$alternateReturn) {
 			if (isset($args[0])) {
 				$sql = $args[0];
@@ -75,12 +76,12 @@ used.
 		}
 	}
 
-To actually make use of this class, a few different objects need to be configured. First up, define the `writeDb`
+```
 object that's made use of above.
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	WriteMySQLDatabase:
 	  class: MySQLDatabase
 	  constructor:
@@ -90,24 +91,24 @@ object that's made use of above.
 	      password: pass
 	      database: write_database
 
-This means that whenever something asks the [api:Injector] for the `WriteMySQLDatabase` object, it'll receive an object 
+```
 of type `MySQLDatabase`, configured to point at the 'write_database'.
 
 Next, this should be bound into an instance of the `Aspect` class
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	MySQLWriteDbAspect:
 	  properties:
 	    writeDb: %$WriteMySQLDatabase
 
-
+```
 Next, we need to define the database connection that will be used for all non-write queries
 
 **mysite/_config/app.yml**
 	
-	:::yml
+```yml
 	ReadMySQLDatabase:
 	  class: MySQLDatabase
 	  constructor:
@@ -117,12 +118,12 @@ Next, we need to define the database connection that will be used for all non-wr
 	    password: pass
 	    database: read_database
 
-The final piece that ties everything together is the [api:AopProxyService] instance that will be used as the replacement
+```
 object when the framework creates the database connection.
 
 **mysite/_config/app.yml**
 	
-	:::yml
+```yml
 	MySQLDatabase:
 	  class: AopProxyService
 	  properties:
@@ -131,7 +132,7 @@ object when the framework creates the database connection.
 	      query: 
 	        - %$MySQLWriteDbAspect
 
-The two important parts here are in the `properties` declared for the object.
+```
 
 - **proxied** : This is the 'read' database connection that all queries should be initially directed through.
 - **beforeCall** : A hash of method\_name => array containing objects that are to be evaluated _before_ a call to the 
@@ -141,7 +142,7 @@ Overall configuration for this would look as follows
 
 **mysite/_config/app.yml**
 	
-	:::yml
+```yml
 	Injector:
 	  ReadMySQLDatabase:
 	    class: MySQLDatabase
@@ -170,19 +171,19 @@ Overall configuration for this would look as follows
 	        query: 
 	          - %$MySQLWriteDbAspect
 
-
+```
 ## Changing what a method returns
 
 One major feature of an `Aspect` is the ability to modify what is returned from the client's call to the proxied method.
 As seen in the above example, the `beforeCall` method modifies the `&$alternateReturn` variable, and returns `false` 
 after doing so. 
 	
-	:::php
+```php
 	$alternateReturn = $this->writeDb->query($sql, $code);
 
 	return false;
 
-By returning `false` from the `beforeCall()` method, the wrapping proxy class will_not_ call any additional `beforeCall`
+```
 handlers defined for the called method. Assigning the `$alternateReturn` variable also indicates to return that value
 to the caller of the method. 
 

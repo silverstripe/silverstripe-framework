@@ -25,7 +25,7 @@ these at `http://localhost/`.  For example, you might have a project at `~/Sites
 Create a new file, `~/Sites/_ss_environment.php`.  Put the following content in it, editing the values of the
 "SS_DATABASE_..." and "SS_DEFAULT_ADMIN_..." defines as appropriate.
 
-	:::php
+```php
 	<?php
 	/* What kind of environment is this: development, test, or live (ie, production)? */
 	define('SS_ENVIRONMENT_TYPE', 'dev/test/live');
@@ -39,11 +39,11 @@ Create a new file, `~/Sites/_ss_environment.php`.  Put the following content in 
 	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 
-
+```
 Now, edit each of your site's configuration file, usually `mysite/_config.php`.  Delete all mention
 of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that you file starts like this.
 
-	:::php
+```php
 	<?php
 	
 	global $project;
@@ -55,7 +55,7 @@ of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that
 	// Use _ss_environment.php file for configuration
 	require_once("conf/ConfigureFromEnv.php");
 
-
+```
 ## How it works
 
 The mechanism by which the `_ss_environment.php` files work is quite simple.  Here's how it works:
@@ -72,7 +72,7 @@ configuration commands that use those defines as their arguments.  If you are cu
 
 This is my `_ss_environment.php` file. I have it placed in `/var`, as each of the sites are in a subfolder of `/var`.
 
-	:::php
+```php
 	<?php
 	// These four define set the database connection details.
 	define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
@@ -107,7 +107,7 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 	global $_FILE_TO_URL_MAPPING;
 	$_FILE_TO_URL_MAPPING['/var/www'] = 'http://simon.geek.nz';
 
-### Example settings to enable Database SSL
+```
 
 In some circumstances, like connecting to a database on a remote host for example, you may wish to enable SSL encryption to ensure the protection of sensitive information and database access credentials. The code below illustrates how to do so.
 
@@ -115,7 +115,7 @@ In some circumstances, like connecting to a database on a remote host for exampl
 SSL database connections are supported for `MySQLDatabase` and `MySQLPDODatabase` as of the moment.
 [/notice]
 
-	:::php
+```php
 	<?php
 	
 	// These four define set the database connection details.
@@ -133,7 +133,7 @@ SSL database connections are supported for `MySQLDatabase` and `MySQLPDODatabase
 	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 	
-	
+```
 When running the installer, make sure to check on the `Use _ss_environment file for configuration` option under the `Database Configuration` section to use the environment file.
 
 ## Available Constants

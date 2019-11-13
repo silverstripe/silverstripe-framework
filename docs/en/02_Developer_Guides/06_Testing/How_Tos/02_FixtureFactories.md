@@ -11,7 +11,7 @@ see the [Fixtures](../fixtures) documentation.
 In this how to we'll use a `FixtureFactory` and a custom blue print for giving us a shortcut for creating new objects
 with information that we need.
 
-	:::php
+```php
 	class MyObjectTest extends SapphireTest {
 
 		protected $factory;
@@ -43,7 +43,7 @@ with information that we need.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Fixtures](../fixtures)
 

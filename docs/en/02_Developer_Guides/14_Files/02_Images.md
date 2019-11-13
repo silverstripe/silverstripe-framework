@@ -31,7 +31,7 @@ images are preserved (meaning images are not stretched).
 
 Here are some examples, assuming the `$Image` object has dimensions of 200x100px:
 
-	:::ss
+```ss
 	// Scaling functions
 	$Image.ScaleWidth(150) // Returns a 150x75px image
 	$Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
@@ -60,12 +60,12 @@ Here are some examples, assuming the `$Image` object has dimensions of 200x100px
 	$Image.Link // Returns relative URL path to image
 	$Image.AbsoluteLink // Returns absolute URL path to image
 
-Image methods are chainable. Example:
+```
 
-	:::ss
+```ss
 	<body style="background-image:url($Image.ScaleWidth(800).CropHeight(800).Link)">
 	
-### Padded Image Resize
+```
 
 The Pad method allows you to resize an image with existing ratio and will
 pad any surplus space. You can specify the color of the padding using a hex code such as FFFFFF or 000000.
@@ -73,12 +73,12 @@ pad any surplus space. You can specify the color of the padding using a hex code
 You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
 png images.
 
-	:::php
+```php
 	$Image.Pad(80, 80, FFFFFF, 50) // white padding with 50% transparency
 	$Image.Pad(80, 80, FFFFFF, 100) // white padding with 100% transparency
 	$Image.Pad(80, 80, FFFFFF) // white padding with no transparency
 
-### Manipulating images in PHP
+```
 
 The image manipulation functions can be used in your code with the same names, example: `$image->Fill(150,150)`.
 
@@ -90,46 +90,12 @@ Please refer to the [api:Image] API documentation for specific functions.
 
 You can also create your own functions by extending the image class, for example
 
-	:::php
-	class MyImage extends DataExtension {
-		
-		public function Landscape()	{
-			return $this->owner->getWidth() > $this->owner->getHeight();
-		}
-		
-		public function Portrait() {
-			return $this->owner->getWidth() < $this->owner->getHeight();
-		}
-		
-		public function PerfectSquare()	{
-			return $this->owner->getFormattedImage('PerfectSquare');
-		}
-		
-		public function generatePerfectSquare(Image_Backend $backend)	{
-			return $backend->croppedResize(100,100);
-		}
-		
-		public function Exif(){
-			//http://www.v-nessa.net/2010/08/02/using-php-to-extract-image-exif-data
-			$image = $this->owner->AbsoluteLink();
-			$d=new ArrayList();	
-			$exif = exif_read_data($image, 0, true);
-			foreach ($exif as $key => $section) {
-				$a=new ArrayList();	
-				foreach ($section as $name => $val)
-					$a->push(new ArrayData(array("Title"=>$name,"Content"=>$val)));
-				$d->push(new ArrayData(array("Title"=>strtolower($key),"Content"=>$a)));
-			}
-			return $d;
-		}
-	}
-
-	:::yml
+```yml
 	Image:
 	  extensions:
 	    - MyImage
 
-### Form Upload
+```
 
 For usage on a website form, see [api:FileField].
 If you want to upload images within the CMS, see [api:UploadField].
@@ -139,25 +105,25 @@ If you want to upload images within the CMS, see [api:UploadField].
 To adjust the quality of the generated images when they are resized add the
 following to your mysite/config/config.yml file:
 
-	:::yml
+```yml
 	GDBackend:
 	  default_quality: 90
 	# or
 	ImagickBackend:
 	  default_quality: 90
 
-The default value is 75.
+```
 
 By default SilverStripe image functions will not resample an image if no
 cropping or resizing is taking place. You can tell SilverStripe to always to
 always produce resampled output by adding this to your
 mysite/config/config.yml file:
 
-	:::yml
+```yml
 	Image:
 	  force_resample: true
 
-If you are intending to resample images with SilverStripe it is good practice
+```
 to upload high quality (minimal compression) images as these will produce
 better results when resampled. Very high resolution images may cause GD to
 crash so a good size for website images is around 2000px on the longest edge.
@@ -171,9 +137,10 @@ and whenever you upload or modify an Image through SilverStripe.
 If you encounter problems with images not appearing, or have mysteriously 
 disappeared, you can try manually flushing the image cache.
 
+```
 	http://localhost/dev/tasks/RegenerateCachedImagesTask
 
-[notice]
+```
 This task was renamed to `RegenerateCachedImagesTask` (originally `FlushGeneratedImagesTask`) circa SilverStripe 3.2.
 [/notice]
 

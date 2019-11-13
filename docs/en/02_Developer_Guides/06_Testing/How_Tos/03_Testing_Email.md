@@ -9,7 +9,7 @@ SilverStripe's test system has built-in support for testing emails sent using th
 running a [api:SapphireTest] test, then it holds off actually sending the email, and instead lets you assert that an 
 email was sent using this method.
 
-	:::php
+```php
 	public function MyMethod() {
 		$e = new Email();
 		$e->To = "someone@example.com";
@@ -18,15 +18,15 @@ email was sent using this method.
 		$e->send();
 	}
 
-To test that `MyMethod` sends the correct email, use the [api:SapphireTest::assertEmailSent()] method.
+```
 
-	:::php
+```php
 	$this->assertEmailSent($to, $from, $subject, $body);
 
 	// to assert that the email is sent to the correct person
 	$this->assertEmailSent("someone@example.com", null, "/th.*e$/");
 
-
+```
 Each of the arguments (`$to`, `$from`, `$subject` and `$body`) can be either one of the following.
 
 * A string: match exactly that string

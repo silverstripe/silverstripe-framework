@@ -18,7 +18,7 @@ you can put on field names to change this behavior. These are represented as `Se
 
 An example of a `SearchFilter` in use:
 	
-	:::php
+```php
 	// fetch any player that starts with a S
 	$players = Player::get()->filter(array(
 		'FirstName:StartsWith' => 'S',
@@ -31,7 +31,7 @@ An example of a `SearchFilter` in use:
 		'LastName:PartialMatch' => 'z'
 	));
 
-Developers can define their own [api:SearchFilter] if needing to extend the ORM filter and exclude behaviors.
+```
 
 These suffixes can also take modifiers themselves. The modifiers currently supported are `":not"`, `":nocase"` and 
 `":case"`. These negate the filter, make it case-insensitive and make it case-sensitive, respectively. The default
@@ -40,7 +40,7 @@ case-sensitive.
 
 The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:
 
-	:::php
+```php
 	$players = Player::get()->filter(array(
 		'FirstName:StartsWith:nocase' => 'S'
 	));
@@ -50,6 +50,6 @@ The following is a query which will return everyone whose first name starts with
 		'FirstName:StartsWith:not' => 'W'
 	));
 
-## API Documentation
+```
 
 * [api:SearchFilter]

@@ -24,55 +24,10 @@ The poll we will be creating on our homepage will ask the user for their name an
 
 **mysite/code/HomePage.php**
 
-```php
-	class HomePage_Controller extends Page_Controller {
-		private static $allowed_actions = array('BrowserPollForm');
-
-		// ...
-	
-		public function BrowserPollForm() {
-			// Create fields
-			$fields = new FieldList(
-				new TextField('Name'),
-				new OptionsetField('Browser', 'Your Favourite Browser', array(
-					'Firefox' => 'Firefox',
-					'Chrome' => 'Chrome',
-					'Internet Explorer' => 'Internet Explorer',
-					'Safari' => 'Safari',
-					'Opera' => 'Opera',
-					'Lynx' => 'Lynx'
-				))
-			);
-			
-			// Create actions
-			$actions = new FieldList(
-				new FormAction('doBrowserPoll', 'Submit')
-			);
-		
-			return new Form($this, 'BrowserPollForm', $fields, $actions);
-		}
-	
-	   ...
-	}
-	
-	...
 ```
 
 Let's step through this code.
 
-```php
-	// Create fields
-	$fields = new FieldList(
-		new TextField('Name'),
-		new OptionsetField('Browser', 'Your Favourite Browser', array(
-			'Firefox' => 'Firefox',
-			'Chrome' => 'Chrome',
-			'Internet Explorer' => 'Internet Explorer',
-			'Safari' => 'Safari',
-			'Opera' => 'Opera',
-			'Lynx' => 'Lynx'
-		))
-	);
 ```
 
 First we create our form fields. 
@@ -83,10 +38,6 @@ argument is passed, as in this case, it is assumed the label is the same as the 
 The second field we create is an [api:OptionsetField]. This is a dropdown, and takes a third argument - an
 array mapping the values to the options listed in the dropdown.
 
-```php
-	$actions = new FieldList(
-		new FormAction('doBrowserPoll', 'Submit');
-	);
 ```
 
 After creating the fields, we create the form actions. Form actions appear as buttons at the bottom of the form. 
@@ -95,8 +46,6 @@ Here we create a 'Submit' button which calls the 'doBrowserPoll' method, which w
 All the form actions (in this case only one) are collected into a [api:FieldList] object the same way we did with
 the fields.
 
-```php
-	return new Form($this, 'BrowserPollForm', $fields, $actions);
 ```
 
 Finally we create the [api:Form] object and return it.
@@ -109,14 +58,6 @@ Add the following code to the top of your home page template, just before `<div 
 
 **themes/simple/templates/Layout/HomePage.ss**
 
-```ss
-	...
-	<div id="BrowserPoll">
-		<h2>Browser Poll</h2>
-		$BrowserPollForm
-	</div>
-	<div class="Content">
-	...
 ```
 
 In order to make the graphs render correctly,
@@ -125,49 +66,6 @@ Add the following code to the existing `form.css` file:
 
 **themes/simple/css/form.css**
 
-	```css
-	/* BROWSER POLL */
-	#BrowserPoll {
-		float: right;
-		margin: 20px 10px 0 0;
-		width: 20%;
-	}
-	form FieldList {
-		border:0;
-	}
-
-  #BrowserPoll .message {
-  	float:left;
-    display: block;
-    color:red;
-    background:#efefef;
-    border:1px solid #ccc;
-    padding:5px;
-    margin:5px;
-	}
-
-	#BrowserPoll h2 {
-		font-size: 1.5em;
-		line-height:2em;
-		color: #0083C8;
-	}
-
-	#BrowserPoll .field {
-		padding:3px 0;
-	}
-
-	#BrowserPoll input.text {
-		padding: 0;
-		font-size:1em;
-	}
-
-	#BrowserPoll .Actions {
-		padding:5px 0;
-	}
-
-	#BrowserPoll .bar {
-		background-color: #015581;
-	}
 ```
 
 
@@ -185,29 +83,11 @@ If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we sa
 
 **mysite/code/BrowserPollSubmission.php**
 
-	```php
-	<?php	
-	class BrowserPollSubmission extends DataObject {
-		private static $db = array(
-			'Name' => 'Text',
-			'Browser' => 'Text'
-		);
-	}
 ```
 If we then rebuild the database ([http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build)), we will see that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePage_Controller*:
 
 **mysite/code/HomePage.php**
 
-	```php	
-	class HomePage_Controller extends Page_Controller {
-		// ...
-		public function doBrowserPoll($data, $form) {
-			$submission = new BrowserPollSubmission();
-			$form->saveInto($submission);
-			$submission->write();
-			return $this->redirectBack();
-		}
-	}
 ```
 
 A function that processes a form submission takes two arguments - the first is the data in the form, the second is the [api:Form] object.
@@ -224,12 +104,6 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 
 **mysite/code/HomePage.php**
 
-	```php
-	public function BrowserPollForm() {
-		// ...
-		$validator = new RequiredFields('Name', 'Browser');
-		return new Form($this, 'BrowserPollForm', $fields, $actions, $validator);
-	}
 ```
 
 If we then open the homepage and attempt to submit the form without filling in the required fields errors should appear.
@@ -246,32 +120,11 @@ We can do this using a session variable. The [api:Session] class handles all ses
 
 **mysite/code/HomePage.php**
 
-	```php
-	// ...
-	class HomePage_Controller extends Page_Controller {
-		// ...
-		public function doBrowserPoll($data, $form) {
-			$submission = new BrowserPollSubmission();
-			$form->saveInto($submission);
-			$submission->write();
-			Session::set('BrowserPollVoted', true);
-			return $this->redirectBack();
-		}
-	}
 ```
 
 Then we simply need to check if the session variable has been set in 'BrowserPollForm()', and to not return the form if
 it is.
 
-	```php
-	// ...
-	class HomePage_Controller extends Page_Controller {
-		// ...
-		public function BrowserPollForm() {
-			if(Session::get('BrowserPollVoted')) return false;
-			// ...
-		}	
-	}
 ```
 
 If you visit the home page now you will see you can only vote once per session; after that the form won't be shown. You can start a new session by closing and reopening your browser,
@@ -287,43 +140,15 @@ Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 
 **mysite/code/HomePage.php**
 
-	```php
-	public function BrowserPollResults() {
-		$submissions = new GroupedList(BrowserPollSubmission::get());
-		$total = $submissions->Count();
-		
-		$list = new ArrayList();
-		foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
-			$percentage = (int) ($browserSubmissions->Count() / $total * 100);
-			$list->push(new ArrayData(array(
-				'Browser' => $browserName,
-				'Percentage' => $percentage
-			)));
-		}
-		return $list;
-	}
 ```
 This code introduces a few new concepts, so let's step through it.
 
-	```php
-	$submissions = new GroupedList(BrowserPollSubmission::get());
 ```
 First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList]. Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
 
-```php
-	$total = $submissions->Count();
 ```
 We get the total number of submissions, which is needed to calculate the percentages.
 
-	```php
-	$list = new ArrayList();
-	foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
-		$percentage = (int) ($browserSubmissions->Count() / $total * 100);
-		$list->push(new ArrayData(array(
-			'Browser' => $browserName,
-			'Percentage' => $percentage
-		)));
-	}
 ```
 
 Now we create an empty [api:ArrayList] to hold the data we'll pass to the template. Its similar to [api:DataList], but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field. 
@@ -335,22 +160,6 @@ The final step is to create the template to display our data. Change the 'Browse
 
 **themes/simple/templates/Layout/HomePage.ss** 
 
-```ss
-	<div id="BrowserPoll">
-		<h2>Browser Poll</h2>
-		<% if $BrowserPollForm %>
-			$BrowserPollForm
-		<% else %>
-		<ul>
-			<% loop $BrowserPollResults %>
-			<li>
-				<div class="browser">$Browser: $Percentage%</div>
-				<div class="bar" style="width:$Percentage%">&nbsp;</div>
-			</li>
-			<% end_loop %>
-		</ul>
-		<% end_if %>
-	</div>
 ```
 
 Here we first check if the *BrowserPollForm* is returned, and if it is display it. Otherwise the user has already voted,

@@ -44,8 +44,9 @@ Let's have a look at the folder structure.
  | framework/ | | The framework that builds both your own site and the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly.                                                             | 
  | mysite/   | | Contains all your site's code (mainly PHP).  | 
  | themes/   | | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme". | 
+```
       
-When designing your site you should only need to modify the *mysite*, *themes* and *assets* folders. The rest of the folders contain files and data that are not specific to any site.
+```
 
 ##  Using the CMS
 
@@ -113,43 +114,43 @@ for a template file in the *simple/templates* folder, with the name `<PageType>`
 
 Open *themes/simple/templates/Page.ss*. It uses standard HTML apart from these exceptions: 
 
-	:::ss
+```ss
 	<% base_tag %>
 
-The base_tag variable is replaced with the HTML [base element](http://www.w3.org/TR/html401/struct/links.html#h-12.4). This
+```
 ensures the browser knows where to locate your site's images and css files.
 
-	:::ss
+```ss
 	$Title
 	$SiteConfig.Title
 
-These two variables are found within the html `<title>` tag, and are replaced by the "Page Name" and "Settings -> Site Title" fields in the CMS.
+```
 
-	:::ss
+```ss
 	$MetaTags 
 
-The MetaTags variable will add meta tags, which are used by search engines. You can define your meta tags in the tab fields at the bottom of the content editor in the CMS. 
-	:::ss
+```
+```ss
 	$Layout 
 
-The Layout variable is replaced with the contents of a template file with the same name as the page type we are using. 
+```
 
 Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more SilverStripe template replacement tags and variables.
 
-	:::ss
+```ss
 	$Content
 
-The Content variable is replaced with the content of the page currently being viewed. This allows you to make all changes to
+```
 your site's content in the CMS.
 
 These template markers are processed by SilverStripe into HTML before being sent to your
 browser and are either prefixed with a dollar sign ($)
 or placed between SilverStripe template tags: 
 
-	:::ss
+```ss
 	<%  %>
 
-
+```
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
@@ -164,16 +165,16 @@ Open up *themes/simple/templates/Includes/Navigation.ss*
 
 The Menu for our site is created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template.
 
-	:::ss 
+```ss
 	<% loop $Menu(1) %>
 
-returns a set of first level menu items. We can then use the template variable
+```
 *$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page, and `$isSection` and `$isCurrent` to help style our menu with CSS (explained in more detail shortly).
 
 > *$Title* refers to **Page Name** in the CMS, whereas *$MenuTitle* refers to (the often shorter) **Navigation label**
 
 
-	:::ss
+```ss
 	<ul>
 		<% loop $Menu(1) %>	  
 			<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
@@ -182,7 +183,7 @@ returns a set of first level menu items. We can then use the template variable
 		<% end_loop %>
 	</ul>
 
-Here we've created an unordered list called *Menu1*, which *themes/simple/css/layout.css* will style into the menu.
+```
 Then, using a loop over the page control *Menu(1)*, we add a link to the list for each menu item. 
 
 This creates the navigation at the top of the page:
@@ -197,17 +198,17 @@ A useful feature is highlighting the current page the user is looking at. We can
 
 For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section.
 
-	:::ss
+```ss
 	<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 	 	<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	</li>
 
-you will then be able to target a section in css (*simple/css/layout.css*), e.g.:
+```
 
-	:::css
+```css
 	.section { background:#ccc; } 
 
-## A second level of navigation
+```
 
 The top navigation system is currently quite restrictive. There is no way to
 nest pages, so we have a completely flat site. Adding a second level in SilverStripe is easy. First (if you haven't already done so), let's add some pages. 
@@ -226,7 +227,7 @@ Great, we now have a hierarchical site structure! Let's look at how this is crea
 
 Adding a second level menu is very similar to adding the first level menu. Open up */themes/simple/templates/Includes/Sidebar.ss* template and look at the following code:
 
-	:::ss
+```ss
 	<ul>
 	  <% loop $Menu(2) %>
 	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
@@ -238,7 +239,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 	  <% end_loop %>
 	</ul>
 
-This should look very familiar. It is the same idea as our first menu, except the loop block now uses *Menu(2)* instead of *Menu(1)*. 
+```
 As we can see here, the *Menu* control takes a single
 argument - the level of the menu we want to get. Our css file will style this linked list into the second level menu,
 using our usual `is` technique to highlight the current page.
@@ -247,7 +248,7 @@ To make sure the menu is not displayed on every page, for example, those that *d
 Look again in the *Sidebar.ss* file and you will see that the menu is surrounded with an **if block**
 like this:
 
-	:::ss
+```ss
 	<% if $Menu(2) %>
 		...
 			<ul>
@@ -263,7 +264,7 @@ like this:
 		...
 	<% end_if %>  	
 
-The if block only includes the code inside it if the condition is true. In this case, it checks for the existence of
+```
 *Menu(2)*. If it exists then the code inside will be processed and the menu will be shown. Otherwise the code will not
 be processed and the menu will not be shown.
 
@@ -271,22 +272,22 @@ Now that we have two levels of navigation, it would also be useful to include so
 
 Open up */themes/simple/templates/Includes/BreadCrumbs.ss* template and look at the following code:
 
-	:::ss
+```ss
 	<% if $Level(2) %>
 		<div id="Breadcrumbs">
 		   	$Breadcrumbs
 		</div>
 	<% end_if %>	
 
-Breadcrumbs are only useful on pages that aren't in the top level. We can ensure that we only show them if we aren't in
+```
 the top level with another if statement.
 
 The *Level* page control allows you to get data from the page's parents, e.g. if you used *Level(1)*, you could use:
 
-	:::ss
+```ss
 	$Level(1).Title 
 
-to get the top level page title. In this case, we merely use it to check the existence of a second level page: if one exists then we include breadcrumbs.
+```
 
 Both the top menu, and the sidebar menu should be updating and highlighting as you move from page to page. They will also mirror changes done in the SilverStripe CMS, such as renaming pages or moving them around.
 
@@ -296,7 +297,7 @@ Feel free to experiment with the if and loop statements. For example, you could 
 
 The following example runs an if statement and a loop on *Children*, checking to see if any sub-pages exist within each top level navigation item. You will need to come up with your own CSS to correctly style this approach.
 
-	:::ss
+```ss
 	<ul>
 	  <% loop $Menu(1) %>
 	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
@@ -317,7 +318,7 @@ The following example runs an if statement and a loop on *Children*, checking to
 	  <% end_loop %>
 	</ul>
 
-
+```
 
 ## Using a different template for the home page
 
@@ -337,14 +338,14 @@ types right now, we will go into much more detail in the [next tutorial](/tutori
 
 Create a new file *HomePage.php* in *mysite/code*. Copy the following code into it:
 
-	:::php
+```php
 	<?php
 	class HomePage extends Page {
 	}
 	class HomePage_Controller extends Page_Controller {
 	}
 
-
+```
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
 We can do this by going to `http://localhost/your_site_name/dev/build`. 
 
@@ -372,24 +373,24 @@ It always tries to use the most specific template in an inheritance chain.
 To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customise the *HomePage* template. 
 
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
-	:::ss
+```ss
 	<% include SideBar %> 
 	
-
+```
 We'll also replace the title text with an image. Find this line:
 
-	:::ss
+```ss
 	<h1>$Title</h1>
 
-
+```
  and replace it with:
 
-	:::ss
+```ss
 	<div id="Banner">
 	  <img src="http://www.silverstripe.org/assets/SilverStripe-200.png" alt="Homepage image" />
 	</div>
 
-
+```
 Your Home page should now look like this:
 
 

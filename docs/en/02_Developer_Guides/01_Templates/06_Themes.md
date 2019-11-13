@@ -25,10 +25,10 @@ theme should be accessible at `themes/theme_name`.
 
 If a theme has `composer` support you can require it directly through `composer`.
 
-	:::bash
+```bash
 	composer require "author/theme_name" "dev/master"
 
-[alert]
+```
 As you've added new files to your SilverStripe installation, make sure you clear the SilverStripe cache by appending
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
 [/alert]
@@ -38,11 +38,11 @@ either altering the `SSViewer.theme` setting in a [config.yml](../configuration)
 the Site Configuration panel (http://yoursite.com/admin/settings)
 
 **mysite/_config/app.yml**
-	:::yml
+```yml
 	SSViewer:
 	  theme: theme_name
 
-## Developing your own theme
+```
 
 A `theme` within SilverStripe is simply a collection of templates and other front end assets such as javascript and css.
 located within the `themes` directory. 
@@ -51,26 +51,6 @@ located within the `themes` directory.
 
 Your theme can also be organised into split folders for each module it caters for.
 
-```
-themes
-    blackcandy
-        css
-            style.css
-        images
-        templates
-            Page.ss
-            Layout
-                Page.ss
-            Includes
-    blackcandy_blog
-        css
-            blog.css
-        images
-        templates
-            Layout
-                BlogHolder.ss
-                BlogEntry.ss
-            Includes
 ```
 
 ## Submitting your theme to SilverStripe

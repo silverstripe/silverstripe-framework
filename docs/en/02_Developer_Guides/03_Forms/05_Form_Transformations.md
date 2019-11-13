@@ -11,21 +11,21 @@ when certain fields cannot be edited due to permissions. Creating the form is do
 
 To make an entire [api:Form] read-only.
 
-	:::php
+```php
 	$form = new Form(..);
 	$form->makeReadonly();
 
-
+```
 To make all the fields within a [api:FieldList] read-only (i.e to make fields read-only but not buttons).
 
-	:::php
+```php
 	$fields = new FieldList(..);
 	$fields = $fields->makeReadonly();
 
-
+```
 To make a [api:FormField] read-only you need to know the name of the form field or call it direct on the object
 
-	:::php
+```php
 	$field = new TextField(..);
 	$field = $field->performReadonlyTransformation();
 
@@ -41,15 +41,7 @@ To make a [api:FormField] read-only you need to know the name of the form field 
 		$field
 	);
 
-## Disabled FormFields
+```
 
 Disabling [api:FormField] instances, sets the `disabled` property on the class. This will use the same HTML markup as 
 a normal form, but set the `disabled` attribute on the `input` tag.
-
-	:::php
-	$field = new TextField(..);
-	$field->setDisabled(true);
-
-	echo $field->forTemplate();
-
-	// returns '<input type="text" class="text" .. disabled="disabled" />'

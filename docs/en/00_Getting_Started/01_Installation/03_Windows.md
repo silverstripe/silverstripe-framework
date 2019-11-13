@@ -32,9 +32,6 @@ See the [Composer documentation](https://getcomposer.org/doc/00-intro.md#install
 
 Once you have installed the above, open a command line and use the following command to get a fresh copy of SilverStripe stable code installed into a 'silverstripe' sub-folder (note here we are using gitbash paths).
 
-```bash
-$ cd /c/wamp/www
-$ composer create-project silverstripe/installer ./silverstripe
 ```
 
 ### Zip download
@@ -69,12 +66,4 @@ control.
 
 Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (framework/main.php). To fix this place the following within the `mod_rewrite` section of your .htaccess file:
 
-```
-<IfModule mod_rewrite.c>
-	# Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
-	<IfModule mod_dir.c>
-    	DirectoryIndex disabled
-	</IfModule>
-# ------ #
-</IfModule>
 ```

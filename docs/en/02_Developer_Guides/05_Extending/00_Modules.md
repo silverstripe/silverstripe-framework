@@ -12,6 +12,7 @@ A module is a collection of classes, templates, and other resources that is load
 the `framework`, `cms` or `mysite` folders. The only thing that identifies a folder as a SilverStripe module is the 
 existence of a `_config` directory or `_config.php` at the top level of the directory.
 
+```
 	mysite/
 	|
 	+-- _config/
@@ -23,7 +24,7 @@ existence of a `_config` directory or `_config.php` at the top level of the dire
 	+-- _config/
 	+-- ...
 
-SilverStripe will automatically include any PHP classes and templates from within your module when you next flush your
+```
 cache.
 
 [info] 
@@ -66,16 +67,16 @@ Each module has a unique identifier, consisting of a vendor prefix and name. For
 identifier `silverstripe/blog` as it is published by *silverstripe*. To install, use the following command executed in 
 the root folder:
 	
-	:::bash
+```bash
 	composer require "silverstripe/blog" "*@stable"
 
-This will fetch the latest compatible stable version of the module. To install a specific version of the module give the
+```
 tag name.
 
-	:::bash
+```bash
 	composer require "silverstripe/blog" "1.1.0"
 
-[info]
+```
 To lock down to a specific version, branch or commit, read up on 
 [Composer "lock" files](http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file).
 [/info]

@@ -41,7 +41,7 @@ Let's create the `Student` and `Project` objects.
 
 **mysite/code/Student.php**
 
-	:::php
+```php
 	<?php
 	class Student extends DataObject {
 		private static $db = array(
@@ -53,9 +53,9 @@ Let's create the `Student` and `Project` objects.
 		);	
 	}
 
-**mysite/code/Project.php**
+```
 
-	:::php
+```php
 	<?php
 	class Project extends Page {
 		private static $has_many = array(
@@ -65,7 +65,7 @@ Let's create the `Student` and `Project` objects.
 	class Project_Controller extends Page_Controller {
 	}
 
-The relationships are defined through the `$has_one`
+```
 and `$has_many` properties on the objects.
 The array keys declares the name of the relationship,
 the array values contain the class name
@@ -98,7 +98,7 @@ The restriction is enforced through the `$allowed_children` directive.
 
 **mysite/code/ProjectsHolder.php**
 
-	:::php
+```php
 	<?php
 	class ProjectsHolder extends Page {
 		private static $allowed_children = array(
@@ -108,7 +108,7 @@ The restriction is enforced through the `$allowed_children` directive.
 	class ProjectsHolder_Controller extends Page_Controller {
 	}
 
-You might have noticed that we don't specify the relationship
+```
 to a project. That's because it's already inherited from the parent implementation,
 as part of the normal page hierarchy in the CMS.
 
@@ -131,7 +131,7 @@ All customization to fields for a page type are managed through a method called
 
 **mysite/code/Project.php**
 
-	:::php
+```php
 	<?php
 	class Project extends Page {
 		// ...
@@ -158,7 +158,7 @@ All customization to fields for a page type are managed through a method called
 		}
 	}
 
-This creates a tabular field, which lists related student records, one row at a time.
+```
 It's empty by default, but you can add new students as required,
 or relate them to the project by typing in the box above the table.
 
@@ -203,7 +203,7 @@ The first step is to create the `Mentor` object and set the relation with the `P
 
 **mysite/code/Mentor.php**
 
-	:::php
+```php
 	<?php
 	class Mentor extends DataObject {
 		private static $db = array(
@@ -214,9 +214,9 @@ The first step is to create the `Mentor` object and set the relation with the `P
 		);
 	}
 
-**mysite/code/Project.php**
+```
 
-	:::php
+```php
 	class Project extends Page {
 		// ...
 		private static $many_many = array(
@@ -224,7 +224,7 @@ The first step is to create the `Mentor` object and set the relation with the `P
 		);
 	}
 
-This code will create a relationship between the `Project` table and the `Mentor` table by storing the ids of the respective `Project` and `Mentor` in a another table named "Project_Mentors"
+```
 (after you've performed a `dev/build` command, of course).
 
 The second step is to add the table in the method `getCMSFields()`,
@@ -234,7 +234,7 @@ to configure it a bit differently.
 
 **mysite/code/Project.php**
 
-	:::php
+```php
 	class Project extends Page {
 		// ...
 		public function getCMSFields() {
@@ -251,7 +251,7 @@ to configure it a bit differently.
 		}
 	}
 
-The important difference to our student management UI is the usage
+```
 of `$this->Mentor()` (rather than `Mentor::get()`). It will limit
 the list of records to those related through the many-many relationship.
 
@@ -289,7 +289,7 @@ a named list of object.
 
 **themes/simple/templates/Layout/ProjectsHolder.ss**
 
-	:::ss
+```ss
 	<% include SideBar %>
 	<div class="content-container unit size3of4 lastUnit">
 		<article>
@@ -328,7 +328,7 @@ a named list of object.
 		</article>
 	</div>
 
-Navigate to the holder page through your website navigation,
+```
 or the "Preview" feature in the CMS. You should see a list of all projects now.
 Add `?flush=1` to the page URL to force a refresh of the template cache.
 
@@ -347,7 +347,7 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 
 **themes/simple/templates/Layout/Project.ss**
 
-	:::ss
+```ss
 	<% include SideBar %>
 	<div class="content-container unit size3of4 lastUnit">
 		<article>
@@ -378,7 +378,7 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 		</article>
 	</div>
 
-Follow the link to a project detail from from your holder page,
+```
 or navigate to it through the submenu provided by the theme.
 
 ### Student Detail Template
@@ -390,19 +390,19 @@ by introducing a new template for them.
 
 **themes/simple/templates/Includes/StudentInfo.ss**
 
-	:::ss
+```ss
 	$Name ($University)
 
-To use this template, we need to add a new method to our student class:
+```
 
-	:::php
+```php
 	class Student extends DataObject {
 		function getInfo() {
 			return $this->renderWith('StudentInfo');
 		}
 	}
 
-Replace the student template code in both `Project.ss`
+```
 and `ProjectHolder.ss` templates with the new placeholder, `$Info`.
 That's the code enclosed in `<% loop $Students %>` and `<% end_loop %>`.
 With this pattern, you can increase code reuse across templates.

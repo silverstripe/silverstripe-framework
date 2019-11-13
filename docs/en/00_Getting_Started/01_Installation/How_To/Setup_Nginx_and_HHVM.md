@@ -12,38 +12,44 @@ packages available to use.
 
 Install apt sources on Debian 7 (wheezy):
 
+```
 	wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -
 	echo deb http://dl.hhvm.com/debian wheezy main | sudo tee /etc/apt/sources.list.d/hhvm.list
 
-Install apt sources on Ubuntu 14.04 (trusty):
+```
 
+```
 	wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -
 	echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list
 
-Now install the required packages:
+```
 
+```
 	sudo apt-get update
 	sudo apt-get install hhvm libgmp-dev libmemcached-dev
 
-Start HHVM automatically on boot:
+```
 
+```
 	sudo update-rc.d hhvm defaults
 
-Please see [Prebuilt Packages for HHVM on HHVM wiki](https://github.com/facebook/hhvm/wiki/Prebuilt%20Packages%20for%20HHVM) for more
+```
 installation options.
 
 Assuming you already have nginx installed, you can then run a script to enable support for
 nginx and/or apache2 depending on whether they are installed or not:
 
+```
 	sudo /usr/share/hhvm/install_fastcgi.sh
 
-For nginx, this will place a file at `/etc/nginx/hhvm.conf` which you can use to include in
+```
 your nginx server definitions to provide support for PHP requests.
 
 In order to get SilverStripe working, you need to add some custom nginx configuration.
 
 Create `/etc/nginx/silverstripe.conf` and add this configuration:
 
+```
 	fastcgi_buffer_size 32k;
 	fastcgi_busy_buffers_size 64k;
 	fastcgi_buffers 4 32k;
@@ -88,7 +94,7 @@ Create `/etc/nginx/silverstripe.conf` and add this configuration:
 		deny all;
 	}
 
-The above script passes all non-static file requests to `/framework/main.php` in the webroot which relies on
+```
 `hhvm.conf` being included prior so that php requests are handled.
 
 Now in your nginx `server` configuration you can then include the `hhvm.conf` and `silverstripe.conf` files
@@ -96,6 +102,7 @@ to complete the configuration required for PHP/HHVM and SilverStripe.
 
 e.g. `/etc/nginx/sites-enabled/mysite`:
 
+```
 	server {
 		listen 80;
 		root /var/www/mysite;
@@ -108,4 +115,4 @@ e.g. `/etc/nginx/sites-enabled/mysite`:
 		include /etc/nginx/silverstripe.conf;
 	}
 
-For more information on nginx configuration, please see the [nginx installation](configure_nginx) page.
+```

@@ -15,7 +15,7 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 
 **mysite/tests/MyNewTest.php**
 
-	:::php
+```php
 	<?php
 	
 	class MyNewTest extends SapphireTest {
@@ -24,12 +24,12 @@ To include your fixture file in your tests, you should define it as your `$fixtu
 		
 	}
 
-You can also use an array of fixture files, if you want to use parts of multiple other tests:
+```
 
 
 **mysite/tests/MyNewTest.php**
 
-	:::php
+```php
 	<?php
 	
 	class MyNewTest extends SapphireTest {
@@ -41,13 +41,13 @@ You can also use an array of fixture files, if you want to use parts of multiple
 		
 	}
 	
-
+```
 Typically, you'd have a separate fixture file for each class you are testing - although overlap between tests is common.
 
 Fixtures are defined in `YAML`. `YAML` is a markup language which is deliberately simple and easy to read, so it is
 ideal for fixture generation. Say we have the following two DataObjects:
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -73,11 +73,11 @@ ideal for fixture generation. Say we have the following two DataObjects:
 		);
 	}
 
-We can represent multiple instances of them in `YAML` as follows:
+```
 
 **mysite/tests/fixtures.yml**
 
-	:::yml
+```yml
 	Team:
 		hurricanes:
 			Name: The Hurricanes
@@ -96,16 +96,16 @@ We can represent multiple instances of them in `YAML` as follows:
 			Name: Jack
 			Team: =>Team.crusaders
 
-This `YAML` is broken up into three levels, signified by the indentation of each line. In the first level of
+```
 indentation, `Player` and `Team`, represent the class names of the objects we want to be created.
 
 The second level, `john`/`joe`/`jack` & `hurricanes`/`crusaders`, are **identifiers**. Each identifier you specify
 represents a new object and can be referenced in the PHP using `objFromFixture`
 
-	:::php
+```php
 	$player = $this->objFromFixture('Player', 'jack');
 
-The third and final level represents each individual object's fields.
+```
 
 A field can either be provided with raw data (such as the names for our Players), or we can define a relationship, as
 seen by the fields prefixed with `=>`.
@@ -131,7 +131,7 @@ This style of relationship declaration can be used for any type of relationship 
 
 We can also declare the relationships conversely. Another way we could write the previous example is:
 
-	:::yml
+```yml
 	Player:
 		john:
 			Name: John
@@ -149,11 +149,11 @@ We can also declare the relationships conversely. Another way we could write the
 			Origin: Canterbury
 			Players: =>Player.joe,=>Player.jack
 
-The database is populated by instantiating `DataObject` objects and setting the fields declared in the `YAML`, then
+```
 calling `write()` on those objects. Take for instance the `hurricances` record in the `YAML`. It is equivalent to
 writing:
 
-	:::php
+```php
 	$team = new Team(array(
 		'Name' => 'Hurricanes',
 		'Origin' => 'Wellington'
@@ -163,7 +163,7 @@ writing:
 
 	$team->Players()->add($john);
 
-[notice]
+```
 As the YAML fixtures will call `write`, any `onBeforeWrite()` or default value logic will be executed as part of the
 test.
 [/notice]
@@ -173,7 +173,7 @@ test.
 `many_many` relations can have additional database fields attached to the relationship. For example we may want to
 declare the role each player has in the team.
 
-	:::php
+```php
 	class Player extends DataObject {
 
 		private static $db = array (
@@ -202,9 +202,9 @@ declare the role each player has in the team.
 		);
 	}
 
-To provide the value for the `many_many_extraField` use the YAML list syntax.
+```
 
-	:::yml
+```yml
 	Player:
 	  john:
 	    Name: John
@@ -217,8 +217,9 @@ To provide the value for the `many_many_extraField` use the YAML list syntax.
 	    Name: The Hurricanes
 	    Players:
 	      - =>Player.john:
- 	        Role: Captain
+```
 
+```
 	  crusaders:
 	    Name: The Crusaders
 	    Players:
@@ -227,7 +228,7 @@ To provide the value for the `many_many_extraField` use the YAML list syntax.
 	      - =>Player.jack:
 	        Role: Winger
 
-## Fixture Factories
+```
 
 While manually defined fixtures provide full flexibility, they offer very little in terms of structure and convention.
 
@@ -245,45 +246,45 @@ name, which is usually set to the class it creates such as `Member` or `Page`.
 Blueprints are auto-created for all available DataObject subclasses, you only need to instantiate a factory to start
 using them.
 
-	:::php
+```php
 	$factory = Injector::inst()->create('FixtureFactory');
 
 	$obj = $factory->createObject('Team', 'hurricanes');
 
-In order to create an object with certain properties, just add a third argument:
+```
 
-	:::php
+```php
 	$obj = $factory->createObject('Team', 'hurricanes', array(
 		'Name' => 'My Value'
 	));
 
-[warning]
+```
 It is important to remember that fixtures are referenced by arbitrary identifiers ('hurricanes'). These are internally
 mapped to their database identifiers.
 [/warning]
 
 After we've created this object in the factory, `getId` is used to retrieve it by the identifier.
 
-	:::php
+```php
 	$databaseId = $factory->getId('Team', 'hurricanes');
 
-
+```
 ### Default Properties
 
 Blueprints can be overwritten in order to customise their behavior. For example, if a Fixture does not provide a Team
 name, we can set the default to be `Unknown Team`.
 
-	:::php
+```php
 	$factory->define('Team', array(
 		'Name' => 'Unknown Team'
 	));
 
-### Dependent Properties
+```
 
 Values can be set on demand through anonymous functions, which can either generate random defaults, or create composite
 values based on other fixture data.
 
-	:::php
+```php
 	$factory->define('Member', array(
 		'Email' => function($obj, $data, $fixtures) {
 			if(isset($data['FirstName']) {
@@ -295,22 +296,22 @@ values based on other fixture data.
 		}
 	));
 
-### Relations
+```
 
 Model relations can be expressed through the same notation as in the YAML fixture format described earlier, through the
 `=>` prefix on data values.
 
-	:::php
+```php
 	$obj = $factory->createObject('Team', 'hurricanes', array(
 		'MyHasManyRelation' => '=>Player.john,=>Player.joe'
 	));
 
-#### Callbacks
+```
 
 Sometimes new model instances need to be modified in ways which can't be expressed in their properties, for example to
 publish a page, which requires a method call.
 
-	:::php
+```php
 	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
 
 	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
@@ -319,7 +320,7 @@ publish a page, which requires a method call.
 
 	$page = $factory->define('Page', $blueprint);
 
-Available callbacks:
+```
 
  * `beforeCreate($identifier, $data, $fixtures)`
  * `afterCreate($obj, $identifier, $data, $fixtures)`
@@ -330,7 +331,7 @@ Data of the same type can have variations, for example forum members vs. CMS adm
 class, but have completely different properties. This is where named blueprints come in. By default, blueprint names
 equal the class names they manage.
 
-	:::php
+```php
 	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
 
 	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
@@ -346,7 +347,7 @@ equal the class names they manage.
 
 	$admin = $factory->createObject('AdminMember'); // in admin group
 
-## Related Documentation
+```
 
 * [How to use a FixtureFactory](how_tos/fixturefactories/)
 

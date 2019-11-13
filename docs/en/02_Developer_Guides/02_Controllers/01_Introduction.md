@@ -9,7 +9,7 @@ subclass the base `Controller` class.
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	<?php
 	
 	class TeamController extends Controller {
@@ -28,7 +28,7 @@ subclass the base `Controller` class.
 		}
 	}
 
-## Routing
+```
 
 We need to define the URL that this controller can be accessed on. In our case, the `TeamsController` should be visible 
 at http://yoursite.com/teams/ and the `players` custom action is at http://yoursite.com/team/players/.
@@ -45,16 +45,18 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 
 **mysite/_config/routes.yml**
 
-	:::yml
-	---
+```yml
+```
+```
 	Name: mysiteroutes
 	After: framework/routes#coreroutes
-	---
+```
+```
 	Director:
 	  rules:
 	    'teams//$Action/$ID/$Name': 'TeamController'
 
-
+```
 For more information about creating custom routes, see the [Routing](routing) documentation.
 
 ## Actions
@@ -75,7 +77,7 @@ Action methods can return one of four main things:
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	/**
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
@@ -128,7 +130,7 @@ Action methods can return one of four main things:
 		return $this->getResponse().
 	}
 
-For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.
+```
 
 ## Security
 
@@ -154,12 +156,12 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
 
-[info]
+```
 The [api:Controller::join_links()] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
 [/info]
 

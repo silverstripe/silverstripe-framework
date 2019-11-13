@@ -14,17 +14,17 @@ output the result of the [api:HtmlText::FirstParagraph()] method to the template
 
 **mysite/code/Page.ss**
 
-	:::ss
+```ss
 	$Content.FirstParagraph
 	<!-- returns the result of HtmlText::FirstParagragh() -->
 
 	$LastEdited.Format("d/m/Y")
 	<!-- returns the result of SS_Datetime::Format("d/m/Y") -->
 
-Any public method from the object in scope can be called within the template. If that method returns another 
+```
 `ViewableData` instance, you can chain the method calls.
 
-	:::ss
+```ss
 	$Content.FirstParagraph.NoHTML
 	<!-- "First Paragraph" -->
 
@@ -34,7 +34,7 @@ Any public method from the object in scope can be called within the template. If
 	<div class="$URLSegment.LowerCase">
 	<!-- <div class="about-us"> -->
 
-[notice]
+```
 See the API documentation for [api:HtmlText], [api:StringField], [api:Text] for all the methods you can use to format 
 your text instances. For other objects such as [api:SS_Datetime] objects see their respective API documentation pages.
 [/notice]
@@ -46,7 +46,7 @@ provide default template for an object.
 
 **mysite/code/Page.php**
 	
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -56,19 +56,19 @@ provide default template for an object.
 		}
 	}
 
-**mysite/templates/Page.ss**
+```
 	
-	:::ss
+```ss
 	$Me
 	<!-- returns Page: Home -->
 
-## Casting
+```
 
 Methods which return data to the template should either return an explicit object instance describing the type of 
 content that method sends back, or, provide a type in the `$casting` array for the object. When rendering that method 
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -82,7 +82,7 @@ to a template, SilverStripe will ensure that the object is wrapped in the correc
 		}
 	}
 
-When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
+```
 accordingly. 
 
 [note]
@@ -103,7 +103,3 @@ There's some exceptions to this rule, see the ["security" guide](../security).
 In case you want to explicitly allow un-escaped HTML input, the property can be cast as [api:HTMLText]. The following 
 example takes the `Content` field in a `SiteTree` class, which is of this type. It forces the content into an explicitly 
 escaped format.
-
-	:::ss
-	$Content.XML 
-	// transforms e.g. "<em>alert</em>" to "&lt;em&gt;alert&lt;/em&gt;"

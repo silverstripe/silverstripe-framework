@@ -18,7 +18,7 @@ The [api:Member] class comes with 2 static methods for getting information about
 Retrieves the ID (int) of the current logged in member.  Returns *0* if user is not logged in.  Much lighter than the
 next method for testing if you just need to test.
 
-	:::php
+```php
 	// Is a member logged in?
 	if( Member::currentUserID() ) {
 		// Yes!
@@ -26,19 +26,19 @@ next method for testing if you just need to test.
 		// No!
 	}
 
-
+```
 **Member::currentUser()**
 
 Returns the full *Member* Object for the current user, returns *null* if user is not logged in.
 
-	:::php
+```php
 	if( $member = Member::currentUser() ) {
 		// Work with $member
 	} else {
 		// Do non-member stuff
 	}
 
-
+```
 ## Subclassing
 
 [warning]
@@ -48,7 +48,7 @@ This is the least desirable way of extending the [api:Member] class. It's better
 
 You can define subclasses of [api:Member] to add extra fields or functionality to the built-in membership system.
 
-	:::php
+```php
 	class MyMember extends Member {
 		private static $db = array(
 			"Age" => "Int",
@@ -56,14 +56,14 @@ You can define subclasses of [api:Member] to add extra fields or functionality t
 		);
 	}
 
-
+```
 To ensure that all new members are created using this class, put a call to [api:Object::useCustomClass()] in
 (project)/_config.php:
 
-	:::php
+```php
 	Object::useCustomClass("Member", "MyMember");
 
-Note that if you want to look this class-name up, you can call Object::getCustomClass("Member")
+```
 
 ## Overloading getCMSFields()
 
@@ -71,7 +71,7 @@ If you overload the built-in public function getCMSFields(), then you can change
 details in the newsletter system.  This function returns a [api:FieldList] object.  You should generally start by calling
 parent::getCMSFields() and manipulate the [api:FieldList] from there.
 
-	:::php
+```php
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->insertBefore("HTMLEmail", new TextField("Age"));
@@ -80,7 +80,7 @@ parent::getCMSFields() and manipulate the [api:FieldList] from there.
 		return $fields;
 	}
 
-
+```
 ## Extending Member or DataObject?
 
 Basic rule: Class [api:Member] should just be extended for entities who have some kind of login.
@@ -96,16 +96,16 @@ Using inheritance to add extra behaviour or data fields to a member is limiting,
 class. A better way is to use role extensions to add this behaviour. Add the following to your
 `[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
 
-	:::yml
+```yml
 	Member:
 	  extensions:
 	    - MyMemberExtension
 
-A role extension is simply a subclass of [api:DataExtension] that is designed to be used to add behaviour to [api:Member]. 
+```
 The roles affect the entire class - all members will get the additional behaviour.  However, if you want to restrict
 things, you should add appropriate [api:Permission::checkMember()] calls to the role's methods.
 
-	:::php
+```php
 	class MyMemberExtension extends DataExtension {
 	  /**
 	
@@ -130,7 +130,7 @@ things, you should add appropriate [api:Permission::checkMember()] calls to the 
 	  }
 	}
 
-
+```
 ## API Documentation
 
 [api:Member]

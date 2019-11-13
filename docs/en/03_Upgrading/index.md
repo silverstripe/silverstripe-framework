@@ -14,11 +14,6 @@ See our [upgrade notes and changelogs](/changelogs/3.2.0) for 3.2.0 specific inf
 
 For projects managed through Composer, update the version number of `framework` and `cms` to `^3.2` in your `composer.json` file and run `composer update`. 
 
-```json
-	"require": {
-		"silverstripe/framework": "^3.2",
-		"silverstripe/cms": "^3.2"
-	}
 ```
 This will also add extra dependencies, the `reports` and `siteconfig` modules. SilverStripe CMS is becoming more modular, and [composer is becoming the preferred way to manage your code](/getting_started/composer).
 

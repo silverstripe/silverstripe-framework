@@ -15,7 +15,7 @@ In the `Player` example, we have four database columns each with a different dat
 
 **mysite/code/Player.php**
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -28,7 +28,7 @@ In the `Player` example, we have four database columns each with a different dat
 		);
 	}
 
-## Available Types
+```
 
 *  [api:Boolean]: A boolean field.
 *  [api:Currency]: A number with 2 decimal points of precision, designed to store currency values.
@@ -53,7 +53,7 @@ See the [API documentation](api:DBField) for a full list of available Data Types
 For complex default values for newly instantiated objects see [Dynamic Default Values](how_tos/dynamic_default_fields). 
 For simple values you can make use of the `$defaults` array. For example:
 
-	:::php
+```php
 	<?php
 
 	class Car extends DataObject {
@@ -69,7 +69,7 @@ For simple values you can make use of the `$defaults` array. For example:
 		);
 	}
 
-### Default values for new database columns
+```
 
 When adding a new `$db` field to a DataObject you can specify a default value
 to be applied to all existing records when the column is added in the database
@@ -77,7 +77,7 @@ for the first time. This will also be applied to any newly created objects
 going forward. You do this be passing an argument for the default value in your 
 `$db` items. For example:
 
-	:::php
+```php
 	<?php
 
 	class Car extends DataObject {
@@ -88,7 +88,7 @@ going forward. You do this be passing an argument for the default value in your
 		);
 	}
 
-## Formatting Output
+```
 
 The Data Type does more than setup the correct database schema. They can also define methods and formatting helpers for
 output. You can manually create instances of a Data Type and pass it through to the template. 
@@ -98,7 +98,7 @@ object we can control the formatting and it allows us to call methods defined fr
 
 **mysite/code/Player.php**
 	
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -110,9 +110,9 @@ object we can control the formatting and it allows us to call methods defined fr
 		}
 	}
 
-Then we can refer to a new `Name` column on our `Player` instances. In templates we don't need to use the `get` prefix.
+```
 
-	:::php
+```php
 	$player = Player::get()->byId(1);
 
 	echo $player->Name;
@@ -124,11 +124,11 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 	echo $player->getName()->LimitCharacters(2);
 	// returns "Sa.."
 
-## Casting
+```
 
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -142,28 +142,28 @@ Rather than manually returning objects from your custom functions. You can use t
 	  }
 	}
 
-The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
+```
 instance of the [api:DBField] class, providing additional helpers. For example, a string can be cast as a [api:Text] 
 type, which has a `FirstSentence()` method to retrieve the first sentence in a longer piece of text.
 
 On the most basic level, the class can be used as simple conversion class from one value to another, e.g. to round a 
 number.
 
-	:::php
+```php
 	DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 
-Of course that's much more verbose than the equivalent PHP call. The power of [api:DBField] comes with its more 
+```
 sophisticated helpers, like showing the time difference to the current date:
 
-	:::php
+```php
 	DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 
-## Casting ViewableData
+```
 
 Most objects in SilverStripe extend from [api:ViewableData], which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
-	:::php
+```php
 	<?php
 
 	class MyObject extends ViewableData {
@@ -183,7 +183,7 @@ context. Through a `$casting` array, arbitrary properties and getters can be cas
 	$obj->obj('MyDate'); // returns object
 	$obj->obj('MyDate')->InPast(); // returns boolean
 
-
+```
 ## Casting HTML Text
 
 The database field types [api:HTMLVarchar]/[api:HTMLText] and [api:Varchar]/[api:Text] are exactly the same in 
@@ -205,7 +205,7 @@ We can overload the default behavior by making a function called "get`<fieldname
 The following example will use the result of `getStatus` instead of the 'Status' database column. We can refer to the
 database column using `dbObject`.
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -218,7 +218,7 @@ database column using `dbObject`.
 	      return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
 	  }
 
-
+```
 ## API Documentation
 
 * [api:DataObject]

@@ -13,7 +13,7 @@ potential issue to handle.
 
 You should use [user_error](http://www.php.net/user_error) to throw errors where appropriate.
 
-	:::php
+```php
 	if(true == false) {
 		user_error("I have an error problem", E_USER_ERROR);
 	}
@@ -22,7 +22,7 @@ You should use [user_error](http://www.php.net/user_error) to throw errors where
 		user_error("This time I am warning you", E_USER_WARNING);
 	}
 
-## Error Levels
+```
 
 *  **E_USER_WARNING:** Err on the side of over-reporting warnings. Throwing warnings provides a means of ensuring that 
 developers know:
@@ -40,7 +40,7 @@ You can indicate a log file relative to the site root.
 
 **mysite/_config.php**
 
-	:::php
+```php
 	if(!Director::isDev()) {
 		// log errors and warnings
 		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-warnings.log'), SS_Log::WARN, '<=');
@@ -52,7 +52,7 @@ You can indicate a log file relative to the site root.
 		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-notices.log'), SS_Log::NOTICE);
 	}
 
-[info]
+```
 In addition to SilverStripe-integrated logging, it is advisable to fall back to PHPs native logging functionality. A
 script might terminate before it reaches the SilverStripe error handling, for example in the case of a fatal error. Make
 sure `log_errors` and `error_log` in your PHP ini file are configured.
@@ -64,7 +64,7 @@ You can send both fatal errors and warnings in your code to a specified email-ad
 
 **mysite/_config.php**
 
-	:::php
+```php
 	if(!Director::isDev()) {
 		// log errors and warnings
 		SS_Log::add_writer(new SS_LogFileWriter('../silverstripe-errors-warnings.log'), SS_Log::WARN, '<=');
@@ -73,6 +73,6 @@ You can send both fatal errors and warnings in your code to a specified email-ad
 		SS_Log::add_writer(new SS_LogEmailWriter('admin@domain.com'), SS_Log::ERR);
 	}
 
-## API Documentation
+```
 
 * [api:SS_Log]

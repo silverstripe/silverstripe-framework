@@ -20,7 +20,7 @@ The default output of a [api:SearchContext] is either a [api:SQLQuery] object fo
 
 Defining search-able fields on your DataObject.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -31,13 +31,13 @@ Defining search-able fields on your DataObject.
 	   );
 	}
 
-## Customizing fields and filters
+```
 
 In this example we're defining three attributes on our MyDataObject subclass: `PublicProperty`, `HiddenProperty`
 and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDate` should only search for dates
 *after* the search entry (with a `GreaterThanFilter`).
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -66,7 +66,7 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 		}
 	}
 
-[notice]
+```
 See the [SearchFilter](../model/searchfilters) documentation for more information about filters to use such as the
 `GreaterThanFilter`.
 [/notice]
@@ -78,7 +78,7 @@ the `$fields` constructor parameter.
 
 ### Generating a search form from the context
 
-	:::php
+```php
 	<?php
 
 	..
@@ -109,14 +109,14 @@ the `$fields` constructor parameter.
 		}
 	}
 
-### Pagination
+```
 
 For pagination records on multiple pages, you need to wrap the results in a
 `PaginatedList` object. This object is also passed the generated `SQLQuery`
 in order to read page limit information. It is also passed the current
 `SS_HTTPRequest` object so it can read the current page from a GET var.
 
-	:::php
+```php
 	public function getResults($searchCriteria = array()) {
 		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
 		$limit = 10;
@@ -135,10 +135,10 @@ in order to read page limit information. It is also passed the current
 		return $records;
 	}
 
-
+```
 notice that if you want to use this getResults function, you need to change the function doSearch for this one:
 
-	:::php
+```php
 	public function doSearch($data, $form) {
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$results = $this->getResults($data);
@@ -147,7 +147,7 @@ notice that if you want to use this getResults function, you need to change the 
 		))->renderWith(array('Catalogo_results', 'Page'));
 	}
 
-
+```
 The change is in **$results = $this->getResults($data);**, because you are using a custom getResults function.
 
 Another thing you cant forget is to check the name of the singleton you are using in your project. the example uses
@@ -164,7 +164,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 **Next   1 2  *3*  4  5 &hellip; 558**  
 
 
-	:::ss
+```ss
 	<% if $Results %>
 		<ul>
 			<% loop $Results %>
@@ -203,7 +203,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 		</div>
 	<% end_if %>
 
-
+```
 ## Available SearchFilters
 
 See [api:SearchFilter] API Documentation

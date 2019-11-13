@@ -18,27 +18,29 @@ These routes by standard, go into a `routes.yml` file in your applications `_con
 
 **mysite/_config/routes.yml**
 
-	:::yml
-	---
+```yml
+```
+```
 	Name: mysiteroutes
 	After: framework/routes#coreroutes
-	---
+```
+```
 	Director:
 	  rules:
 	    'teams//$Action/$ID/$Name': 'TeamController'
 	    'player/': 'PlayerController'
 	    '': 'HomeController'
 
-[notice]
+```
 To understand the syntax for the `routes.yml` file better, read the [Configuration](../configuration) documentation.
 [/notice]
 
 ## Parameters
 
-	:::yml
+```yml
 	'teams//$Action/$ID/$Name': 'TeamController'
 
-This route has defined that any URL beginning with `team` should create, and be handled by a `TeamController` instance.
+```
 
 It also contains 3 `parameters` or `params` for short. `$Action`, `$ID` and `$Name`. These variables are placeholders 
 which will be filled when the user makes their request. Request parameters are available on the `SS_HTTPRequest` object 
@@ -50,7 +52,7 @@ All Controllers have access to `$this->getRequest()` for the request object and 
 
 Here is what those parameters would look like for certain requests
 
-	:::php
+```php
 	// GET /teams/
 
 	print_r($this->getRequest()->params());
@@ -84,16 +86,16 @@ Here is what those parameters would look like for certain requests
 	//   [Name] => null
 	// )
 
-You can also fetch one parameter at a time.
+```
 
-	:::php
+```php
 
 	// GET /teams/players/1/
 
 	echo $this->getRequest()->param('ID');
 	// returns '1'
 
-
+```
 ## URL Patterns
 
 The [api:RequestHandler] class will parse all rules you specify against the following patterns. The most specific rule
@@ -109,28 +111,28 @@ A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable 
  | `!`         | **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
  | `//`        | **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
 
-	:::yml
+```yml
 	'teams/$Action/$ID/$OtherID': 'TeamController' 
 
 	# /teams/
 	# /teams/players/
 	# /teams/
 
-Standard URL handler syntax. For any URL that contains 'team' this rule will match and hand over execution to the 
+```
 matching controller. The `TeamsController` is passed an optional action, id and other id parameters to do any more
 decision making.
 
-	:::yml
+```yml
 	'teams/$Action!/$ID!/': 'TeamController'
 
-This does the same matching as the previous example, any URL starting with `teams` will look at this rule **but** both
+```
 `$Action` and `$ID` are required. Any requests to `team/` will result in a `404` error rather than being handed off to
 the `TeamController`.
 
-	:::yml
+```yml
 	`admin/help//$Action/$ID`: 'AdminHelp'
 
-Match an url starting with `/admin/help/`, but don't include `/help/` as part of the action (the shift point is set to 
+```
 start parsing variables and the appropriate controller action AFTER the `//`).
 
 
@@ -153,7 +155,7 @@ This is useful when you want to provide custom actions for the mapping of `teams
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	<?php
 
 	class TeamController extends Controller {
@@ -167,7 +169,7 @@ This is useful when you want to provide custom actions for the mapping of `teams
 			'coach/$ID/$Name' => 'payroll'
 	    );
 
-The syntax for the `$url_handlers` array users the same pattern matches as the `YAML` configuration rules.
+```
 
 Now let’s consider a more complex example from a real project, where using
 **$url_handlers** is mandatory. In this example, the URLs are of the form
@@ -176,7 +178,7 @@ class specifies the URL pattern in `$url_handlers`. Notice that it defines 5
 parameters.
 
 
-	:::php
+```php
 	class FeedController extends ContentController {
 
 		private static $allowed_actions = array('go');
@@ -191,15 +193,15 @@ parameters.
 			/* more processing goes here */
 		}
 
-The YAML rule, in contrast, is simple. It needs to provide only enough
+```
 information for the framework to choose the desired controller.
 
-	:::yaml
+```yaml
 	Director:
 	  rules:
 	    'feed': 'FeedController'
 
-## Links
+```
 
 * [api:Controller] API documentation
 * [api:Director] API documentation

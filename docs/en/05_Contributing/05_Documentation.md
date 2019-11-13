@@ -89,31 +89,34 @@ sparingly.
 
 Code for a Tip box:
 
+```
 	[hint]
 	...
 	[/hint]
 
-[notice]
+```
 "Notification box": A notification box is good for technical notifications relating to the main text. For example, notifying users about a deprecated feature.
 [/notice]
 
 Code for a Notification box:
 
+```
 	[notice]
 	...
 	[/notice]
 
-[warning]
+```
 "Warning box": A warning box is useful for highlighting a severe bug or a technical issue requiring a user's attention. For example, suppose a rare edge case sometimes leads to a variable being overwritten incorrectly. A warning box can be used to alert the user to this case so they can write their own code to handle it.  
 [/warning]
 
 Code for a Warning box:
 
+```
 	[warning]
 	...
 	[/warning]
 
-See [markdown extra documentation](http://michelf.com/projects/php-markdown/extra/#html) for more restrictions
+```
 on placing HTML blocks inside Markdown.
 
 ## Translating documentation

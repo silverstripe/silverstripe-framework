@@ -51,7 +51,7 @@ backend for each named cache. There is a default File cache set up as the
 Caches can be created and retrieved through the `SS_Cache::factory()` method.
 The returned object is of type `Zend_Cache`.
 
-	:::php
+```php
 	// foo is any name (try to be specific), and is used to get configuration 
 	// & storage info
 	$cache = SS_Cache::factory('foo'); 
@@ -61,42 +61,42 @@ The returned object is of type `Zend_Cache`.
 	}
 	return $result;
 
-Normally there's no need to remove things from the cache - the cache 
+```
 backends clear out entries based on age and maximum allocated storage. If you 
 include the version of the object in the cache key, even object changes 
 don't need any invalidation. You can force disable the cache though,
 e.g. in development mode.
 
-	:::php
+```php
 	// Disables all caches
 	SS_Cache::set_cache_lifetime('any', -1, 100);
 
-You can also specifically clean a cache.
+```
 Keep in mind that `Zend_Cache::CLEANING_MODE_ALL` deletes all cache
 entries across all caches, not just for the 'foo' cache in the example below.
 
-	:::php
+```php
 	$cache = SS_Cache::factory('foo'); 
 	$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 
-A single element can be invalidated through its cache key.
+```
 
-	:::php
+```php
 	$cache = SS_Cache::factory('foo');  
 	$cache->remove($cachekey);
 
-In order to increase the chance of your cache actually being hit,
+```
 it often pays to increase the lifetime of caches ("TTL").
 It defaults to 10 minutes (600s) in SilverStripe, which can be
 quite short depending on how often your data changes.
 Keep in mind that data expiry should primarily be handled by your cache key,
 e.g. by including the `LastEdited` value when caching `DataObject` results.
 
-	:::php
+```php
 	// set all caches to 3 hours
 	SS_Cache::set_cache_lifetime('any', 60*60*3);
 
-### Versioned cache segmentation
+```
 
 `SS_Cache` segments caches based on the versioned reading mode. This prevents developers 
 from caching draft data and then accidentally exposing it on the live stage without potentially 
@@ -106,8 +106,6 @@ required authorisation checks. This segmentation is automatic for all caches gen
 Data that is not content sensitive can be cached across stages by simply opting out of the
 segmented cache with the `disable-segmentation` argument.
 
-```php
-$cache = SS_Cache::factory('myapp', 'Output', array('disable-segmentation' => true));
 ``` 
 
 ## Alternative Cache Backends
@@ -132,6 +130,7 @@ server. memcached is a high-performance, distributed memory object caching syste
 To use this backend, you need a memcached daemon and the memcache PECL extension.
 
  	:::php
+```
 	// _config.php 
 	SS_Cache::add_backend(
 		'primary_memcached',
@@ -151,10 +150,11 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 	);
 	SS_Cache::pick_backend('primary_memcached', 'any', 10);
 	
-
+```
 If your Memcached instance is using a local Unix socket instead of a network port:
 
  	:::php
+```
 	// _config.php 
 	SS_Cache::add_backend(
 		'primary_memcached',
@@ -174,26 +174,16 @@ If your Memcached instance is using a local Unix socket instead of a network por
 	);
 	SS_Cache::pick_backend('primary_memcached', 'any', 10);
 
-### APC
+```
 
 This backends stores cache records in shared memory through the [APC](http://pecl.php.net/package/APC)
  (Alternative PHP Cache) extension (which is of course need for using this backend).
 
-	:::php
+```php
 	SS_Cache::add_backend('primary_apc', 'APC');
 	SS_Cache::pick_backend('primary_apc', 'any', 10);
 
-### Two-Levels
+```
 
 This backend is an hybrid one. It stores cache records in two other backends: 
 a fast one (but limited) like Apc, Memcache... and a "slow" one like File or Sqlite.
-
-	:::php
-	SS_Cache::add_backend('two_level', 'Two-Levels', array(
-		'slow_backend' => 'File',
-		'fast_backend' => 'APC',
-		'slow_backend_options' => array(
-				'cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache'
-		)
-	));
-	SS_Cache::pick_backend('two_level', 'any', 10); 

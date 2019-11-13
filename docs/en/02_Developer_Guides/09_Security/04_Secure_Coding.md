@@ -32,7 +32,7 @@ come from user input.
 
 Example:
 	
-	:::php
+```php
 	$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
 	$records = MyClass::get()->where(array('"ID" = ?' => 3));
 	$records = MyClass::get()->where(array('"ID"' => 3));
@@ -41,9 +41,9 @@ Example:
 	$records = MyClass::get()->byID(3);
 	$records = SQLQuery::create()->addWhere(array('"ID"' => 3))->execute();
 
-Parameterised updates and inserts are also supported, but the syntax is a little different
+```
 
-	:::php
+```php
 	SQLInsert::create('"MyClass"')
 		->assign('"Name"', 'Daniel')
 		->addAssignments(array(
@@ -59,7 +59,7 @@ Parameterised updates and inserts are also supported, but the syntax is a little
 		array('Daniel', 'Accountant', 24, 28)
 	);
 
-
+```
 ### Automatic escaping
 
 SilverStripe internally will use parameterised queries in SQL statements wherever possible.
@@ -83,7 +83,7 @@ handled via prepared statements.
 
 Example:
 	
-	:::php
+```php
 	// automatically escaped/quoted
 	$members = Member::get()->filter('Name', $_GET['name']); 
 	// automatically escaped/quoted
@@ -93,7 +93,7 @@ Example:
 	// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
 	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
-[warning]
+```
 It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
 [/warning]
@@ -114,7 +114,7 @@ and [datamodel](/developer_guides/model) for ways to parameterise, cast, and con
 
 Example:
 
-	:::php
+```php
 	class MyForm extends Form {
 	  public function save($RAW_data, $form) {
 			// Pass true as the second parameter of raw2sql to quote the value safely
@@ -124,13 +124,13 @@ Example:
 	  }
 	}
 
-
+```
 *  `FormField->Value()`
 *  URLParams passed to a Controller-method
 
 Example:
 
-	:::php
+```php
 	class MyController extends Controller {
 	  private static $allowed_actions = array('myurlaction');
 	  public function myurlaction($RAW_urlParams) {
@@ -141,12 +141,12 @@ Example:
 	  }
 	}
 
-
+```
 As a rule of thumb, you should escape your data **as close to querying as possible**
 (or preferably, use parameterised queries). This means if you've got a chain of functions
 passing data through, escaping should happen at the end of the chain.
 
-	:::php
+```php
 	class MyController extends Controller {
 	  /**
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
@@ -162,7 +162,7 @@ passing data through, escaping should happen at the end of the chain.
 	  }
 	}
 
-This might not be applicable in all cases - especially if you are building an API thats likely to be customised. If
+```
 you're passing unescaped data, make sure to be explicit about it by writing *phpdoc*-documentation and *prefixing* your
 variables ($RAW_data instead of $data).
 
@@ -195,9 +195,10 @@ stripped out
 To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
 true, e.g.
 
+```
 	HtmlEditorField::config()->sanitise_server_side = true
 
-The built in sanitiser enforces the TinyMCE whitelist rules on the server side, and is sufficient to eliminate the
+```
 most common XSS vectors.
 
 However some subtle XSS attacks that exploit HTML parsing bugs need heavier filtering. For greater protection
@@ -224,7 +225,7 @@ object-properties by [casting](/developer_guides/model/data_types_and_casting) i
 
 PHP:
 
-	:::php
+```php
 	class MyObject extends DataObject {
 	  private static $db = array(
 	    'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
@@ -232,16 +233,16 @@ PHP:
 	  );
 	}
 
-
+```
 Template:
 
-	:::php
+```php
 	<ul>
 	  <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
 	  <li>$MyUnescapedValue</li> // output: <b>bold</b>
 	</ul>
 
-
+```
 The example below assumes that data wasn't properly filtered when saving to the database, but are escaped before
 outputting through SSViewer.
 
@@ -252,7 +253,7 @@ You can force escaping on a casted value/object by using an [escape type](/devel
 
 Template (see above):
 
-	:::php
+```php
 	<ul>
 	  // output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
 	  <li><a href="#" title="$Title.ATT">$Title</a></li>
@@ -261,7 +262,7 @@ Template (see above):
 	  <li>$MyUnescapedValue.XML</li> // output: &lt;b&gt;bold&lt;b&gt;
 	</ul>
 
-
+```
 ### Escaping custom attributes and getters
 
 Every object attribute or getter method used for template purposes should have its escape type defined through the
@@ -269,7 +270,7 @@ static *$casting* array. Caution: Casting only applies when using values in a te
 
 PHP:
 
-	:::php
+```php
 	class MyObject extends DataObject {
 		public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
 	     
@@ -284,17 +285,17 @@ PHP:
 		}
 	}
 
-
+```
 Template:
 
-	:::php
+```php
 	<ul>
 	  <li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
 	  <li>$Title.RAW</li> // output: <b>not bold</b>
 	  <li>$TitleWithHTMLSuffix</li> // output: <b>not bold</b>: <small>(...)</small>
 	</ul>
 
-
+```
 Note: Avoid generating HTML by string concatenation in PHP wherever possible to minimize risk and separate your
 presentation from business logic.
 
@@ -308,7 +309,7 @@ also used by *XML* and *ATT* in template code).
 
 PHP:
 
-	:::php
+```php
 	class MyController extends Controller {
 		private static $allowed_actions = array('search');
 		public function search($request) {
@@ -320,13 +321,13 @@ PHP:
 		}
 	}
 
-
+```
 Template:
 
-	:::php
+```php
 	<h2 title="Searching for $Query.ATT">$HTMLTitle</h2>
 
-
+```
 Whenever you insert a variable into an HTML attribute within a template, use $VarName.ATT, no not $VarName.
 
 You can also use the built-in casting in PHP by using the *obj()* wrapper, see [datamodel](/developer_guides/model/data_types_and_casting).
@@ -338,7 +339,7 @@ user data, not *Convert::raw2att()*.  Use raw ampersands in your URL, and cast t
 
 PHP:
 
-	:::php
+```php
 	class MyController extends Controller {
 		private static $allowed_actions = array('search');
 		public function search($request) {
@@ -350,13 +351,13 @@ PHP:
 		}
 	}
 
-
+```
 Template:
 
-	:::php
+```php
 	<a href="$RSSLink.ATT">RSS feed</a>
 
-
+```
 Some rules of thumb:
 
 *  Don't concatenate URLs in a template.  It only works in extremely simple cases that usually contain bugs.
@@ -401,7 +402,7 @@ passed, such as *mysite.com/home/add/dfsdfdsfd*, then it returns 0.
 
 Below is an example with different ways you would use this casting technique:
 
-	:::php
+```php
 	public function CaseStudies() {
 	
 	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
@@ -417,7 +418,7 @@ Below is an example with different ways you would use this casting technique:
 	   return CaseStudy::get()->byID($categoryID);
 	}
 
-
+```
 The same technique can be employed anywhere in your PHP code you know something must be of a certain type. A list of PHP
 cast types can be found here:
 
@@ -444,6 +445,7 @@ disallow certain filetypes.
 
 Example configuration for Apache2:
 
+```
 	<VirtualHost *:80>
 	  <LocationMatch assets/>
 	    php_flag engine off
@@ -451,16 +453,17 @@ Example configuration for Apache2:
 	  </LocationMatch>
 	</VirtualHost>
 
-
+```
 If you are using shared hosting or in a situation where you cannot alter your Vhost definitions, you can use a .htaccess
 file in the assets directory.  This requires PHP to be loaded as an Apache module (not CGI or FastCGI).
 
 **/assets/.htaccess**
 
+```
 	php_flag engine off
 	Options -ExecCGI -Includes -Indexes 
 
-### Don't allow access to YAML files
+```
 
 YAML files are often used to store sensitive or semi-sensitive data for use by 
 SilverStripe, such as configuration files. We block access to any files
@@ -469,12 +472,13 @@ If you need users to access files with this extension,
 you can bypass the rules for a specific directory.
 Here's an example for a `.htaccess` file used by the Apache web server:
 
+```
 	<Files *.yml>
 		Order allow,deny
 		Allow from all
 	</Files>
 
-
+```
 ### User uploaded files
 
 Certain file types are by default excluded from user upload. html, xhtml, htm, and xml files may have embedded,
@@ -518,19 +522,20 @@ So in addition to storing the password in a secure fashion,
 you can also enforce specific password policies by configuring
 a [api:PasswordValidator]:
 
-	:::php
+```php
 	$validator = new PasswordValidator();
 	$validator->minLength(7);
 	$validator->checkHistoricalPasswords(6);
 	$validator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
 	Member::set_password_validator($validator);
 
-In addition, you can tighten password security with the following configuration settings:
+```
 
  * `Member.password_expiry_days`: Set the number of days that a password should be valid for.
  * `Member.lock_out_after_incorrect_logins`: Number of incorrect logins after which
+```
     the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
- * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts.
+```
  		Only applies if `lock_out_after_incorrect_logins` is greater than 0.
  * `Security.remember_username`: Set to false to disable autocomplete on login form
 
@@ -545,7 +550,7 @@ included in HTML "frame" or "iframe" elements, and thereby prevent the most comm
 attack vector. This is done through a HTTP header, which is usually added in your
 controller's `init()` method:
 
-	:::php
+```php
 	class MyController extends Controller {
 		public function init() {
 			parent::init();
@@ -553,7 +558,7 @@ controller's `init()` method:
 		}
 	}
 	
-
+```
 This is a recommended option to secure any controller which displays
 or submits sensitive user input, and is enabled by default in all CMS controllers,
 as well as the login form.
@@ -565,10 +570,10 @@ allows the configure of a whitelist of hosts that are allowed to access the syst
 this whitelist in your _ss_environment.php file, any request presenting a `Host` header that is
 _not_ in this list will be blocked with a HTTP 400 error:
 
-	:::php
+```php
 	define('SS_ALLOWED_HOSTS', 'www.mysite.com,mysite.com,subdomain.mysite.com');
 
-Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)
+```
 that will be accessing the site.
 
 When SilverStripe is run behind a reverse proxy, it's normally necessary for this proxy to
@@ -584,13 +589,13 @@ In order to prevent this kind of attack, it's necessary to whitelist trusted pro
 server IPs using the SS_TRUSTED_PROXY_IPS define in your _ss_environment.php.
 
 
-	:::php
+```php
 	define('SS_TRUSTED_PROXY_IPS', '127.0.0.1,192.168.0.1');
 	define('SS_TRUSTED_PROXY_HOST_HEADER', 'HTTP_X_FORWARDED_HOST');
 	define('SS_TRUSTED_PROXY_IP_HEADER', 'HTTP_X_FORWARDED_FOR');
 	define('SS_TRUSTED_PROXY_PROTOCOL_HEADER', 'HTTP_X_FORWARDED_PROTOCOL');
 
-At the same time, you'll also need to define which headers you trust from these proxy IPs. Since there are multiple ways through which proxies can pass through HTTP information on the original hostname, IP and protocol, these values need to be adjusted for your specific proxy. The header names match their equivalent `$_SERVER` values.
+```
 
 If there is no proxy server, 'none' can be used to distrust all clients.
 If only trusted servers will make requests then you can use '*' to trust all clients.
@@ -601,6 +606,7 @@ This behaviour is enabled whenever SS_TRUSTED_PROXY_IPS is defined, or if the
 following in your .htaccess to ensure this behaviour is activated.
 
 
+```
 	<IfModule mod_env.c>
 		# Ensure that X-Forwarded-Host is only allowed to determine the request
 		# hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your _ss_environment.php
@@ -608,7 +614,7 @@ following in your .htaccess to ensure this behaviour is activated.
 		SetEnv BlockUntrustedIPs true
 	</IfModule>
 
-
+```
 In a future release this behaviour will be changed to be on by default, and this environment
 variable will be no longer necessary, thus it will be necessary to always set
 SS_TRUSTED_PROXY_IPS if using a proxy.

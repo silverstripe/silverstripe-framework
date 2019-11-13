@@ -28,7 +28,7 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 
 **mysite/code/MyClass.php**
 
-	:::php
+```php
 	<?php
 
 	class MyClass extends Page {
@@ -46,18 +46,19 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 		// ..
 	}
 
-## Accessing and Setting Configuration Properties
+```
 
 This can be done by calling the static method [api:Config::inst()], like so:
 
-	:::php
+```php
 	$config = Config::inst()->get('MyClass');
 
-Or through the `config()` object on the class.
+```
 	
+```
 	$config = $this->config();
 
-There are three public methods available on the instance. `get($class, $variable)`, `remove($class, $variable)` and
+```
 `update($class, $variable, $value)`.
 
 [notice]
@@ -69,7 +70,7 @@ To set those configuration options on our previously defined class we can define
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	MyClass:
 	  option_one: false
 	  option_two:
@@ -77,9 +78,9 @@ To set those configuration options on our previously defined class we can define
 	    - Bar
 	    - Baz
 
-To use those variables in your application code:
+```
 
-	:::php
+```php
 	$me = new MyClass();
 
 	echo $me->config()->option_one;
@@ -107,7 +108,7 @@ To use those variables in your application code:
 	echo implode(', ', MyClass::config()->option_one);
 	// returns 'Qux'
 
-[notice]
+```
 There is no way currently to restrict read or write access to any configuration property, or influence/check the values 
 being read or written.
 [/notice]
@@ -153,11 +154,12 @@ be raised due to optimizations in the lookup code.
 At some of these levels you can also set masks. These remove values from the composite value at their priority point 
 rather than add.
 
+```
 	$actionsWithoutExtra = $this->config()->get(
 		'allowed_actions', Config::UNINHERITED
 	);
 
-They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value
+```
 
 - If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
 - If the composite value is an associative array, any member of that array that matches both the key and value of any 
@@ -178,17 +180,19 @@ The name of the files within the applications `_config` directly are arbitrary. 
 
 The structure of each YAML file is a series of headers and values separated by YAML document separators. 
 
-	:::yml
-	---
+```yml
+```
+```
 	Name: adminroutes
 	After:
-  	  - '#rootroutes'
+```
   	  - '#coreroutes'
 	---
+```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
-	---
+```
 
 [info]
 If there is only one set of values the header can be omitted.
@@ -225,17 +229,19 @@ before (lower priority than) or after (higher priority than) some other value se
 To specify these rules you add an "After" and/or "Before" key to the relevant header section. The value for these
 keys is a list of reference paths to other value sections. A basic example:
 
-	:::yml
-	---
+```yml
+```
+```
 	Name: adminroutes
 	After:
-  	  - '#rootroutes'
+```
   	  - '#coreroutes'
 	---
+```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
-	---
+```
 
 You do not have to specify all portions of a reference path. Any portion may be replaced with a wildcard "\*", or left
 out all together. Either has the same affect - that portion will be ignored when checking a value section's reference
@@ -280,26 +286,31 @@ You then list any of the following rules as sub-keys, with informational values 
   - 'classexists', in which case the value(s) should be classes that must exist
   - 'moduleexists', in which case the value(s) should be modules that must exist
   - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe
+```
     mode the site must be in
-  - 'envvarset', in which case the value(s) should be environment variables that must be set
+```
   - 'constantdefined', in which case the value(s) should be constants that must be defined
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
-	:::yml
-	---
+```yml
+```
+```
 	Only:
 	  moduleexists: 'MyFineModule'
-	---
+```
+```
 	MyClass:
 	  property: 'foo'
-	---
+```
+```
 	Except:
 	  moduleexists: 'MyFineModule'
-	---
+```
+```
 	MyClass:
 	  property: 'bar'
-	---
+```
 
 [alert]
 When you have more than one rule for a nested fragment, they're joined like 

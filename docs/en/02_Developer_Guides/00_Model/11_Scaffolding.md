@@ -14,7 +14,7 @@ customise those fields as required.
 
 An example is `DataObject`, SilverStripe will automatically create your CMS interface so you can modify what you need.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -34,9 +34,9 @@ An example is `DataObject`, SilverStripe will automatically create your CMS inte
 		}
 	}
 
-To fully customise your form fields, start with an empty FieldList.
+```
 
-	:::php
+```php
 	<?php
 
 		public function getCMSFields() {
@@ -52,7 +52,7 @@ To fully customise your form fields, start with an empty FieldList.
 			return $fields;
 		}
 
-
+```
 
 You can also alter the fields of built-in and module `DataObject` classes through your own 
 [DataExtension](/developer_guides/extending/extensions), and a call to `DataExtension->updateCMSFields`.
@@ -62,7 +62,7 @@ You can also alter the fields of built-in and module `DataObject` classes throug
 The `$searchable_fields` property uses a mixed array format that can be used to further customise your generated admin
 system. The default is a set of array values listing the fields.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -73,12 +73,12 @@ system. The default is a set of array values listing the fields.
 	   );
 	}
 
-
+```
 Searchable fields will be appear in the search interface with a default form field (usually a [api:TextField]) and a 
 default search filter assigned (usually an [api:ExactMatchFilter]). To override these defaults, you can specify 
 additional information on `$searchable_fields`:
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -89,10 +89,10 @@ additional information on `$searchable_fields`:
 		);
 	}
 
-If you assign a single string value, you can set it to be either a [api:FormField] or [api:SearchFilter]. To specify 
+```
 both, you can assign an array:
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -110,10 +110,10 @@ both, you can assign an array:
 	   );
 	}
 
-
+```
 To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, you can use a dot-notation.
 
-	:::php
+```php
 	<?php
 
 	class Team extends DataObject {
@@ -144,13 +144,13 @@ To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, 
 	  );
 	}
 
-
+```
 ### Summary Fields
 
 Summary fields can be used to show a quick overview of the data for a specific [api:DataObject] record. The most common use 
 is their display as table columns, e.g. in the search results of a [api:ModelAdmin] CMS interface.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -167,10 +167,10 @@ is their display as table columns, e.g. in the search results of a [api:ModelAdm
 	  );
 	}
 
-
+```
 To include relations or field manipulations in your summaries, you can use a dot-notation.
 
-	:::php
+```php
 	<?php
 
 	class OtherObject extends DataObject {
@@ -198,10 +198,10 @@ To include relations or field manipulations in your summaries, you can use a dot
 	  );
 	}
 
-
+```
 Non-textual elements (such as images and their manipulations) can also be used in summaries.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -220,7 +220,7 @@ Non-textual elements (such as images and their manipulations) can also be used i
 	  );
 	}
 
-## Related Documentation
+```
 
 * [SearchFilters](searchfilters)
 

@@ -20,7 +20,7 @@ bottle-necks and identify slow moving parts of your application chain.
 
 The [api:Debug] class contains a number of static utility methods for more advanced debugging.
 
-	:::php
+```php
 	Debug::show($myVariable);
 	// similar to print_r($myVariable) but shows it in a more useful format.
 
@@ -30,7 +30,7 @@ The [api:Debug] class contains a number of static utility methods for more advan
 	SS_Backtrace::backtrace();
 	// prints a calls-stack
 
-## API Documentation
+```
 
 * [api:SS_Log]
 * [api:SS_Backtrace]

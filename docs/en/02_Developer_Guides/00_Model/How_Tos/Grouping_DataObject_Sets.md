@@ -27,19 +27,22 @@ Let's say you have a set of Module objects, each representing a SilverStripe mod
 these in alphabetical order, with each letter as a heading; something like the following list:
 
 	*	B
+```
 		* Blog
-	*	C
+```
+```
 		* CMS Workflow
 		* Custom Translations
-	*	D
+```
+```
 		* Database Plumber
 		* ...
 
-The first step is to set up the basic data model, 
+```
 along with a method that returns the first letter of the title. This
 will be used both for grouping and for the title in the template.
 
-	:::php
+```php
 	class Module extends DataObject {
 		private static $db = array(
 			'Title' => 'Text'
@@ -54,10 +57,10 @@ will be used both for grouping and for the title in the template.
 		}
 	}
 
-The next step is to create a method or variable that will contain/return all the objects, 
+```
 sorted by title. For this example this will be a method on the `Page` class.
 
-	:::php
+```php
 	class Page extends SiteTree {
 	
 		// ...
@@ -72,11 +75,11 @@ sorted by title. For this example this will be a method on the `Page` class.
 	
 	}
 
-The final step is to render this into a template. The `GroupedBy()` method breaks up the set into
+```
 a number of sets, grouped by the field that is passed as the parameter. 
 In this case, the `getTitleFirstLetter()` method defined earlier is used to break them up.
 
-	:::ss
+```ss
 	<%-- Modules list grouped by TitleFirstLetter --%>
 	<h2>Modules</h2>
 	<% loop $GroupedModules.GroupedBy(TitleFirstLetter) %>
@@ -88,7 +91,7 @@ In this case, the `getTitleFirstLetter()` method defined earlier is used to brea
 		</ul>
 	<% end_loop %>
 
-## Grouping Sets By Month
+```
 
 Grouping a set by month is a very similar process. 
 The only difference would be to sort the records by month name, and
@@ -100,7 +103,7 @@ but grouping by its built-in `Created` property instead,
 which is automatically set when the record is first written to the database.
 This will have a method which returns the month it was posted in:
 
-	:::php
+```php
 	class Module extends DataObject {
 	
 		// ...
@@ -115,10 +118,10 @@ This will have a method which returns the month it was posted in:
 	
 	}
 
-The next step is to create a method that will return all records that exist, 
+```
 sorted by month name from January to December. This can be accomplshed by sorting by the `Created` field:
 
-	:::php
+```php
 	class Page extends SiteTree {
 		
 		// ...
@@ -133,9 +136,9 @@ sorted by month name from January to December. This can be accomplshed by sortin
 	
 	}
 
-The final step is the render this into the template using the [api:GroupedList::GroupedBy()] method.
+```
 
-	:::ss
+```ss
 	// Modules list grouped by the Month Posted
 	<h2>Modules</h2>
 	<% loop $GroupedModulesByDate.GroupedBy(MonthCreated) %>
@@ -147,7 +150,7 @@ The final step is the render this into the template using the [api:GroupedList::
 		</ul>
 	<% end_loop %>
 
-## Related
+```
 
  * [Howto: "Pagination"](/developer_guides/templates/how_tos/pagination)
  

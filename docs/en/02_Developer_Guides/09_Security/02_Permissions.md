@@ -28,7 +28,7 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 [api:PermissionProvider] is an interface which lets you define a method *providePermissions()*.
 This method should return a map of permission code names with a human readable explanation of its purpose.
 
-	:::php
+```php
 	class Page_Controller implements PermissionProvider {
 	  public function init() {
 	    parent::init();
@@ -42,7 +42,7 @@ This method should return a map of permission code names with a human readable e
 	  }
 	}
 
-
+```
 This can then be used to add a dropdown for permission codes to the security panel.  Permission::get_all_codes() will be
 a helper method that will call providePermissions() on every applicable class, and collate the resuls into a single
 dropdown.
@@ -95,12 +95,12 @@ This works much like ADMIN permissions (see above)
 
 You can check if a user has access to the CMS by simply performing a check against `CMS_ACCESS`.
 
-	:::php
+```php
 	if (Permission::checkMember($member, 'CMS_ACCESS')) {
 		//user can access the CMS
 	}
 
-Internally, this checks that the user has any of the defined `CMS_ACCESS_*` permissions.
+```
 
 
 ## API Documentation

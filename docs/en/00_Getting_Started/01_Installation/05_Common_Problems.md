@@ -21,12 +21,12 @@ If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL t
 "dev mode". If you can't log-in in the first place because of the error, add this directive to your `mysite/_config/config.yml`
 (don't forget to remove it afterwards!):
 
-	:::php
+```php
 	Director:
 	  # temporary debugging statement
 	  environment_type: 'dev'
 
-[warning]
+```
 On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly
 (and potentially security sensitive) PHP errors as well.
 [/warning]
@@ -35,14 +35,6 @@ On "live" environments, the `?isDev=1` solution is preferred, as it means that y
 
 Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (framework/main.php). To fix this place the following within the `mod_rewrite` section of your .htaccess file:
 
-```
-<IfModule mod_rewrite.c>
-	# Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
-	<IfModule mod_dir.c>
-    	DirectoryIndex disabled
-	</IfModule>
-# ------ #
-</IfModule>
 ```
 
 ## My templates don't update on page refresh
@@ -108,24 +100,4 @@ If that doesn't work out, here's a little script to run checks in all relevant P
 Save it as `check.php` into your webroot, and run it as `php check.php` (or open it in your browser).
 After using the script (and fixing errors afterwards), please remember to remove it again.
 
-```php
-<?php
-// Check for whitespace around PHP brackets which show in output,
-// and hence can break HTML rendering and HTTP operations.
-$path = dirname(__FILE__);
-$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
-$matched = false;
-foreach($files as $name => $file){
-	if($file->getExtension() != 'php') continue;
-	if(preg_match('/thirdparty|vendor/',$file->getPathname())) continue;
-    $content = file_get_contents($file->getPathname());
-    if(preg_match('/^[[:blank:]]+<\?' . 'php/', $content)) {
-		echo sprintf("%s: Space before opening bracket\n", $file->getPathname());
-		$matched = true;
-	}
-    if(preg_match('/^\?' . '>\n?[[:blank:]]+/m', $content)) {
-    	echo sprintf("%s: Space after closing bracket\n", $file->getPathname());
-    	$matched = true;
-    }
-}
 ```

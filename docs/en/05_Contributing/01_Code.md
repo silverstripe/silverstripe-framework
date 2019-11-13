@@ -34,6 +34,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
    Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
    (replace with your own fork URL). Run a `composer update` afterwards.
 
+```
 		"repositories": [
 			{
 				"type": "vcs",
@@ -41,34 +42,39 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 			}
 		],
 
-3. Add a new "upstream" remote so you can track the original repository for changes, and rebase/merge your fork as required.
+```
 
+```
 		cd cms
 		git remote add -f upstream git://github.com/silverstripe/silverstripe-cms.git
 
-4. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
+```
 
+```
 		# verify current branch 'base' then branch and switch
 		git status
 		git branch ###-description
 		git checkout ###-description
 
-5. As time passes, the upstream repository accumulates new commits. Keep your working copy's branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
+```
 
+```
 		# [make sure all your changes are committed as necessary in branch]
 		git fetch upstream
 		git rebase upstream/3.2
 
-6. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
+```
 
+```
 		git fetch upstream
 		git rebase -i upstream/3.2
 
-7. Push release candidate branch to GitHub 
+```
 
+```
 		git push origin ###-description
 
-8. Issue pull request on GitHub.  Visit your forked repository on GitHub.com and click the "Create Pull Request" button next to the new branch.
+```
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you!
@@ -85,11 +91,13 @@ Each release is labeled in the format `$MAJOR`.`$MINOR`.`$PATCH`. For example, 3
 
 * `$MAJOR` version is incremented if any backwards incompatible changes are introduced to the public API. 
 * `$MINOR` version is incremented if new, backwards compatible **functionality** is introduced to the public API or 
+```
 	improvements are introduced within the private code. 
-* `$PATCH` version is incremented if only backwards compatible **bug fixes** are introduced. A bug fix is defined as 
+```
+```
 	an internal change that fixes incorrect behavior.
 
-**Public API** refers to any aspect of the system that has been designed to be used by SilverStripe modules & site developers. In SilverStripe 3, because we haven't been clear, in principle we have to treat every public or protected method as *potentially* part of the public API, but sometimes it comes to a judgement call about how likely it is that a given method will have been used in a particular way. If we were strict about never changing publicly exposed behaviour, it would be difficult to fix any bug whatsoever, which isn't in the interests of our user community.
+```
 
 In future major releases of SilverStripe, we will endeavour to be more explicit about documenting the public API.
 
@@ -216,37 +224,42 @@ Further guidelines:
 
 Example: Bad commit message
 
+```
 	finally fixed this dumb rendering bug that Joe talked about ... LOL
 	also added another form field for password validation
 
-Example: Good commit message
+```
 
+```
 	BUG Formatting through prepValueForDB() 
 
 	Added prepValueForDB() which is called on DBField->writeToManipulation() 
 	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
 	Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
 
-## The steps in more detail
+```
 
 ### Branch for new issue and develop on issue branch
 
 Before you start working on a new feature or bugfix, create a new branch dedicated to that one change named by issue number and description. If you're working on Issue #100, a `DataObject::get_one()` bugfix, create a new branch with the issue number and description, like this:
 
+```
 	$ git checkout -b 100-dataobject-get-one
 
-Edit and test the files on your development environment. When you've got something the way you want and established that it works, commit the changes to your branch on your local git repo. 
+```
 
+```
 	$ git add <filename>
 	$ git commit -m 'Some kind of descriptive message (fixes #100)' 
 
-You'll need to use git add for each file that you created or modified. There are ways to add multiple files, but I highly recommend a more deliberate approach unless you know what you're doing.
+```
 
 Then, you can push your new branch to GitHub, like this (replace `100-dataobject-get-one` with your branch name):
 
+```
 	$ git push origin 100-dataobject-get-one
 
-You should be able to log into your GitHub account, switch to the branch, and see that your changes have been committed. Then click the Pull button to request that your commits get merged into the development master.  
+```
 
 ### Rebase Your Development Branch on the Latest Upstream
 
@@ -254,12 +267,14 @@ To keep your development branch up to date, rebase your changes on top of the cu
 
 If you've set up an upstream branch as detailed above, and a development branch called `100-dataobject-get-one`, you can update `upstream` and rebase your branch from it like so:
 
+```
 	# make sure all your changes are committed as necessary in branch
 	$ git fetch upstream
 	$ git rebase upstream/master
 
-Note that the example doesn't keep your own master branch up to date.  If you wanted to that, you might take the following approach instead:
+```
 
+```
 	# make sure all your changes are committed as necessary in branch
 	$ git fetch upstream
 	$ git checkout master
@@ -267,22 +282,24 @@ Note that the example doesn't keep your own master branch up to date.  If you wa
 	$ git checkout 100-dataobject-get-one
 	$ git rebase master
 
-You may need to resolve conflicts that occur when a file on the development trunk and one of your files have both been changed. Edit each file to resolve the differences, then commit the fixes to your development server repo and test. Each file will need to be "added" before running a "commit." 
+```
 
 Conflicts are clearly marked in the code files. Make sure to take time in determining what version of the conflict you want to keep and what you want to discard. 
 
+```
 	$ git add <filename>
 	$ git rebase --continue
 
-### Squash All Commits Related to a Single Issue into a Single Commit
+```
 
 Once you have rebased your work on top of the latest state of the upstream master, you may have several commits related to the issue you were working on. Once everything is done, squash them into a single commit with a descriptive message (see ["Contributing: Commit Messages"](code#commit-messages)).
 
 To squash four commits into one, do the following:
 
+```
 	$ git rebase -i upstream/master
 
-In the text editor that comes up, replace the words "pick" with "squash" or just "s" next to the commits you want to squash into the commit before it.
+```
 Save and close the editor, and git will combine the "squash"'ed commits with the one before it.
 Git will then give you the opportunity to change your commit message to something like, `BUG DataObject::get_one() parameter order (fixes #100)`.
 
@@ -290,29 +307,34 @@ If you want to discard the commit messages from the commits you're squashing and
 
 Important: If you've already pushed commits to GitHub, and then squash them locally, you will have to force-push to your GitHub again.  Add the `-f` argument to your git push command:
 
+```
 	$ git push -f origin 100-dataobject-get-one
 
-Helpful hint: You can always edit your last commit message by using:
+```
 
+```
 	$ git commit --amend
 
-## Some gotchas
+```
 
 Be careful not to commit any of your configuration files, logs, or throwaway test files to your GitHub repo. These files can contain information you wouldn't want publicly viewable and they will make it impossible to merge your contributions into the main development trunk.
 
 Most of these special files are listed in the `.gitignore` file and won't be included in any commit, but you should carefully review the files you have modified and added before staging them and committing them to your repo. The git status command will display detailed information about any new files, modifications and staged.
 
+```
 	$ git status 
 
-One thing you do not want to do is to issue a git commit with the -a option. This automatically stages and commits every modified file that's not expressly defined in .gitignore, including your crawler logs.
+```
 
+```
 	$ git commit -a 
 
-Sometimes, you might correct an issue which was reported in a different repo. In these cases, don't simply refer to the issue number as GitHub will infer that as correcting an issue in the current repo. In these cases, use the full GitHub path to reference the issue.
+```
 
+```
 	$ git commit -m 'Issue silverstripe/silverstripe-cms#100: Some kind of descriptive message'
 
-Sometimes, you might correct an issue which was reported in a different repo. In these cases, don't simply refer to the issue number as GitHub will infer that as correcting an issue in the current repo. See [Commit Messages](code#commit-messages) above for the correct way to reference these issues.
+```
 
 ## What is git rebase?
 
@@ -320,17 +342,19 @@ Using `git rebase` helps create clean commit trees and makes keeping your code u
 
 Let's say you're working on Issue #212 a new plugin in your own branch and you start with something like this:
 
+```
 	      1---2---3 #212-my-new-plugin
 	     /
 	A---B #master
 
-You keep coding for a few days and then pull the latest upstream stuff and you end up like this:
+```
 
+```
 	      1---2---3 #212-my-new-plugin
 	     /
 	A---B--C--D--E--F #master
 
-So all these new things (C,D,..F) have happened since you started. Normally you would just keep going (let's say you're not finished with the plugin yet) and then deal with a merge later on, which becomes a commit, which get moved upstream and ends up grafted on the tree forever.
+```
 
 A cleaner way to do this is to use rebase to essentially rewrite your commits as if you had started at point F instead of point B. So just do:
 
@@ -338,11 +362,12 @@ git rebase master 212-my-new-plugin
 
 git will rewrite your commits like this:
 
+```
 	                  1---2---3 #212-my-new-plugin
 	                 /
 	A---B--C--D--E--F #master
 
-It's as if you had just started your branch. One immediate advantage you get is that you can test your branch now to see if C, D, E, or F had any impact on your code (you don't need to wait until you're finished with your plugin and merge to find this out). And, since you can keep doing this over and over again as you develop your plugin, at the end your merge will just be a fast-forward (in other words no merge at all).
+```
 
 So when you're ready to send the new plugin upstream, you do one last rebase, test, and then merge (which is really no merge at all) and send out your pull request. Then in most cases, we have a simple fast-forward on our end (or at worst a very small rebase or merge) and over time that adds up to a simpler tree.
 

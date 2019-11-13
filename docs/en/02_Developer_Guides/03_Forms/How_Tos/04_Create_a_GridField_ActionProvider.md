@@ -22,7 +22,7 @@ perform custom operations on a row.
 A basic outline of our new `GridFieldCustomAction.php` will look like something
 below:
 
-	:::php
+```php
 	<?php
 
 	class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider {
@@ -37,7 +37,8 @@ below:
 			return array('class' => 'col-buttons');
 		}
 
-
+```
+```
 		public function getColumnMetadata($gridField, $columnName) {
 			if($columnName == 'Actions') {
 				return array('title' => '');
@@ -59,7 +60,8 @@ below:
 				array('RecordID' => $record->ID)
 			);
 
-
+```
+```
 			return $field->Field();
 		}
 
@@ -80,14 +82,14 @@ below:
 		}
 	}
 
-## Add the GridFieldCustomAction to the current `GridFieldConfig`
+```
 
 While we're working on the code, to add this new action to the `GridField`, add
 a new instance of the class to the [api:GridFieldConfig] object. The `GridField`
 [Reference](/developer_guides/forms/field_types/gridfield) documentation has more information about
 manipulating the `GridFieldConfig` instance if required.
 
-	:::php
+```php
 	// option 1: creating a new GridField with the CustomAction
 	$config = GridFieldConfig::create();
 	$config->addComponent(new GridFieldCustomAction());
@@ -97,7 +99,7 @@ manipulating the `GridFieldConfig` instance if required.
 	// option 2: adding the CustomAction to an exisitng GridField
 	$gridField->getConfig()->addComponent(new GridFieldCustomAction());
 	
-
+```
 For documentation on adding a Component to a `GridField` created by `ModelAdmin` 
 please view the [GridField Customization](/developer_guides/forms/how_tos/create_a_gridfield_actionprovider) section.
 

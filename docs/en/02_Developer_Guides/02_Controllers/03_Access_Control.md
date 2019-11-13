@@ -13,7 +13,7 @@ actions on the website they shouldn't be able to.
 Any action you define on a controller must be defined in a `$allowed_actions` static array. This prevents users from
 directly calling methods that they shouldn't.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -39,14 +39,14 @@ directly calling methods that they shouldn't.
 		);
 	}
 
-[info]
+```
 If the permission check fails, SilverStripe will return a `403` Forbidden HTTP status.
 [/info]
 
 An action named "index" is white listed by default, unless `allowed_actions` is defined as an empty array, or the action 
 is specifically restricted.
 
-	:::php
+```php
 	<?php 
 
 	class MyController extends Controller {
@@ -56,9 +56,9 @@ is specifically restricted.
 		}
 	}
 
-`$allowed_actions` can be defined on `Extension` classes applying to the controller.
+```
 
-	:::php
+```php
 	<?php
 
 	class MyExtension extends Extension {
@@ -68,9 +68,9 @@ is specifically restricted.
 		);
 	}
 
-Only public methods can be made accessible.
+```
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -89,9 +89,9 @@ Only public methods can be made accessible.
 		}
 	}
 
-If a method on a parent class is overwritten, access control for it has to be redefined as well.
+```
 	
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -116,7 +116,7 @@ If a method on a parent class is overwritten, access control for it has to be re
 		}
 	}
 
-[notice]
+```
 Access checks on parent classes need to be overwritten via the [Configuration API](../configuration).
 [/notice]
 
@@ -125,7 +125,7 @@ Access checks on parent classes need to be overwritten via the [Configuration AP
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 	
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -143,12 +143,12 @@ as an `allowed_action`.
 		}
 	}
 
-## Action Level Checks
+```
 
 Each method responding to a URL can also implement custom permission checks, e.g. to handle responses conditionally on 
 the passed request data.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -166,7 +166,7 @@ the passed request data.
 		}
 	}
 
-[notice]
+```
 This is recommended as an addition for `$allowed_actions`, in order to handle more complex checks, rather than a 
 replacement.
 [/notice]
@@ -180,7 +180,7 @@ execution. This behavior can be used to implement permission checks.
 [info]
 `init` is called for any possible action on the controller and before any specific method such as `index`.
 [/info]
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -196,7 +196,7 @@ execution. This behavior can be used to implement permission checks.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Security](../security)
 

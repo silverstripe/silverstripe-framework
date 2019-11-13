@@ -23,7 +23,7 @@ write, and respond appropriately if it isn't.
 
 The return value of `validate()` is a [api:ValidationResult] object.
 
-	:::php
+```php
 	<?php
 
 	class MyObject extends DataObject {
@@ -44,7 +44,7 @@ The return value of `validate()` is a [api:ValidationResult] object.
 		}
 	}
 
-## API Documentation
+```
 
 * [api:DataObject]
 * [api:ValidationResult];
