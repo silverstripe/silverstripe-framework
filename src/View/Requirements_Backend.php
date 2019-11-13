@@ -418,19 +418,19 @@ class Requirements_Backend
 
         // make sure that async/defer is set if it is set once even if file is included multiple times
         $async = (
-            isset($options['async']) && isset($options['async']) == true
+            isset($options['async']) && $options['async']
             || (
                 isset($this->javascript[$file])
                 && isset($this->javascript[$file]['async'])
-                && $this->javascript[$file]['async'] == true
+                && $this->javascript[$file]['async']
             )
         );
         $defer = (
-            isset($options['defer']) && isset($options['defer']) == true
+            isset($options['defer']) && $options['defer']
             || (
                 isset($this->javascript[$file])
                 && isset($this->javascript[$file]['defer'])
-                && $this->javascript[$file]['defer'] == true
+                && $this->javascript[$file]['defer']
             )
         );
         $integrity = $options['integrity'] ?? null;
