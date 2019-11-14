@@ -61,9 +61,6 @@
         "psr/container-implementation": "1.0.0"
     },
     "extra": {
-        "branch-alias": {
-            "4.x-dev": "4.5.x-dev"
-        },
         "expose": [
             "client/images",
             "client/styles"
