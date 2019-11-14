@@ -73,8 +73,8 @@ Silverstripe\SiteConfig\SiteConfig:
 ```
 
 <div class="notice" markdown="1">
-After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
-You may also need to reload the screen with a `?flush=1` i.e http://yoursite.com/admin/settings?flush=1.
+After adding the class and the YAML change, make sure to rebuild your database by visiting http://example.com/dev/build.
+You may also need to reload the screen with a `?flush=1` i.e http://example.com/admin/settings?flush=1.
 </div>
 
 You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and want to
