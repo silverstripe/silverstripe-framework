@@ -122,16 +122,18 @@ The current GitHub labels are grouped into five sections:
 | change/major | A change for the next major release (eg: 4.0) |
 | change/minor | A change for the next minor release (eg: 3.x) |
 | change/patch | A change for the next patch release (eg: 3.1.x) |
-| impact/critical | Broken functionality without workarounds, affecting major usage flows. Should target all [supported minor releases](release_process#supported-versions) |
-| impact/high | Broken functionality with workarounds available, affecting major usage flows |
+| impact/critical | Broken functionality/experience without any workarounds, or an enhancement that is required to enable a critical task. Typically affecting major usage flows or core interactions. If the issue is `type/bug`, the fix for it will target all [supported minor release](release_process#supported-versions) lines |
+| impact/high | Broken functionality/experience with no obvious workarounds available, or an enhancement that provides a clear benefit to users. Typically affecting major usage flows or core interactions |
 | impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
 | impact/low | A nuisance but doesn't break any functionality (typos, etc) |
 | effort/easy | Someone with limited SilverStripe experience could resolve |
 | effort/medium | Someone with a good understanding of SilverStripe could resolve |
 | effort/hard | Only an expert with SilverStripe could resolve |
 | type/docs | A docs change |
+| type/bug | Does not function as intended, or is inadequate for the purpose it was created for |
 | type/frontend | A change to front-end (CSS, HTML, etc) |
-| type/ux | User experience impact |
+| type/enhancement | New feature or improvement for either users or developers |
+| type/ux | Impact on the CMS user or user interface |
 | feedback-required/core-team | Core team members need to give an in-depth consideration |
 | feedback-required/author | This issue is awaiting feedback from the original author of the PR |
 | rfc/draft | [RFC](request_for_comment) under discussion |
