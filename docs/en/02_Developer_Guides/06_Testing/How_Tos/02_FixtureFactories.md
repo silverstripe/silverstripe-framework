@@ -1,4 +1,8 @@
+---
 title: How to use a FixtureFactory
+summary: Provide context to your tests with database fixtures
+icon: industry
+---
 
 # How to use a FixtureFactory
 

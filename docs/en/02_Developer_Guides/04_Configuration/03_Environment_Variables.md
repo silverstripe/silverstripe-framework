@@ -1,5 +1,8 @@
+---
 title: Environment Variables
 summary: Site configuration variables such as database connection details, environment type and remote login information.
+icon: dollar-sign
+---
 
 # Environment Variables
 

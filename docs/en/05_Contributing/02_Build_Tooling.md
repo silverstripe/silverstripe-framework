@@ -1,3 +1,9 @@
+---
+title: Build tooling
+summary: The tools we use to compile our frontend code
+icon: tools
+---
+
 # Client-side build tooling
 
 Core JavaScript, CSS, and thirdparty dependencies are managed with the build tooling

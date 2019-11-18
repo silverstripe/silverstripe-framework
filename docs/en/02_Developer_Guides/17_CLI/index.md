@@ -1,6 +1,9 @@
+---
 title: Command Line Interface
 summary: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
 introduction: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
+icon: terminal
+---
 
 SilverStripe can call [Controllers](../controllers) through a command line interface (CLI) just as easily as through a
 web browser. This functionality can be used to automate tasks with cron jobs, run unit tests, or anything else that
@@ -14,21 +17,21 @@ cd your-webroot/
 php vendor/silverstripe/framework/cli-script.php dev/build
 ```
 
-<div class="notice">
+[notice]
 Your command line php version is likely to use a different configuration as your webserver (run `php -i` to find out
 more). This can be a good thing, your CLI can be configured to use higher memory limits than you would want your website
 to have.
-</div>
+[/notice]
 
 ## Sake - SilverStripe Make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one
 are available. It is accessible via `vendor/bin/sake`.
 
-<div class="info" markdown='1'>
+[info]
 If you are using a Debian server: Check you have the php-cli package installed for sake to work. If you get an error
 when running the command php -v, then you may not have php-cli installed so sake won't work.
-</div>
+[/info]
 
 ### Installation
 
@@ -39,9 +42,9 @@ cd your-webroot/
 sudo ./vendor/bin/sake installsake
 ```
 
-<div class="warning">
+[warning]
 This currently only works on UNIX like systems, not on Windows.
-</div>
+[/warning]
 
 ### Configuration
 
@@ -74,10 +77,10 @@ sake dev/
 sake dev/build "flush=1"
 ```
 
-<div class="alert" markdown="1">
+[alert]
 You have to run "sake" with the same system user that runs your web server,
 otherwise "flush" won't be able to clean the cache properly.
-</div>
+[/alert]
 
 It can also be handy if you have a long running script..
 
@@ -130,9 +133,9 @@ sake -start MyProcess
 sake -stop MyProcess
 ```
 
-<div class="notice">
+[notice]
 `sake` stores `pid` and log files in the site root directory.
-</div>
+[/notice]
 
 ## Arguments
 

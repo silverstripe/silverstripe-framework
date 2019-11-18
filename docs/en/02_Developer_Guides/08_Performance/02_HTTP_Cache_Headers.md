@@ -1,5 +1,8 @@
+---
 title: HTTP Cache Headers
 summary: Set the correct HTTP cache headers for your responses.
+icon: tachometer-alt
+---
 
 # HTTP Cache Headers
 

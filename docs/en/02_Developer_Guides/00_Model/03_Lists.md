@@ -1,5 +1,8 @@
+---
 title: Managing Lists
 summary: The SS_List interface allows you to iterate through and manipulate a list of objects.
+icon: list
+---
 
 # Managing Lists
 

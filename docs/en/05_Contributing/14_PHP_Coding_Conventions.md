@@ -1,3 +1,8 @@
+---
+title: PHP coding conventions
+summary: The code style guidelines we use in our open source software
+iconBrand: php
+---
 # PHP Coding Conventions
 
 This document provides guidelines for code formatting and documentation

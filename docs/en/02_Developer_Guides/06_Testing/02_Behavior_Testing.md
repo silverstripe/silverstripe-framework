@@ -1,5 +1,7 @@
+---
 title: Behavior Testing
 summary: Describe how your application should behave in plain text and run tests in a browser.
+---
 
 # Behavior Testing
 

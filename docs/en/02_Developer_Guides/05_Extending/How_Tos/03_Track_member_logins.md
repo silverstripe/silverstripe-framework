@@ -1,3 +1,8 @@
+---
+title: Track member logins
+summary: Keep a log in the database of who logs in and when
+icon: user-friends
+---
 # Howto: Track Member Logins
 
 Sometimes its good to know how active your users are,

@@ -1,4 +1,7 @@
+---
 title: Disable Anchor Rewriting
+summary: Get more control over how hash links are rendered.
+---
 
 # Disable Anchor Rewriting
 

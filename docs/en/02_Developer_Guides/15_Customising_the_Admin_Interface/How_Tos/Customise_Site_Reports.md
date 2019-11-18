@@ -1,5 +1,8 @@
+---
 title: Customise site reports
 summary: Creating your own custom data or content reports.
+---
+
 # Customise site reports
 
 ## Introduction

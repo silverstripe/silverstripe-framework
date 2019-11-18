@@ -1,3 +1,8 @@
+---
+title: Environment Management
+summary: How to configure your server environment for Silverstripe CMS
+---
+
 # Environment management
 
 As part of website development and hosting it is natural for our sites to be hosted on several different environments.
@@ -59,9 +64,9 @@ SilverStripe\Core\Injector\Injector:
       MyProperty: '`ENV_VAR_HERE`'
 ```
 
-<div class="info">
+[info]
 <p>Environment variables cannot be used outside of Injector config as of version 4.2.</p>
-</div>
+[/info]
 
 
 ## Including an extra `.env` file

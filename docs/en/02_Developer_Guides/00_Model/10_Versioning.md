@@ -1,5 +1,7 @@
+---
 title: Versioning
 summary: Add versioning to your database content through the Versioned extension.
+---
 
 # Versioning
 
@@ -11,7 +13,7 @@ from published content shown to your website visitors.
 
 Versioning in SilverStripe is handled through the [Versioned](api:SilverStripe\Versioned\Versioned) class. As a [DataExtension](api:SilverStripe\ORM\DataExtension) it is possible to be applied to any [DataObject](api:SilverStripe\ORM\DataObject) subclass. The extension class will automatically update read and write operations done via the ORM via the `augmentSQL` database hook.
 
-<div class="notice" markdown="1">
+[notice]
 There are two complementary modules that improve content editor experience around "owned" nested objects (e.g. elemental blocks).
 Those are in experimental status right now, but we would appreciate any feedback and contributions.
 
@@ -25,7 +27,7 @@ The second module extends CMS History UI adding control over nested objects.
 ![](../../_images/snapshot-admin.png)
 
 *Example screenshot from versioned-snapshot-admin*
-</div>
+[/notice]
 
 ## Understanding versioning concepts
 
@@ -63,11 +65,11 @@ SilverStripe makes this possible by using the concept of _cascade publishing_. Y
 
 A non-recursive publish operation is also available if you want to publish a new version of a object without cascade publishing all its children.
 
-<div class="alert" markdown="1">
+[alert]
 Declaring ownership implies publish permissions on owned objects.
 Built-in controllers using cascading publish operations check canPublish()
 on the owner, but not on the owned object.
-</div>
+[/alert]
 
 #### Ownership of unversioned object
 
@@ -92,11 +94,11 @@ Changes to many objects can be grouped together using the [`ChangeSet`](api:Silv
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
 
-<div class="info" markdown="1">
+[info]
 DataObjects can be added to more than one ChangeSet.
 Most of the time, these objects contain changes.
 A ChangeSet can contain unchanged objects as well.
-</div>
+[/info]
 
 #### Implicit vs. Explicit inclusions
 
@@ -144,15 +146,15 @@ class VersionedModel extends DataObject
 }
 ```
 
-<div class="notice" markdown="1">
+[notice]
 The extension is automatically applied to `SiteTree` class. For more information on extensions see
-[Extending](../extending) and the [Configuration](../configuration) documentation.
-</div>
+<a href="../extending">extending</a> and the <a href="../configuration">Configuration</a> documentation.
+[/notice]
 
-<div class="warning" markdown="1">
+[warning]
 Versioning only works if you are adding the extension to the base class. That is, the first subclass
 of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
-</div>
+[/warning]
 
 
 ### Defining ownership between related versioned DataObjects
@@ -344,10 +346,10 @@ use SilverStripe\Versioned\Versioned;
 $historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
 ```
 
-<div class="alert" markdown="1">
+[alert]
 The record is retrieved as a `DataObject`, but saving back modifications via `write()` will create a new version,
 rather than modifying the existing one.
-</div>
+[/alert]
 
 In order to get a list of all versions for a specific record, we need to generate specialized [Versioned_Version](api:SilverStripe\Versioned\Versioned_Version)
 objects, which expose the same database information as a `DataObject`, but also include information about when and how
@@ -512,10 +514,10 @@ Depending on whether staging is enabled, one or more new tables will be created 
 is always created to track historic versions for your model. If staging is enabled this will also create a new
 `<class>_Live` table once you've rebuilt the database.
 
-<div class="notice" markdown="1">
+[notice]
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than
 adding a suffix.
-</div>
+[/notice]
 
  * `MyRecord` table: Contains staged data
  * `MyRecord_Live` table: Contains live data
@@ -682,22 +684,22 @@ SilverStripe\Control\Director:
     'my-objects/$ID': 'MyObjectController'
 ```
 
-<div class="alert" markdown="1">
+[alert]
 The `choose_site_stage()` call only deals with setting the default stage, and doesn't check if the user is
 authenticated to view it. As with any other controller logic, please use `DataObject->canView()` to determine
 permissions, and avoid exposing unpublished content to your users.
-</div>
+[/alert]
 
 ### Controlling permissions to versioned DataObjects
 
 By default, `Versioned` will come out of the box with security extensions which restrict the visibility of objects in Draft (stage) or Archive viewing mode.
 
-<div class="alert" markdown="1">
+[alert]
 As is standard practice, user code should always invoke `canView()` on any object before
 rendering it. DataLists do not filter on `canView()` automatically, so this must be
-done via user code. This be be achieved either by wrapping `<% if $canView %>` in
+done via user code. This be be achieved either by wrapping `<% if $canView %>;` in
 your template, or by implementing your visibility check in PHP.
-</div>
+[/alert]
 
 #### Version specific _can_ methods
 
@@ -845,7 +847,7 @@ public function init()
 
 SilverStripe will usually call these low level methods for you when you. However if you have specialised needs, you may call them directly.
 
-To move a saved version from one stage to another, call [writeToStage(<stage>)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
+To move a saved version from one stage to another, call [writeToStage(stage)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
 
 `copyVersionToStage($versionID, $stage)` allow you to restore a previous version to a specific stage. This is used internally when performing a rollback.
 

@@ -1,5 +1,8 @@
+---
 title: Caching
 summary: Reduce rendering time with cached templates and understand the limitations of the ViewableData object caching.
+icon: rocket
+---
 
 # Caching 
 

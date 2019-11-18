@@ -1,3 +1,8 @@
+---
+title: Composer
+summary: What is composer and how to use it with Silverstripe CMS
+---
+
 # Installing and Upgrading with Composer
 
 Composer is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules. Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org. This is our recommended way of downloading SilverStripe and managing your code.
@@ -19,9 +24,9 @@ You can then run Composer commands by calling `composer`.  For example:
 composer help
 ```
 
-<div class="hint" markdown="1">
+[hint]
 It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
-</div>
+[/hint]
 
 #### Updating composer
 
@@ -99,9 +104,9 @@ composer search silverstripe
 
 This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
-<div class="warning" markdown="1">
+[warning]
 **Version constraints:** `master` is not a legal version string - it's a branch name. These are different things. The version string that would get you the branch is `dev-master`. The version string that would get you a numeric branch is a little different. The version string for the `4` branch is `4.x-dev`.
-</div>
+[/warning]
 
 ## Updating dependencies
 

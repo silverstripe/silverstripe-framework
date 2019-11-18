@@ -1,5 +1,8 @@
+---
 title: Formatting, Modifying and Casting Variables
 summary: Information on casting, security, modifying data before it's displayed to the user and how to format data within the template.
+icon: code
+---
 
 # Formatting and Casting
 
@@ -34,10 +37,10 @@ $Content.FirstParagraph.NoHTML
 <!-- <div class="about-us"> -->
 ```
 
-<div class="notice" markdown="1">
+[notice]
 See the API documentation for [DBHtmlText](api:SilverStripe\ORM\FieldType\DBHtmlText), [FieldType](api:SilverStripe\ORM\FieldType), [DBText](api:SilverStripe\ORM\FieldType\DBText) for all the methods you can use to format 
 your text instances. For other objects such as [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime) objects see their respective API documentation pages.
-</div>
+[/notice]
 
 ## forTemplate
 
@@ -92,10 +95,10 @@ class Page extends SiteTree
 When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
 accordingly. 
 
-<div class="note" markdown="1">
+[note]
 By default, all content without a type explicitly defined in a `$casting` array will be assumed to be `Text` content 
 and HTML characters encoded.
-</div>
+[/note]
 
 ## Escaping
 
@@ -103,9 +106,9 @@ Properties are usually auto-escaped in templates to ensure consistent representa
 displaying un-escaped ampersands in HTML. By default, values are escaped as `XML`, which is equivalent to `HTML` for 
 this purpose. 
 
-<div class="note" markdown="1">
+[note]
 There's some exceptions to this rule, see the ["security" guide](../security).
-</div>
+[/note]
 
 For every field used in templates, a casting helper will be applied. This will first check for any
 `casting` helper on your model specific to that field, and will fall back to the `default_cast` config
@@ -148,11 +151,11 @@ See [DBField](api:SilverStripe\ORM\FieldType\DBField) for the specific implement
   E.g. `<element>$Field.CDATA</element>` will ensure that the `<element>` body is safely escaped
   as a string.
 
-<div class="warning" markdown="1">
+[warning]
 Note: Take care when using `.XML` on `HTMLText` fields, as this will result in double-encoded
 html. To ensure that the correct encoding is used for that field in a template, simply use
 `$Field` by itself to allow the casting helper to determine the best encoding itself.
-</div>
+[/warning]
 
 ## Cast summary methods
 
