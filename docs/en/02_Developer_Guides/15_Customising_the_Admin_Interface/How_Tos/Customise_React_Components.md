@@ -1,3 +1,7 @@
+---
+title: Customising React components
+summary: Learn how to use Injector to override React-rendered form fields
+---
 # Customising React Components
 
 In this tutorial, we'll customise some form elements rendered with React to have some new features.

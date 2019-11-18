@@ -1,3 +1,8 @@
+---
+title: Grouping DataObject sets
+summary: Learn how to split the results of a query into subgroups
+---
+
 # Grouping lists of records
 
 The [SS_List](api:SilverStripe\ORM\SS_List) class is designed to return a flat list of records.

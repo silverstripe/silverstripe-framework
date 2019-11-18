@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
@@ -43,7 +43,37 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 '<p default1="specific1" force1="specific1">Test</p>',
                 '<p default1="specific1" force1="force1" default2="default2" force2="force2">Test</p>',
                 'Default attributes are set when not present in input, forced attributes are always set'
-            )
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" target="_blank">Test</a>',
+                '<a href="/test" target="_blank" rel="noopener noreferrer">Test</a>',
+                'noopener rel attribute is added when target attribute is set'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" target="_top">Test</a>',
+                '<a href="/test" target="_top" rel="noopener noreferrer">Test</a>',
+                'noopener rel attribute is added when target is _top instead of _blank'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" rel="noopener noreferrer">Test</a>',
+                '<a href="/test">Test</a>',
+                'noopener rel attribute is removed when target is not set'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" rel="noopener noreferrer" target="_blank">Test</a>',
+                '<a href="/test" target="_blank">Test</a>',
+                'noopener rel attribute is removed when link_rel_value is an empty string'
+            ),
+            array(
+                'a[href|target|rel]',
+                '<a href="/test" target="_blank">Test</a>',
+                '<a href="/test" target="_blank">Test</a>',
+                'noopener rel attribute is unchanged when link_rel_value is null'
+            ),
         );
 
         $config = HTMLEditorConfig::get('htmleditorsanitisertest');
@@ -53,6 +83,14 @@ class HTMLEditorSanitiserTest extends FunctionalTest
 
             $config->setOptions(array('valid_elements' => $validElements));
             $sanitiser = new HtmlEditorSanitiser($config);
+
+            $value = 'noopener noreferrer';
+            if (strpos($desc, 'link_rel_value is an empty string') !== false) {
+                $value = '';
+            } elseif (strpos($desc, 'link_rel_value is null') !== false) {
+                $value = null;
+            }
+            Config::inst()->set(HTMLEditorSanitiser::class, 'link_rel_value', $value);
 
             $htmlValue = HTMLValue::create($input);
             $sanitiser->sanitise($htmlValue);

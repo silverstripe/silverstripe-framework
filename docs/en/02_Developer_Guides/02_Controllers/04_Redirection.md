@@ -1,5 +1,8 @@
+---
 title: Redirection
 summary: Move users around your site using automatic redirection.
+icon: reply
+---
 
 # Redirection
 

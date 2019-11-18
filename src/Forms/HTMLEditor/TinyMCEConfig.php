@@ -3,9 +3,9 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use Exception;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -13,6 +13,7 @@ use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
@@ -20,7 +21,7 @@ use SilverStripe\View\ThemeResourceLoader;
 /**
  * Default configuration for HtmlEditor specific to tinymce
  */
-class TinyMCEConfig extends HTMLEditorConfig
+class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 {
     /**
      * @config
@@ -209,6 +210,19 @@ class TinyMCEConfig extends HTMLEditorConfig
      */
     protected $contentCSS = null;
 
+
+    /**
+     * List of image size preset that will appear when you select an image. Each preset can have the following:
+     * * `name` to store an internal name for the preset (required)
+     * * `i18n` to store a translation key (e.g.: `SilverStripe\Forms\HTMLEditor\TinyMCEConfig.BESTFIT`)
+     * * `text` that will appear in the button (should be the default English translation)
+     * * `width` which will define the horizontal size of the preset. If not provided, the preset will match the
+     *   original size of the image.
+     * @var array[]
+     * @config
+     */
+    private static $image_size_presets = [ ];
+
     /**
      * TinyMCE JS settings
      *
@@ -268,6 +282,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         'menubar' => false,
         'language' => 'en',
         'branding' => false,
+        'upload_folder_id' => null, // Set folder ID for insert media dialog
     ];
 
     /**
@@ -661,8 +676,37 @@ class TinyMCEConfig extends HTMLEditorConfig
         }
         $settings['theme_url'] = $theme;
 
+        $this->initImageSizePresets($settings);
+
         // Send back
         return $settings;
+    }
+
+    /**
+     * Initialise the image preset on the settings array. This is a custom configuration option that asset-admin reads
+     * to provide some preset image sizes.
+     * @param array $settings
+     */
+    private function initImageSizePresets(array &$settings): void
+    {
+        if (empty($settings['image_size_presets'])) {
+            $settings['image_size_presets'] = self::config()->get('image_size_presets');
+        }
+
+        foreach ($settings['image_size_presets'] as &$preset) {
+            if (isset($preset['i18n'])) {
+                $preset['text'] = _t(
+                    $preset['i18n'],
+                    isset($preset['text']) ? $preset['text'] : ''
+                );
+            } elseif (empty($preset['text']) && isset($preset['width'])) {
+                $preset['text'] = _t(
+                    self::class . '.PIXEL_WIDTH',
+                    '{width} pixels',
+                    $preset
+                );
+            }
+        }
     }
 
     /**
@@ -843,5 +887,35 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
+    }
+
+
+    /**
+     * Sets the upload folder name used by the insert media dialog
+     *
+     * @param string $folderName
+     * @return $this
+     */
+    public function setFolderName(string $folderName): self
+    {
+        $folder = Folder::find_or_make($folderName);
+        $folderID = $folder ? $folder->ID : null;
+        $this->setOption('upload_folder_id', $folderID);
+        return $this;
+    }
+
+    public function provideI18nEntities()
+    {
+        $entities = [
+            self::class . '.PIXEL_WIDTH' => '{width} pixels',
+        ];
+        foreach (self::config()->get('image_size_presets') as $preset) {
+            if (empty($preset['i18n']) || empty($preset['text'])) {
+                continue;
+            }
+            $entities[$preset['i18n']] = $preset['text'];
+        }
+
+        return $entities;
     }
 }

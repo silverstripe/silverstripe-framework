@@ -1,5 +1,8 @@
+---
 title: Contributing Code
 summary: Fix bugs and add new features to help make SilverStripe better.
+icon: code
+---
 
 # Contributing Code - Submitting Bugfixes and Enhancements
 
@@ -14,17 +17,17 @@ For other modules, our [add-ons site](https://addons.silverstripe.org/add-ons/) 
 If you are modifying CSS or JavaScript files in core modules, you'll need to regenerate some files.
 Please check out our [client-side build tooling](build_tooling) guide for details.
 
-<div class="hint" markdown="1">
+[hint]
 Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
 
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
-</div>
+[/hint]
 
 ## Step-by-step: From forking to sending the pull request
 
-<div class="notice" markdown='1'>
+[notice]
 **Note:** Please adjust the commands below to the version of SilverStripe that you're targeting.
-</div>
+[/notice]
 
 1. Create a [fork](https://help.github.com/articles/about-forks/) of the module you want to contribute to (listed on [github.com/silverstripe/](https://github.com/silverstripe/)).
 
@@ -77,14 +80,21 @@ there are any problems they will follow up with you, so please ensure they have 
 ### Picking the right version
 
 The SilverStripe project follows the [Semantic Versioning](http://semver.org) (SemVer) specification for releases. 
-It clarifies what to expect from different releases, and also guides you in choosing the right branch
-to base your pull request on. In short, most pull requests should be based on the "default branch"
-which gets automatically chosen when creating a new pull request. This ensures your code
-gets into the next minor release of the current major release.
+It clarifies what to expect from different releases, and also guides you in choosing the right branch to base your pull request on.
+
+If you are unsure what branch your pull request should go to, consider asking in the GitHub issue that you address with your patch, or
+simply choose the "default branch" of the repository where you want to contribute to. That would usually target the next minor release of the module.
 
 If you are changing existing APIs, introducing new APIs or major new features,
-please review our guidance on [supported versions](release-process#supported-versions).
-You will need to change the branch for your pull request accordingly.
+please review our guidance on [supported versions](release_process#supported-versions).
+You will need to choose the branch for your pull request accordingly.
+
+As we follow SemVer, we name the branches in repositories accordingly
+(using BNF rules defined by [semver.org](https://semver.org/#backusnaur-form-grammar-for-valid-semver-versions)):
+ - `"master"` branch contains the next major and yet unreleased version
+ - `<positive digit>` branches contain released major versions and all changes for yet unreleased minor versions
+ - `<positive digit> "." <digits>` branches contain released minor versions and all changes for yet to be released patch versions
+
 
 
 ### The Pull Request Process
@@ -112,20 +122,22 @@ The current GitHub labels are grouped into five sections:
 | change/major | A change for the next major release (eg: 4.0) |
 | change/minor | A change for the next minor release (eg: 3.x) |
 | change/patch | A change for the next patch release (eg: 3.1.x) |
-| impact/critical | Broken functionality without workarounds, affecting major usage flows. Should target all [supported minor releases](release-process#supported-versions) |
-| impact/high | Broken functionality with workarounds available, affecting major usage flows |
+| impact/critical | Broken functionality/experience without any workarounds, or an enhancement that is required to enable a critical task. Typically affecting major usage flows or core interactions. If the issue is `type/bug`, the fix for it will target all [supported minor release](release_process#supported-versions) lines |
+| impact/high | Broken functionality/experience with no obvious workarounds available, or an enhancement that provides a clear benefit to users. Typically affecting major usage flows or core interactions |
 | impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
 | impact/low | A nuisance but doesn't break any functionality (typos, etc) |
 | effort/easy | Someone with limited SilverStripe experience could resolve |
 | effort/medium | Someone with a good understanding of SilverStripe could resolve |
 | effort/hard | Only an expert with SilverStripe could resolve |
 | type/docs | A docs change |
+| type/bug | Does not function as intended, or is inadequate for the purpose it was created for |
 | type/frontend | A change to front-end (CSS, HTML, etc) |
-| type/ux | User experience impact |
+| type/enhancement | New feature or improvement for either users or developers |
+| type/ux | Impact on the CMS user or user interface |
 | feedback-required/core-team | Core team members need to give an in-depth consideration |
 | feedback-required/author | This issue is awaiting feedback from the original author of the PR |
-| rfc/draft | [RFC](request-for-comment) under discussion |
-| rfc/accepted | [RFC](request-for-comment) where agreement has been reached |
+| rfc/draft | [RFC](request_for_comment) under discussion |
+| rfc/accepted | [RFC](request_for_comment) where agreement has been reached |
 | affects/* | Issue has been observed on a specific release line |
 
 ### Quickfire Do's and Don't's
@@ -153,7 +165,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 ## Check List
 
 * Adhere to our [coding conventions](/contributing/coding_conventions)
-* If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
+* If your patch is extensive, discuss it first on the [SilverStripe Forums](https://forum.silverstripe.org/c/feature-ideas) (ideally before doing any serious coding)
 * When working on existing tickets, provide status updates through ticket comments
 * Check your patches against the "master" branch, as well as the latest release branch
 * Write [unit tests](../developer_guides/testing/unit_testing)

@@ -1,5 +1,8 @@
+---
 title: Rich-text editing (WYSIWYG)
-summary: SilverStripe's use and configuration of TinyMCE html editor.
+summary: Silverstripe CMS's use and configuration of TinyMCE html editor.
+icon: file-code
+---
 
 # Rich-text editing (WYSIWYG)
 
@@ -83,14 +86,14 @@ in the framework (and the `cms` module in case you've got that installed).
 There can be multiple configs, which should always be created / accessed using [HtmlEditorConfig::get()](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig::get()). You can 
 then set the currently active config using `set_active()`.
 
-<div class="info" markdown="1">
-</div>
+[info]
+[/info]
 
-<div class="notice" markdown='1'>
+[notice]
 Currently the order in which the `_config.php` files are executed depends on the module directory names. Execution 
 order is alphabetical, so if you set a TinyMCE option in the `aardvark/_config.php`, this will be overridden in 
 `vendor/silverstripe/framework/admin/_config.php` and your modification will disappear.
-</div>
+[/notice]
 
 ## Adding and removing capabilities
 
@@ -107,11 +110,11 @@ use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
 HtmlEditorConfig::get('cms')->enablePlugins('media');
 ```
 
-<div class="notice" markdown="1">
+[notice]
 This utilities the TinyMCE's `PluginManager::load` function under the hood (check the 
 [TinyMCE documentation on plugin loading](http://www.tinymce.com/wiki.php/API3:method.tinymce.AddOnManager.load) for 
 details).
-</div>
+[/notice]
 
 Plugins and advanced themes can provide additional buttons that can be added (or removed) through the
 configuration. Here is an example of adding a `ssmacron` button after the `charmap` button:
@@ -130,11 +133,11 @@ Buttons can also be removed:
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Internally [HtmlEditorConfig](api:SilverStripe\Forms\HTMLEditor\HtmlEditorConfig) uses the TinyMCE's `theme_advanced_buttons` option to configure these. See the 
 [TinyMCE documentation of this option](http://www.tinymce.com/wiki.php/Configuration:theme_advanced_buttons_1_n)
 for more details.
-</div>
+[/notice]
 
 ### Setting options
 
@@ -162,10 +165,10 @@ HtmlEditorConfig::get('cms')->setOption(
 );
 ```
 
-<div class="notice" markdown="1">
+[notice]
 The default setting for the CMS's `extended_valid_elements` we are overriding here can be found in 
 `vendor/silverstripe/admin/_config.php`.
-</div>
+[/notice]
 
 ## Writing custom plugins
 
@@ -189,6 +192,53 @@ as hotlinking files from the web.
 We use [shortcodes](/developer_guides/extending/shortcodes) to store information about inserted images or media elements. The 
 [ShortcodeParser](api:SilverStripe\View\Parsers\ShortcodeParser) API post-processes the HTML content on rendering, and replaces the shortcodes accordingly. It also 
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
+
+### Image size pre-sets
+SilverStripe will suggest pre-set image size in the HTMLEditor. Editors can quickly switch between the pre-set size when interacting with images in the HTMLEditorField.
+
+The default values are "Best fit" (600 pixels width) and original size. Developers can customise the pre-set sizes by altering their HTMLEditorConfig.
+
+You can alter the defaults for all HTMLEditor in your YML configuration.
+
+```yaml
+SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+  image_size_presets:
+    - name: widesize
+      i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.WIDE_SIZE
+      text: Wide size
+      width: 900
+```
+
+You can edit the image size pre-sets for an individual configuration with this code snippet.
+
+```php
+<?php
+use SilverStripe\Forms\HTMLEditor\HtmlEditorConfig;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
+
+HtmlEditorConfig::get('cms')->setOption('image_size_presets', [
+    [
+        'width' => 300,
+        'text' => 'Small fit',
+        'name' => 'smallfit',
+        'default' => true
+    ],
+    [
+        'width' => 600,
+        'i18n' =>  TinyMCEConfig::class . '.BEST_FIT',
+        'text' => 'Best fit',
+        'name' => 'bestfit'
+    ],
+    [
+        'i18n' =>  TinyMCEConfig::class . '.ORIGINAL_SIZE',
+        'text' => 'Original size',
+        'name' => 'originalsize'
+    ]
+]);
+```
+
+
+
 
 ## oEmbed: Embedding media through external services
 

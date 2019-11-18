@@ -1,5 +1,7 @@
+---
 title: Introduction to a Controller
 summary: A brief look at the definition of a Controller, creating actions and how to respond to requests.
+---
 
 # Introduction to Controllers
 
@@ -37,15 +39,15 @@ class TeamController extends Controller
 We need to define the URL that this controller can be accessed on. In our case, the `TeamsController` should be visible 
 at http://yoursite.com/teams/ and the `players` custom action is at http://yoursite.com/team/players/.
 
-<div class="info" markdown="1">
+[info]
 If you're using the `cms` module with and dealing with `Page` objects then for your custom `Page Type` controllers you 
 would extend `ContentController` or `PageController`. You don't need to define the routes value as the `cms` handles 
 routing.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `?flush=1`.
-</div>
+[/alert]
 
 **app/_config/routes.yml**
 
@@ -66,9 +68,9 @@ For more information about creating custom routes, see the [Routing](routing) do
 Controllers respond by default to an `index` method. You don't need to define this method (as it's assumed) but you
 can override the `index()` response to provide custom data back to the [Template and Views](../templates). 
 
-<div class="notice" markdown="1">
+[notice]
 It is standard in SilverStripe for your controller actions to be `lowercasewithnospaces`
-</div>
+[/notice]
 
 Action methods can return one of four main things:
 

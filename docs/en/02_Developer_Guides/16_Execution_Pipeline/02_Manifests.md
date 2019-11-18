@@ -1,5 +1,7 @@
+---
 title: Manifests
 summary: Manage caches of file path maps and other expensive information
+---
 
 # Manifests
 

@@ -98,6 +98,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $file = '';
         $line = '';
 
+        // TODO: deprecate and use Session::regenerateSessionId
         // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
         // There's nothing we can do about this, because it's an operating system function!
         if (!headers_sent($file, $line)) {

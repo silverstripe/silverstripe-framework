@@ -99,8 +99,8 @@ class Form extends BaseForm
 
     protected function buildActionList(Storage $storage)
     {
-        $cancel = FormAction::create('doRefuse', _t(__CLASS__.'.REFUSE', 'Cancel'));
-        $confirm = FormAction::create('doConfirm', _t(__CLASS__.'.CONFIRM', 'Run the action'))->setAutofocus(true);
+        $cancel = FormAction::create('doRefuse', _t(__CLASS__ . '.REFUSE', 'Cancel'));
+        $confirm = FormAction::create('doConfirm', _t(__CLASS__ . '.CONFIRM', 'Run the action'))->setAutofocus(true);
 
         if ($storage->getHttpMethod() === 'POST') {
             $confirm->setAttribute('formaction', htmlspecialchars($storage->getSuccessUrl()));
@@ -165,7 +165,7 @@ class Form extends BaseForm
     protected function buildEmptyFieldList()
     {
         return FieldList::create(
-            HeaderField::create(null, _t(__CLASS__.'.EMPTY_TITLE', 'Nothing to confirm'))
+            HeaderField::create(null, _t(__CLASS__ . '.EMPTY_TITLE', 'Nothing to confirm'))
         );
     }
 }

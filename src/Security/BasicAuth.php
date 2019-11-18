@@ -16,11 +16,16 @@ use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 /**
  * Provides an interface to HTTP basic authentication.
  *
- * This utility class can be used to secure any request with basic authentication.  To do so,
- * {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
+ * This utility class can be used to secure any request processed by SilverStripe with basic authentication.
+ * To do so, {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
  *
  * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
  * for more information. You can control this setting on controller-level by using {@link Controller->basicAuthEnabled}.
+ *
+ * CAUTION: Basic Auth is an oudated security measure which passes credentials without encryption over the network.
+ * It is considered insecure unless this connection itself is secured (via HTTPS).
+ * It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+ * Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
  */
 class BasicAuth
 {
@@ -68,7 +73,6 @@ class BasicAuth
      * Require basic authentication.  Will request a username and password if none is given.
      *
      * Used by {@link Controller::init()}.
-     *
      *
      * @param HTTPRequest $request
      * @param string $realm
@@ -164,16 +168,19 @@ class BasicAuth
     }
 
     /**
-     * Enable protection of the entire site with basic authentication.
+     * Enable protection of all requests handed by SilverStripe with basic authentication.
      *
      * This log-in uses the Member database for authentication, but doesn't interfere with the
      * regular log-in form. This can be useful for test sites, where you want to hide the site
      * away from prying eyes, but still be able to test the regular log-in features of the site.
      *
      * You can also enable this feature by adding this line to your .env. Set this to a permission
-     * code you wish to require.
+     * code you wish to require: `SS_USE_BASIC_AUTH=ADMIN`
      *
-     * SS_USE_BASIC_AUTH=ADMIN
+     * CAUTION: Basic Auth is an oudated security measure which passes credentials without encryption over the network.
+     * It is considered insecure unless this connection itself is secured (via HTTPS).
+     * It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+     * Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
      *
      * @param boolean $protect Set this to false to disable protection.
      * @param string $code {@link Permission} code that is required from the user.

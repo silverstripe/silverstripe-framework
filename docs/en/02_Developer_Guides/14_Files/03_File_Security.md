@@ -1,4 +1,8 @@
+---
+title: File security
 summary: Manage access permission to assets
+icon: lock
+---
 
 # File Security
 
@@ -72,12 +76,12 @@ Most commonly this is through the "Access to Files section" permission.
 Custom implementations (e.g. APIs or custom file viewers) can have
 further restrictions in your project. 
 
-<div class="warning" markdown="1">
+[warning]
 When implenting your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
 existing unprotected files are not retroactively moved to the protected asset store.
 While those new permissions are honoured in the CMS, protected files through custom `canView()`
 can still be downloaded through a public URL until a `write()` operation is triggered on them.
-</div>  
+[/warning]  
 
 ## Asset stores
 
@@ -214,10 +218,10 @@ $object->SecretFile->protectFile();
 $object->PublicFile->publishFile();
 ```
 
-<div class="notice" markdown="1">
+[notice]
 One thing to note is that all variants of a single file will be treated as
 a single entity for access control, so specific variants cannot be individually controlled.
-</div>
+[/notice]
 
 ## How file access is protected
 
@@ -327,11 +331,11 @@ SilverStripe\Assets\File:
     - xzip
 ```
 
-<div class="warning" markdown="1">
+[warning]
 Any file not included in this config, or in the default list of extensions, will be blocked from
 any requests to the assets directory. Invalid files will be blocked regardless of whether they
 exist or not, and will not invoke any PHP processes.
-</div>
+[/warning]
 
 ### Configuring: Protected file headers {#protected_file_headers}
 

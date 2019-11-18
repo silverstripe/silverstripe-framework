@@ -14,7 +14,7 @@ class StorageTest extends SapphireTest
 
     private function getNamespace($id)
     {
-        return str_replace('\\', '.', Storage::class).'.'.$id;
+        return str_replace('\\', '.', Storage::class) . '.' . $id;
     }
 
     public function testNewStorage()

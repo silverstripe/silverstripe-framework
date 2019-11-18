@@ -1,5 +1,8 @@
+---
 title: Introduction to the Data Model and ORM
 summary: Introduction to creating and querying a database records through the ORM (object-relational model)
+icon: database
+---
 
 # Introduction to the Data Model and ORM
 
@@ -60,10 +63,10 @@ It **won't** do any of the following
   their table names don't match a SilverStripe data class.
 
 
-<div class="notice" markdown='1'>
+[notice]
 You need to be logged in as an administrator to perform this command, unless your site is in [dev mode](../debugging), 
 or the command is run through [CLI](../cli).
-</div>
+[/notice]
 
 When rebuilding the database schema through the [ClassLoader](api:SilverStripe\Core\Manifest\ClassLoader) the following additional properties are 
 automatically set on the `DataObject`.
@@ -121,9 +124,9 @@ Or, a better way is to use the `create` method.
 $player = Player::create();
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Using the `create()` method provides chainability, which can add elegance and brevity to your code, e.g. `Player::create()->write()`. More importantly, however, it will look up the class in the [Injector](../extending/injector) so that the class can be overriden by [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection).
-</div>
+[/notice]
 
 
 Database columns and properties can be set as class properties on the object. The SilverStripe ORM handles the saving
@@ -179,9 +182,9 @@ $members = Player::get()->filter([
 
 ```
 
-<div class="info" markdown="1">
+[info]
 Provided `filter` values are automatically escaped and do not require any escaping.
-</div>
+[/info]
 
 ## Lazy Loading
 
@@ -440,11 +443,11 @@ $teams = Team::get()->filter('Players.Sum(PointsScored):LessThan', 300);
 It is also possible to filter by a PHP callback, this will force the data model to fetch all records and loop them in 
 PHP, thus `filter()` or `filterAny()` are to be preferred over `filterByCallback()`.    
 
-<div class="notice" markdown="1">
+[notice]
 Because `filterByCallback()` has to run in PHP, it has a significant performance tradeoff, and should not be used on large recordsets. 
 
 `filterByCallback()` will always return  an `ArrayList`.
-</div>
+[/notice]
 
 The first parameter to the callback is the item, the second parameter is the list itself. The callback will run once 
 for each record, if the callback returns true, this record will be added to the list of returned items.    
@@ -470,9 +473,9 @@ $players = Player::get()->exclude('FirstName', 'Sam');
 Remove both Sam and Sig..
 
 ```php
-$players = Player::get()->exclude(
+$players = Player::get()->exclude([
     'FirstName' => ['Sam','Sig']
-);
+]);
 ```
 
 `Exclude` follows the same pattern as filter, so for removing only Sam Minnée from the list:
@@ -552,9 +555,9 @@ offset, if not provided as an argument, will default to 0.
 $members = Member::get()->sort('Surname')->limit(10, 4);
 ```
 
-<div class="alert">
+[alert]
 Note that the `limit` argument order is different from a MySQL LIMIT clause.
-</div>
+[/alert]
 
 ### Mapping classes to tables with DataObjectSchema
 
@@ -653,10 +656,10 @@ $members = Member::get()
     ->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "Rel");
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Passing a *$join* statement to will filter results further by the JOINs performed against the foreign table. It will 
 **not** return the additionally joined data.
-</div>
+[/alert]
 
 ### Default Values
 
@@ -675,10 +678,10 @@ class Player extends DataObject
 }
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Note: Alternatively you can set defaults directly in the database-schema (rather than the object-model). See 
 [Data Types and Casting](/developer_guides/model/data_types_and_casting) for details.
-</div>
+[/notice]
 
 ## Subclasses
 

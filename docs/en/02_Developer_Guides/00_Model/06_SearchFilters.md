@@ -1,5 +1,8 @@
+---
 title: SearchFilter Modifiers
 summary: Use suffixes on your ORM queries.
+icon: search
+---
 
 # SearchFilter Modifiers
 

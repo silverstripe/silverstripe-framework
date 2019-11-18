@@ -1,5 +1,7 @@
+---
 title: Unit and Integration Testing
 summary: Test models, database logic and your object methods.
+---
 
 # Unit and Integration Testing
 
@@ -36,44 +38,44 @@ class PageTest extends SapphireTest
 }
 ```
 
-<div class="info" markdown="1">
+[info]
 Tests for your application should be stored in the `app/tests` directory. Test cases for add-ons should be stored in 
 the `(modulename)/tests` directory. 
 
 Test case classes should end with `Test` (e.g `PageTest`) and test methods must start with `test` (e.g `testMyMethod`).
 
 Ensure you [import](http://php.net/manual/en/language.namespaces.importing.php#example-252) any classes you need for the test, including `SilverStripe\Dev\SapphireTest` or `SilverStripe\Dev\FunctionalTest`.
-</div>
+[/info]
 
 A SilverStripe unit test is created by extending one of two classes, [SapphireTest](api:SilverStripe\Dev\SapphireTest) or [FunctionalTest](api:SilverStripe\Dev\FunctionalTest). 
 
 [SapphireTest](api:SilverStripe\Dev\SapphireTest) is used to test your model logic (such as a `DataObject`), and [FunctionalTest](api:SilverStripe\Dev\FunctionalTest) is used when 
 you want to test a `Controller`, `Form` or anything that requires a web page.
 
-<div class="info" markdown="1">
+[info]
 `FunctionalTest` is a subclass of `SapphireTest` so will inherit all of the behaviors. By subclassing `FunctionalTest`
 you gain the ability to load and test web pages on the site. 
 
 `SapphireTest` in turn, extends `PHPUnit_Framework_TestCase`. For more information on `PHPUnit_Framework_TestCase` see 
 the [PHPUnit](http://www.phpunit.de) documentation. It provides a lot of fundamental concepts that we build on in this 
 documentation.
-</div>
+[/info]
 
 ## Test Databases and Fixtures
 
-SilverStripe tests create their own database when the test starts. New `ss_tmp` databases are created using the same 
+SilverStripe tests create their own database when the test starts and fixture files are specified. New `ss_tmp` databases are created using the same 
 connection details you provide for the main website. The new `ss_tmp` database does not copy what is currently in your 
 application database. To provide seed data use a [Fixture](fixtures) file.
 
-<div class="alert" markdown="1">
+[alert]
 As the test runner will create new databases for the tests to run, the database user should have the appropriate 
 permissions to create new databases on your server.
-</div>
+[/alert]
 
-<div class="notice" markdown="1">
-The test database is rebuilt every time one of the test methods is run. Over time, you may have several hundred test 
+[notice]
+The test database is rebuilt every time one of the test methods is run and is removed afterwards. If the test is interrupted, the database will not be removed. Over time, you may have several hundred test 
 databases on your machine. To get rid of them, run `sake dev/tasks/CleanupTestDatabasesTask`.
-</div>
+[/notice]
 
 ## Custom PHPUnit Configuration
 

@@ -68,4 +68,26 @@ class TinyMCEConfigTest extends SapphireTest
             $config->getContentCSS()
         );
     }
+
+    public function testProvideI18nEntities()
+    {
+        TinyMCEConfig::config()->set('image_size_presets', [
+            ['i18n' => TinyMCEConfig::class . '.TEST', 'text' => 'Foo bar'],
+            ['text' => 'No translation key'],
+            ['i18n' => TinyMCEConfig::class . '.NO_TRANSLATION_TEXT'],
+            ['i18n' => TinyMCEConfig::class . '.TEST_TWO', 'text' => 'Bar foo'],
+        ]);
+
+        $config = TinyMCEConfig::create();
+        $translations = $config->provideI18nEntities();
+
+        $this->assertEquals(
+            3,
+            sizeof($translations),
+            'Only two presets have valid translation + the generic PIXEL_WIDTH one'
+        );
+        $this->assertEquals('Foo bar', $translations[TinyMCEConfig::class . '.TEST']);
+        $this->assertEquals('Bar foo', $translations[TinyMCEConfig::class . '.TEST_TWO']);
+        $this->assertEquals('{width} pixels', $translations[TinyMCEConfig::class . '.PIXEL_WIDTH']);
+    }
 }

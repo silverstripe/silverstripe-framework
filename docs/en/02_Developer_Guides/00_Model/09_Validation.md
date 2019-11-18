@@ -1,5 +1,8 @@
+---
 title: Model Validation and Constraints
 summary: Validate your data at the model level
+icon: check-square
+---
 
 # Validation and Constraints
 

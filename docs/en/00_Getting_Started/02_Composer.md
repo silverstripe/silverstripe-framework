@@ -1,3 +1,8 @@
+---
+title: Composer
+summary: What is composer and how to use it with Silverstripe CMS
+---
+
 # Using SilverStripe with Composer
 
 ## Requirements
@@ -62,9 +67,9 @@ This will install the `silverstripe/blog` module in the latest compatible versio
 composer require silverstripe/blog ^2
 ```
 
-<div class="warning" markdown="1">
+[warning]
 **Version constraints:** `master` is not a legal version string - it's a branch name. These are different things. The version string that would get you the branch is `dev-master`. The version string that would get you a numeric branch is a little different. The version string for the `4` branch is `4.x-dev`.
-</div>
+[/warning]
 
 ## Updating dependencies
 

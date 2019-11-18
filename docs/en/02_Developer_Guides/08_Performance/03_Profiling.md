@@ -1,5 +1,8 @@
+---
 title: Profiling
 summary: Identify bottlenecks within your application.
+icon: tachometer-alt
+---
 
 # Profiling
 

@@ -1,5 +1,7 @@
+---
 title: Upgrading a module
-introduction: Upgrade your module to be compatible with SilverStripe 4 and make it easy for your users to upgrade.
+summary: Upgrade your module to be compatible with SilverStripe 4 and make it easy for your users to upgrade.
+---
 
 # Upgrading a module to be compatible with SilverStripe 4
 

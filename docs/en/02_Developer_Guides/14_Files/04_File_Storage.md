@@ -1,5 +1,8 @@
+---
 title: File storage
 summary: Describes the persistence layer of files
+icon: hdd
+---
 
 # File storage
 

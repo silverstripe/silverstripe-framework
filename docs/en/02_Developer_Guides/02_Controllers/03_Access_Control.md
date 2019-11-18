@@ -1,5 +1,8 @@
+---
 title: Access Control
 summary: Define allowed behavior and add permission based checks to your Controllers.
+icon: user-lock
+---
 
 # Access Control
 
@@ -39,9 +42,9 @@ class MyController extends Controller
 }
 ```
 
-<div class="info">
+[info]
 If the permission check fails, SilverStripe will return a `403` Forbidden HTTP status.
-</div>
+[/info]
 
 An action named "index" is white listed by default, unless `allowed_actions` is defined as an empty array, or the action 
 is specifically restricted.
@@ -130,9 +133,9 @@ class MyChildController extends MyController
 
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Access checks on parent classes need to be overwritten via the [Configuration API](../configuration).
-</div>
+[/notice]
 
 ## Forms
 
@@ -190,10 +193,10 @@ class MyController extends Controller
 
 ```
 
-<div class="notice" markdown="1">
+[notice]
 This is recommended as an addition for `$allowed_actions`, in order to handle more complex checks, rather than a 
 replacement.
-</div>
+[/notice]
 
 ## Controller Level Checks
 
@@ -201,9 +204,9 @@ After checking for allowed_actions, each controller invokes its `init()` method,
 common state, If an `init()` method returns a `HTTPResponse` with either a 3xx or 4xx HTTP status code, it'll abort 
 execution. This behavior can be used to implement permission checks.
 
-<div class="info" markdown="1">
+[info]
 `init` is called for any possible action on the controller and before any specific method such as `index`.
-</div>
+[/info]
 
 ```php
 use SilverStripe\Security\Permission;

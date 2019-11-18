@@ -1,3 +1,7 @@
+---
+title: Create a GridField action provider
+summary: Handle custom actions on your GridField
+---
 # How to add a custom action to a GridField row
 
 You can add an action to the row(s) of a [GridField](/developer_guides/forms/field_types/gridfield), such as the built in edit or delete actions.

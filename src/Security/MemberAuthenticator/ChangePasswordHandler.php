@@ -158,6 +158,7 @@ class ChangePasswordHandler extends RequestHandler
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
 
+        $this->getRequest()->getSession()->regenerateSessionId();
         // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
         $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
     }

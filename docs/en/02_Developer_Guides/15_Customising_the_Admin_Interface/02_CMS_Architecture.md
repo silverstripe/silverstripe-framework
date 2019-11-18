@@ -1,3 +1,8 @@
+---
+title: CMS Architecture
+summary: An overview of the code architecture of the CMS
+icon: sitemap
+---
 # CMS Architecture
 
 ## Introduction
@@ -17,7 +22,7 @@ For a more practical-oriented approach to CMS customizations, refer to the
 
 ## Installation
 
-In order to contribute to the core frontend code, you need [NodeJS 4.x](https://nodejs.org/).
+In order to contribute to the core frontend code, you need [NodeJS](https://nodejs.org/).
 This will install the package manager necessary to download frontend requirements.
 Once NodeJS is ready to go, you can download those requirements:
 

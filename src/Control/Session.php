@@ -225,7 +225,6 @@ class Session
      */
     public function init(HTTPRequest $request)
     {
-
         if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
             $this->start($request);
         }
@@ -640,6 +639,18 @@ class Session
                 $sourceVal = $this->nestedValue($key, $source);
                 $this->recursivelyApplyChanges($changed, $sourceVal, $destVal);
             }
+        }
+    }
+
+    /**
+     * Regenerate session id
+     *
+     * @internal This is for internal use only. Isn't a part of public API.
+     */
+    public function regenerateSessionId()
+    {
+        if (!headers_sent()) {
+            session_regenerate_id(true);
         }
     }
 }

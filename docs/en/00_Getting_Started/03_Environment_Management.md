@@ -1,3 +1,8 @@
+---
+title: Environment Management
+summary: How to configure your server environment for Silverstripe CMS
+---
+
 # Environment management
 
 As part of website development and hosting it is natural for our sites to be hosted on several different environments.
@@ -59,9 +64,9 @@ SilverStripe\Core\Injector\Injector:
       MyProperty: '`ENV_VAR_HERE`'
 ```
 
-<div class="info">
+[info]
 <p>Environment variables cannot be used outside of Injector config as of version 4.2.</p>
-</div>
+[/info]
 
 
 ## Including an extra `.env` file
@@ -99,7 +104,7 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
 | `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin. This is a user with administrative privileges.|
 | `SS_DEFAULT_ADMIN_PASSWORD`| The password of the default admin. This will not be stored in the database.|
-| `SS_USE_BASIC_AUTH`| Protect the site with basic auth (good for test sites).<br/>When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` rewrite rule to your `.htaccess` file|
+| `SS_USE_BASIC_AUTH`| Baseline protection for requests handled by SilverStripe. Usually requires additional security measures for comprehensive protection. See [Environment Types](/developer_guides/debugging/environment_types) for caveats.|
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you define this constant, all emails will be sent from this address.|
 | `SS_ERROR_LOG` | Relative path to the log file. |

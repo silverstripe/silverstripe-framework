@@ -268,15 +268,15 @@ class PermissionCheckboxSetField extends FormField
             }
         }
         if ($this->readonly) {
+            $message = _t(
+                'SilverStripe\\Security\\Permission.UserPermissionsIntro',
+                'Assigning groups to this user will adjust the permissions they have.'
+                . ' See the groups section for details of permissions on individual groups.'
+            );
+
             return
                 "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
-                "<li class=\"help\">" .
-                _t(
-                    'SilverStripe\\Security\\Permission.UserPermissionsIntro',
-                    'Assigning groups to this user will adjust the permissions they have.'
-                    . ' See the groups section for details of permissions on individual groups.'
-                ) .
-                "</li>" .
+                "<li class=\"help\">" . $message . "</li>" .
                 $options .
                 "</ul>\n";
         } else {

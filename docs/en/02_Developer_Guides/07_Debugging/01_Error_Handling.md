@@ -1,5 +1,8 @@
+---
 title: Logging and Error Handling
 summary: Trap, fire and report diagnostic logs, user exceptions, warnings and errors.
+icon: exclamation-circle
+---
 
 # Logging and Error Handling
 
@@ -249,11 +252,11 @@ SilverStripe\Core\Injector\Injector:
       Body: "The website server has not been able to respond to your request"
 ```
 
-<div class="info" markdown="1">
+[info]
 In addition to SilverStripe-integrated logging, it is advisable to fall back to PHP's native logging functionality. A
 script might terminate before it reaches the SilverStripe error handling, for example in the case of a fatal error. Make
 sure `log_errors` and `error_log` in your PHP ini file are configured.
-</div>
+[/info]
 
 ## Replacing default implementations
 

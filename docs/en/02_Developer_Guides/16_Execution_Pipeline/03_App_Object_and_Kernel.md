@@ -1,5 +1,7 @@
+---
 title: App Object and Kernel
 summary: Provides bootstrapping and entrypoint to the SilverStripe application
+---
 
 # Kernel
 

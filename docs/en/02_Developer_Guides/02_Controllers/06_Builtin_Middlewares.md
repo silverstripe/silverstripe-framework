@@ -1,5 +1,7 @@
+---
 title: Built-in Middleware
 summary: Middleware components that come with SilverStripe Framework
+---
 
 # Built-in Middleware
 

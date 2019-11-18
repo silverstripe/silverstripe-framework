@@ -1,5 +1,8 @@
+---
 title: Personal Data
 summary: How the SilverStripe CMS deals with data privacy
+icon: user-ninja
+---
 
 # Personal Data
 

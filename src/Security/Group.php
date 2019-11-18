@@ -96,7 +96,7 @@ class Group extends DataObject
 
         return $doSet;
     }
-    
+
     private function getDecodedBreadcrumbs()
     {
         $list = Group::get()->exclude('ID', $this->ID);
@@ -166,10 +166,10 @@ class Group extends DataObject
             /** @var GridFieldDetailForm $detailForm */
             $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
-                ->setValidator(Member_Validator::create())
                 ->setItemEditFormCallback(function ($form) use ($group) {
                     /** @var Form $form */
                     $record = $form->getRecord();
+                    $form->setValidator($record->getValidator());
                     $groupsField = $form->Fields()->dataFieldByName('DirectGroups');
                     if ($groupsField) {
                         // If new records are created in a group context,
@@ -332,7 +332,7 @@ class Group extends DataObject
         // Now set all children groups as a new foreign key
         $familyIDs = $this->collateFamilyIDs();
         $result = $result->forForeignID($familyIDs);
-        
+
         return $result->where($filter);
     }
 

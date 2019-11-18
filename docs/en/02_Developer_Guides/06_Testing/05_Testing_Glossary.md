@@ -1,4 +1,7 @@
+---
 title: Testing Glossary
+summary: All the jargon you need to be a bonafide testing guru
+---
 
 <dl>
 <dt>Assertion<dd>A predicate statement that must be true when a test runs.

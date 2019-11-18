@@ -1,3 +1,8 @@
+---
+title: Access Control
+summary: Restrict CMS access to specific groups of users
+icon: user-lock
+---
 # Access Control and Page Security
 
 There is a fairly comprehensive security mechanism in place for SilverStripe. If you want to add premium content to your

@@ -1,5 +1,8 @@
+---
 title: Authentication
 summary: Explains SilverStripe's Authentication options and custom authenticators. 
+icon: users-cog
+---
 
 # Authentication
 

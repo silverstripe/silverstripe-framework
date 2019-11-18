@@ -1,5 +1,8 @@
+---
 title: Themes
 summary: What makes up a SilverStripe Theme. How to install one or write your own theme. 
+icon: paint-brush
+---
 
 # Themes
 
@@ -22,10 +25,10 @@ composer require my_vendor/my_theme [version]
 
 *Note:* `[version]` should be replaced with a version constraint if you know it, otherwise leave it blank to pull the latest version compatible with your project.
 
-<div class="alert" markdown="1">
+[alert]
 As you've added new files to your SilverStripe installation, make sure you clear the SilverStripe cache by appending
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
-</div>
+[/alert]
 
 ### Configuring themes
 

@@ -1,5 +1,8 @@
+---
 title: Sessions
 summary: A set of static methods for manipulating PHP sessions.
+icon: user
+---
 
 # Sessions
 

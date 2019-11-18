@@ -1,4 +1,6 @@
+---
 summary: Learn how to crop and resize images in templates and PHP code
+---
 
 # Image
 

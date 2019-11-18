@@ -68,7 +68,7 @@ class ConfirmationMiddlewareTest extends SapphireTest
         $this->assertFalse($next);
         $this->assertInstanceOf(HTTPResponse::class, $response);
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(Director::baseURL().'dev/confirm/middleware', $response->getHeader('location'));
+        $this->assertEquals(Director::baseURL() . 'dev/confirm/middleware', $response->getHeader('location'));
 
         // Test bypasses have more priority than rules
         $middleware->setBypasses([new Url('dev/build')]);

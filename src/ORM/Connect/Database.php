@@ -656,6 +656,20 @@ abstract class Database
         return false;
     }
 
+
+    /**
+     * Determines if the used database supports given transactionMode as an argument to startTransaction()
+     * If transactions are completely unsupported, returns false.
+     *
+     * @param string $mode
+     * @return bool
+     */
+    public function supportsTransactionMode(string $mode): bool
+    {
+        // Default implementation: assume all modes are a supported.
+        return $this->supportsTransactions();
+    }
+
     /**
      * Invoke $callback within a transaction
      *

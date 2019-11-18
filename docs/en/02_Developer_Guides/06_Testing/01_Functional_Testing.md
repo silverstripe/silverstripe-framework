@@ -1,5 +1,7 @@
+---
 title: Functional Testing
 summary: Test controllers, forms and HTTP responses.
+---
 
 # Functional Testing
 
@@ -90,9 +92,9 @@ Assert that the most recently queried page contains a number of content tags spe
 selector will be applied to the HTML of the most recent page. The content of every matching tag will be examined. The 
 assertion fails if one of the expectedMatches fails to appear.
 
-<div class="notice" markdown="1">
+[notice]
 `&amp;nbsp;` characters are stripped from the content; make sure that your assertions take this into account.
-</div>
+[/notice]
 
 ### assertExactHTMLMatchBySelector
 ```php
@@ -105,9 +107,9 @@ Assert that the most recently queried page contains a number of content tags spe
 selector will be applied to the HTML of the most recent page.  The full HTML of every matching tag will be examined. The 
 assertion fails if one of the expectedMatches fails to appear.
 
-<div class="notice" markdown="1">
+[notice]
 `&amp;nbsp;` characters are stripped from the content; make sure that your assertions take this into account.
-</div>
+[/notice]
 
 ## Related Documentation
 
