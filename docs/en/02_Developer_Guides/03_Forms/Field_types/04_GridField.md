@@ -1,24 +1,26 @@
+---
 title: GridField
 summary: How to use the GridField class for managing tabular data.
-
+icon: table
+---
 # GridField
 
 [api:GridField] is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 
 tabular data in a format that is easy to view and modify. It can be thought of as a HTML table with some tricks.
 
-	:::php
+```php
 	$field = new GridField($name, $title, $list);
 
+```
 
-
-<div class="hint" markdown='1'>
+[hint]
 GridField can only be used with `$list` data sets that are of the type `SS_List` such as `DataList` or `ArrayList`.
-</div>
+[/hint]
 
-<div class="notice" markdown="1">
+[notice]
 [api:GridField] powers the automated data UI of [api:ModelAdmin]. For more information about `ModelAdmin` see the 
 [Customizing the CMS](/developer_guides/customising_the_admin_interface) guide.
-</div>
+[/notice]
 
 Each `GridField` is built from a number of components grouped into the [api:GridFieldConfig]. Without any components, 
 a `GridField` has almost no functionality. The `GridFieldConfig` instance and the attached [api:GridFieldComponent] are 
@@ -27,7 +29,7 @@ actions such as deleting records.
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -43,7 +45,7 @@ actions such as deleting records.
 		}
 	}
 
-This will display a bare bones `GridField` instance under `Pages` tab in the CMS. As we have not specified the 
+```
 `GridField` configuration, the default configuration is an instance of [api:GridFieldConfig_Base] which provides:
 
  * [api:GridFieldToolbarHeader]
@@ -58,7 +60,7 @@ the `getConfig()` method on `GridField`.
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -90,10 +92,10 @@ the `getConfig()` method on `GridField`.
 		}
 	}
 
-
+```
 With the `GridFieldConfig` instance, we can modify the behavior of the `GridField`. 
 
-	:::php
+```php
 	// `GridFieldConfig::create()` will create an empty configuration (no components).
 	$config = GridFieldConfig::create();
 
@@ -103,31 +105,31 @@ With the `GridFieldConfig` instance, we can modify the behavior of the `GridFiel
 	// Update the GridField with our custom configuration
 	$gridField->setConfig($config);
 
-`GridFieldConfig` provides a number of methods to make setting the configuration easier. We can insert a component 
+```
 before another component by passing the second parameter.
 	
-	:::php
+```php
 	$config->addComponent(new GridFieldFilterHeader(), 'GridFieldDataColumns');
 	
-We can add multiple components in one call.
+```
 
-	:::php
+```php
 	$config->addComponents(
 		new GridFieldDataColumns(), 
 		new GridFieldToolbarHeader()
 	);
 
-Or, remove a component.
+```
 
-	:::php
+```php
 	$config->removeComponentsByType('GridFieldDeleteAction');
 
-Fetch a component to modify it later on.
+```
 
-	:::php
+```php
 	$component = $config->getComponentByType('GridFieldFilterHeader')
 
-
+```
 Here is a list of components for use bundled with the core framework. Many more components are provided by third-party
 modules and extensions.
 
@@ -152,7 +154,7 @@ developers manually adding each component.
 
 A simple read-only and paginated view of records with sortable and searchable headers.
 
-	:::php
+```php
 	$config = GridFieldConfig_Base::create();
 
 	$gridField->setConfig($config);
@@ -165,22 +167,22 @@ A simple read-only and paginated view of records with sortable and searchable he
 	// .. new GridFieldPageCount('toolbar-header-right')
 	// .. new GridFieldPaginator($itemsPerPage)
 
-### GridFieldConfig_RecordViewer
+```
 
 Similar to `GridFieldConfig_Base` with the addition support of the ability to view a `GridFieldDetailForm` containing
 a read-only view of the data record.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the read-only view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 The `DataObject` class displayed must define a `canView()` method that returns a boolean on whether the user can view 
 this record.
-</div>
+[/alert]
 
-	:::php
+```php
 	$config = GridFieldConfig_RecordViewer::create();
 	
 	$gridField->setConfig($config);
@@ -189,21 +191,21 @@ this record.
 	// .. new GridFieldViewButton(),
 	// .. new GridFieldDetailForm()
 
-### GridFieldConfig_RecordEditor
+```
 
 Similar to `GridFieldConfig_RecordViewer` with the addition support to edit or delete each of the records.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the edit view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 Permission control for editing and deleting the record uses the `canEdit()` and `canDelete()` methods on the 
 `DataObject` object.
-</div>
+[/alert]
 
-	:::php
+```php
 	$config = GridFieldConfig_RecordEditor::create();
 	
 	$gridField->setConfig($config);
@@ -213,17 +215,17 @@ Permission control for editing and deleting the record uses the `canEdit()` and 
 	// .. new GridFieldEditButton(),
 	// .. new GridFieldDeleteAction()
 
-### GridFieldConfig_RelationEditor
+```
 
 Similar to `GridFieldConfig_RecordEditor`, but adds features to work on a record's has-many or many-many relationships. 
 As such, it expects the list used with the `GridField` to be a instance of `RelationList`. 
 
-	:::php
+```php
 	$config = GridFieldConfig_RelationEditor::create();
 
 	$gridField->setConfig($config);
 
-This configuration adds the ability to searched for existing records and add a relationship 
+```
 (`GridFieldAddExistingAutocompleter`).
 
 Records created or deleted through the `GridFieldConfig_RelationEditor` automatically update the relationship in the
@@ -235,13 +237,13 @@ The `GridFieldDetailForm` component drives the record viewing and editing form. 
 `DataObject->getCMSFields()` method but can be customised to accept different fields via the 
 [api:GridFieldDetailForm::setFields()] method.
 
-	:::php
+```php
 	$form = $gridField->getConfig()->getComponentByType('GridFieldDetailForm');
 	$form->setFields(new FieldList(
 		new TextField('Title')
 	));
 
-### many_many_extraFields
+```
 
 The component also has the ability to load and save data stored on join tables when two records are related via a 
 "many_many" relationship, as defined through [api:DataObject::$many_many_extraFields]. While loading and saving works 
@@ -252,7 +254,7 @@ them as fields for relation extra data, and to avoid clashes with the other form
 
 The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `ManyMany[MyExtraField]`.
 
-	:::php
+```php
 	<?php
 
 	class Team extends DataObject {
@@ -304,7 +306,7 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 		}
 	}
 
-
+```
 ## Flexible Area Assignment through Fragments
 
 `GridField` layouts can contain many components other than the table itself, for example a search bar to find existing 
@@ -316,24 +318,25 @@ The goal is for multiple components to share the same space, for example a heade
  - `header`/`footer`: Renders in a `<thead>`/`<tfoot>`, should contain table markup
  - `before`/`after`: Renders before/after the actual `<table>`
  - `buttons-before-left`/`buttons-before-right`/`buttons-after-left`/`buttons-after-right`: 
+```
     Renders in a shared row before the table. Requires [api:GridFieldButtonRow].
 
-These built-ins can be used by passing the fragment names into the constructor of various components. Note that some 
+```
 [api:GridFieldConfig] classes will already have rows added to them. The following example will add a print button at the 
 bottom right of the table.
 
-	:::php
+```php
 	$config->addComponent(new GridFieldButtonRow('after'));
 	$config->addComponent(new GridFieldPrintButton('buttons-after-right'));
 
-
+```
 ### Creating your own Fragments
 
 Fragments are designated areas within a `GridField` which can be shared between component templates. You can define 
 your own fragments by using a `\$DefineFragment' placeholder in your components' template. This example will simply 
 create an area rendered before the table wrapped in a simple `<div>`.
 
-	:::php
+```php
 	<?php
 
 	class MyAreaComponent implements GridField_HTMLProvider {
@@ -345,15 +348,15 @@ create an area rendered before the table wrapped in a simple `<div>`.
 		}
 	}
 
-<div class="notice" markdown="1">
+```
 Please note that in templates, you'll need to escape the dollar sign on `\$DefineFragment`. These are specially 
 processed placeholders as opposed to native template syntax.
-</div>
+[/notice]
 
 Now you can add other components into this area by returning them as an array from your 
 [api:GridFieldComponent::getHTMLFragments()] implementation:
 
-	:::php
+```php
 	<?php
 
 	class MyShareLinkComponent implements GridField_HTMLProvider {
@@ -365,12 +368,12 @@ Now you can add other components into this area by returning them as an array fr
 		}
 	}
 
-Your new area can also be used by existing components, e.g. the [api:GridFieldPrintButton]
+```
 
-	:::php
+```php
 	new GridFieldPrintButton('my-component-area');
 
-## Creating a Custom GridFieldComponent
+```
 
 Customizing a `GridField` is easy, applications and modules can provide their own `GridFieldComponent` instances to add
 functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_gridfieldcomponent).

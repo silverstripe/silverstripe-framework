@@ -1,6 +1,8 @@
+---
 title: Extensions
 summary: Extensions and DataExtensions let you modify and augment objects transparently. 
-
+icon: code
+---
 # Extensions and DataExtensions
 
 An [api:Extension] allows for adding additional functionality to a [api:Object] or modifying existing functionality 
@@ -10,14 +12,14 @@ or even their own code to make it more reusable.
 Extensions are defined as subclasses of either [api:DataExtension] for extending a [api:DataObject] subclass or 
 the [api:Extension] class for non DataObject subclasses (such as [api:Controllers])
 
-<div class="info" markdown="1">
+[info]
 For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
-</div>
+[/info]
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+```php
 	<?php
 	
 	class MyMemberExtension extends DataExtension {
@@ -32,26 +34,26 @@ and `RequestHandler`. You can still apply extensions to descendants of these cla
 		}
 	}
 
-<div class="info" markdown="1">
+```
 Convention is for extension class names to end in `Extension`. This isn't a requirement but makes it clearer
-</div>
+[/info]
 
 After this class has been created, it does not yet apply it to any object. We need to tell SilverStripe what classes 
 we want to add the `MyMemberExtension` too. To activate this extension, add the following via the [Configuration API](../configuration).
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	Member:
 	  extensions:
 	    - MyMemberExtension
 
-Alternatively, we can add extensions through PHP code (in the `_config.php` file).
+```
 
-	:::php
+```php
 	Member::add_extension('MyMemberExtension');
 
-This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
+```
 transformed the original `Member` class in two ways:
 
 * Added a new [api:SS_Datetime] for the users date of birth, and;
@@ -70,7 +72,7 @@ $has_one etc.
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+```php
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -89,32 +91,32 @@ $has_one etc.
 		}
 	}
 
-**mysite/templates/Page.ss**
+```
 	
-	:::ss
+```ss
 	$CurrentMember.Position
 	$CurrentMember.Image
 
-
+```
 ## Adding Methods
 
 Methods that have a unique name will be called as part of the `__call` method on [api:Object]. In the previous example
 we added a `SayHi` method which is unique to our extension.
 
 **mysite/templates/Page.ss**
-	:::ss
+```ss
 	<p>$CurrentMember.SayHi</p>
 
 	// "Hi Sam"
 
-**mysite/code/Page.php**
-	:::php
+```
+```php
 	$member = Member::currentUser();
 	echo $member->SayHi;
 
 	// "Hi Sam"
 
-
+```
 ## Modifying Existing Methods
 
 If the `Extension` needs to modify an existing method it's a little trickier. It requires that the method you want to
@@ -123,7 +125,7 @@ through the [api:Object::extend()] method.
 
 **framework/security/Member.php**
 
-	:::php
+```php
 	public function getValidator() {
 		// ..
 		
@@ -132,14 +134,14 @@ through the [api:Object::extend()] method.
 		// ..
 	}
 
-Extension Hooks can be located anywhere in the method and provide a point for any `Extension` instances to modify the 
+```
 variables at that given point. In this case, the core function `getValidator` on the `Member` class provides an 
 `updateValidator` hook for developers to modify the core method. The `MyMemberExtension` would modify the core member's
 validator by defining the `updateValidator` method.
 
 **mysite/code/extensions/MyMemberExtension.php**
 
-	:::php
+```php
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -152,14 +154,14 @@ validator by defining the `updateValidator` method.
 		}
 	}
 
-<div class="info" markdown="1">
+```
 The `$validator` parameter is passed by reference, as it is an object.
-</div>
+[/info]
 
 Another common example of when you will want to modify a method is to update the default CMS fields for an object in an 
 extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
-	:::php
+```php
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -178,13 +180,13 @@ extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 		}
 	}
 
-
-<div class="notice" markdown="1">
+```
+[notice]
 If you're providing a module or working on code that may need to be extended by  other code, it should provide a *hook* 
 which allows an Extension to modify the results. 
-</div>
+[/notice]
 
-	:::php
+```php
 	public function Foo() {
 		$foo = // ..
 
@@ -193,7 +195,7 @@ which allows an Extension to modify the results.
 		return $foo;
 	}
 
-The convention for extension hooks is to provide an `update{$Function}` hook at the end before you return the result. If
+```
 you need to provide extension hooks at the beginning of the method use `before{..}`.
 
 ## Owner
@@ -201,7 +203,7 @@ you need to provide extension hooks at the beginning of the method use `before{.
 In your [api:Extension] class you can only refer to the source object through the `owner` property on the class as 
 `$this` will refer to your `Extension` instance.
 
-	:::php
+```php
 	<?php
 
 	class MyMemberExtension extends DataExtension {
@@ -212,13 +214,13 @@ In your [api:Extension] class you can only refer to the source object through th
 		}
 	}
 
-## Checking to see if an Object has an Extension
+```
 
 To see what extensions are currently enabled on an object, use [api:Object::getExtensionInstances()] and 
 [api:Object::hasExtension()]
 
 
-	:::php
+```php
 	$member = Member::currentUser();
 
 	print_r($member->getExtensionInstances());
@@ -227,7 +229,7 @@ To see what extensions are currently enabled on an object, use [api:Object::getE
 		// ..
 	}
 
-
+```
 ## Object extension injection points
 
 `Object` has two additional methods, `beforeExtending` and `afterExtending`, each of which takes a method name and a 
@@ -236,15 +238,15 @@ callback to be executed immediately before and after `Object::extend()` is calle
 This is useful in many cases where working with modules such as `Translatable` which operate on `DataObject` fields 
 that must exist in the `FieldList` at the time that `$this->extend('UpdateCMSFields')` is called.
 
-<div class="notice" markdown='1'>
+[notice]
 Please note that each callback is only ever called once, and then cleared, so multiple extensions to the same function 
 require that a callback is registered each time, if necessary.
-</div>
+[/notice]
 
 Example: A class that wants to control default values during object  initialization. The code needs to assign a value 
 if not specified in `self::$defaults`, but before extensions have been called:
 
-	:::php
+```php
 	function __construct() {
 		$self = $this;
 
@@ -257,13 +259,13 @@ if not specified in `self::$defaults`, but before extensions have been called:
 		parent::__construct();
 	}
 
-Example 2: User code can intervene in the process of extending cms fields.
+```
 
-<div class="notice" markdown="1">
+[notice]
 This method is preferred to disabling, enabling, and calling field extensions manually.
-</div>
+[/notice]
 
-	:::php
+```php
 	public function getCMSFields() {
 
 		$this->beforeUpdateCMSFields(function($fields) {
@@ -276,7 +278,7 @@ This method is preferred to disabling, enabling, and calling field extensions ma
 		return $fields;
 	}
 
-
+```
 ## Related Documentaion
 
 * [Injector](injector/)

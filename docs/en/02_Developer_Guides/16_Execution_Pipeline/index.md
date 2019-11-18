@@ -1,5 +1,8 @@
+---
+title: Execution pipeline
 summary: An overview of the steps involved in delivering a SilverStripe web page.
-
+icon: route
+---
 # Execution Pipeline
 
 ## Introduction
@@ -20,6 +23,7 @@ By default, requests will be passed through for files existing on the filesystem
 Some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files.
 If no file can be directly matched, control is handed off to `framework/main.php`.
 
+```
 	### SILVERSTRIPE START ###
 
 	# Deny access to templates (but allow from localhost)
@@ -68,13 +72,13 @@ If no file can be directly matched, control is handed off to `framework/main.php
 	</IfModule>
 	### SILVERSTRIPE END ###
 
-SilverStripe can also operate without this level of rewriting, in which case all dynamic requests go
+```
 through an `index.php` script in the webroot.
 
-<div class="notice" markdown="1">
+[notice]
 Running SilverStripe without web server based rewriting is not recommended since it
 can leave sensitive files exposed to public access (the `RewriteRule` conditions from above don't apply).
-</div>
+[/notice]
 
 ## Bootstrap
 

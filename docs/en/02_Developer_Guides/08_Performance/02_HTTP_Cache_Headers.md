@@ -1,6 +1,8 @@
+---
 title: HTTP Cache Headers
 summary: Set the correct HTTP cache headers for your responses.
-
+icon: tachometer-alt
+---
 # HTTP Cache Headers
 
 ## Overview
@@ -98,19 +100,6 @@ The priority order is as followed, sorted in descending order
 
 Enable caching for all page content (through `Page_Controller`).
 
-```php
-class Page_Controller extends ContentController
-{
-    public function init()
-    {
-        HTTPCacheControl::singleton()
-           ->enableCache()
-           ->setMaxAge(60); // 1 minute
-
-        
-        parent::init();
-    }
-}
 ```
 
 Note: SilverStripe will still override this preference when a session is active,
@@ -124,18 +113,6 @@ permission checks or other triggers for conditional output,
 you can disable caching either on a controller level
 (through `init()`) or for a particular action.
 
-```php
-class MyPage_Controller extends Page_Controller
-{
-    public function myprivateaction($request)
-    {
-        $response = $this->myPrivateResponse();
-        HTTPCacheControl::singleton()
-           ->disableCache();
-        
-        return $response;
-    }
-}
 ```
 
 Note: SilverStripe will still override this preference when a session is active,
@@ -155,18 +132,6 @@ But any subsequent requests by this visitor will also carry a session, leading t
 for this visitor. This is the case even if the output does not contain any forms,
 and does not vary for this particular visitor.
 
-```php
-class Page_Controller extends ContentController
-{
-    public function init()
-    {
-        HTTPCacheControl::singleton()
-           ->enableCache($force=true) // DANGER ZONE
-           ->setMaxAge(60); // 1 minute
-        
-        parent::init();
-    }
-}
 ```
 
 ## Defaults
@@ -188,35 +153,30 @@ The cache age determines the lifetime of your cache, in seconds.
 It only takes effect if you instruct the cache control
 that your response is public in the first place (via `enableCache()` or via modifying the `HTTP.cache_control` defaults).
 
-	:::php
+```php
 	HTTPCacheControl::singleton()
 	    ->setMaxAge(60)
 
-Note that `setMaxAge(0)` is NOT sufficient to disable caching in all cases.
+```
 
 ### Last Modified
 
 Used to set the modification date to something more recent than the default. [api:DataObject::__construct] calls 
 [api:HTTP::register_modification_date(] whenever a record comes from the database ensuring the newest date is present.
 
-	:::php
+```php
 	HTTP::register_modification_date('2014-10-10');
 
-### Vary
+```
 
 A `Vary` header tells caches which aspects of the response should be considered
 when calculating a cache key, usually in addition to the full URL path.
 By default, SilverStripe will output a `Vary` header with the following content: 
 
 ```
-Vary: X-Forwarded-Protocol
-```
 
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration.
 
-```yml
-HTTP:
-  vary: ""
 ```
 
 Note that if you use `Director::is_ajax()` on cached pages then you should add `X-Requested-With` to the vary

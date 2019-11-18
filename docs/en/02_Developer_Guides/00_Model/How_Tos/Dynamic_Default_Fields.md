@@ -1,3 +1,8 @@
+---
+title: Dynamic Default Fields
+summary: Learn how to add default values to your models
+---
+
 # Dynamic Default Values
 
 The [api:DataObject::$defaults] array allows you to specify simple static values to be the default values when a
@@ -9,7 +14,7 @@ object!
 
 A simple example is to set a field to the current date and time:
 
-	:::php
+```php
 	/**
 	 * Sets the Date field to the current date.
 	 */
@@ -18,19 +23,5 @@ A simple example is to set a field to the current date and time:
 		parent::populateDefaults();
 	}
 
-It's also possible to get the data from any other source, or another object, just by using the usual data retrieval
+```
 methods. For example:
-
-	:::php
-	/**
-	 * This method combines the Title of the parent object with the Title of this
-	 * object in the FullTitle field.
-	 */
-	public function populateDefaults() {
-		if($parent = $this->Parent()) {
-			$this->FullTitle = $parent->Title . ': ' . $this->Title;
-		} else {
-			$this->FullTitle = $this->Title;
-		}
-		parent::populateDefaults();
-	}

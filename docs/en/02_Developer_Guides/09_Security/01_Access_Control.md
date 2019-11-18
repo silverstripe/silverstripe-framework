@@ -1,3 +1,9 @@
+---
+title: Access Control
+summary: Restrict CMS access to specific groups of users
+icon: user-lock
+---
+
 # Access Control and Page Security
 
 There is a fairly comprehensive security mechanism in place for SilverStripe. If you want to add premium content to your
@@ -21,16 +27,18 @@ In the security tab you can make groups for security.  The way this was intended
 intuitive):
 
 	* employees
+```
 		* marketing
 			* marketing executive
 
-Thus, the further up the hierarchy you go the MORE privileges you can get.  Similarly, you could have:
+```
 
 	* members
+```
 		* coordinators
 			* admins
 
-Where members have some privileges, coordinators slightly more and administrators the most; having each group inheriting
+```
 privileges from its parent group.     
 
 ## Permission checking is at class level

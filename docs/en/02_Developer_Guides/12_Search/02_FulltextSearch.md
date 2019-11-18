@@ -1,17 +1,19 @@
+---
 title: Fulltext Search
 summary: Fulltext search allows sophisticated searching on text content.
-
+icon: search
+---
 # FulltextSearchable
 
 Fulltext search allows advanced search criteria for searching words within a text based data column. While basic
 Fulltext search can be achieved using the built-in [api:MySQLDatabase] class a more powerful wrapper for Fulltext
 search is provided through a module.
 
-<div class="notice" markdown="1">
+[notice]
 See the [FulltextSearch Module](https://github.com/silverstripe-labs/silverstripe-fulltextsearch/). This module provides
 a high level wrapper for running advanced search services such as Solr, Lucene or Sphinx in the backend rather than
 `MySQL` search.
-</div>
+[/notice]
 
 ## Adding Fulltext Support to MySQLDatabase
 
@@ -21,7 +23,7 @@ storage engine.
 
 You can do so by adding this static variable to your class definition:
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -31,13 +33,13 @@ You can do so by adding this static variable to your class definition:
 		);
 	}
 
-The [api:FulltextSearchable] extension will add the correct `Fulltext` indexes to the data model.
+```
 
-<div class="alert" markdown="1">
+[alert]
 The [api:SearchForm] and [api:FulltextSearchable] API's are currently hard coded to be specific to `Page` and `File`
 records and cannot easily be adapted to include custom `DataObject` instances. To include your custom objects in the
 default site search, have a look at those extensions and modify as required.
-</div>
+[/alert]
 
 ### Fulltext Filter
 
@@ -46,7 +48,7 @@ SilverStripe provides a [api:FulltextFilter] which you can use to perform custom
 
 Example DataObject:
 
-	:::php
+```php
 	class SearchableDataObject extends DataObject {
 		
 		private static $db = array(
@@ -68,12 +70,12 @@ Example DataObject:
 
 	}
 
-Performing the search:
+```
 
-	:::php
+```php
 	SearchableDataObject::get()->filter('SearchFields:fulltext', 'search term');
 
-If your search index is a single field size, then you may also specify the search filter by the name of the
+```
 field instead of the index.
 
 ## API Documentation

@@ -1,6 +1,8 @@
+---
 title: Template Inheritance
 summary: Override and extend module and core markup templates from your application code.
-
+icon: sitemap
+---
 # Template Inheritance
 
 Bundled within SilverStripe are default templates for any markup the framework outputs for things like Form templates,
@@ -16,16 +18,16 @@ name in the `mysite/templates/email` folder or in the `themes/your_theme/templat
 
 **mysite/templates/email/GenericEmail.ss**
 	
-	:::ss
+```ss
 	$Body
 
 	<p>Thanks from Bob's Fantasy Football League.</p>
 
-All emails going out of our application will have the footer `Thanks from Bob's Fantasy Football Leaguee` added.
+```
 
-<div class="alert" markdown="1">
+[alert]
 As we've added a new file, make sure you flush your SilverStripe cache by visiting `http://yoursite.com/?flush=1`
-</div>
+[/alert]
 
 Template inheritance works on more than email templates. All files within the `templates` directory including `includes`, 
 `layout` or anything else from core (or add-on's) template directory can be overridden by being located inside your 
@@ -51,11 +53,11 @@ It will each and prioritize templates in the following priority:
 4. modules  (e.g. blog)
 5. framework
 
-<div class="warning">
+[warning]
 Whenever you add or remove template files, rebuild the manifest by visiting `http://yoursite.com/?flush=1`. You can 
 flush the cache from any page, (.com/home?flush=1, .com/admin?flush=1, etc.). Flushing the cache can be slow, so you 
 only need to do it when you're developing new templates.
-</div>
+[/warning]
 
 ## Nested Layouts through `$Layout`
 
@@ -74,6 +76,7 @@ footer and navigation will remain the same and we don't want to replicate this w
 
 **mysite/templates/Page.ss**
 
+```
 	<html>
 	<head>
 		..
@@ -88,16 +91,18 @@ footer and navigation will remain the same and we don't want to replicate this w
 		<% include Footer %>
 	</body>
 
-**mysite/templates/Layout/Page.ss**
+```
 
+```
 	<p>You are on a $Title page</p>
 
 	$Content
 
-**mysite/templates/Layout/HomePage.ss**
+```
 
+```
 	<h1>This is the homepage!</h1>
 
 	<blink>Hi!</blink>
 
-
+```

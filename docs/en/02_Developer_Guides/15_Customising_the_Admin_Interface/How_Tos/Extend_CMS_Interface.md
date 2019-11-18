@@ -1,3 +1,8 @@
+---
+title: Extend the CMS interface
+summary: Customise the UI of the CMS backend
+---
+
 # How to extend the CMS interface
 
 ## Introduction
@@ -28,7 +33,7 @@ Copy the template markup of the base implementation at `framework/admin/template
 into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
 the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 
-	:::ss
+```ss
 	...
 	<ul class="cms-menu-list">
 		<!-- ... -->
@@ -41,7 +46,7 @@ the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 	</ul>
 	...
 
-Refresh the CMS interface with `admin/?flush=all`, and you should see those
+```
 hardcoded links underneath the left-hand menu. We'll make these dynamic further down.
 
 ## Include custom CSS in the CMS
@@ -51,25 +56,25 @@ we'll add some CSS, and get it to load
 with the CMS interface. Paste the following content into a new file called
 `mysite/css/BookmarkedPages.css`:
 
-	:::css
+```css
 	.bookmarked-link.first {margin-top: 1em;}
 
-Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
+```
 [configuration value](../../configuration).
 
-	:::yml
+```yml
 	LeftAndMain:
 	  extra_requirements_css:
 	    - mysite/css/BookmarkedPages.css
 
-## Create a "bookmark" flag on pages
+```
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in
 the database. For this we need to decorate the page record with a
 `DataExtension`. Create a new file called `mysite/code/BookmarkedPageExtension.php`
 and insert the following code.
 
-	:::php
+```php
 	<?php
 
 	class BookmarkedPageExtension extends DataExtension {
@@ -85,14 +90,14 @@ and insert the following code.
 		}
 	}
 
-Enable the extension in your [configuration file](../../configuration)
+```
 
-	:::yml
+```yml
 	SiteTree:
 	  extensions:
 	    - BookmarkedPageExtension
 
-In order to add the field to the database, run a `dev/build/?flush=all`.
+```
 Refresh the CMS, open a page for editing and you should see the new checkbox.
 
 ## Retrieve the list of bookmarks from the database
@@ -104,7 +109,7 @@ links)? Again, we extend a core class: The main CMS controller called
 
 Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension.php`;
 
-	:::php
+```php
 	<?php
 
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
@@ -114,18 +119,18 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 		}
 	}
 
-Enable the extension in your [configuration file](../../configuration)
+```
 
-	:::yml
+```yml
 	LeftAndMain:
 	  extensions:
 	    - BookmarkedPagesLeftAndMainExtension
 
-As the last step, replace the hardcoded links with our list from the database.
+```
 Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`
 and replace it with the following:
 
-	:::ss
+```ss
 	<ul class="cms-menu-list">
 		<!-- ... -->
 		<% loop $BookmarkedPages %>
@@ -135,7 +140,7 @@ and replace it with the following:
 		<% end_loop %>
 	</ul>
 
-## Extending the CMS actions
+```
 
 CMS actions follow a principle similar to the CMS fields: they are built in the
 backend with the help of `FormFields` and `FormActions`, and the frontend is
@@ -165,30 +170,30 @@ First of all we can add a regular standalone button anywhere in the set. Here
 we are inserting it in the front of all other actions. We could also add a
 button group (`CompositeField`) in a similar fashion.
 
-	:::php
+```php
 	$fields->unshift(FormAction::create('normal', 'Normal button'));
 
-We can affect the existing button group by manipulating the `CompositeField`
+```
 already present in the `FieldList`.
 
-	:::php
+```php
 	$fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
 
-Another option is adding actions into the drop-up - best place for placing
+```
 infrequently used minor actions.
 
-	:::php
+```php
 	$fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
 
-We can also easily create new drop-up menus by defining new tabs within the
+```
 `TabSet`.
 
-	:::php
+```php
 	$fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
 
-<div class="hint" markdown='1'>
+```
 Empty tabs will be automatically removed from the `FieldList` to prevent clutter.
-</div>
+[/hint]
 
 To make the actions more user-friendly you can also use alternating buttons as
 detailed in the [CMS Alternating Button](cms_alternating_button)
@@ -200,7 +205,7 @@ Your newly created buttons need handlers to bind to before they will do anything
 To implement these handlers, you will need to create a `LeftAndMainExtension` and add
 applicable controller actions to it:
 
-	:::php
+```php
 	class CustomActionsExtension extends LeftAndMainExtension {
 		
 		private static $allowed_actions = array(
@@ -214,19 +219,21 @@ applicable controller actions to it:
     	
     }
     
+```
 The extension then needs to be registered:
 
-	:::yaml
+```yaml
 	LeftAndMain:
 		extensions:
 			- CustomActionsExtension
 			
-You can now use these handlers with your buttons:
 
-	:::php
+```
+
+```php
 	$fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
 
-## Summary
+```
 
 In a few lines of code, we've customised the look and feel of the CMS.
 

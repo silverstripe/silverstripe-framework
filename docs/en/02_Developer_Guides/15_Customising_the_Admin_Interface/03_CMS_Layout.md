@@ -1,5 +1,7 @@
+---
 title: Admin Layout
-
+summary: Add interactivity enhancements to the admin with Javascript
+---
 # CMS layout
 
 The CMS markup is structured into "panels", which are the base units containing interface components (or other panels),
@@ -16,10 +18,10 @@ children setting sizes and positions, which in turn requires redrawing of some o
 
 The easiest way to update the layout of the CMS is to call `redraw` on the top-level `.cms-container` element.
 
-	:::js
+```js
 	$('.cms-container').redraw();
 
-This causes the framework to:
+```
 
 * reset the _threeColumnCompressor_ algorithm with the current layout options (that can be set via
 `updateLayoutOptions`)
@@ -27,17 +29,17 @@ This causes the framework to:
 to the layout manager)
 * trigger `redraw` on children which also cascades deeper into the hierarchy (this is framework activity)
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: `layout` is also triggered when a DOM element is replaced with AJAX in `LeftAndMain::handleAjaxResponse`. In
 this case it is triggered on the parent of the element being replaced so jLayout has a chance to rebuild its algorithms.
 Calling the top level `layout` is not enough as it will wrongly descend down the detached element's hierarchy.
-</div>
+[/notice]
 
-<div class="notice" markdown='1'>
+[notice]
 Caveat: invocation order of the `redraws` is crucial here, generally going from innermost to outermost elements.  For
 example, the tab panels have be applied in the CMS form before the form itself is layouted with its sibling panels to
 avoid incorrect dimensions.
-</div>
+[/notice]
 
 ![Layout variations](../../_images/cms-architecture.png)
 
@@ -55,7 +57,7 @@ Call `redraw` on `.cms-container` to re-layout the CMS.
 Layout manager will automatically apply algorithms to the children of `.cms-container` by inspecting the
 `data-layout-type` attribute. Let's take the content toolbar as an example of a second-level layout application:
 
-	:::html
+```html
 	<div class="cms-content-tools west cms-panel cms-panel-layout"
 		data-expandOnClick="true"
 		data-layout-type="border"
@@ -63,7 +65,7 @@ Layout manager will automatically apply algorithms to the children of `.cms-cont
 		<%-- content utilising border's north, south, east, west and center classes --%>
 	</div>
 
-For detailed discussion on available algorithms refer to
+```
 [jLayout algorithms](https://github.com/bramstein/jlayout#layout-algorithms).
 
 Our [Howto: Extend the CMS Interface](how_tos/extend_cms_interface) has a practical example on how to add a bottom
@@ -99,10 +101,10 @@ by the algorithm that are initially taken from the `LeftAndMain::LayoutOptions` 
 
 Use provided factory method to generate algorithm instances.
 
-	:::js
+```js
 	jLayout.threeColumnCompressor(<column-spec-object>, <options-object>);
 
-The parameters are as follows:
+```
 
 * **column-spec-object**: object providing the _menu_, _content_ and _preview_ elements (all fields mandatory)
 * **options-object**: object providing the configuration (all fields mandatory, see options below)

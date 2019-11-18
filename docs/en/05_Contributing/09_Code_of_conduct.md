@@ -1,3 +1,9 @@
+---
+title: Code of conduct
+summary: How to be a high-performing, helpful member of our community
+icon: handshake
+---
+
 # SilverStripe community code of conduct
 
 These guidelines aim to be an aspirational ideal for how we should behave when interacting in the SilverStripe developer community and to aid in building great open source software.

@@ -1,4 +1,8 @@
+---
+title: Release process
 summary: Describes the process followed for "core" releases.
+iconBrand: git-alt
+---
 
 # Release Process
 
@@ -65,7 +69,7 @@ How to deprecate an API:
 
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
-	:::php
+```php
 	/**
 	 * Returns true if your are in development mode
 	 * @deprecated 4.0 Use {@link Env::is_dev()} instead.
@@ -75,7 +79,7 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 		return Env::is_dev();
 	}
 
-This change could be committed to a minor release like *3.2.0*, and remains deprecated in all subsequent minor releases
+```
 (e.g. *3.3.0*, *3.4.0*), until a new major release (e.g. *4.0.0*), at which point it gets removed from the codebase. 
 
 Deprecation notices are enabled by default on dev environment, but can be
@@ -86,17 +90,17 @@ notices are always disabled on both live and test.
 `mysite/_config.php`
 
 
-    :::php
+```php
     Deprecation::set_enabled(false);
 
-
+```
 `_ss_environment.php`
 
 
-    :::php
+```php
     define('SS_DEPRECATION_ENABLED', false);
 
-
+```
 ## Security Releases
 
 ### Reporting an issue

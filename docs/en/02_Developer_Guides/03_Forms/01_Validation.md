@@ -1,13 +1,15 @@
+---
 title: Form Validation
 summary: Validate form data through the server side validation API.
-
+icon: check-square
+---
 # Form Validation
 
 SilverStripe provides server-side form validation out of the box through the [api:Validator] class and its' child class
 [api:RequiredFields]. A single `Validator` instance is set on each `Form`. Validators are implemented as an argument to 
 the [api:Form] constructor or through the function `setValidator`.
 
-	:::php
+```php
 	<?php
 
 	class Page_Controller extends ContentController {
@@ -45,25 +47,25 @@ the [api:Form] constructor or through the function `setValidator`.
 		}
 	}
 
-In this example we will be required to input a value for `Name` and a valid email address for `Email` before the 
+```
 `doSubmitForm` method is called.
 
-<div class="info" markdown="1">
+[info]
 Each individual [api:FormField] instance is responsible for validating the submitted content through the 
 [api:FormField::validate()] method. By default, this just checks the value exists. Fields like `EmailField` override 
 `validate` to check for a specific format.
-</div>
+[/info]
 
 Subclasses of `FormField` can define their own version of `validate` to provide custom validation rules such as the 
 above example with the `Email` validation. The `validate` method on `FormField` takes a single argument of the current 
 `Validator` instance. 
 
-<div class="notice" markdown="1">
+[notice]
 The data value of the `FormField` submitted is not passed into validate. It is stored in the `value` property through 
 the `setValue` method.
-</div>
+[/notice]
 
-	:::php
+```php
 	public function validate($validator) {
 		if($this->value == 10) {
 			return false;
@@ -72,12 +74,12 @@ the `setValue` method.
 		return true;
 	}
 
-The `validate` method should return `true` if the value passes any validation and `false` if SilverStripe should trigger
+```
 a validation error on the page.
 
-<div class="notice" markdown="1">
+[notice]
 You can also override the entire `Form` validation by subclassing `Form` and defining a `validate` method on the form.
-</div>
+[/notice]
 
 Say we need a custom `FormField` which requires the user input a value in a `TextField` between 2 and 5. There would be
 two ways to go about this:
@@ -87,7 +89,7 @@ the same validation logic applied to it throughout.
 
 **mysite/code/formfields/CustomNumberField.php**
 
-	:::php
+```php
 	<?php
 
 	class CustomNumberField extends TextField {
@@ -112,11 +114,11 @@ the same validation logic applied to it throughout.
 		}
 	}
 
-Or, an alternative approach to the custom class is to define the behavior inside the Form's action method. This is less
+```
 reusable and would not be possible within the `CMS` or other automated `UI` but does not rely on creating custom 
 `FormField` classes.
 	
-	:::php
+```php
 	<?php
 
 	class Page_Controller extends ContentController {
@@ -152,34 +154,34 @@ reusable and would not be possible within the `CMS` or other automated `UI` but 
 				return $this->redirectBack();
 			}
 
-
 			$form->sessionMessage("You have been added to our mailing list", 'good');
 			
 			return $this->redirectBack();
 		}
 	}
 
+```
 ## Server-side validation messages
 
 If a `FormField` fails to pass `validate()` the default error message is returned.
 
-	:::php
+```php
 	'$Name' is required
 
-Use `setCustomValidationMessage` to provide a custom message.
+```
 
-	:::php
+```php
 	$field = new TextField(..);
 	$field->setCustomValidationMessage('Whoops, looks like you have missed me!');
 
-## JavaScript validation
+```
 
 Although there are no built-in JavaScript validation handlers in SilverStripe, the `FormField` API is flexible enough 
 to provide the information required in order to plug in custom libraries like [Parsley.js](http://parsleyjs.org/) or 
 [jQuery.Validate](http://jqueryvalidation.org/). Most of these libraries work on HTML `data-` attributes or special 
 classes added to each input. For Parsley we can structure the form like.
 
-	:::php
+```php
 	$form = new Form(..);
 	$form->setAttribute('data-parsley-validate', true);
 
@@ -188,7 +190,7 @@ classes added to each input. For Parsley we can structure the form like.
 	$field->setAttribute('required', true);
 	$field->setAttribute('data-parsley-mincheck', '2');
 
-
+```
 ## Model Validation
 
 An alternative (or additional) approach to validation is to place it directly on the database model. SilverStripe 
@@ -202,11 +204,11 @@ call `setValidator` easily. However, a `DataObject` can provide its' own `Valida
 `getCMSValidator()` method. The CMS interfaces such as [api:LeftAndMain], [api:ModelAdmin] and [api:GridField] will 
 respect the provided `Validator` and handle displaying error and success responses to the user. 
 
-<div class="info" markdown="1">
+[info]
 Again, custom error messages can be provided through the `FormField`
-</div>
+[/info]
 
-	:::php
+```php
 	<?php
 
 	class Page extends SiteTree {
@@ -229,7 +231,7 @@ Again, custom error messages can be provided through the `FormField`
 			));
 		}
 
-## API Documentation
+```
 
  * [api:RequiredFields]
  * [api:Validator]

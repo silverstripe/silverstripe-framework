@@ -1,3 +1,7 @@
+---
+title: Customise the CMS pages list
+---
+
 # Howto: Customize the Pages List in the CMS
 
 The pages "list" view in the CMS is a powerful alternative to visualizing
@@ -17,7 +21,7 @@ You can use these two classes as a starting point for your customizations.
 Here's a brief example on how to add sorting and a new column for a
 hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
-	:::php
+```php
 	// mysite/code/NewsPageHolder.php
 	class NewsPageHolder extends Page {
 		private static $allowed_children = array('NewsPage');
@@ -30,13 +34,13 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 		);
 	}
 
-We'll now add an `Extension` subclass to `LeftAndMain`, which is the main CMS controller.
+```
 This allows us to intercept the list building logic, and alter the `GridField`
 before its rendered. In this case, we limit our logic to the desired page type,
 although it's just as easy to implement changes which apply to all page types,
 or across page types with common characteristics.
 
-	:::php
+```php
 	// mysite/code/NewsPageHolderCMSMainExtension.php
 	class NewsPageHolderCMSMainExtension extends Extension {
 		function updateListView($listView) {
@@ -62,11 +66,12 @@ or across page types with common characteristics.
 		}
 	}
 
-Now you just need to enable the extension in your [configuration file](../../configuration).
+```
 
+```
 	// mysite/_config/config.yml
 	LeftAndMain:
 	  extensions:
 	    - NewsPageHolderCMSMainExtension
 
-You're all set! Don't forget to flush the caches by appending `?flush=all` to the URL.
+```

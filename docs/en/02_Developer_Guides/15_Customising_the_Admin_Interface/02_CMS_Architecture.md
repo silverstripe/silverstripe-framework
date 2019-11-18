@@ -1,3 +1,9 @@
+---
+title: CMS Architecture
+summary: An overview of the code architecture of the CMS
+icon: sitemap
+---
+
 # CMS architecture
 
 ## Introduction
@@ -111,7 +117,7 @@ of a `PjaxResponseNegotiator` to handle its display.
 
 Basic example form in a CMS controller subclass:
 
-	:::php
+```php
 	class MyAdmin extends LeftAndMain {
 		function getEditForm() {
 			return CMSForm::create(
@@ -139,7 +145,7 @@ Basic example form in a CMS controller subclass:
 		}
 	}
 
-Note: Usually you don't need to worry about these settings,
+```
 and will simply call `parent::getEditForm()` to modify an existing,
 correctly configured form.
 
@@ -234,50 +240,25 @@ Example: Create a bare-bones CMS subclass which shows breadcrumbs (a built-in me
 as well as info on the current record. A single link updates both sections independently
 in a single Ajax request.
 
-	:::php
-	// mysite/code/MyAdmin.php
-	class MyAdmin extends LeftAndMain {
-		private static $url_segment = 'myadmin';
-		public function getResponseNegotiator() {
-			$negotiator = parent::getResponseNegotiator();
-			$controller = $this;
-			// Register a new callback
-			$negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
-				return $controller->MyRecordInfo();
-			});
-			return $negotiator;
-		}
-		public function MyRecordInfo() {
-			return $this->renderWith('MyRecordInfo');
-		}
-	}
-
-	:::js
-	// MyAdmin.ss
-	<% include CMSBreadcrumbs %>
-	<div>Static content (not affected by update)</div>
-	<% include MyRecordInfo %>
-	<a href="admin/myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
-		Update record info
-	</a>
-
-	:::ss
+```ss
 	// MyRecordInfo.ss
 	<div data-pjax-fragment="MyRecordInfo">
 		Current Record: $currentPage.Title
 	</div>
 
-A click on the link will cause the following (abbreviated) ajax HTTP request:
+```
 
+```
 	GET /admin/myadmin HTTP/1.1
 	X-Pjax:MyRecordInfo,Breadcrumbs
 	X-Requested-With:XMLHttpRequest
 
-... and result in the following response:
+```
 
+```
 	{"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
 
-Keep in mind that the returned view isn't always decided upon when the Ajax request
+```
 is fired, so the server might decide to change it based on its own logic,
 sending back different `X-Pjax` headers and content.
 
@@ -285,9 +266,10 @@ On the client, you can set your preference through the `data-pjax-target` attrib
 on links or through the `X-Pjax` header. For firing off an Ajax request that is
 tracked in the browser history, use the `pjax` attribute on the state data.
 
+```
 	$('.cms-container').loadPanel('admin/pages', null, {pjax: 'Content'});
 
-## Loading lightweight PJAX fragments
+```
 
 Normal navigation between URLs in the admin section of the Framework occurs through `loadPanel` and `submitForm`.
 These calls make sure the HTML5 history is updated correctly and back and forward buttons work. They also take
@@ -301,18 +283,20 @@ unrelated to the main flow.
 In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
 parallel as you want. This will not disturb the main navigation.
 
+```
 		$('.cms-container').loadFragment('admin/foobar/', 'Fragment1');
 		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2');
 		$('.cms-container').loadFragment('admin/foobar/', 'Fragment3');
 
-The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
+```
 result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
 
 You can also load multiple fragments in one request, as long as they are to the same controller (i.e. URL):
 
+```
 		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2,Fragment3');
 
-This counts as a separate request type from the perspective of the request tracking, so will not abort the singular
+```
 `Fragment2` nor `Fragment3`.
 
 Upon the receipt of the response, the fragment will be injected into DOM where a matching `data-pjax-fragment` attribute
@@ -321,6 +305,7 @@ will be triggered. In case of a request error a `loadfragmenterror` will be rais
 
 You can hook up a response handler that obtains all the details of the XHR request via Entwine handler:
 
+```
 		'from .cms-container': {
 			onafterloadfragment: function(e, data) {
 				// Say 'success'!
@@ -328,8 +313,9 @@ You can hook up a response handler that obtains all the details of the XHR reque
 			}
 		}
 
-Alternatively you can use the jQuery deferred API:
+```
 
+```
 		$('.cms-container')
 			.loadFragment('admin/foobar/', 'Fragment1')
 			.success(function(data, status, xhr) {
@@ -337,7 +323,7 @@ Alternatively you can use the jQuery deferred API:
 				alert(status);
 			});
 
-## Ajax Redirects
+```
 
 Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,
 the resulting view will be the edit form of the new record. On non-ajax submissions, that's easily
@@ -356,7 +342,7 @@ For example, the currently used controller class might've changed due to a "redi
 which affects the currently active menu entry. We're using HTTP response headers to contain this data
 without affecting the response body.
 
-	:::php
+```php
 	class MyController extends LeftAndMain {
 		class myaction() {
 			// ...
@@ -365,7 +351,7 @@ without affecting the response body.
 		}
 	}
 
-Built-in headers are:
+```
 
   * `X-Title`: Set window title (requires URL encoding)
 	* `X-Controller`: PHP class name matching a menu entry, which is marked active
@@ -415,14 +401,14 @@ from "Page" to "Files & Images". To communicate this state change, a controller
 response has the option to pass along a special HTTP response header,
 which is picked up by the menu:
 
-	:::php
+```php
 	public function mycontrollermethod() {
 		// .. logic here
 		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
 		return 'my response';
 	}
 
-This is usually handled by the existing [api:LeftAndMain] logic,
+```
 so you don't need to worry about it. The same concept applies for
 'X-Title' (change the window title) and 'X-ControllerURL' (change the URL recorded in browser history).
 Note: You can see any additional HTTP headers through the web developer tools in your browser of choice.
@@ -465,7 +451,7 @@ since all others should render with their tab navigation inline.
 
 Form template with custom tab navigation (trimmed down):
 
-	:::ss
+```ss
 	<form $FormAttributes data-layout-type="border">
 
 		<div class="cms-content-header north">
@@ -490,9 +476,9 @@ Form template with custom tab navigation (trimmed down):
 
 	</form>
 
-Tabset template without tab navigation (e.g. `CMSTabset.ss`)
+```
 
-	:::ss
+```ss
 	<div $AttributesHTML>
 		<% loop Tabs %>
 			<% if Tabs %>
@@ -507,7 +493,7 @@ Tabset template without tab navigation (e.g. `CMSTabset.ss`)
 		<% end_loop %>
 	</div>
 
-Lazy loading works based on the `href` attribute of the tab navigation.
+```
 The base behaviour is applied through adding a class `.cms-tabset` to a container.
 Assuming that each tab has its own URL which is tracked in the HTML5 history,
 the current tab display also has to work when loaded directly without Ajax.
@@ -515,7 +501,7 @@ This is achieved by template conditionals (see "MyActiveCondition").
 The `.cms-panel-link` class will automatically trigger the ajax loading,
 and load the HTML content into the main view. Example:
 
-	:::ss
+```ss
 	<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
 		<ul>
 			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
@@ -531,7 +517,7 @@ and load the HTML content into the main view. Example:
 		</ul>
 	</div>
 
-The URL endpoints `admin/mytabs/tab1` and `admin/mytabs/tab2`
+```
 should return HTML fragments suitable for inserting into the content area,
 through the `PjaxResponseNegotiator` class (see above).
 

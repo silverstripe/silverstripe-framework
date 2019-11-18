@@ -1,3 +1,9 @@
+---
+title: CSV Import
+summary: Load data into your Silverstripe database in bulk
+icon: upload
+---
+
 # Import CSV data
 
 ## Introduction
@@ -28,24 +34,25 @@ You can use the CsvBulkLoader without subclassing or other customizations, if th
 in your CSV file match `$db` properties in your dataobject. E.g. a simple import for the
 [api:Member] class could have this data in a file:
 
+```
 	FirstName,LastName,Email
 	Donald,Duck,donald@disney.com
 	Daisy,Duck,daisy@disney.com
 
-The loader would be triggered through the `load()` method:
+```
 
-	:::php
+```php
 	$loader = new CsvBulkLoader('Member');
 	$result = $loader->load('<my-file-path>');
 
-By the way, you can import [api:Member] and [api:Group] data through `http://localhost/admin/security`
+```
 interface out of the box.
 
 ## Import through ModelAdmin
 
 The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interface - you get an upload form out of the box.
 
-	:::php
+```php
 	<?php
 	class PlayerAdmin extends ModelAdmin {
 	   private static $managed_models = array(
@@ -58,7 +65,7 @@ The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interf
 	}
 	?>
 
-The new admin interface will be available under `http://localhost/admin/players`, the import form is located
+```
 below the search form on the left.
 
 ## Import through a custom controller
@@ -68,7 +75,7 @@ Let's create a simple upload form (which is used for `MyDataObject` instances).
 You'll need to add a route to your controller to make it accessible via URL 
 (see [director](/reference/director)).
 
-	:::php
+```php
 	<?php
 	class MyController extends Controller {
 
@@ -109,7 +116,7 @@ You'll need to add a route to your controller to make it accessible via URL
 		}
 	}
 
-Note: This interface is not secured, consider using [api:Permission::check()] to limit the controller to users
+```
 with certain access rights.
 
 ## Column mapping and relation import
@@ -118,15 +125,16 @@ We're going to use our knowledge from the previous example to import a more soph
 
 Sample CSV Content
 
+```
 	"Number","Name","Birthday","Team"
 	11,"John Doe",1982-05-12,"FC Bayern"
 	12,"Jane Johnson", 1982-05-12,"FC Bayern"
 	13,"Jimmy Dole",,"Schalke 04"
 
-
+```
 Datamodel for Player
 
-	:::php
+```php
 	<?php
 	class Player extends DataObject {
 	   private static $db = array(
@@ -141,10 +149,10 @@ Datamodel for Player
 	}
 	?>
 
-
+```
 Datamodel for FootballTeam:
 
-	:::php
+```php
 	<?php
 	class FootballTeam extends DataObject {
 	   private static $db = array(
@@ -156,7 +164,7 @@ Datamodel for FootballTeam:
 	}
 	?>
 
-
+```
 Sample implementation of a custom loader. Assumes a CSV-file in a certain format (see below).
 
 *  Converts property names
@@ -165,7 +173,7 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
 
 
-	:::php
+```php
 	<?php
 	class PlayerCsvBulkLoader extends CsvBulkLoader {
 	   public $columnMap = array(
@@ -195,9 +203,9 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	}
 	?>
 	
-Building off of the ModelAdmin example up top, use a custom loader instead of the default loader by adding it to `$model_importers`. In this example, `CsvBulkLoader` is replaced with `PlayerCsvBulkLoader`.
+```
 
-	:::php
+```php
 	<?php
 	class PlayerAdmin extends ModelAdmin {
 	   private static $managed_models = array(
@@ -210,7 +218,7 @@ Building off of the ModelAdmin example up top, use a custom loader instead of th
 	}
 	?>
 
-
+```
 ## Related
 
 *  [api:CsvParser]

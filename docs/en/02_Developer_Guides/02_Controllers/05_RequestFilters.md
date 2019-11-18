@@ -1,6 +1,8 @@
+---
 title: Request Filters
 summary: Create objects for modifying request and response objects across controllers.
-
+icon: filter
+---
 # Request Filters
 
 [api:RequestFilter] is an interface that provides two key methods. `preRequest` and `postRequest`. These methods are 
@@ -9,7 +11,7 @@ perform operations wrapped around responses and request objects. A `RequestFilte
 
 **mysite/code/CustomRequestFilter.php**
 
-	:::php
+```php
 	<?php
 
 	class CustomRequestFilter implements RequestFilter {
@@ -38,18 +40,18 @@ perform operations wrapped around responses and request objects. A `RequestFilte
 		}
 	}
 
-After defining the `RequestFilter`, add it as an allowed `filter` through the [Configuration API](../configuration)
+```
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	Injector:
 	  RequestProcessor:
 	    properties:
 	      filters:
 	        - '%$CustomRequestFilter'
 
-## API Documentation
+```
 
 * [api:RequestFilter]
 * [api:RequestProcessor]

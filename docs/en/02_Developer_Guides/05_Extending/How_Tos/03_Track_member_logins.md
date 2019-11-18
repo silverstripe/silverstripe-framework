@@ -1,3 +1,9 @@
+---
+title: Track member logins
+summary: Keep a log in the database of who logs in and when
+icon: user-friends
+---
+
 # Howto: Track Member Logins
 
 Sometimes its good to know how active your users are,
@@ -9,7 +15,7 @@ often the member has visited. Or more specifically,
 how often he has started a browser session, either through
 explicitly logging in or by invoking the "remember me" functionality.
 
-	:::php
+```php
 	<?php
 	class MyMemberExtension extends DataExtension {
 		private static $db = array(
@@ -43,10 +49,11 @@ explicitly logging in or by invoking the "remember me" functionality.
 		}
 	}
 
-Now you just need to apply this extension through your config:
+```
 
-	:::yml
+```yml
 	Member:
 		extensions:
 			- MyMemberExtension
 
+```

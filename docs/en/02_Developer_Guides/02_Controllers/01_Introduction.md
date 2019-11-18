@@ -1,6 +1,7 @@
+---
 title: Introduction to a Controller
 summary: A brief look at the definition of a Controller, creating actions and how to respond to requests.
-
+---
 # Introduction to Controllers
 
 The following example is for a simple [api:Controller] class. When building off the SilverStripe Framework you will
@@ -8,7 +9,7 @@ subclass the base `Controller` class.
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	<?php
 	
 	class TeamController extends Controller {
@@ -27,33 +28,35 @@ subclass the base `Controller` class.
 		}
 	}
 
-## Routing
+```
 
 We need to define the URL that this controller can be accessed on. In our case, the `TeamsController` should be visible 
 at http://yoursite.com/teams/ and the `players` custom action is at http://yoursite.com/team/players/.
 
-<div class="info" markdown="1">
+[info]
 If you're using the `cms` module with and dealing with `Page` objects then for your custom `Page Type` controllers you 
 would extend `ContentController` or `Page_Controller`. You don't need to define the routes value as the `cms` handles 
 routing.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `?flush=1`.
-</div>
+[/alert]
 
 **mysite/_config/routes.yml**
 
-	:::yml
-	---
+```yml
+```
+```
 	Name: mysiteroutes
 	After: framework/routes#coreroutes
-	---
+```
+```
 	Director:
 	  rules:
 	    'teams//$Action/$ID/$Name': 'TeamController'
 
-
+```
 For more information about creating custom routes, see the [Routing](routing) documentation.
 
 ## Actions
@@ -61,9 +64,9 @@ For more information about creating custom routes, see the [Routing](routing) do
 Controllers respond by default to an `index` method. You don't need to define this method (as it's assumed) but you
 can override the `index()` response to provide custom data back to the [Template and Views](../templates). 
 
-<div class="notice" markdown="1">
+[notice]
 It is standard in SilverStripe for your controller actions to be `lowercasewithnospaces`
-</div>
+[/notice]
 
 Action methods can return one of four main things:
 
@@ -74,7 +77,7 @@ Action methods can return one of four main things:
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	/**
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
@@ -127,7 +130,7 @@ Action methods can return one of four main things:
 		return $this->getResponse().
 	}
 
-For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.
+```
 
 ## Security
 
@@ -153,14 +156,14 @@ Each controller should define a `Link()` method. This should be used to avoid ha
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
+```php
 	public function Link($action = null) {
 		return Controller::join_links('teams', $action);
 	}
 
-<div class="info" markdown="1">
+```
 The [api:Controller::join_links()] is optional, but makes `Link()` more flexible by allowing an `$action` argument, and concatenates the path segments with slashes. The action should map to a method on your controller.
-</div>
+[/info]
 
 ## Related Documentation
 

@@ -1,3 +1,9 @@
+---
+title: Request for comment
+summary: Our approach to decision-making around impactful changes to the product
+icon: comments
+---
+
 # Request for comment (RFC)
 
 ## Why RFCs?
@@ -22,7 +28,9 @@ The benefits of writing an RFC for non-trivial feature proposals are:
  * Community becomes aware of incoming changes prior to the implementation
  * RFC can be used as a basis for documentation of the feature
 	
+
 ## How to write an RFC?
+
 ### Template
 The following heading can act as a template to starting your RFC.
  * **Introduction** - include a reference #, title, author

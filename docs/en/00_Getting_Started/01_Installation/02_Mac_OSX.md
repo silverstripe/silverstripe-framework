@@ -1,4 +1,9 @@
-# Mac OSX with MAMP
+---
+title: Mac OSX
+summary: How to set up Silverstripe CMS on a MacOS system using MAMP
+icon: apple
+---
+# MacOS with MAMP
 
 This topic covers setting up your Mac as a web server and installing SilverStripe.
 

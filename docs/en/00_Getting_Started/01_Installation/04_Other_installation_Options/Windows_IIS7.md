@@ -126,6 +126,7 @@ This is an op-code cacher which speeds up PHP execution on Windows.
  * Ensure that **wincache** and **sqlsrv** details can be found in the information
  * Go to **Enable or disable an extension** and disable everything, except for these:
 
+```
 	php_curl.dll
 	php_gd2.dll
 	php_mbstring.dll
@@ -133,24 +134,26 @@ This is an op-code cacher which speeds up PHP execution on Windows.
 	php_wincache.dll
 	php_tidy.dll
 
- * Go to **Configure error reporting** and check **Development machine**
+```
  * Go to **Manage all settings** and set the following:
 
+```
 	date.timezone = "Pacific/Auckland" (or choose from the list here: http://nz.php.net/manual/en/timezones.php)
 	post_max_size = 64M
 	memory_limit = 256M
 	upload_max_filesize = 64M
 
-Tweak the above values as necessary if your requirements differ.
+```
 
 ## Folder permissions for PHP
 
 Now we need to set up folder permissions for PHP. Open the php.ini and find the paths for sessions and file uploads. They will look like this:
 
+```
 	upload_tmp_dir="C:\Windows\Temp"
 	session.save_path="C:\Windows\Temp"
 
-Two other important folders to set the permissions on are `assets` and `silverstripe-cache` (if used) in your web root.
+```
 
 You will need to give **Modify** permission to **IUSR** user. To do it right click the folder and choose **Properties**. Then open the security tab, press **Edit** and add the **IUSR** user to the list by clicking the **Add** button. Afterwards tick **Modify** under **Allow** for that user. Repeat these steps for each folder.
 
@@ -166,6 +169,7 @@ This file tells SilverStripe projects installed on this machine which database s
 
 Inside the newly created _ss_environment.php file, insert the following code:
 
+```
 	<?php
 	/* What kind of environment is this: development, test, or live (ie, production)? */
 	define('SS_ENVIRONMENT_TYPE', 'dev');
@@ -177,7 +181,7 @@ Inside the newly created _ss_environment.php file, insert the following code:
 	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 
-Insert the password you created for SQL Server earlier into the **SS_DATABASE_PASSWORD** field that is currently empty.
+```
 
   * Grab the latest stable version from here: http://www.silverstripe.org/stable-download
   * Extract contents to **C:\inetpub\wwwroot\ss**

@@ -1,6 +1,7 @@
+---
 title: Versioning
 summary: Add versioning to your database content through the Versioned extension.
-
+---
 # Versioning
 
 Database content in SilverStripe can be "staged" before its publication, as well as track all changes through the 
@@ -17,30 +18,30 @@ Adding Versioned to your `DataObject` subclass works the same as any other exten
 denoting the different "stages", which map to different database tables. 
 
 **mysite/_config/app.yml**
-	:::yml
+```yml
 	MyRecord:
 	  extensions:
 	    - Versioned("Stage","Live")
 
-<div class="notice" markdown="1">
+```
 The extension is automatically applied to `SiteTree` class. For more information on extensions see 
 [Extending](../extending) and the [Configuration](../configuration) documentation.
-</div>
+[/notice]
 
-<div class="warning" markdown="1">
+[warning]
 Versioning only works if you are adding the extension to the base class. That is, the first subclass
 of `DataObject`. Adding this extension to children of the base class will have unpredictable behaviour.
-</div>
+[/warning]
 
 ## Database Structure
 
 Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
 will create a new `MyRecord_Live` table once you've rebuilt the database.
 
-<div class="notice" markdown="1">
+[notice]
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than 
 adding a suffix.
-</div>
+[/notice]
 
  * `MyRecord` table: Contains staged data
  * `MyRecord_Live` table: Contains live data
@@ -60,7 +61,7 @@ automatically joined as required:
 By default, all records are retrieved from the "Draft" stage (so the `MyRecord` table in our example). You can 
 explicitly request a certain stage through various getters on the `Versioned` class.
 
-	:::php
+```php
 	// Fetching multiple records
 	$stageRecords = Versioned::get_by_stage('MyRecord', 'Stage');
 	$liveRecords = Versioned::get_by_stage('MyRecord', 'Live');
@@ -69,29 +70,29 @@ explicitly request a certain stage through various getters on the `Versioned` cl
 	$stageRecord = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
 	$liveRecord = Versioned::get_by_stage('MyRecord', 'Live')->byID(99);
 
-### Historical Versions
+```
 
 The above commands will just retrieve the latest version of its respective stage for you, but not older versions stored 
 in the `<class>_versions` tables.
 
-	:::php
+```php
 	$historicalRecord = Versioned::get_version('MyRecord', <record-id>, <version-id>);
 
-<div class="alert" markdown="1">
+```
 The record is retrieved as a `DataObject`, but saving back modifications via `write()` will create a new version, 
 rather than modifying the existing one.
-</div>
+[/alert]
 
 In order to get a list of all versions for a specific record, we need to generate specialized [api:Versioned_Version] 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
 	
-	:::php
+```php
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	$versions = $record->allVersions();
 	echo $versions->First()->Version; // instance of Versioned_Version
 
-### Writing Versions and Changing Stages
+```
 
 The usual call to `DataObject->write()` will write to whatever stage is currently active, as defined by the 
 `Versioned::current_stage()` global setting. Each call will automatically create a new version in the 
@@ -101,7 +102,7 @@ To move a saved version from one stage to another, call [writeToStage(<stage>)](
 object. The process of moving a version to a different stage is also called "publishing", so we've created a shortcut 
 for this: `publish(<from-stage>, <to-stage>)`.
 
-	:::php
+```php
 	$record = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
 	$record->MyField = 'changed';
 	// will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
@@ -110,26 +111,26 @@ for this: `publish(<from-stage>, <to-stage>)`.
 	// will copy the saved record information to the `MyRecord_Live` table
 	$record->publish('Stage', 'Live');
 
-Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
+```
 
-	:::php
+```php
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	// will remove the row from the `MyRecord_Live` table
 	$record->deleteFromStage('Live');
 
-### Forcing the Current Stage
+```
 
 The current stage is stored as global state on the object. It is usually modified by controllers, e.g. when a preview 
 is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
-	:::php
+```php
 	$origMode = Versioned::get_reading_mode(); // save current mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
 	Versioned::set_reading_mode('Stage'); // temporarily overwrite mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
 
-### Custom SQL
+```
 
 We generally discourage writing `Versioned` queries from scratch, due to the complexities involved through joining 
 multiple tables across an inherited table scheme (see [api:Versioned::augmentSQL()]). If possible, try to stick to 
@@ -137,20 +138,20 @@ smaller modifications of the generated `DataList` objects.
 
 Example: Get the first 10 live records, filtered by creation date:
 
-	:::php
+```php
 	$records = Versioned::get_by_stage('MyRecord', 'Live')->limit(10)->sort('Created', 'ASC');
 
-### Permissions
+```
 
 By default, `Versioned` will come out of the box with security extensions which restrict
 the visibility of objects in Draft (stage) or Archive viewing mode.
 
-<div class="alert" markdown="1">
+[alert]
 As is standard practice, user code should always invoke `canView()` on any object before
 rendering it. DataLists do not filter on `canView()` automatically, so this must be
 done via user code. This be be achieved either by wrapping `<% if $canView %>` in
 your template, or by implementing your visibility check in PHP.
-</div>
+[/alert]
 
 Versioned object visibility can be customised in one of the following ways by editing your user code:
 
@@ -160,7 +161,7 @@ Versioned object visibility can be customised in one of the following ways by ed
  
 E.g.
 
-    :::php
+```php
     class MyObject extends DataObject {
         private static $extensions = array(
             'Versioned'
@@ -179,7 +180,7 @@ E.g.
         }
     }
 
-If you want to control permissions of an object in an extension, you can also use
+```
 one of the below extension points in your `DataExtension` subclass:
 
  * `canView` to update the visibility of the object's `canView`
@@ -190,19 +191,19 @@ only be invoked if the object is in a non-published state.
  
 E.g.
 
-    :::php
+```php
     class MyObjectExtension extends DataExtension {
         public function canViewNonLive($member = null) {
             return Permission::check($member, 'DRAFT_STATUS');
         }
     }
 
-If none of the above checks are overridden, visibility will be determined by the 
+```
 permissions in the `TargetObject.non_live_permissions` config.
 
 E.g.
 
-    :::php
+```php
     class MyObject extends DataObject {
         private static $extensions = array(
             'Versioned'
@@ -210,7 +211,7 @@ E.g.
         private static $non_live_permissions = array('ADMIN');
     }
 
-Versioned applies no additional permissions to `canEdit` or `canCreate`, and such
+```
 these permissions should be implemented as per standard unversioned DataObjects.
 
 ### Page Specific Operations
@@ -225,13 +226,13 @@ default, and only preview draft content if explicitly requested (e.g. by the "pr
 to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
 
 **mysite/code/MyController.php**
-	:::php
+```php
 	public function init() {
 		parent::init();
 		Versioned::set_reading_mode('Stage.Stage');
 	}
 
-
+```
 ### Controllers
 
 The current stage for each request is determined by `VersionedRequestFilter` before any controllers initialize, through 
@@ -239,11 +240,11 @@ The current stage for each request is determined by `VersionedRequestFilter` bef
 `?stage=Stage` to your request. The setting is "sticky" in the PHP session, so any subsequent requests will also be in 
 draft stage.
 
-<div class="alert" markdown="1">
+[alert]
 The `choose_site_stage()` call only deals with setting the default stage, and doesn't check if the user is 
 authenticated to view it. As with any other controller logic, please use `DataObject->canView()` to determine 
 permissions, and avoid exposing unpublished content to your users.
-</div>
+[/alert]
 
 ## API Documentation
 

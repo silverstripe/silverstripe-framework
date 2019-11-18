@@ -1,6 +1,8 @@
+---
 title: Access Control
 summary: Define allowed behavior and add permission based checks to your Controllers.
-
+icon: user-lock
+---
 # Access Control
 
 Within your controllers you should declare and restrict what people can see and do to ensure that users cannot run 
@@ -11,7 +13,7 @@ actions on the website they shouldn't be able to.
 Any action you define on a controller must be defined in a `$allowed_actions` static array. This prevents users from
 directly calling methods that they shouldn't.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -37,14 +39,14 @@ directly calling methods that they shouldn't.
 		);
 	}
 
-<div class="info">
+```
 If the permission check fails, SilverStripe will return a `403` Forbidden HTTP status.
-</div>
+[/info]
 
 An action named "index" is white listed by default, unless `allowed_actions` is defined as an empty array, or the action 
 is specifically restricted.
 
-	:::php
+```php
 	<?php 
 
 	class MyController extends Controller {
@@ -54,9 +56,9 @@ is specifically restricted.
 		}
 	}
 
-`$allowed_actions` can be defined on `Extension` classes applying to the controller.
+```
 
-	:::php
+```php
 	<?php
 
 	class MyExtension extends Extension {
@@ -66,9 +68,9 @@ is specifically restricted.
 		);
 	}
 
-Only public methods can be made accessible.
+```
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -87,9 +89,9 @@ Only public methods can be made accessible.
 		}
 	}
 
-If a method on a parent class is overwritten, access control for it has to be redefined as well.
+```
 	
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -114,16 +116,16 @@ If a method on a parent class is overwritten, access control for it has to be re
 		}
 	}
 
-<div class="notice" markdown="1">
+```
 Access checks on parent classes need to be overwritten via the [Configuration API](../configuration).
-</div>
+[/notice]
 
 ## Forms
 
 Form action methods should **not** be included in `$allowed_actions`. However, the form method **should** be included 
 as an `allowed_action`.
 	
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -141,12 +143,12 @@ as an `allowed_action`.
 		}
 	}
 
-## Action Level Checks
+```
 
 Each method responding to a URL can also implement custom permission checks, e.g. to handle responses conditionally on 
 the passed request data.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -164,10 +166,10 @@ the passed request data.
 		}
 	}
 
-<div class="notice" markdown="1">
+```
 This is recommended as an addition for `$allowed_actions`, in order to handle more complex checks, rather than a 
 replacement.
-</div>
+[/notice]
 
 ## Controller Level Checks
 
@@ -175,10 +177,10 @@ After checking for allowed_actions, each controller invokes its `init()` method,
 common state, If an `init()` method returns a `SS_HTTPResponse` with either a 3xx or 4xx HTTP status code, it'll abort 
 execution. This behavior can be used to implement permission checks.
 
-<div class="info" markdown="1">
+[info]
 `init` is called for any possible action on the controller and before any specific method such as `index`.
-</div>
-	:::php
+[/info]
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -194,7 +196,7 @@ execution. This behavior can be used to implement permission checks.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Security](../security)
 

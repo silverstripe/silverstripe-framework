@@ -1,12 +1,15 @@
+---
 title: Import CSV Data through a Controller
-
+summary: Data importing through the frontend
+icon: upload
+---
 # Import CSV Data through a Controller
 
 You can have more customised logic and interface feedback through a custom controller. Let's create a simple upload 
 form (which is used for `MyDataObject` instances). You can access it through 
 `http://yoursite.com/MyController/?flush=all`.
 
-	:::php
+```php
 	<?php
 
 	class MyController extends Controller {
@@ -63,7 +66,7 @@ form (which is used for `MyDataObject` instances). You can access it through
 		}
 	}
 
-<div class="alert" markdown="1">
+```
 This interface is not secured, consider using [api:Permission::check()] to limit the controller to users with certain 
 access rights.
-</div>
+[/alert]

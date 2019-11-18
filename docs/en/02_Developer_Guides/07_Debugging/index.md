@@ -1,5 +1,8 @@
+---
+title: Debugging
 summary: Learn how to identify errors in your application and best practice for logging application errors.
-
+icon: bug
+---
 # Debugging
 
 SilverStripe can be a large and complex framework to debug, but there are ways to make debugging less painful. In this
@@ -17,7 +20,7 @@ bottle-necks and identify slow moving parts of your application chain.
 
 The [api:Debug] class contains a number of static utility methods for more advanced debugging.
 
-	:::php
+```php
 	Debug::show($myVariable);
 	// similar to print_r($myVariable) but shows it in a more useful format.
 
@@ -27,7 +30,7 @@ The [api:Debug] class contains a number of static utility methods for more advan
 	SS_Backtrace::backtrace();
 	// prints a calls-stack
 
-## API Documentation
+```
 
 * [api:SS_Log]
 * [api:SS_Backtrace]

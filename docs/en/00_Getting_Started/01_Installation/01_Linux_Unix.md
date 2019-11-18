@@ -1,3 +1,9 @@
+---
+title: Linux and Unix
+summary: How to install Silversripe on a *nix system
+icon: linux
+---
+
 # Installation on Linux, Unix and *nix like Operating Systems
 
 SilverStripe should be able to be installed on any Linux, Unix or *nix like OS as long as the correct server software is installed and configured (referred to as *nix in this document from herein). It is common that web hosting that you may use for your production SilverStripe application will be *nix based, here you may also want to use *nix locally to ensure how you develop locally mimics closely your production environment.
