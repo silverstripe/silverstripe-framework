@@ -26,7 +26,6 @@ fundamental concepts that we build on in this documentation.
 
 In order to run tests, you need to install SilverStripe using [/getting-started/composer](Composer),
 which will pull in the required development dependencies to run tests.
-These are not included in the standard archive downloads provided from silverstripe.org.
 
 Tests are run from the commandline, in your webroot folder:
 
