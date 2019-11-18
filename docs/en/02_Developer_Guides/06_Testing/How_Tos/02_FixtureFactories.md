@@ -1,5 +1,8 @@
+---
 title: How to use a FixtureFactory
-
+summary: Provide context to your tests with database fixtures
+icon: industry
+---
 # How to use a FixtureFactory
 
 The [api:FixtureFactory] is used to manually create data structures for use with tests. For more information on fixtures
@@ -8,7 +11,7 @@ see the [Fixtures](../fixtures) documentation.
 In this how to we'll use a `FixtureFactory` and a custom blue print for giving us a shortcut for creating new objects
 with information that we need.
 
-	:::php
+```php
 	class MyObjectTest extends SapphireTest {
 
 		protected $factory;
@@ -40,7 +43,7 @@ with information that we need.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Fixtures](../fixtures)
 

@@ -1,6 +1,7 @@
+---
 title: MySQL SSL Support
 summary: Setting up MySQL SSL certificates to work with Silverstripe
-
+---
 # MySQL SSL Support: Why do I need it?
 
 In a typical Silverstripe set up, you will only need to use a single host to function as the web server, email server, database server, among others.
@@ -9,9 +10,9 @@ In some cases, however, you may be required to connect to a database on a remote
 
 This article demonstrates how to generate SSL certificates using MySQL and implementing them in Silverstripe.
 
-<div class="notice" markdown='1'>
+[notice]
 This article assumes that you have `MySQL` and `OpenSSL` installed.
-</div>
+[/notice]
 
 
 ## Generating Certificates
@@ -28,12 +29,12 @@ We also need to sign the certificates with our generated CA.
 
 The commands below illustrate how to do so on your MySQL host.
 
-<div class="notice" markdown='1'>
+[notice]
 The following commands will work on Linux/Unix based servers. For other servers such as windows, refer to the [MySQL documentation](https://dev.mysql.com/doc/refman/5.7/en/creating-ssl-files-using-openssl.html)
-</div>
+[/notice]
 
 
-	:::bash
+```bash
 	
 	# Create directory
 	sudo mkdir ssl
@@ -60,14 +61,16 @@ The following commands will work on Linux/Unix based servers. For other servers 
 	
 	# Verify validity of generated certificates
 	sudo openssl verify -CAfile ca-cert.pem server-cert.pem client-cert.pem
-	
-<div class="warning" markdown='1'>
+
+```
+[warning]
 After generating the certificates, make sure to set the correct permissions to prevent unauthorized access to your keys! 
 
 It is critical that the key files (files ending in *key.pem) are kept secret. Once these files are exposed, you will need to regenerate the certificates to prevent exposing your data traffic. 
-</div>
+[/warning]
 
-	:::bash
+
+```bash
 	# Set permissions readonly permissions and change owner to root
 	sudo chown root:root *.pem 
 	sudo chmod 440 *.pem
@@ -76,18 +79,19 @@ It is critical that the key files (files ending in *key.pem) are kept secret. On
 	sudo chgrp mysql server*.pem
 	sudo mv *.pem /etc/mysql/ssl
 
-
+```
 ## Setting up MySQL to use SSL certificates
 
-<div class="notice" markdown='1'>
+[notice]
 For Debian/Ubuntu instances, the configuration file is usually in `/etc/mysql/my.cnf`. Refer to your MySQL manual for more information
-</div>
+[/notice]
 
 We must edit the MySQL configuration to use the newly generated certificates.
 
 Edit your MySQL configuration file as follows. 
 
 
+```
 	[mysqld]
 	...
 	ssl-ca=/etc/mysql/ca-cert.pem
@@ -97,16 +101,16 @@ Edit your MySQL configuration file as follows.
 	# IMPORTANT! When enabling MySQL remote connections, make sure to take adequate steps to secure your machine from unathorized access!
 	bind-address=0.0.0.0
 
-<div class="warning" markdown='1'>
+```
 Enabling remote connections to your MySQL instance introduces various security risks. Make sure to take appropriate steps to secure your instance by using a strong password, disabling MySQL root access, and using a firewall to only accept qualified hosts, for example.
-</div>
+[/warning]
 
 Make sure to restart your MySQL instance to reflect the changes.
 
-	:::bash
+```bash
 	sudo service mysql restart
 
-
+```
 ## Setting up Silverstripe to connect to MySQL
 
 Now that we have successfully setup the SSL your MySQL host, we now need to configure Silverstripe to use the certificates.
@@ -119,13 +123,13 @@ First we need to copy the client certificate files to the Silverstripe instance.
 - `client-cert.pem`
 - `ca-cert.pem`
 
-<div class="warning" markdown='1'>
+[warning]
 Make sure to only copy `client-key.pem`, `client-cert.pem`, and `ca-cert.pem` to avoid leaking your credentials!
-</div>
+[/warning]
 
 On your Silverstripe instance:
 
-	:::bash
+```bash
 	# Secure copy over SSH via rsync command. You may use an alternative method if desired. 
 	rsync -avP user@db1.example.com:/path/to/client/certs /path/to/secure/folder
 	
@@ -134,15 +138,15 @@ On your Silverstripe instance:
 	sudo chmod 750 /path/to/secure/folder
 	sudo chmod 400 /path/to/secure/folder/*
 
-### Setting up _ss_environment.php to use SSL certificates
+```
 
-<div class="notice" markdown='1'>
+[notice]
 `SS_DATABASE_SERVER does not accept IP-based hostnames. Also, if the domain name of the host does not match the common name you used to generate the server certificate, you will get an `SSL certificate mismatch error`.
-</div>
+[/notice]
 
 Add or edit your `_ss_environment.php` configuration file. (See [Environment Management](/getting_started/environment_management) for more information.) 
 
-	:::php
+```php
 	<?php
 	
 	// These four define set the database connection details.
@@ -161,7 +165,7 @@ Add or edit your `_ss_environment.php` configuration file. (See [Environment Man
 	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 	
-	
+```
 When running the installer, make sure to check on the `Use _ss_environment file for configuration` option under the `Database Configuration` section to use the environment file.
 
 ## Conclusion

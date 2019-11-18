@@ -1,6 +1,7 @@
+---
 title: i18n
 summary: Display templates and PHP code in different languages based on the preferences of your website users.
-
+---
 # i18n
 
 The i18n class (short for "internationalization") in SilverStripe enables you to display templates and PHP code in
@@ -27,12 +28,12 @@ The i18n class is enabled by default.
 To set the locale you just need to call [api:i18n::set_locale()] passing, as a parameter, the name of the locale that 
 you want to set.
 
-	:::php
+```php
 	// mysite/_config.php
 	i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
 	i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
 
-
+```
 Once we set a locale, all the calls to the translator function will return strings according to the set locale value, if
 these translations are available. See [unicode.org](http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html) 
 for a complete listing of available locales.
@@ -45,14 +46,14 @@ As you set the locale you can also get the current value, just by calling [api:i
 
 To let browsers know which language they're displaying a document in, you can declare a language in your template.
 
-	:::html
+```html
 	//'Page.ss' (HTML)
 	<html lang="$ContentLocale">
 
 	//'Page.ss' (XHTML)
 	<html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
 
-
+```
 Setting the `<html>` attribute is the most commonly used technique. There are other ways to specify content languages
 (meta tags, HTTP headers), explained in this [w3.org article](http://www.w3.org/International/tutorials/language-decl/).
 
@@ -60,19 +61,19 @@ You can also set the [script direction](http://www.w3.org/International/question
 which is determined by the current locale, in order to indicate the preferred flow of characters
 and default alignment of paragraphs and tables to browsers.
 
-	:::html
+```html
 	<html lang="$ContentLocale" dir="$i18nScriptDirection">
 
-### Date and time formats
+```
 
 Formats can be set globally in the i18n class. These settings are currently only picked up by the CMS, you'll need
 to write your own logic for any frontend output.
 
-	:::php
+```php
 	Config::inst()->update('i18n', 'date_format', 'dd.MM.YYYY');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 
-Most localization routines in SilverStripe use the [Zend_Date API](http://framework.zend.com/manual/1.12/en/zend.date.overview.html).
+```
 This means all formats are defined in
 [ISO date format](http://framework.zend.com/manual/1.12/en/zend.date.constants.html),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
@@ -84,22 +85,22 @@ They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [
 
 In order to add a value, add the following to your `config.yml`:
 
-	:::yml
+```yml
 	i18n:
 	  common_locales:
 	    de_CGN:
 	      name: German (Cologne)
 	      native: Kölsch
 
-Similarly, to change an existing language label, you can overwrite one of these keys:
+```
 
-	:::yml
+```yml
 	i18n:
 	  common_locales:
 	    en_NZ:
 	      native: Niu Zillund
 
-### i18n in URLs
+```
 
 By default, URLs for pages in SilverStripe (the `SiteTree->URLSegment` property)
 are automatically reduced to the allowed allowed subset of ASCII characters.
@@ -118,13 +119,13 @@ Please refer to [W3C: Introduction to IDN and IRI](http://www.w3.org/Internation
 
 Date- and time related form fields support i18n ([api:DateField], [api:TimeField], [api:DatetimeField]).
 
-	:::php
+```php
 	i18n::set_locale('ca_AD');
 	$field = new DateField(); // will automatically set date format defaults for 'ca_AD'
 	$field->setLocale('de_DE'); // will not update the date formats
 	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // sets typical 'de_DE' date format, shows as "23. Juni 1982"
 
-Defaults can be applied globally for all field instances through the `DateField.default_config`
+```
 and `TimeField.default_config` [configuration arrays](/developer_guides/configuration).
 If no 'locale' default is set on the field, [api:i18n::get_locale()] will be used.
 
@@ -136,25 +137,25 @@ The [api:DateField] API can be enhanced by JavaScript, and comes with
 The field tries to translate the date formats and locales into a format compatible with jQuery UI
 (see [api:DateField_View_JQuery::$locale_map_] and [api:DateField_View_JQuery::convert_iso_to_jquery_format()]).
 
-	:::php
+```php
 	$field = new DateField();
 	$field->setLocale('de_AT'); // set Austrian/German locale
 	$field->setConfig('showcalendar', true);
 	$field->setConfig('jslocale', 'de'); // jQuery UI only has a generic German localization
 	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // will be transformed to 'dd. MM yy' for jQuery
 
-## Translating text
+```
 
 Adapting a module to make it localizable is easy with SilverStripe. You just need to avoid hardcoding strings that are
 language-dependent and use a translator function call instead.
 
-	:::php
+```php
 	// without i18n
 	echo "This is a string";
 	// with i18n
 	echo _t("Namespace.Entity","This is a string");
 
-
+```
 All strings passed through the `_t()` function will be collected in a separate language table (see [Collecting text](#collecting-text)), which is the starting point for translations.
 
 ### The _t() function
@@ -171,7 +172,7 @@ to the translator.
 
 #### Usage in PHP Files
 
-	:::php
+```php
 
 	// Simple string translation
 	_t('LeftAndMain.FILESIMAGES','Files & Images');
@@ -186,11 +187,11 @@ to the translator.
 		array('value' => $itemRestored)
 	);
 
-#### Usage in Template Files
+```
 
-<div class="hint" markdown='1'>
+[hint]
 The preferred template syntax has changed somewhat since [version 2.x](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#usage-2).
-</div>
+[/hint]
 
 In `.ss` template files, instead of `_t(params)` the syntax `<%t params %>` is used. The syntax for passing parameters to the function is quite different to
 the PHP version of the function.
@@ -199,7 +200,7 @@ the PHP version of the function.
  * The original language string and the natural language comment parameters are separated by ` on `.
  * The final parameter (which is an array in PHP) is passed as a space separated list of key/value pairs.
 
-	:::ss
+```ss
 	// Simple string translation
 	<%t Namespace.Entity "String to translate" %>
 
@@ -209,19 +210,19 @@ the PHP version of the function.
 	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
 	<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
 
-#### Caching in Template Files with locale switching
+```
 
 When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is important to add the Locale to the cache key 
 otherwise it won't pick up locale changes.
 
-	:::ss
+```ss
 	<% cached 'MyIdentifier', $CurrentLocale %>
 		<% loop $Students %>
 			$Name
 		<% end_loop %>
 	<% end_cached %>
 
-## Collecting text
+```
 
 To collect all the text in code and template files we have just to visit: `http://localhost/dev/tasks/i18nTextCollectorTask`
 
@@ -231,9 +232,9 @@ underscore function, and tell you about the created files and any possible entit
 If you want to run the text collector for just one module you can use the 'module' parameter: 
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
-<div class="hint" markdown='1'>
+[hint]
 You'll need to install PHPUnit to run the text collector (see [testing-guide](/developer_guides/testing)).
-</div>
+[/hint]
 
 ## Module Priority
 
@@ -252,16 +253,18 @@ This default order is configured in `framework/_config/i18n.yml`.  This file spe
 To create a custom module order, you need to specify a config fragment that inserts itself either after or before those items.  For example, you may have a number of modules that have to come after the framework/admin, but before anyhting else.  To do that, you would use this
 
 	---
+```
 	Name: customi18n
 	Before: 'defaulti18n'
-	---
+```
+```
 	i18n:
 	  module_priority:
 	    - module1
 	    - module2
 	    - module3
 
-The config option being set is `i18n.module_priority`, and it is a list of module names.
+```
 
 There are a few special cases:
 
@@ -279,32 +282,34 @@ By default, SilverStripe 3.x uses a YAML format (through the [Zend_Translate_Rai
 
 Example: framework/lang/en.yml (extract)
 
+```
 	en:
 	  ImageUploader:
 	    Attach: 'Attach %s'
 	  UploadField:
 	    NOTEADDFILES: 'You can add files once you have saved for the first time.'
 
-Translation table: framework/lang/de.yml (extract)
+```
 
+```
 	de:
 	  ImageUploader:
 	    ATTACH: '%s anhängen'
 	  UploadField:
 	    NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
 
-Note that translations are cached across requests.
+```
 The cache can be cleared through the `?flush=1` query parameter,
 or explicitly through `Zend_Translate::getCache()->clean(Zend_Cache::CLEANING_MODE_ALL)`.
 
-<div class="hint" markdown='1'>
+[hint]
 The format of language definitions has changed significantly in since version 2.x.
-</div>
+[/hint]
 
 In order to enable usage of [version 2.x style language definitions](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#language-tables-in-php) in 3.x, you need to register a legacy adapter
 in your `mysite/_config.php`:
 
-	:::php
+```php
 	i18n::register_translator(
 		new Zend_Translate(array(
 			'adapter' => 'i18nSSLegacyAdapter',
@@ -315,7 +320,7 @@ in your `mysite/_config.php`:
 		9 // priority lower than standard translator
 	);
 
-## Javascript Usage
+```
 
 The i18n system in JavaScript is similar to its PHP equivalent.
 Languages are typically stored in `<my-module-dir>/javascript/lang`.
@@ -329,10 +334,10 @@ the browser: The current locale, and the default locale as a fallback.
 The `Requirements` class has a special method to determine these includes:
 Just point it to a directory instead of a file, and the class will figure out the includes.
 
-	:::php
+```php
 	Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
 
-
+```
 ###  Translation Tables in JavaScript
 
 Translation tables are automatically included as required, depending on the configured locale in `i18n::get_locale()`.
@@ -340,7 +345,7 @@ As a fallback for partially translated tables we always include the master table
 
 Master Table (`<my-module-dir>/javascript/lang/en.js`)
 
-	:::js
+```js
 	if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 	  console.error('Class ss.i18n not defined');
 	} else {
@@ -349,34 +354,32 @@ Master Table (`<my-module-dir>/javascript/lang/en.js`)
 	  });
 	}
 
-
+```
 Example Translation Table (`<my-module-dir>/javascript/lang/de.js`)
 
-	:::js
+```js
 	ss.i18n.addDictionary('de', {
 	  'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
 	});
 
-For most core modules, these files are generated by a
+```
 [build task](https://github.com/silverstripe/silverstripe-buildtools/blob/master/src/GenerateJavascriptI18nTask.php),
 with the actual source files in a JSON
 format which can be processed more easily by external translation providers (see `javascript/lang/src`).
 
 ### Basic Usage
 
-	:::js
+```js
 	alert(ss.i18n._t('MYMODULE.MYENTITY'));
 
-
+```
 ### Advanced Use
 
 The `ss.i18n` object contain a couple functions to help and replace dynamic variable from within a string.
 
 #### Legacy sequential replacement with sprintf()
 
-	`sprintf()` will substitute occurencies of `%s` in the main string with each of the following arguments passed to the function. The substitution is done sequentially.
-
-	:::js
+```js
 	// MYMODULE.MYENTITY contains "Really delete %s articles by %s?"
 	alert(ss.i18n.sprintf(
 		ss.i18n._t('MYMODULE.MYENTITY'),
@@ -385,12 +388,10 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 	));
 	// Displays: "Really delete 42 articles by Douglas Adams?"
 
-
+```
 #### Variable injection with inject()
 
-	`inject()` will substitute variables in the main string like `{myVar}` by the keys in the object passed as second argument. Each variable can be in any order and appear multiple times.
-
-	:::js
+```js
 	// MYMODULE.MYENTITY contains "Really delete {count} articles by {author}?"
 	alert(ss.i18n.inject(
 		ss.i18n._t('MYMODULE.MYENTITY'),
@@ -398,7 +399,7 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 	));
 	// Displays: "Really delete 42 articles by Douglas Adams?"
 
-
+```
 ## Limitations
 
 *  No detecting/conversion of character encodings (we rely fully on UTF-8)

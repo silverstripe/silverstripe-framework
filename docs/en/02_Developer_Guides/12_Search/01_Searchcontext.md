@@ -1,6 +1,8 @@
+---
 title: Scaffolding with SearchContext
 summary: Configure the search form within ModelAdmin using the SearchContext class.
-
+icon: search
+---
 # SearchContext
 
 [api:SearchContext] manages searching of properties on one or more [api:DataObject] types, based on a given set of
@@ -10,15 +12,15 @@ search parameters and an object class it acts on.
 The default output of a [api:SearchContext] is either a [api:SQLQuery] object for further refinement, or a
 [api:DataObject] instance.
 
-<div class="notice" markdown="1">
+[notice]
 [api:SearchContext] is mainly used by [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin).
-</div>
+[/notice]
 
 ## Usage
 
 Defining search-able fields on your DataObject.
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -29,13 +31,13 @@ Defining search-able fields on your DataObject.
 	   );
 	}
 
-## Customizing fields and filters
+```
 
 In this example we're defining three attributes on our MyDataObject subclass: `PublicProperty`, `HiddenProperty`
 and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDate` should only search for dates
 *after* the search entry (with a `GreaterThanFilter`).
 
-	:::php
+```php
 	<?php
 
 	class MyDataObject extends DataObject {
@@ -64,19 +66,19 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 		}
 	}
 
-<div class="notice" markdown="1">
+```
 See the [SearchFilter](../model/searchfilters) documentation for more information about filters to use such as the
 `GreaterThanFilter`.
-</div>
+[/notice]
 
-<div class="notice" markdown="1">
+[notice]
 In case you need multiple contexts, consider name-spacing your request parameters by using `FieldList->namespace()` on
 the `$fields` constructor parameter.
-</div>
+[/notice]
 
 ### Generating a search form from the context
 
-	:::php
+```php
 	<?php
 
 	..
@@ -107,14 +109,14 @@ the `$fields` constructor parameter.
 		}
 	}
 
-### Pagination
+```
 
 For pagination records on multiple pages, you need to wrap the results in a
 `PaginatedList` object. This object is also passed the generated `SQLQuery`
 in order to read page limit information. It is also passed the current
 `SS_HTTPRequest` object so it can read the current page from a GET var.
 
-	:::php
+```php
 	public function getResults($searchCriteria = array()) {
 		$start = ($this->getRequest()->getVar('start')) ? (int)$this->getRequest()->getVar('start') : 0;
 		$limit = 10;
@@ -133,10 +135,10 @@ in order to read page limit information. It is also passed the current
 		return $records;
 	}
 
-
+```
 notice that if you want to use this getResults function, you need to change the function doSearch for this one:
 
-	:::php
+```php
 	public function doSearch($data, $form) {
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$results = $this->getResults($data);
@@ -145,7 +147,7 @@ notice that if you want to use this getResults function, you need to change the 
 		))->renderWith(array('Catalogo_results', 'Page'));
 	}
 
-
+```
 The change is in **$results = $this->getResults($data);**, because you are using a custom getResults function.
 
 Another thing you cant forget is to check the name of the singleton you are using in your project. the example uses
@@ -162,7 +164,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 **Next   1 2  *3*  4  5 &hellip; 558**  
 
 
-	:::ss
+```ss
 	<% if $Results %>
 		<ul>
 			<% loop $Results %>
@@ -201,7 +203,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 		</div>
 	<% end_if %>
 
-
+```
 ## Available SearchFilters
 
 See [api:SearchFilter] API Documentation

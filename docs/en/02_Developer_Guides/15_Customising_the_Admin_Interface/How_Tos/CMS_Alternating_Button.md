@@ -1,3 +1,8 @@
+---
+title: CMS alternating button
+summary: Add an "active" and "neutral" state to the CMS buttons
+---
+
 # How to implement an alternating button
 
 ## Introduction
@@ -26,7 +31,7 @@ state already, so you just need to add the alternate state using two data additi
 
 Here is the configuration code for the button:
 
-	:::php
+```php
 	public function getCMSActions() {
 		$fields = parent::getCMSActions();
 
@@ -42,7 +47,7 @@ Here is the configuration code for the button:
 		return $fields;
 	}
 
-You can control the state of the button from the backend by applying `ss-ui-alternate` class to the `FormAction`. To
+```
 simplify our example, let's assume the button state is controlled on the backend only, but you'd usually be better off
 adjusting the state in the frontend to give the user the benefit of immediate feedback. This technique might still be
 used for initialisation though.
@@ -50,7 +55,7 @@ used for initialisation though.
 Here we initialise the button based on the backend check, and assume that the button will only update after page reload
 (or on CMS action).
 
-	:::php
+```php
 	public function getCMSActions() {
 		// ...
 		if ($this->needsCleaning()) {
@@ -60,31 +65,31 @@ Here we initialise the button based on the backend check, and assume that the bu
 		// ...
 	}
 
-## Frontend support
+```
 
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
 frontend. You can affect the state of the button through the jQuery UI calls.
 
 First of all, you can toggle the state of the button - execute this code in the browser's console to see how it works.
 
-	:::js
+```js
 	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button('toggleAlternate');
 
-Another, more useful, scenario is to check the current state.
+```
 
-	:::js
+```js
 	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
 
-You can also force the button into a specific state by using UI options.
+```
 
-	:::js
+```js
 	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button({showingAlternate: true});
 
-This will allow you to react to user actions in the CMS and give immediate feedback. Here is an example taken from the
+```
 CMS core that tracks the changes to the input fields and reacts by enabling the *Save* and *Save & publish* buttons
 (changetracker will automatically add `changed` class to the form if a modification is detected).
 
-	:::js
+```js
 	/**
 	 * Enable save buttons upon detecting changes to content.
 	 * "changed" class is added by jQuery.changetracker.
@@ -103,7 +108,7 @@ CMS core that tracks the changes to the input fields and reacts by enabling the 
 		}
 	});
 
-## Frontend hooks
+```
 
 `ssui.button` defines several additional events so that you can extend the code with your own behaviours. For example
 this is used in the CMS to style the buttons. Three events are available:
@@ -131,7 +136,7 @@ disassembled into:
 Here is the entire handler put together. You don't need to add any separate initialisation code, this will handle all
 cases.
 
-	:::js
+```js
 	(function($) {
 
 		$.entwine('mysite', function($){
@@ -153,7 +158,7 @@ cases.
 
 	}(jQuery));
 
-## Summary
+```
 
 The code presented gives you a fully functioning alternating button, similar to the defaults that come with the the CMS.
 These alternating buttons can be used to give user the advantage of visual feedback upon their actions.

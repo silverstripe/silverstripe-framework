@@ -1,5 +1,8 @@
+---
 title: How to Create Lightweight Form
-
+summary: Create a simple search form with Silverstripe CMS
+iconBrand: wpforms
+---
 # How to Create Lightweight Form
 
 Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [api:FormFields], however this can 
@@ -11,7 +14,7 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	<?php
 
 	public function SearchForm() {
@@ -29,9 +32,9 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 		return $form;
 	}
 
-**mysite/templates/Includes/SearchForm.ss**
+```
 
-	:::ss
+```ss
 	<form $FormAttributes>
 		<fieldset>
 			$Fields.dataFieldByName(q)
@@ -42,11 +45,11 @@ totally custom template to meet our needs. To do this, we'll provide the class w
 		</div>
 	</form>
 
-`SearchForm.ss` will be executed within the scope of the `Form` object so has access to any of the methods and 
+```
 properties on [api:Form] such as `$Fields` and `$Actions`. 
 
-<div class="notice">
+[notice]
 To understand more about Scope or the syntax for custom templates, read the [Templates](../../templates) guide.
-</div>
+[/notice]
 
 

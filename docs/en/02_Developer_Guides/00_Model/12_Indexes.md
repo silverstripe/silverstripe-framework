@@ -1,13 +1,15 @@
+---
 title: Indexes
 summary: Add Indexes to your Data Model to optimize database queries.
-
+icon: database
+---
 # Indexes
 
 It is sometimes desirable to add indexes to your data model, whether to optimize queries or add a uniqueness constraint 
 to a field. This is done through the `DataObject::$indexes` map, which maps index names to descriptor arrays that 
 represent each index. There're several supported notations:
 
-	:::php
+```php
 	<?php
 
 	class MyObject extends DataObject {
@@ -19,6 +21,7 @@ represent each index. There're several supported notations:
 		);
 	}
 	
+```
 The `<index-name>` can be an arbitrary identifier in order to allow for more than one index on a specific database 
 column. The "advanced" notation supports more `<type>` notations. These vary between database drivers, but all of them 
 support the following:
@@ -32,7 +35,7 @@ In order to use more database specific or complex index notations, we also suppo
 
 **mysite/code/MyTestObject.php**
 
-	:::php
+```php
 	<?php
 
 	class MyTestObject extends DataObject {
@@ -50,7 +53,7 @@ In order to use more database specific or complex index notations, we also suppo
 		);
 	}
 
-As of 3.7.0 `default_sort` fields will automatically become database indexes as this provides significant performance
+```
 benefits.
 
 ## API Documentation

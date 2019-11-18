@@ -1,7 +1,9 @@
+---
 title: Templates and Views
 summary: This guide showcases the SilverStripe template engine and learn how to build your own themes.
 introduction: SilverStripe comes with it's own templating engine. This guide walks you through the features of the template engine, how to create custom templates and ways to customise your data output.
-
+icon: file-code
+---
 Most of what will be public on your website comes from template files that are defined in SilverStripe. Either in the
 core framework, the modules or themes you install, and your own custom templates. 
 

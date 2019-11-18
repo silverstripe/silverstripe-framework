@@ -1,6 +1,7 @@
+---
 title: SilverStripe Documentation
-introduction: Welcome to the SilverStripe Developer Documentation. This website is aimed at website developers looking to learn how to build and manage web applications with the SilverStripe Framework.
-
+summary: Welcome to the SilverStripe Developer Documentation. This website is aimed at website developers looking to learn how to build and manage web applications with the SilverStripe Framework.
+---
 ## Getting Started with SilverStripe
 
 Before you start developing your first web application, you'll need to install the latest version of SilverStripe onto 

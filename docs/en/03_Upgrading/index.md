@@ -1,23 +1,19 @@
+---
 title: Upgrading
-introduction: Keep your SilverStripe installations up to date with the latest fixes, security patches and new features.
-
+summary: The following guides will help you upgrade your project or module to SilverStripe 4.
+---
 # Upgrading to SilverStripe 3.2
 
 SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to your SilverStripe installation means overwriting files, flushing the cache and updating your database-schema. 
 
-<div class="info" markdown="1">
+[info]
 See our [upgrade notes and changelogs](/changelogs/3.2.0) for 3.2.0 specific information, bugfixes and API changes.
-</div>
+[/info]
 
 ## Composer 
 
 For projects managed through Composer, update the version number of `framework` and `cms` to `^3.2` in your `composer.json` file and run `composer update`. 
 
-```json
-	"require": {
-		"silverstripe/framework": "^3.2",
-		"silverstripe/cms": "^3.2"
-	}
 ```
 This will also add extra dependencies, the `reports` and `siteconfig` modules. SilverStripe CMS is becoming more modular, and [composer is becoming the preferred way to manage your code](/getting_started/composer).
 
@@ -36,9 +32,9 @@ This will also add extra dependencies, the `reports` and `siteconfig` modules. S
 *  Check if you need to adapt your code to changed PHP APIs
 *  Check if you have overwritten any core templates or styles which might need an update.
 
-<div class="warning" markdown="1">
+[warning]
 Never update a website on the live server without trying it on a development copy first.
-</div>
+[/warning]
 
 ##  Decision Helpers
 

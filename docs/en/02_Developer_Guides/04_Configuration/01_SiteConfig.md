@@ -1,6 +1,8 @@
+---
 title: SiteConfig
 summary: Content author configuration through the SiteConfig module.
-
+icon: laptop-code
+---
 # SiteConfig
 
 The `SiteConfig` module provides a generic interface for managing site wide settings or functionality which is used 
@@ -10,7 +12,7 @@ throughout the site. Out of the box this includes selecting the current site the
 
 `SiteConfig` options can be accessed from any template by using the $SiteConfig variable.
 
-	:::ss
+```ss
 	$SiteConfig.Title 
 	$SiteConfig.Tagline
 	
@@ -18,23 +20,23 @@ throughout the site. Out of the box this includes selecting the current site the
 		$Title $AnotherField
 	<% end_with %>
 
-To access variables in the PHP:
+```
 
-	:::php
+```php
 	$config = SiteConfig::current_site_config(); 
 	
 	echo $config->Title;
 
 	// returns "Website Name"
 
-
+```
 ## Extending SiteConfig
 
 To extend the options available in the panel, define your own fields via a [api:DataExtension].
 
 **mysite/code/extensions/CustomSiteConfig.php**
 
-	:::php
+```php
 	<?php
 	
 	class CustomSiteConfig extends DataExtension {
@@ -50,19 +52,19 @@ To extend the options available in the panel, define your own fields via a [api:
 		}
 	}
 
-Then activate the extension.
+```
 
 **mysite/_config/app.yml**
 
-	:::yml
+```yml
 	SiteConfig:
 	  extensions:
 	    - CustomSiteConfig
 
-<div class="notice" markdown="1">
+```
 After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
 You may also need to reload the screen with a `?flush=1` i.e http://yoursite.com/admin/settings?flush=1.
-</div>
+[/notice]
 
 You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and want to
 provide the users a place to configure settings then the `SiteConfig` panel is the place to go it.

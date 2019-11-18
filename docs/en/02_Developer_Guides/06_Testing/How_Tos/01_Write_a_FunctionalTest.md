@@ -1,5 +1,7 @@
+---
 title: How to write a FunctionalTest
-
+summary: Expand your testing capabilities with integrations tests
+---
 # How to Write a FunctionalTest
 
 [api:FunctionalTest] test your applications `Controller` instances and anything else which requires a web request. The 
@@ -9,7 +11,7 @@ response and modify the session within a test.
 
 **mysite/tests/HomePageTest.php**
 
-	:::php
+```php
 	<?php
 
 	class HomePageTest extends FunctionalTest {
@@ -46,7 +48,7 @@ response and modify the session within a test.
 		}
 	}
 
-## Related Documentation
+```
 
 * [Functional Testing](../functional_testing)
 * [Unit Testing](../unit_testing)

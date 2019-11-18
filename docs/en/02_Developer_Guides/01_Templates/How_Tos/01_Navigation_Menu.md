@@ -1,5 +1,7 @@
+---
 title: How to Create a Navigation Menu
-
+summary: Build a multi-tiered navigation UI.
+---
 # How to Create a Navigation Menu
 
 In this how-to, we'll create a simple menu which you can use as the primary navigation for your website. This outputs a
@@ -7,7 +9,7 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 
 **mysite/templates/Page.ss**
 
-	:::ss
+```ss
 	<ul>
 		<% loop $Menu(1) %>
 			<li>
@@ -28,7 +30,7 @@ top level menu with a nested second level using the `Menu` loop and a `Children`
 		<% end_loop %>
 	</ul>
 
-## Related
+```
 
 * [Template Syntax](../syntax)
 * [Common Variables](../common_variables)

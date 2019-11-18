@@ -1,7 +1,8 @@
+---
 title: Flushable
 summary: Allows a class to define it's own flush functionality.
- 
-# Flushable
+---
+ Flushable
 
 ## Introduction
 
@@ -18,7 +19,7 @@ this defines the actions that need to be executed on a flush request.
 
 This example uses [api:SS_Cache] in some custom code, and the same cache is cleaned on flush:
 
-	:::php
+```php
 	<?php
 	class MyClass extends DataObject implements Flushable {
 	
@@ -38,13 +39,13 @@ This example uses [api:SS_Cache] in some custom code, and the same cache is clea
 	
 	}
 
-### Using with filesystem
+```
 
 Another example, some temporary files are created in a directory in assets, and are deleted on flush. This would be
 useful in an example like `GD` or `Imagick` generating resampled images, but we want to delete any cached images on
 flush so they are re-created on demand.
 
-	:::php
+```php
 	<?php
 	class MyClass extends DataObject implements Flushable {
 	
@@ -56,3 +57,4 @@ flush so they are re-created on demand.
 	
 	}
 
+```

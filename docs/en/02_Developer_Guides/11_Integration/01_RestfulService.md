@@ -1,13 +1,15 @@
+---
+title: Restful service
 summary: Consume external data through their RESTFul interfaces.
-
+---
 # Restful Service
 
 [api:RestfulService] is used to enable connections to remote web services through PHP's `curl` command. It provides an
 interface and utility functions for generating a valid request and parsing the response returned from the web service. 
 
-<div class="alert" markdown="1">
+[alert]
 RestfulService currently only supports XML. It has no JSON support at this stage.
-</div>
+[/alert]
 
 ## Examples
 
@@ -19,7 +21,7 @@ in the template.
 
 **mysite/code/Page.php**
 
-	:::php
+```php
 	public function getWellingtonWeather() {
 		$fetch = new RestfulService(
 			'https://query.yahooapis.com/v1/public/yql'
@@ -49,17 +51,17 @@ in the template.
 		return $output;
 	}
 
-## Features
+```
 
 ### Basic Authenication
 
-	:::php
+```php
 	$service = new RestfulService("http://example.harvestapp.com");
 	$service->basicAuth('username', 'password');
 
-### Make multiple requests
+```
 
-	:::php
+```php
 	$service = new RestfulService("http://example.harvestapp.com");
 
 	$peopleXML = $service->request('/people');
@@ -70,23 +72,23 @@ in the template.
 	$taskXML = $service->request('/tasks');
 	$tasks = $service->getValues($taskXML, 'task');
 
-
+```
 ### Caching
 
 To set the cache interval you can pass it as the 2nd argument to constructor.
 
-	:::php
+```php
 	$expiry = 60 * 60; // 1 hour;
 
 	$request = new RestfulService("http://example.harvestapp.com", $expiry );
 
-
+```
 ### Getting Values & Attributes
 
 You can traverse through document tree to get the values or attribute of a particular node using XPath. Take for example
 the following XML that is returned.
 
-	:::xml
+```xml
 	<entries>
 	     <entry id='12'>Sally</entry>
 	     <entry id='15'>Ted</entry>
@@ -94,41 +96,41 @@ the following XML that is returned.
 	     <entry id='22'>John</entry>
 	</entries>
 
-To extract the id attributes of the entries use:
+```
 
-	:::php
+```php
 	$this->getAttributes($xml, "entries", "entry");
 
 	// array(array('id' => 12), array('id' => '15'), ..)
 
-To extract the values (the names) of the entries use:
+```
 
-	:::php
+```php
 	$this->getValues($xml, "entries", "entry");
 
 	// array('Sally', 'Ted', 'Matt', 'John')
 
-### Searching for Values & Attributes
+```
 
 If you don't know the exact position of DOM tree where the node will appear you can use xpath to search for the node. 
 
-<div class="note">
+[note]
 This is the recommended method for retrieving values of name spaced nodes.
-</div>
+[/note]
 
-	:::xml
+```xml
 	<media:guide>
 	     <media:entry id="2030">video</media:entry>
 	</media:guide>
 
-To get the value of entry node with the namespace media, use:
+```
 
-	:::php
+```php
 	$this->searchValue($response, "//media:guide/media:entry");
 
 	// array('video');
 
-
+```
 ## Best Practices
 
 ### Handling Errors
@@ -137,7 +139,7 @@ If the web service returned an error (for example, API key not available or inad
 [api:RestfulService] can delegate the error handling to it's descendant class. To handle the errors, subclass 
 `RestfulService and define a function called errorCatch.
 
-	:::php
+```php
 	<?php
 
 	class MyRestfulService extends RestfulService {
@@ -153,9 +155,9 @@ If the web service returned an error (for example, API key not available or inad
 		}
 	}
 
-If you want to bypass error handling, define `checkErrors` in the constructor for `RestfulService`
+```
 
-	:::php
+```php
 	<?php
 
 	class MyRestfulService extends RestfulService {
@@ -167,7 +169,7 @@ If you want to bypass error handling, define `checkErrors` in the constructor fo
 		}
 	}
 
-
+```
 ### Setting cURL options
 
 Restful service uses cURL to make requests. There are various settings that can be defined on the cURL
@@ -186,11 +188,6 @@ To set global cURL settings you can update the `RestfulService` config via the C
 
 Here is an example to increase the HTTP Timeout globally. Insert this in your `_config.php` file:
 
-```php
-Config::inst()->update('RestfulService', 'default_curl_options', array(
-	CURLOPT_DNS_CACHE_TIMEOUT => 3600,
-	CURLOPT_CONNECTTIMEOUT => 10,
-));
 ```
 
 
@@ -200,16 +197,6 @@ When making a request using `RestfulService` one can also pass through an array 
 parameter in `RestfulService::request()`.
 
 For example:
-
-```php
-
-//cURL options
-$curlOptions = array(
-	CURLOPT_UNRESTRICTED_AUTH => true,
-);
-
-$service = new RestfulService('http://example.com/');
-$service->request('service.json', 'GET', null, null, $curlOptions);
 
 ```
 

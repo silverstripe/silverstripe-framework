@@ -1,5 +1,8 @@
+---
+title: File management
 summary: Learn how to work with File and Image records
-
+icon: file-signature
+---
 # File Management
 
 ## Files, Images and Folders as database records

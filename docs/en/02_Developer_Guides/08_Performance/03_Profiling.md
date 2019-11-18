@@ -1,6 +1,8 @@
+---
 title: Profiling
 summary: Identify bottlenecks within your application.
-
+icon: tachometer-alt
+---
 # Profiling
 
 Profiling is the best way to identify bottle necks and other slow moving parts of your application prime for 

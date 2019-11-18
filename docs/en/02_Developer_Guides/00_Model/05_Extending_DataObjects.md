@@ -1,6 +1,7 @@
+---
 title: Extending DataObjects
 summary: Modify the data model without using subclasses.
-
+---
 # Extending DataObjects
 
 You can add properties and methods to existing [api:DataObject]s like [api:Member] without hacking core code or sub 
@@ -18,7 +19,7 @@ a `ModelAdmin` record.
 
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -50,14 +51,14 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	  }
 	}
 
-## onBeforeDelete
+```
 
 Triggered before executing *delete()* on an existing object.
 
 Example: Checking for a specific [permission](permissions) to delete this type of object. It checks if a 
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
-	:::php
+```php
 	<?php
 
 	class Player extends DataObject {
@@ -76,9 +77,9 @@ member is logged in who belongs to a group containing the permission "PLAYER_DEL
 	  }
 	}
 
+```
 
-
-<div class="notice" markdown='1'>
+[notice]
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 
 these two modes, as shown in the example above.
-</div>
+[/notice]

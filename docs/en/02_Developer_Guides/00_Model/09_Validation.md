@@ -1,6 +1,8 @@
+---
 title: Model Validation and Constraints
 summary: Validate your data at the model level
-
+icon: check-square
+---
 # Validation and Constraints
 
 Traditionally, validation in SilverStripe has been mostly handled on the controller through [form validation](../forms).
@@ -21,7 +23,7 @@ write, and respond appropriately if it isn't.
 
 The return value of `validate()` is a [api:ValidationResult] object.
 
-	:::php
+```php
 	<?php
 
 	class MyObject extends DataObject {
@@ -42,7 +44,7 @@ The return value of `validate()` is a [api:ValidationResult] object.
 		}
 	}
 
-## API Documentation
+```
 
 * [api:DataObject]
 * [api:ValidationResult];

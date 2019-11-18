@@ -1,5 +1,8 @@
+---
 title: Implement Internationalisation
 summary: Implement SilverStripe's internationalisation system in your own modules.
+icon: globe
+---
 
 # Implementing Internationalisation
 
@@ -21,16 +24,6 @@ the web interface, there's a convenient
 [commandline client](http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles) for this 
 purpose. In order to use it, set up a new `.tx/config` file in your module folder:
 	
-```yaml
-[main]
-host = https://www.transifex.com
-
-
-[my-project.master]
-file_filter = lang/<lang>.yml
-source_file = lang/en.yml
-source_lang = en
-type = YML
 ```
 
 If you don't have existing translations to import, your project is ready to go - simply point translators to the URL, have them 
@@ -72,16 +65,16 @@ Translations need to be reviewed before being committed, which is a process that
 merging back translations into all supported release branches as well as the `master` branch. The following script 
 should be applied to the oldest release branch, and then merged forward into newer branches:
 	
-	:::bash	
+```bash
 	tx pull
 
 	# Manually review changes through git diff, then commit
 	git add lang/*
 	git commit -m "Updated translations"
 
-<div class="notice" markdown="1">
+```
 You can download your work right from Transifex in order to speed up the process for your desired language.
-</div>
+[/notice]
 
 ## JavaScript Translations
 
@@ -89,18 +82,16 @@ SilverStripe also supports translating strings in JavaScript (see [i18n](/develo
 conversion step involved in order to get those translations syncing with Transifex. Our translation files stored in 
 `mymodule/javascript/lang/*.js` call `ss.i18n.addDictionary()` to add files.
 	
-	:::js
+```js
 	ss.i18n.addDictionary('de', {'MyNamespace.MyKey': 'My Translation'});
 
-But Transifex only accepts structured formats like JSON.
-
 ```
-{'MyNamespace.MyKey': 'My Translation'}
+
 ```
 
 First of all, you need to create those source files in JSON, and store them in `mymodule/javascript/lang/src/*.js`. In your `.tx/config` you can configure this path as a separate master location.
 	
-	:::ruby
+```ruby
 	[main]
 	host = https://www.transifex.com
 
@@ -116,16 +107,17 @@ First of all, you need to create those source files in JSON, and store them in `
 	source_lang = en
 	type = KEYVALUEJSON
 
-Then you can upload the source files via a normal `tx push`. Once translations come in, you need to convert the source 
+```
 files back into the JS files SilverStripe can actually read. This requires an installation of our 
 [buildtools](https://github.com/silverstripe/silverstripe-buildtools).
 
+```
 	tx pull
 	(cd .. && phing -Dmodule=mymodule translation-generate-javascript-for-module)
 	git add javascript/lang/*
 	git commit -m "Updated javascript translations"
 
-# Related
+```
 
  * [i18n](/developer_guides/i18n/): Developer-level documentation of Silverstripe's i18n capabilities
  * [Contributing Translations](/contributing/translations): Information for translators looking to contribute translations of the SilverStripe UI.
