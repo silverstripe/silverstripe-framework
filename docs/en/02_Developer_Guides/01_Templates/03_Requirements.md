@@ -82,7 +82,7 @@ When rendered in HTML code, these URLs will be rewritten to their matching path 
 
 **<my-module-dir>/templates/SomeTemplate.ss**
 
-```ss
+```
 <% require css("<my-module-dir>/css/some_file.css") %>
 <% require themedCSS("some_themed_file") %>
 <% require javascript("<my-module-dir>/javascript/some_file.js") %>
