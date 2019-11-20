@@ -11,4 +11,10 @@ We also keep an overview of [security-related releases](http://silverstripe.org/
 
 For information on how to upgrade to newer versions consult the [upgrading](/upgrading) guide.
 
-[CHILDREN]
+---
+
+[CHILDREN Only="rc" includeFolders]
+
+---
+
+[CHILDREN reverse]
