@@ -1,0 +1,15 @@
+name: Build Docs
+on:
+  push:
+    branches:
+      - '3.7'
+      - '4'
+    paths:
+      - 'docs/**'
+jobs:
+  build:
+    name: build-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run build hook
+        run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK }}
