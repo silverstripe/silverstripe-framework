@@ -27,7 +27,7 @@ icon: graduation-cap
 * [Lesson 20: Beyond the ORM: Building Custom SQL](https://www.silverstripe.org/learn/lessons/v4/beyond-the-orm-building-custom-sql-1)
 * [Lesson 21: Advanced Environment Configuration](https://www.silverstripe.org/learn/lessons/v4/advanced-environment-configuration-1)
 
-## Help: If you get stuck
+## Testing this 
 
  * [Common Problems](/getting_started/common_problems): Review some existing solutions to common problems.
  * [SilverStripe Community](http://www.silverstripe.org/community/): Join our community chat via Slack, or ask a question on Stack Overflow.
