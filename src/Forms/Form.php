@@ -1271,6 +1271,23 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
+     * Set an error message for a field in the session, for display next time this form is shown.
+     *
+     * @param string $message the text of the message
+     * @param string $fieldName Name of the field to set the error message on it.
+     * @param string $type Should be set to good, bad, or warning.
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     */
+    public function sessionFieldError($message, $fieldName, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
+    {
+        $this->setMessage($message, $type, $cast);
+        $result = $this->getSessionValidationResult() ?: ValidationResult::create();
+        $result->addFieldMessage($fieldName, $message, $type, null, $cast);
+        $this->setSessionValidationResult($result);
+    }
+
+    /**
      * Returns the DataObject that has given this form its data
      * through {@link loadDataFrom()}.
      *
