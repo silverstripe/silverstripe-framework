@@ -2169,7 +2169,10 @@ class DataObjectTest extends SapphireTest
         // Write object with components
         $ceo->Name = 'Edward Scissorhands';
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->Company()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->Company()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
@@ -2212,7 +2215,10 @@ class DataObjectTest extends SapphireTest
 
         // Write object with components
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->CompanyOwned()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->CompanyOwned()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
