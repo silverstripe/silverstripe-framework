@@ -716,6 +716,19 @@ if (!Director::isDev()) {
 }
 ```
 
+`forceSSL()` will only take effect in environment types that `CanonicalURLMiddleware` is configured to apply to (by
+default, only `LIVE`). To apply this behaviour in all environment types, you'll need to update that configuration:
+
+```php
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
+
+if (!Director::isDev()) {
+    CanonicalURLMiddleware::singleton()->setEnabledEnvs(true); // You can also specify individual environment types
+    Director::forceSSL();
+}
+```
+
 Forcing HTTPS so requires a certificate to be purchased or obtained through a vendor such as 
 [lets encrypt](https://letsencrypt.org/) and configured on your web server.
 
