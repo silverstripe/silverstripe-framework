@@ -34,7 +34,7 @@ class Team extends DataObject
     ];
 
     private static $has_many = [
-        'Players' => 'Player'
+        'Players' => Player::class,
     ];
 }
 ```
@@ -97,13 +97,13 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject
 {
     private static $has_many = [
-        "Fans" => "Fan.FanOf"
+        "Fans" => Fan::class.".FanOf",
     ];
 }
 class Team extends DataObject
 {
     private static $has_many = [
-        "Fans" => "Fan.FanOf"
+        "Fans" => Fan::class.".FanOf",
     ];
 }
 
@@ -146,18 +146,18 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $db = [
-        'Title' => 'Varchar'
+        'Title' => 'Varchar',
     ];
 
     private static $has_many = [
-        'Players' => 'Player'
+        'Players' => Player::class,
     ];
 }
 class Player extends DataObject
 {
 
     private static $has_one = [
-        "Team" => "Team",
+        "Team" => Team::class,
     ];
 }
 ```
@@ -187,15 +187,15 @@ use SilverStripe\ORM\DataObject;
 class Person extends DataObject
 {
     private static $has_many = [
-        "Managing" => "Company.Manager",
-        "Cleaning" => "Company.Cleaner",
+        "Managing" => Company::class.".Manager",
+        "Cleaning" => Company::class.".Cleaner",
     ];
 }
 class Company extends DataObject
 {
     private static $has_one = [
-        "Manager" => "Person",
-        "Cleaner" => "Person"
+        "Manager" => Person::class,
+        "Cleaner" => Person::class,
     ];
 }
 ```
@@ -231,14 +231,14 @@ class Team extends DataObject
 {
 
     private static $has_one = [
-        'Coach' => 'Coach'
+        'Coach' => Coach::class
     ];
 }
 class Coach extends DataObject
 {
 
     private static $belongs_to = [
-        'Team' => 'Team.Coach'
+        'Team' => Team::class.'.Coach'
     ];
 }
 ```
@@ -280,7 +280,7 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $many_many = [
-        "Supporters" => "Supporter",
+        "Supporters" => Supporter::class,
     ];
 
     private static $many_many_extraFields = [
@@ -293,7 +293,7 @@ class Team extends DataObject
 class Supporter extends DataObject
 {
     private static $belongs_many_many = [
-        "Supports" => "Team",
+        "Supports" => Team::class,
     ];
 }
 ```
@@ -465,16 +465,16 @@ class Category extends DataObject
 {
 
     private static $many_many = [
-        'Products' => 'Product',
-        'FeaturedProducts' => 'Product'
+        'Products' => Product::class,
+        'FeaturedProducts' => Product::class,
     ];
 }
 
 class Product extends DataObject
 {   
     private static $belongs_many_many = [
-        'Categories' => 'Category.Products',
-        'FeaturedInCategories' => 'Category.FeaturedProducts'
+        'Categories' => Category::class.'.Products',
+        'FeaturedInCategories' => Category::class.'.FeaturedProducts',
     ];
 }
 ```
@@ -589,7 +589,7 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $has_many = [
-        "Players" => "Player"
+        "Players" => Player::class
     ];
 
     public function ActivePlayers()
