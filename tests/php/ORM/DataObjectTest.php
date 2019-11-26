@@ -1011,6 +1011,12 @@ class DataObjectTest extends SapphireTest
             DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value()
         );
 
+        // Can write to component directly
+        $this->assertEquals(false, $team->Captain()->IsRetired);
+        $team->Captain()->IsRetired = true;
+        $team->Captain()->write();
+        $this->assertEquals(true, $team->Captain()->IsRetired, 'Saves writes to components directly');
+
         /* After giving it a value, you should also be able to set it back to null */
         $team->CaptainID = '';
         $team->write();
@@ -2169,7 +2175,10 @@ class DataObjectTest extends SapphireTest
         // Write object with components
         $ceo->Name = 'Edward Scissorhands';
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->Company()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->Company()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
@@ -2199,7 +2208,7 @@ class DataObjectTest extends SapphireTest
             'belongs_to returns the right results.'
         );
 
-        // Test automatic creation of class where no assigment exists
+        // Test automatic creation of class where no assignment exists
         $ceo = new DataObjectTest\CEO();
         $ceo->write();
 
@@ -2208,11 +2217,14 @@ class DataObjectTest extends SapphireTest
             'DataObjects across polymorphic belongs_to relations are automatically created.'
         );
         $this->assertEquals($ceo->ID, $ceo->CompanyOwned()->OwnerID, 'Remote IDs are automatically set.');
-        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically  set');
+        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically set.');
 
-        // Write object with components
+        // Skip writing components that do not exist
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->CompanyOwned()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->CompanyOwned()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
