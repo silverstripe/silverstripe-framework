@@ -77,6 +77,12 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     protected $updateSearchFormCallback = null;
 
     /**
+     * The name of the default search field
+     * @var string|null
+     */
+    protected ?string $searchField = null;
+
+    /**
      * @inheritDoc
      */
     public function getURLHandlers($gridField)
@@ -123,6 +129,17 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     public function getThrowExceptionOnBadDataType()
     {
         return $this->throwExceptionOnBadDataType;
+    }
+
+    public function getSearchField(): ?string
+    {
+        return $this->searchField;
+    }
+
+    public function setSearchField(string $field): self
+    {
+        $this->searchField = $field;
+        return $this;
     }
 
     /**
@@ -281,7 +298,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     public function getSearchFieldSchema(GridField $gridField)
     {
         $schemaUrl = Controller::join_links($gridField->Link(), 'schema/SearchForm');
-
+        $inst = singleton($gridField->getModelClass());
         $context = $this->getSearchContext($gridField);
         $params = $gridField->getRequest()->postVar('filter') ?: [];
         if (array_key_exists($gridField->getName(), $params ?? [])) {
@@ -292,10 +309,13 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
         $context->setSearchParams($params);
 
-        $searchField = $context->getSearchFields()->first();
-        $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
+        $searchField = $this->getSearchField() ?: $inst->config()->get('general_search_field');
+        if (!$searchField) {
+            $searchField = $context->getSearchFields()->first();
+            $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
+        }
 
-        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+        $name = $gridField->Title ?: $inst->i18n_plural_name();
 
         // Prefix "Search__" onto the filters for the React component
         $filters = $context->getSearchParams();

@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -155,5 +156,21 @@ class GridFieldFilterHeaderTest extends SapphireTest
             $this->assertEquals('stacked', $field->extraClasses['stacked']);
             $this->assertEquals('no-change-track', $field->extraClasses['no-change-track']);
         }
+    }
+
+    public function testCustomSearchField()
+    {
+        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $this->assertEquals('Name', $searchSchema->name);
+
+        Config::modify()->set(Team::class, 'general_search_field', 'CustomSearch');
+        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $this->assertEquals('CustomSearch', $searchSchema->name);
+
+        $this->component->setSearchField('ReallyCustomSearch');
+        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $this->assertEquals('ReallyCustomSearch', $searchSchema->name);
+
+        $this->assertEquals('ReallyCustomSearch', $this->component->getSearchField());
     }
 }
