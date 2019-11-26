@@ -1011,6 +1011,12 @@ class DataObjectTest extends SapphireTest
             DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value()
         );
 
+        // Can write to component directly
+        $this->assertEquals(false, $team->Captain()->IsRetired);
+        $team->Captain()->IsRetired = true;
+        $team->Captain()->write();
+        $this->assertEquals(true, $team->Captain()->IsRetired, 'Saves writes to components directly');
+
         /* After giving it a value, you should also be able to set it back to null */
         $team->CaptainID = '';
         $team->write();
@@ -2202,7 +2208,7 @@ class DataObjectTest extends SapphireTest
             'belongs_to returns the right results.'
         );
 
-        // Test automatic creation of class where no assigment exists
+        // Test automatic creation of class where no assignment exists
         $ceo = new DataObjectTest\CEO();
         $ceo->write();
 
@@ -2211,9 +2217,9 @@ class DataObjectTest extends SapphireTest
             'DataObjects across polymorphic belongs_to relations are automatically created.'
         );
         $this->assertEquals($ceo->ID, $ceo->CompanyOwned()->OwnerID, 'Remote IDs are automatically set.');
-        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically  set');
+        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically set.');
 
-        // Write object with components
+        // Skip writing components that do not exist
         $ceo->write(false, false, false, true);
         $this->assertFalse(
             $ceo->CompanyOwned()->isInDB(),
