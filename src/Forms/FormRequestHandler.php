@@ -227,23 +227,48 @@ class FormRequestHandler extends RequestHandler
             $controller = $this->form->getController();
             if ($controller && $controller->hasMethod($funcName)) {
                 $controller->setRequest($request);
-                return $controller->$funcName($vars, $this->form, $request, $this);
+
+                $this->extend('beforeCallFormHandlerController', $request, $funcName, $vars, $this->form);
+
+                $result = $controller->$funcName($vars, $this->form, $request, $this);
+
+                $this->extend('afterCallFormHandlerController', $request, $funcName, $vars, $this->form, $result);
+
+                return $result;
             }
 
             // Otherwise, try a handler method on the form request handler.
             if ($this->hasMethod($funcName)) {
-                return $this->$funcName($vars, $this->form, $request, $this);
+                $this->extend('beforeCallFormHandlerMethod', $request, $funcName, $vars, $this->form);
+
+                $result = $this->$funcName($vars, $this->form, $request, $this);
+
+                $this->extend('afterCallFormHandlerMethod', $request, $funcName, $vars, $this->form, $result);
+
+                return $result;
             }
 
             // Otherwise, try a handler method on the form itself
             if ($this->form->hasMethod($funcName)) {
-                return $this->form->$funcName($vars, $this->form, $request, $this);
+                $this->extend('beforeCallFormHandlerFormMethod', $request, $funcName, $vars, $this->form);
+
+                $result = $this->form->$funcName($vars, $this->form, $request, $this);
+
+                $this->extend('afterCallFormHandlerFormMethod', $request, $funcName, $vars, $this->form, $result);
+
+                return $result;
             }
 
             // Check for inline actions
             $field = $this->checkFieldsForAction($this->form->Fields(), $funcName);
             if ($field) {
-                return $field->$funcName($vars, $this->form, $request, $this);
+                $this->extend('beforeCallFormHandlerFieldMethod', $request, $funcName, $vars, $this->form);
+
+                $result = $field->$funcName($vars, $this->form, $request, $this);
+
+                $this->extend('afterCallFormHandlerFieldMethod', $request, $funcName, $vars, $this->form, $result);
+
+                return $result;
             }
         } catch (ValidationException $e) {
             // The ValdiationResult contains all the relevant metadata

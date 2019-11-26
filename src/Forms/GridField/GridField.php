@@ -1132,7 +1132,11 @@ class GridField extends FormField
                             }
 
                             try {
+                                $this->extend('beforeCallActionURLHandler', $request, $action);
+
                                 $result = $component->$action($this, $request);
+
+                                $this->extend('afterCallActionURLHandler', $request, $action, $result);
                             } catch (HTTPResponse_Exception $responseException) {
                                 $result = $responseException->getResponse();
                             }
