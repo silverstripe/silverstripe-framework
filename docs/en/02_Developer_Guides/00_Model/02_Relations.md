@@ -23,7 +23,7 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject
 {
     private static $has_one = [
-        "Team" => "Team",
+        "Team" => Team::class,
     ];
 }
 
