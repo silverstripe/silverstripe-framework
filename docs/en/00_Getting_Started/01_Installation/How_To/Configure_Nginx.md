@@ -1,5 +1,5 @@
 ---
-title: Configure Lighttpd
+title: Configure Nginx
 summary: Write a custom config for nginx
 ---
 
