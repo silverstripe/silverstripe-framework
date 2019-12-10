@@ -269,9 +269,9 @@ E.g.
 `cow release 4.0.1 -vvv`
 
 * `<version>` The recipe version that is to be released. E.g. `4.1.4` or `4.3.0-rc1`
-* `<recipe>` `Optional: the recipe that is being released (default: "silverstripe/installer")
+* `<recipe>` Optional: the recipe that is being released (default: "silverstripe/installer")
 
-This command has these options (note that --repository option is critical for security releases):
+This command has these options (note that `--repository` option is critical for security releases):
 
 * `-vvv` to ensure all underlying commands are echoed
 * `--directory <directory>` to specify the folder to create or look for this project in. If you don't specify this,
@@ -293,7 +293,7 @@ and needs to be manually advanced):
 
 * `release:create` The release version will be created in the `release-<version>`
   folder directly underneath the folder this command was invoked in. Cow
-  will look at the available versions and branch-aliases of silverstripe/installer
+  will look at the available versions and branch-aliases of `silverstripe/installer`
   to determine the best version to install from. E.g. installing 4.0.0 will
   know to install dev-master, and installing 3.3.0 will install from 3.x-dev.
   If installing pre-release versions for stabilisation, it will use the correct

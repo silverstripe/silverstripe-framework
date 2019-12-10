@@ -183,3 +183,25 @@ import react from 'react';
 import jQuery from 'jQuery';
 import FormBuilder from 'components/FormBuilder/FormBuilder';
 ```
+
+## Publishing frontend packages to NPM
+
+We're progressing to include NPM modules in our development process. We currently have a limited number of 
+[JavaScript only projects published to NPM under the `@silverstripe` organisation](https://www.npmjs.com/search?q=%40silverstripe).
+
+When a pull request is merged against one of those JS-only projects, a new release has to be published to NPM. Regular
+Silverstripe CMS modules using these packages have to upgrade their JS dependencies to get the new release.
+
+These are the steps involved to publish a new version to NPM for a package, similar steps apply for creating a new
+package under the `@silverstripe` organisation:
+ 
+1) Make your changes, pull from upstream if applicable
+2) Change to the relevant container folder with the `package.json` file
+3) Run `npm login` and make sure you’re part of the `@silverstripe` organisation
+4) Make sure the `name` property of the `package.json` file matches to the right module name with organisation name prefix, e.g. `"name": "@silverstripe/webpack-config"`
+5) Update the `version` property of the `package.json` file with a new version number, following semantic versioning where possible
+6) Run `npm version` and validate that the version matches what you expect
+7) Run `npm publish`
+ 
+_IMPORTANT NOTE_: You cannot publish the same or lower version number. Only members of the Silverstripe CMS core team
+can publish a release to NPM.
