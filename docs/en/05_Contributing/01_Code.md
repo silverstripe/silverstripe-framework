@@ -96,6 +96,21 @@ As we follow SemVer, we name the branches in repositories accordingly
  - `<positive digit> "." <digits>` branches contain released minor versions and all changes for yet to be released patch versions
 
 
+Silverstripe CMS public APIs explicitly include:
+ - namespaces, classes, interfaces and traits
+ - public and protected scope (including methods, properties and constants)
+ - global functions, variables
+ - yml configuration file structure and value types
+ - private static class properties (considered to be configuration variables)
+
+Silverstripe CMS public APIs explicitly exclude:
+ - private scope (methods and properties with the exception for `private static`)
+ - entities marked as `@internal`
+ - yml configuration file default values
+ - HTML, CSS, JavaScript, TypeScript, SQL and anything else that is not PHP
+
+Other entities might be considered to be included or excluded from the public APIs on case-by-case basis.
+
 
 ### The Pull Request Process
 
