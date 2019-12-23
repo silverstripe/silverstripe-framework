@@ -128,7 +128,7 @@ class ContactPageController extends PageController
 [hint]
 	Caution: This form is prone to abuse by spammers,
 	since it doesn't enforce a rate limitation, or checks for bots.
-	We recommend to use a validation service like the ["recaptcha" module](http://www.silverstripe.org/recaptcha-module/)
+	We recommend to use a validation service like the ["recaptcha" module](https://www.silverstripe.org/spam-protection-module)
 	for better security.
 [/hint]
 
