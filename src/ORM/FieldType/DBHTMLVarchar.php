@@ -124,7 +124,7 @@ class DBHTMLVarchar extends DBVarchar
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return HTMLEditorField::create($this->name, $title)->setRows(1);
+        return HTMLEditorField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)
