@@ -58,7 +58,7 @@ At the start of the Beta phase:
 * a feature freeze is instituted on the minor branches
 * a `beta1` release is tagged for recipes and related modules.
 
-The beta phase lasts approximately one month. Additional betas may be released to address critical issues holding back
+The length of the beta phase period will be communicated at the time it is tagged via the [Silverstripe Forum](https://forum.silverstripe.org/c/releases). While the beta phase lasts additional betas may be released to address critical issues holding back
 testers.
 
 #### "Beta release" definition
