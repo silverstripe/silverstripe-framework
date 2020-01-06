@@ -17,7 +17,7 @@ module in a "potentially releasable" state. Releases are planned around an issue
 [roadmap](https://www.silverstripe.org/software/roadmap/).  We re-revaluate our priorities every few weeks.
 
 Silverstripe CMS is split up into many modules listed on [github.com/silverstripe](https://github.com/silverstripe).
-Each of them will have its own milestones and issues, and different release lines (e.g. 1.x vs. 4.x).
+Each may have a different release line (e.g. 1.x vs. 4.x).
 There are high-level "recipe" milestones on the [framework repository](https://github.com/silverstripe/silverstripe-framework/milestones)
 to combine individual module milestones into a larger release that's eventually available to install with 
 [composer](https://silverstripe.org/download).
@@ -47,7 +47,7 @@ versions of its modules within the same minor release line (4.3 in this example)
 
 ## Regular quarterly releases
 
-A regular Silverstripe CMS release is tagged every quarter. This usually involves creating a new minor increment of 
+A regular Silverstripe CMS release is tagged on a quarterly basis, in the months: March, June, September, December. This usually involves creating a new minor increment of 
 each core recipe. Regular quarterly releases are preceded by pre-stable releases to help lay the groundwork for the
 stable release.
 
@@ -63,7 +63,7 @@ testers.
 
 #### "Beta release" definition
 
-The purpose of a beta release is to stabilise the Silverstripe CMS codebase for an upcoming stable release and showcase 
+The purpose of a beta release is to initiate a "Feature Freeze" to stabilise the Silverstripe CMS codebase for an upcoming stable release and showcase 
 new features. A beta release is likely to contain regressions and new bugs. A beta release is primarily aimed at testers 
 who want to help identify bugs and regressions.
 
@@ -152,7 +152,7 @@ How to deprecate an API:
 * Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
 * The commit message should contain an `API` prefix (see ["commit message format"](code#commit-messages))
 * Document the change in the [changelog](/changelogs) for the next release
-* Deprecated APIs can be removed only after developers have had sufficient time to react to the changes. Hence,     deprecated APIs should be removed in MAJOR releases only. Between MAJOR releases, leave the code in place with    a deprecation warning. 
+* Deprecated APIs can be removed only after developers have had sufficient time to react to the changes. Hence, deprecated APIs should be removed in MAJOR releases only. Between MAJOR releases, leave the code in place with a deprecation warning. 
 * Exceptions to the deprecation cycle are APIs that have been moved into their own module, and continue to work with the new minor release. These changes can be performed in a single minor release without a deprecation period.
 * Add a `warnings` entry to the module's `.upgrade.yml` file so the
 [Silverstripe Upgrader can flag deprecated APIs](/upgrading/upgrading_module#upgradeyml).  
