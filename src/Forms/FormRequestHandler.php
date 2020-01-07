@@ -522,9 +522,9 @@ class FormRequestHandler extends RequestHandler
      * @param string $funcName
      * @param HTTPRequest $request
      * @param array $vars
-     * @return HTTPResponse
+     * @return mixed
      */
-    private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars): HTTPResponse
+    private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars)
     {
         $this->extend('beforeCallFormHandler', $request, $funcName, $vars, $this->form, $subject);
         $result = $subject->$funcName($vars, $this->form, $request, $this);
