@@ -10,9 +10,9 @@ SilverStripe is designed to be a modular application system - even the CMS is si
 framework.
 
 A module is a collection of classes, templates, and other resources that is loaded into a directory.
-Usually this directory is a [Composer package](https://getcomposer.org/), which is placed in the `vendor/` folder.
-SilverStripe modules are just Composer packages with a toplevel `_config` directory or `_config.php` file,
-as well as a special type in their `composer.json` file.
+Modules are [Composer packages](https://getcomposer.org/), and are placed in the `vendor/` folder.
+These packages need to contain either a toplevel `_config` directory or `_config.php` file,
+as well as a special `type` in their `composer.json` file ([example](https://github.com/silverstripe/silverstripe-module/blob/4/composer.json)).
 
 ```
 app/
@@ -24,15 +24,14 @@ app/
 vendor/my_vendor/my_module/
 |
 +-- _config/
++-- composer.json
 +-- ...
 ```
 
-SilverStripe will automatically include any PHP classes and templates from within your module when you next flush your
-cache.
-
-Creating a module is a good way to re-use code and templates across multiple projects. SilverStripe already
-has certain modules included, for example the `cms` module and core functionality such as commenting and spam protection
-are also abstracted into modules allowing developers the freedom to choose what they want.
+Like with any Composer package, we recommend declaring your PHP classes through
+[PSR autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading).
+SilverStripe will automatically discover templates and configuration settings
+within your module when you next flush your cache.
 
 
 ## Finding Modules
@@ -71,14 +70,23 @@ To lock down to a specific version, branch or commit, read up on
 After you add or remove modules, make sure you rebuild the database, class and configuration manifests by going to http://yoursite.com/dev/build?flush=1
 [/notice]
 
-## Publishing your own SilverStripe module
+## Creating a Module {#create}
 
-See the [How to Publish a SilverStripe Module](how_tos/publish_a_module) for details on how to publish your SilverStripe
-modules with the community
+Creating a module is a good way to re-use code and templates across multiple projects,
+or share your code with the community. SilverStripe already
+has certain modules included, for example the `cms` module and core functionality such as commenting and spam protection
+are also abstracted into modules allowing developers the freedom to choose what they want.
+
+The easiest way to get started is our [Module Skeleton](https://github.com/silverstripe/silverstripe-module).
+In case you want to share your creation with the community,
+read more about [publishing a module](how_tos/publish_a_module).
 
 ## Module Standard
 
 The SilverStripe module standard defines a set of conventions that high-quality SilverStripe modules should follow. It’s a bit like PSR for SilverStripe CMS. Suggested improvements can be raised as pull requests.
+This standard is also part of the more highlevel
+[Supported Modules Definition](https://www.silverstripe.org/software/addons/supported-modules-definition/)
+which the SilverStripe project applies to the modules it creates and maintains directly.
 
 ### Coding Guidelines
 
@@ -126,4 +134,5 @@ Documentation will cover:
 
 ## Related
 
-* [How to Publish a SilverStripe Module](how_tos/publish_a_module)
+* [Module Skeleton](https://github.com/silverstripe/silverstripe-module)
+* [Publishing a module](how_tos/publish_a_module)
