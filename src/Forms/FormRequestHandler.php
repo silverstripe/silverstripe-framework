@@ -225,50 +225,26 @@ class FormRequestHandler extends RequestHandler
 
             // First, try a handler method on the controller (has been checked for allowed_actions above already)
             $controller = $this->form->getController();
+            $args = [$funcName, $request, $vars];
             if ($controller && $controller->hasMethod($funcName)) {
                 $controller->setRequest($request);
-
-                $this->extend('beforeCallFormHandlerController', $request, $funcName, $vars, $this->form);
-
-                $result = $controller->$funcName($vars, $this->form, $request, $this);
-
-                $this->extend('afterCallFormHandlerController', $request, $funcName, $vars, $this->form, $result);
-
-                return $result;
+                return $this->invokeFormHandler($controller, ...$args);
             }
 
             // Otherwise, try a handler method on the form request handler.
             if ($this->hasMethod($funcName)) {
-                $this->extend('beforeCallFormHandlerMethod', $request, $funcName, $vars, $this->form);
-
-                $result = $this->$funcName($vars, $this->form, $request, $this);
-
-                $this->extend('afterCallFormHandlerMethod', $request, $funcName, $vars, $this->form, $result);
-
-                return $result;
+                return $this->invokeFormHandler($this, ...$args);
             }
 
             // Otherwise, try a handler method on the form itself
             if ($this->form->hasMethod($funcName)) {
-                $this->extend('beforeCallFormHandlerFormMethod', $request, $funcName, $vars, $this->form);
-
-                $result = $this->form->$funcName($vars, $this->form, $request, $this);
-
-                $this->extend('afterCallFormHandlerFormMethod', $request, $funcName, $vars, $this->form, $result);
-
-                return $result;
+                return $this->invokeFormHandler($this->form, ...$args);
             }
 
             // Check for inline actions
             $field = $this->checkFieldsForAction($this->form->Fields(), $funcName);
             if ($field) {
-                $this->extend('beforeCallFormHandlerFieldMethod', $request, $funcName, $vars, $this->form);
-
-                $result = $field->$funcName($vars, $this->form, $request, $this);
-
-                $this->extend('afterCallFormHandlerFieldMethod', $request, $funcName, $vars, $this->form, $result);
-
-                return $result;
+                return $this->invokeFormHandler($field, ...$args);
             }
         } catch (ValidationException $e) {
             // The ValdiationResult contains all the relevant metadata
@@ -539,5 +515,21 @@ class FormRequestHandler extends RequestHandler
     public function forTemplate()
     {
         return $this->form->forTemplate();
+    }
+
+    /**
+     * @param $subject
+     * @param string $funcName
+     * @param HTTPRequest $request
+     * @param array $vars
+     * @return HTTPResponse
+     */
+    private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars): HTTPResponse
+    {
+        $this->extend('beforeCallFormHandler', $request, $funcName, $vars, $this->form, $subject);
+        $result = $subject->$funcName($vars, $this->form, $request, $this);
+        $this->extend('afterCallFormHandler', $request, $funcName, $vars, $this->form, $subject, $result);
+
+        return $result;
     }
 }
