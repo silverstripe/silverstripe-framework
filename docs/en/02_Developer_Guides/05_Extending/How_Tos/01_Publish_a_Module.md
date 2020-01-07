@@ -6,6 +6,9 @@ icon: rocket
 
 # How to Publish a SilverStripe module.
 
+After you've [created](modules#create) your own Silverstripe module,
+you could decide to make it open source and share it with the world.
+
 If you wish to submit your module to our public directory, you take responsibility for a certain level of code quality, 
 adherence to conventions, writing documentation, and releasing updates. 
 
