@@ -11,7 +11,7 @@ framework.
 
 A module is a collection of classes, templates, and other resources that is loaded into a directory.
 Modules are [Composer packages](https://getcomposer.org/), and are placed in the `vendor/` folder.
-This folder needs to contain either a toplevel `_config` directory or `_config.php` file,
+These packages need to contain either a toplevel `_config` directory or `_config.php` file,
 as well as a special `type` in their `composer.json` file ([example](https://github.com/silverstripe/silverstripe-module/blob/4/composer.json)).
 
 ```
