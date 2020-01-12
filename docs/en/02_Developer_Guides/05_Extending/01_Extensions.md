@@ -249,6 +249,10 @@ class MyMemberExtension extends DataExtension
 }
 ```
 
+[notice]
+Please note that while you can read protected properties (using `$this->owner->protectedProperty`) you cannot not call protected methods (`$this->owner->protectedMethod()`). You also cannot access any private properties or methods (So this would not work either `$this->owner->privateProperty`).
+[/notice]
+
 ## Checking to see if an Object has an Extension
 
 To see what extensions are currently enabled on an object, use the [getExtensionInstances()](api:SilverStripe\Core\Extensible::getExtensionInstances()) and 
