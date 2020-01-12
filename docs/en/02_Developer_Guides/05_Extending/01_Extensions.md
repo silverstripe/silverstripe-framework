@@ -250,7 +250,7 @@ class MyMemberExtension extends DataExtension
 ```
 
 [notice]
-Please note that while you can read protected properties (using `$this->owner->protectedProperty`) you cannot not call protected methods (`$this->owner->protectedMethod()`). You also cannot access any private properties or methods (So this would not work either `$this->owner->privateProperty`).
+Please note that while you can read protected properties of the source object (using `$this->owner->protectedProperty`) you cannot call any of it's protected methods (So this `$this->owner->protectedMethod()` would not work). You also cannot access any of the source object's private properties or methods (So this would not work either `$this->owner->privateProperty`).
 [/notice]
 
 ## Checking to see if an Object has an Extension
