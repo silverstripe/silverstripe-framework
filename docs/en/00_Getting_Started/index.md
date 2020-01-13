@@ -41,6 +41,7 @@ SS_DATABASE_USERNAME="<user>"
 SS_DATABASE_PASSWORD="<password>"
 SS_DEFAULT_ADMIN_USERNAME="admin"
 SS_DEFAULT_ADMIN_PASSWORD="password"
+SS_ENVIRONMENT_TYPE="<dev|test|live>"
 ```
 
 Now you should be able to build your database by running this command:
