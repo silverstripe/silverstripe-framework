@@ -203,7 +203,9 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
             'Custom action',
             "docustomaction",
             ['RecordID' => $record->ID]
-         );
+         )->addExtraClass(
+            'action-menu--handled'
+        );
     }
     
     public function getExtraData($gridField, $record, $columnName)
