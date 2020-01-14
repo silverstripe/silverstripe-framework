@@ -145,12 +145,8 @@ class DatabaseAdapterRegistry
             $databaseConfig = $config;
         }
         // Search through all composer packages in vendor, updating $databaseConfig
-        foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
-            foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
-                if (file_exists($directory . '/_configure_database.php')) {
-                    include_once($directory . '/_configure_database.php');
-                }
-            }
+        foreach (glob(BASE_PATH . '/vendor/*/*/_configure_database.php') as $configFile) {
+            include_once $configFile;
         }
         // Update modified variable
         $config = $databaseConfig;
