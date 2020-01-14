@@ -378,8 +378,8 @@ class i18nTextCollector
             // Merge
             if ($existingMessages) {
                 $entitiesByModule[$module] = array_merge(
-                    $existingMessages,
-                    $messages
+                    $messages,
+                    $existingMessages
                 );
             }
         }
