@@ -340,11 +340,13 @@ Injector.transform(
   { after: '*' }
 );
 ```
+
 [info]
 This flag can only be used once per transformation.
 The following are not allowed:
 * `{ before: ['*', 'something-else'] }`
 * `{ after: '*', before: 'something-else' }`
+
 [/info]
 
 ## Injector context
