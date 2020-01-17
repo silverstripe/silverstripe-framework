@@ -53,8 +53,7 @@
         "ext-xml": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "7.1.3",
-        "sminnee/phpunit-mock-objects": "^3.4.5",
+        "phpunit/phpunit": "^7.5",
         "silverstripe/versioned": "^2"
     },
     "provide": {
