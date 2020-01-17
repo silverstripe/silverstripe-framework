@@ -226,7 +226,6 @@ class Session
      */
     public function init(HTTPRequest $request)
     {
-
         if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
             $this->start($request);
         }
@@ -235,9 +234,7 @@ class Session
         if (self::config()->get('strict_user_agent_check') && isset($this->data['HTTP_USER_AGENT'])) {
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
-                $this->destroy();
-                $this->started = false;
-                $this->start($request);
+                $this->restart($request);
             }
         }
     }
@@ -250,7 +247,7 @@ class Session
     public function restart(HTTPRequest $request)
     {
         $this->destroy();
-        $this->init($request);
+        $this->start($request);
     }
 
     /**
@@ -379,6 +376,7 @@ class Session
         // http://nz1.php.net/manual/en/function.session-destroy.php
         unset($_SESSION);
         $this->data = null;
+        $this->started = false;
     }
 
     /**
@@ -642,6 +640,18 @@ class Session
                 $sourceVal = $this->nestedValue($key, $source);
                 $this->recursivelyApplyChanges($changed, $sourceVal, $destVal);
             }
+        }
+    }
+
+    /**
+     * Regenerate session id
+     *
+     * @internal This is for internal use only. Isn't a part of public API.
+     */
+    public function regenerateSessionId()
+    {
+        if (!headers_sent()) {
+            session_regenerate_id(true);
         }
     }
 }

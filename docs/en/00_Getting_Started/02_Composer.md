@@ -1,47 +1,31 @@
-# Installing and Upgrading with Composer
+---
+title: Composer
+summary: What is composer and how to use it with Silverstripe CMS
+---
 
-Composer is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules. Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org. This is our recommended way of downloading SilverStripe and managing your code.
+# Using SilverStripe with Composer
 
-For more information about Composer, visit [its website](http://getcomposer.org/).
+## Requirements
+
+[Composer](http://getcomposer.org/) is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules.
 We also have separate instructions for [installing modules with Composer](/developer_guides/extending/modules).
-
-# Basic usage
-
-## Installing composer
 
 Before installing Composer you should ensure your system has the version control system, [Git installed](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Composer uses Git to check out the code dependancies you need to run your SilverStripe CMS website from the code repositories maintained on GitHub.
 
-Next, [install composer](https://getcomposer.org/download/). For our documentation we assume composer is installed globally.
-
-You can then run Composer commands by calling `composer`.  For example:
+Next, [install composer](https://getcomposer.org/download/). For our documentation we assume the `composer` command is installed globally.
+You should now be able to run the command:
 
 ```
 composer help
 ```
 
-<div class="hint" markdown="1">
-It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
-</div>
-
-#### Updating composer
-
-If you already have composer installed you can update it by running:
-
-```
-sudo composer self-update
-```
-
-Composer updates regularly, so you should run this command fairly often. These instructions assume you are running the latest version.
-
-## Installing Composer on Windows WAMP
-For those that use WAMP as a development environment, [detailed information is available on installing using Composer.](/getting_started/installation/windows)
-
 ## Create a new site
 
-Composer can create a new site for you, using the installer as a template (by default composer will download the latest stable version):
+Composer can create a new site for you, using the installer as a template.
+By default it will download the latest stable version:
 
 ```
-composer create-project silverstripe/installer ./my/website/folder ^4
+composer create-project silverstripe/installer my-project
 ```
 
 If you want to get all additional fixtures for testing, such as behat and phpunit configuration,
@@ -51,15 +35,15 @@ to include these files.
 If you want a minimal installation with the bare essentials to get working without any additional overhead,
 and don't plan on contributing back changes to framework, use `--prefer-dist` (default) for a more lightweight install.
 
-`./my/website/folder` should be the root directory where your site will live.  
+`./my-project` should be the root directory where your site will live.
 For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need.
 Now visit the site in your web browser, and the installation process will be completed.
 
-You can also specify a version to download that version explicitly, i.e. this will download the older `3.6.0` release:
+You can also specify a version to download that version explicitly, i.e. this will download the older `4.3.3` release:
 
 ```
-composer create-project silverstripe/installer ./my/website/folder 3.6.0
+composer create-project silverstripe/installer ./my-project 4.3.3
 ```
 
 When `create-project` is used with a release version like above,
@@ -69,39 +53,23 @@ see [Using development versions](#using-development-versions).
 
 ## Adding modules to your project
 
-Composer isn't only used to download SilverStripe CMS, it is also used to manage all SilverStripe modules. Installing a module can be done with the following command:
+Composer isn't only used to download SilverStripe CMS, it is also used to manage all SilverStripe modules. 
+You can find thousands of modules on [https://addons.silverstripe.org](https://addons.silverstripe.org).
+Installing a module can be done with the following command:
 
 ```
-composer require silverstripe/forum
+composer require silverstripe/blog
 ```
 
-This will install the forum module in the latest compatible version. If you know the specific version you want to install already (such as `^0.8`), you can add it after the package name. For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key):
+This will install the `silverstripe/blog` module in the latest compatible version. If you know the specific version you want to install already (such as `^2`), you can add it after the package name as a [version constraint](http://getcomposer.org/doc/01-basic-usage.md#the-require-key):
 
 ```
-composer require silverstripe/forum ^0.8
+composer require silverstripe/blog ^2
 ```
 
-By default, Composer updates other existing modules (like `framework` and `cms`),
-and installs "dev" dependencies like PHPUnit. In case you don't need those dependencies,
-use the following command instead:
-
-```
-composer require --no-update silverstripe/forum
-composer update --no-dev
-```
-
-The `require` command has two parts. First is `silverstripe/forum`. This is the name of the package.
-You can find other packages with the following command:
-
-```
-composer search silverstripe
-```
-
-This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
-
-<div class="warning" markdown="1">
+[warning]
 **Version constraints:** `master` is not a legal version string - it's a branch name. These are different things. The version string that would get you the branch is `dev-master`. The version string that would get you a numeric branch is a little different. The version string for the `4` branch is `4.x-dev`.
-</div>
+[/warning]
 
 ## Updating dependencies
 
@@ -110,7 +78,7 @@ Except for the control code of the Voyager space probe, every piece of code in t
 To get the latest updates of the modules in your project, run this command:
 
 ```
-composer update --no-dev
+composer update
 ```
 
 Updates to the required modules will be installed, and the `composer.lock` file will get updated with the specific commits and version constraints for each of them.
@@ -130,77 +98,11 @@ So your deployment process, as it relates to Composer, should be as follows:
 
 ## Composer managed modules, Git and .gitignore
 
-Modules and themes managed by composer should not be committed with your projects source code. For more details read  [Should I commit the dependencies in my vendor directory?](https://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).
+Modules and themes managed by Composer should not be committed with your projects source code. 
+SilverStripe ships with a [.gitignore](http://git-scm.com/docs/gitignore) file by default which prevents this.
+For more details read  [Should I commit the dependencies in my vendor directory?](https://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).
 
-Since SilverStripe modules are installed into their own folder, you have to manage your [.gitignore](http://git-scm.com/docs/gitignore) to ensure they are ignored from your repository.
-
-Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
-
-```
-assets/*
-.env
-tools/phing-metadata
-silverstripe-cache
-.buildpath
-.project
-.settings
-.idea
-.DS_Store
-vendor/
-# Don't include the forum module, as this will be installed with composer
-forum
-```
-
-In large projects it can get difficult to manage your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it contains all composer managed modules and themes.
-
-You can automate this with the [SSAutoGitIgnore](https://github.com/guru-digital/SSAutoGitIgnore/) package.
-This package will maintain your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it is kept up to date with your composer managed modules without affecting custom ignores. Once installed and setup, it will automatically run every time you install, remove or update modules using composer.
-
-### Installing and enabling the SSAutoGitIgnore package
-
-Include the package in your project by running this command
-
-```
-composer require gdmedia/ss-auto-git-ignore --dev
-```
-
-Edit your `composer.json` and insert:
-
-```json
-"scripts": {
-     "post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
-}
-```
-
-This will instruct composer to run SSAutoGitIgnore after every update. SSAutoGitIgnore will then ensure composer managed models and themes are correctly added to your [.gitignore](http://git-scm.com/docs/gitignore).    
-For more information about SSAutoGitIgnore, see the [SSAutoGitIgnore home page](https://github.com/guru-digital/SSAutoGitIgnore/).    
-For more information about post-updated-cmd and scripts, read the ["Scripts" chapter of the Composer documentation](https://getcomposer.org/doc/articles/scripts.md).
-
-Full example of composer.json with the SSAutoGitIgnore installed and enabled
-
-```json
-{
-    "name": "silverstripe/installer",
-    "description": "The SilverStripe Framework Installer",
-    "require": {
-        "php": ">=7.1.0",
-        "silverstripe/cms": "^5",
-        "silverstripe/framework": "^5",
-        "silverstripe-themes/simple": "~3.2.0"
-    },
-    "require-dev": {
-        "silverstripe/docsviewer": "^3.0",
-        "gdmedia/ss-auto-git-ignore": "^1.0"
-    },
-    "scripts": {
-        "post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
-}
-```
-
-# Dev Environments for Contributing Code {#contributing}
+## Dev Environments for Contributing Code {#contributing}
 
 So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
 You have to tell composer three things in order to be able to do this:
@@ -212,10 +114,10 @@ You have to tell composer three things in order to be able to do this:
 The first two steps are done as part of the initial create project using additional arguments.
 
 ```
-composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 5.x-dev --prefer-source
+composer create-project --keep-vcs --dev silverstripe/installer ./my-project 5.x-dev --prefer-source
 ```
 
-The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 5.0 release line. To check out from master instead,
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 5.x release line. To check out from master instead,
 replace `5.x-dev` with `dev-master` (more info on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifying-the-version)).
 
 The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
@@ -246,13 +148,13 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
     "name": "silverstripe/installer",
     "description": "The SilverStripe Framework Installer",
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.3",
         "silverstripe/cms": "^5",
         "silverstripe/framework": "^5",
         "silverstripe-themes/simple": "~3.2.0"
     },
     "require-dev": {
-        "silverstripe/docsviewer": "^3.0"
+        "silverstripe/docsviewer": "^3"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
@@ -279,13 +181,13 @@ This is a two step process. First you get composer to start a project based on
 the latest unstable silverstripe/installer
 
 ```
-composer create-project silverstripe/installer ./my/website/folder dev-master
+composer create-project silverstripe/installer ./my-project dev-master
 ```
 
 Or for the latest development version in the 5.x series
 
 ```
-composer create-project silverstripe/installer ./my/website/folder 5.x-dev
+composer create-project silverstripe/installer ./my-project 5.x-dev
 ```
 
 ## Working with project forks and unreleased modules
@@ -411,7 +313,7 @@ We recommend looking into [Composer "lock" files](http://getcomposer.org/doc/01-
 
 ### Can I keep using Downloads, Subversion Externals or Git Submodules?
 
-Yes and no. Composer comes with additional features such as
+Composer is more than just a file downloader. It comes with additional features such as
 [autoloading](http://getcomposer.org/doc/01-basic-usage.md#autoloading)
 or [scripts](http://getcomposer.org/doc/articles/scripts.md)
 which some modules will start relying on.

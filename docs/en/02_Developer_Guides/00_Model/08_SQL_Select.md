@@ -1,5 +1,8 @@
+---
 title: SQL Queries
 summary: Write and modify direct database queries through SQLExpression subclasses.
+iconBrand: searchengin
+---
 
 # SQLSelect
 
@@ -46,10 +49,10 @@ various assumptions the ORM and code based on it have:
 We'll explain some ways to use *SELECT* with the full power of SQL, 
 but still maintain a connection to the ORM where possible.
 
-<div class="warning" markdown="1">
+[warning]
 Please read our [security topic](/developer_guides/security) to find out
 how to properly prepare user input and variables for use in queries
-</div>
+[/warning]
 
 ## Usage
 

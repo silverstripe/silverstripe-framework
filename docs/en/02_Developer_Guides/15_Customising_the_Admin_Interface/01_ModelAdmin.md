@@ -1,5 +1,7 @@
+---
 title: ModelAdmin
 summary: Create admin UI's for managing your data records.
+---
 
 # ModelAdmin
 
@@ -9,10 +11,10 @@ searchables list and edit views of [DataObject](api:SilverStripe\ORM\DataObject)
 It uses the framework's knowledge about the model to provide sensible defaults, allowing you to get started in a couple
 of lines of code, while still providing a solid base for customization.
 
-<div class="info" markdown="1">
+[info]
 The interface is mainly powered by the [GridField](api:SilverStripe\Forms\GridField\GridField) class ([documentation](../forms/field_types/gridfield)), which can
 also be used in other areas of your application.
-</div>
+[/info]
 
 Let's assume we want to manage a simple product listing as a sample data model: A product can have a name, price, and
 a category.
@@ -85,9 +87,9 @@ class MyAdmin extends ModelAdmin
 This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
 users will be able to upload and manage `Product` and `Category` instances through http://yoursite.com/admin/products.
 
-<div class="alert" markdown="1">
+[alert]
 After defining these classes, make sure you have rebuilt your SilverStripe database and flushed your cache.
-</div>
+[/alert]
 
 ## Permissions
 
@@ -95,9 +97,9 @@ Each new `ModelAdmin` subclass creates its' own [permission code](../security), 
 `CMS_ACCESS_MyAdmin`. Users with access to the Admin UI will need to have this permission assigned through
 `admin/security/` or have the `ADMIN` permission code in order to gain access to the controller.
 
-<div class="notice" markdown="1">
+[notice]
 For more information on the security and permission system see the [Security Documentation](../security)
-</div>
+[/notice]
 
 The [DataObject](api:SilverStripe\ORM\DataObject) API has more granular permission control, which is enforced in [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) by default.
 Available checks are `canEdit()`, `canCreate()`, `canView()` and `canDelete()`. Models check for administrator
@@ -172,9 +174,9 @@ class Product extends DataObject
 }
 ```
 
-<div class="hint" markdown="1">
+[hint]
 [SearchContext](../search/searchcontext) documentation has more information on providing the search functionality.
-</div>
+[/hint]
 
 ## Displaying Results
 
@@ -211,6 +213,7 @@ For example, we might want to exclude all products without prices in our sample 
 
 
 ```php
+<?php
 use SilverStripe\Admin\ModelAdmin;
 
 class MyAdmin extends ModelAdmin 
@@ -235,6 +238,7 @@ checkbox which limits search results to expensive products (over $100).
 **app/code/MyAdmin.php**
 
 ```php
+<?php
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Admin\ModelAdmin;
 
@@ -266,39 +270,51 @@ class MyAdmin extends ModelAdmin
 }
 ```
 
+## Altering the ModelAdmin GridField or Form
+
+If you wish to provided a tailored esperience for CMS users, you can directly interact with the ModelAdmin form or gridfield. Override the following method:
+* `getEditForm()` to alter the Form object
+* `getGridField()` to alter the GridField field
+* `getGridFieldConfig()` to alter the GridField configuration.
+
+Extensions applied to a ModelAdmin can also use the `updateGridField` and `updateGridFieldConfig` hooks.
+
+[hint]
+`getGridField()`, `getGridFieldConfig()`, `updateGridField` and `updateGridFieldConfig` are only available on 
+Silverstripe CMS 4.6 and above.
+[/hint]
+
 To alter how the results are displayed (via [GridField](api:SilverStripe\Forms\GridField\GridField)), you can also overload the `getEditForm()` method. For
 example, to add a new component.
+
+### Overriding the methods on ModelAdmin
 
 **app/code/MyAdmin.php**
 
 
 ```php
+<?php
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Admin\ModelAdmin;
 
 class MyAdmin extends ModelAdmin 
 {
 
     private static $managed_models = [
-        'Product',
-        'Category'
+        Product::class,
+        Category::class
     ];
+    
+    private static $url_segment = 'my-admin';
 
-    // ...
-    public function getEditForm($id = null, $fields = null) 
+    protected function getGridFieldConfig(): GridFieldConfig
     {
-        $form = parent::getEditForm($id, $fields);
+        $config = parent::getGridFieldConfig();
 
-        // $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
-        // is managed by this ModelAdmin, the GridField for it will also be named 'Product'
+        $config->addComponent(new GridFieldFilterHeader());
 
-        $gridFieldName = $this->sanitiseClassName($this->modelClass);
-        $gridField = $form->Fields()->fieldByName($gridFieldName);
-
-        // modify the list view.
-        $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
-
-        return $form;
+        return $config;
     }
 }
 ```
@@ -310,6 +326,77 @@ to only one specific `GridField`:
 
 
 ```php
+<?php
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Admin\ModelAdmin;
+
+class MyAdmin extends ModelAdmin 
+{
+
+    private static $managed_models = [
+        Product::class,
+        Category::class
+    ];
+    
+    private static $url_segment = 'my-admin';
+
+    protected function getGridFieldConfig(): GridFieldConfig 
+    {
+        $config = parent::getGridFieldConfig();
+
+        // modify the list view.
+        if ($this->modelClass === Product::class) {
+            $config->addComponent(new GridFieldFilterHeader());
+        }
+
+        return $config;
+    }
+}
+```
+
+### Using an extension to customise a ModelAdmin
+
+You can use an Extension to achieve the same results. Extensions have the advantage of being reusable in many contexts.
+
+**app/code/ModelAdminExtension.php**
+
+
+```php
+<?php
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+
+/**
+ * You can apply this extension to a GridField.
+ */
+class ModelAdminExtension extends Extension
+{
+    public function updateGridFieldConfig(GridFieldConfig &$config)
+    {
+        $config->addComponent(new GridFieldFilterHeader());
+    }
+}
+```
+
+**app/_config/mysite.yml**
+
+```yaml
+MyAdmin:
+  extensions:
+    - ModelAdminExtension
+```
+
+### Altering a ModelAdmin using only `getEditForm()`
+
+If you're developing against a version of Silverstripe CMS prior to 4.6, your only option is to override `getEditForm()`. This requires a bit more work to access the GridField and GridFieldConfig instances.
+
+**app/code/MyAdmin.php**
+
+```php
+<?php
+
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Admin\ModelAdmin;
 
@@ -317,20 +404,23 @@ class MyAdmin extends ModelAdmin
 {
 
     private static $managed_models = [
-        'Product',
-        'Category'
+        Product::class,
+        Category::class
     ];
+    
+    private static $url_segment = 'my-admin';
 
     public function getEditForm($id = null, $fields = null) 
     {
         $form = parent::getEditForm($id, $fields);
 
-        $gridFieldName = 'Product';
+        // $gridFieldName is generated from the ModelClass, eg if the Class 'Product'
+        // is managed by this ModelAdmin, the GridField for it will also be named 'Product'
+        $gridFieldName = $this->sanitiseClassName($this->modelClass);
         $gridField = $form->Fields()->fieldByName($gridFieldName);
 
-        if ($gridField) {
-            $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
-        }
+        // modify the list view.
+        $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
 
         return $form;
     }

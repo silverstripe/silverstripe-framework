@@ -1,5 +1,8 @@
+---
 title: Environment Types
 summary: Configure your SilverStripe environment to define how your web application behaves.
+icon: exclamation-circle
+---
 
 # Environment Types
 
@@ -14,11 +17,11 @@ When developing your websites, adding page types or installing modules you shoul
 you will see full error back traces and view the development tools without having to be logged in as an administrator 
 user.
 
-<div class="alert" markdown="1">
+[alert]
 **dev mode should not be enabled long term on live sites for security reasons**. In dev mode by outputting back traces 
 of function calls a hacker can gain information about your environment (including passwords) so you should use dev mode 
 on a public server very carefully.
-</div>
+[/alert]
 
 ### Test Mode
 
@@ -37,13 +40,20 @@ SilverStripe\Security\BasicAuth:
   entire_site_protected: true
 ```
 
+The default password protection in this mode (Basic Auth) is an oudated security measure which passes credentials without encryption over the network.
+It is considered insecure unless this connection itself is secured (via HTTPS).
+It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
+
+When using CGI/FastCGI with Apache, you will have to add the `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` rewrite rule to your `.htaccess` file
+
 ### Live Mode
 
 All error messages are suppressed from the user and the application is in it's most *secure* state.
 
-<div class="alert">
+[alert]
 Live sites should always run in live mode. You should not run production websites in dev mode.
-</div>
+[/alert]
 
 
 ## Checking Environment Type

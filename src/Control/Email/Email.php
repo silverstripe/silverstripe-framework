@@ -51,9 +51,10 @@ class Email extends ViewableData
 
     /**
      * This will be set in the config on a site-by-site basis
+     * @see https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
      *
      * @config
-     * @var string The default administrator email address.
+     * @var string|array The default administrator email address or array of [email => name]
      */
     private static $admin_email = null;
 

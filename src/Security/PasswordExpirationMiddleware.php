@@ -25,13 +25,13 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
     /**
      * Session key for persisting URL of the password change form
      */
-    const SESSION_KEY_REDIRECT = __CLASS__.'.change password redirect';
+    const SESSION_KEY_REDIRECT = __CLASS__ . '.change password redirect';
 
     /**
      * Session key for persisting a flag allowing to process the current request
      * without performing password expiration check
      */
-    const SESSION_KEY_ALLOW_CURRENT_REQUEST = __CLASS__.'.allow current request';
+    const SESSION_KEY_ALLOW_CURRENT_REQUEST = __CLASS__ . '.allow current request';
 
     /**
      * List of URL patterns allowed for users to visit where

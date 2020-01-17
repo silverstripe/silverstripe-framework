@@ -178,8 +178,8 @@ class Url implements Rule, Bypass
     {
         return new Confirmation\Item(
             $token,
-            _t(__CLASS__.'.CONFIRMATION_NAME', 'URL is protected'),
-            _t(__CLASS__.'.CONFIRMATION_DESCRIPTION', 'The URL is: "{url}"', ['url' => $url])
+            _t(__CLASS__ . '.CONFIRMATION_NAME', 'URL is protected'),
+            _t(__CLASS__ . '.CONFIRMATION_DESCRIPTION', 'The URL is: "{url}"', ['url' => $url])
         );
     }
 

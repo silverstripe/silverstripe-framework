@@ -1,5 +1,8 @@
+---
 title: Shortcodes
 summary: Flexible content embedding
+icon: code
+---
 
 # Shortcodes
 

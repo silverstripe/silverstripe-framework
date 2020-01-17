@@ -1,5 +1,8 @@
+---
 title: Javascript Development
 summary: Advanced documentation about writing and customizing javascript within SilverStripe.
+iconBrand: js
+---
 
 # Javascript Development
 

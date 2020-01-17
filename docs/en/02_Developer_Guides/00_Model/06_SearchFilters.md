@@ -1,9 +1,12 @@
+---
 title: SearchFilter Modifiers
 summary: Use suffixes on your ORM queries.
+icon: search
+---
 
 # SearchFilter Modifiers
 
-The `filter` and `exclude` operations specify exact matches by default. However, there are a number of suffixes that
+The `filter` and `exclude` operations specify exact matches by default. However, when filtering `DataList`s, there are a number of suffixes that
 you can put on field names to change this behavior. These are represented as `SearchFilter` subclasses and include.
 
  * [StartsWithFilter](api:SilverStripe\ORM\Filters\StartsWithFilter)

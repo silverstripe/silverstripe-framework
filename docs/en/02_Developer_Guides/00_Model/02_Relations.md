@@ -1,5 +1,8 @@
+---
 title: Relations between Records
 summary: Relate models together using the ORM using has_one, has_many, and many_many.
+icon: link
+---
 
 # Relations between Records
 
@@ -20,7 +23,7 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject
 {
     private static $has_one = [
-        "Team" => "Team",
+        "Team" => Team::class,
     ];
 }
 
@@ -31,7 +34,7 @@ class Team extends DataObject
     ];
 
     private static $has_many = [
-        'Players' => 'Player'
+        'Players' => Player::class,
     ];
 }
 ```
@@ -94,13 +97,13 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject
 {
     private static $has_many = [
-        "Fans" => "Fan.FanOf"
+        "Fans" => Fan::class.".FanOf",
     ];
 }
 class Team extends DataObject
 {
     private static $has_many = [
-        "Fans" => "Fan.FanOf"
+        "Fans" => Fan::class.".FanOf",
     ];
 }
 
@@ -115,19 +118,19 @@ class Fan extends DataObject
 }
 ```
 
-<div class="warning" markdown='1'>
+[warning]
 Note: The use of polymorphic relationships can affect query performance, especially
 on joins, and also increases the complexity of the database and necessary user code.
 They should be used sparingly, and only where additional complexity would otherwise
 be necessary. E.g. Additional parent classes for each respective relationship, or
 duplication of code.
-</div>
+[/warning]
 
 ## has_many
 
 Defines 1-to-many joins. As you can see from the previous example, `$has_many` goes hand in hand with `$has_one`.
 
-<div class="alert" markdown='1'>
+[alert]
 Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary accessors
 available on both ends. To add a $has_one-relationship on core classes, yml config settings can be used:
 ```yml
@@ -135,7 +138,7 @@ SilverStripe\Assets\Image:
   has_one:
     MyDataObject: MyDataObject
 ```
-</div>
+[/alert]
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -143,18 +146,18 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $db = [
-        'Title' => 'Varchar'
+        'Title' => 'Varchar',
     ];
 
     private static $has_many = [
-        'Players' => 'Player'
+        'Players' => Player::class,
     ];
 }
 class Player extends DataObject
 {
 
     private static $has_one = [
-        "Team" => "Team",
+        "Team" => Team::class,
     ];
 }
 ```
@@ -184,15 +187,15 @@ use SilverStripe\ORM\DataObject;
 class Person extends DataObject
 {
     private static $has_many = [
-        "Managing" => "Company.Manager",
-        "Cleaning" => "Company.Cleaner",
+        "Managing" => Company::class.".Manager",
+        "Cleaning" => Company::class.".Cleaner",
     ];
 }
 class Company extends DataObject
 {
     private static $has_one = [
-        "Manager" => "Person",
-        "Cleaner" => "Person"
+        "Manager" => Person::class,
+        "Cleaner" => Person::class,
     ];
 }
 ```
@@ -228,14 +231,14 @@ class Team extends DataObject
 {
 
     private static $has_one = [
-        'Coach' => 'Coach'
+        'Coach' => Coach::class
     ];
 }
 class Coach extends DataObject
 {
 
     private static $belongs_to = [
-        'Team' => 'Team.Coach'
+        'Team' => Team::class.'.Coach'
     ];
 }
 ```
@@ -246,10 +249,10 @@ Defines many-to-many joins, which uses a third table created between the two to 
 There are two ways in which this can be declared, which are described below, depending on
 how the developer wishes to manage this join table.
 
-<div class="warning" markdown='1'>
+[warning]
 Please specify a $belongs_many_many-relationship on the related class as well, in order
 to have the necessary accessors available on both ends.
-</div>
+[/warning]
 
 Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well.
 The only difference being you will get an instance of [ManyManyList](api:SilverStripe\ORM\ManyManyList) or
@@ -277,7 +280,7 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $many_many = [
-        "Supporters" => "Supporter",
+        "Supporters" => Supporter::class,
     ];
 
     private static $many_many_extraFields = [
@@ -290,7 +293,7 @@ class Team extends DataObject
 class Supporter extends DataObject
 {
     private static $belongs_many_many = [
-        "Supports" => "Team",
+        "Supports" => Team::class,
     ];
 }
 ```
@@ -462,16 +465,16 @@ class Category extends DataObject
 {
 
     private static $many_many = [
-        'Products' => 'Product',
-        'FeaturedProducts' => 'Product'
+        'Products' => Product::class,
+        'FeaturedProducts' => Product::class,
     ];
 }
 
 class Product extends DataObject
 {   
     private static $belongs_many_many = [
-        'Categories' => 'Category.Products',
-        'FeaturedInCategories' => 'Category.FeaturedProducts'
+        'Categories' => Category::class.'.Products',
+        'FeaturedInCategories' => Category::class.'.FeaturedProducts',
     ];
 }
 ```
@@ -511,10 +514,10 @@ If your object is versioned, cascade_deletes will also act as "cascade unpublish
 on a parent object will trigger unpublish on the child, similarly to how `owns` causes triggered publishing.
 See the [versioning docs](/developer_guides/model/versioning) for more information on ownership.
 
-<div class="alert" markdown="1">
+[alert]
 Declaring cascade_deletes implies delete permissions on the listed objects.
 Built-in controllers using delete operations check canDelete() on the owner, but not on the owned object.   
-</div>
+[/alert]
 
 ## Cascading duplications
 
@@ -586,7 +589,7 @@ use SilverStripe\ORM\DataObject;
 class Team extends DataObject
 {
     private static $has_many = [
-        "Players" => "Player"
+        "Players" => Player::class
     ];
 
     public function ActivePlayers()
@@ -597,10 +600,10 @@ class Team extends DataObject
 
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the filtered
 criteria on the added record.
-</div>
+[/notice]
 
 ## Relations on Unsaved Objects
 

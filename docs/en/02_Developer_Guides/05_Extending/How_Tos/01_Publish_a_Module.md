@@ -1,6 +1,13 @@
+---
 title: How to Publish a SilverStripe module
+summary: Have you created some work you think others can use? Turn it into a module and share it.
+icon: rocket
+---
 
 # How to Publish a SilverStripe module.
+
+After you've [created](modules#create) your own Silverstripe module,
+you could decide to make it open source and share it with the world.
 
 If you wish to submit your module to our public directory, you take responsibility for a certain level of code quality, 
 adherence to conventions, writing documentation, and releasing updates. 
@@ -86,9 +93,9 @@ Say you have a module which supports SilverStripe 3.0. A new release of this mod
 in SilverStripe 3.1. In this case, you would create a new branch for the 3.0 compatible code base of your module. This 
 allows you to continue fixing bugs on this older release branch.
 
-<div class="info" markdown="1">
+[info]
 As a convention, the `master` branch of your module should always work with the `master` branch of SilverStripe.
-</div>
+[/info]
 
 Other branches should be created on your module as needed if they're required to support specific SilverStripe releases.
 

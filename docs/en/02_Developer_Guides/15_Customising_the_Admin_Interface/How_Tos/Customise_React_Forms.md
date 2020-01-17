@@ -1,3 +1,8 @@
+---
+title: Customising React forms
+summary: Use Injector to add customisations to React-rendered forms
+---
+
 # Customising React Forms
 
 Forms that are rendered with React use the [ReduxForm](http://redux-form.com) library and are based on schema definitions that come from the server. To customise these forms, you can apply middleware that updates the schema or applies validation.

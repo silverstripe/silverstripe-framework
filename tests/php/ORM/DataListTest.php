@@ -1073,11 +1073,9 @@ class DataListTest extends SapphireTest
             ->leftJoin(
                 'DataObjectTest_Team',
                 '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
-            )->filter(
-                array(
+            )->filter([
                 'Title' => 'Team 1'
-                )
-            );
+            ]);
 
         $this->assertEquals(2, $list->count());
         $values = $list->column('Name');

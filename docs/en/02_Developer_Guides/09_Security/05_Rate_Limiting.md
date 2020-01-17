@@ -1,5 +1,8 @@
+---
 title: Rate Limiting
 summary: SilverStripe's in built rate limiting features
+icon: tachometer-alt
+---
 
 # Rate Limiting
 

@@ -1,5 +1,8 @@
+---
 title: Making a SilverStripe core release
 summary: Development guide for core contributors to build and publish a new release
+iconBrand: github-alt
+---
 
 # Making a SilverStripe core release
 
@@ -99,10 +102,10 @@ exactly the same for these.
 Standard practice is to produce a pre-release for any patched modules on the security 
 forks, e.g. for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
 
-<div class="warning" markdown="1">
+[warning]
 Security issues are never disclosed until a public stable release containing this fix
 is available, or within a reasonable period of time of such a release.
-</div>
+[/warning]
 
 ### When receiving a report
 
@@ -144,7 +147,7 @@ is available, or within a reasonable period of time of such a release.
   containing security fixes. See below for setting up a temporary satis repository.
    * Once release testing is completed and the release is ready for stabilisation, then these fixes
   can then be pushed to the upstream module fork, and the release completed as per normal.
-   * Follow the steps for [making a core release](making-a-silverstripe-core-release)
+   * Follow the steps for [making a core release](making_a_silverstripe_core_release)
  
 ### After release
 
@@ -203,10 +206,10 @@ Note:
 * Test you can view the satis home page at `http://localhost/satis-security/public/`
 * When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below)
 
-<div class="warning" markdown="1">
+[warning]
 It's important that you re-run `satis build` step after EVERY change that is pushed upstream; E.g. between
 each release, if making multiple releases.
-</div>
+[/warning]
 
 ### Detailed CVE and CVSS Guidance
 
@@ -266,9 +269,9 @@ E.g.
 `cow release 4.0.1 -vvv`
 
 * `<version>` The recipe version that is to be released. E.g. `4.1.4` or `4.3.0-rc1`
-* `<recipe>` `Optional: the recipe that is being released (default: "silverstripe/installer")
+* `<recipe>` Optional: the recipe that is being released (default: "silverstripe/installer")
 
-This command has these options (note that --repository option is critical for security releases):
+This command has these options (note that `--repository` option is critical for security releases):
 
 * `-vvv` to ensure all underlying commands are echoed
 * `--directory <directory>` to specify the folder to create or look for this project in. If you don't specify this,
@@ -290,7 +293,7 @@ and needs to be manually advanced):
 
 * `release:create` The release version will be created in the `release-<version>`
   folder directly underneath the folder this command was invoked in. Cow
-  will look at the available versions and branch-aliases of silverstripe/installer
+  will look at the available versions and branch-aliases of `silverstripe/installer`
   to determine the best version to install from. E.g. installing 4.0.0 will
   know to install dev-master, and installing 3.3.0 will install from 3.x-dev.
   If installing pre-release versions for stabilisation, it will use the correct
@@ -346,47 +349,23 @@ Once this has been done, then the release is ready to be published live.
 ### Stage 2: Release publication
 
 Once a release has been generated, has its translations updated, changelog generated,
-and tested, the next step is to publish the release. This involves tagging,
-building an archive, and uploading to
-[www.silverstripe.org](http://www.silverstripe.org/software/download/) download page.
-
-Invoked by running `cow release:publish` in the format as below:
+and tested, the next step is to publish the release by tagging all modules
+in the release plan.
 
 `cow release:publish <version> [<recipe>] -vvv`
 
-E.g.
+Example on how to publish the installer:
 
 `cow release:publish 4.0.1 silverstripe/installer`
 
-This command has these options:
+Options:
 
 * `-vvv` to ensure all underlying commands are echoed
 * `--directory <directory>` to specify the folder to look for the project created in the prior step. As with
   above, it will be guessed if omitted. You can run this command in the `./release-<version>` directory and
   omit this option.
-* `--aws-profile <profile>` to specify the AWS profile name for uploading releases to s3. Check with
-  damian@silverstripe.com if you don't have an AWS key setup.
-* `--skip-archive-upload` to disable both "archive" and "upload". This is useful if doing a private release and
-  you don't want to upload this file to AWS.
-* `--skip-upload` to disable the "upload" command (but not archive)
 
-As with the `cow release` command, this step is broken down into the following
-subtasks which are invoked in sequence:
-
-* `release:tag` Each module will have the appropriate tag applied (except the theme). All tags are pushed up to origin
-  on github.
-* `release:archive` This will generate a new tar.gz and zip archive, each for
-  cms and framework-only installations. These will be copied to the root folder
-  of the release directory, although the actual build will be created in temporary
-  directories (so any temp files generated during testing will not end up in the release).
-  If the tags generated in the prior step are not yet available on packagist (which can
-  take a few minutes at times) then this task will cycle through a retry-cycle,
-  which will re-attempt the archive creation periodically until these tags are available.
-* `release:upload` This will invoke the AWS CLI command to upload these archives to the
-  s3 bucket `silverstripe-ssorg-releases`. If you have setup your AWS profile
-  for silverstripe releases under a non-default name, you can specify this profile
-  on the command line with the `--aws-profile=<profile>` command.
-  See "Stage 3: Let the world know" to check if this worked correctly.
+Note: We are no longer creating or publishing archive downloads on silverstripe.org/download.
 
 Once all of these commands have completed there are a couple of final tasks left that
 aren't strictly able to be automated:
@@ -464,9 +443,7 @@ will need to be regularly updated.
   silverstripe.org has the release available. If it's a stable, it will appear
   at the top of the page. If it's a pre-release, it will be available under the
   [development builds](http://www.silverstripe.org/download#download-releases)
-  section. If it's not available, you might need to check that the release was
-  properly uploaded to aws s3, or that you aren't viewing a cached version of
-  the download page. You can cache-bust this by adding `?release=<version>` to
+  section. You can cache-bust this by adding `?release=<version>` to
   the url. If things aren't working properly (and you have admin permissions)
   you can run the [CoreReleaseUpdateTask](http://www.silverstripe.org/dev/tasks/CoreReleaseUpdateTask)
   to synchronise with packagist.

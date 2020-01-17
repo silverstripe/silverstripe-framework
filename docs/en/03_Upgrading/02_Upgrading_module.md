@@ -1,5 +1,7 @@
+---
 title: Upgrading a module
-introduction: Upgrade your module to be compatible with SilverStripe 4 and make it easy for your users to upgrade.
+summary: Upgrade your module to be compatible with SilverStripe 4 and make it easy for your users to upgrade.
+---
 
 # Upgrading a module to be compatible with SilverStripe 4
 
@@ -7,7 +9,7 @@ This guide will help you upgrade a SilverStripe 3 module to be compatible with S
 
 You should be familiar with [Upgrading a project to SilverStripe 4](upgrading_project) before reading this guide. The process for upgrading a SilverStripe module is very similar to the process for Upgrading a SilverStripe project. This guide focuses on highlighting ways in which upgrading a module differs from upgrading a regular project.
 
-## Improving the upgrade experience of your users with a`.upgrade.yml` file 
+## Improving the upgrade experience of your users with a ".upgrade.yml" file {#upgradeyml}
 
 Making your module compatible with SilverStripe 4 is only one part of the process. As a module maintainer, you also want to provide a good upgrade experience for your users. Your module can integrate with the [SilverStripe upgrader](https://github.com/silverstripe/silverstripe-upgrader) just like the SilverStripe core modules.
 

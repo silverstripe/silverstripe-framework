@@ -1,5 +1,8 @@
+---
 title: Themes
 summary: What makes up a SilverStripe Theme. How to install one or write your own theme. 
+icon: paint-brush
+---
 
 # Themes
 
@@ -9,25 +12,23 @@ application can provide multiple unique themes (i.e a mobile theme).
 ## Downloading
 
 Head to the [ themes section of the addons site ](http://addons.silverstripe.org/add-ons?search=&type=theme) to check out the range of themes the 
-community has built. Each theme has a page with links you can use to preview and download it. Themes are normally published and downloaded using Composer,
-but may be available as archive files as well.
+community has built. Each theme has a page with links you can use to preview and download it. Themes are published and downloaded using Composer,
+just like any other [SilverStripe module](/developer_guides/extending/modules).
 
 ## Installation
 
-### Via Composer
-
-If a theme has Composer support you can require it directly through `composer`.
+Themes can be installed through `composer`.
 
 ```bash
-composer require author/theme_name [version]
+composer require my_vendor/my_theme [version]
 ```
 
 *Note:* `[version]` should be replaced with a version constraint if you know it, otherwise leave it blank to pull the latest version compatible with your project.
 
-<div class="alert" markdown="1">
+[alert]
 As you've added new files to your SilverStripe installation, make sure you clear the SilverStripe cache by appending
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
-</div>
+[/alert]
 
 ### Configuring themes
 
@@ -67,11 +68,6 @@ main styles of syntax:
   - `myvendor/mymodule` - Points to the base folder of the given module.
   - `mymodule:` - Also points to the base folder of the given module, but without a vendor.
   The `:` is necessary to distinguish this from a non-module theme.
-
-### Manually
-
-Unpack the contents of the zip file you download into the `themes` directory in your SilverStripe installation. The
-theme should be accessible at `themes/theme_name`.
 
 ## Developing your own theme
 

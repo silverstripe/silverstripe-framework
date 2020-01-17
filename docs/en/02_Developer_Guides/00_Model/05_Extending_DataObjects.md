@@ -1,5 +1,7 @@
+---
 title: Extending DataObjects
 summary: Modify the data model without using subclasses.
+---
 
 # Extending DataObjects
 
@@ -85,10 +87,10 @@ class Player extends DataObject
 }
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 
 these two modes, as shown in the example above.
-</div>
+[/notice]
 
 ## Related Lessons
 * [Working with data relationships - $has_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-has-many-1)

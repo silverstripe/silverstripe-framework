@@ -1,5 +1,7 @@
+---
 title: DateField
 summary: How to format and use the DateField class.
+---
 
 # DateField
 
@@ -52,9 +54,9 @@ DateField::create('MyDate')
     ->setDateFormat('dd/MM/yyyy'); 
 ```
 
-<div class="info" markdown="1">
+[info]
 The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
-</div>
+[/info]
  
 
 ## Min and Max Dates
@@ -90,9 +92,9 @@ $dateField->setDescription(_t(
 $dateField->setAttribute('placeholder', $dateField->getDateFormat());
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Fields scaffolded through [DataObject::scaffoldCMSFields()](api:SilverStripe\ORM\DataObject::scaffoldCMSFields()) automatically have a description attached to them.
-</div>
+[/notice]
 
 ## API Documentation
 

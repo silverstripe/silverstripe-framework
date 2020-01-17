@@ -1,3 +1,8 @@
+---
+title: Permissions
+summary: Customise the permission system in Silverstripe
+icon: lock
+---
 # User Permissions
 
 ## Introduction

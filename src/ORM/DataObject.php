@@ -1639,6 +1639,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     private function skipWriteComponents($recursive, DataObject $target, array &$skip)
     {
+        // skip writing component if it doesn't exist
+        if (!$target->exists()) {
+            return true;
+        }
+
         // We only care about the skip list if our call is meant to be recursive
         if (!$recursive) {
             return false;
@@ -2104,12 +2109,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
         if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
-                $this->unsavedRelations[$componentName] =
-                    new UnsavedRelationList(
-                        $manyManyComponent['parentClass'],
-                        $componentName,
-                        $manyManyComponent['childClass']
-                    );
+                $this->unsavedRelations[$componentName] = new UnsavedRelationList(
+                    $manyManyComponent['parentClass'],
+                    $componentName,
+                    $manyManyComponent['childClass']
+                );
             }
             return $this->unsavedRelations[$componentName];
         }

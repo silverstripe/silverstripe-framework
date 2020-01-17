@@ -211,6 +211,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
         /** @var GridFieldDataColumns|null $gridFieldColumnsComponent */
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $columnsHandled = ($gridFieldColumnsComponent)
+            ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
+            : [];
 
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
@@ -226,7 +229,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
 
                         $value = $columnHeader($relObj);
-                    } elseif ($gridFieldColumnsComponent) {
+                    } elseif ($gridFieldColumnsComponent && array_key_exists($columnSource, $columnsHandled)) {
                         $value = strip_tags(
                             $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource)
                         );

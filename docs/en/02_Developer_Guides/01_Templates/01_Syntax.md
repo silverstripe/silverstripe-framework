@@ -1,5 +1,8 @@
+---
 title: Template Syntax
 summary: A look at the operations, variables and language controls you can use within templates.
+icon: code
+---
 
 # Template Syntax
 
@@ -40,10 +43,10 @@ An example of a SilverStripe template is below:
 </html>
 ```
 
-<div class="note">
+[note]
 Templates can be used for more than HTML output. You can use them to output your data as JSON, XML, CSV or any other 
 text-based format.
-</div>
+[/note]
 
 ## Template file location
 
@@ -91,10 +94,10 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its `forTemplate()` method. If the `forTemplate()` method has not 
 been defined, the system will return an error.
 
-<div class="note" markdown="1">
+[note]
 For more detail around how variables are inserted and formatted into a template see 
 [Formating, Modifying and Casting Variables](casting)
-</div>
+[/note]
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
@@ -113,9 +116,9 @@ public function UsersIpAddress()
 <p>You are coming from $UsersIpAddress.</p>
 ```
 
-<div class="node" markdown="1">
+[note]
 	Method names that begin with `get` will automatically be resolved when their prefix is excluded. For example, the above method call `$UsersIpAddress` would also invoke a method named `getUsersIpAddress()`.
-</div>
+[/note]
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
 object the methods get called on. For the standard `Page.ss` template the scope is the current [PageController](api:SilverStripe\CMS\Controllers\ContentController\PageController) 
@@ -150,9 +153,9 @@ A conditional can also check for a value other than falsy.
 <% end_if %>
 ```
 
-<div class="notice" markdown="1">
+[notice]
 When inside template tags variables should have a '$' prefix, and literals should have quotes. 
-</div>
+[/notice]
 
 Conditionals can also provide the `else` case.
 
@@ -280,13 +283,13 @@ collection.
 This snippet loops over the children of a page, and generates an unordered list showing the `Title` property from each 
 page. 
 
-<div class="notice" markdown="1">
+[notice]
 $Title inside the loop refers to the Title property on each object that is looped over, not the current page like
 the reference of `$Title` outside the loop. 
 
 This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the 
 object that is being looped over.
-</div>
+[/notice]
 
 ### Altering the list
 
@@ -370,10 +373,10 @@ iteration.
 </ul>
 ```
 
-<div class="info" markdown="1">
+[info]
 A common task is to paginate your lists. See the [Pagination](how_tos/pagination) how to for a tutorial on adding 
 pagination.
-</div>
+[/info]
 
 ### Modulus and MultipleOf
 
@@ -395,10 +398,10 @@ $MultipleOf(factor, offset)
 // returns <div class="column-3">, <div class="column-2">,
 ```
 
-<div class="hint" markdown="1">
+[hint]
 `$Modulus` is useful for floated grid CSS layouts. If you want 3 rows across, put $Modulus(3) as a class and add a 
 `clear: both` to `.column-1`.
-</div>
+[/hint]
 
 $MultipleOf(value, offset) can also be utilized to build column and grid layouts. In this case we want to add a `<br>` 
 after every 3rd item.
@@ -434,9 +437,9 @@ $Foo // returns "3"
 \$Foo // returns "$Foo"
 ```
 
-<div class="hint" markdown="1">
+[hint]
 For more information on formatting and casting variables see [Formating, Modifying and Casting Variables](casting)
-</div>
+[/hint]
 
 ## Scope
 
@@ -473,7 +476,7 @@ When in a particular scope, `$Up` takes the scope back to the previous level.
 ```
 
 Given the following structure, it will output the text.
-
+```
 	My Page
 	|
 	+-+ Child 1
@@ -488,10 +491,10 @@ Given the following structure, it will output the text.
 	Page 'Grandchild 1' is a grandchild of 'My Page'
 	Page 'Child 2' is a child of 'MyPage'
 
-<div class="notice" markdown="1">
+[notice]
 Each `<% loop %>` or `<% with %>` block results in a change of scope, regardless of how the objects are traversed in the opening statement.
 See the example below:
-</div>
+[/notice]]
 
 ```ss
 {$Title} <%-- Page title --%>

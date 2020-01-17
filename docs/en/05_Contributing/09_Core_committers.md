@@ -1,3 +1,9 @@
+---
+title: Core committers
+summary: The team of contributors that has merge access to our open source repositories
+icon: users
+---
+
 # Core Committers
 The Core Committers team is reviewed approximately annually, new members are added based on quality contributions to SilverStipe code and outstanding community participation. 
 

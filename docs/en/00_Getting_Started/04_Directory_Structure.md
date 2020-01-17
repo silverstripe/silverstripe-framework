@@ -1,3 +1,9 @@
+---
+title: Directory Structure
+summary: An overview of what each directory contains in a Silverstripe CMS installation
+icon: sitemap
+---
+
 # Directory Structure
 
 ## Introduction

@@ -1,5 +1,7 @@
+---
 title: Upgrading to SilverStripe 4
-introduction: Upgrade your project SilverStripe 4 and keep it up to date with the latest fixes, security patches and new features.
+summary: Upgrade your project SilverStripe 4 and keep it up to date with the latest fixes, security patches and new features.
+---
 
 # Upgrading a SilverStripe 3 project to SilverStripe 4
 
@@ -23,7 +25,7 @@ How easy will it be to update my project? It's a fair question, and sometimes a 
 
 There are some fundamental changes in SilverStripe 4:
 
-* PHP 5.6 is now the minimum required version and up to PHP 7.2 is supported.
+* PHP 5.6 is now the minimum required version and up to PHP 7.3 is supported. We strongly recommend you only use [supported versions of PHP](https://www.php.net/supported-versions.php).
 * SilverStripe is now even more modular which allows you to remove functionality your project might not need.
 * Common functionality sets can now be installed via SilverStripe _recipes_.
 * SilverStripe modules can now be installed in the `vendor/` folder along with your regular PHP packages.
@@ -74,9 +76,9 @@ Before you begin the upgrade process, make sure you meet these pre-requisites.
 * Backup your database content.
 * Backup your codebase (use version control if possible).
 
-<div class="warning" markdown="1">
+[warning]
 Never update a website on the live server. Get it working on a development copy first!
-</div>
+[/warning]
 
 ### Install composer
 
@@ -121,9 +123,9 @@ Each command in the upgrader has somewhat different arguments. However, most of 
 * `--write` which tells the upgrader to apply changes to your code base
 * `--root-dir` which can be use to explicitly specify the root of your project. If this is not specified then the current working directory is assumed to be the root of the project.
 
-<div class="info" markdown="1">
+[info]
 Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
-</div>
+[/info]
 
 #### Install the upgrader globally with composer
 
@@ -906,9 +908,9 @@ class ProductService
 }
 ```
 
-<div class="warning" markdown="1">
+[warning]
 Avoid using `static::class` or `parent::class` to retrieve translated string. It will retrieve unpredictable values bases on the class inheritance. 
-</div>
+[/warning]
 
 If your template files contain translatable strings, they also need to be updated to referenced the namespaced classes.
 For example, `<%t Member.SINGULARNAME 'Member' %>` would become `<%t SilverStripe\Security\Member.SINGULARNAME 'Member' %>`.

@@ -1,3 +1,9 @@
+---
+title: Customise the CMS tree
+summary: Learn how to add custom UI elements to the CMS page navigation
+icon: sitemap
+---
+
 # How to customise the CMS tree
 
 ## Overview

@@ -1,5 +1,7 @@
+---
 title: Flushable
 summary: Allows a class to define it's own flush functionality.
+---
 
 # Flushable
 
@@ -10,11 +12,11 @@ Allows a class to define it's own flush functionality, which is triggered when `
 implementors of [Flushable](api:SilverStripe\Core\Flushable).
 
 
-<div class="notice">
+[notice]
 Flushable implementers might also be triggered automatically on deploy if you have `SS_FLUSH_ON_DEPLOY` [environment
 variable](../configuration/environment_variables) defined. In that case even if you don't manually pass `flush=1` parameter, the first request after deploy
 will still be calling `Flushable::flush` on those entities.
-</div>
+[/notice]
 
 
 ## Usage

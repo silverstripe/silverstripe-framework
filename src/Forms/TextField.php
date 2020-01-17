@@ -7,7 +7,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Text input field.
  */
-class TextField extends FormField
+class TextField extends FormField implements TippableFieldInterface
 {
     /**
      * @var int
@@ -15,6 +15,11 @@ class TextField extends FormField
     protected $maxLength;
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
+
+    /**
+     * @var Tip|null A tip to render beside the input
+     */
+    private $tip;
 
     /**
      * Returns an input field.
@@ -60,6 +65,29 @@ class TextField extends FormField
     }
 
     /**
+     * @return Tip|null
+     */
+    public function getTip(): ?Tip
+    {
+        return $this->tip;
+    }
+
+    /**
+     * Applies a Tip to the field, which shows a popover on the right side of
+     * the input to place additional context or explanation of the field's
+     * purpose in. Currently only supported in React-based forms.
+     *
+     * @param Tip|null $tip The Tip to apply, or null to remove an existing one
+     * @return $this
+     */
+    public function setTip(?Tip $tip = null): self
+    {
+        $this->tip = $tip;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getAttributes()
@@ -83,6 +111,11 @@ class TextField extends FormField
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['maxlength'] =  $this->getMaxLength();
+
+        if ($this->getTip() instanceof Tip) {
+            $data['tip'] = $this->getTip()->getTipSchema();
+        }
+
         return $data;
     }
 

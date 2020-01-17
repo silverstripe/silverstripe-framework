@@ -1,4 +1,8 @@
+---
+title: Email
 summary: Send HTML and plain text email from your SilverStripe application.
+icon: envelope-open
+---
 
 # Email
 
@@ -65,11 +69,11 @@ $email = new Email($from, $to, $subject, $body);
 $email->send();
 ```
 
-<div class="info" markdown="1">
+[info]
 The default HTML template for emails is named `GenericEmail` and is located in `vendor/silverstripe/framework/templates/SilverStripe/Email/`.
 To customise this template, copy it to the `app/templates/Email/` folder or use `setHTMLTemplate` when you create the 
 `Email` instance.
-</div>
+[/info]
 
 
 ### Templates
@@ -106,10 +110,10 @@ if ($email->send()) {
 
 ```
 
-<div class="alert" markdown="1">
+[alert]
 As we've added a new template file (`MyCustomEmail`) make sure you clear the SilverStripe cache for your changes to
 take affect.
-</div>
+[/alert]
 
 #### Custom plain templates
 
@@ -143,10 +147,10 @@ SilverStripe\Control\Email\Email:
     support@example.com: 'Support team'
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Remember, setting a `from` address that doesn't come from your domain (such as the users email) will likely see your
 email marked as spam. If you want to send from another address think about using the `setReplyTo` method.
-</div>
+[/alert]
 
 ## Redirecting Emails
 
@@ -196,9 +200,9 @@ $email = new Email(...);
 $email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValue');
 ```
 
-<div class="info" markdown="1">
+[info]
 See this [Wikipedia](http://en.wikipedia.org/wiki/E-mail#Message_header) entry for a list of header names.
-</div>
+[/info]
 
 ## Disabling Emails
 

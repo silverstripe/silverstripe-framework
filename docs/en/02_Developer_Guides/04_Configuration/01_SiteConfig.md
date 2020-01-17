@@ -1,10 +1,13 @@
+---
 title: SiteConfig
 summary: Content author configuration through the SiteConfig module.
+icon: laptop-code
+---
 
 # SiteConfig
 
-The `SiteConfig` module provides a generic interface for managing site wide settings or functionality which is used 
-throughout the site. Out of the box this includes selecting the current site theme, site name and site wide access.
+The `SiteConfig` module provides a generic interface for managing site-wide settings or functionality which is used 
+throughout the site. Out of the box, this includes setting the site name and site-wide access.
 
 ## Accessing variables
 
@@ -72,10 +75,10 @@ Silverstripe\SiteConfig\SiteConfig:
     - CustomSiteConfig
 ```
 
-<div class="notice" markdown="1">
-After adding the class and the YAML change, make sure to rebuild your database by visiting http://yoursite.com/dev/build.
-You may also need to reload the screen with a `?flush=1` i.e http://yoursite.com/admin/settings?flush=1.
-</div>
+[notice]
+After adding the class and the YAML change, make sure to rebuild your database by visiting http://example.com/dev/build.
+You may also need to reload the screen with a `?flush=1` i.e http://example.com/admin/settings?flush=1.
+[/notice]
 
 You can define as many extensions for `SiteConfig` as you need. For example, if you're developing a module and want to
 provide the users a place to configure settings then the `SiteConfig` panel is the place to go it.
