@@ -2,14 +2,12 @@
 
 namespace SilverStripe\Control\Middleware;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Confirmation;
-use SilverStripe\Security\Security;
 
 /**
  * Checks whether user manual confirmation is required for HTTPRequest
@@ -171,8 +169,11 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return HTTPResponse
      */
-    protected function buildConfirmationRedirect(HTTPRequest $request, Confirmation\Storage $storage, array $confirmationItems)
-    {
+    protected function buildConfirmationRedirect(
+        HTTPRequest $request,
+        Confirmation\Storage $storage,
+        array $confirmationItems
+    ) {
         $storage->cleanup();
 
         foreach ($confirmationItems as $item) {
@@ -201,7 +202,10 @@ class ConfirmationMiddleware implements HTTPMiddleware
      */
     protected function processItems(HTTPRequest $request, callable $delegate, $items)
     {
-        $storage = Injector::inst()->createWithArgs(Confirmation\Storage::class, [$request->getSession(), $this->confirmationId, false]);
+        $storage = Injector::inst()->createWithArgs(
+            Confirmation\Storage::class,
+            [$request->getSession(), $this->confirmationId, false]
+        );
 
         if (!count($storage->getItems())) {
             return $this->buildConfirmationRedirect($request, $storage, $items);

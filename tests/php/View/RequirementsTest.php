@@ -1193,13 +1193,17 @@ EOS
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
-        $backend->javascript('javascript/RequirementsTest_a.js', ['integrity' => 'abc', 'crossorigin' => 'use-credentials']);
+        $backend->javascript(
+            'javascript/RequirementsTest_a.js',
+            ['integrity' => 'abc', 'crossorigin' => 'use-credentials']
+        );
         $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
         $html = $backend->includeInHTML(self::$html_template);
 
         /* Javascript has correct attributes */
         $this->assertRegExp(
-            '#<script type="application/javascript" src=".*/javascript/RequirementsTest_a.js.*" integrity="abc" crossorigin="use-credentials"#',
+            '#<script type="application/javascript" src=".*/javascript/RequirementsTest_a.js.*" '
+            . 'integrity="abc" crossorigin="use-credentials"#',
             $html,
             'javascript has correct sri attributes'
         );

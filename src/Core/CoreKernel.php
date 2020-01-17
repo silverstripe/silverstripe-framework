@@ -146,7 +146,8 @@ class CoreKernel implements Kernel
      *
      * @return string
      *
-     * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if kernel overrides. No checking SESSION or Environment.
+     * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if
+     * kernel overrides. No checking SESSION or Environment.
      */
     public function getEnvironment()
     {

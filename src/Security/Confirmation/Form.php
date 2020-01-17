@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Security\Confirmation;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\Form as BaseForm;
-use SilverStripe\Forms\FormAction;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form as BaseForm;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LabelField;
@@ -145,7 +145,9 @@ class Form extends BaseForm
             $data = $storage->getSuccessPostVars();
 
             if (is_null($data)) {
-                throw new ValidationException('Sorry, your cookies seem to have expired. Try to repeat the initial action.');
+                throw new ValidationException(
+                    'Sorry, your cookies seem to have expired. Try to repeat the initial action.'
+                );
             }
 
             foreach ($data as $key => $value) {

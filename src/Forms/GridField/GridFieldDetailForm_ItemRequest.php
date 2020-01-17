@@ -386,7 +386,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                         ->setAttribute('data-btn-alternate-add', 'btn-primary font-icon-save')
                         ->setAttribute('data-btn-alternate-remove', $noChangesClasses)
                         ->setUseButtonTag(true)
-                    ->setAttribute('data-text-alternate', _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save'))
+                    ->setAttribute(
+                        'data-text-alternate',
+                        _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save')
+                    )
                 );
             }
 

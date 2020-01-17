@@ -344,11 +344,13 @@ class ConfigTest extends SapphireTest
                 Config::inst()->get(ConfigTest\First::class, $property)
             );
 
-            $resultValue = Config::withConfig(function (MutableConfigCollectionInterface $config) use ($newValue2, $property) {
-                $config->set(ConfigTest\First::class, $property, $newValue2);
+            $resultValue = Config::withConfig(
+                function (MutableConfigCollectionInterface $config) use ($newValue2, $property) {
+                    $config->set(ConfigTest\First::class, $property, $newValue2);
 
-                return Config::inst()->get(ConfigTest\First::class, $property);
-            });
+                    return Config::inst()->get(ConfigTest\First::class, $property);
+                }
+            );
 
             $this->assertEquals($newValue2, $resultValue);
 
