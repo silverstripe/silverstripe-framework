@@ -225,9 +225,7 @@ class Session
         if (isset($this->data['HTTP_USER_AGENT'])) {
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
-                $this->destroy();
-                $this->started = false;
-                $this->start($request);
+                $this->restart($request);
             }
         }
     }
@@ -240,7 +238,7 @@ class Session
     public function restart(HTTPRequest $request)
     {
         $this->destroy();
-        $this->init($request);
+        $this->start($request);
     }
 
     /**
@@ -368,6 +366,7 @@ class Session
         // http://nz1.php.net/manual/en/function.session-destroy.php
         unset($_SESSION);
         $this->data = null;
+        $this->started = false;
     }
 
     /**
