@@ -77,7 +77,7 @@ class CsvBulkLoader extends BulkLoader
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
             $csvReader->setDelimiter($this->delimiter);
-            $csvReader->stripBom(true);
+            $csvReader->skipInputBOM();
 
             $tabExtractor = function ($row) {
                 foreach ($row as &$item) {
