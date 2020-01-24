@@ -203,7 +203,9 @@ class GridFieldCustomAction implements GridField_ColumnProvider, GridField_Actio
             'Custom action',
             "docustomaction",
             ['RecordID' => $record->ID]
-         );
+         )->addExtraClass(
+            'action-menu--handled'
+        )->setAttribute('classNames', 'font-icon-universal-access'); //replace with class of icon you'd like to show in menu
     }
     
     public function getExtraData($gridField, $record, $columnName)
