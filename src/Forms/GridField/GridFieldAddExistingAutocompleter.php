@@ -136,7 +136,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 
         // If an object is not found, disable the action
         if (!is_int($gridField->State->GridFieldAddRelation(null))) {
-            $addAction->setReadonly(true);
+            $addAction->setDisabled(true);
         }
 
         $forTemplate->Fields->push($searchField);
