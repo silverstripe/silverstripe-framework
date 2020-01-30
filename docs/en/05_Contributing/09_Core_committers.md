@@ -11,7 +11,6 @@ The Core Committers team is reviewed approximately annually, new members are add
 
 * [Aaron Carlino](https://github.com/unclecheese/)
 * [Chris Joe](https://github.com/flamerohr/)
-* [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
 * [Guy Marriott](https://github.com/ScopeyNZ)
 * [Ingo Schommer](https://github.com/chillu)
