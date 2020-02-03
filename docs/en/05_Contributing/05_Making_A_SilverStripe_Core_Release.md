@@ -231,11 +231,11 @@ each release, if making multiple releases.
 
 ## Standard release process
 
-The release process, at a high level, involves creating a release, publishing it, and
-reviewing the need for either another pre-release or a final stable tag within a short period
-(normally within 3-5 business days).
+See [Release Process](release-process) for details on the standard timeline for releases.
+In summary, we produce a beta release, stabilise, produce a release candidate, perform
+penetration testing, and then produce a stable release.
 
-When creating a new pre-release or stable, the following process is broken down into two
+When creating a new release, the following process is broken down into two
 main sets of commands:
 
 ### Stage 1: Release preparation:
@@ -323,6 +323,36 @@ and needs to be manually advanced):
   or special considerations. If this is a security release, make sure that any
   links to the security registrar (http://www.silverstripe.org/download/security-releases)
   match the pages saved in draft.
+
+#### Basing a new release on a previous one (tweak releases)
+
+Commonly a stable release will need to mirror the contents of the release
+candidate that preceded it, sometimes with a small set of additional commits.
+However, running the standard `cow release` command will create a release that
+includes all the latest commits on the branches it targets, which can include
+unaudited code. A **tweak release** includes only the commits present in the
+previous tagged release by default, and can optionally include additional
+commits when necessary. To create one, use the `release:detach-tagged-base`
+command:
+
+1. `cow release:create <new-version>` to create the new release.
+2. `cow release:plan <new-version>` to generate a plan for the new release.
+3. `cow release:detach-tagged-base <new-version>` to shift all of the modules
+  to the correct commit in the branch to match the contents of the last release.
+  * **How?** This command finds the last common commit between the latest tag on
+    the chosen branch and the tip of that branch, and then shifts the HEAD to
+    that commit.
+4. `cherry-pick` any extra commits that need to be included in the release onto
+   the affected module(s).
+5. Run usual release preparation commands (from `release:test` onwards).
+6. Publish the release.
+
+Any extra commits included in a tweak release should be applied to the release
+branch as soon as possible (if they weren't cherry-picked from it). Avoid
+merging the tagged release into the branch to achieve this, as this will include
+the release commit, which may pin Composer dependencies to specific versions.
+
+#### Testing the release
 
 Once the release task has completed, it may be ideal to manually test the site out
 by running it locally (e.g. `http://localhost/release-3.3.4`) to do some smoke-testing
