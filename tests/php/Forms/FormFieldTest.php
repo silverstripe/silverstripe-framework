@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
@@ -14,6 +15,7 @@ use SilverStripe\Forms\NullableField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ValidationResult;
 
 class FormFieldTest extends SapphireTest
 {
@@ -185,6 +187,53 @@ class FormFieldTest extends SapphireTest
         $this->assertNotContains('one="1"', $field->getAttributesHTML('one', 'two'));
         $this->assertNotContains('two="2"', $field->getAttributesHTML('one', 'two'));
         $this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
+    }
+
+    /**
+     * Covering all potential inputs for Convert::raw2xml
+     */
+    public function escapeHtmlDataProvider()
+    {
+        return [
+            ['<html>'],
+            [['<html>']],
+            [['<html>' => '<html>']]
+        ];
+    }
+
+    /**
+     * @dataProvider escapeHtmlDataProvider
+     **/
+    public function testGetAttributesEscapeHtml($value)
+    {
+        $key = bin2hex(random_bytes(4));
+
+        if (is_scalar($value)) {
+            $field = new FormField('<html>', '<html>', '<html>');
+            $field->setAttribute($value, $key);
+            $html = $field->getAttributesHTML();
+            $this->assertFalse(strpos($html, '<html>'));
+        }
+
+        $field = new FormField('<html>', '<html>', '<html>');
+        $field->setAttribute($key, $value);
+        $html = $field->getAttributesHTML();
+
+        $this->assertFalse(strpos($html, '<html>'));
+    }
+
+    /**
+     * @dataProvider escapeHtmlDataProvider
+     */
+    public function testDebugEscapeHtml($value)
+    {
+        $field = new FormField('<html>', '<html>', '<html>');
+        $field->setAttribute('<html>', $value);
+        $field->setMessage('<html>', null, ValidationResult::CAST_HTML);
+
+        $html = $field->debug();
+
+        $this->assertFalse(strpos($html, '<html>'));
     }
 
     public function testReadonly()
