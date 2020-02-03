@@ -340,7 +340,7 @@ command:
 3. `cow release:detach-tagged-base <new-version>` to shift all of the modules
   to the correct commit in the branch to match the contents of the last release.
   * **How?** This command finds the last common commit between the latest tag on
-    the chosen release branch and the tip of the branch, and shifts the HEAD to
+    the chosen branch and the tip of that branch, and then shifts the HEAD to
     that commit.
 4. `cherry-pick` any extra commits that need to be included in the release onto
    the affected module(s).
