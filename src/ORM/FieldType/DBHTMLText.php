@@ -203,7 +203,7 @@ class DBHTMLText extends DBText
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new HTMLEditorField($this->name, $title);
+        return HTMLEditorField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)

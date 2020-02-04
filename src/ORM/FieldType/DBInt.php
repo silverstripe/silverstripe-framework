@@ -58,7 +58,7 @@ class DBInt extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new NumericField($this->name, $title);
+        return NumericField::create($this->name, $title);
     }
 
     public function nullValue()
