@@ -5,10 +5,10 @@ summary: Welcome to the SilverStripe Developer Documentation. This website is ai
 
 ## Getting Started with SilverStripe
 
-Before you start developing your first web application, you'll need to install the latest version of SilverStripe onto 
-a web server. The [Getting Started](/getting_started) section will show you what 
-[server requirements](/getting_started/server_requirements) you will need to meet and how to 
-[download and install SilverStripe](/getting_started/installation).
+Before you start developing your first web application, you'll need to install the latest version of SilverStripe onto
+a web server. The [Getting Started](/getting_started) section will show you what
+[server requirements](/getting_started/server_requirements) you will need to meet and how to
+[install SilverStripe with Composer](/getting_started/composer).
 
 To check out the features that SilverStripe offers without installing it, read the [Feature Overview](http://www.silverstripe.org/software/) 
 and play with our [interactive demos](http://silverstripe.org/try).
