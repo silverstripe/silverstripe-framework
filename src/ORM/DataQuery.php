@@ -1325,10 +1325,6 @@ class DataQuery
         $tablePrefix = str_replace('"', '', $fieldData[0]);
 
         // check if related table is available
-        if (!$query->isJoinedTo($tablePrefix)) {
-            return false;
-        }
-
-        return true;
+        return $query->isJoinedTo($tablePrefix);
     }
 }
