@@ -933,7 +933,7 @@ class DataQuery
             $joinExpression = "{$foreignKeyIDColumn} = {$localIDColumn}";
         }
         $this->query->addLeftJoin(
-            $this->augmentTable($foreignClass, $foreignTable),
+            $this->getJoinTableName($foreignClass, $foreignTable),
             $joinExpression,
             $foreignTableAliased
         );
@@ -947,7 +947,7 @@ class DataQuery
             if ($ancestorTable !== $foreignTable) {
                 $ancestorTableAliased = $foreignPrefix . $ancestorTable;
                 $this->query->addLeftJoin(
-                    $this->augmentTable($ancestor, $ancestorTable),
+                    $this->getJoinTableName($ancestor, $ancestorTable),
                     "\"{$foreignTableAliased}\".\"ID\" = \"{$ancestorTableAliased}\".\"ID\"",
                     $ancestorTableAliased
                 );
@@ -993,7 +993,7 @@ class DataQuery
         $foreignIDColumn = $schema->sqlColumnForField($foreignBaseClass, 'ID', $foreignPrefix);
         $localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID", $localPrefix);
         $this->query->addLeftJoin(
-            $this->augmentTable($foreignClass, $foreignBaseTable),
+            $this->getJoinTableName($foreignClass, $foreignBaseTable),
             "{$foreignIDColumn} = {$localColumn}",
             $foreignPrefix . $foreignBaseTable
         );
@@ -1008,7 +1008,7 @@ class DataQuery
                 if ($ancestorTable !== $foreignBaseTable) {
                     $ancestorTableAliased = $foreignPrefix . $ancestorTable;
                     $this->query->addLeftJoin(
-                        $this->augmentTable($ancestor, $ancestorTable),
+                        $this->getJoinTableName($ancestor, $ancestorTable),
                         "{$foreignIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
                         $ancestorTableAliased
                     );
@@ -1044,11 +1044,11 @@ class DataQuery
         if (class_exists($relationClassOrTable)) {
             // class is provided
             $relationTable = $schema->tableName($relationClassOrTable);
-            $relationTableAugmented = $this->augmentTable($relationClassOrTable, $relationTable);
+            $relationTableUpdated = $this->getJoinTableName($relationClassOrTable, $relationTable);
         } else {
             // table is provided
             $relationTable = $relationClassOrTable;
-            $relationTableAugmented = $relationClassOrTable;
+            $relationTableUpdated = $relationClassOrTable;
         }
 
         // Check if already joined to component alias (skip join table for the check)
@@ -1063,7 +1063,7 @@ class DataQuery
         $relationAliasedTable = $componentPrefix . $relationTable;
         $parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID', $parentPrefix);
         $this->query->addLeftJoin(
-            $relationTableAugmented,
+            $relationTableUpdated,
             "\"{$relationAliasedTable}\".\"{$parentField}\" = {$parentIDColumn}",
             $relationAliasedTable
         );
@@ -1071,7 +1071,7 @@ class DataQuery
         // Join on base table of component class
         $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID', $componentPrefix);
             $this->query->addLeftJoin(
-                $this->augmentTable($componentBaseClass, $componentBaseTable),
+                $this->getJoinTableName($componentBaseClass, $componentBaseTable),
                 "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
                 $componentAliasedTable
             );
@@ -1085,7 +1085,7 @@ class DataQuery
             if ($ancestorTable !== $componentBaseTable) {
                 $ancestorTableAliased = $componentPrefix . $ancestorTable;
                 $this->query->addLeftJoin(
-                    $this->augmentTable($ancestor, $ancestorTable),
+                    $this->getJoinTableName($ancestor, $ancestorTable),
                     "{$componentIDColumn} = \"{$ancestorTableAliased}\".\"ID\"",
                     $ancestorTableAliased
                 );
@@ -1101,12 +1101,12 @@ class DataQuery
      * @param $table
      * @return mixed
      */
-    protected function augmentTable($class, $table)
+    protected function getJoinTableName($class, $table)
     {
-        $augmented = $table;
-        $this->invokeWithExtensions('augmentJoinTable', $class, $table, $augmented);
+        $updated = $table;
+        $this->invokeWithExtensions('updateJoinTableName', $class, $table, $updated);
 
-        return $augmented;
+        return $updated;
     }
 
     /**
