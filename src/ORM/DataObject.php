@@ -18,18 +18,17 @@ use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\FieldType\DBClassName;
-use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\UniqueKey;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 use stdClass;
@@ -3234,9 +3233,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "")
     {
-        $SNG = singleton($callerClass);
+        /** @var DataObject $singleton */
+        $singleton = singleton($callerClass);
 
-        $cacheComponents = [$filter, $orderby, $SNG->extend('cacheKeyComponent')];
+        $cacheComponents = [$filter, $orderby, $singleton->getCacheKeyComponent()];
         $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
@@ -4187,6 +4187,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Generate a unique key for data object
+     * the unique key uses the @see DataObject::getCacheKeyComponent() extension point so unique key modifiers
+     * such as versioned or fluent are covered
+     * i.e. same data object in different stages or different locales will produce different unique key
+     *
+     * recommended use:
+     * - when you need unique key for caching purposes
+     * - when you need unique id on the front end (for example JavaScript needs to target specific element)
+     *
+     * @return string
+     */
+    public function getUniqueKey(): string
+    {
+        $cacheKeys = $this->getCacheKeyComponent();
+
+        return UniqueKey\Service::singleton()->generateKey($this, $cacheKeys);
+    }
+
+    /**
      * Merge single object into a list, but ensures that existing objects are not
      * re-added.
      *
@@ -4210,5 +4229,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($joined) {
             $this->mergeRelatedObject($list, $added, $joined);
         }
+    }
+
+    private function getCacheKeyComponent(): array
+    {
+        return $this->extend('cacheKeyComponent');
     }
 }
