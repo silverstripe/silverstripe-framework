@@ -1,0 +1,9 @@
+SilverStripe\Forms\Tests\DefaultCmsFields\Entrance:
+  entrance1:
+    Title: Entrance1
+
+SilverStripe\Forms\Tests\DefaultCmsFields\House:
+  house1:
+    Title: House1
+    Address: Address1
+    EntranceID: =>SilverStripe\Forms\Tests\DefaultCmsFields\Entrance.entrance1
