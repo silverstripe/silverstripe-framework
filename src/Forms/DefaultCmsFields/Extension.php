@@ -23,23 +23,23 @@ use SilverStripe\ORM\DataObject;
  *    extensions:
  *      defaultFields: SilverStripe\Forms\DefaultCmsFields\Extension
  *      field_removal:
- *        db-keep: # remove all db fields except Title and ShowTitle
+ *        - # remove all db fields except Title and ShowTitle
  *          property: db
  *          type: keep
  *          fields:
  *            Title: true
  *            ShowTitle: true
- *        has-one-keep: # remove all has_one fields
+ *        - # remove all has_one fields
  *          property: has_one
  *          type: keep
- *        many-many-remove: # remove LinkTracking, FileTracking and BackLinkTracking fields from many_many
+ *        - # remove LinkTracking, FileTracking and BackLinkTracking fields from many_many
  *          property: many_many
  *          type: remove
  *          fields:
  *            LinkTracking: true
  *            FileTracking: true
  *            BackLinkTracking: true
- *        extra-remove: # remove Settings field (not part of any static property)
+ *        - # remove Settings field (not part of any static property)
  *          property: extra
  *          fields:
  *            Settings: true
