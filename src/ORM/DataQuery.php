@@ -1094,22 +1094,6 @@ class DataQuery
     }
 
     /**
-     * Use this extension point to alter the table name
-     * useful for versioning for example
-     *
-     * @param $class
-     * @param $table
-     * @return mixed
-     */
-    protected function getJoinTableName($class, $table)
-    {
-        $updated = $table;
-        $this->invokeWithExtensions('updateJoinTableName', $class, $table, $updated);
-
-        return $updated;
-    }
-
-    /**
      * Removes the result of query from this query.
      *
      * @param DataQuery $subtractQuery
@@ -1326,5 +1310,21 @@ class DataQuery
 
         // check if related table is available
         return $query->isJoinedTo($tablePrefix);
+    }
+
+    /**
+     * Use this extension point to alter the table name
+     * useful for versioning for example
+     *
+     * @param $class
+     * @param $table
+     * @return mixed
+     */
+    private function getJoinTableName($class, $table)
+    {
+        $updated = $table;
+        $this->invokeWithExtensions('updateJoinTableName', $class, $table, $updated);
+
+        return $updated;
     }
 }
