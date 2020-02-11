@@ -246,10 +246,10 @@ class DBText extends DBString
     {
         if (!$this->nullifyEmpty) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
-            return new NullableField(new TextareaField($this->name, $title));
+            return NullableField::create(TextareaField::create($this->name, $title));
         } else {
             // Automatically determine null (empty string)
-            return new TextareaField($this->name, $title);
+            return TextareaField::create($this->name, $title);
         }
     }
 

@@ -28,7 +28,7 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
 ## Links ##
 
  * [Server Requirements](https://doc.silverstripe.org/framework/en/installation/server-requirements)
- * [Changelogs](https://doc.silverstripe.org/framework/en/changelogs/)
+ * [Changelogs](https://docs.silverstripe.org/en/4/changelogs/)
  * [Bugtracker: Framework](https://github.com/silverstripe/silverstripe-framework/issues)
  * [Bugtracker: CMS](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Bugtracker: Installer](https://github.com/silverstripe/silverstripe-installer/issues)
