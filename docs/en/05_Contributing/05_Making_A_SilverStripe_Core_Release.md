@@ -255,6 +255,8 @@ Use the [list of all issues across modules](https://www.silverstripe.org/communi
 as a starting point, and add a `milestone:"your-milestone"` filter.
 
 Merge up from other older [supported release branches](release-process#supported-versions) (e.g. merge `4.0`->`4.1`, `4.1`->`4.2`, `4.2`->`4`, `4`->`master`).
+Some core modules use major version `1` for their CMS 4 release line - this can
+be considered interchangeable with `4`.
 
 This is the part of the release that prepares and tests everything locally, but
 doe not make any upstream changes (so it's safe to run without worrying about
@@ -351,6 +353,19 @@ Any extra commits included in a tweak release should be applied to the release
 branch as soon as possible (if they weren't cherry-picked from it). Avoid
 merging the tagged release into the branch to achieve this, as this will include
 the release commit, which may pin Composer dependencies to specific versions.
+
+#### Updating Composer requirements in minor releases
+
+We keep core modules in lockstep at the minor level - that is, we can release
+patches (e.g. 4.5.x) for individual modules, but when we perform a minor release
+(4.x.0), we ship that version of every core module. To this end, the Composer
+dependencies of each module need to be manually adjusted when we perform a minor
+release - for example, the `cms` module version `4.6.0` must include a minimum
+requirement of `framework` `^4.6`. This ensures that language level requirements
+(e.g. minimum PHP versions) can be safely centralised in the framework module
+for surrounding core modules to inherit. In short, ensure you commit updates to
+the Composer requirements of every core module after each minor branch is
+created, and before you ship the release.
 
 #### Testing the release
 
