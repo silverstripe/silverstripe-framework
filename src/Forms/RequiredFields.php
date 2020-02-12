@@ -215,4 +215,12 @@ class RequiredFields extends Validator
     {
         return array_values($this->required);
     }
+
+    /**
+     * @return bool
+     */
+    public function canBeCached(): bool
+    {
+        return count($this->getRequired()) === 0;
+    }
 }

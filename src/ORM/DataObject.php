@@ -15,6 +15,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
+use SilverStripe\Forms\ValidatorList;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -2447,6 +2448,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $actions;
     }
 
+    public function getCMSValidators(): ValidatorList
+    {
+        $validatorList = new ValidatorList();
+
+        // Support for the old method during the deprecation period
+        if ($this->hasMethod('getCMSValidator')) {
+            $validatorList->addValidator($this->getCMSValidator());
+        }
+
+        $this->invokeWithExtensions('updateCMSValidators', $validatorList);
+
+        return $validatorList;
+    }
 
     /**
      * Used for simple frontend forms without relation editing

@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Extensible;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Default form builder class.
@@ -96,15 +97,11 @@ class DefaultFormFactory implements FormFactory
      */
     protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
     {
-        $validator = null;
-        if ($context['Record']->hasMethod('getCMSValidator')) {
-            // @todo Deprecate or formalise support for getCMSValidator()
-            $validator = $context['Record']->getCMSValidator();
+        if (!$context['Record'] instanceof DataObject) {
+            return null;
         }
 
-        // Extend validator
-        $this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
-        return $validator;
+        return $context['Record']->getCMSValidators();
     }
 
     /**
