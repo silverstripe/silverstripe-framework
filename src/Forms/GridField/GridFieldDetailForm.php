@@ -123,7 +123,7 @@ class GridFieldDetailForm implements GridField_URLHandler
 
         // if no validator has been set on the GridField then use the Validators from the record.
         if (!$this->getValidator()) {
-            $this->setValidator($record->getCMSValidators());
+            $this->setValidator($record->getValidatorList());
         }
 
         return $handler->handleRequest($request);

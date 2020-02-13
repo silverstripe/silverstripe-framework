@@ -101,7 +101,12 @@ class DefaultFormFactory implements FormFactory
             return null;
         }
 
-        return $context['Record']->getCMSValidators();
+        $validator = $context['Record']->getValidatorList();
+
+        // Extend validator
+        $this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
+
+        return $validator;
     }
 
     /**

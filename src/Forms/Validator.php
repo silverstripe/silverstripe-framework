@@ -169,8 +169,7 @@ abstract class Validator
     }
 
     /**
-     * When Validators are set on the form, it can affect whether or not the form cannot be cached. The base
-     * implementation always returns false (in order to match the current paradigm).
+     * When Validators are set on the form, it can affect whether or not the form cannot be cached.
      *
      * @see RequiredFields for an example of when you might be able to cache your form.
      *

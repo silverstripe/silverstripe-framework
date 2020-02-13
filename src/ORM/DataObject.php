@@ -2448,7 +2448,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $actions;
     }
 
-    public function getCMSValidators(): ValidatorList
+    /**
+     * @return ValidatorList
+     */
+    public function getValidatorList(): ValidatorList
     {
         $validatorList = new ValidatorList();
 
@@ -2457,7 +2460,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $validatorList->addValidator($this->getCMSValidator());
         }
 
-        $this->invokeWithExtensions('updateCMSValidators', $validatorList);
+        $this->invokeWithExtensions('updateValidatorList', $validatorList);
 
         return $validatorList;
     }

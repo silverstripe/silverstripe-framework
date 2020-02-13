@@ -1866,11 +1866,17 @@ class Form extends ViewableData implements HasRequestHandler
         if ($this->getSecurityToken()->isEnabled()) {
             return false;
         }
+
         if ($this->FormMethod() !== 'GET') {
             return false;
         }
 
-        // Don't cache if there are required fields, or some other complex validator
-        return $this->getValidator()->canBeCached();
+        $validator = $this->getValidator();
+
+        if (!$validator) {
+            return true;
+        }
+
+        return $validator->canBeCached();
     }
 }

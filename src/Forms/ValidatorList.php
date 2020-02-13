@@ -38,6 +38,17 @@ class ValidatorList extends Validator
     }
 
     /**
+     * @param Validator $validator
+     * @return ValidatorList
+     */
+    public function addValidator(Validator $validator): ValidatorList
+    {
+        $this->getValidators()->add($validator);
+
+        return $this;
+    }
+
+    /**
      * Returns any errors there may be. This method considers the enabled status of the ValidatorList as a whole
      * (exiting early if the List is disabled), as well as the enabled status of each individual Validator.
      *
@@ -76,27 +87,6 @@ class ValidatorList extends Validator
     }
 
     /**
-     * Returns whether the field in question is required. This will usually display '*' next to the
-     * field.
-     *
-     * @param string $fieldName
-     *
-     * @return bool
-     */
-    public function fieldIsRequired($fieldName)
-    {
-        foreach ($this->getValidators() as $validator) {
-            if (!$validator->fieldIsRequired($fieldName)) {
-                continue;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Note: The existing implementations for the php() method (@see RequiredFields) does not check whether the
      * Validator is enabled or not, and it also does not reset the validation result - so, neither does this.
      *
@@ -120,14 +110,22 @@ class ValidatorList extends Validator
     }
 
     /**
-     * @param Validator $validator
-     * @return ValidatorList
+     * Returns whether the field in question is required. This will usually display '*' next to the
+     * field.
+     *
+     * @param string $fieldName
+     *
+     * @return bool
      */
-    public function addValidator(Validator $validator): ValidatorList
+    public function fieldIsRequired($fieldName)
     {
-        $this->getValidators()->add($validator);
+        foreach ($this->getValidators() as $validator) {
+            if ($validator->fieldIsRequired($fieldName)) {
+                return true;
+            }
+        }
 
-        return $this;
+        return false;
     }
 
     /**
@@ -161,7 +159,7 @@ class ValidatorList extends Validator
      * @param string $className
      * @return ValidatorList
      */
-    public function removeByType(string $className): ValidatorList
+    public function removeValidatorsByType(string $className): ValidatorList
     {
         foreach ($this->getValidators() as $validator) {
             if (!$validator instanceof $className) {
@@ -180,11 +178,9 @@ class ValidatorList extends Validator
     public function canBeCached(): bool
     {
         foreach ($this->getValidators() as $validator) {
-            if ($validator->canBeCached()) {
-                continue;
+            if (!$validator->canBeCached()) {
+                return false;
             }
-
-            return false;
         }
 
         return true;
