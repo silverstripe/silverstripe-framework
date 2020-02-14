@@ -6,7 +6,13 @@ use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
+use SilverStripe\Core\Tests\ClassInfoTest\BaseObject;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest2;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest3;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest1;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest2;
 use SilverStripe\Core\Tests\ClassInfoTest\GrandChildClass;
 use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
 use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
@@ -28,6 +34,10 @@ class ClassInfoTest extends SapphireTest
         NoFields::class,
         WithCustomTable::class,
         WithRelation::class,
+        BaseObject::class,
+        ExtendTest::class,
+        ExtendTest2::class,
+        ExtendTest3::class,
     );
 
     protected function setUp()
@@ -188,5 +198,71 @@ class ClassInfoTest extends SapphireTest
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2])));
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionUsingConfiguredExtensions()
+    {
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest1::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns class with extensions applied via class config'
+        );
+
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest1::class, ExtendTest::class, true),
+            'ClassInfo::testClassesWithExtension() returns class with extensions applied via class config, including the base class'
+        );
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionUsingDynamicallyAddedExtensions()
+    {
+        $this->assertEquals(
+            [],
+            ClassInfo::classesWithExtension(ExtensionTest2::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns no classes for extension that hasn\'t been applied yet.'
+        );
+
+        ExtendTest::add_extension(ExtensionTest2::class);
+
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest2::class, ExtendTest::class),
+            'ClassInfo::testClassesWithExtension() returns class with extra extension dynamically added'
+        );
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionWithDynamicallyRemovedExtensions()
+    {
+        ExtendTest::remove_extension(ExtensionTest1::class);
+
+        $this->assertEquals(
+            [],
+            ClassInfo::classesWithExtension(ExtensionTest1::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns no classes after an extension being removed'
+        );
     }
 }
