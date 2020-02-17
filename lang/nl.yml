@@ -16,11 +16,22 @@ nl:
     TEXT1: 'Hier is uw'
     TEXT2: 'link om uw wachtwoord opnieuw aan te maken'
     TEXT3: voor
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET parameter'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'De URL is: "{url}"'
+    CONFIRMATION_NAME: 'URL is afgeschermd'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'De volledige URL is: "{url}"'
+    CONFIRMATION_NAME: 'De URL begint met "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Fout bij verwerken'
     REQUEST_ABORTED: 'Fout bij verwerken (geannuleerd)'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Onbekend
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Bevestig het uitvoeren van mogelijk gevaarlijke taak'
+    INFO_TITLE: Beveiligingswaarschuwing
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nee
     YESANSWER: Ja
@@ -35,6 +46,8 @@ nl:
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
   SilverStripe\Forms\DateField:
+    NOTSET: 'niet ingesteld'
+    TODAY: vandaag
     VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
     VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
     VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
@@ -44,6 +57,7 @@ nl:
     VALIDDATETIMEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Kies)
+    SEARCH_OR_CHOOSE_MODEL: '(Zoek of kies {name})'
     SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
@@ -73,6 +87,7 @@ nl:
     LinkExisting: 'Koppel een bestaand item'
     NewRecord: 'Nieuw {type}'
     NoItemsFound: 'Geen items gevonden.'
+    OpenFilter: 'Zoeken en filteren openen'
     PRINTEDAT: 'Geprint op'
     PRINTEDBY: 'Geprint door'
     PlaceHolder: 'Zoek {type}'
@@ -92,14 +107,23 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '{type} {name} verwijderd'
     Save: Opslaan
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    NEW: 'Nieuwe item toevoegen'
+    NEXT: 'Naar volgende item'
+    PREVIOUS: 'Naar vorige item'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Bewerken
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Zoek naar "{name}"'
+    SearchFormFaliure: 'Er kon geen zoekformulier worden aangemaakt'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'U kunt uzelf niet verwijderen van deze groep, omdat u dan geen admin-rechten meer heeft.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: van
     Page: Pagina
     View: Bekijk
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Bekijk
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
@@ -168,6 +192,12 @@ nl:
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>U bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als u niet automatisch wordt doorgestuurd.</p>'
     SUCCESS_TITLE: 'Inloggen is gelukt'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: Uitvoeren
+    EMPTY_TITLE: 'Niets te bevestigen'
+    REFUSE: Annuleren
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Bevestig het uitvoeren van mogelijk gevaarlijke taak'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Standaard Beheerder'
   SilverStripe\Security\Group:

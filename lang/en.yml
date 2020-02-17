@@ -124,6 +124,10 @@ en:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Best fit'
+    ORIGINAL: Original
+    PIXEL_WIDTH: '{width} pixels'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
