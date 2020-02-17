@@ -21,6 +21,9 @@ pl:
     REQUEST_ABORTED: 'Żądanie zostało przerwane'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Nieznany
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Potwierdź potencjalnie niebezpieczną operację'
+    INFO_TITLE: 'Potwierdzenie bezpieczeństwa'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Tak
@@ -35,6 +38,8 @@ pl:
     MAXIMUM: 'Hasła mogą mieć co najwyżej {max} znaków.'
     SHOWONCLICKTITLE: 'Zmiana Hasła'
   SilverStripe\Forms\DateField:
+    NOTSET: 'nie ustawiony'
+    TODAY: dzisiaj
     VALIDDATEFORMAT2: 'Proszę wprowadź prawidłowy format daty ({format})'
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
@@ -44,6 +49,7 @@ pl:
     VALIDDATETIMEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (wybierz)
+    SEARCH_OR_CHOOSE_MODEL: '(Wyszukaj lub wybierz {name})'
     SOURCE_VALIDATION: 'Wybierz wartość z podanej listy. {value} nie jest poprawną opcją'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'
@@ -73,6 +79,7 @@ pl:
     LinkExisting: 'Linkuj istniejący'
     NewRecord: 'Nowy {type}'
     NoItemsFound: 'Nie znaleziono elementów'
+    OpenFilter: 'Otwórz wyszukiwanie i filtruj'
     PRINTEDAT: 'Wydrukowane na'
     PRINTEDBY: 'Wydrukowane przez'
     PlaceHolder: 'Znajdź {type}'
@@ -92,12 +99,23 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    NEW: Dodaj
+    NEXT: 'Przejdź do następnego rekordu'
+    PREVIOUS: 'Przejdź do poprzedniego rekordu'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Zmień
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Wyszukaj "{name}"'
+    SearchFormFaliure: 'Nie można wygenerować formularza wyszukiwania'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Nie możesz usunąć siebie z tej grupy, stracone zostałby prawa administratora'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: z
     Page: Strona
     View: Widok
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Widok
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Ilość
     FIELDLABELCURRENCY: waluta
@@ -158,6 +176,8 @@ pl:
       other: '{count} lat'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Jakikolwiek
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Zbyt wiele powiązanych obiektów; pole rezerwowe w użyciu'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Zbyt wiele dzieci ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -178,6 +198,12 @@ pl:
     SUCCESS: Sukces
     SUCCESSCONTENT: '<p>Zalogowano poprawnie! Jeżeli nie zostaniesz automatycznie przekierowany <a target="_top" href="{link}">kliknij tutaj</a></p>'
     SUCCESS_TITLE: 'Zalogowano poprawne'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Uruchom akcję'
+    EMPTY_TITLE: 'Nic do potwierdzenia'
+    REFUSE: Anuluj
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Potwierdź potencjalnie niebezpieczną operację'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Domyślny administrator'
   SilverStripe\Security\Group:
@@ -347,3 +373,5 @@ pl:
     LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
+    PASSWORDRESETSENTHEADER: 'Link resetowania hasła wysłany'
+    PASSWORDRESETSENTTEXT: 'Dziękujemy! Link resetujący hasło został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
