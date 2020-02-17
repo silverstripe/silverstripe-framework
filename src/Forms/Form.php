@@ -897,7 +897,11 @@ class Form extends ViewableData implements HasRequestHandler
         // Create markup
         $parts = array();
         foreach ($attrs as $name => $value) {
-            $parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
+            if ($value === true) {
+                $value = $name;
+            }
+
+            $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
         }
 
         return implode(' ', $parts);

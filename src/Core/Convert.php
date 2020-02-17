@@ -33,6 +33,8 @@ class Convert
     /**
      * Convert a value to be suitable for an XML attribute.
      *
+     * Warning: Does not escape array keys
+     *
      * @param array|string $val String to escape, or array of strings
      * @return array|string
      */
@@ -43,6 +45,8 @@ class Convert
 
     /**
      * Convert a value to be suitable for an HTML attribute.
+     *
+     * Warning: Does not escape array keys
      *
      * @param string|array $val String to escape, or array of strings
      * @return array|string
@@ -55,6 +59,8 @@ class Convert
     /**
      * Convert a value to be suitable for an HTML ID attribute. Replaces non
      * supported characters with a space.
+     *
+     * Warning: Does not escape array keys
      *
      * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
      *
@@ -78,6 +84,8 @@ class Convert
     /**
      * Convert a value to be suitable for an HTML ID attribute. Replaces non
      * supported characters with an underscore.
+     *
+     * Warning: Does not escape array keys
      *
      * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
      *
@@ -108,6 +116,8 @@ class Convert
     /**
      * Ensure that text is properly escaped for XML.
      *
+     * Warning: Does not escape array keys
+     *
      * @see http://www.w3.org/TR/REC-xml/#dt-escape
      * @param array|string $val String to escape, or array of strings
      * @return array|string
@@ -126,6 +136,8 @@ class Convert
 
     /**
      * Ensure that text is properly escaped for Javascript.
+     *
+     * Warning: Does not escape array keys
      *
      * @param array|string $val String to escape, or array of strings
      * @return array|string
@@ -182,6 +194,8 @@ class Convert
      * Safely encodes a value (or list of values) using the current database's
      * safe string encoding method
      *
+     * Warning: Does not encode array keys
+     *
      * @param mixed|array $val Input value, or list of values as an array
      * @param boolean $quoted Flag indicating whether the value should be safely
      * quoted, instead of only being escaped. By default this function will
@@ -221,6 +235,9 @@ class Convert
 
     /**
      * Convert XML to raw text.
+     *
+     * Warning: Does not decode array keys
+     *
      * @uses html2raw()
      * @todo Currently &#xxx; entries are stripped; they should be converted
      * @param mixed $val

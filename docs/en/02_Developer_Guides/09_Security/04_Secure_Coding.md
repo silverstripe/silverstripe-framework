@@ -347,6 +347,19 @@ template, you'll need to take care of casting and escaping yourself in PHP.
 The [Convert](api:SilverStripe\Core\Convert) class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
 also used by *XML* and *ATT* in template code).
 
+<div class="warning" markdown='1'>
+Most of the `Convert::raw2` methods accept arrays and do not affect array keys.
+If you serialize your data, make sure to do that before you pass it to `Convert::raw2` methods.
+
+E.g.:
+
+```php
+json_encode(Convert::raw2sql($request->getVar('multiselect')));  // WRONG!
+
+Convert::raw2sql(json_encode($request->getVar('multiselect')));  // Correct!
+```
+</div>
+
 PHP:
 
 ```php
