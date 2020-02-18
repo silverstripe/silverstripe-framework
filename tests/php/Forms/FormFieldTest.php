@@ -201,46 +201,18 @@ class FormFieldTest extends SapphireTest
         $this->assertStringContainsString('three="3"', $field->getAttributesHTML('one', 'two'));
     }
 
-    /**
-     * Covering all potential inputs for Convert::raw2xml
-     */
-    public function escapeHtmlDataProvider()
+    public function testGetAttributesEscapeHtml()
     {
-        return [
-            ['<html>'],
-            [['<html>']],
-            [['<html>' => '<html>']]
-        ];
-    }
-
-    /**
-     * @dataProvider escapeHtmlDataProvider
-     **/
-    public function testGetAttributesEscapeHtml($value)
-    {
-        $key = bin2hex(random_bytes(4));
-
-        if (is_scalar($value)) {
-            $field = new FormField('<html>', '<html>', '<html>');
-            $field->setAttribute($value, $key);
-            $html = $field->getAttributesHTML();
-            $this->assertFalse(strpos($html, '<html>'));
-        }
-
         $field = new FormField('<html>', '<html>', '<html>');
-        $field->setAttribute($key, $value);
+        $field->setAttribute('<html>', '<html>');
         $html = $field->getAttributesHTML();
-
         $this->assertFalse(strpos($html, '<html>'));
     }
 
-    /**
-     * @dataProvider escapeHtmlDataProvider
-     */
-    public function testDebugEscapeHtml($value)
+    public function testDebugEscapeHtml()
     {
         $field = new FormField('<html>', '<html>', '<html>');
-        $field->setAttribute('<html>', $value);
+        $field->setAttribute('<html>', '<html>');
         $field->setMessage('<html>', null, ValidationResult::CAST_HTML);
 
         $html = $field->debug();

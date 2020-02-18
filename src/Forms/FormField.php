@@ -742,12 +742,6 @@ class FormField extends RequestHandler
         foreach ($attributes as $name => $value) {
             if ($value === true) {
                 $value = $name;
-            } else {
-                if (is_scalar($value)) {
-                    $value = (string) $value;
-                } else {
-                    $value = json_encode($value);
-                }
             }
 
             $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
