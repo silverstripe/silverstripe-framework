@@ -20,7 +20,7 @@ class DBYear extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        $selectBox = new DropdownField($this->name, $title);
+        $selectBox = DropdownField::create($this->name, $title);
         $selectBox->setSource($this->getDefaultOptions());
         return $selectBox;
     }

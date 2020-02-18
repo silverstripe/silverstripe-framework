@@ -13,8 +13,8 @@ class TestFormHandler extends FormRequestHandler
 {
     private static $url_handlers = array(
         'fields/$FieldName' => 'handleField',
-        "POST " => "handleSubmission",
-        "GET " => "handleGet",
+        "POST /" => "handleSubmission",
+        "GET /" => "handleGet",
     );
 
     // These are a different case from those in url_handlers to confirm that it's all case-insensitive

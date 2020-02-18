@@ -14,6 +14,7 @@ use SilverStripe\Control\Tests\ControllerTest\IndexSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\SubController;
 use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Control\Tests\ControllerTest\UnsecuredController;
+use SilverStripe\Control\Tests\RequestHandlingTest\HTTPMethodTestController;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
@@ -34,6 +35,7 @@ class ControllerTest extends FunctionalTest
         ContainerController::class,
         HasAction::class,
         HasAction_Unsecured::class,
+        HTTPMethodTestController::class,
         IndexSecuredController::class,
         SubController::class,
         TestController::class,
@@ -513,5 +515,16 @@ class ControllerTest extends FunctionalTest
         // Handle nested action
         $response = $this->get('ContainerController/subcontroller/substring/subvieweraction');
         $this->assertEquals('Hope this works', $response->getBody());
+    }
+
+    public function testSpecificHTTPMethods()
+    {
+        // 'GET /'
+        $response = $this->get('HTTPMethodTestController');
+        $this->assertEquals('Routed to getRoot', $response->getBody());
+
+        // 'POST ' (legacy method of specifying root route)
+        $response = $this->post('HTTPMethodTestController', ['dummy' => 'example']);
+        $this->assertEquals('Routed to postLegacyRoot', $response->getBody());
     }
 }

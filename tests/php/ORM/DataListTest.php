@@ -4,24 +4,24 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\InjectorNotFoundException;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Sortable;
+use SilverStripe\ORM\Tests\DataObjectTest\Staff;
 use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
-use SilverStripe\ORM\Tests\DataObjectTest\Staff;
+use SilverStripe\ORM\Tests\ManyManyListTest\Category;
 
 /**
  * @skipUpgrade
@@ -1857,5 +1857,38 @@ class DataListTest extends SapphireTest
         $list = Team::get()->shuffle();
 
         $this->assertSQLContains(DB::get_conn()->random() . ' AS "_SortColumn', $list->dataQuery()->sql());
+    }
+
+    public function testColumnFailureInvalidColumn()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Category::get()->column('ObviouslyInvalidColumn');
+    }
+
+    public function testColumnFailureInvalidTable()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $columnName = null;
+        Category::get()
+            ->applyRelation('Products.ID', $columnName)
+            ->column('"ObviouslyInvalidTable"."ID"');
+    }
+
+    public function testColumnFromRelatedTable()
+    {
+        $columnName = null;
+        $productTitles = Category::get()
+            ->applyRelation('Products.Title', $columnName)
+            ->column($columnName);
+
+        $productTitles = array_diff($productTitles, [null]);
+        sort($productTitles);
+
+        $this->assertEquals([
+            'Product A',
+            'Product B',
+        ], $productTitles);
     }
 }

@@ -905,9 +905,11 @@ class FormTest extends FunctionalTest
         $form->setAttribute('one', 1);
         $form->setAttribute('two', 2);
         $form->setAttribute('three', 3);
+        $form->setAttribute('<html>', '<html>');
         $this->assertNotContains('one="1"', $form->getAttributesHTML('one', 'two'));
         $this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
         $this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
+        $this->assertNotContains('<html>', $form->getAttributesHTML());
     }
 
     public function testMessageEscapeHtml()

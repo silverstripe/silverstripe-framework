@@ -120,5 +120,5 @@ SilverStripe\Control\Director:
 
 ## API Documentation
 
-* [Built-in Middleware](./06_Builtin_Middlewares.md)
+* [Built-in Middleware](/developer_guides/controllers/builtin_middlewares)
 * [HTTPMiddleware](api:SilverStripe\Control\Middleware\HTTPMiddleware)

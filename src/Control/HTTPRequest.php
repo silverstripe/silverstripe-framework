@@ -523,8 +523,8 @@ class HTTPRequest implements ArrayAccess
             $pattern = $matches[2];
         }
 
-        // Special case for the root URL controller
-        if (!$pattern) {
+        // Special case for the root URL controller (designated as an empty string, or a slash)
+        if (!$pattern || $pattern === '/') {
             return ($this->dirParts == array()) ? array('Matched' => true) : false;
         }
 

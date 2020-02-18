@@ -56,7 +56,7 @@ class DBBoolean extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new CheckboxField($this->name, $title);
+        return CheckboxField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)

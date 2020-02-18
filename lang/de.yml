@@ -7,6 +7,7 @@ de:
     EDITINFO: 'Diese Datei bearbeiten'
     REMOVE: Entfernen
   SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Das Passwort für den Account mit der E-Mail Adresse {email} wurde geändert. Wenn Sie Ihr Passwort nicht geändert haben, bitte ändern Sie Ihr Passwort indem Sie auf den nachfolgenden Link klicken.'
     CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
     CHANGEPASSWORDTEXT3: 'Passwort ändern'
     HELLO: Hallo
@@ -15,11 +16,22 @@ de:
     TEXT1: 'Hier ist Ihr'
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET-Parameter'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'Die URL ist: "{url}"'
+    CONFIRMATION_NAME: 'URL ist geschützt'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'Die komplette URL ist: "{url}"'
+    CONFIRMATION_NAME: 'URL beginnt mit "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ungültige Anfrage'
     REQUEST_ABORTED: 'Anfrage abgebrochen'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Unbekannt
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Bestätige potenziell gefährliche Aktion'
+    INFO_TITLE: Sicherheitsbestätigung
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nein
     YESANSWER: Ja
@@ -34,6 +46,8 @@ de:
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
   SilverStripe\Forms\DateField:
+    NOTSET: 'Nicht gesetzt'
+    TODAY: Heute
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
     VALIDDATEMINDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({date}) liegen oder gleich sein'
@@ -43,12 +57,14 @@ de:
     VALIDDATETIMEMINDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({datetime}) liegen oder gleich sein'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswahl)
+    SEARCH_OR_CHOOSE_MODEL: '(Suchen oder {name} auswählen)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
   SilverStripe\Forms\FileUploadReceiver:
     FIELDNOTSET: 'Dateiinformation nicht gefunden'
   SilverStripe\Forms\Form:
+    BAD_METHOD: 'Dieses Formular erfordert eine {method} Anfrage'
     CSRF_EXPIRED_MESSAGE: 'Ihre Sitzung ist abgelaufen. Bitte schicken Sie das Formular erneut ab.'
     CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
     VALIDATIONPASSWORDSDONTMATCH: 'Die Passwörter stimmen nicht überein'
@@ -71,6 +87,7 @@ de:
     LinkExisting: 'Bestehenden Datensatz verknüpfen'
     NewRecord: 'Neue(r) {type}'
     NoItemsFound: 'Keine Elemente gefunden'
+    OpenFilter: 'Suche und Filter öffnen'
     PRINTEDAT: 'Gedruckt am'
     PRINTEDBY: 'Gedruckt von'
     PlaceHolder: '{type} suchen'
@@ -90,10 +107,23 @@ de:
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht {type} {name}'
     Save: Speichern
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    NEW: 'Neuen Eintrag hinzufügen'
+    NEXT: 'Gehe zu nächstem Eintrag'
+    PREVIOUS: 'Gehe zu vorherigem Eintrag'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Bearbeiten
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Suche "{name}"'
+    SearchFormFaliure: 'Das Suchformular konnte nicht erzeugt werden'
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Sie können sich nicht selber von dieser Gruppe entfernen, Sie würden Admin-Rechte verlieren.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: von
     Page: Seite
     View: Anzeigen
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Anzeigen
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -140,6 +170,8 @@ de:
       other: '{count} Jahre'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: alle
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Zu viele Objekte; Standardfeld verwendet'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Zu viele Kindelemente ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -156,9 +188,16 @@ de:
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Ungültiger Benutzer. <a target="_top" href="{link}">Bitte melden Sie sich hier an</a> um fortzufahren.</p>'
     LOGIN_MESSAGE: '<p>Ihre Sitzung ist wegen Inaktivität abgelaufen.</p>'
+    LOGIN_TITLE: 'Zurück wo Sie waren, bevor Sie sich abgemeldet haben'
     SUCCESS: Erfolg
     SUCCESSCONTENT: '<p>Login erfolgreich. Falls Sie nicht automatisch weitergeleitet werden, bitte <a target="_top" href="{link}">hier klicken</a></p>'
     SUCCESS_TITLE: 'Login erfolgreich'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Aktion ausführen'
+    EMPTY_TITLE: 'Nichts zu bestätigen'
+    REFUSE: Abbrechen
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Bestätige potenziell gefährliche Aktion'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: Standardadmin
   SilverStripe\Security\Group:
@@ -231,6 +270,7 @@ de:
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
+    VALIDATIONADMINLOSTACCESS: 'Sie können nicht alle Admin Gruppen von Ihrem Profil entfernen'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
@@ -303,10 +343,14 @@ de:
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
     CHANGEPASSWORDBELOW: 'Sie können Ihr Passwort unten ändern.'
     CHANGEPASSWORDHEADER: 'Passwort ändern'
+    CONFIRMLOGOUT: 'Bitte klicken Sie den Button um zu bestätigen dass Sie sich abmelden wollen'
     ENTERNEWPASSWORD: 'Bitte geben Sie ein neues Passwort ein'
     ERRORPASSWORDPERMISSION: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     LOGIN: Anmelden
     LOGOUT: Abmelden
     LOSTPASSWORDHEADER: 'Passwort vergessen'
     NOTEPAGESECURED: 'Diese Seite ist geschützt. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.'
+    NOTERESETLINKINVALID: '<p>Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.</p><p>Sie können <a href="{link1}">hier</a> einen neuen anfordern, oder sich <a href="{link2}">einloggen</a> um Ihr Passwort zu ändern</p>'
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'
+    PASSWORDRESETSENTHEADER: 'Der Link zum Zurücksetzen des Passworts wurde gesendet'
+    PASSWORDRESETSENTTEXT: 'Vielen Dank! Wenn ein Account zu der E-Mail Adresse existiert, wurde eine E-Mail mit dem Link zum Zurücksetzen des Passworts verschickt.'

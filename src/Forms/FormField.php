@@ -12,6 +12,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -740,14 +741,16 @@ class FormField extends RequestHandler
 
         foreach ($attributes as $name => $value) {
             if ($value === true) {
-                $parts[] = sprintf('%s="%s"', $name, $name);
+                $value = $name;
             } else {
-                $strValue = Convert::raw2att($value);
-                if (!is_string($strValue)) {
-                    $strValue = json_encode($strValue);
+                if (is_scalar($value)) {
+                    $value = (string) $value;
+                } else {
+                    $value = json_encode($value);
                 }
-                $parts[] = sprintf('%s="%s"', $name, $strValue);
             }
+
+            $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
         }
 
         return implode(' ', $parts);
@@ -1346,13 +1349,14 @@ class FormField extends RequestHandler
     public function debug()
     {
         $strValue = is_string($this->value) ? $this->value : print_r($this->value, true);
+
         return sprintf(
             '%s (%s: %s : <span style="color:red;">%s</span>) = %s',
-            static::class,
-            $this->name,
-            $this->title,
-            $this->message,
-            $strValue
+            Convert::raw2att(static::class),
+            Convert::raw2att($this->name),
+            Convert::raw2att($this->title),
+            $this->getMessageCast() == ValidationResult::CAST_HTML ? Convert::raw2xml($this->message) : $this->message,
+            Convert::raw2att($strValue)
         );
     }
 
