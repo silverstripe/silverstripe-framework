@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayList;
+use InvalidArgumentException;
 use SilverStripe\ORM\ValidationResult;
 
 /**
@@ -13,13 +13,18 @@ use SilverStripe\ORM\ValidationResult;
 class ValidatorList extends Validator
 {
     /**
-     * @var ArrayList|Validator[]
+     * @var array|Validator[]
      */
     private $validators;
 
-    public function __construct()
+    /**
+     * ValidatorList constructor.
+     *
+     * @param array|Validator[] $validators
+     */
+    public function __construct(array $validators = [])
     {
-        $this->validators = ArrayList::create();
+        $this->validators = array_values($validators);
 
         parent::__construct();
     }
@@ -43,7 +48,7 @@ class ValidatorList extends Validator
      */
     public function addValidator(Validator $validator): ValidatorList
     {
-        $this->getValidators()->add($validator);
+        $this->validators[] = $validator;
 
         return $this;
     }
@@ -129,27 +134,27 @@ class ValidatorList extends Validator
     }
 
     /**
-     * @return ArrayList|Validator[]
+     * @return array|Validator[]
      */
-    public function getValidators(): ArrayList
+    public function getValidators(): array
     {
         return $this->validators;
     }
 
     /**
      * @param string $className
-     * @return ArrayList|Validator[]
+     * @return array|Validator[]
      */
-    public function getValidatorsByType(string $className): ArrayList
+    public function getValidatorsByType(string $className): array
     {
-        $validators = ArrayList::create();
+        $validators = [];
 
-        foreach ($this->getValidators() as $validator) {
+        foreach ($this->getValidators() as $key => $validator) {
             if (!$validator instanceof $className) {
                 continue;
             }
 
-            $validators->add($validator);
+            $validators[$key] = $validator;
         }
 
         return $validators;
@@ -161,13 +166,26 @@ class ValidatorList extends Validator
      */
     public function removeValidatorsByType(string $className): ValidatorList
     {
-        foreach ($this->getValidators() as $validator) {
-            if (!$validator instanceof $className) {
-                continue;
-            }
-
-            $this->getValidators()->remove($validator);
+        foreach ($this->getValidatorsByType($className) as $key => $validator) {
+            $this->removeValidatorByKey($key);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param int $key
+     * @return ValidatorList
+     */
+    public function removeValidatorByKey(int $key): ValidatorList
+    {
+        if (!array_key_exists($key, $this->validators)) {
+            throw new InvalidArgumentException(
+                sprintf('Key "%s" does not exist in $validators array', $key)
+            );
+        }
+
+        unset($this->validators[$key]);
 
         return $this;
     }
