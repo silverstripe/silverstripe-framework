@@ -496,7 +496,7 @@ class Member extends DataObject
      *
      * @param bool $write Whether this method should persist the Member object to the database or not
      */
-    public function regenerateTempID($write = true)
+    public function regenerateTempID(bool $write = true)
     {
         $generator = new RandomGenerator();
         $lifetime = self::config()->get('temp_id_lifetime');
@@ -1810,7 +1810,7 @@ class Member extends DataObject
      *
      * @param bool $write Whether this method should persist the Member object to the database or not
      */
-    public function registerSuccessfulLogin($write = true)
+    public function registerSuccessfulLogin(bool $write = true)
     {
         if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
