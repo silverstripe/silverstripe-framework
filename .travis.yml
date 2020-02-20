@@ -36,7 +36,7 @@ matrix:
         - PDO=1
         - PHPUNIT_TEST=framework
 
-    - php: 7.4snapshot
+    - php: 7.4
       env:
         - DB=MYSQL
         - PHPUNIT_TEST=framework
