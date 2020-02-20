@@ -476,11 +476,11 @@ class Member extends DataObject
     public function afterMemberLoggedIn()
     {
         // Clear the incorrect log-in count
-        $this->registerSuccessfulLogin();
+        $this->registerSuccessfulLogin(false);
 
         $this->LockedOutUntil = null;
 
-        $this->regenerateTempID();
+        $this->regenerateTempID(false);
 
         $this->write();
 
@@ -493,8 +493,10 @@ class Member extends DataObject
      *
      * This should be performed any time the user presents their normal identification (normally Email)
      * and is successfully authenticated.
+     *
+     * @param bool $write Whether this method should persist the Member object to the database or not
      */
-    public function regenerateTempID()
+    public function regenerateTempID($write = true)
     {
         $generator = new RandomGenerator();
         $lifetime = self::config()->get('temp_id_lifetime');
@@ -502,7 +504,10 @@ class Member extends DataObject
         $this->TempIDExpired = $lifetime
             ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + $lifetime)
             : null;
-        $this->write();
+
+        if ($write) {
+            $this->write();
+        }
     }
 
     /**
@@ -1802,14 +1807,19 @@ class Member extends DataObject
 
     /**
      * Tell this member that a successful login has been made
+     *
+     * @param bool $write Whether this method should persist the Member object to the database or not
      */
-    public function registerSuccessfulLogin()
+    public function registerSuccessfulLogin($write = true)
     {
         if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
             $this->LockedOutUntil = null;
-            $this->write();
+
+            if ($write) {
+                $this->write();
+            }
         }
     }
 
