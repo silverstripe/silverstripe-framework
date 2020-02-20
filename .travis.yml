@@ -1,6 +1,10 @@
 language: php
 
-dist: trusty
+dist: xenial
+
+services:
+  - mysql
+  - postgresql
 
 cache:
   directories:
