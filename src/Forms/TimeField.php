@@ -373,6 +373,14 @@ class TimeField extends TextField
     {
         /** @var TimeField_Readonly $result */
         $result = $this->castedCopy(TimeField_Readonly::class);
+        $result
+            ->setValue(false)
+            ->setHTML5($this->html5)
+            ->setTimeFormat($this->timeFormat)
+            ->setTimezone($this->getTimezone())
+            ->setLocale($this->locale)
+            ->setTimeLength($this->timeLength)
+            ->setValue($this->value);
         return $result;
     }
 
