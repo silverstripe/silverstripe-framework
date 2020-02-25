@@ -48,6 +48,8 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
     {
+        // <<< check if cache entry exists here, if so, then return get cache
+
         // Get service URL
         if (!empty($content)) {
             $serviceURL = $content;
@@ -90,14 +92,19 @@ class EmbedShortcodeProvider implements ShortcodeHandler
 
         // Process embed
         $embed = $embed->getEmbed();
+        // ^ exception should get thrown here if 503 (I think), so wrap in try, catch
 
         // Convert embed object into HTML
         if ($embed && $embed instanceof Adapter) {
             $result = static::embedForTemplate($embed, $arguments);
             if ($result) {
+
+                // <<< set cache here
+
                 return $result;
             }
         }
+        // << catch block here, log exception
 
         // Fallback to link to service
         return static::linkEmbed($arguments, $serviceURL, $serviceURL);
