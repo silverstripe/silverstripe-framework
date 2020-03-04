@@ -89,7 +89,24 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         }
 
         // Process embed
-        $embed = $embed->getEmbed();
+        try {
+            $embed = $embed->getEmbed();
+        }
+        catch(\Embed\Exceptions\InvalidUrlException $e) {
+            $attr = array(
+                'class' => 'ss-media-exception embed'
+            );
+            if (Director::isDev()) {
+                $result = HTML::createTag('div', $attr, $e->getMessage());
+                return $result;
+            }
+            $result = HTML::createTag(
+                'div',
+                $attr,
+                HTML::createTag('p', array(), 'There was a problem loading the media.')
+            );
+            return $result;
+        }
 
         // Convert embed object into HTML
         if ($embed && $embed instanceof Adapter) {
