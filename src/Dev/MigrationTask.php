@@ -55,7 +55,7 @@ class MigrationTask extends BuildTask
 
     protected $title = "Database Migrations";
 
-    protected $description = "Provide atomic database changes (not implemented yet)";
+    protected $description = "Provide atomic database changes (subclass this and implement yourself)";
 
     public function run($request)
     {
