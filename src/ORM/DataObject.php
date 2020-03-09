@@ -26,6 +26,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\UniqueKey\UniqueKeyInterface;
+use SilverStripe\ORM\UniqueKey\UniqueKeyService;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -4201,7 +4202,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function getUniqueKey(): string
     {
         /** @var UniqueKeyInterface $service */
-        $service = $this->uniqueKeyService;
+        $service = UniqueKeyService::singleton();
         if (!$service instanceof UniqueKeyInterface) {
             return '';
         }
