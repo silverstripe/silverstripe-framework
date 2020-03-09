@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Tests\UniqueKey;
+namespace SilverStripe\Tests\ORM\UniqueKey;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -43,14 +43,14 @@ class ServiceTest extends SapphireTest
     public function uniqueKeysProvider(): array
     {
         return [
-            [1, River::class, false, 'ss-River-1-7eab00006ab6d090635b03f9fa1187d7'],
-            [1, River::class, true, 'ss-River-1-65474ab87fd42ca8cbfc32f87d5840e7'],
-            [2, River::class, false, 'ss-River-2-9c63d549d3a7a2f9679f7ce0dbb6a177'],
-            [2, River::class, true, 'ss-River-2-a028c9b5ecd2dd68edc6f20192e29c63'],
-            [1, Mountain::class, false, 'ss-Mountain-1-013d8ba56604ceeb2bda4b09d04c7e29'],
-            [1, Mountain::class, true, 'ss-Mountain-1-3dba35f13a9d3ad648be466946297444'],
-            [2, Mountain::class, false, 'ss-Mountain-2-a628f2db748065729d6a832a094cea3f'],
-            [2, Mountain::class, true, 'ss-Mountain-2-e6236799ab5a00d36ee704fa87d46021'],
+            [1, River::class, false, 'ss-River-1-e64cc160ce00cc28cb0f8a3096cf3ed5'],
+            [1, River::class, true, 'ss-River-1-1484f5b9c7d403b7fd2ba944efead0a6'],
+            [2, River::class, false, 'ss-River-2-93608031dbdb53167fce1c700e71adfd'],
+            [2, River::class, true, 'ss-River-2-cfb8c8328ca792cfe83859b0ef28d3f4'],
+            [1, Mountain::class, false, 'ss-Mountain-1-8d1e32d7d9a5f55b9c5e87facc6a0acc'],
+            [1, Mountain::class, true, 'ss-Mountain-1-7d286845ff54b023fb43450ecd55aeb8'],
+            [2, Mountain::class, false, 'ss-Mountain-2-813dc6d6a905b6d3720130b9fb46e01a'],
+            [2, Mountain::class, true, 'ss-Mountain-2-d1133d717d00c944732ac25e6043ce5e'],
         ];
     }
 }

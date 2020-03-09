@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Tests\UniqueKey;
+namespace SilverStripe\Tests\ORM\UniqueKey;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Dev\TestOnly;

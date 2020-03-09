@@ -1,0 +1,6 @@
+---
+Name: orm_unique_key
+---
+SilverStripe\ORM\DataObject:
+  dependencies:
+    uniqueKeyService: '%$SilverStripe\ORM\UniqueKey\UniqueKeyService'

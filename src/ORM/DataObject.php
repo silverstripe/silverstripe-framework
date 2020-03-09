@@ -25,10 +25,10 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
+use SilverStripe\ORM\UniqueKey\UniqueKeyInterface;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\UniqueKey;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 use stdClass;
@@ -4200,9 +4200,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getUniqueKey(): string
     {
+        /** @var UniqueKeyInterface $service */
+        $service = $this->uniqueKeyService;
+        if (!$service instanceof UniqueKeyInterface) {
+            return '';
+        }
+
         $cacheKeys = $this->getCacheKeyComponent();
 
-        return UniqueKey\Service::singleton()->generateKey($this, $cacheKeys);
+        return $service->generateKey($this, $cacheKeys);
     }
 
     /**

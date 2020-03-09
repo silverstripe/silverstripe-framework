@@ -1,16 +1,16 @@
 <?php
 
-namespace SilverStripe\Tests\UniqueKey;
+namespace SilverStripe\Tests\ORM\UniqueKey;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
 
-class Mountain extends DataObject implements TestOnly
+class River extends DataObject implements TestOnly
 {
     /**
      * @var string
      */
-    private static $table_name = 'UniqueKeyTest_Mountain';
+    private static $table_name = 'UniqueKeyTest_River';
 
     /**
      * @var array
