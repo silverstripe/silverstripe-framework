@@ -90,6 +90,7 @@ class CheckboxSetField extends MultiSelectField
             $options->push(new ArrayData(array(
                 'ID' => $itemID,
                 'Class' => $extraClass,
+                'Role' => 'option',
                 'Name' => "{$this->name}[{$itemValue}]",
                 'Value' => $itemValue,
                 'Title' => $title,
