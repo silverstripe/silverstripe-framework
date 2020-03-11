@@ -94,7 +94,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         try {
             $embed = $embed->getEmbed();
         } catch (InvalidUrlException $e) {
-            $message = (Director::isDev()) ? $e->getMessage() : _t(__CLASS__.'.INVALID_URL','There was a problem loading the media.');
+            $message = (Director::isDev()) ? $e->getMessage() : _t(__CLASS__.'.INVALID_URL', 'There was a problem loading the media.');
 
             $attr = [
                 'class' => 'ss-media-exception embed'
