@@ -364,7 +364,7 @@ class TeamSupporter extends DataObject
         'Supporter' => Supporter::class,
     ];
 
-    private static $default_sort = '"TeamSupporter"."Ranking" ASC'
+    private static $default_sort = '"TeamSupporter"."Ranking" ASC';
 }
 ```
 
