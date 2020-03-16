@@ -39,9 +39,11 @@ class CMSSecurity extends Security
         // Assign default cms theme and replace user-specified themes
         SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
 
-        // Core styles / vendor scripts
-        Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');
-        Requirements::css('silverstripe/admin: client/dist/styles/bundle.css');
+        if (ModuleLoader::getModule('silverstripe/admin')) {
+            // Core styles / vendor scripts
+            Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');
+            Requirements::css('silverstripe/admin: client/dist/styles/bundle.css');
+        }
     }
 
     public function login($request = null, $service = Authenticator::CMS_LOGIN)
