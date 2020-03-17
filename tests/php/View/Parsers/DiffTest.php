@@ -86,6 +86,5 @@ class DiffTest extends SapphireTest
         $actual = Diff::compareHTML($from, $to);
 
         $this->assertRegExp($expected, $actual);
-
     }
 }
