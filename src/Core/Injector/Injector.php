@@ -401,7 +401,7 @@ class Injector implements ContainerInterface
 
             // make sure the class is set...
             if (empty($class)) {
-                throw new InvalidArgumentException('Missing spec class');
+                throw new InvalidArgumentException(sprintf('Missing spec class: %s', $class));
             }
             $spec['class'] = $class;
 
