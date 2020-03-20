@@ -52,14 +52,12 @@ This can be done by calling the static method [api:Config::inst()], like so:
 
 ```php
 	$config = Config::inst()->get('MyClass');
+```
+Or through the config() method on the class.
 
-```
-	
-```
+```php
 	$config = $this->config();
-
 ```
-`update($class, $variable, $value)`.
 
 [notice]
 There is no "set" method. It is not possible to completely set the value of a classes' property. `update` adds new 
@@ -138,8 +136,7 @@ the result will be the higher priority false-ish value.
 The locations that configuration values are taken from in highest -> lowest priority order are:
 
 - Any values set via a call to Config#update
-- The configuration values taken from the YAML files in `_config/` directories (internally sorted in before / after 
-order, where the item that is latest is highest priority)
+- The configuration values taken from the YAML files in `_config/` directories (internally sorted in before / after order, where the item that is latest is highest priority)
 - Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
 - Any static set on the class named the same as the name of the property
 - The composite configuration value of the parent class of this class
@@ -158,12 +155,10 @@ rather than add.
 	$actionsWithoutExtra = $this->config()->get(
 		'allowed_actions', Config::UNINHERITED
 	);
-
 ```
 
 - If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
-- If the composite value is an associative array, any member of that array that matches both the key and value of any 
-pair in the mask is removed
+- If the composite value is an associative array, any member of that array that matches both the key and value of any pair in the mask is removed
 - If the composite value is not an array, if that value matches any value in the mask it is removed
 
 
@@ -181,14 +176,11 @@ The name of the files within the applications `_config` directly are arbitrary. 
 The structure of each YAML file is a series of headers and values separated by YAML document separators. 
 
 ```yml
-```
-```
+	---
 	Name: adminroutes
 	After:
-```
   	  - '#coreroutes'
 	---
-```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
@@ -200,8 +192,7 @@ If there is only one set of values the header can be omitted.
 
 Each value section of a YAML file has:
 
-  - A reference path, made up of the module name, the config file name, and a fragment identifier Each path looks a 
-  little like a URL and is of this form: `module/file#fragment`.
+  - A reference path, made up of the module name, the config file name, and a fragment identifier Each path looks a little like a URL and is of this form: `module/file#fragment`.
   - A set of rules for the value section's priority relative to other value sections
   - A set of rules that might exclude the value section from being used
 
@@ -230,14 +221,11 @@ To specify these rules you add an "After" and/or "Before" key to the relevant he
 keys is a list of reference paths to other value sections. A basic example:
 
 ```yml
-```
-```
+	---
 	Name: adminroutes
 	After:
-```
   	  - '#coreroutes'
 	---
-```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
@@ -285,29 +273,22 @@ You then list any of the following rules as sub-keys, with informational values 
 
   - 'classexists', in which case the value(s) should be classes that must exist
   - 'moduleexists', in which case the value(s) should be modules that must exist
-  - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe
-```
-    mode the site must be in
-```
+  - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe mode the site must be in
   - 'constantdefined', in which case the value(s) should be constants that must be defined
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
 ```yml
-```
-```
+	---
 	Only:
 	  moduleexists: 'MyFineModule'
-```
-```
+	---
 	MyClass:
 	  property: 'foo'
-```
-```
+	---
 	Except:
 	  moduleexists: 'MyFineModule'
-```
-```
+	---
 	MyClass:
 	  property: 'bar'
 ```
