@@ -25,6 +25,21 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals(array("_matched" => true), $request->match('add', true));
     }
 
+    /**
+     * @useDatabase false
+     */
+    public function testWildCardMatch()
+    {
+        $request = new HTTPRequest('GET', 'admin/crm/test');
+        $this->assertEquals(['$1' => 'crm', '$2' => 'test'], $request->match('admin/$@', true));
+        $this->assertTrue($request->allParsed());
+
+        $request = new HTTPRequest('GET', 'admin/crm/test');
+        $this->assertEquals(['_matched' => true], $request->match('admin/$*', true));
+        $this->assertTrue($request->allParsed());
+        $this->assertEquals('crm/test', $request->remaining());
+    }
+
     public function testHttpMethodOverrides()
     {
         $request = new HTTPRequest(

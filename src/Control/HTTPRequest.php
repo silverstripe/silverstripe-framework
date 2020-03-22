@@ -564,7 +564,23 @@ class HTTPRequest implements ArrayAccess
 
                 /** @skipUpgrade */
                 $key = "Controller";
-                $arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
+                if ($varName === '*') {
+                    array_pop($patternParts);
+                    $shiftCount = sizeof($patternParts);
+                    $patternParts = array_merge($patternParts, array_slice($this->dirParts, $i));
+                    break;
+                } elseif ($varName === '@') {
+                    array_pop($patternParts);
+                    $shiftCount = sizeof($patternParts);
+                    $remaining = count($this->dirParts) - $i;
+                    for ($j = 1; $j <= $remaining; $j++) {
+                        $arguments["$${j}"] = $this->dirParts[$j + $i - 1];
+                    }
+                    $patternParts = array_merge($patternParts, array_keys($arguments));
+                    break;
+                } else {
+                    $arguments[$varName] = $this->dirParts[$i] ?? null;
+                }
                 if ($part == '$Controller'
                     && (
                         !ClassInfo::exists($arguments[$key])
