@@ -44,7 +44,7 @@ class HomePageTest extends FunctionalTest
         $page = $this->get('home/');
 
         $this->assertExactHTMLMatchBySelector("#Welcome", [
-            'Welcome Back'
+            'Welcome back'
         ]);
     }
 }
