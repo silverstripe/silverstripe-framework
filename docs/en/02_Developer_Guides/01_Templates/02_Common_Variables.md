@@ -54,7 +54,7 @@ Returns the currently logged in [Member](api:SilverStripe\Security\Member) insta
 
 ```ss
 <% if $CurrentMember %>
-  Welcome Back, $CurrentMember.FirstName
+  Welcome back, $CurrentMember.FirstName
 <% end_if %>
 ```
 

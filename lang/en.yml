@@ -272,7 +272,7 @@ en:
     SURNAME: Surname
     VALIDATIONADMINLOSTACCESS: 'Cannot remove all admin groups from your profile'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Welcome back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
     belongs_many_many_Groups: Groups
     db_Locale: 'Interface Locale'
