@@ -564,20 +564,25 @@ class HTTPRequest implements ArrayAccess
 
                 /** @skipUpgrade */
                 $key = "Controller";
-                if ($varName === '*') {
-                    array_pop($patternParts);
-                    $shiftCount = sizeof($patternParts);
-                    $patternParts = array_merge($patternParts, array_slice($this->dirParts, $i));
-                    break;
-                } elseif ($varName === '@') {
-                    array_pop($patternParts);
-                    $shiftCount = sizeof($patternParts);
-                    $remaining = count($this->dirParts) - $i;
-                    for ($j = 1; $j <= $remaining; $j++) {
-                        $arguments["$${j}"] = $this->dirParts[$j + $i - 1];
+                if ($varName === '*' || $varName === '@') {
+                    if (isset($patternParts[$i + 1])) {
+                        user_error(sprintf('All URL params after wildcard parameter $%s will be ignored', $varName), E_USER_WARNING);
                     }
-                    $patternParts = array_merge($patternParts, array_keys($arguments));
-                    break;
+                    if ($varName === '*') {
+                        array_pop($patternParts);
+                        $shiftCount = sizeof($patternParts);
+                        $patternParts = array_merge($patternParts, array_slice($this->dirParts, $i));
+                        break;
+                    } else {
+                        array_pop($patternParts);
+                        $shiftCount = sizeof($patternParts);
+                        $remaining = count($this->dirParts) - $i;
+                        for ($j = 1; $j <= $remaining; $j++) {
+                            $arguments["$${j}"] = $this->dirParts[$j + $i - 1];
+                        }
+                        $patternParts = array_merge($patternParts, array_keys($arguments));
+                        break;
+                    }
                 } else {
                     $arguments[$varName] = $this->dirParts[$i] ?? null;
                 }

@@ -47,10 +47,19 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals(['Action' => 'crm'], $request->match('admin/$Action/$*', true));
         $this->assertTrue($request->allParsed());
         $this->assertEquals('test/part1/part2', $request->remaining());
+    }
 
+    /**
+     * This test just asserts a warning is given if there is more than one wildcard parameter. Note that this isn't an
+     * enforcement of an API and we an add new behaviour in the future to allow many wildcard params if we want to
+     *
+     * @expectedException \PHPUnit_Framework_Error_Warning
+     */
+    public function testWildCardWithFurtherParams()
+    {
         $request = new HTTPRequest('GET', 'admin/crm/test');
         // all parameters after the first wildcard parameter are ignored
-        $this->assertEquals(['Action' => 'crm', '$1' => 'test'], $request->match('admin/$Action/$@/$Other/$*', true));
+        $request->match('admin/$Action/$@/$Other/$*', true);
     }
 
     public function testHttpMethodOverrides()
