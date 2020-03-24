@@ -142,6 +142,51 @@ the `TeamController`.
 Match an url starting with `/admin/help/`, but don't include `/help/` as part of the action (the shift point is set to 
 start parsing variables and the appropriate controller action AFTER the `//`).
 
+### Wildcard URL Patterns
+
+As of SilverStripe 4.6 there are two wildcard patterns that can be used. `$@` and `$*`. These parameters can only be used
+at the end of a URL pattern, any further rules are ignored.
+
+Inspired by bash variadic variable syntax there are two ways to capture all URL parameters without having to explicitly
+specify them in the URL rule.
+
+Using `$@` will split the URL into numbered parameters (`$1`, `$2`, ..., `$n`). For example:
+
+```php
+<?php
+class StaffController extends \SilverStripe\Control\Controller
+{
+    private static $url_handlers = [
+        'staff/$@' => 'index',
+    ];
+
+    public function index($request)
+    {
+        // GET /staff/managers/bob
+        $request->latestParam('$1'); // managers
+        $request->latestParam('$2'); // bob
+    }
+}
+```
+
+Alternatively, if access to the parameters is not required in this way then it is possible to use `$*` to match all
+URL parameters but not collect them in the same way:
+
+```php
+<?php
+class StaffController extends \SilverStripe\Control\Controller
+{
+    private static $url_handlers = [
+        'staff/$*' => 'index',
+    ];
+
+    public function index($request)
+    {
+        // GET /staff/managers/bob
+        $request->remaining(); // managers/bob
+    }
+}
+```
 
 ## URL Handlers
 
