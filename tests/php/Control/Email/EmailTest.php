@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Control\Tests\Email;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Email\SwiftMailer;
@@ -627,11 +627,11 @@ class EmailTest extends SapphireTest
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|Email
+     * @return MockObject|Email
      */
     protected function makeEmailMock($subject)
     {
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        /** @var Email|MockObject $email */
         $email = $this->getMockBuilder(Email::class)
             ->enableProxyingToOriginalMethods()
             ->getMock();
