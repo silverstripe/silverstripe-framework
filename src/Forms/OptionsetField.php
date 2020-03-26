@@ -72,6 +72,7 @@ class OptionsetField extends SingleSelectField
         return new ArrayData(array(
             'ID' => $this->getOptionID($value),
             'Class' => $this->getOptionClass($value, $odd),
+            'Role' => 'option',
             'Name' => $this->getOptionName(),
             'Value' => $value,
             'Title' => $title,

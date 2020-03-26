@@ -193,7 +193,7 @@ The shortcode format in SilverStripe 4 has changed from SilverStripe 3. This mea
 After running the file migration, you can run the short code migration task to update your existing HTML content in your database:
 
 ```bash
-sake dev/tasks/TagsToShortcode
+sake dev/tasks/TagsToShortcodeTask
 ``` 
 
 This will rewrite your existing shortcodes to the newer format SilverStripe 4 expects as well as convert `img` and `a` tags to use shortcodes.
