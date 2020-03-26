@@ -63,7 +63,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\TreeNode::class,
     );
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

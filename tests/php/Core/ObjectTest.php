@@ -31,7 +31,7 @@ use SilverStripe\Versioned\Versioned;
 class ObjectTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         Injector::inst()->unregisterObjects([
@@ -290,7 +290,7 @@ class ObjectTest extends SapphireTest
             $objectTest_ExtensionTest->hasExtension(ExtendTest3::class),
             "Extensions are detected with instance hasExtension() when added through add_extension()"
         );
-        
+
         // load in a custom implementation
         Injector::inst()->registerService(new ExtendTest5(), ExtendTest4::class);
         $this->assertTrue(

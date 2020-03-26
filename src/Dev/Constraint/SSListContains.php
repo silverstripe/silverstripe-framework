@@ -57,7 +57,7 @@ class SSListContains extends Constraint implements TestOnly
      *
      * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool
     {
         $success = true;
 

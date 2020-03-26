@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control\Tests;
 
-use http\Exception\BadMessageException;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
@@ -18,7 +17,7 @@ class SessionTest extends SapphireTest
      */
     protected $session = null;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->session = new Session([]);
         return parent::setUp();

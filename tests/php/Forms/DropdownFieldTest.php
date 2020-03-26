@@ -400,7 +400,7 @@ class DropdownFieldTest extends SapphireTest
      * string of HTML.
      *
      * @param  string $html HTML to scan for elements
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement[]
      */
     public function findOptionElements($html)
     {

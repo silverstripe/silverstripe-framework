@@ -42,7 +42,7 @@ class ControllerTest extends FunctionalTest
         UnsecuredController::class,
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         Director::config()->update('alternate_base_url', '/');
