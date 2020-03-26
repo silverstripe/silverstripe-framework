@@ -40,7 +40,10 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals('crm/test', $request->remaining());
 
         $request = new HTTPRequest('GET', 'admin/crm/test/part1/part2');
-        $this->assertEquals(['Action' => 'crm', '$1' => 'test', '$2' => 'part1', '$3' => 'part2'], $request->match('admin/$Action/$@', true));
+        $this->assertEquals(
+            ['Action' => 'crm', '$1' => 'test', '$2' => 'part1', '$3' => 'part2'],
+            $request->match('admin/$Action/$@', true)
+        );
         $this->assertTrue($request->allParsed());
 
         $request = new HTTPRequest('GET', 'admin/crm/test/part1/part2');
