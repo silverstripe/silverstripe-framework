@@ -20,7 +20,7 @@ class SessionTest extends SapphireTest
     protected function setUp() : void
     {
         $this->session = new Session([]);
-        return parent::setUp();
+        parent::setUp();
     }
 
     /**
@@ -106,7 +106,7 @@ class SessionTest extends SapphireTest
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException BadMethodCallException
+     * @expectedException \BadMethodCallException
      * @expectedExceptionMessage Session has already started
      */
     public function testStartErrorsWhenStartingTwice()
