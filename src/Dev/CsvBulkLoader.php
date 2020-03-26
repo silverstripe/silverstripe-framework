@@ -76,14 +76,7 @@ class CsvBulkLoader extends BulkLoader
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
             $csvReader->setDelimiter($this->delimiter);
-
-            // league/csv 9
-            if (method_exists($csvReader, 'skipInputBOM')) {
-                $csvReader->skipInputBOM();
-            // league/csv 8
-            } else {
-                $csvReader->stripBom(true);
-            }
+            $csvReader->skipInputBOM();
 
             $tabExtractor = function ($row, $rowOffset) {
                 foreach ($row as &$item) {
