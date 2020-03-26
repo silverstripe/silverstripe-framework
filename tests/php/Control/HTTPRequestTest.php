@@ -53,7 +53,7 @@ class HTTPRequestTest extends SapphireTest
      * This test just asserts a warning is given if there is more than one wildcard parameter. Note that this isn't an
      * enforcement of an API and we an add new behaviour in the future to allow many wildcard params if we want to
      *
-     * @expectedException \PHPUnit_Framework_Error_Warning
+     * @expectedException \PHPUnit\Framework\Error\Warning
      */
     public function testWildCardWithFurtherParams()
     {
