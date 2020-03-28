@@ -108,12 +108,12 @@ class ListDecoratorTest extends SapphireTest
         $this->assertFalse($this->decorator->canFilterBy('Title'));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage SS_Filterable::filterByCallback() passed callback must be callable, 'boolean' given
-     */
     public function testFilterByCallbackThrowsExceptionWhenGivenNonCallable()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage(
+            'SS_Filterable::filterByCallback() passed callback must be callable, \'boolean\' given'
+        );
         $this->decorator->filterByCallback(true);
     }
 

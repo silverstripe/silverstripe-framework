@@ -31,11 +31,11 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_SessionController/showform');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertNotContains('public', $header);
-        $this->assertNotContains('private', $header);
-        $this->assertContains('no-cache', $header);
-        $this->assertContains('no-store', $header);
-        $this->assertContains('must-revalidate', $header);
+        $this->assertStringNotContainsString('public', $header);
+        $this->assertStringNotContainsString('private', $header);
+        $this->assertStringContainsString('no-cache', $header);
+        $this->assertStringContainsString('no-store', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
     }
 
     public function testPublicForm()
@@ -44,10 +44,10 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_SessionController/showpublicform');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertContains('public', $header);
-        $this->assertContains('must-revalidate', $header);
-        $this->assertNotContains('no-cache', $response->getHeader('Cache-Control'));
-        $this->assertNotContains('no-store', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('public', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
+        $this->assertStringNotContainsString('no-cache', $response->getHeader('Cache-Control'));
+        $this->assertStringNotContainsString('no-store', $response->getHeader('Cache-Control'));
     }
 
     public function testPrivateActionsError()
@@ -56,9 +56,9 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_SessionController/privateaction');
         $header = $response->getHeader('Cache-Control');
         $this->assertTrue($response->isError());
-        $this->assertContains('no-cache', $header);
-        $this->assertContains('no-store', $header);
-        $this->assertContains('must-revalidate', $header);
+        $this->assertStringContainsString('no-cache', $header);
+        $this->assertStringContainsString('no-store', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
     }
 
     public function testPrivateActionsAuthenticated()
@@ -68,10 +68,10 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_SessionController/privateaction');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertContains('private', $header);
-        $this->assertContains('must-revalidate', $header);
-        $this->assertNotContains('no-cache', $header);
-        $this->assertNotContains('no-store', $header);
+        $this->assertStringContainsString('private', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
+        $this->assertStringNotContainsString('no-cache', $header);
+        $this->assertStringNotContainsString('no-store', $header);
     }
 
     public function testPrivateCache()
@@ -79,10 +79,10 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_RuleController/privateaction');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertContains('private', $header);
-        $this->assertContains('must-revalidate', $header);
-        $this->assertNotContains('no-cache', $header);
-        $this->assertNotContains('no-store', $header);
+        $this->assertStringContainsString('private', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
+        $this->assertStringNotContainsString('no-cache', $header);
+        $this->assertStringNotContainsString('no-store', $header);
     }
 
     public function testPublicCache()
@@ -90,11 +90,11 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_RuleController/publicaction');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertContains('public', $header);
-        $this->assertContains('must-revalidate', $header);
-        $this->assertNotContains('no-cache', $header);
-        $this->assertNotContains('no-store', $header);
-        $this->assertContains('max-age=9000', $header);
+        $this->assertStringContainsString('public', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
+        $this->assertStringNotContainsString('no-cache', $header);
+        $this->assertStringNotContainsString('no-store', $header);
+        $this->assertStringContainsString('max-age=9000', $header);
     }
 
     public function testDisabledCache()
@@ -102,10 +102,10 @@ class HTTPCacheControlIntegrationTest extends FunctionalTest
         $response = $this->get('HTTPCacheControlIntegrationTest_RuleController/disabledaction');
         $header = $response->getHeader('Cache-Control');
         $this->assertFalse($response->isError());
-        $this->assertNotContains('public', $header);
-        $this->assertNotContains('private', $header);
-        $this->assertContains('no-cache', $header);
-        $this->assertContains('no-store', $header);
-        $this->assertContains('must-revalidate', $header);
+        $this->assertStringNotContainsString('public', $header);
+        $this->assertStringNotContainsString('private', $header);
+        $this->assertStringContainsString('no-cache', $header);
+        $this->assertStringContainsString('no-store', $header);
+        $this->assertStringContainsString('must-revalidate', $header);
     }
 }

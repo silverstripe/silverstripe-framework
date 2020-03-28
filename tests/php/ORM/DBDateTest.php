@@ -24,30 +24,6 @@ class DBDateTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    protected function tearDown() : void
-    {
-        $this->restoreNotices();
-        parent::tearDown();
-    }
-
-    /**
-     * Temporarily disable notices
-     */
-    protected function suppressNotices()
-    {
-        error_reporting(error_reporting() & ~E_USER_NOTICE);
-        Notice::$enabled = false;
-    }
-
-    /**
-     * Restore notices
-     */
-    protected function restoreNotices()
-    {
-        error_reporting($this->oldError);
-        Notice::$enabled = true;
-    }
-
     public function testNiceDate()
     {
         $this->assertEquals(
@@ -92,21 +68,17 @@ class DBDateTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.
-     */
     public function testMDYConversion()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid date: \'3/16/2003\'. Use y-MM-dd to prevent this error.');
         DBField::create_field('Date', '3/16/2003');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.
-     */
     public function testY2kCorrection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid date: \'03-03-04\'. Use y-MM-dd to prevent this error.');
         DBField::create_field('Date', '03-03-04');
     }
 

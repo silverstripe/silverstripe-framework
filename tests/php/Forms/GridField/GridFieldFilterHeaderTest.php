@@ -70,11 +70,11 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $htmlFragment = $this->component->getHTMLFragments($this->gridField);
 
         // Check that the output is the new search field
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden"',
             $htmlFragment['before']
         );
-        $this->assertContains('Open search and filter', $htmlFragment['buttons-before-right']);
+        $this->assertStringContainsString('Open search and filter', $htmlFragment['buttons-before-right']);
 
         $this->gridField->getConfig()->removeComponentsByType(GridFieldFilterHeader::class);
         $this->gridField->getConfig()->addComponent(new GridFieldFilterHeader(true));
@@ -82,7 +82,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $htmlFragment = $this->component->getHTMLFragments($this->gridField);
 
         // Check that the output is the legacy filter header
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<tr class="grid-field__filter-header grid-field__search-holder--hidden">',
             $htmlFragment['header']
         );

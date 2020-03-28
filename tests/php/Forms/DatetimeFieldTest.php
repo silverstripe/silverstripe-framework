@@ -490,12 +490,10 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertTrue($result->isReadonly());
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Can't change timezone after setting a value
-     */
     public function testSetTimezoneThrowsExceptionWhenChangingTimezoneAfterSettingValue()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('Can\'t change timezone after setting a value');
         date_default_timezone_set('Europe/Berlin');
         $field = new DatetimeField('Datetime', 'Time', '2003-03-29 23:59:38');
         $field->setTimezone('Pacific/Auckland');

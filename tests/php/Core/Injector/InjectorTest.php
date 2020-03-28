@@ -918,11 +918,9 @@ class InjectorTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNonExistentMethods()
     {
+        $this->expectException(InvalidArgumentException::class);
         $injector = new Injector();
         $config = array(
             'TestService' => array(
@@ -937,11 +935,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testProtectedMethods()
     {
+        $this->expectException(InvalidArgumentException::class);
         $injector = new Injector();
         $config = array(
             'TestService' => array(
@@ -956,11 +952,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testTooManyArrayValues()
     {
+        $this->expectException(InvalidArgumentException::class);
         $injector = new Injector();
         $config = array(
             'TestService' => array(
@@ -975,11 +969,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     */
     public function testGetThrowsOnNotFound()
     {
+        $this->expectException(\SilverStripe\Core\Injector\InjectorNotFoundException::class);
         $injector = new Injector();
         $injector->get('UnknownService');
     }

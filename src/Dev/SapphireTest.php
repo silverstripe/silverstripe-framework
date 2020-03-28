@@ -956,7 +956,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        static::assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertStringContainsString($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -978,7 +978,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        static::assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertStringNotContainsString($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**

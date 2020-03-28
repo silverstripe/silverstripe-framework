@@ -193,10 +193,10 @@ class ManyManyThroughListTest extends SapphireTest
     /**
      * Test validation
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testValidateModelValidatesJoinType()
     {
+        $this->expectException(\InvalidArgumentException::class);
         DataObject::reset();
         ManyManyThroughListTest\Item::config()->update(
             'db',

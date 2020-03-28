@@ -144,12 +144,10 @@ class FixtureBlueprintTest extends SapphireTest
         $this->assertNotNull($obj2->HasManyRelation()->find('ID', $relation2->ID));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage No fixture definitions found
-     */
     public function testCreateWithInvalidRelationName()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No fixture definitions found');
         $blueprint = new FixtureBlueprint(TestDataObject::class);
 
         $obj = $blueprint->createObject(
@@ -165,12 +163,10 @@ class FixtureBlueprintTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage No fixture definitions found
-     */
     public function testCreateWithInvalidRelationIdentifier()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No fixture definitions found');
         $blueprint = new FixtureBlueprint(TestDataObject::class);
 
         $obj = $blueprint->createObject(
@@ -186,12 +182,10 @@ class FixtureBlueprintTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid format
-     */
     public function testCreateWithInvalidRelationFormat()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid format');
         $factory = new FixtureFactory();
         $blueprint = new FixtureBlueprint(TestDataObject::class);
 

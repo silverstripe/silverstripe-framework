@@ -67,14 +67,46 @@ class RequirementsTest extends SapphireTest
 
         $html = $backend->includeInHTML(self::$html_template);
 
-        $this->assertContains('http://www.mydomain.com/test.js', $html, 'Load external javascript URL');
-        $this->assertContains('https://www.mysecuredomain.com/test.js', $html, 'Load external secure javascript URL');
-        $this->assertContains('//scheme-relative.example.com/test.js', $html, 'Load external scheme-relative JS');
-        $this->assertContains('http://www.mydomain.com:3000/test.js', $html, 'Load external with port');
-        $this->assertContains('http://www.mydomain.com/test.css', $html, 'Load external CSS URL');
-        $this->assertContains('https://www.mysecuredomain.com/test.css', $html, 'Load external secure CSS URL');
-        $this->assertContains('//scheme-relative.example.com/test.css', $html, 'Load scheme-relative CSS URL');
-        $this->assertContains('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
+        $this->assertStringContainsString(
+            'http://www.mydomain.com/test.js',
+            $html,
+            'Load external javascript URL'
+        );
+        $this->assertStringContainsString(
+            'https://www.mysecuredomain.com/test.js',
+            $html,
+            'Load external secure javascript URL'
+        );
+        $this->assertStringContainsString(
+            '//scheme-relative.example.com/test.js',
+            $html,
+            'Load external scheme-relative JS'
+        );
+        $this->assertStringContainsString(
+            'http://www.mydomain.com:3000/test.js',
+            $html,
+            'Load external with port'
+        );
+        $this->assertStringContainsString(
+            'http://www.mydomain.com/test.css',
+            $html,
+            'Load external CSS URL'
+        );
+        $this->assertStringContainsString(
+            'https://www.mysecuredomain.com/test.css',
+            $html,
+            'Load external secure CSS URL'
+        );
+        $this->assertStringContainsString(
+            '//scheme-relative.example.com/test.css',
+            $html,
+            'Load scheme-relative CSS URL'
+        );
+        $this->assertStringContainsString(
+            'http://www.mydomain.com:3000/test.css',
+            $html,
+            'Load external with port'
+        );
     }
 
     /**
@@ -217,12 +249,12 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
@@ -268,12 +300,12 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
@@ -312,7 +344,7 @@ class RequirementsTest extends SapphireTest
         );
 
         /* DEFER IS NOT INCLUDED IN SCRIPT TAG */
-        $this->assertNotContains('defer', $html, 'defer is not included');
+        $this->assertStringNotContainsString('defer', $html, 'defer is not included');
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         clearstatcache(); // needed to get accurate file_exists() results
@@ -322,12 +354,12 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
@@ -386,7 +418,7 @@ class RequirementsTest extends SapphireTest
         );
 
         /* ASYNC IS NOT INCLUDED IN SCRIPT TAG */
-        $this->assertNotContains('async', $html, 'async is not included');
+        $this->assertStringNotContainsString('async', $html, 'async is not included');
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         clearstatcache(); // needed to get accurate file_exists() results
@@ -396,12 +428,12 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
@@ -467,12 +499,12 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
@@ -609,7 +641,7 @@ class RequirementsTest extends SapphireTest
         clearstatcache(); // needed to get accurate file_exists() results
         $backend->includeInHTML(self::$html_template);
         $this->assertFileExists($combinedFilePath2);
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath2),
             'blocked uncombined files are not included'
@@ -822,12 +854,12 @@ class RequirementsTest extends SapphireTest
 
         $backend->setWriteJavascriptToBody(false);
         $html = $backend->includeInHTML($template);
-        $this->assertContains('<head><script', $html);
+        $this->assertStringContainsString('<head><script', $html);
 
         $backend->setWriteJavascriptToBody(true);
         $html = $backend->includeInHTML($template);
-        $this->assertNotContains('<head><script', $html);
-        $this->assertContains("</script>\n</body>", $html);
+        $this->assertStringNotContainsString('<head><script', $html);
+        $this->assertStringContainsString("</script>\n</body>", $html);
     }
 
     public function testIncludedJsIsNotCommentedOut()
@@ -840,7 +872,7 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML($template);
         //wiping out commented-out html
         $html = preg_replace('/<!--(.*)-->/Uis', '', $html);
-        $this->assertContains("RequirementsTest_a.js", $html);
+        $this->assertStringContainsString("RequirementsTest_a.js", $html);
     }
 
     public function testCommentedOutScriptTagIsIgnored()
@@ -959,7 +991,7 @@ EOS
 
         $urlGenerator->setNonceStyle(null);
         $html = $backend->includeInHTML($template);
-        $this->assertNotContains('RequirementsTest_a.js=', $html);
+        $this->assertStringNotContainsString('RequirementsTest_a.js=', $html);
         $this->assertNotRegExp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
         $this->assertNotRegExp('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
         $this->assertNotRegExp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);

@@ -29,11 +29,9 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertInstanceOf(TestEncryptor::class, $e);
     }
 
-    /**
-     * @expectedException \SilverStripe\Security\PasswordEncryptor_NotFoundException
-     */
     public function testCreateForCodeNotFound()
     {
+        $this->expectException(\SilverStripe\Security\PasswordEncryptor_NotFoundException::class);
         PasswordEncryptor::create_for_algorithm('unknown');
     }
 
@@ -47,7 +45,7 @@ class PasswordEncryptorTest extends SapphireTest
         $encryptors = PasswordEncryptor::get_encryptors();
         $this->assertContains('test', array_keys($encryptors));
         $encryptor = $encryptors['test'];
-        $this->assertContains(TestEncryptor::class, key($encryptor));
+        $this->assertStringContainsString(TestEncryptor::class, key($encryptor));
     }
 
     public function testEncryptorPHPHashWithArguments()

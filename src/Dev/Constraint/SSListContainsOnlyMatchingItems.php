@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
+use SebastianBergmann\Exporter\Exporter;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
@@ -28,13 +29,24 @@ class SSListContainsOnlyMatchingItems extends Constraint implements TestOnly
      */
     private $constraint;
 
+    /**
+     * @var SSListExporter
+     */
+    private $exporter;
+
     public function __construct($match)
     {
-        parent::__construct();
-        $this->exporter = new SSListExporter();
-
         $this->constraint = new ViewableDataContains($match);
         $this->match = $match;
+    }
+
+    protected function exporter(): Exporter
+    {
+        if ($this->exporter === null) {
+            $this->exporter = new SSListExporter;
+        }
+
+        return $this->exporter;
     }
 
     /**

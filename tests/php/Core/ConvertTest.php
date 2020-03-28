@@ -247,7 +247,7 @@ PHP
         $this->assertEquals(3, count($decoded), '3 items in the decoded array');
         $this->assertContains('Bloggs', $decoded, 'Contains "Bloggs" value in decoded array');
         $this->assertContains('Jones', $decoded, 'Contains "Jones" value in decoded array');
-        $this->assertContains('Structure', $decoded['My']['Complicated']);
+        $this->assertStringContainsString('Structure', $decoded['My']['Complicated']);
     }
 
     /**

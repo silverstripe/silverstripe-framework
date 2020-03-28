@@ -30,8 +30,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             $f->getHiddenPermissions(),
             array('NON-ADMIN')
         );
-        $this->assertContains('ADMIN', $f->Field());
-        $this->assertNotContains('NON-ADMIN', $f->Field());
+        $this->assertStringContainsString('ADMIN', $f->Field());
+        $this->assertStringNotContainsString('NON-ADMIN', $f->Field());
     }
 
     public function testSaveInto()

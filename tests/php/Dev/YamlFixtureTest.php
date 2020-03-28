@@ -45,11 +45,9 @@ class YamlFixtureTest extends SapphireTest
         $this->assertNull($obj->getFixtureFile());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testFailsWithInvalidFixturePath()
     {
+        $this->expectException(InvalidArgumentException::class);
         $invalidPath = ltrim(FRAMEWORK_DIR . '/tests/testing/invalid.yml', '/');
         $obj = Injector::inst()->create(YamlFixture::class, $invalidPath);
     }

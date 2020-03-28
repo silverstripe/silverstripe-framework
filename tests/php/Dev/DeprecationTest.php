@@ -32,11 +32,9 @@ class DeprecationTest extends SapphireTest
         $this->assertNull(Deprecation::notice('2.0', 'Deprecation test failed'));
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     */
     public function testEqualVersionTriggersNotice()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
         Deprecation::notification_version('2.0.0');
         Deprecation::notice('2.0.0', 'Deprecation test passed');
     }
@@ -48,11 +46,9 @@ class DeprecationTest extends SapphireTest
         $this->assertNull(Deprecation::notice('2.0.0', 'Deprecation test failed'));
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     */
     public function testGreaterVersionTriggersNotice()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
         Deprecation::notification_version('3.0.0');
         Deprecation::notice('2.0', 'Deprecation test passed');
     }
@@ -64,11 +60,9 @@ class DeprecationTest extends SapphireTest
         $this->callThatOriginatesFromFramework();
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     */
     public function testMatchingModuleNotifcationVersionAffectsNotice()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
         Deprecation::notification_version('1.0.0');
         Deprecation::notification_version('3.0.0', 'silverstripe/framework');
         $this->callThatOriginatesFromFramework();
@@ -82,32 +76,26 @@ class DeprecationTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     * @expectedExceptionMessage DeprecationTest->testScopeMethod is deprecated. Method scope
-     */
     public function testScopeMethod()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
+        $this->expectExceptionMessage('DeprecationTest->testScopeMethod is deprecated. Method scope');
         Deprecation::notification_version('2.0.0');
         Deprecation::notice('2.0.0', 'Method scope', Deprecation::SCOPE_METHOD);
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     * @expectedExceptionMessage DeprecationTest is deprecated. Class scope
-     */
     public function testScopeClass()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
+        $this->expectExceptionMessage('DeprecationTest is deprecated. Class scope');
         Deprecation::notification_version('2.0.0');
         Deprecation::notice('2.0.0', 'Class scope', Deprecation::SCOPE_CLASS);
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     * @expectedExceptionMessage Global scope
-     */
     public function testScopeGlobal()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
+        $this->expectExceptionMessage('Global scope');
         Deprecation::notification_version('2.0.0');
         Deprecation::notice('2.0.0', 'Global scope', Deprecation::SCOPE_GLOBAL);
     }

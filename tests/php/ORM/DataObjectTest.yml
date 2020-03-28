@@ -49,7 +49,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Player:
   captain1:
     FirstName: Captain
     Surname: Zookeeper
-    ShirtNumber: 007
+    ShirtNumber: '007'
     FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     Teams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     FoundingTeams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1

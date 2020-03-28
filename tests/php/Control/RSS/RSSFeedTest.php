@@ -24,17 +24,17 @@ class RSSFeedTest extends SapphireTest
         $rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
         $content = $rssFeed->outputToBrowser();
 
-        $this->assertContains('<link>http://www.example.org/item-a/</link>', $content);
-        $this->assertContains('<link>http://www.example.com/item-b.html</link>', $content);
-        $this->assertContains('<link>http://www.example.com/item-c.html</link>', $content);
+        $this->assertStringContainsString('<link>http://www.example.org/item-a/</link>', $content);
+        $this->assertStringContainsString('<link>http://www.example.com/item-b.html</link>', $content);
+        $this->assertStringContainsString('<link>http://www.example.com/item-c.html</link>', $content);
 
-        $this->assertContains('<title>ItemA</title>', $content);
-        $this->assertContains('<title>ItemB</title>', $content);
-        $this->assertContains('<title>ItemC</title>', $content);
+        $this->assertStringContainsString('<title>ItemA</title>', $content);
+        $this->assertStringContainsString('<title>ItemB</title>', $content);
+        $this->assertStringContainsString('<title>ItemC</title>', $content);
 
-        $this->assertContains('<description>ItemA Content</description>', $content);
-        $this->assertContains('<description>ItemB Content</description>', $content);
-        $this->assertContains('<description>ItemC Content</description>', $content);
+        $this->assertStringContainsString('<description>ItemA Content</description>', $content);
+        $this->assertStringContainsString('<description>ItemB Content</description>', $content);
+        $this->assertStringContainsString('<description>ItemC Content</description>', $content);
 
 
         // Feed #2 - put Content() into <title> and AltContent() into <description>
@@ -48,13 +48,13 @@ class RSSFeedTest extends SapphireTest
         );
         $content = $rssFeed->outputToBrowser();
 
-        $this->assertContains('<title>ItemA Content</title>', $content);
-        $this->assertContains('<title>ItemB Content</title>', $content);
-        $this->assertContains('<title>ItemC Content</title>', $content);
+        $this->assertStringContainsString('<title>ItemA Content</title>', $content);
+        $this->assertStringContainsString('<title>ItemB Content</title>', $content);
+        $this->assertStringContainsString('<title>ItemC Content</title>', $content);
 
-        $this->assertContains('<description>ItemA AltContent</description>', $content);
-        $this->assertContains('<description>ItemB AltContent</description>', $content);
-        $this->assertContains('<description>ItemC AltContent</description>', $content);
+        $this->assertStringContainsString('<description>ItemA AltContent</description>', $content);
+        $this->assertStringContainsString('<description>ItemB AltContent</description>', $content);
+        $this->assertStringContainsString('<description>ItemC AltContent</description>', $content);
     }
 
     public function testLinkEncoding()
@@ -62,7 +62,7 @@ class RSSFeedTest extends SapphireTest
         $list = new ArrayList();
         $rssFeed = new RSSFeed($list, "http://www.example.com/?param1=true&param2=true", "Test RSS Feed");
         $content = $rssFeed->outputToBrowser();
-        $this->assertContains('<link>http://www.example.com/?param1=true&amp;param2=true', $content);
+        $this->assertStringContainsString('<link>http://www.example.com/?param1=true&amp;param2=true', $content);
     }
 
     public function testRSSFeedWithShortcode()
@@ -73,11 +73,11 @@ class RSSFeedTest extends SapphireTest
         $rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
         $content = $rssFeed->outputToBrowser();
 
-        $this->assertContains('<link>http://www.example.org/item-d.html</link>', $content);
+        $this->assertStringContainsString('<link>http://www.example.org/item-d.html</link>', $content);
 
-        $this->assertContains('<title>ItemD</title>', $content);
+        $this->assertStringContainsString('<title>ItemD</title>', $content);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<description><![CDATA[<p>ItemD Content test shortcode output</p>]]></description>',
             $content
         );
@@ -92,11 +92,11 @@ class RSSFeedTest extends SapphireTest
         $rssFeed->setTemplate('RSSFeedTest');
 
         $content = $rssFeed->outputToBrowser();
-        $this->assertContains('<title>Test Custom Template</title>', $content);
+        $this->assertStringContainsString('<title>Test Custom Template</title>', $content);
 
         $rssFeed->setTemplate(null);
         $content = $rssFeed->outputToBrowser();
-        $this->assertNotContains('<title>Test Custom Template</title>', $content);
+        $this->assertStringNotContainsString('<title>Test Custom Template</title>', $content);
     }
 
     protected function setUp() : void

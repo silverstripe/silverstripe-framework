@@ -192,7 +192,7 @@ class TransactionTest extends SapphireTest
         $fail = DataObject::get_one(TestObject::class, "\"Title\"='Read only page failed'");
 
         //This page should be in the system
-        $this->assertInternalType('object', $success);
+        $this->assertIsObject($success);
         $this->assertTrue($success->exists());
 
         //This page should NOT exist, we had 'read only' permissions

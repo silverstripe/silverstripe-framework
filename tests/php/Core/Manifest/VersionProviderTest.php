@@ -54,9 +54,9 @@ class VersionProviderTest extends SapphireTest
         ]);
 
         $result = $this->provider->getVersion();
-        $this->assertContains('SiteConfig: ', $result);
-        $this->assertContains('Framework: ', $result);
-        $this->assertContains(', ', $result);
+        $this->assertStringContainsString('SiteConfig: ', $result);
+        $this->assertStringContainsString('Framework: ', $result);
+        $this->assertStringContainsString(', ', $result);
     }
 
     public function testGetModulesFromComposerLock()
@@ -85,6 +85,6 @@ class VersionProviderTest extends SapphireTest
         ]);
 
         $result = $mock->getVersion();
-        $this->assertContains('Some Package: 1.2.3', $result);
+        $this->assertStringContainsString('Some Package: 1.2.3', $result);
     }
 }

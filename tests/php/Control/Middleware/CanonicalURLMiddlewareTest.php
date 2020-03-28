@@ -45,7 +45,11 @@ class CanonicalURLMiddlewareTest extends SapphireTest
 
         $this->assertNotSame($mockResponse, $result, 'New response is created and returned');
         $this->assertEquals(301, $result->getStatusCode(), 'Basic auth responses are redirected');
-        $this->assertContains('https://', $result->getHeader('Location'), 'HTTPS is in the redirect location');
+        $this->assertStringContainsString(
+            'https://',
+            $result->getHeader('Location'),
+            'HTTPS is in the redirect location'
+        );
     }
 
     public function testMiddlewareDelegateIsReturnedWhenBasicAuthRedirectIsDisabled()

@@ -53,24 +53,23 @@ class TipTest extends SapphireTest
     /**
      * Ensure passing an invalid importance level to the constructor fails
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Provided importance level must be defined in Tip::IMPORTANCE_LEVELS
      */
     public function testInvalidImportanceLevelInConstructorCausesException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Provided importance level must be defined in Tip::IMPORTANCE_LEVELS');
         $tip = new Tip('message', 'arbitrary-importance');
     }
 
     /**
      * Ensure setting an invalid importance level fails
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Provided importance level must be defined in Tip::IMPORTANCE_LEVELS
      */
     public function testInvalidImportanceLevelInSetterCausesException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Provided importance level must be defined in Tip::IMPORTANCE_LEVELS');
         $tip = new Tip('message');
-
         $tip->setImportanceLevel('arbitrary-importance');
     }
 }

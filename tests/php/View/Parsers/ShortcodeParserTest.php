@@ -322,9 +322,9 @@ class ShortcodeParserTest extends SapphireTest
     {
         $result = $this->parser->parse('<a href="[test_shortcode]?my-string=this&thing=2#my-anchor">Link</a>');
 
-        $this->assertContains('my-string=this', $result);
-        $this->assertContains('thing=2', $result);
-        $this->assertContains('my-anchor', $result);
+        $this->assertStringContainsString('my-string=this', $result);
+        $this->assertStringContainsString('thing=2', $result);
+        $this->assertStringContainsString('my-anchor', $result);
     }
 
     public function testNoParseAttemptIfNoCode()
@@ -352,7 +352,7 @@ class ShortcodeParserTest extends SapphireTest
 
         $result = $this->parser->parse('[img]');
 
-        $this->assertContains('http://example.com/image.jpg', $result);
+        $this->assertStringContainsString('http://example.com/image.jpg', $result);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -61,34 +61,34 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $generator = Injector::inst()->create(TinyMCECombinedGenerator::class);
         $this->assertRegExp('#_tinymce/tinymce-testconfig-[0-9a-z]{10,10}#', $generator->generateFilename($c));
         $content = $generator->generateContent($c);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir/';\n",
             $content
         );
         // Main script file
-        $this->assertContains("/* tinymce.js */\n", $content);
+        $this->assertStringContainsString("/* tinymce.js */\n", $content);
         // Locale file
-        $this->assertContains("/* en.js */\n", $content);
+        $this->assertStringContainsString("/* en.js */\n", $content);
         // Local plugins
-        $this->assertContains("/* plugin1.js */\n", $content);
-        $this->assertContains("/* plugin4.min.js */\n", $content);
-        $this->assertContains("/* plugin4/langs/en.js */\n", $content);
-        $this->assertContains("/* plugin5.js */\n", $content);
-        $this->assertContains("/* plugin6.js */\n", $content);
+        $this->assertStringContainsString("/* plugin1.js */\n", $content);
+        $this->assertStringContainsString("/* plugin4.min.js */\n", $content);
+        $this->assertStringContainsString("/* plugin4/langs/en.js */\n", $content);
+        $this->assertStringContainsString("/* plugin5.js */\n", $content);
+        $this->assertStringContainsString("/* plugin6.js */\n", $content);
         // module-resource plugin
-        $this->assertContains("/* plugin8.js */\n", $content);
+        $this->assertStringContainsString("/* plugin8.js */\n", $content);
         // Exclude non-local plugins
-        $this->assertNotContains('plugin2.js', $content);
-        $this->assertNotContains('plugin3.js', $content);
+        $this->assertStringNotContainsString('plugin2.js', $content);
+        $this->assertStringNotContainsString('plugin3.js', $content);
         // Exclude missing file
-        $this->assertNotContains('plugin7.js', $content);
+        $this->assertStringNotContainsString('plugin7.js', $content);
 
         // Check themes
-        $this->assertContains("/* theme.js */\n", $content);
-        $this->assertContains("/* testtheme/langs/en.js */\n", $content);
+        $this->assertStringContainsString("/* theme.js */\n", $content);
+        $this->assertStringContainsString("/* testtheme/langs/en.js */\n", $content);
 
         // Check plugin links included
-        $this->assertContains(
+        $this->assertStringContainsString(
             'tinymce.each(\'tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,'
             . 'tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,'
             . 'mycode/plugin8.js?m=',
@@ -96,7 +96,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         );
 
         // Check theme links included
-        $this->assertContains(
+        $this->assertStringContainsString(
             "tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),"
             . "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});",
             $content
