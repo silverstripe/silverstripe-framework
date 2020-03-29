@@ -2,9 +2,13 @@
 
 namespace SilverStripe\Dev;
 
+use ArrayAccess;
 use Exception;
 use LogicException;
+use PHPUnit\Framework\Constraint\ArraySubset;
 use PHPUnit\Framework\Constraint\LogicalNot;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
@@ -583,6 +587,43 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         // Call state helpers
         static::$state->tearDown($this);
+    }
+
+    /**
+     * Asserts that an array has a specified subset.
+     *
+     * @param array|ArrayAccess $subset
+     * @param array|ArrayAccess $array
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws \PHPUnit\Framework\Exception
+     *
+     * @codeCoverageIgnore
+     */
+    public static function assertArraySubset(
+        $subset,
+        $array,
+        bool $checkForObjectIdentity = false,
+        string $message = ''
+    ): void {
+        if (!(\is_array($subset) || $subset instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                1,
+                'array or ArrayAccess'
+            );
+        }
+
+        if (!(\is_array($array) || $array instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                2,
+                'array or ArrayAccess'
+            );
+        }
+
+        $constraint = new ArraySubset($subset, $checkForObjectIdentity);
+
+        static::assertThat($array, $constraint, $message);
     }
 
     public static function assertContains(
