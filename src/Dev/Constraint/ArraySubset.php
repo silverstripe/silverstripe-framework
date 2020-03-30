@@ -85,6 +85,8 @@ final class ArraySubset extends Constraint
 
             $this->fail($other, $description, $f);
         }
+
+        return null;
     }
 
     /**
