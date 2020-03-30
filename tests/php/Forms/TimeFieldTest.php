@@ -11,7 +11,7 @@ use SilverStripe\i18n\i18n;
 
 class TimeFieldTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -147,36 +147,30 @@ class TimeFieldTest extends SapphireTest
         $this->assertEquals($f->Value(), '23:59:00');
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setTimeFormat/
-     */
     public function testHtml5WithCustomFormatThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setTimeFormat/');
         $f = new TimeField('Time', 'Time');
         $f->setValue('15:59:00');
         $f->setTimeFormat('mm:HH');
         $f->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setTimeLength/
-     */
     public function testHtml5WithCustomDateLengthThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setTimeLength/');
         $f = new TimeField('Time', 'Time');
         $f->setValue('15:59:00');
         $f->setTimeLength(IntlDateFormatter::MEDIUM);
         $f->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setLocale/
-     */
     public function testHtml5WithCustomLocaleThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setLocale/');
         $f = new TimeField('Time', 'Time');
         $f->setValue('15:59:00');
         $f->setLocale('de_DE');

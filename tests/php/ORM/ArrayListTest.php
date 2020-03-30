@@ -134,11 +134,9 @@ class ArrayListTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     */
     public function testZeroLimit()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
         Deprecation::notification_version('4.3.0');
         $list = new ArrayList([
             ['Key' => 1],

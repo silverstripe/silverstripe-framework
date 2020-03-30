@@ -25,7 +25,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         TestObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         TestAssetStore::reset();
         parent::tearDown();
@@ -73,12 +73,12 @@ class HTMLEditorFieldTest extends FunctionalTest
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
         // Test shortcodes
         $inputText = "Shortcode: [file_link id=4]";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+        $this->assertStringContainsString('Shortcode: [file_link id=4]', $field->Field());
     }
 
     public function testBasicSaving()

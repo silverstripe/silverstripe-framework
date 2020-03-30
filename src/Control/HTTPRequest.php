@@ -566,7 +566,10 @@ class HTTPRequest implements ArrayAccess
                 $key = "Controller";
                 if ($varName === '*' || $varName === '@') {
                     if (isset($patternParts[$i + 1])) {
-                        user_error(sprintf('All URL params after wildcard parameter $%s will be ignored', $varName), E_USER_WARNING);
+                        user_error(
+                            sprintf('All URL params after wildcard parameter $%s will be ignored', $varName),
+                            E_USER_WARNING
+                        );
                     }
                     if ($varName === '*') {
                         array_pop($patternParts);

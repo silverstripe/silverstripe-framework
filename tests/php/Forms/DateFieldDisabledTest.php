@@ -12,7 +12,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class DateFieldDisabledTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -79,7 +79,7 @@ class DateFieldDisabledTest extends SapphireTest
     {
         $field = new DateField_Disabled('Test');
         $result = $field->Type();
-        $this->assertContains('readonly', $result, 'Disabled field should be treated as readonly');
-        $this->assertContains('date_disabled', $result, 'Field should contain date_disabled class');
+        $this->assertStringContainsString('readonly', $result, 'Disabled field should be treated as readonly');
+        $this->assertStringContainsString('date_disabled', $result, 'Field should contain date_disabled class');
     }
 }

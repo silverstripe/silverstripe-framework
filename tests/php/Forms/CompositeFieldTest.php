@@ -134,9 +134,9 @@ class CompositeFieldTest extends SapphireTest
         $field->setColumnCount(3);
         $result = $field->extraClass();
 
-        $this->assertContains('field', $result, 'Default class was not added');
-        $this->assertContains('CompositeField', $result, 'Default class was not added');
-        $this->assertContains('multicolumn', $result, 'Multi column field did not have extra class added');
+        $this->assertStringContainsString('field', $result, 'Default class was not added');
+        $this->assertStringContainsString('CompositeField', $result, 'Default class was not added');
+        $this->assertStringContainsString('multicolumn', $result, 'Multi column field did not have extra class added');
     }
 
     public function testGetAttributes()
@@ -160,17 +160,13 @@ class CompositeFieldTest extends SapphireTest
         $this->assertNull($result['title']);
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Error
-     * @expectedExceptionMessageRegExp /a field called 'Test' appears twice in your form.*TextField.*TextField/
-     */
     public function testCollateDataFieldsThrowsErrorOnDuplicateChildren()
     {
-        $field = CompositeField::create(
-            TextField::create('Test'),
-            TextField::create('Test')
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
+        $this->expectExceptionMessageMatches(
+            '/a field called \'Test\' appears twice in your form.*TextField.*TextField/'
         );
-
+        $field = CompositeField::create(TextField::create('Test'), TextField::create('Test'));
         $list = [];
         $field->collateDataFields($list);
     }
@@ -265,8 +261,8 @@ class CompositeFieldTest extends SapphireTest
         $field->setName('TestComposite');
 
         $result = $field->debug();
-        $this->assertContains(CompositeField::class . ' (TestComposite)', $result);
-        $this->assertContains('TestTextField', $result);
-        $this->assertContains('<ul', $result, 'Result should be formatted as a <ul>');
+        $this->assertStringContainsString(CompositeField::class . ' (TestComposite)', $result);
+        $this->assertStringContainsString('TestTextField', $result);
+        $this->assertStringContainsString('<ul', $result, 'Result should be formatted as a <ul>');
     }
 }

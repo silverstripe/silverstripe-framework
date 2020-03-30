@@ -20,7 +20,7 @@ use SilverStripe\Forms\PopoverField;
  */
 class FormSchemaTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class FormSchemaTest extends SapphireTest
         $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testGetSchema.json'), true);
 
         $schema = $formSchema->getSchema($form);
-        $this->assertInternalType('array', $schema);
+        $this->assertIsArray($schema);
         $this->assertEquals($expected, $schema);
     }
 
@@ -62,7 +62,7 @@ class FormSchemaTest extends SapphireTest
         ];
 
         $state = $formSchema->getState($form);
-        $this->assertInternalType('array', $state);
+        $this->assertIsArray($state);
         $this->assertEquals($expected, $state);
     }
 
@@ -92,7 +92,7 @@ class FormSchemaTest extends SapphireTest
         ];
 
         $state = $formSchema->getState($form);
-        $this->assertInternalType('array', $state);
+        $this->assertIsArray($state);
         $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
     }
 
@@ -136,7 +136,7 @@ class FormSchemaTest extends SapphireTest
         ];
 
         $state = $formSchema->getState($form);
-        $this->assertInternalType('array', $state);
+        $this->assertIsArray($state);
         $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
     }
 
@@ -167,7 +167,7 @@ class FormSchemaTest extends SapphireTest
         $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testGetNestedSchema.json'), true);
         $schema = $formSchema->getSchema($form);
 
-        $this->assertInternalType('array', $schema);
+        $this->assertIsArray($schema);
         $this->assertEquals($expected, $schema);
     }
 
@@ -207,7 +207,7 @@ class FormSchemaTest extends SapphireTest
         $formSchema = new FormSchema();
         $schema = $formSchema->getSchema($form);
         $expected = json_decode(file_get_contents(__DIR__ . '/FormSchemaTest/testSchemaValidation.json'), true);
-        $this->assertInternalType('array', $schema);
+        $this->assertIsArray($schema);
         $this->assertEquals($expected, $schema);
     }
 }

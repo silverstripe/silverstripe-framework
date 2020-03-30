@@ -63,7 +63,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\TreeNode::class,
     );
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -1472,11 +1472,9 @@ class DataObjectTest extends SapphireTest
     }
 
 
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWritingInvalidDataObjectThrowsException()
     {
+        $this->expectException(\SilverStripe\ORM\ValidationException::class);
         $validatedObject = new DataObjectTest\ValidatedObject();
         $validatedObject->write();
     }
@@ -1626,29 +1624,23 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Staff', $ceoObj->EmploymentType);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->merge(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->set(DataObjectTest\Team::class, 'has_many', array(0 => DataObjectTest\Player::class));
         DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->merge(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
@@ -1970,7 +1962,7 @@ class DataObjectTest extends SapphireTest
         $obj = new DataObjectTest\Fixture();
         $obj->write();
 
-        $this->assertInternalType("int", $obj->ID);
+        $this->assertIsInt($obj->ID);
     }
 
     /**
@@ -2250,11 +2242,9 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException LogicException
-     */
     public function testInvalidate()
     {
+        $this->expectException(LogicException::class);
         $do = new DataObjectTest\Fixture();
         $do->write();
 
@@ -2375,11 +2365,9 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testBrokenLateStaticBindingStyle()
     {
+        $this->expectException(\InvalidArgumentException::class);
         // If you call DataObject::get() you have to pass a first argument
         DataObject::get();
     }

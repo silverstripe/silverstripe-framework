@@ -71,11 +71,11 @@ class IPUtilsTest extends SapphireTest
     }
 
     /**
-     * @expectedException \RuntimeException
      * @requires extension sockets
      */
     public function testAnIPv6WithOptionDisabledIPv6()
     {
+        $this->expectException(\RuntimeException::class);
         if (defined('AF_INET6')) {
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }

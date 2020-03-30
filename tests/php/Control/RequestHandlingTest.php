@@ -357,7 +357,7 @@ class RequestHandlingTest extends FunctionalTest
         $response = $this->post('ControllerFormWithAllowedActions/Form', $data);
         $this->assertEquals(403, $response->getStatusCode());
         // Note: Looks for a specific 403 thrown by Form->httpSubmission(), not RequestHandler->handleRequest()
-        $this->assertContains('not allowed on form', $response->getBody());
+        $this->assertStringContainsString('not allowed on form', $response->getBody());
     }
 
     public function testActionHandlingOnField()

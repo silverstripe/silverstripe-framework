@@ -8,7 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class HTTPCacheControlMiddlewareTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         // Set to disabled at null forcing level
@@ -39,7 +39,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $response = new HTTPResponse();
         $cc->applyToResponse($response);
 
-        $this->assertContains('must-revalidate', $response->getHeader('cache-control'));
+        $this->assertStringContainsString('must-revalidate', $response->getHeader('cache-control'));
     }
 
     /**
@@ -62,9 +62,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         if ($immutable) {
             $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
         } else {
-            $this->assertContains('max-age=300', $response->getHeader('cache-control'));
-            $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
-            $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+            $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('no-cache', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('no-store', $response->getHeader('cache-control'));
         }
     }
 
@@ -78,9 +78,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $response = new HTTPResponse();
         $cc->applyToResponse($response);
 
-        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
-        $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
-        $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+        $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
+        $this->assertStringNotContainsString('no-cache', $response->getHeader('cache-control'));
+        $this->assertStringNotContainsString('no-store', $response->getHeader('cache-control'));
     }
 
     public function testEnableCacheWithMaxAgeAppliesWhenLevelDoesNot()
@@ -94,7 +94,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $response = new HTTPResponse();
         $cc->applyToResponse($response);
 
-        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+        $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
     }
 
     public function testPublicCacheWithMaxAge()
@@ -107,10 +107,10 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $response = new HTTPResponse();
         $cc->applyToResponse($response);
 
-        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+        $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
         // STATE_PUBLIC doesn't contain no-cache or no-store headers to begin with,
         // so can't test their removal effectively
-        $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
+        $this->assertStringNotContainsString('no-cache', $response->getHeader('cache-control'));
     }
 
     public function testPublicCacheWithMaxAgeAppliesWhenLevelDoesNot()
@@ -124,7 +124,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $response = new HTTPResponse();
         $cc->applyToResponse($response);
 
-        $this->assertContains('max-age=300', $response->getHeader('cache-control'));
+        $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
     }
 
     /**
@@ -150,9 +150,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         if ($immutable) {
             $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
         } else {
-            $this->assertContains('no-store', $response->getHeader('cache-control'));
-            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
-            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+            $this->assertStringContainsString('no-store', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('max-age', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('s-maxage', $response->getHeader('cache-control'));
         }
     }
 
@@ -179,9 +179,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         if ($immutable) {
             $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
         } else {
-            $this->assertContains('no-cache', $response->getHeader('cache-control'));
-            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
-            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+            $this->assertStringContainsString('no-cache', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('max-age', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('s-maxage', $response->getHeader('cache-control'));
         }
     }
 
@@ -206,9 +206,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         if ($immutable) {
             $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
         } else {
-            $this->assertContains('s-maxage=300', $response->getHeader('cache-control'));
-            $this->assertNotContains('no-cache', $response->getHeader('cache-control'));
-            $this->assertNotContains('no-store', $response->getHeader('cache-control'));
+            $this->assertStringContainsString('s-maxage=300', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('no-cache', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('no-store', $response->getHeader('cache-control'));
         }
     }
 
@@ -233,9 +233,9 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         if ($immutable) {
             $this->assertEquals($originalResponse->getHeader('cache-control'), $response->getHeader('cache-control'));
         } else {
-            $this->assertContains('must-revalidate', $response->getHeader('cache-control'));
-            $this->assertNotContains('max-age', $response->getHeader('cache-control'));
-            $this->assertNotContains('s-maxage', $response->getHeader('cache-control'));
+            $this->assertStringContainsString('must-revalidate', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('max-age', $response->getHeader('cache-control'));
+            $this->assertStringNotContainsString('s-maxage', $response->getHeader('cache-control'));
         }
     }
 

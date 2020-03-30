@@ -42,7 +42,7 @@ class SecurityTest extends FunctionalTest
         SecurityTest\SecuredController::class,
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         // Set to an empty array of authenticators to enable the default
         Config::modify()
@@ -87,7 +87,7 @@ class SecurityTest extends FunctionalTest
 
         $response = $this->get('SecurityTest_SecuredController');
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertContains(
+        $this->assertStringContainsString(
             Config::inst()->get(Security::class, 'login_url'),
             $response->getHeader('Location')
         );
@@ -95,7 +95,7 @@ class SecurityTest extends FunctionalTest
         $this->logInWithPermission('ADMIN');
         $response = $this->get('SecurityTest_SecuredController');
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('Success', $response->getBody());
+        $this->assertStringContainsString('Success', $response->getBody());
 
         $this->autoFollowRedirection = true;
     }
@@ -140,7 +140,7 @@ class SecurityTest extends FunctionalTest
             array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!')
         );
         Security::permissionFailure($controller);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'You are already logged in!',
             $controller->getResponse()->getBody(),
             'Custom permission failure message was ignored'
@@ -150,7 +150,7 @@ class SecurityTest extends FunctionalTest
             $controller,
             array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message')
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'One-off failure message',
             $controller->getResponse()->getBody(),
             "Message set passed to Security::permissionFailure() didn't override Config values"
@@ -161,7 +161,7 @@ class SecurityTest extends FunctionalTest
             $controller,
             DBField::create_field('HTMLFragment', '<p>Custom HTML &amp; Message</p>')
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<p>Custom HTML &amp; Message</p>',
             $controller->getResponse()->getBody()
         );
@@ -171,7 +171,7 @@ class SecurityTest extends FunctionalTest
             $controller,
             DBField::create_field('Text', 'Safely escaped & message')
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Safely escaped &amp; message',
             $controller->getResponse()->getBody()
         );
@@ -201,29 +201,32 @@ class SecurityTest extends FunctionalTest
             Security::setCurrentUser(null);
         }
         $response = $this->getRecursive('SecurityTest_SecuredController');
-        $this->assertContains(Convert::raw2xml("That page is secured."), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
+        $this->assertStringContainsString(Convert::raw2xml("That page is secured."), $response->getBody());
+        $this->assertStringContainsString('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // Non-logged in user should not be redirected, but instead shown the login form
         // No message/context is available as the user has not attempted to view the secured controller
         $response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
-        $this->assertNotContains(Convert::raw2xml("That page is secured."), $response->getBody());
-        $this->assertNotContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
-        $this->assertContains('<input type="submit" name="action_doLogin"', $response->getBody());
+        $this->assertStringNotContainsString(Convert::raw2xml("That page is secured."), $response->getBody());
+        $this->assertStringNotContainsString(
+            Convert::raw2xml("You don't have access to this page"),
+            $response->getBody()
+        );
+        $this->assertStringContainsString('<input type="submit" name="action_doLogin"', $response->getBody());
 
         // BackURL with permission error (wrong permissions) should not redirect
         $this->logInAs('grouplessmember');
         $response = $this->getRecursive('SecurityTest_SecuredController');
-        $this->assertContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
-        $this->assertContains(
+        $this->assertStringContainsString(Convert::raw2xml("You don't have access to this page"), $response->getBody());
+        $this->assertStringContainsString(
             '<input type="submit" name="action_logout" value="Log in as someone else"',
             $response->getBody()
         );
 
         // Directly accessing this page should attempt to follow the BackURL, but stop when it encounters the error
         $response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
-        $this->assertContains(Convert::raw2xml("You don't have access to this page"), $response->getBody());
-        $this->assertContains(
+        $this->assertStringContainsString(Convert::raw2xml("You don't have access to this page"), $response->getBody());
+        $this->assertStringContainsString(
             '<input type="submit" name="action_logout" value="Log in as someone else"',
             $response->getBody()
         );
@@ -231,11 +234,11 @@ class SecurityTest extends FunctionalTest
         // Check correctly logged in admin doesn't generate the same errors
         $this->logInAs('admin');
         $response = $this->getRecursive('SecurityTest_SecuredController');
-        $this->assertContains(Convert::raw2xml("Success"), $response->getBody());
+        $this->assertStringContainsString(Convert::raw2xml("Success"), $response->getBody());
 
         // Directly accessing this page should attempt to follow the BackURL and succeed
         $response = $this->getRecursive('Security/login?BackURL=SecurityTest_SecuredController/');
-        $this->assertContains(Convert::raw2xml("Success"), $response->getBody());
+        $this->assertStringContainsString(Convert::raw2xml("Success"), $response->getBody());
     }
 
     public function testLogInAsSomeoneElse()
@@ -722,7 +725,7 @@ class SecurityTest extends FunctionalTest
         $response = $this->get(Config::inst()->get(Security::class, 'login_url'));
         $robotsHeader = $response->getHeader('X-Robots-Tag');
         $this->assertNotNull($robotsHeader);
-        $this->assertContains('noindex', $robotsHeader);
+        $this->assertStringContainsString('noindex', $robotsHeader);
     }
 
     public function testDoNotSendEmptyRobotsHeaderIfNotDefined()

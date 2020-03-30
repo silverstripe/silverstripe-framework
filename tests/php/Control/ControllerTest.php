@@ -42,7 +42,7 @@ class ControllerTest extends FunctionalTest
         UnsecuredController::class,
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         Director::config()->update('alternate_base_url', '/');
@@ -60,7 +60,10 @@ class ControllerTest extends FunctionalTest
     {
         /* For a controller with a template, the default action will simple run that template. */
         $response = $this->get("TestController/");
-        $this->assertContains("This is the main template. Content is 'default content'", $response->getBody());
+        $this->assertStringContainsString(
+            "This is the main template. Content is 'default content'",
+            $response->getBody()
+        );
     }
 
     public function testMethodActions()
@@ -68,18 +71,21 @@ class ControllerTest extends FunctionalTest
         /* The Action can refer to a method that is called on the object.  If a method returns an array, then it
         * will be used to customise the template data */
         $response = $this->get("TestController/methodaction");
-        $this->assertContains("This is the main template. Content is 'methodaction content'.", $response->getBody());
+        $this->assertStringContainsString(
+            "This is the main template. Content is 'methodaction content'.",
+            $response->getBody()
+        );
 
         /* If the method just returns a string, then that will be used as the response */
         $response = $this->get("TestController/stringaction");
-        $this->assertContains("stringaction was called.", $response->getBody());
+        $this->assertStringContainsString("stringaction was called.", $response->getBody());
     }
 
     public function testTemplateActions()
     {
         /* If there is no method, it can be used to point to an alternative template. */
         $response = $this->get("TestController/templateaction");
-        $this->assertContains(
+        $this->assertStringContainsString(
             "This is the template for templateaction. Content is 'default content'.",
             $response->getBody()
         );
@@ -284,12 +290,10 @@ class ControllerTest extends FunctionalTest
         });
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid allowed_action '*'
-     */
     public function testWildcardAllowedActions()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid allowed_action \'*\'');
         $this->get('AccessWildcardSecuredController');
     }
 

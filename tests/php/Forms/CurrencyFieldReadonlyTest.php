@@ -21,9 +21,9 @@ class CurrencyFieldReadonlyTest extends SapphireTest
         $field = new CurrencyField_Readonly('Test', '', '$5.00');
         $result = $field->Field();
 
-        $this->assertContains('<input', $result, 'An input should be rendered');
-        $this->assertContains('readonly', $result, 'The input should be readonly');
-        $this->assertContains('$5.00', $result, 'The value should be rendered');
+        $this->assertStringContainsString('<input', $result, 'An input should be rendered');
+        $this->assertStringContainsString('readonly', $result, 'The input should be readonly');
+        $this->assertStringContainsString('$5.00', $result, 'The value should be rendered');
     }
 
     public function testFieldWithOutValue()
@@ -32,9 +32,9 @@ class CurrencyFieldReadonlyTest extends SapphireTest
         $field = new CurrencyField_Readonly('Test', '', null);
         $result = $field->Field();
 
-        $this->assertContains('<input', $result, 'An input should be rendered');
-        $this->assertContains('readonly', $result, 'The input should be readonly');
-        $this->assertContains('AUD0.00', $result, 'The value should be rendered');
+        $this->assertStringContainsString('<input', $result, 'An input should be rendered');
+        $this->assertStringContainsString('readonly', $result, 'The input should be readonly');
+        $this->assertStringContainsString('AUD0.00', $result, 'The value should be rendered');
     }
 
     /**
@@ -46,8 +46,8 @@ class CurrencyFieldReadonlyTest extends SapphireTest
         $field = new CurrencyField_Readonly('Test', '', '€5.00');
         $result = $field->Field();
 
-        $this->assertContains('<input', $result, 'An input should be rendered');
-        $this->assertContains('readonly', $result, 'The input should be readonly');
-        $this->assertContains('€5.00', $result, 'The value should be rendered');
+        $this->assertStringContainsString('<input', $result, 'An input should be rendered');
+        $this->assertStringContainsString('readonly', $result, 'The input should be readonly');
+        $this->assertStringContainsString('€5.00', $result, 'The value should be rendered');
     }
 }

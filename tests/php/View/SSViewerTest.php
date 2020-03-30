@@ -50,7 +50,7 @@ class SSViewerTest extends SapphireTest
         SSViewerTest\TestObject::class,
     );
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         SSViewer::config()->update('source_file_comments', false);
@@ -59,7 +59,7 @@ class SSViewerTest extends SapphireTest
         $this->oldServer = $_SERVER;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $_SERVER = $this->oldServer;
         TestAssetStore::reset();
@@ -259,14 +259,14 @@ class SSViewerTest extends SapphireTest
         $testBackend->processCombinedFiles();
         $js = array_keys($testBackend->getJavascript());
         $combinedTestFilePath = Director::publicFolder() . reset($js);
-        $this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
+        $this->assertStringContainsString('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
         // and make sure the combined content matches the input content, i.e. no loss of functionality
         if (!file_exists($combinedTestFilePath)) {
             $this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
         }
         $combinedTestFileContents = file_get_contents($combinedTestFilePath);
-        $this->assertContains($jsFileContents, $combinedTestFileContents);
+        $this->assertStringContainsString($jsFileContents, $combinedTestFileContents);
     }
 
     public function testRequirementsMinification()
@@ -1524,25 +1524,12 @@ after'
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Up called when we're already at the top of the scope
-     */
     public function testTooManyUps()
     {
-        $data = new ArrayData([
-            'Foo' => new ArrayData([
-                'Name' => 'Foo',
-                'Bar' => new ArrayData([
-                    'Name' => 'Bar'
-                ])
-            ])
-        ]);
-
-        $this->assertEquals(
-            'Foo',
-            $this->render('<% with Foo.Bar %>{$Up.Up.Name}<% end_with %>', $data)
-        );
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Up called when we\'re already at the top of the scope');
+        $data = new ArrayData(['Foo' => new ArrayData(['Name' => 'Foo', 'Bar' => new ArrayData(['Name' => 'Bar'])])]);
+        $this->assertEquals('Foo', $this->render('<% with Foo.Bar %>{$Up.Up.Name}<% end_with %>', $data));
     }
 
     /**
@@ -1832,23 +1819,23 @@ after'
             '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>'
         );
         $result = $tmpl->process($obj);
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<svg><use xlink:href="#sprite"></use></svg>',
             $result,
             'SSTemplateParser should only rewrite anchor hrefs'
@@ -1887,13 +1874,13 @@ after'
 
         $code = '<a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace("/^(\/)+/", "/",'
             . ' $_SERVER[\'REQUEST_URI\'])); ?>#anchor">InsertedLink</a>';
-        $this->assertContains($code, $result);
+        $this->assertStringContainsString($code, $result);
         // TODO Fix inline links in PHP mode
-        // $this->assertContains(
+        // $this->assertStringContainsString(
         //  '<a class="inline" href="<?php echo str_replace(',
         //  $result
         // );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<svg><use xlink:href="#sprite"></use></svg>',
             $result,
             'SSTemplateParser should only rewrite anchor hrefs'

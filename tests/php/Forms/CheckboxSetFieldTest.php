@@ -359,13 +359,13 @@ class CheckboxSetFieldTest extends SapphireTest
             )
         );
         $fieldHTML = (string)$field1->Field();
-        $this->assertContains('One', $fieldHTML);
-        $this->assertContains('Two &amp; Three', $fieldHTML);
-        $this->assertNotContains('Two & Three', $fieldHTML);
-        $this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
-        $this->assertNotContains('Four & Five & Six', $fieldHTML);
-        $this->assertContains('&lt;firstname&gt;', $fieldHTML);
-        $this->assertNotContains('<firstname>', $fieldHTML);
+        $this->assertStringContainsString('One', $fieldHTML);
+        $this->assertStringContainsString('Two &amp; Three', $fieldHTML);
+        $this->assertStringNotContainsString('Two & Three', $fieldHTML);
+        $this->assertStringContainsString('Four &amp; Five &amp; Six', $fieldHTML);
+        $this->assertStringNotContainsString('Four & Five & Six', $fieldHTML);
+        $this->assertStringContainsString('&lt;firstname&gt;', $fieldHTML);
+        $this->assertStringNotContainsString('<firstname>', $fieldHTML);
     }
 
     /**

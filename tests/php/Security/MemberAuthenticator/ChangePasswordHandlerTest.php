@@ -15,7 +15,7 @@ class ChangePasswordHandlerTest extends SapphireTest
 {
     protected static $fixture_file = 'ChangePasswordHandlerTest.yml';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -42,8 +42,8 @@ class ChangePasswordHandlerTest extends SapphireTest
 
         $result = $handler->setRequest($request)->changepassword();
 
-        $this->assertInternalType('array', $result, 'An array is returned');
-        $this->assertContains('Security/lostpassword', $result['Content'], 'Lost password URL is included');
-        $this->assertContains('Security/login', $result['Content'], 'Login URL is included');
+        $this->assertIsArray($result, 'An array is returned');
+        $this->assertStringContainsString('Security/lostpassword', $result['Content'], 'Lost password URL is included');
+        $this->assertStringContainsString('Security/login', $result['Content'], 'Login URL is included');
     }
 }

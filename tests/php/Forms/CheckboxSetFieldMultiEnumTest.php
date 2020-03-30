@@ -26,7 +26,7 @@ class CheckboxSetFieldMulitEnumTest extends SapphireTest
         }
     }
 
-    public function setUp()
+    protected function setUp() : void
     {
         if (!(DB::get_conn() instanceof MySQLDatabase)) {
             $this->markTestSkipped('DBMultiEnum only supported by MySQL');
@@ -35,7 +35,7 @@ class CheckboxSetFieldMulitEnumTest extends SapphireTest
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         if (!(DB::get_conn() instanceof MySQLDatabase)) {
             return;

@@ -2,9 +2,13 @@
 
 namespace SilverStripe\Dev;
 
+use ArrayAccess;
 use Exception;
 use LogicException;
+use PHPUnit\Framework\Constraint\ArraySubset;
 use PHPUnit\Framework\Constraint\LogicalNot;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\InvalidArgumentHelper;
 use SilverStripe\CMS\Controllers\RootURLController;
@@ -261,7 +265,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::setUp() before custom setup code
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         if (!defined('FRAMEWORK_PATH')) {
             trigger_error(
@@ -373,7 +377,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * @throws Exception
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         // Start tests
         static::start();
@@ -402,7 +406,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::tearDownAfterClass() after custom tear down code
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         // Call state helpers
         static::$state->tearDownOnce(static::class);
@@ -567,7 +571,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      *
      * User code should call parent::tearDown() after custom tear down code
      */
-    protected function tearDown()
+    protected function tearDown() : void
     {
         // Reset mocked datetime
         DBDatetime::clear_mock_now();
@@ -583,6 +587,43 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         // Call state helpers
         static::$state->tearDown($this);
+    }
+
+    /**
+     * Asserts that an array has a specified subset.
+     *
+     * @param array|ArrayAccess $subset
+     * @param array|ArrayAccess $array
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws \PHPUnit\Framework\Exception
+     *
+     * @codeCoverageIgnore
+     */
+    public static function assertArraySubset(
+        $subset,
+        $array,
+        bool $checkForObjectIdentity = false,
+        string $message = ''
+    ): void {
+        if (!(\is_array($subset) || $subset instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                1,
+                'array or ArrayAccess'
+            );
+        }
+
+        if (!(\is_array($array) || $array instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                2,
+                'array or ArrayAccess'
+            );
+        }
+
+        $constraint = new ArraySubset($subset, $checkForObjectIdentity);
+
+        static::assertThat($array, $constraint, $message);
     }
 
     public static function assertContains(
@@ -956,7 +997,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        static::assertContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertStringContainsString($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**
@@ -978,7 +1019,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $needleSQL = static::normaliseSQL($needleSQL);
         $haystackSQL = static::normaliseSQL($haystackSQL);
 
-        static::assertNotContains($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
+        static::assertStringNotContainsString($needleSQL, $haystackSQL, $message, $ignoreCase, $checkForObjectIdentity);
     }
 
     /**

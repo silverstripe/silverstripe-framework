@@ -20,7 +20,7 @@ class i18nTextCollectorTest extends SapphireTest
      */
     protected $alternateBaseSavePath = null;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->setupManifest();
@@ -29,7 +29,7 @@ class i18nTextCollectorTest extends SapphireTest
         Filesystem::makeFolder($this->alternateBaseSavePath);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         if (is_dir($this->alternateBaseSavePath)) {
             Filesystem::removeFolder($this->alternateBaseSavePath);
@@ -547,27 +547,27 @@ PHP;
         );
 
         $moduleLangFileContent = file_get_contents($moduleLangFile);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    ADDITION: Addition\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    ENTITY: 'Entity with \"Double Quotes\"'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    MAINTEMPLATE: 'Main Template'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    OTHERENTITY: 'Other Entity'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    WITHNAMESPACE: 'Include Entity with Namespace'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    NONAMESPACE: 'Include Entity without Namespace'\n",
             $moduleLangFileContent
         );
@@ -579,11 +579,11 @@ PHP;
             'Master language file can be written to modules /lang folder'
         );
         $otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    ENTITY: 'Other Module Entity'\n",
             $otherModuleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    MAINTEMPLATE: 'Main Template Other Module'\n",
             $otherModuleLangFileContent
         );

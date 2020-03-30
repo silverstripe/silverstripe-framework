@@ -48,6 +48,8 @@ class MySQLQuery extends Query
     public function getIterator()
     {
         if (is_object($this->handle)) {
+            // reset to the beginning of the result set before iterating
+            $this->handle->data_seek(0);
             while ($data = $this->nextRecord()) {
                 yield $data;
             }

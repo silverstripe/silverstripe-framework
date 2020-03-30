@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Util\InvalidArgumentHelper;
+use PHPUnit\Framework\InvalidArgumentException;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
 
@@ -29,10 +29,8 @@ class ViewableDataContains extends Constraint implements TestOnly
      */
     public function __construct($match)
     {
-        parent::__construct();
-
         if (!is_array($match)) {
-            throw InvalidArgumentHelper::factory(
+            throw InvalidArgumentException::create(
                 1,
                 'array'
             );

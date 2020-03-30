@@ -27,13 +27,13 @@ class ManyManyThroughListTest extends SapphireTest
         ManyManyThroughListTest\FallbackLocale::class,
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         DataObject::reset();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         DataObject::reset();
         parent::tearDown();
@@ -193,10 +193,10 @@ class ManyManyThroughListTest extends SapphireTest
     /**
      * Test validation
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testValidateModelValidatesJoinType()
     {
+        $this->expectException(\InvalidArgumentException::class);
         DataObject::reset();
         ManyManyThroughListTest\Item::config()->update(
             'db',

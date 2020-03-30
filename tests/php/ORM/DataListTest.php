@@ -90,11 +90,9 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSubtractBadDataclassThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $teamsComments = TeamComment::get();
         $teams = Team::get();
         $teamsComments->subtract($teams);
@@ -153,21 +151,21 @@ class DataListTest extends SapphireTest
     public function testDistinct()
     {
         $list = TeamComment::get();
-        $this->assertContains(
+        $this->assertSQLContains(
             'SELECT DISTINCT',
             $list->dataQuery()->sql($params),
             'Query is set as distinct by default'
         );
 
         $list = $list->distinct(false);
-        $this->assertNotContains(
+        $this->assertSQLNotContains(
             'SELECT DISTINCT',
             $list->dataQuery()->sql($params),
             'Query does not contain distinct'
         );
 
         $list = $list->distinct(true);
-        $this->assertContains(
+        $this->assertSQLContains(
             'SELECT DISTINCT',
             $list->dataQuery()->sql($params),
             'Query contains distinct'
@@ -442,8 +440,8 @@ class DataListTest extends SapphireTest
 
         // Assert that filtering on ID searches by the base table, not the child table field
         $query = SubTeam::get()->filter('ID', 4)->sql($parameters);
-        $this->assertContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
-        $this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
+        $this->assertSQLContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
+        $this->assertSQLNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
     }
 
     public function testByIDs()
@@ -595,12 +593,12 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Phil', $list->last()->Name);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player
-     */
     public function testSortInvalidParameters()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Fans is not a linear relation on model SilverStripe\\ORM\\Tests\\DataObjectTest\\Player'
+        );
         $list = Team::get();
         $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
     }
@@ -763,12 +761,10 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
     }
 
-    /**
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     * @expectedExceptionMessage Class DataListFilter.Bogus does not exist
-     */
     public function testSimpleFilterWithNonExistingComparisator()
     {
+        $this->expectException(\SilverStripe\Core\Injector\InjectorNotFoundException::class);
+        $this->expectExceptionMessage('Class DataListFilter.Bogus does not exist');
         $list = TeamComment::get();
         $list->filter('Comment:Bogus', 'team comment');
     }
@@ -776,11 +772,11 @@ class DataListTest extends SapphireTest
     /**
      * Invalid modifiers are treated as failed filter construction
      *
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     * @expectedExceptionMessage Class DataListFilter.invalidmodifier does not exist
      */
     public function testInvalidModifier()
     {
+        $this->expectException(\SilverStripe\Core\Injector\InjectorNotFoundException::class);
+        $this->expectExceptionMessage('Class DataListFilter.invalidmodifier does not exist');
         $list = TeamComment::get();
         $list->filter('Comment:invalidmodifier', 'team comment');
     }
@@ -1104,12 +1100,12 @@ class DataListTest extends SapphireTest
         $this->assertEquals('007', $list->first()->ShirtNumber);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage MascotAnimal is not a relation on model SilverStripe\ORM\Tests\DataObjectTest\Team
-     */
     public function testFilterOnInvalidRelation()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'MascotAnimal is not a relation on model SilverStripe\\ORM\\Tests\\DataObjectTest\\Team'
+        );
         // Filter on missing relation 'MascotAnimal'
         Team::get()
             ->filter('MascotAnimal.Name', 'Richard')
@@ -1717,11 +1713,11 @@ class DataListTest extends SapphireTest
     /**
      * Test exact match filter with empty array items
      *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set
      */
     public function testEmptyFilter()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set');
         $list = TeamComment::get();
         $list->exclude('Name', array());
     }

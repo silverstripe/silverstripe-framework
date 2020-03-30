@@ -14,7 +14,7 @@ use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 class DevAdminControllerTest extends FunctionalTest
 {
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -43,8 +43,8 @@ class DevAdminControllerTest extends FunctionalTest
     {
         // Check for the controller running from the registered url above
         // (we use contains rather than equals because sometimes you get a warning)
-        $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
-        $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
+        $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
+        $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
     }
 
     public function testGoodRegisteredControllerStatus()

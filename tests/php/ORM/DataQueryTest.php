@@ -79,12 +79,12 @@ class DataQueryTest extends SapphireTest
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestC');
         $this->assertTrue($dq->query()->isJoinedTo('testc_DataQueryTest_C'));
-        $this->assertContains('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+        $this->assertSQLContains('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
 
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestCTwo');
         $this->assertTrue($dq->query()->isJoinedTo('testctwo_DataQueryTest_C'));
-        $this->assertContains('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+        $this->assertSQLContains('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
     }
 
     public function testApplyRelationDeepInheritance()
@@ -94,7 +94,7 @@ class DataQueryTest extends SapphireTest
         //apply a relation to a relation from an ancestor class
         $newDQ->applyRelation('TestA');
         $this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
+        $this->assertSQLContains('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 
         //test many_many relation
 
@@ -105,7 +105,7 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql());
+        $this->assertSQLContains("FROM \"$baseDBTable\"", $newDQ->sql());
 
         //test many_many with shared inheritance
         $newDQ = new DataQuery(DataQueryTest\ObjectE::class);
@@ -113,12 +113,12 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
+        $this->assertSQLContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
         $newDQ->applyRelation('ManyTestGs');
         //confirm we are still joined to the base table
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //double check it is the "FROM" clause
-        $this->assertContains(
+        $this->assertSQLContains(
             "FROM \"$baseDBTable\"",
             $newDQ->sql(),
             'The FROM clause has been removed from the query'
@@ -260,7 +260,7 @@ class DataQueryTest extends SapphireTest
     {
         $dq = new DataQuery(SQLSelectTest\TestObject::class);
         $dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
-        $this->assertContains(
+        $this->assertSQLContains(
             'ORDER BY "SQLSelectTest_DO"."Name" ASC, "_SortColumn0" DESC',
             $dq->sql($parameters)
         );
@@ -276,13 +276,13 @@ class DataQueryTest extends SapphireTest
     public function testDistinct()
     {
         $query = new DataQuery(DataQueryTest\ObjectE::class);
-        $this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
+        $this->assertSQLContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
 
         $query = $query->distinct(false);
-        $this->assertNotContains('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
+        $this->assertSQLNotContains('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
 
         $query = $query->distinct(true);
-        $this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
+        $this->assertSQLContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
     }
 
     public function testComparisonClauseInt()

@@ -56,7 +56,7 @@ class TreeMultiselectFieldTest extends SapphireTest
      */
     protected $fieldValue;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -170,7 +170,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(0, $items, 'there must be no items selected');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
+        $this->assertStringContainsString($field->ID(), $html);
     }
 
 
@@ -198,8 +198,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(2, $items, 'there must be exactly 2 items selected');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
-        $this->assertContains($this->fieldValue, $html);
+        $this->assertStringContainsString($field->ID(), $html);
+        $this->assertStringContainsString($this->fieldValue, $html);
     }
 
     /**
@@ -247,7 +247,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(0, $items, 'there must be 0 selected items');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
+        $this->assertStringContainsString($field->ID(), $html);
     }
 
     /**
@@ -297,7 +297,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(2, $items, 'there must be exactly 2 selected items');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
-        $this->assertContains($this->fieldValue, $html);
+        $this->assertStringContainsString($field->ID(), $html);
+        $this->assertStringContainsString($this->fieldValue, $html);
     }
 }

@@ -47,23 +47,26 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $htmlFragment = $compontent->getHTMLFragments($gridField);
 
         // Check that the output shows name and hat as sortable fields, but not city
-        $this->assertContains('<span class="non-sortable">City</span>', $htmlFragment['header']);
-        $this->assertContains(
+        $this->assertStringContainsString('<span class="non-sortable">City</span>', $htmlFragment['header']);
+        $this->assertStringContainsString(
             'value="Name" class="action grid-field__sort" id="action_SetOrderName"',
             $htmlFragment['header']
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'value="Cheerleader Hat" class="action grid-field__sort" id="action_SetOrderCheerleader-Hat-Colour"',
             $htmlFragment['header']
         );
 
         // Check inverse of above
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'value="City" class="action grid-field__sort" id="action_SetOrderCity"',
             $htmlFragment['header']
         );
-        $this->assertNotContains('<span class="non-sortable">Name</span>', $htmlFragment['header']);
-        $this->assertNotContains('<span class="non-sortable">Cheerleader Hat</span>', $htmlFragment['header']);
+        $this->assertStringNotContainsString('<span class="non-sortable">Name</span>', $htmlFragment['header']);
+        $this->assertStringNotContainsString(
+            '<span class="non-sortable">Cheerleader Hat</span>',
+            $htmlFragment['header']
+        );
     }
 
     public function testGetManipulatedData()
@@ -145,20 +148,20 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $relationListAsql = Convert::nl2os($relationListA->sql(), ' ');
 
         // Assert that all tables are joined properly
-        $this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListAsql);
-        $this->assertContains(
+        $this->assertStringContainsString('FROM "GridFieldSortableHeaderTest_Team"', $relationListAsql);
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
             . 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
             $relationListAsql
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
             . 'AS "cheerleader_GridFieldSortableHeaderTest_Cheerleader" '
             . 'ON "cheerleader_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
             . '"GridFieldSortableHeaderTest_Team"."CheerleaderID"',
             $relationListAsql
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
             . 'AS "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
             . 'ON "cheerleader_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '
@@ -185,15 +188,15 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $relationListBsql = $relationListB->sql();
 
         // Assert that subclasses are included in the query
-        $this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListBsql);
-        $this->assertContains(
+        $this->assertStringContainsString('FROM "GridFieldSortableHeaderTest_Team"', $relationListBsql);
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
             . 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
             $relationListBsql
         );
         // Joined tables are joined basetable first
         // Note: CheerLeader is base of Mom table, hence the alias
-        $this->assertContains(
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
             . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader" '
             . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
@@ -201,14 +204,14 @@ class GridFieldSortableHeaderTest extends SapphireTest
             $relationListBsql
         );
         // Then the basetable of the joined record is joined to the specific subtable
-        $this->assertContains(
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
             . 'AS "cheerleadersmom_GridFieldSortableHeaderTest_Mom" '
             . 'ON "cheerleadersmom_GridFieldSortableHeaderTest_Cheerleader"."ID" = '
             . '"cheerleadersmom_GridFieldSortableHeaderTest_Mom"."ID"',
             $relationListBsql
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
             . 'AS "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat" '
             . 'ON "cheerleadersmom_hat_GridFieldSortableHeaderTest_CheerleaderHat"."ID" = '

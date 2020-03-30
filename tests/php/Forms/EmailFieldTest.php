@@ -77,6 +77,6 @@ class EmailFieldTest extends FunctionalTest
             ['Email' => 'test@test.com']
         );
 
-        $this->assertContains('Test save was successful', $response->getBody());
+        $this->assertStringContainsString('Test save was successful', $response->getBody());
     }
 }
