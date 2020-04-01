@@ -161,7 +161,7 @@ class HTMLEditorConfigTest extends SapphireTest
         try {
             $config = new TinyMCEConfig();
             $this->expectException(Exception::class);
-            $this->expectExceptionMessageRegExp('/module is not installed/');
+            $this->expectExceptionMessageMatches('/module is not installed/');
             $config->getScriptURL();
         } finally {
             ModuleLoader::inst()->popManifest();
