@@ -301,7 +301,7 @@ class SSViewerTest extends SapphireTest
         $testBackend->processCombinedFiles();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/^Cannot minify files without a minification service defined./');
+        $this->expectExceptionMessageMatches('/^Cannot minify files without a minification service defined./');
 
         $testBackend->setMinifyCombinedFiles(true);
         $testBackend->setMinifier(null);
