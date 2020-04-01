@@ -77,4 +77,14 @@ class DiffTest extends SapphireTest
 
         $this->assertRegExp($expected, $actual);
     }
+
+    public function testDiffArray()
+    {
+        $from = ['Lorem', ['array here please ignore'], 'ipsum dolor'];
+        $to = 'Lorem,ipsum';
+        $expected = "/^Lorem,ipsum *<del>dolor<\/del> *$/";
+        $actual = Diff::compareHTML($from, $to);
+
+        $this->assertRegExp($expected, $actual);
+    }
 }
