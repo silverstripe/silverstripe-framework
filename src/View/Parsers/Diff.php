@@ -174,6 +174,7 @@ class Diff extends \Diff
             $content = $content ? "true" : "false";
         }
         if (is_array($content)) {
+            $content = array_filter($content, 'is_scalar');
             // Convert array to CSV
             $content = implode(',', $content);
         }

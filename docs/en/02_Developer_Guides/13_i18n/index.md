@@ -244,7 +244,7 @@ en:
     SINGULARNAME: 'object'
     PLURALNAME: 'objects'
     PLURALS:
-      one: 'An object',
+      one: 'An object'
       other: '{count} objects'
 ```
 

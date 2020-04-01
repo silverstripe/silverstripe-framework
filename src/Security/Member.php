@@ -793,7 +793,7 @@ class Member extends DataObject
      *
      * E.g.
      * <code>
-     * Member::logInAs(Security::findAnAdministrator(), function() {
+     * Member::actAs(Security::findAnAdministrator(), function() {
      *     $record->write();
      * });
      * </code>

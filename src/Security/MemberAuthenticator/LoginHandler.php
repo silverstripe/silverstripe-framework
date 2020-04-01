@@ -201,7 +201,7 @@ class LoginHandler extends RequestHandler
             // Welcome message
             $message = _t(
                 'SilverStripe\\Security\\Member.WELCOMEBACK',
-                'Welcome Back, {firstname}',
+                'Welcome back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
             Security::singleton()->setSessionMessage($message, ValidationResult::TYPE_GOOD);
