@@ -88,7 +88,7 @@ class Text extends StringField {
 			}
 		}
 
-		return count($output)==0 ? '' : implode($output, '. ') . '.';
+		return count($output)==0 ? '' : implode('. ', $output) . '.';
 	}
 
 

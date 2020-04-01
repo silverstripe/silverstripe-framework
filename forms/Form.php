@@ -1810,7 +1810,7 @@ class Form extends RequestHandler {
 	 * @return string
 	 */
 	public function extraClass() {
-		return implode(array_unique($this->extraClasses), ' ');
+		return implode(' ', array_unique($this->extraClasses));
 	}
 
 	/**
