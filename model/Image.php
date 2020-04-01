@@ -767,7 +767,7 @@ class Image extends File implements Flushable {
 		foreach($matches as $formatdir) {
 			$prepend[] = $formatdir[0];
 		}
-		$filename = implode($prepend) . $filename;
+		$filename = implode('', $prepend) . $filename;
 
 		if (!preg_match($pattern['FullPattern'], $filename)) {
 			throw new InvalidArgumentException('Filename ' . $filename

@@ -1993,7 +1993,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 		// Get additional filter classes
 		if($this->filter && ($filterClasses = $this->filter->getPageClasses($this->obj))) {
 			if(is_array($filterClasses)) {
-				$filterClasses = implode(' ' . $filterClasses);
+				$filterClasses = implode(' ', $filterClasses);
 			}
 			$classes .= ' ' . $filterClasses;
 		}
