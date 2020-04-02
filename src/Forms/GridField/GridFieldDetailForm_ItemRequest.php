@@ -111,7 +111,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     public function view($request)
     {
         if (!$this->record->canView()) {
-            $this->httpError(403);
+            $this->httpError(403, _t(
+                __CLASS__ . '.ViewPermissionsFailure',
+                'It seems you don\'t have the necessary permissions to view "{ObjectTitle}"',
+                ['ObjectTitle' => $this->record->singular_name()]
+            ));
         }
 
         $controller = $this->getToplevelController();
@@ -189,8 +193,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         if (!$this->record->canView()) {
             $controller = $this->getToplevelController();
-            // TODO More friendly error
-            return $controller->httpError(403);
+            return $controller->httpError(403, _t(
+                __CLASS__ . '.ViewPermissionsFailure',
+                'It seems you don\'t have the necessary permissions to view "{ObjectTitle}"',
+                ['ObjectTitle' => $this->record->singular_name()]
+            ));
         }
 
         $fields = $this->component->getFields();
@@ -490,7 +497,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         // Check permission
         if (!$this->record->canEdit()) {
-            return $this->httpError(403);
+            $this->httpError(403, _t(
+                __CLASS__ . '.EditPermissionsFailure',
+                'It seems you don\'t have the necessary permissions to edit "{ObjectTitle}"',
+                ['ObjectTitle' => $this->record->singular_name()]
+            ));
+            return null;
         }
 
         // Save from form data

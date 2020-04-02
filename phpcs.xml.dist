@@ -18,7 +18,7 @@
 		<exclude name="Generic.Files.LineLength.TooLong" />
 		<exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />
 	</rule>
-	<rule phpcbf-only="true" ref="Squiz.Strings.ConcatenationSpacing">
+	<rule ref="Squiz.Strings.ConcatenationSpacing">
 		<properties>
 			<property name="spacing" value="1" />
 			<property name="ignoreNewlines" value="true"/>

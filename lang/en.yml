@@ -111,6 +111,8 @@ en:
     NEW: 'Add new record'
     NEXT: 'Go to next record'
     PREVIOUS: 'Go to previous record'
+    EditPermissionsFailure: 'It seems you don''t have the necessary permissions to edit "{ObjectTitle}"'
+    ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
