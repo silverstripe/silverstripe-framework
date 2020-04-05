@@ -2615,7 +2615,7 @@ class i18n extends SS_Object implements TemplateGlobalProvider, Flushable {
 				if(is_dir($themesBase)) {
 					foreach(scandir($themesBase) as $theme) {
 						if(
-							strpos($theme, Config::inst()->get('SSViewer', 'theme')) === 0
+							strpos($theme, (string)Config::inst()->get('SSViewer', 'theme')) === 0
 							&& file_exists("{$themesBase}/{$theme}/lang/")
 						) {
 							$filename = $adapter->getFilenameForLocale($locale);

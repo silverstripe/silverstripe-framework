@@ -31,8 +31,11 @@ matrix:
     - php: 7.3
       env: DB=SQLITE
 
-    - php: 7.4snapshot
+    - php: 7.4
       env: DB=SQLITE INSTALL_PHPUNIT_FORK=1
+      dist: xenial
+      services:
+        - mysql
 
     # CMS test
     - php: 5.5

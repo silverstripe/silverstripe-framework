@@ -52,14 +52,16 @@ This can be done by calling the static method [api:Config::inst()], like so:
 
 ```php
 	$config = Config::inst()->get('MyClass');
+```
+Or through the config() method on the class.
 
-```
-	
-```
+```php
 	$config = $this->config();
-
 ```
+
+There are three public methods available on the instance. `get($class, $variable)`, `remove($class, $variable)` and
 `update($class, $variable, $value)`.
+
 
 [notice]
 There is no "set" method. It is not possible to completely set the value of a classes' property. `update` adds new 
@@ -77,8 +79,9 @@ To set those configuration options on our previously defined class we can define
 	    - Foo
 	    - Bar
 	    - Baz
-
 ```
+
+To use those variables in your application code:
 
 ```php
 	$me = new MyClass();
@@ -109,6 +112,8 @@ To set those configuration options on our previously defined class we can define
 	// returns 'Qux'
 
 ```
+
+[notice]
 There is no way currently to restrict read or write access to any configuration property, or influence/check the values 
 being read or written.
 [/notice]
@@ -158,8 +163,9 @@ rather than add.
 	$actionsWithoutExtra = $this->config()->get(
 		'allowed_actions', Config::UNINHERITED
 	);
-
 ```
+
+They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value
 
 - If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
 - If the composite value is an associative array, any member of that array that matches both the key and value of any 
@@ -181,14 +187,11 @@ The name of the files within the applications `_config` directly are arbitrary. 
 The structure of each YAML file is a series of headers and values separated by YAML document separators. 
 
 ```yml
-```
-```
+	---
 	Name: adminroutes
 	After:
-```
   	  - '#coreroutes'
 	---
-```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
@@ -230,14 +233,11 @@ To specify these rules you add an "After" and/or "Before" key to the relevant he
 keys is a list of reference paths to other value sections. A basic example:
 
 ```yml
-```
-```
+	---
 	Name: adminroutes
 	After:
-```
   	  - '#coreroutes'
 	---
-```
 	Director:
 	  rules:
 	    'admin': 'AdminRootController'
@@ -286,28 +286,23 @@ You then list any of the following rules as sub-keys, with informational values 
   - 'classexists', in which case the value(s) should be classes that must exist
   - 'moduleexists', in which case the value(s) should be modules that must exist
   - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe
-```
     mode the site must be in
-```
+  - 'envvarset', in which case the value(s) should be environment variables that must be set
   - 'constantdefined', in which case the value(s) should be constants that must be defined
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
 ```yml
-```
-```
+	---
 	Only:
 	  moduleexists: 'MyFineModule'
-```
-```
+	---
 	MyClass:
 	  property: 'foo'
-```
-```
+	---
 	Except:
 	  moduleexists: 'MyFineModule'
-```
-```
+	---
 	MyClass:
 	  property: 'bar'
 ```
