@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM\Filters;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use Exception;
@@ -10,8 +9,7 @@ use Exception;
 /**
  * Filters by full-text matching on the given field.
  *
- * Full-text indexes are only available with MyISAM tables. The following column types are
- * supported:
+ * The following column types are supported:
  *   - Char
  *   - Varchar
  *   - Text
