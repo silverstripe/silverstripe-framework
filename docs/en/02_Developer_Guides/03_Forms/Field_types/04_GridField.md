@@ -329,6 +329,7 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\ORM\DataObject;
 
 class Team extends DataObject 
@@ -338,7 +339,7 @@ class Team extends DataObject
         'Name' => 'Text'
     ];
 
-    public static $many_many = [
+    public static $belongs_many_many = [
         'Players' => 'Player'
     ];
 }
@@ -372,7 +373,7 @@ class Player extends DataObject
             );
 
             $config = GridFieldConfig_RelationEditor::create();
-            $config->getComponentByType('GridFieldDetailForm')->setFields($teamFields);
+            $config->getComponentByType(GridFieldDetailForm::class)->setFields($teamFields);
 
             $gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
             $fields->findOrMakeTab('Root.Teams')->replaceField('Teams', $gridField);
