@@ -165,7 +165,9 @@ class Page_Controller extends ContentController
         if ($check) {
             $validationResult = new ValidationResult();
             $validationResult->addFieldError('Email', 'This email already exists');
-            throw new ValidationException($validationResult);
+            $form->setSessionValidationResult($validationResult);
+            $form->setSessionData($form->getData());
+            return $this->redirectBack();
         }
 
 
