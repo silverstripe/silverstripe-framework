@@ -556,21 +556,26 @@ trait Extensible
             if (in_array($class, self::$unextendable_classes)) {
                 continue;
             }
-            $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
+            $extensions = Config::inst()->get(
+                $class,
+                'extensions',
+                Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+            ) ?? [];
 
-            if ($extensions) {
-                foreach ($extensions as $extension) {
-                    $name = $extension;
-                    // Allow service names of the form "%$ServiceName"
-                    if (substr($name, 0, 2) == '%$') {
-                        $name = substr($name, 2);
-                    }
-                    $name = trim(strtok($name, '('));
-                    if (class_exists($name)) {
-                        $name = ClassInfo::class_name($name);
-                    }
-                    $this->extension_instances[$name] = Injector::inst()->get($extension);
+            foreach ($extensions as $extension) {
+                // Allow service names of the form "%$ServiceName" or "ServiceName.default"
+                [$extensionClass,] = ClassInfo::parse_class_spec($extension);
+
+                // If singletons have constructor dependencies they must be service references, and
+                // must be defined in Injector configuration
+                $extensionArgs = [];
+                if ($extensionSpec = Injector::inst()->getServiceSpec($extensionClass)) {
+                    $extensionClass = $extensionSpec['class'];
+                    $extensionArgs = $extensionSpec['constructor'] ?? [];
                 }
+
+                $name = class_exists($extensionClass) ? ClassInfo::class_name($extensionClass) : $extension;
+                $this->extension_instances[$name] = Injector::inst()->get($extensionClass, true, $extensionArgs);
             }
         }
 

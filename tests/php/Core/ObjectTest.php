@@ -292,7 +292,7 @@ class ObjectTest extends SapphireTest
             $objectTest_ExtensionTest->hasExtension(ExtendTest3::class),
             "Extensions are detected with instance hasExtension() when added through add_extension()"
         );
-        
+
         // load in a custom implementation
         Injector::inst()->registerService(new ExtendTest5(), ExtendTest4::class);
         $this->assertTrue(
@@ -558,16 +558,33 @@ class ObjectTest extends SapphireTest
         BaseObject::create();
     }
 
-    public function testExtensionsCanBeAppliedViaInjectorServices()
+    /**
+     * @dataProvider serviceNameProvider
+     */
+    public function testExtensionsCanBeAppliedViaInjectorServices($serviceClass, $expected)
     {
-        $config = Config::modify();
-        $config->set(Injector::class, 'ATestService', [
-            'class' => ExtensionService::class,
-            'constructor' => ['nonsense'],
-        ]);
-        $config->set(BaseObject::class, 'extensions', ['ATestService']);
+        Config::modify()
+            ->set(Injector::class, 'ATestService', [
+                'class' => ExtensionService::class,
+                'constructor' => ['default'],
+            ])
+            ->set(Injector::class, 'ATestService.secondary', [
+                'class' => ExtensionService::class,
+                'constructor' => ['secondary'],
+            ])
+            ->set(Injector::class, 'AnotherTestService', '%$ATestService')
+            ->set(BaseObject::class, 'extensions', [$serviceClass]);
 
-        $nonsense = BaseObject::create();
-        $this->assertEquals('This extension is nonsense', $nonsense->aMethod());
+        $baseObject = BaseObject::create();
+        $this->assertSame('This extension is ' . $expected, $baseObject->aMethod());
+    }
+
+    public function serviceNameProvider()
+    {
+        yield ['ATestService', 'default'];
+        yield ['ATestService.secondary', 'secondary'];
+        yield ['%$ATestService', 'default'];
+        yield ['%$ATestService.secondary', 'secondary'];
+        yield ['AnotherTestService', 'default'];
     }
 }

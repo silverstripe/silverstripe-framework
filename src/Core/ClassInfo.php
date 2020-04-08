@@ -423,6 +423,12 @@ class ClassInfo
             return static::$_cache_parse[$classSpec];
         }
 
+        // Remove service class prefixes and append them later, ensuring PHP can still parse it
+        $serviceClassPrefix = substr($classSpec, 0, 2) === '%$';
+        if ($serviceClassPrefix) {
+            $classSpec = substr($classSpec, 2);
+        }
+
         $tokens = token_get_all("<?php $classSpec");
         $class = null;
         $args = array();
@@ -556,7 +562,12 @@ class ClassInfo
             }
         }
 
+        // Re-apply service class prefix
+        if ($serviceClassPrefix) {
+            $class = '%$' . $class;
+        }
         $result = [$class, $args];
+
         static::$_cache_parse[$classSpec] = $result;
         return $result;
     }

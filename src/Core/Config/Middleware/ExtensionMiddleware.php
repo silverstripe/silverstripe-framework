@@ -64,9 +64,8 @@ class ExtensionMiddleware implements Middleware
 
         $extensions = $extensionSourceConfig['extensions'];
         foreach ($extensions as $extension) {
-            list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
-            // Strip service name specifier
-            $extensionClass = strtok($extensionClass, '.');
+            [$extensionClass, $extensionArgs] = ClassInfo::parse_class_spec($extension);
+
             if ($extensionSpec = Injector::inst()->getServiceSpec($extensionClass)) {
                 $extensionClass = $extensionSpec['class'];
             }

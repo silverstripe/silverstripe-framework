@@ -348,6 +348,8 @@ class CustomisedSomeExtension extends SomeExtension
 }
 ```
 
+You may also use [Injector service definitions](injector/) to define extensions such as `%$MyExtension.default`, which will be resolved by Injector before being applied.
+
 [notice]
 Please note that modifications such as this should be done in YAML configuration only. It is not recommended
 to use `Config::modify()->set()` to adjust the implementation class name of an extension after the configuration

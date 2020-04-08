@@ -1068,6 +1068,11 @@ class Injector implements ContainerInterface
             return $this->specs[$name];
         }
 
+        // Strip prefix
+        if (substr($name, 0, 2) === '%$') {
+            $name = substr($name, 2);
+        }
+
         // Lazy load
         $config = $this->configLocator->locateConfigFor($name);
         if ($config) {
