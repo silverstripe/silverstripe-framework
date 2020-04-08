@@ -227,8 +227,9 @@ class MySQLDatabase extends Database implements TransactionManager
             $match[$fileClass] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = '$fileClassSQL'";
 
             // We make the relevance search by converting a boolean mode search into a normal one
-            $relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
-            $htmlEntityRelevanceKeywords = str_replace(array('*', '+', '-'), '', $htmlEntityKeywords);
+            $booleanChars = ['*', '+', '@', '-', '(', ')', '<', '>'];
+            $relevanceKeywords = str_replace($booleanChars, '', $keywords);
+            $htmlEntityRelevanceKeywords = str_replace($booleanChars, '', $htmlEntityKeywords);
             $relevance[$pageClass] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
                     . "AGAINST ('$relevanceKeywords') "
                     . "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";

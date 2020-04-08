@@ -34,5 +34,4 @@ class TestObject extends DataObject implements TestOnly
             'columns' => ['ColumnE'],
         ],
     );
-
 }
