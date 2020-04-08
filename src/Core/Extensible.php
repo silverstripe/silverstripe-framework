@@ -564,7 +564,7 @@ trait Extensible
 
             foreach ($extensions as $extension) {
                 // Allow service names of the form "%$ServiceName" or "ServiceName.default"
-                [$extensionClass,] = ClassInfo::parse_class_spec($extension);
+                [$extensionClass] = ClassInfo::parse_class_spec($extension);
 
                 // If singletons have constructor dependencies they must be service references, and
                 // must be defined in Injector configuration
