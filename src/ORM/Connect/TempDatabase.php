@@ -25,6 +25,13 @@ class TempDatabase
     protected $name = null;
 
     /**
+     * Workaround to avoid infinite loops.
+     *
+     * @var Exception
+     */
+    private $skippedException = null;
+
+    /**
      * Optionally remove the test DB when the PHP process exits
      *
      * @var boolean
@@ -293,6 +300,13 @@ class TempDatabase
         try {
             $this->rebuildTables($extraDataObjects);
         } catch (DatabaseException $ex) {
+            // Avoid infinite loops
+            if ($this->skippedException && $this->skippedException->getMessage() == $ex->getMessage()) {
+                throw $ex;
+            }
+
+            $this->skippedException = $ex;
+
             // In case of error during build force a hard reset
             // e.g. pgsql doesn't allow schema updates inside transactions
             $this->kill();
