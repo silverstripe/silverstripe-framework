@@ -10,8 +10,8 @@ interface UniqueKeyInterface
      * Generate a unique key for data object
      *
      * @param DataObject $object
-     * @param array $extraKeys
+     * @param array $keyComponents
      * @return string
      */
-    public function generateKey(DataObject $object, array $extraKeys = []): string;
+    public function generateKey(DataObject $object, array $keyComponents = []): string;
 }

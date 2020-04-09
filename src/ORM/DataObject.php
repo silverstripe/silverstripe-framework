@@ -3237,7 +3237,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         /** @var DataObject $singleton */
         $singleton = singleton($callerClass);
 
-        $cacheComponents = [$filter, $orderby, $singleton->getCacheKeyComponent()];
+        $cacheComponents = [$filter, $orderby, $singleton->getUniqueKeyComponents()];
         $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
@@ -4189,7 +4189,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Generate a unique key for data object
-     * the unique key uses the @see DataObject::getCacheKeyComponent() extension point so unique key modifiers
+     * the unique key uses the @see DataObject::getUniqueKeyComponents() extension point so unique key modifiers
      * such as versioned or fluent are covered
      * i.e. same data object in different stages or different locales will produce different unique key
      *
@@ -4198,18 +4198,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * - when you need unique id on the front end (for example JavaScript needs to target specific element)
      *
      * @return string
+     * @throws Exception
      */
     public function getUniqueKey(): string
     {
         /** @var UniqueKeyInterface $service */
         $service = UniqueKeyService::singleton();
         if (!$service instanceof UniqueKeyInterface) {
-            return '';
+            return bin2hex(random_bytes(16));
         }
 
-        $cacheKeys = $this->getCacheKeyComponent();
+        $keyComponents = $this->getUniqueKeyComponents();
 
-        return $service->generateKey($this, $cacheKeys);
+        return $service->generateKey($this, $keyComponents);
     }
 
     /**
@@ -4238,7 +4239,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
     }
 
-    private function getCacheKeyComponent(): array
+    private function getUniqueKeyComponents(): array
     {
         return $this->extend('cacheKeyComponent');
     }

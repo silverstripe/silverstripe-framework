@@ -28,7 +28,7 @@ The unique key generation can be altered in two ways:
 
 ### Extension point
 
-`cacheKeyComponent` extension point is located in `DataObject::getCacheKeyComponent`.
+`cacheKeyComponent` extension point is located in `DataObject::getUniqueKeyComponents`.
 Use standard extension flow to define the  `cacheKeyComponent` method on your extension which is expected to return a `string`.
 This value will be used when unique key is generated. Common cases are:
 
