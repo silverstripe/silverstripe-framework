@@ -3,7 +3,10 @@
 namespace SilverStripe\Dev\Install;
 
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Flushable;
 
 /**
  * This class keeps track of the available database adapters
@@ -12,7 +15,7 @@ use SilverStripe\Dev\Deprecation;
  *
  * @author Tom Rix
  */
-class DatabaseAdapterRegistry
+class DatabaseAdapterRegistry implements Flushable
 {
 
     /**
@@ -144,12 +147,46 @@ class DatabaseAdapterRegistry
         } else {
             $databaseConfig = $config;
         }
-        // Search through all composer packages in vendor, updating $databaseConfig
-        foreach (glob(BASE_PATH . '/vendor/*/*/_configure_database.php') as $configFile) {
-            include_once $configFile;
+        foreach (static::getConfigureDatabasePaths() as $configureDatabasePath) {
+            include_once $configureDatabasePath;
         }
         // Update modified variable
         $config = $databaseConfig;
+    }
+
+    /**
+     * Including _configure_database.php is a legacy method of configuring a database
+     * It's still used by https://github.com/silverstripe/silverstripe-sqlite3
+     */
+    protected static function getConfigureDatabasePaths(): array
+    {
+        // autoconfigure() will get called before flush() on ?flush, so manually flush just to ensure no weirdness
+        if (isset($_GET['flush'])) {
+            static::flush();
+        }
+        $cache = static::getCache();
+        $key = __FUNCTION__;
+        if ($cache->has($key)) {
+            return (array) $cache->get($key);
+        } else {
+            try {
+                $paths = glob(BASE_PATH . '/vendor/*/*/_configure_database.php');
+            } catch (Exception $e) {
+                $paths = [];
+            }
+            $cache->set($key, $paths);
+            return $paths;
+        }
+    }
+
+    public static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.DatabaseAdapterRegistry');
+    }
+
+    public static function flush()
+    {
+        static::getCache()->clear();
     }
 
     /**
