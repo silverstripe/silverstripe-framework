@@ -317,3 +317,5 @@ fr:
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
+    PASSWORDRESETSENTHEADER: 'Lien de réinitialisation envoyé'
+    PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitialiser votre mot de passe vous a été envoyé à l''adresse indiquée'
