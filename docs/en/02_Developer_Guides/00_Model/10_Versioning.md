@@ -269,19 +269,16 @@ the shortcode references the database identifier of the `Image` object.
 
 ### Controlling how CMS users interact with versioned DataObjects
 
-By default the versioned module includes a `VersionedGridfieldDetailForm` that can extend gridfield with versioning support for models.
+By default the versioned module includes a `VersionedGridfieldDetailForm` that extends gridfield with versioning support for DataObjects.
 
-You can enable this on a per-model basis using the following code:
+You can disable this on a per-model basis using the following code:
 
 ```php
 <?php
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 class MyBanner extends DataObject {
-    private static $extensions = [
-        Versioned::class,
-    ];
-    private static $versioned_gridfield_extensions = true;
+    private static $versioned_gridfield_extensions = false;
 }
 ```
 
