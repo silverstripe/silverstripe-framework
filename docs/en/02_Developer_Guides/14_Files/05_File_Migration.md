@@ -23,6 +23,25 @@ that previously visible assets remain visible to the public site.
 If additional security or visibility rules should be applied to File dataobjects, then
 make sure to correctly extend `canView` via extensions.
 
+### If you were using the versionedfiles on your 3.x site
+
+If you have had [versionedfiles](https://github.com/symbiote/silverstripe-versionedfiles) module installed, it is very important to run
+an extra task that would clean up the `_versions` folders. Otherwise, files in those folders may be left exposed to public access
+through your web server via guessable URLs. This includes all the unpublished versions of your files.
+
+The task for the job is `VersionedFilesMigrationTask`, and you may run it as follows:
+
+`$ vendor/bin/sake dev/tasks/migrate-versionedfiles strategy=[delete|protect]`
+
+Before you run it, it is important to choose an appropriate strategy that suits your project best.
+
+  - `delete` (default) - delete all `_versions` folders
+  - `protect` - create a protective `.htaccess` file in every `_versions` folder (Apache specific)
+
+If you choose `delete`, it may be wise to take a snapshot of your `public/assets` folder. 
+Shall you consider `protect` as the method, please beware that it may not always work, depending on your server setup.
+In that case it is important to make sure your web server is Apache and that it allows `.htaccess` for all subfolders.
+
 ## Automatic migration
 
 Migration can be invoked by either this task, or can be configured to automatically run during dev build
