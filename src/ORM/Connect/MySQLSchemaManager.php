@@ -40,10 +40,6 @@ class MySQLSchemaManager extends DBSchemaManager
         }
         if ($indexes) {
             foreach ($indexes as $k => $v) {
-                // force MyISAM if we have a fulltext index
-                if ($v['type'] === 'fulltext') {
-                    $addOptions = 'ENGINE=MyISAM';
-                }
                 $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
             }
         }
@@ -104,30 +100,11 @@ class MySQLSchemaManager extends DBSchemaManager
 
         $dbID = self::ID;
         if ($alteredOptions && isset($alteredOptions[$dbID])) {
-            $indexList = $this->indexList($tableName);
-            $skip = false;
-            foreach ($indexList as $index) {
-                if ($index['type'] === 'fulltext') {
-                    $skip = true;
-                    break;
-                }
-            }
-            if ($skip) {
-                $this->alterationMessage(
-                    sprintf(
-                        "Table %s options not changed to %s due to fulltextsearch index",
-                        $tableName,
-                        $alteredOptions[$dbID]
-                    ),
-                    "changed"
-                );
-            } else {
-                $this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$dbID]));
-                $this->alterationMessage(
-                    sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$dbID]),
-                    "changed"
-                );
-            }
+            $this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$dbID]));
+            $this->alterationMessage(
+                sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$dbID]),
+                "changed"
+            );
         }
 
         $alterations = implode(",\n", $alterList);

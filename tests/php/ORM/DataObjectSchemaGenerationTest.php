@@ -25,12 +25,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Start tests
         static::start();
 
-        // enable fulltext option on this table
-        TestIndexObject::config()->update(
-            'create_table_options',
-            array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
-        );
-
         parent::setUpBeforeClass();
     }
 

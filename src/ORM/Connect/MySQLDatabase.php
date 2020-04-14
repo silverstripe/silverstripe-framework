@@ -144,6 +144,12 @@ class MySQLDatabase extends Database implements TransactionManager
      * The core search engine, used by this class and its subclasses to do fun stuff.
      * Searches both SiteTree and File.
      *
+     * Caution: While the $keywords argument is escaped for safe use in a query context,
+     * you need to ensure that it is also a valid boolean expression when opting into $booleanSearch.
+     * For example, the "asterisk" and "greater than" characters have a special meaning in this context,
+     * and can only be placed in certain parts of the keywords. You will need to preprocess and sanitise
+     * user input accordingly in order to avoid query errors.
+     *
      * @param array $classesToSearch
      * @param string $keywords Keywords as a string.
      * @param int $start
@@ -221,8 +227,9 @@ class MySQLDatabase extends Database implements TransactionManager
             $match[$fileClass] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = '$fileClassSQL'";
 
             // We make the relevance search by converting a boolean mode search into a normal one
-            $relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
-            $htmlEntityRelevanceKeywords = str_replace(array('*', '+', '-'), '', $htmlEntityKeywords);
+            $booleanChars = ['*', '+', '@', '-', '(', ')', '<', '>'];
+            $relevanceKeywords = str_replace($booleanChars, '', $keywords);
+            $htmlEntityRelevanceKeywords = str_replace($booleanChars, '', $htmlEntityKeywords);
             $relevance[$pageClass] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
                     . "AGAINST ('$relevanceKeywords') "
                     . "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";

@@ -34,8 +34,4 @@ class TestObject extends DataObject implements TestOnly
             'columns' => ['ColumnE'],
         ],
     );
-
-    private static $create_table_options = array(
-        MySQLSchemaManager::ID => "ENGINE=MyISAM",
-    );
 }
