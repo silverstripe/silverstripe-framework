@@ -21,27 +21,58 @@ $ ./vendor/bin/sake dev/tasks/MigrateFileTask
 
 This task will perform a number of subtasks:
 
- - `move-files`: Migrates existing `File` objects by adding required metadata to the database (incl. versioning).
-   By default, it will not move files on the filesystem (starting with [4.4.0](/changelogs/4.4.0)).
-   Publishes to the live stage to ensure
-   that previously visible assets remain visible to the public site.
-   If additional security or visibility rules should be applied to `File`, then
-   make sure to correctly extend `canView` via extensions.
- - `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
-   This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
- - `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
-    This can be a CPU and memory intensive task for large asset stores.
-    See [Migrating substantial number of files](#performance)
- - `fix-secureassets`: Migrates files secured through the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets) module.
-    Ensures that previous `.htaccess` folder protections don't interfere with 4.x-style asset protections.
- - `fix-folder-permissions`: Fixes folder permissions which might have been broken by
-    previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
+- `move-files`: Migrates existing `File` objects by adding required metadata to the database (incl. versioning).
+  By default, it will not move files on the filesystem (starting with [4.4.0](/changelogs/4.4.0)).
+  Publishes to the live stage to ensure
+  that previously visible assets remain visible to the public site.
+  If additional security or visibility rules should be applied to `File`, then
+  make sure to correctly extend `canView` via extensions.
+- `migrate-folders`: Migrates existing `Folder` objects by adding metadata to the
+  database (incl. versioning). This subtask does not perform any operations with the actual
+  file system. It merely updates the database records.
+- `move-thumbnails`: Move existing thumbnails, rather than have them generated on the fly.
+  This task is optional, but helps to avoid growing your asset folder (no duplicate thumbnails)
+- `generate-cms-thumbnails`: The new CMS UI needs different thumbnail sizes, which can be pregenerated.
+  This can be a CPU and memory intensive task for large asset stores.
+  See [Migrating substantial number of files](#performance)
+- `fix-secureassets`: Migrates files secured through the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets) module.
+  Ensures that previous `.htaccess` folder protections don't interfere with 4.x-style asset protections.
+- `fix-folder-permissions`: Fixes folder permissions which might have been broken by
+  previously using the [silverstripe/secureassets](https://github.com/silverstripe/silverstripe-secureassets)
 
 One or more subtasks can be run individually through the `only` argument.
 Example: `only=move-files,move-thumbnails`
 
+The `move-files` and `migrate-folders` subtasks are mandatory. Without running them,
+your database will be left in an inconsistent state.
+
 The output is quite verbose by default. Look for `WARNING` and `ERROR` in the log files.
 When executing the task on CLI, you'll get colour coded error messages.
+
+### Specialised opt-in file migration subtasks
+Some subtasks are only necessary in specific situations. Those subtasks will not be run by default and must be explicitly referenced via the `only` parameter.
+
+- `normalise-access`: This subtask identifies physical files that are
+inadvertently exposed to the public and moves them to a protected location.
+Until the release of Silverstripe CMS 4.3.5/4.4.4 in September 2019,
+Silverstripe CMS stored protected files in publicly accessible locations
+when the files were created from a "LIVE" versioned context. This commonly
+occur when a user uploaded a file in a user form.
+[CVE-2019-12245 patch](https://www.silverstripe.org/download/security-releases/CVE-2019-12245)
+addressed this issue preventing the exposure of new files. However, this patch
+did not retroactively protect files that had been exposed. You should run this
+task at least once if your Silverstripe CMS project was created prior to
+September 2019.
+- `relocate-userform-uploads-2020-9280`: This subtask is specific to the
+`silverstripe/userforms` module. Because of the
+[CVE-2020-9280](https://www.silverstripe.org/download/security-releases/CVE-2020-9280)
+vulnerability, if your project was migrated from Silverstripe CMS 3, the
+migrated user forms might upload files in wrong folders. This subtask goes
+through all files uploaded via user forms and moves them to their intended
+locations.
+
+Read the [Silverstripe CMS 4.4.6 change logs](/changelogs/4.4.6) to learn more
+about the `normalise-access` and `relocate-userform-uploads-2020-9280` subtasks.
 
 ## Background migration through the Queuedjobs module
 
@@ -65,7 +96,7 @@ are configured to run jobs automatically without time limits
 [2](https://www.cwp.govt.nz/developer-docs/en/2/working_with_projects/infrastructural_considerations/)).
 It is not recommended to run
 [multiple processes](https://github.com/symbiote/silverstripe-queuedjobs/blob/master/docs/en/configuring-multi-process-execution.md)
-when executing the file migration job. 
+when executing the file migration job.
 
 ## Migration of existing thumbnails
 
@@ -123,7 +154,7 @@ and [File Security: Protected file headers](file_security#protected_file_headers
 ## Migrating substantial numbers of files {#performance}
 
 The time it takes to run the file migration will depend on the number of files and their size. The generation of thumbnails will depend on the number and dimension of your images.
-In general, the migration task can be restarted if it times out, and will continue where it left off. 
+In general, the migration task can be restarted if it times out, and will continue where it left off.
 
 If you are migrating a substantial number of files, you should run the file migration task either as a queued job or on the command line. If the migration task fails or times out, you can start it again and it will pick up where it left off.
 
@@ -131,7 +162,7 @@ If your environment supports the _Imagick_ PHP library, you may want to use that
 
 [Changing the image manipulation driver to Imagick](images#changing-the-manipulation-driver-to-imagick)
 
-If your project hosts big images (e.g. 4K images), this can also affect the amount of memory used to generate the thumbnails. The file migration task assumes that it will have at least 512MB of memory available. 
+If your project hosts big images (e.g. 4K images), this can also affect the amount of memory used to generate the thumbnails. The file migration task assumes that it will have at least 512MB of memory available.
 
 By default the file migration task will not generate thumbnails for files greater than 9MB to avoid exhausting the available memory. To increase this limit, add the following code to your YML configuration:
 
