@@ -184,7 +184,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns the SQL query that will be used to get this DataList's records.  Good for debugging. :-)
      *
      * @param array $parameters Out variable for parameters required for this query
-     * @return string The resulting SQL query (may be paramaterised)
+     * @return string The resulting SQL query (may be parameterised)
      */
     public function sql(&$parameters = [])
     {
@@ -363,7 +363,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Return a copy of this list which only includes items with these charactaristics
+     * Return a copy of this list which only includes items with these characteristics
      *
      * @see SS_List::filter()
      *
