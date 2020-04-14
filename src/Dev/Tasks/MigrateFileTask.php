@@ -9,6 +9,8 @@ use Psr\Log\LoggerInterface;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
 use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
 use SilverStripe\Assets\Dev\Tasks\FileMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\FolderMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\NormaliseAccessMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Storage\FileHashingService;
 use SilverStripe\Control\Director;
@@ -17,6 +19,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
+use SilverStripe\UserForms\Task\RecoverUploadLocationsHelper;
 use \Bramus\Monolog\Formatter\ColoredLineFormatter;
 
 /**
@@ -30,10 +33,16 @@ class MigrateFileTask extends BuildTask
 
     protected $defaultSubtasks = [
         'move-files',
+        'migrate-folders',
         'move-thumbnails',
         'generate-cms-thumbnails',
         'fix-folder-permissions',
         'fix-secureassets',
+    ];
+
+    protected $optInSubtasks = [
+        'normalise-access',
+        'relocate-userform-uploads-2020-9280'
     ];
 
     private static $dependencies = [
@@ -81,13 +90,24 @@ class MigrateFileTask extends BuildTask
                     ->setLogger($this->logger)
                     ->run();
 
-                // TODO Split file migration helper into two tasks,
-                // and report back on their process counts consistently here
-                // if ($count) {
-                //     $this->logger->info("{$count} File objects upgraded");
-                // } else {
-                //     $this->logger->info("No File objects needed upgrading");
-                // }
+                $this->extend('postFileMigrationSubtask', $subtask);
+            }
+        }
+
+        $subtask = 'migrate-folders';
+        if (in_array($subtask, $subtasks)) {
+            if (!class_exists(FolderMigrationHelper::class)) {
+                $this->logger->error("No folder migration helper detected");
+            } else {
+                $this->extend('preFileMigrationSubtask', $subtask);
+
+                $this->logger->notice("######################################################");
+                $this->logger->notice("Migrating folder database records ({$subtask})");
+                $this->logger->notice("######################################################");
+
+                FolderMigrationHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
 
                 $this->extend('postFileMigrationSubtask', $subtask);
             }
@@ -195,6 +215,46 @@ class MigrateFileTask extends BuildTask
             }
         }
 
+        $subtask = 'normalise-access';
+        if (in_array($subtask, $subtasks)) {
+            if (!class_exists(NormaliseAccessMigrationHelper::class)) {
+                $this->logger->error("No normalise access migration helper detected");
+            } else {
+                $this->extend('preFileMigrationSubtask', $subtask);
+
+                $this->logger->notice("######################################################");
+                $this->logger->notice("Migrating filesystem and database records ({$subtask})");
+                $this->logger->notice("######################################################");
+
+                NormaliseAccessMigrationHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
+
+                $this->extend('postFileMigrationSubtask', $subtask);
+            }
+        }
+
+        $subtask = 'relocate-userform-uploads-2020-9280';
+        if (in_array($subtask, $subtasks)) {
+            if (!class_exists(RecoverUploadLocationsHelper::class)) {
+                $this->logger->error("No UserForms helper detected");
+            } else {
+                $this->extend('preFileMigrationSubtask', $subtask);
+
+                $this->logger->notice("######################################################");
+                $this->logger->notice("Recovering UserForm uploaded file locations ({$subtask})");
+                $this->logger->notice("######################################################");
+
+                RecoverUploadLocationsHelper::singleton()
+                    ->setLogger($this->logger)
+                    ->run();
+
+                $this->extend('postFileMigrationSubtask', $subtask);
+            }
+        }
+
+        $this->logger->info("Done!");
+
         $this->extend('postFileMigration');
 
         $this->logger->info("Done!");
@@ -236,8 +296,13 @@ TXT;
     protected function validateArgs($args)
     {
         if (!empty($args['only'])) {
-            if (array_diff(explode(',', $args['only']), $this->defaultSubtasks)) {
-                throw new \InvalidArgumentException('Invalid subtasks detected: ' . $args['only']);
+            $only = explode(',', $args['only']);
+
+            $diff = array_diff($only, $this->defaultSubtasks);
+            $diff = array_diff($diff, $this->optInSubtasks);
+
+            if ($diff) {
+                throw new \InvalidArgumentException('Invalid subtasks detected: ' . implode(', ', $diff));
             }
         }
     }
