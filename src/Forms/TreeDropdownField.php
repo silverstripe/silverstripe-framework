@@ -528,14 +528,21 @@ class TreeDropdownField extends FormField
 
         // Set title formatter
         $customised = function (DataObject $child) use ($isSubTree) {
-            return [
+            $data = [
                 'name' => $this->getName(),
                 'id' => $child->obj($this->getKeyField()),
                 'title' => $child->obj($this->getTitleField()),
                 'treetitle' => $child->obj($this->getLabelField()),
                 'disabled' => $this->nodeIsDisabled($child),
-                'isSubTree' => $isSubTree
+                'isSubTree' => $isSubTree,
             ];
+
+            // TODO: would be prefereable not to have to refer to Folder within TreeDropdownField
+            if ($child instanceof Folder) {
+                $data['canViewAnonymous'] = $child->canViewAnonymous();
+                $data['hasChildUserDefinedFormUploads'] = $child->hasChildUserDefinedFormUploads();
+            }
+            return $data;
         };
 
         // Determine output format
@@ -875,6 +882,12 @@ class TreeDropdownField extends FormField
                 'treetitle' => $record->obj($this->getLabelField())->getSchemaValue(),
                 'titlePath' => $titlePath,
             ];
+
+            // TODO: would be prefereable not to have to refer to Folder within TreeDropdownField
+            if ($record instanceof Folder) {
+                $data['data']['valueObject']['canViewAnonymous'] = $record->canViewAnonymous();
+                $data['data']['valueObject']['hasChildUserDefinedFormUploads'] = $record->hasChildUserDefinedFormUploads();
+            }
         }
 
         return $data;
