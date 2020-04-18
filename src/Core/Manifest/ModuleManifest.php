@@ -271,7 +271,8 @@ class ModuleManifest
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // Check if path is in module
-            if (stripos($path, realpath($module->getPath())) !== 0) {
+            $realPath = realpath($module->getPath());
+            if ($realPath && stripos($path, $realPath) !== 0) {
                 continue;
             }
 
