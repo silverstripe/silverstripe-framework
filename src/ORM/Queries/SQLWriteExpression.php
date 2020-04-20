@@ -66,7 +66,7 @@ interface SQLWriteExpression
      *
      * For multi-row objects returns assignments for the current row.
      *
-     * @return array List of assigments. The key of this array will be the
+     * @return array List of assignments. The key of this array will be the
      * column to assign, and the value a parameterised array in the format
      * ['SQL' => [parameters]];
      */

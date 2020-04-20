@@ -97,7 +97,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
     }
 
     /**
-     * Clears all currently set assigment values
+     * Clears all currently set assignment values
      *
      * @return $this The self reference to this query
      */

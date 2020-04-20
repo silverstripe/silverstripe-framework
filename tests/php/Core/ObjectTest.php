@@ -290,7 +290,7 @@ class ObjectTest extends SapphireTest
             $objectTest_ExtensionTest->hasExtension(ExtendTest3::class),
             "Extensions are detected with instance hasExtension() when added through add_extension()"
         );
-        
+
         // load in a custom implementation
         Injector::inst()->registerService(new ExtendTest5(), ExtendTest4::class);
         $this->assertTrue(

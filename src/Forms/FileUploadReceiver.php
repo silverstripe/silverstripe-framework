@@ -44,7 +44,7 @@ trait FileUploadReceiver
     public $relationAutoSetting = true;
 
     /**
-     * Parent data record. Will be infered from parent form or controller if blank.
+     * Parent data record. Will be inferred from parent form or controller if blank.
      *
      * @var DataObject
      */
