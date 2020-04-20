@@ -25,6 +25,11 @@
 		</properties>
 	</rule>
 
+	<!-- use short array syntax (less thirdparty) -->
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
+		<exclude-pattern>/thirdparty/*</exclude-pattern>
+	</rule>
+
 	<!-- include php files only -->
 	<arg name="extensions" value="php,lib,inc,php5"/>
 
