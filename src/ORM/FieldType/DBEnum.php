@@ -56,7 +56,7 @@ class DBEnum extends DBString
      *  "MyField" => "Enum('Val1, Val2, Val3')" // First item 'Val1' is default implicitly
      *  "MyField" => "Enum('Val1, Val2, Val3', 'Val2')" // 'Val2' is default explicitly
      *  "MyField" => "Enum('Val1, Val2, Val3', null)" // Force empty (no) default
-     *  "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')" // Supports array notation as well
+     *  "MyField" => "Enum(['Val1', 'Val2', 'Val3'], 'Val1')" // Supports array notation as well
      * </code>
      *
      * @param string $name
@@ -102,7 +102,7 @@ class DBEnum extends DBString
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
         $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
 
-        $parts = array(
+        $parts = [
             'datatype' => 'enum',
             'enums' => $this->getEnumObsolete(),
             'character set' => $charset,
@@ -110,12 +110,12 @@ class DBEnum extends DBString
             'default' => $this->getDefault(),
             'table' => $this->getTable(),
             'arrayValue' => $this->arrayValue
-        );
+        ];
 
-        $values = array(
+        $values = [
             'type' => 'enum',
             'parts' => $parts
-        );
+        ];
 
         DB::require_field($this->getTable(), $this->getName(), $values);
     }
@@ -175,7 +175,7 @@ class DBEnum extends DBString
     public function enumValues($hasEmpty = false)
     {
         return ($hasEmpty)
-            ? array_merge(array('' => ''), ArrayLib::valuekey($this->getEnum()))
+            ? array_merge(['' => ''], ArrayLib::valuekey($this->getEnum()))
             : ArrayLib::valuekey($this->getEnum());
     }
 
@@ -211,7 +211,7 @@ class DBEnum extends DBString
 
         // Ensure the table level cache exists
         if (empty(self::$enum_cache[$table])) {
-            self::$enum_cache[$table] = array();
+            self::$enum_cache[$table] = [];
         }
 
         // Check existing cache

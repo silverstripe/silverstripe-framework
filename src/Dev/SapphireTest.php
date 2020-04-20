@@ -98,7 +98,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @var array
      */
-    protected $requireDefaultRecordsFrom = array();
+    protected $requireDefaultRecordsFrom = [];
 
     /**
      * A list of extensions that can't be applied during the execution of this run.  If they are
@@ -667,7 +667,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $found = (bool)static::findEmail($to, $from, $subject, $content);
 
         $infoParts = '';
-        $withParts = array();
+        $withParts = [];
         if ($to) {
             $infoParts .= " to '$to'";
         }
@@ -1059,7 +1059,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $permArray = $permCode;
             $permCode = implode('.', $permCode);
         } else {
-            $permArray = array($permCode);
+            $permArray = [$permCode];
         }
 
         // Check cached member
@@ -1139,7 +1139,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Cache for logInWithPermission()
      */
-    protected $cache_generatedMembers = array();
+    protected $cache_generatedMembers = [];
 
     /**
      * Test against a theme.

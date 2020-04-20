@@ -24,14 +24,14 @@ trait CustomMethods
      *
      * @var array
      */
-    protected $extra_method_registers = array();
+    protected $extra_method_registers = [];
 
     /**
      * Non-custom methods
      *
      * @var array
      */
-    protected static $built_in_methods = array();
+    protected static $built_in_methods = [];
 
     /**
      * Attempts to locate and call a method dynamically added to a class at runtime if a default cannot be located
@@ -242,11 +242,11 @@ trait CustomMethods
                     . ' callSetOwnerFirst will be removed in 5.0'
                 );
             }
-            $methodInfo = array(
+            $methodInfo = [
                 'property' => $property,
                 'index' => $index,
                 'callSetOwnerFirst' => $extension instanceof Extension,
-            );
+            ];
 
             $newMethods = array_fill_keys($methods, $methodInfo);
 
@@ -310,10 +310,10 @@ trait CustomMethods
      */
     protected function addWrapperMethod($method, $wrap)
     {
-        self::$extra_methods[static::class][strtolower($method)] = array(
+        self::$extra_methods[static::class][strtolower($method)] = [
             'wrap' => $wrap,
             'method' => $method
-        );
+        ];
     }
 
     /**

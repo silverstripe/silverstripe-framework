@@ -42,7 +42,7 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            array('test' => array(TestEncryptor::class => null))
+            ['test' => [TestEncryptor::class => null]]
         );
         $encryptors = PasswordEncryptor::get_encryptors();
         $this->assertContains('test', array_keys($encryptors));

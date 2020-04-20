@@ -23,7 +23,7 @@ class Component implements GridField_ColumnProvider, GridField_ActionProvider, T
         if ($columnName == 'Surname') {
             return 'shouldnotbestring';
         }
-        return array('class' => 'css-class');
+        return ['class' => 'css-class'];
     }
 
     public function getColumnMetadata($gridField, $columnName)
@@ -31,9 +31,9 @@ class Component implements GridField_ColumnProvider, GridField_ActionProvider, T
         if ($columnName == 'Surname') {
             return 'shouldnotbestring';
         } elseif ($columnName == 'FirstName') {
-            return array();
+            return [];
         }
-        return array('metadata' => 'istrue');
+        return ['metadata' => 'istrue'];
     }
 
     /**
@@ -43,12 +43,12 @@ class Component implements GridField_ColumnProvider, GridField_ActionProvider, T
      */
     public function getColumnsHandled($gridField)
     {
-        return array('Email', 'Surname', 'FirstName');
+        return ['Email', 'Surname', 'FirstName'];
     }
 
     public function getActions($gridField)
     {
-        return array('jump');
+        return ['jump'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)

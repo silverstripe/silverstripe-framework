@@ -50,7 +50,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
         // case insensitive search against keyword 'sub' for folders
-        $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json'));
+        $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = json_decode($response->getBody(), true);
@@ -81,7 +81,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
         // case insensitive search against keyword 'sub' for folders
-        $request = new HTTPRequest('GET', 'url', array('search'=>'sub', 'format' => 'json', 'flatList' => '1'));
+        $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json', 'flatList' => '1']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = json_decode($response->getBody(), true);
@@ -139,7 +139,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
         // case insensitive search against keyword 'sub' for folders
-        $request = new HTTPRequest('GET', 'url', array('search'=>'sub'));
+        $request = new HTTPRequest('GET', 'url', ['search'=>'sub']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = $response->getBody();
@@ -177,7 +177,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
 
         // case insensitive search against keyword 'sub' for files
-        $request = new HTTPRequest('GET', 'url', array('search'=>'sub'));
+        $request = new HTTPRequest('GET', 'url', ['search'=>'sub']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
         $tree = $response->getBody();

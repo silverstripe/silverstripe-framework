@@ -27,7 +27,7 @@ abstract class SelectField extends FormField
      *
      * @var array
      */
-    protected $disabledItems = array();
+    protected $disabledItems = [];
 
     /**
      * @param string $name The field name
@@ -35,7 +35,7 @@ abstract class SelectField extends FormField
      * @param array|ArrayAccess $source A map of the dropdown items
      * @param mixed $value The current value
      */
-    public function __construct($name, $title = null, $source = array(), $value = null)
+    public function __construct($name, $title = null, $source = [], $value = null)
     {
         $this->setSource($source);
         if (!isset($title)) {
@@ -107,7 +107,7 @@ abstract class SelectField extends FormField
     {
         return array_merge(
             parent::getAttributes(),
-            array('type' => null, 'value' => null)
+            ['type' => null, 'value' => null]
         );
     }
 
@@ -190,7 +190,7 @@ abstract class SelectField extends FormField
     {
         // Empty values
         if (empty($values)) {
-            return array();
+            return [];
         }
 
         // Direct array
@@ -203,7 +203,7 @@ abstract class SelectField extends FormField
             return $values->column('ID');
         }
 
-        return array(trim($values));
+        return [trim($values)];
     }
 
     /**

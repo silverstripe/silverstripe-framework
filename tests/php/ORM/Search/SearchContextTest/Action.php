@@ -9,12 +9,12 @@ class Action extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Action';
 
-    private static $db = array(
+    private static $db = [
         'Description' => 'Text',
         'SolutionArea' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Project' => Project::class,
-    );
+    ];
 }

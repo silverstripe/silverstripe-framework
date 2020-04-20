@@ -50,9 +50,9 @@ class ViewableData implements IteratorAggregate
      * @var array
      * @config
      */
-    private static $casting = array(
+    private static $casting = [
         'CSSClasses' => 'Varchar'
-    );
+    ];
 
     /**
      * The default object to cast scalar fields to if casting information is not specified, and casting to an object
@@ -66,7 +66,7 @@ class ViewableData implements IteratorAggregate
     /**
      * @var array
      */
-    private static $casting_cache = array();
+    private static $casting_cache = [];
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ class ViewableData implements IteratorAggregate
     /**
      * @var array
      */
-    private $objCache = array();
+    private $objCache = [];
 
     public function __construct()
     {
@@ -482,7 +482,7 @@ class ViewableData implements IteratorAggregate
 
         // Load value from record
         if ($this->hasMethod($fieldName)) {
-            $value = call_user_func_array(array($this, $fieldName), $arguments ?: []);
+            $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
         } else {
             $value = $this->$fieldName;
         }

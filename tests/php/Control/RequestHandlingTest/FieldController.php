@@ -16,7 +16,7 @@ class FieldController extends Controller implements TestOnly
 {
     private static $url_segment = 'FieldController';
 
-    private static $allowed_actions = array('TestForm');
+    private static $allowed_actions = ['TestForm'];
 
     public function TestForm()
     {

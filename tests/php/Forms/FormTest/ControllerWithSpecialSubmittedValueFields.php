@@ -31,11 +31,11 @@ class ControllerWithSpecialSubmittedValueFields extends Controller implements Te
         }
     }
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action//$ID/$OtherID' => "handleAction",
-    );
+    ];
 
     protected $template = 'BlankPage';
 
@@ -76,7 +76,7 @@ class ControllerWithSpecialSubmittedValueFields extends Controller implements Te
                 'SomeRequiredField'
             )
         );
-        $form->setValidationExemptActions(array('doSubmitValidationExempt'));
+        $form->setValidationExemptActions(['doSubmitValidationExempt']);
         $form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 
         return $form;

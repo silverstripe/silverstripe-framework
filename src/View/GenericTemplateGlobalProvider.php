@@ -10,10 +10,10 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
 
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'ModulePath',
             'List' => 'getDataList'
-        );
+        ];
     }
 
     /**

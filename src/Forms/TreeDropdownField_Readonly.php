@@ -6,7 +6,7 @@ class TreeDropdownField_Readonly extends TreeDropdownField
 {
     protected $readonly = true;
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $fieldName = $this->getTitleField();
         if ($this->value) {

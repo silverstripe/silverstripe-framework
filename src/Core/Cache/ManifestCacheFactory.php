@@ -41,7 +41,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
      * @param array $params The constructor parameters.
      * @return CacheInterface
      */
-    public function create($service, array $params = array())
+    public function create($service, array $params = [])
     {
         // Override default cache generation with SS_MANIFESTCACHE
         $cacheClass = Environment::getEnv('SS_MANIFESTCACHE');

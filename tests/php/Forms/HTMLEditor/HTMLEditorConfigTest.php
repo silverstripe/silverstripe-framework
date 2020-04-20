@@ -35,7 +35,7 @@ class HTMLEditorConfigTest extends SapphireTest
     public function testEnablePluginsByArray()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1', 'plugin2'));
+        $c->enablePlugins(['plugin1', 'plugin2']);
         $this->assertContains('plugin1', array_keys($c->getPlugins()));
         $this->assertContains('plugin2', array_keys($c->getPlugins()));
     }
@@ -60,13 +60,13 @@ class HTMLEditorConfigTest extends SapphireTest
         $c->setOption('language', 'es');
         $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(
-            array(
+            [
                 'plugin1' => 'mypath/plugin1.js',
                 'plugin2' => '/anotherbase/mypath/plugin2.js',
                 'plugin3' => 'https://www.google.com/plugin.js',
                 'plugin4' => null,
                 'plugin5' => null,
-            )
+            ]
         );
         $attributes = $c->getAttributes();
         $config = json_decode($attributes['data-config'], true);
@@ -116,8 +116,8 @@ class HTMLEditorConfigTest extends SapphireTest
     public function testDisablePluginsByArray()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1', 'plugin2'));
-        $c->disablePlugins(array('plugin1', 'plugin2'));
+        $c->enablePlugins(['plugin1', 'plugin2']);
+        $c->disablePlugins(['plugin1', 'plugin2']);
         $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
         $this->assertNotContains('plugin2', array_keys($c->getPlugins()));
     }
@@ -134,8 +134,8 @@ class HTMLEditorConfigTest extends SapphireTest
     public function testDisablePluginsByArrayWithPaths()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2'));
-        $c->disablePlugins(array('plugin1', 'plugin2'));
+        $c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
+        $c->disablePlugins(['plugin1', 'plugin2']);
         $plugins = $c->getPlugins();
         $this->assertNotContains('plugin1', array_keys($plugins));
         $this->assertNotContains('plugin2', array_keys($plugins));

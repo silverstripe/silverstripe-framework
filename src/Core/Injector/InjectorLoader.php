@@ -18,7 +18,7 @@ class InjectorLoader
     /**
      * @var Injector[] map of injector instances
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self

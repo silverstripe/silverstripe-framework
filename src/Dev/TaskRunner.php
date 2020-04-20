@@ -15,15 +15,15 @@ use ReflectionClass;
 class TaskRunner extends Controller
 {
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '' => 'index',
         '$TaskName' => 'runTask'
-    );
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index',
         'runTask',
-    );
+    ];
 
     protected function init()
     {
@@ -114,7 +114,7 @@ class TaskRunner extends Controller
      */
     protected function getTasks()
     {
-        $availableTasks = array();
+        $availableTasks = [];
 
         $taskClasses = ClassInfo::subclassesFor(BuildTask::class);
         // remove the base class
@@ -131,12 +131,12 @@ class TaskRunner extends Controller
                 ? Convert::html2raw($singleton->getDescription())
                 : $singleton->getDescription();
 
-            $availableTasks[] = array(
+            $availableTasks[] = [
                 'class' => $class,
                 'title' => $singleton->getTitle(),
                 'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class),
                 'description' => $desc,
-            );
+            ];
         }
 
         return $availableTasks;

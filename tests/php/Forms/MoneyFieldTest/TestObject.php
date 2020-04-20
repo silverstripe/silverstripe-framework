@@ -9,7 +9,7 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'MoneyFieldTest_Object';
 
-    private static $db = array(
+    private static $db = [
         'MyMoney' => 'Money',
-    );
+    ];
 }

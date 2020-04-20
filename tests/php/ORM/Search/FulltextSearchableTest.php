@@ -32,8 +32,8 @@ class FulltextSearchableTest extends SapphireTest
         Config::modify()->merge(
             File::class,
             'create_table_options',
-            array(
-            MySQLSchemaManager::ID => 'ENGINE=InnoDB')
+            [
+            MySQLSchemaManager::ID => 'ENGINE=InnoDB']
         );
     }
 
@@ -44,7 +44,7 @@ class FulltextSearchableTest extends SapphireTest
 
     public function testEnableWithCustomClasses()
     {
-        FulltextSearchable::enable(array(File::class));
+        FulltextSearchable::enable([File::class]);
         $this->assertTrue(File::has_extension(FulltextSearchable::class));
 
         File::remove_extension(FulltextSearchable::class);

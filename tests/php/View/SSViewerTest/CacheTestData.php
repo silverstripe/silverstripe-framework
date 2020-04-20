@@ -16,17 +16,17 @@ class CacheTestData extends ViewableData implements TestOnly
     public function TestWithCall()
     {
         $this->testWithCalls++;
-        return ArrayData::create(array('Message' => 'Hi'));
+        return ArrayData::create(['Message' => 'Hi']);
     }
 
     public function TestLoopCall()
     {
         $this->testLoopCalls++;
         return ArrayList::create(
-            array(
-            ArrayData::create(array('Message' => 'One')),
-            ArrayData::create(array('Message' => 'Two'))
-            )
+            [
+            ArrayData::create(['Message' => 'One']),
+            ArrayData::create(['Message' => 'Two'])
+            ]
         );
     }
 }

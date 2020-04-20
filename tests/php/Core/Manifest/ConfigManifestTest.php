@@ -175,11 +175,11 @@ class ConfigManifestTest extends SapphireTest
     {
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
-        foreach (array('dev', 'test', 'live') as $env) {
+        foreach (['dev', 'test', 'live'] as $env) {
             $kernel->setEnvironment($env);
             $config = $this->getConfigFixtureValue('Environment');
 
-            foreach (array('dev', 'test', 'live') as $check) {
+            foreach (['dev', 'test', 'live'] as $check) {
                 $this->assertEquals(
                     $env == $check ? $check : 'not' . $check,
                     @$config[ucfirst($check) . 'Environment'],

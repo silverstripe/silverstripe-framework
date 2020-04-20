@@ -34,7 +34,7 @@ abstract class DBComposite extends DBField
      * @config
      * @var array
      */
-    private static $composite_db = array();
+    private static $composite_db = [];
 
     /**
      * Marker as to whether this record has changed
@@ -47,7 +47,7 @@ abstract class DBComposite extends DBField
      *
      * @var array|DataObject
      */
-    protected $record = array();
+    protected $record = [];
 
     public function __set($property, $value)
     {

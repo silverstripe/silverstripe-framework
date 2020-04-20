@@ -176,7 +176,7 @@ class HTMLEditorField extends TextareaField
         return $this->performReadonlyTransformation();
     }
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         // Include requirements
         $this->getEditorConfig()->init();

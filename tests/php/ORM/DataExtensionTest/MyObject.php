@@ -9,9 +9,9 @@ class MyObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_MyObject';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
-    );
+    ];
 
     private static $extensions = [
         Extension1::class,

@@ -17,17 +17,17 @@ class IndirectPrimary extends DataObject implements TestOnly
 {
     private static $table_name = 'ManyManyListTest_IndirectPrimary';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)'
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Secondary' => Secondary::class
-    );
+    ];
 
-    private static $many_many_extraFields = array(
-        'Secondary' => array(
+    private static $many_many_extraFields = [
+        'Secondary' => [
             'DocumentSort' => 'Int'
-        )
-    );
+        ]
+    ];
 }

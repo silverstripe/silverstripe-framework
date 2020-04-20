@@ -171,9 +171,9 @@ class EmailTest extends SapphireTest
             ->getMock();
         $email->setFrom('from@example.com');
         $email->setTo('to@example.com');
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'test',
-        ));
+        ]);
         $this->assertFalse($email->hasPlainPart());
         $this->assertEmpty($email->getBody());
         // these seem to fail for some reason :/
@@ -198,9 +198,9 @@ class EmailTest extends SapphireTest
             ->getMock();
         $email->setFrom('from@example.com');
         $email->setTo('to@example.com');
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'test',
-        ));
+        ]);
         $this->assertFalse($email->hasPlainPart());
         $this->assertEmpty($email->getBody());
         $email->send();
@@ -324,7 +324,7 @@ class EmailTest extends SapphireTest
         $email = new Email();
         $this->assertEmpty($email->getSender());
         $email->setSender('sender@example.com', 'Silver Stripe');
-        $this->assertEquals(array('sender@example.com' => 'Silver Stripe'), $email->getSender());
+        $this->assertEquals(['sender@example.com' => 'Silver Stripe'], $email->getSender());
     }
 
     public function testSetGetReturnPath()
@@ -341,7 +341,7 @@ class EmailTest extends SapphireTest
         $this->assertCount(1, $email->getTo());
         $this->assertContains('to@example.com', array_keys($email->getTo()));
         $email->setTo('new-to@example.com', 'Silver Stripe');
-        $this->assertEquals(array('new-to@example.com' => 'Silver Stripe'), $email->getTo());
+        $this->assertEquals(['new-to@example.com' => 'Silver Stripe'], $email->getTo());
     }
 
     public function testAddTo()
@@ -361,7 +361,7 @@ class EmailTest extends SapphireTest
         $this->assertCount(1, $email->getCC());
         $this->assertContains('cc@example.com', array_keys($email->getCC()));
         $email->setCC('new-cc@example.com', 'Silver Stripe');
-        $this->assertEquals(array('new-cc@example.com' => 'Silver Stripe'), $email->getCC());
+        $this->assertEquals(['new-cc@example.com' => 'Silver Stripe'], $email->getCC());
     }
 
     public function testAddCC()
@@ -388,7 +388,7 @@ class EmailTest extends SapphireTest
         $this->assertCount(1, $email->getBCC());
         $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
         $email->setBCC('new-bcc@example.com', 'Silver Stripe');
-        $this->assertEquals(array('new-bcc@example.com' => 'Silver Stripe'), $email->getBCC());
+        $this->assertEquals(['new-bcc@example.com' => 'Silver Stripe'], $email->getBCC());
     }
 
     public function testAddBCC()
@@ -414,7 +414,7 @@ class EmailTest extends SapphireTest
         $email = new Email();
         $this->assertEmpty($email->getReplyTo());
         $email->setReplyTo('reply-to@example.com', 'Silver Stripe');
-        $this->assertEquals(array('reply-to@example.com' => 'Silver Stripe'), $email->getReplyTo());
+        $this->assertEquals(['reply-to@example.com' => 'Silver Stripe'], $email->getReplyTo());
         $email->addReplyTo('new-reply-to@example.com');
         $this->assertCount(2, $email->getReplyTo());
         $this->assertContains('reply-to@example.com', array_keys($email->getReplyTo()));
@@ -441,20 +441,20 @@ class EmailTest extends SapphireTest
     {
         $email = new Email();
         $this->assertEmpty($email->getData());
-        $email->setData(array(
+        $email->setData([
             'Title' => 'My Title',
-        ));
+        ]);
         $this->assertCount(1, $email->getData());
-        $this->assertEquals(array('Title' => 'My Title'), $email->getData());
+        $this->assertEquals(['Title' => 'My Title'], $email->getData());
 
         $email->addData('Content', 'My content');
         $this->assertCount(2, $email->getData());
-        $this->assertEquals(array(
+        $this->assertEquals([
             'Title' => 'My Title',
             'Content' => 'My content',
-        ), $email->getData());
+        ], $email->getData());
         $email->removeData('Title');
-        $this->assertEquals(array('Content' => 'My content'), $email->getData());
+        $this->assertEquals(['Content' => 'My content'], $email->getData());
     }
 
     public function testDataWithViewableData()
@@ -544,9 +544,9 @@ class EmailTest extends SapphireTest
     public function testRenderAgain()
     {
         $email = new Email();
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'my content',
-        ));
+        ]);
         $email->render();
         $this->assertContains('my content', $email->getBody());
         $children = $email->getSwiftMessage()->getChildren();
@@ -562,9 +562,9 @@ class EmailTest extends SapphireTest
     public function testRenderPlainOnly()
     {
         $email = new Email();
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'test content',
-        ));
+        ]);
         $email->render(true);
         $this->assertEquals('text/plain', $email->getSwiftMessage()->getContentType());
         $this->assertEmpty($email->getSwiftMessage()->getChildren());
@@ -573,9 +573,9 @@ class EmailTest extends SapphireTest
     public function testHasPlainPart()
     {
         $email = new Email();
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'test',
-        ));
+        ]);
         //emails are assumed to be HTML by default
         $this->assertFalse($email->hasPlainPart());
         //make sure plain attachments aren't picked up as a plain part
@@ -601,9 +601,9 @@ class EmailTest extends SapphireTest
     public function testMultipleEmailSends()
     {
         $email = new Email();
-        $email->setData(array(
+        $email->setData([
             'EmailContent' => 'Test',
-        ));
+        ]);
         $this->assertEmpty($email->getBody());
         $this->assertEmpty($email->getSwiftMessage()->getChildren());
         $email->send();

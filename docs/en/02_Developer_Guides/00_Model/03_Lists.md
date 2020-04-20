@@ -51,11 +51,11 @@ A map is an array where the array indexes contain data as well as the values. Yo
 ```php
 $members = Member::get()->map('ID', 'FirstName');
 
-// $members = array(
+// $members = [
 //    1 => 'Sam'
 //    2 => 'Sig'
 //    3 => 'Will'
-// );
+// ];
 ```
 
 This functionality is provided by the [Map](api:SilverStripe\ORM\Map) class, which can be used to build a map around any `SS_List`.
@@ -72,11 +72,11 @@ $members = Member::get();
 
 echo $members->column('Email');
 
-// returns array(
+// returns [
 //    'sam@silverstripe.com',
 //    'sig@silverstripe.com',
 //    'will@silverstripe.com'
-// );
+// ];
 ```
 
 ## ArrayList

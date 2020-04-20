@@ -60,13 +60,13 @@ _t(
 "Line 5");
 PHP;
         $this->assertEquals(
-            array(
+            [
                 'Test.CONCATENATED' => [
                     'default' => "Line 1 and Line '2' and Line \"3\"",
                     'comment' => 'Comment'
                 ],
                 'Test.CONCATENATED2' => "Line \"4\" and Line 5"
-            ),
+            ],
             $c->collectFromCode($php, null, $module)
         );
     }
@@ -388,11 +388,11 @@ PHP;
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
 _t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
-	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
-		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 _t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
 	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
@@ -429,7 +429,7 @@ PHP;
         $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
 
         $php = <<<PHP
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
         $c->setWarnOnEmptyDefault(true);
         $c->collectFromCode($php, null, $mymodule);
@@ -696,7 +696,7 @@ PHP;
         $conflictsA = $collector->getConflicts_Test($data2);
         sort($conflictsA);
         $this->assertEquals(
-            array('i18ntestmodule.THREE', 'i18ntestmodule.TWO'),
+            ['i18ntestmodule.THREE', 'i18ntestmodule.TWO'],
             $conflictsA
         );
 
@@ -704,7 +704,7 @@ PHP;
         unset($data2['module3']);
         $conflictsB = $collector->getConflicts_Test($data2);
         $this->assertEquals(
-            array('i18ntestmodule.THREE'),
+            ['i18ntestmodule.THREE'],
             $conflictsB
         );
     }

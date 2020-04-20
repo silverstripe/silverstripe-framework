@@ -34,7 +34,7 @@ abstract class HTMLEditorConfig
      *
      * @var HTMLEditorConfig[]
      */
-    protected static $configs = array();
+    protected static $configs = [];
 
     /**
      * Identifier key of current config. This will match an array key in $configs.
@@ -182,7 +182,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_available_configs_map()
     {
-        $configs = array();
+        $configs = [];
 
         foreach (self::$configs as $identifier => $config) {
             $configs[$identifier] = $config->getOption('friendly_name');

@@ -14,10 +14,10 @@ class TestViewableData extends ViewableData implements TestOnly
 
     private static $default_cast = 'Text';
 
-    private static $casting = array(
+    private static $casting = [
         'TextValue' => 'Text',
         'HTMLValue' => 'HTMLFragment'
-    );
+    ];
 
     public function methodWithOneArgument($arg1)
     {

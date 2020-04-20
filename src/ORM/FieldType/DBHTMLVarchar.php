@@ -17,12 +17,12 @@ class DBHTMLVarchar extends DBVarchar
 
     private static $escape_type = 'xml';
 
-    private static $casting = array(
+    private static $casting = [
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
         "LowerCase" => "HTMLFragment",
         "UpperCase" => "HTMLFragment",
-    );
+    ];
 
     /**
      * Enable shortcode parsing on this field
@@ -69,7 +69,7 @@ class DBHTMLVarchar extends DBVarchar
      *
      * @return $this
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists("shortcodes", $options)) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);

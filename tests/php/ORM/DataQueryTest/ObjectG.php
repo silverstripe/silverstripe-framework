@@ -8,7 +8,7 @@ class ObjectG extends ObjectC implements TestOnly
 {
     private static $table_name = 'DataQueryTest_G';
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'ManyTestEs' => ObjectE::class,
-    );
+    ];
 }

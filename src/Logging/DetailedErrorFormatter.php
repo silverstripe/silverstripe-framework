@@ -16,13 +16,13 @@ class DetailedErrorFormatter implements FormatterInterface
         if (isset($record['context']['exception'])) {
             /** @var Exception $exception */
             $exception = $record['context']['exception'];
-            $context = array(
+            $context = [
                 'code' => $exception->getCode(),
                 'message' => 'Uncaught ' . get_class($exception) . ': ' . $exception->getMessage(),
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
                 'trace' => $exception->getTrace(),
-            );
+            ];
         } else {
             $context = isset($record['context']) ? $record['context'] : $record;
             foreach (['code', 'message', 'file', 'line'] as $key) {

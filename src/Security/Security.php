@@ -36,7 +36,7 @@ use SilverStripe\View\TemplateGlobalProvider;
 class Security extends Controller implements TemplateGlobalProvider
 {
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'basicauthlogin',
         'changepassword',
         'index',
@@ -45,7 +45,7 @@ class Security extends Controller implements TemplateGlobalProvider
         'lostpassword',
         'passwordsent',
         'ping',
-    );
+    ];
 
     /**
      * If set to TRUE to prevent sharing of the session across several sites
@@ -366,7 +366,7 @@ class Security extends Controller implements TemplateGlobalProvider
             if ($configMessageSet = static::config()->get('default_message_set')) {
                 $messageSet = $configMessageSet;
             } else {
-                $messageSet = array(
+                $messageSet = [
                     'default' => _t(
                         __CLASS__ . '.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
@@ -377,12 +377,12 @@ class Security extends Controller implements TemplateGlobalProvider
                         "You don't have access to this page.  If you have another account that "
                             . "can access that page, you can log in again below."
                     )
-                );
+                ];
             }
         }
 
         if (!is_array($messageSet)) {
-            $messageSet = array('default' => $messageSet);
+            $messageSet = ['default' => $messageSet];
         }
 
         $member = static::getCurrentUser();

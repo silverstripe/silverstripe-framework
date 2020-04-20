@@ -12,17 +12,17 @@ class PeopleGroup extends DataObject implements TestOnly
 
     private static $table_name = 'GridFieldDetailFormTest_PeopleGroup';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar'
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'People' => Person::class
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'FavouritePeople' => Person::class
-    );
+    ];
 
     private static $default_sort = '"Name"';
 

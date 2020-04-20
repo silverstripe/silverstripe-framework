@@ -17,15 +17,15 @@ class DBBigInt extends DBInt
 
     public function requireField()
     {
-        $parts = array(
+        $parts = [
             'datatype' => 'bigint',
             'precision' => 8,
             'null' => 'not null',
             'default' => $this->defaultVal,
             'arrayValue' => $this->arrayValue
-        );
+        ];
 
-        $values = array('type' => 'bigint', 'parts' => $parts);
+        $values = ['type' => 'bigint', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 }

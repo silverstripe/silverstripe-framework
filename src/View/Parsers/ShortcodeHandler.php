@@ -25,5 +25,5 @@ interface ShortcodeHandler
      * @param array $extra Extra arguments
      * @return string Result of the handled shortcode
      */
-    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array());
+    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = []);
 }

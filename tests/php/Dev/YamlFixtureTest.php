@@ -15,10 +15,10 @@ use SilverStripe\Control\Director;
 class YamlFixtureTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestDataObject::class,
         DataObjectRelation::class,
-    );
+    ];
 
     public function testAbsoluteFixturePath()
     {

@@ -61,10 +61,10 @@ class GroupTest extends FunctionalTest
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
         $checkboxSetField->setValue(
-            array(
+            [
             $adminGroup->ID => $adminGroup->ID, // keep existing relation
             $parentGroup->ID => $parentGroup->ID, // add new relation
-            )
+            ]
         );
         $form->saveInto($member);
         $updatedGroups = $member->Groups();
@@ -81,10 +81,10 @@ class GroupTest extends FunctionalTest
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
         $checkboxSetField->setValue(
-            array(
+            [
             $adminGroup->ID => $adminGroup->ID, // keep existing relation
             //$parentGroup->ID => $parentGroup->ID, // remove previously set relation
-            )
+            ]
         );
         $form->saveInto($member);
         $member->flushCache();
@@ -104,14 +104,14 @@ class GroupTest extends FunctionalTest
 
         // Can save user to unsaved group
         $group->Members()->add($member);
-        $this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList()));
 
         // Persists after writing to DB
         $group->write();
 
         /** @var Group $group */
         $group = Group::get()->byID($group->ID);
-        $this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList()));
     }
 
     public function testCollateAncestorIDs()

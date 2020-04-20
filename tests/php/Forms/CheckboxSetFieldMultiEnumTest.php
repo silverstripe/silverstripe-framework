@@ -81,7 +81,7 @@ class CheckboxSetFieldMulitEnumTest extends SapphireTest
             ]
         );
         $article = new MultiEnumArticle();
-        $field->setValue(array('Red' => 'Red', 'Blue' => 'Blue'));
+        $field->setValue(['Red' => 'Red', 'Blue' => 'Blue']);
         $field->saveInto($article);
         $article->write();
 

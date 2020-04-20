@@ -30,7 +30,7 @@ class LookupField extends MultiSelectField
      *
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $source = ArrayLib::flatten($this->getSource());
         $values = $this->getValueArray();
@@ -58,10 +58,10 @@ class LookupField extends MultiSelectField
             $inputValue = '';
         }
 
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
             'InputValue' => $inputValue
-        ));
+        ]);
 
         return parent::Field($properties);
     }

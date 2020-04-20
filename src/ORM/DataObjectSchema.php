@@ -476,8 +476,8 @@ class DataObjectSchema
         if (isset($this->databaseFields[$class]) && isset($this->compositeFields[$class])) {
             return;
         }
-        $compositeFields = array();
-        $dbFields = array();
+        $compositeFields = [];
+        $dbFields = [];
 
         // Ensure fixed fields appear at the start
         $fixedFields = DataObject::config()->uninherited('fixed_fields');
@@ -489,7 +489,7 @@ class DataObjectSchema
         }
 
         // Check each DB value as either a field or composite field
-        $db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: array();
+        $db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: [];
         foreach ($db as $fieldName => $fieldSpec) {
             $fieldClass = strtok($fieldSpec, '(');
             if (singleton($fieldClass) instanceof DBComposite) {
@@ -500,7 +500,7 @@ class DataObjectSchema
         }
 
         // Add in all has_ones
-        $hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: array();
+        $hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: [];
         foreach ($hasOne as $fieldName => $hasOneClass) {
             if ($hasOneClass === DataObject::class) {
                 $compositeFields[$fieldName] = 'PolymorphicForeignKey';
@@ -666,7 +666,7 @@ class DataObjectSchema
         } else {
             throw new InvalidArgumentException("Invalid sort() column");
         }
-        return array($table, $column);
+        return [$table, $column];
     }
 
     /**
@@ -729,7 +729,7 @@ class DataObjectSchema
      *
      * Standard many_many return type is:
      *
-     * array(
+     * [
      *  <manyManyClass>,        Name of class for relation. E.g. "Categories"
      *  <classname>,            The class that relation is defined in e.g. "Product"
      *  <candidateName>,        The target class of the relation e.g. "Category"
@@ -738,7 +738,7 @@ class DataObjectSchema
      *  <joinTableOrRelation>   The join table between the two classes e.g. "Product_Categories".
      *                          If the class name is 'ManyManyThroughList' then this is the name of the
      *                          has_many relation.
-     * )
+     * ]
      *
      * @param string $class Name of class to get component for
      * @param string $component The component name

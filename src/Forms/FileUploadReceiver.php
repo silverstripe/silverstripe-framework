@@ -44,7 +44,7 @@ trait FileUploadReceiver
     public $relationAutoSetting = true;
 
     /**
-     * Parent data record. Will be infered from parent form or controller if blank.
+     * Parent data record. Will be inferred from parent form or controller if blank.
      *
      * @var DataObject
      */
@@ -187,7 +187,7 @@ trait FileUploadReceiver
 
         // Filter items by what's allowed to be viewed
         $filteredItems = new ArrayList();
-        $fileIDs = array();
+        $fileIDs = [];
         /** @var File $file */
         foreach ($items as $file) {
             if ($file->isInDB() && $file->canView()) {
@@ -200,7 +200,7 @@ trait FileUploadReceiver
         $this->items = $filteredItems;
         // Same format as posted form values for this field. Also ensures that
         // $this->setValue($this->getValue()); is non-destructive
-        $value = $fileIDs ? array('Files' => $fileIDs) : null;
+        $value = $fileIDs ? ['Files' => $fileIDs] : null;
 
         // Set value using parent
         parent::setValue($value, $record);
@@ -238,7 +238,7 @@ trait FileUploadReceiver
     public function getItemIDs()
     {
         $value = $this->Value();
-        return empty($value['Files']) ? array() : $value['Files'];
+        return empty($value['Files']) ? [] : $value['Files'];
     }
 
     public function Value()
@@ -398,7 +398,7 @@ trait FileUploadReceiver
     {
         // Note: Format of posted file parameters in php is a feature of using
         // <input name='{$Name}[Uploads][]' /> for multiple file uploads
-        $tmpFiles = array();
+        $tmpFiles = [];
         if (!empty($postVars['tmp_name'])
             && is_array($postVars['tmp_name'])
             && !empty($postVars['tmp_name']['Uploads'])
@@ -408,8 +408,8 @@ trait FileUploadReceiver
                 if (empty($postVars['tmp_name']['Uploads'][$i])) {
                     continue;
                 }
-                $tmpFile = array();
-                foreach (array('name', 'type', 'tmp_name', 'error', 'size') as $field) {
+                $tmpFile = [];
+                foreach (['name', 'type', 'tmp_name', 'error', 'size'] as $field) {
                     $tmpFile[$field] = $postVars[$field]['Uploads'][$i];
                 }
                 $tmpFiles[] = $tmpFile;

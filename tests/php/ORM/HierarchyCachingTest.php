@@ -18,11 +18,11 @@ class HierachyCacheTest extends SapphireTest
 
     protected static $fixture_file = 'HierarchyTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestObject::class,
         HideTestObject::class,
         HideTestSubObject::class,
-    );
+    ];
 
     public function setUp()
     {

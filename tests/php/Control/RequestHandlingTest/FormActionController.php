@@ -16,12 +16,12 @@ class FormActionController extends Controller implements TestOnly
 
     private static $url_segment = 'FormActionController';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'controlleraction',
         'Form',
         'formactionInAllowedActions'
         //'formaction', // left out, implicitly allowed through form action
-    );
+    ];
 
     public function controlleraction($request)
     {

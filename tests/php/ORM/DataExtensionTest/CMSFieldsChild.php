@@ -15,10 +15,10 @@ class CMSFieldsChild extends CMSFieldsBase implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_CMSFieldsChild';
 
-    private static $db = array(
+    private static $db = [
         'ChildField' => 'Varchar(255)',
         'ChildFieldBeforeExtension' => 'Varchar(255)'
-    );
+    ];
 
     public function getCMSFields()
     {

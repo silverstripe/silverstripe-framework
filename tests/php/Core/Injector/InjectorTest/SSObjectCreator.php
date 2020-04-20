@@ -25,7 +25,7 @@ class SSObjectCreator extends InjectionCreator implements TestOnly
         $this->injector = $injector;
     }
 
-    public function create($class, array $params = array())
+    public function create($class, array $params = [])
     {
         if (strpos($class, '(') === false) {
             return parent::create($class, $params);

@@ -93,7 +93,7 @@ class i18nTextCollector
      *
      * @var array
      */
-    protected $fileExtensions = array('php', 'ss');
+    protected $fileExtensions = ['php', 'ss'];
 
     /**
      * @param $locale
@@ -195,7 +195,7 @@ class i18nTextCollector
      * @param bool $mergeWithExisting
      * @return array
      */
-    public function collect($restrictToModules = array(), $mergeWithExisting = false)
+    public function collect($restrictToModules = [], $mergeWithExisting = false)
     {
         $entitiesByModule = $this->getEntitiesByModule();
 
@@ -258,7 +258,7 @@ class i18nTextCollector
     protected function getConflicts($entitiesByModule)
     {
         $modules = array_keys($entitiesByModule);
-        $allConflicts = array();
+        $allConflicts = [];
         // bubble-compare each group of modules
         for ($i = 0; $i < count($modules) - 1; $i++) {
             $left = array_keys($entitiesByModule[$modules[$i]]);
@@ -307,7 +307,7 @@ class i18nTextCollector
         );
 
         // Fall back to framework then cms modules
-        foreach (array('framework', 'cms') as $module) {
+        foreach (['framework', 'cms'] as $module) {
             if (isset($entitiesByModule[$module][$key])) {
                 $this->classModuleCache[$class] = $module;
                 return $module;
@@ -394,7 +394,7 @@ class i18nTextCollector
     protected function getEntitiesByModule()
     {
         // A master string tables array (one mst per module)
-        $entitiesByModule = array();
+        $entitiesByModule = [];
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // we store the master string tables
@@ -470,7 +470,7 @@ class i18nTextCollector
      */
     protected function processModule(Module $module)
     {
-        $entities = array();
+        $entities = [];
 
         // Search for calls in code files if these exists
         $fileList = $this->getFileListForModule($module);
@@ -550,7 +550,7 @@ class i18nTextCollector
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
 
-        $entities = array();
+        $entities = [];
 
         $tokens = token_get_all("<?php\n" . $content);
         $inTransFn = false;
@@ -559,7 +559,7 @@ class i18nTextCollector
         $inClass = false; // after `class` but before `{`
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
         $inSelf = false; // Tracks progress of collecting self::class
-        $currentEntity = array();
+        $currentEntity = [];
         $currentClass = []; // Class components
         $previousToken = null;
         $thisToken = null; // used to populate $previousToken on next iteration
@@ -632,7 +632,7 @@ class i18nTextCollector
                     $inTransFn = false;
                     $inArrayClosedBy = false;
                     $inConcat = false;
-                    $currentEntity = array();
+                    $currentEntity = [];
                     continue;
                 }
 
@@ -746,7 +746,7 @@ class i18nTextCollector
                             trigger_error("Missing localisation default for key " . $currentEntity[0], E_USER_NOTICE);
                         }
                     }
-                    $currentEntity = array();
+                    $currentEntity = [];
                     $inArrayClosedBy = false;
                     break;
             }
@@ -771,7 +771,7 @@ class i18nTextCollector
      * @param array $parsedFiles
      * @return array $entities An array of entities representing the extracted template function calls
      */
-    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = array())
+    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = [])
     {
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
@@ -810,7 +810,7 @@ class i18nTextCollector
      */
     public function collectFromEntityProviders($filePath, Module $module = null)
     {
-        $entities = array();
+        $entities = [];
         $classes = ClassInfo::classes_for_file($filePath);
         foreach ($classes as $class) {
             // Skip non-implementing classes
@@ -897,10 +897,10 @@ class i18nTextCollector
      * @param string $folderExclude Regular expression matching folder names to exclude
      * @return array $fileList An array of files
      */
-    protected function getFilesRecursive($folder, $fileList = array(), $type = null, $folderExclude = '/\/(tests)$/')
+    protected function getFilesRecursive($folder, $fileList = [], $type = null, $folderExclude = '/\/(tests)$/')
     {
         if (!$fileList) {
-            $fileList = array();
+            $fileList = [];
         }
         // Skip ignored folders
         if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude, $folder)) {

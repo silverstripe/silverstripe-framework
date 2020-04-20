@@ -170,11 +170,11 @@ class TreeMultiselectField extends TreeDropdownField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $value = '';
-        $titleArray = array();
-        $idArray = array();
+        $titleArray = [];
+        $idArray = [];
         $items = $this->getItems();
         $emptyTitle = _t('SilverStripe\\Forms\\DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 
@@ -202,12 +202,12 @@ class TreeMultiselectField extends TreeDropdownField
         }
         $properties = array_merge(
             $properties,
-            array(
+            [
                 'Title' => $title,
                 'EmptyTitle' => $emptyTitle,
                 'Link' => $dataUrlTree,
                 'Value' => $value
-            )
+            ]
         );
         return FormField::Field($properties);
     }

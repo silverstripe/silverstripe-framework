@@ -11,9 +11,9 @@ use SilverStripe\Forms\FormRequestHandler;
  */
 class FormWithAllowedActionsHandler extends FormRequestHandler
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'allowedformaction' => 1,
-    );
+    ];
 
     public function allowedformaction()
     {

@@ -196,8 +196,8 @@ class MySQLiConnector extends DBConnector
     public function parsePreparedParameters($parameters, &$blobs)
     {
         $types = '';
-        $values = array();
-        $blobs = array();
+        $values = [];
+        $blobs = [];
         $parametersCount = count($parameters);
         for ($index = 0; $index < $parametersCount; $index++) {
             $value = $parameters[$index];
@@ -229,10 +229,10 @@ class MySQLiConnector extends DBConnector
                 case 'blob':
                     $types .= 'b';
                     // Blobs must be sent via send_long_data and set to null here
-                    $blobs[] = array(
+                    $blobs[] = [
                         'index' => $index,
                         'value' => $value
-                    );
+                    ];
                     $value = null;
                     break;
                 case 'array':
@@ -246,7 +246,7 @@ class MySQLiConnector extends DBConnector
             }
             $values[] = $value;
         }
-        return array_merge(array($types), $values);
+        return array_merge([$types], $values);
     }
 
     /**

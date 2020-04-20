@@ -12,11 +12,11 @@ use SilverStripe\Security\Security;
  */
 class SapphireInfo extends Controller
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'baseurl',
         'version',
         'environmenttype',
-    );
+    ];
 
     protected function init()
     {

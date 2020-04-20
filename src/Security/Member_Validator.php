@@ -30,10 +30,10 @@ class Member_Validator extends RequiredFields
      * @var array
      * @skipUpgrade
      */
-    protected $customRequired = array(
+    protected $customRequired = [
         'FirstName',
         'Email'
-    );
+    ];
 
     /**
      * Determine what member this validator is meant for
@@ -129,7 +129,7 @@ class Member_Validator extends RequiredFields
                     _t(
                         'SilverStripe\\Security\\Member.VALIDATIONMEMBEREXISTS',
                         'A member already exists with the same {identifier}',
-                        array('identifier' => Member::singleton()->fieldLabel($identifierField))
+                        ['identifier' => Member::singleton()->fieldLabel($identifierField)]
                     ),
                     'required'
                 );

@@ -57,7 +57,7 @@ class TestSession
 
     public function __construct()
     {
-        $this->session = Injector::inst()->create(Session::class, array());
+        $this->session = Injector::inst()->create(Session::class, []);
         $this->cookies = Injector::inst()->create(Cookie_Backend::class);
         $request = new HTTPRequest('GET', '/');
         $request->setSession($this->session());
@@ -210,7 +210,7 @@ class TestSession
      * @return HTTPResponse
      * @throws Exception
      */
-    public function submitForm($formID, $button = null, $data = array())
+    public function submitForm($formID, $button = null, $data = [])
     {
         $page = $this->lastPage();
         if ($page) {
@@ -234,7 +234,7 @@ class TestSession
 
             $url = Director::makeRelative($form->getAction()->asString());
 
-            $postVars = array();
+            $postVars = [];
             parse_str($submission->_encode(), $postVars);
             return $this->post($url, $postVars);
         } else {

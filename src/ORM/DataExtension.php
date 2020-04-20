@@ -113,7 +113,7 @@ abstract class DataExtension extends Extension
      */
     public function extraStatics($class = null, $extension = null)
     {
-        return array();
+        return [];
     }
 
     /**

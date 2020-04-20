@@ -16,7 +16,7 @@ class DataQueryTest extends SapphireTest
 
     protected static $fixture_file = 'DataQueryTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DataQueryTest\ObjectA::class,
         DataQueryTest\ObjectB::class,
         DataQueryTest\ObjectC::class,
@@ -29,7 +29,7 @@ class DataQueryTest extends SapphireTest
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
         SQLSelectTest\TestChild::class,
-    );
+    ];
 
     public function testSortByJoinedFieldRetainsSourceInformation()
     {
@@ -265,7 +265,7 @@ class DataQueryTest extends SapphireTest
     {
         $query = new DataQuery(DataQueryTest\ObjectE::class);
         $result = $query->column('Title');
-        $this->assertEquals(array('First', 'Second', 'Last'), $result);
+        $this->assertEquals(['First', 'Second', 'Last'], $result);
     }
 
     public function testDistinct()
@@ -373,11 +373,11 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectC::class);
         $query->sort('"SortOrder"');
         $query->where(
-            array(
-            '"DataQueryTest_C"."Title" = ?' => array('First')
-            )
+            [
+            '"DataQueryTest_C"."Title" = ?' => ['First']
+            ]
         );
-        $result = $query->getFinalisedQuery(array('Title'));
+        $result = $query->getFinalisedQuery(['Title']);
         $from = $result->getFrom();
         $this->assertContains('DataQueryTest_C', array_keys($from));
         $this->assertNotContains('DataQueryTest_E', array_keys($from));
@@ -386,13 +386,13 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectC::class);
         $query->sort('"SortOrder"');
         $query->where(
-            array(
-            '"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => array(
+            [
+            '"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => [
                 'First', 2
-            )
-            )
+            ]
+            ]
         );
-        $result = $query->getFinalisedQuery(array('Title'));
+        $result = $query->getFinalisedQuery(['Title']);
         $from = $result->getFrom();
 
         // Check that including "SortOrder" prompted inclusion of DataQueryTest_E table

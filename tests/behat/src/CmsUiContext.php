@@ -147,7 +147,7 @@ class CmsUiContext implements Context
     {
         $cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
-        $element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
+        $element = $cms_content_toolbar_element->find('named', ['link_or_button', "'$text'"]);
         assertNotNull($element, sprintf('%s button not found', $text));
     }
 
@@ -158,7 +158,7 @@ class CmsUiContext implements Context
     {
         // Wait until visible
         $cmsTreeElement = $this->getCmsTreeElement();
-        $element = $cmsTreeElement->find('named', array('content', "'$text'"));
+        $element = $cmsTreeElement->find('named', ['content', "'$text'"]);
         assertNotNull($element, sprintf('%s not found', $text));
     }
 
@@ -169,7 +169,7 @@ class CmsUiContext implements Context
     {
         // Wait until not visible
         $cmsTreeElement = $this->getCmsTreeElement();
-        $element = $cmsTreeElement->find('named', array('content', "'$text'"));
+        $element = $cmsTreeElement->find('named', ['content', "'$text'"]);
         assertNull($element, sprintf('%s found', $text));
     }
 
@@ -188,7 +188,7 @@ class CmsUiContext implements Context
         assertNotNull($cmsListElement, 'CMS list not found');
 
         // Check text within this element
-        $element = $cmsListElement->find('named', array('content', "'$text'"));
+        $element = $cmsListElement->find('named', ['content', "'$text'"]);
         if (strstr($negate, 'not')) {
             assertNull($element, sprintf('Unexpected %s found in cms list', $text));
         } else {
@@ -418,7 +418,7 @@ SCRIPT
         $tab_element = null;
         /** @var NodeElement $tabset */
         foreach ($tabsets as $tabset) {
-            $tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+            $tab_element = $tabset->find('named', ['link_or_button', "'$tab'"]);
             if ($tab_element) {
                 break;
             }
@@ -450,7 +450,7 @@ SCRIPT
             if ($tab_element) {
                 continue;
             }
-            $tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+            $tab_element = $tabset->find('named', ['link_or_button', "'$tab'"]);
         }
         assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
@@ -572,7 +572,7 @@ SCRIPT
         $escaper = new Escaper();
         $nativeField = $this->getSession()->getPage()->find(
             'named',
-            array('select', $escaper->escapeLiteral($field))
+            ['select', $escaper->escapeLiteral($field)]
         );
         if ($nativeField && $nativeField->isVisible()) {
             $nativeField->selectOption($value);
@@ -580,7 +580,7 @@ SCRIPT
         }
 
         // Given the fuzzy matching, we might get more than one matching field.
-        $formFields = array();
+        $formFields = [];
 
         // Find by label
         $formField = $this->getSession()->getPage()->findField($field);

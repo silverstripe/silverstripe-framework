@@ -12,26 +12,26 @@ class Person extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldDetailFormTest_Person';
 
-    private static $db = array(
+    private static $db = [
         'FirstName' => 'Varchar',
         'Surname' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Group' => PeopleGroup::class
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Categories' => Category::class,
         'FavouriteGroups' => PeopleGroup::class
-    );
+    ];
 
-    private static $many_many_extraFields = array(
-        'Categories' => array(
+    private static $many_many_extraFields = [
+        'Categories' => [
             'IsPublished' => 'Boolean',
             'PublishedBy' => 'Varchar'
-        )
-    );
+        ]
+    ];
 
     private static $default_sort = '"FirstName"';
 
@@ -63,10 +63,10 @@ class Person extends DataObject implements TestOnly
     public function getCMSValidator()
     {
         return new RequiredFields(
-            array(
+            [
             'FirstName',
             'Surname'
-            )
+            ]
         );
     }
 }

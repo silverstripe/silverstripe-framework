@@ -24,11 +24,11 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
             'GroupID'
         );
         $f->setHiddenPermissions(
-            array('NON-ADMIN')
+            ['NON-ADMIN']
         );
         $this->assertEquals(
             $f->getHiddenPermissions(),
-            array('NON-ADMIN')
+            ['NON-ADMIN']
         );
         $this->assertContains('ADMIN', $f->Field());
         $this->assertNotContains('NON-ADMIN', $f->Field());
@@ -73,10 +73,10 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
 
         // add some permissions
         $field->setValue(
-            array(
+            [
             'ADMIN'=>true,
             'NON-ADMIN'=>true
-            )
+            ]
         );
 
         $field->saveInto($group);
@@ -117,9 +117,9 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
 
         // remove permission
         $field->setValue(
-            array(
+            [
             'ADMIN'=>true,
-            )
+            ]
         );
 
         $field->saveInto($group);

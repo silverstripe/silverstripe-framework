@@ -19,14 +19,14 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var array $firstItems
      */
-    protected $firstItems = array();
+    protected $firstItems = [];
 
     /**
      * @see Map::push()
      *
      * @var array $lastItems
      */
-    protected $lastItems = array();
+    protected $lastItems = [];
 
     /**
      * Construct a new map around an SS_list.
@@ -69,7 +69,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function toArray()
     {
-        $array = array();
+        $array = [];
 
         foreach ($this as $k => $v) {
             $array[$k] = $v;
@@ -110,9 +110,9 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     public function unshift($key, $value)
     {
         $oldItems = $this->firstItems;
-        $this->firstItems = array(
+        $this->firstItems = [
             $key => $value
-        );
+        ];
 
         if ($oldItems) {
             $this->firstItems = $this->firstItems + $oldItems;
@@ -132,9 +132,9 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     {
         $oldItems = $this->lastItems;
 
-        $this->lastItems = array(
+        $this->lastItems = [
             $key => $value
-        );
+        ];
 
         if ($oldItems) {
             $this->lastItems = $this->lastItems + $oldItems;

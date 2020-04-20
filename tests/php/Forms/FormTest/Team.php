@@ -15,12 +15,12 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'FormTest_Team';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Region' => 'Varchar',
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Players' => Player::class
-    );
+    ];
 }

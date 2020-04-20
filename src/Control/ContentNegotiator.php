@@ -124,11 +124,11 @@ class ContentNegotiator
             return;
         }
 
-        $mimes = array(
+        $mimes = [
             "xhtml" => "application/xhtml+xml",
             "html" => "text/html",
-        );
-        $q = array();
+        ];
+        $q = [];
         if (headers_sent()) {
             $chosenFormat = static::config()->get('default_format');
         } elseif (isset($_GET['forceFormat'])) {
@@ -140,7 +140,7 @@ class ContentNegotiator
                 $chosenFormat = "xhtml";
             } else {
                 foreach ($mimes as $format => $mime) {
-                    $regExp = '/' . str_replace(array('+', '/'), array('\+', '\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+                    $regExp = '/' . str_replace(['+', '/'], ['\+', '\/'], $mime) . '(;q=(\d+\.\d+))?/i';
                     if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
                         $preference = isset($matches[2]) ? $matches[2] : 1;
                         if (!isset($q[$preference])) {
@@ -237,8 +237,8 @@ class ContentNegotiator
 
         $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
         $content = str_replace(
-            array('/>', 'xml:lang', 'application/xhtml+xml'),
-            array('>', 'lang', 'text/html'),
+            ['/>', 'xml:lang', 'application/xhtml+xml'],
+            ['>', 'lang', 'text/html'],
             $content
         );
 

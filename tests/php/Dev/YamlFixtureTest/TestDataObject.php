@@ -9,11 +9,11 @@ class TestDataObject extends DataObject implements TestOnly
 {
     private static $table_name = 'YamlFixtureTest_TestDataObject';
 
-    private static $db = array(
+    private static $db = [
         "Name" => "Varchar"
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         "ManyManyRelation" => DataObjectRelation::class
-    );
+    ];
 }

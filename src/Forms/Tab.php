@@ -139,10 +139,10 @@ class Tab extends CompositeField
     {
         return array_merge(
             $this->attributes,
-            array(
+            [
                 'id' => $this->ID(),
                 'class' => 'tab ' . $this->extraClass()
-            )
+            ]
         );
     }
 }

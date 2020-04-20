@@ -33,7 +33,7 @@ class PaginatedList extends ListDecorator
      *        request object that the pagination offset is read from.
      * @throws Exception
      */
-    public function __construct(SS_List $list, $request = array())
+    public function __construct(SS_List $list, $request = [])
     {
         if (!is_array($request) && !$request instanceof ArrayAccess) {
             throw new Exception('The request must be readable as an array.');
@@ -258,7 +258,7 @@ class PaginatedList extends ListDecorator
         }
 
         for ($i = $start; $i < $end; $i++) {
-            $result->push(new ArrayData(array(
+            $result->push(new ArrayData([
                 'PageNum' => $i + 1,
                 'Link' => HTTP::setGetVar(
                     $this->getPaginationGetVar(),
@@ -266,7 +266,7 @@ class PaginatedList extends ListDecorator
                     ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
                 ),
                 'CurrentBool' => $this->CurrentPage() == ($i + 1)
-            )));
+            ]));
         }
 
         return $result;
@@ -347,17 +347,17 @@ class PaginatedList extends ListDecorator
             );
 
             if ($emptyRange) {
-                $result->push(new ArrayData(array(
+                $result->push(new ArrayData([
                     'PageNum' => null,
                     'Link' => null,
                     'CurrentBool' => false
-                )));
+                ]));
             } elseif ($num == 1 || $num == $total || in_array($num, $range)) {
-                $result->push(new ArrayData(array(
+                $result->push(new ArrayData([
                     'PageNum' => $num,
                     'Link' => $link,
                     'CurrentBool' => $current == $num
-                )));
+                ]));
             }
         }
 

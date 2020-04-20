@@ -370,11 +370,11 @@ class i18n implements TemplateGlobalProvider
 
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'i18nLocale' => 'get_locale',
             'get_locale',
             'i18nScriptDirection' => 'get_script_direction',
-        );
+        ];
     }
 
     /**

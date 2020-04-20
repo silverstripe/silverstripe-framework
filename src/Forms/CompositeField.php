@@ -200,7 +200,7 @@ class CompositeField extends FormField
     public function extraClass()
     {
         /** @skipUpgrade */
-        $classes = array('field', 'CompositeField', parent::extraClass());
+        $classes = ['field', 'CompositeField', parent::extraClass()];
         if ($this->columnCount) {
             $classes[] = 'multicolumn';
         }
@@ -212,12 +212,12 @@ class CompositeField extends FormField
     {
         return array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'tabindex' => null,
                 'type' => null,
                 'value' => null,
                 'title' => ($this->tag === 'fieldset') ? null : $this->legend
-            )
+            ]
         );
     }
 

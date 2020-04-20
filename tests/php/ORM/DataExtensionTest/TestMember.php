@@ -9,10 +9,10 @@ class TestMember extends DataObject implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_Member';
 
-    private static $db = array(
+    private static $db = [
         "Name" => "Varchar",
         "Email" => "Varchar"
-    );
+    ];
 
     private static $extensions = [
         ContactRole::class

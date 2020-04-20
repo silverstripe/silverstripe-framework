@@ -201,7 +201,7 @@ class i18nTest extends SapphireTest
 
         i18n::set_locale('de_DE');
         $viewer = new SSViewer('i18nTestModule');
-        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
         $this->assertContains(
             Convert::nl2os("TRANS Main Template\n"),
             $parsedHtml
@@ -262,7 +262,7 @@ class i18nTest extends SapphireTest
         $translated = i18n::_t(
             $entity . '_DOES_NOT_EXIST',
             $default,
-            array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye")
+            ["name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"]
         );
         $this->assertContains(
             "Hello Mark welcome. But it is late, bye",
@@ -470,7 +470,7 @@ class i18nTest extends SapphireTest
     {
         i18n::config()->update(
             'common_languages',
-            array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
+            ['de_CGN' => ['name' => 'German (Cologne)', 'native' => 'K&ouml;lsch']]
         );
         $this->assertEquals('German', i18n::getData()->languageName('de_CGN'));
         $this->assertEquals('Deutsch', i18n::with_locale('de_CGN', function () {

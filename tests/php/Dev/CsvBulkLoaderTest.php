@@ -18,11 +18,11 @@ class CsvBulkLoaderTest extends SapphireTest
 
     protected static $fixture_file = 'CsvBulkLoaderTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Player::class,
         PlayerContract::class,
-    );
+    ];
 
     /**
      * Name of csv test dir
@@ -56,9 +56,9 @@ class CsvBulkLoaderTest extends SapphireTest
         // Test that columns were correctly imported
         $obj = DataObject::get_one(
             Player::class,
-            array(
+            [
             '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-            )
+            ]
         );
         $this->assertNotNull($obj);
         $this->assertEquals("He's a good guy", $obj->Biography);
@@ -95,13 +95,13 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CsvBulkLoader(Player::class);
         $loader->hasHeaderRow = false;
-        $loader->columnMap = array(
+        $loader->columnMap = [
             'FirstName',
             'Biography',
             null, // ignored column
             'Birthday',
             'IsRegistered'
-        );
+        ];
         $filepath = $this->csvPath . 'PlayersWithTabs.csv';
         $results = $loader->load($filepath);
         $this->assertCount(5, $results);
@@ -131,13 +131,13 @@ class CsvBulkLoaderTest extends SapphireTest
         $file = fopen($filepath, 'r');
         $compareCount = $this->getLineCount($file);
         $compareRow = fgetcsv($file);
-        $loader->columnMap = array(
+        $loader->columnMap = [
             'FirstName',
             'Biography',
             null, // ignored column
             'Birthday',
             'IsRegistered'
-        );
+        ];
         $loader->hasHeaderRow = false;
         $results = $loader->load($filepath);
 
@@ -147,9 +147,9 @@ class CsvBulkLoaderTest extends SapphireTest
         // Test that columns were correctly imported
         $obj = DataObject::get_one(
             Player::class,
-            array(
+            [
             '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-            )
+            ]
         );
         $this->assertNotNull($obj);
         $this->assertEquals("He's a good guy", $obj->Biography);
@@ -158,9 +158,9 @@ class CsvBulkLoaderTest extends SapphireTest
 
         $obj2 = DataObject::get_one(
             Player::class,
-            array(
+            [
             '"CsvBulkLoaderTest_Player"."FirstName"' => 'Jane'
-            )
+            ]
         );
         $this->assertNotNull($obj2);
         $this->assertEquals('0', $obj2->IsRegistered);
@@ -179,22 +179,22 @@ class CsvBulkLoaderTest extends SapphireTest
         $compareCount = $this->getLineCount($file);
         fgetcsv($file); // pop header row
         $compareRow = fgetcsv($file);
-        $loader->columnMap = array(
+        $loader->columnMap = [
             'first name' => 'FirstName',
             'bio' => 'Biography',
             'bday' => 'Birthday',
             'teamtitle' => 'Team.Title', // test existing relation
             'teamsize' => 'Team.TeamSize', // test existing relation
             'salary' => 'Contract.Amount' // test relation creation
-        );
+        ];
         $loader->hasHeaderRow = true;
-        $loader->relationCallbacks = array(
-            'Team.Title' => array(
+        $loader->relationCallbacks = [
+            'Team.Title' => [
                 'relationname' => 'Team',
                 'callback' => 'getTeamByTitle'
-            ),
+            ],
             // contract should be automatically discovered
-        );
+        ];
         $results = $loader->load($filepath);
 
         // Test that right amount of columns was imported
@@ -208,9 +208,9 @@ class CsvBulkLoaderTest extends SapphireTest
         $testContract = DataObject::get_one(PlayerContract::class);
         $testPlayer = DataObject::get_one(
             Player::class,
-            array(
+            [
             '"CsvBulkLoaderTest_Player"."FirstName"' => 'John'
-            )
+            ]
         );
         $this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 
@@ -235,11 +235,11 @@ class CsvBulkLoaderTest extends SapphireTest
         // first load
         $loader = new CsvBulkLoader(Player::class);
         $filepath = $this->csvPath . 'PlayersWithId.csv';
-        $loader->duplicateChecks = array(
+        $loader->duplicateChecks = [
             'ExternalIdentifier' => 'ExternalIdentifier',
             'NonExistantIdentifier' => 'ExternalIdentifier',
             'AdditionalIdentifier' => 'ExternalIdentifier'
-        );
+        ];
         $results = $loader->load($filepath);
         $createdPlayers = $results->Created();
 
@@ -268,12 +268,12 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CustomLoader(Player::class);
         $filepath = $this->csvPath . 'PlayersWithHeader.csv';
-        $loader->columnMap = array(
+        $loader->columnMap = [
             'FirstName' => '->importFirstName',
             'Biography' => 'Biography',
             'Birthday' => 'Birthday',
             'IsRegistered' => 'IsRegistered'
-        );
+        ];
         $results = $loader->load($filepath);
         $createdPlayers = $results->Created();
         $player = $createdPlayers->first();
@@ -286,12 +286,12 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CustomLoader(Player::class);
         $filepath = $this->csvPath . 'PlayersWithHeader.csv';
-        $loader->columnMap = array(
+        $loader->columnMap = [
             'FirstName' => '->updatePlayer',
             'Biography' => '->updatePlayer',
             'Birthday' => 'Birthday',
             'IsRegistered' => 'IsRegistered'
-        );
+        ];
 
         $results = $loader->load($filepath);
 

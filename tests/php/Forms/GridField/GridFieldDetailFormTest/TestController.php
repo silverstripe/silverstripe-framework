@@ -31,7 +31,7 @@ class TestController extends Controller implements TestOnly
         return Controller::join_links('GridFieldDetailFormTest_Controller', $action, '/');
     }
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     protected $template = 'BlankPage';
 

@@ -203,7 +203,7 @@ class MemberLoginForm extends BaseLoginForm
             $message = _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
-                array('name' => $member->{$this->loggedInAsField})
+                ['name' => $member->{$this->loggedInAsField}]
             );
             $this->setMessage($message, ValidationResult::TYPE_INFO);
         }

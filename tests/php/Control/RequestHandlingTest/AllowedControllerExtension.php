@@ -10,9 +10,9 @@ use SilverStripe\Dev\TestOnly;
  */
 class AllowedControllerExtension extends Extension implements TestOnly
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'otherExtendedMethod'
-    );
+    ];
 
     public function otherExtendedMethod()
     {

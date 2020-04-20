@@ -489,7 +489,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
             throw new InvalidArgumentException("Invalid sort() direction");
         }
 
-        return array($column, $direction);
+        return [$column, $direction];
     }
 
     /**

@@ -12,9 +12,9 @@ class VersionedModel extends DataObject implements TestOnly
 
     protected $entropy = 'default';
 
-    private static $extensions = array(
+    private static $extensions = [
         Versioned::class
-    );
+    ];
 
     public function setEntropy($entropy)
     {

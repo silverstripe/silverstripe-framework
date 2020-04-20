@@ -86,7 +86,7 @@ class HTTPRequestBuilder
      */
     public static function extractRequestHeaders(array $server)
     {
-        $headers = array();
+        $headers = [];
         foreach ($server as $key => $value) {
             if (substr($key, 0, 5) == 'HTTP_') {
                 $key = substr($key, 5);

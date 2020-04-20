@@ -135,9 +135,9 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
 
     public function params($includeToken = true)
     {
-        $params = array(
+        $params = [
             $this->parameterName => $this->parameter,
-        );
+        ];
         if ($includeToken) {
             $params[$this->parameterName . 'token'] = $this->genToken();
         }

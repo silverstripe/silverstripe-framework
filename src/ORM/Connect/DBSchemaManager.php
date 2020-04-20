@@ -146,14 +146,14 @@ abstract class DBSchemaManager
         $this->schemaIsUpdating = true;
 
         // Update table list
-        $this->tableList = array();
+        $this->tableList = [];
         $tables = $this->tableList();
         foreach ($tables as $table) {
             $this->tableList[strtolower($table)] = $table;
         }
 
         // Clear update list for client code to mess around with
-        $this->schemaUpdateTransaction = array();
+        $this->schemaUpdateTransaction = [];
 
         /** @var Exception $error */
         $error = null;
@@ -239,13 +239,13 @@ abstract class DBSchemaManager
      */
     public function transCreateTable($table, $options = null, $advanced_options = null)
     {
-        $this->schemaUpdateTransaction[$table] = array(
+        $this->schemaUpdateTransaction[$table] = [
             'command' => 'create',
-            'newFields' => array(),
-            'newIndexes' => array(),
+            'newFields' => [],
+            'newIndexes' => [],
             'options' => $options,
             'advancedOptions' => $advanced_options
-        );
+        ];
     }
 
     /**
@@ -323,14 +323,14 @@ abstract class DBSchemaManager
     protected function transInitTable($table)
     {
         if (!isset($this->schemaUpdateTransaction[$table])) {
-            $this->schemaUpdateTransaction[$table] = array(
+            $this->schemaUpdateTransaction[$table] = [
                 'command' => 'alter',
-                'newFields' => array(),
-                'newIndexes' => array(),
-                'alteredFields' => array(),
-                'alteredIndexes' => array(),
+                'newFields' => [],
+                'newIndexes' => [],
+                'alteredFields' => [],
+                'alteredIndexes' => [],
                 'alteredOptions' => ''
-            );
+            ];
         }
     }
 
@@ -345,7 +345,7 @@ abstract class DBSchemaManager
      * @param array $indexSchema A list of indexes to create. See {@link requireIndex()}
      * The values of the array can be one of:
      *   - true: Create a single column index on the field named the same as the index.
-     *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
+     *   - ['fields' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
      *     control over the index.
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
      * @param array $options Create table options (ENGINE, etc.)
@@ -356,7 +356,7 @@ abstract class DBSchemaManager
         $fieldSchema = null,
         $indexSchema = null,
         $hasAutoIncPK = true,
-        $options = array(),
+        $options = [],
         $extensions = false
     ) {
         if (!isset($this->tableList[strtolower($table)])) {
@@ -478,7 +478,7 @@ MESSAGE
      * The keys of the array are the names of the index.
      * The values of the array can be one of:
      *  - true: Create a single column index on the field named the same as the index.
-     *  - array('type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB'): This gives you full
+     *  - ['type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB']: This gives you full
      *    control over the index.
      *
      * @param string $table The table name.
@@ -536,7 +536,7 @@ MESSAGE
         $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec);
 
         // Split potentially quoted modifiers
-        // E.g. 'Title, "QuotedColumn"' => array('Title', 'QuotedColumn')
+        // E.g. 'Title, "QuotedColumn"' => ['Title', 'QuotedColumn']
         return preg_split('/"?\s*,\s*"?/', trim($containedSpec, '(") '));
     }
 
@@ -723,7 +723,7 @@ MESSAGE
                 $new = preg_split("/'\\s*,\\s*'/", $specMatches['values']);
                 $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values']);
 
-                $holder = array();
+                $holder = [];
                 foreach ($old as $check) {
                     if (!in_array($check, $new)) {
                         $holder[] = $check;

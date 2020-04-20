@@ -28,12 +28,12 @@ class ManifestFileFinder extends FileFinder
      */
     const RESOURCES_DIR = RESOURCES_DIR;
 
-    protected static $default_options = array(
+    protected static $default_options = [
         'include_themes' => false,
         'ignore_tests' => true,
         'min_depth' => 1,
         'ignore_dirs' => ['node_modules']
-    );
+    ];
 
     public function acceptDir($basename, $pathname, $depth)
     {

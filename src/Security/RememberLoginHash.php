@@ -26,20 +26,20 @@ class RememberLoginHash extends DataObject
 
     private static $plural_name = 'Login Hashes';
 
-    private static $db = array (
+    private static $db = [
         'DeviceID' => 'Varchar(40)',
         'Hash' => 'Varchar(160)',
         'ExpiryDate' => 'Datetime'
-    );
+    ];
 
-    private static $has_one = array (
+    private static $has_one = [
         'Member' => Member::class,
-    );
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         'DeviceID' => true,
         'Hash' => true
-    );
+    ];
 
     private static $table_name = "RememberLoginHash";
 
@@ -179,7 +179,7 @@ class RememberLoginHash extends DataObject
         if (!$member->exists()) {
             return;
         }
-        $filter = array('MemberID'=>$member->ID);
+        $filter = ['MemberID'=>$member->ID];
         if (!static::config()->logout_across_devices && $alcDevice) {
             $filter['DeviceID'] = $alcDevice;
         }

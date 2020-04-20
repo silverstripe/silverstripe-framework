@@ -108,7 +108,7 @@ abstract class SingleSelectField extends SelectField
     {
         // Inject default option
         if ($this->getHasEmptyDefault()) {
-            return array('' => $this->getEmptyString()) + $this->getSource();
+            return ['' => $this->getEmptyString()] + $this->getSource();
         } else {
             return $this->getSource();
         }
@@ -147,7 +147,7 @@ abstract class SingleSelectField extends SelectField
             _t(
                 'SilverStripe\\Forms\\DropdownField.SOURCE_VALIDATION',
                 "Please select a value within the list provided. {value} is not a valid option",
-                array('value' => $selected)
+                ['value' => $selected]
             ),
             "validation"
         );

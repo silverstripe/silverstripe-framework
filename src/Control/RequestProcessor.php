@@ -20,14 +20,14 @@ class RequestProcessor implements HTTPMiddleware
      *
      * @var RequestFilter[]
      */
-    private $filters = array();
+    private $filters = [];
 
     /**
      * Construct new RequestFilter with a list of filter objects
      *
      * @param RequestFilter[] $filters
      */
-    public function __construct($filters = array())
+    public function __construct($filters = [])
     {
         $this->filters = $filters;
     }

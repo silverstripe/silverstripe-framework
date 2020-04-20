@@ -178,6 +178,6 @@ class YamlWriter implements Writer
             array_shift($parts);
         }
         $key = implode('.', $parts);
-        return array($class, $key);
+        return [$class, $key];
     }
 }

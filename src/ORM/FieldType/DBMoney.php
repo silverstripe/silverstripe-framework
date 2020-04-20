@@ -21,10 +21,10 @@ class DBMoney extends DBComposite
     /**
      * @param array
      */
-    private static $composite_db = array(
+    private static $composite_db = [
         "Currency" => "Varchar(3)",
         "Amount" => 'Decimal(19,4)'
-    );
+    ];
 
     /**
      * Get currency formatter

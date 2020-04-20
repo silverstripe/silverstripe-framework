@@ -64,9 +64,9 @@ class ConfigTest extends SapphireTest
         );
 
         // Modify first param
-        Config::modify()->merge(ConfigTest\First::class, 'first', array('test_1_2'));
-        Config::modify()->merge(ConfigTest\Third::class, 'first', array('test_3_2'));
-        Config::modify()->merge(ConfigTest\Fourth::class, 'first', array('test_4'));
+        Config::modify()->merge(ConfigTest\First::class, 'first', ['test_1_2']);
+        Config::modify()->merge(ConfigTest\Third::class, 'first', ['test_3_2']);
+        Config::modify()->merge(ConfigTest\Fourth::class, 'first', ['test_4']);
 
         // Check base class
         $this->assertEquals(
@@ -87,8 +87,8 @@ class ConfigTest extends SapphireTest
         );
 
         // Modify second param
-        Config::modify()->merge(ConfigTest\Fourth::class, 'second', array('test_4'));
-        Config::modify()->merge(ConfigTest\Third::class, 'second', array('test_3_2'));
+        Config::modify()->merge(ConfigTest\Fourth::class, 'second', ['test_4']);
+        Config::modify()->merge(ConfigTest\Third::class, 'second', ['test_3_2']);
 
         // Check fourth class
         $this->assertEquals(
@@ -212,8 +212,8 @@ class ConfigTest extends SapphireTest
         $this->assertEquals(Config::inst()->get(ConfigTest\First::class, 'third', Config::UNINHERITED), 'test_1');
         $this->assertEquals(Config::inst()->get(ConfigTest\Fourth::class, 'third', Config::UNINHERITED), null);
 
-        Config::modify()->merge(ConfigTest\First::class, 'first', array('test_1b'));
-        Config::modify()->merge(ConfigTest\Second::class, 'first', array('test_2b'));
+        Config::modify()->merge(ConfigTest\First::class, 'first', ['test_1b']);
+        Config::modify()->merge(ConfigTest\Second::class, 'first', ['test_2b']);
 
         // Check that it can be applied to parent and subclasses, and queried directly
         $this->assertContains(
@@ -235,7 +235,7 @@ class ConfigTest extends SapphireTest
         // Subclasses that don't have the static explicitly defined should allow definition, also
         // This also checks that set can be called after the first uninherited get()
         // call (which can be buggy due to caching)
-        Config::modify()->merge(ConfigTest\Fourth::class, 'first', array('test_4b'));
+        Config::modify()->merge(ConfigTest\Fourth::class, 'first', ['test_4b']);
         $this->assertContains('test_4b', Config::inst()->get(ConfigTest\Fourth::class, 'first', Config::UNINHERITED));
     }
 

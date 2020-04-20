@@ -7,7 +7,7 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField
 
     protected $readonly = true;
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         // Build list of titles
         $titleField = $this->getTitleField();

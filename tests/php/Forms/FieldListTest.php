@@ -37,7 +37,7 @@ class FieldListTest extends SapphireTest
 {
     public function testRecursiveWalk()
     {
-        $fields = array(
+        $fields = [
             new TextField('Name'),
             new EmailField('Email'),
             new HiddenField('Hidden'),
@@ -47,7 +47,7 @@ class FieldListTest extends SapphireTest
                 new TextField('Month'),
                 new TextField('Year')
             ),
-        );
+        ];
         $fieldList = new FieldList($fields);
 
         $count = 0;
@@ -61,7 +61,7 @@ class FieldListTest extends SapphireTest
 
     public function testFlattenFields()
     {
-        $fields = array(
+        $fields = [
             new TextField('Name'),
             new EmailField('Email'),
             new HiddenField('Hidden'),
@@ -71,7 +71,7 @@ class FieldListTest extends SapphireTest
                 $month = new TextField('Month'),
                 $year = new TextField('Year')
             ),
-        );
+        ];
         $fieldList = new FieldList($fields);
 
         array_pop($fields);
@@ -82,7 +82,7 @@ class FieldListTest extends SapphireTest
 
     public function testSaveableFields()
     {
-        $fields = array(
+        $fields = [
             new TextField('Name'),
             new EmailField('Email'),
             new HiddenField('Hidden'),
@@ -92,7 +92,7 @@ class FieldListTest extends SapphireTest
                 $month = new TextField('Month'),
                 $year = new TextField('Year')
             ),
-        );
+        ];
         $fieldList = new FieldList($fields);
 
         array_pop($fields);
@@ -104,7 +104,7 @@ class FieldListTest extends SapphireTest
 
     public function testFieldNames()
     {
-        $fields = array(
+        $fields = [
             new TextField('Name'),
             new EmailField('Email'),
             new HiddenField('Hidden'),
@@ -114,7 +114,7 @@ class FieldListTest extends SapphireTest
                 $month = new TextField('Month'),
                 $year = new TextField('Year')
             ),
-        );
+        ];
         $fieldList = new FieldList($fields);
 
         $this->assertEquals(['Name', 'Email', 'Hidden', 'Day', 'Month', 'Year'], $fieldList->dataFieldNames());
@@ -133,10 +133,10 @@ class FieldListTest extends SapphireTest
         $fields->addFieldToTab('Root', new TextField('Country'));
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             new EmailField('Email'),
             new TextField('Name'),
-            )
+            ]
         );
 
         /* Check that the field objects were created */
@@ -164,7 +164,7 @@ class FieldListTest extends SapphireTest
 
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             $group1 = new FieldGroup(
                 new TextField('Name'),
                 new EmailField('Email')
@@ -173,7 +173,7 @@ class FieldListTest extends SapphireTest
                 new TextField('Company'),
                 new TextareaField('Address')
             )
-            )
+            ]
         );
 
         /* Check that the field objects were created */
@@ -285,11 +285,11 @@ class FieldListTest extends SapphireTest
         /* We add an array of fields, using addFieldsToTab() */
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             new TextField('Name', 'Your name'),
             new EmailField('Email', 'Email address'),
             new NumericField('Number', 'Insert a number')
-            )
+            ]
         );
 
         /* We have 3 fields inside the tab, which we just created */
@@ -298,11 +298,11 @@ class FieldListTest extends SapphireTest
         /* We remove the 3 fields from the tab */
         $fields->removeFieldsFromTab(
             'Root',
-            array(
+            [
             'Name',
             'Email',
             'Number'
-            )
+            ]
         );
 
         /* We have no fields in the tab now */
@@ -349,7 +349,7 @@ class FieldListTest extends SapphireTest
         $this->assertEquals(2, $fields->count());
 
         /* Then, we call up removeByName() to take it out again */
-        $fields->removeByName(array('Name', 'Email'));
+        $fields->removeByName(['Name', 'Email']);
 
         /* We have 0 fields in our set now, as we've just removed the one we added */
         $this->assertEquals(0, $fields->count());
@@ -638,21 +638,21 @@ class FieldListTest extends SapphireTest
 
         $fields->addFieldsToTab(
             'Root.Main',
-            array(
+            [
             new TextField('NewField1'),
             new TextField('NewField2')
-            ),
+            ],
             'B'
         );
 
         $this->assertEquals(
             array_keys($fields->dataFields()),
-            array(
+            [
             'A',
             'NewField1',
             'NewField2',
             'B'
-            )
+            ]
         );
     }
 
@@ -1047,7 +1047,7 @@ class FieldListTest extends SapphireTest
      */
     public function testChangeFieldOrder()
     {
-        $fieldNames = array('A','B','C','D','E');
+        $fieldNames = ['A','B','C','D','E'];
         $setArray = new FieldList();
         $setArgs = new FieldList();
         foreach ($fieldNames as $fN) {
@@ -1055,7 +1055,7 @@ class FieldListTest extends SapphireTest
             $setArgs->push(new TextField($fN));
         }
 
-        $setArray->changeFieldOrder(array('D','B','E'));
+        $setArray->changeFieldOrder(['D','B','E']);
         $this->assertEquals(0, $setArray->fieldPosition('D'));
         $this->assertEquals(1, $setArray->fieldPosition('B'));
         $this->assertEquals(2, $setArray->fieldPosition('E'));

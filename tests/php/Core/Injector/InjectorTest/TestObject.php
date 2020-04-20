@@ -9,7 +9,7 @@ class TestObject implements TestOnly
 
     public $sampleService;
 
-    public $methodCalls = array();
+    public $methodCalls = [];
 
     public function setSomething($v)
     {

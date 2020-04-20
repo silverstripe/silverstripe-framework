@@ -24,7 +24,7 @@ class SelectionGroup_Item extends CompositeField
     {
         $this->setValue($value);
         if ($fields && !is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
 
         parent::__construct($fields);

@@ -11,9 +11,9 @@ class TestObject extends DataObject implements TestOnly
 
     public $number = null;
 
-    private static $casting = array(
+    private static $casting = [
         'Link' => 'Text',
-    );
+    ];
 
 
     public function __construct($number = null)

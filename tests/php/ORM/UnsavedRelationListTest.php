@@ -56,11 +56,11 @@ class UnsavedRelationListTest extends SapphireTest
         $children = $object->Children();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $children
         );
 
@@ -69,11 +69,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($children, $object->Children());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $object->Children()
         );
     }
@@ -90,11 +90,11 @@ class UnsavedRelationListTest extends SapphireTest
         $siblings = $object->Siblings();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $siblings
         );
 
@@ -103,11 +103,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($siblings, $object->Siblings());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $object->Siblings()
         );
     }
@@ -117,18 +117,18 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $children = $object->Children();
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'A']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'B']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'C']));
 
         $children = $object->Children();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $children
         );
 
@@ -137,11 +137,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($children, $object->Children());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $object->Children()
         );
     }
@@ -151,18 +151,18 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $children = $object->RelatedObjects();
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'A']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'B']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'C']));
 
         $children = $object->RelatedObjects();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $children
         );
 
@@ -171,11 +171,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($children, $object->RelatedObjects());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $object->RelatedObjects()
         );
     }
@@ -185,18 +185,18 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $Siblings = $object->Siblings();
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'A']));
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'B']));
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'C']));
 
         $siblings = $object->Siblings();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $siblings
         );
 
@@ -205,11 +205,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($siblings, $object->Siblings());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $object->Siblings()
         );
     }
@@ -219,18 +219,18 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $Siblings = $object->Siblings();
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')), array('Number' => 1));
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')), array('Number' => 2));
-        $Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')), array('Number' => 3));
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'A']), ['Number' => 1]);
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'B']), ['Number' => 2]);
+        $Siblings->add(new UnsavedRelationListTest\TestObject(['Name' => 'C']), ['Number' => 3]);
 
         $siblings = $object->Siblings();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A', 'Number' => 1),
-            array('Name' => 'B', 'Number' => 2),
-            array('Name' => 'C', 'Number' => 3)
-            ),
+            [
+            ['Name' => 'A', 'Number' => 1],
+            ['Name' => 'B', 'Number' => 2],
+            ['Name' => 'C', 'Number' => 3]
+            ],
             $siblings
         );
 
@@ -239,11 +239,11 @@ class UnsavedRelationListTest extends SapphireTest
         $this->assertNotEquals($siblings, $object->Siblings());
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A', 'Number' => 1),
-            array('Name' => 'B', 'Number' => 2),
-            array('Name' => 'C', 'Number' => 3)
-            ),
+            [
+            ['Name' => 'A', 'Number' => 1],
+            ['Name' => 'B', 'Number' => 2],
+            ['Name' => 'C', 'Number' => 3]
+            ],
             $object->Siblings()
         );
     }
@@ -253,31 +253,31 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $children = $object->Children();
-        $this->assertEquals($children->getIDList(), array());
-        $children->add($child1 = new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
-        $children->add($child2 = new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
-        $children->add($child3 = new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
+        $this->assertEquals($children->getIDList(), []);
+        $children->add($child1 = new UnsavedRelationListTest\TestObject(['Name' => 'A']));
+        $children->add($child2 = new UnsavedRelationListTest\TestObject(['Name' => 'B']));
+        $children->add($child3 = new UnsavedRelationListTest\TestObject(['Name' => 'C']));
         $children->add($child1);
 
-        $this->assertEquals($children->getIDList(), array());
+        $this->assertEquals($children->getIDList(), []);
 
         $child1->write();
         $this->assertEquals(
             $children->getIDList(),
-            array(
+            [
             $child1->ID => $child1->ID
-            )
+            ]
         );
 
         $child2->write();
         $child3->write();
         $this->assertEquals(
             $children->getIDList(),
-            array(
+            [
             $child1->ID => $child1->ID,
             $child2->ID => $child2->ID,
             $child3->ID => $child3->ID
-            )
+            ]
         );
     }
 
@@ -286,28 +286,28 @@ class UnsavedRelationListTest extends SapphireTest
         $object = new UnsavedRelationListTest\TestObject();
 
         $children = $object->Children();
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
-        $children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'A']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'B']));
+        $children->add(new UnsavedRelationListTest\TestObject(['Name' => 'C']));
 
         $children = $object->Children();
 
         $this->assertListEquals(
-            array(
-            array('Name' => 'A'),
-            array('Name' => 'B'),
-            array('Name' => 'C')
-            ),
+            [
+            ['Name' => 'A'],
+            ['Name' => 'B'],
+            ['Name' => 'C']
+            ],
             $children
         );
 
         $this->assertEquals(
             $children->column('Name'),
-            array(
+            [
             'A',
             'B',
             'C'
-            )
+            ]
         );
     }
 }

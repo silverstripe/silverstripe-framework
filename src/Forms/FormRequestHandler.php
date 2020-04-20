@@ -26,22 +26,22 @@ class FormRequestHandler extends RequestHandler
      * @config
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'handleField',
         'httpSubmission',
         'forTemplate',
-    );
+    ];
 
     /**
      * @config
      * @var array
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         'field/$FieldName!' => 'handleField',
         'POST ' => 'httpSubmission',
         'GET ' => 'httpSubmission',
         'HEAD ' => 'httpSubmission',
-    );
+    ];
 
     /**
      * Form model being handled
@@ -169,13 +169,13 @@ class FormRequestHandler extends RequestHandler
                 // Break off querystring arguments included in the action
                 if (strpos($paramName, '?') !== false) {
                     list($paramName, $paramVars) = explode('?', $paramName, 2);
-                    $newRequestParams = array();
+                    $newRequestParams = [];
                     parse_str($paramVars, $newRequestParams);
                     $vars = array_merge((array)$vars, (array)$newRequestParams);
                 }
 
                 // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(array('/^action_/','/_x$|_y$/'), '', $paramName);
+                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName);
                 break;
             }
         }

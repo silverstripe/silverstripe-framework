@@ -152,7 +152,7 @@ class FieldGroup extends CompositeField
      */
     public function getMessage()
     {
-        $dataFields = array();
+        $dataFields = [];
         $this->collateDataFields($dataFields);
 
         /** @var FormField $subfield */
@@ -176,7 +176,7 @@ class FieldGroup extends CompositeField
      */
     public function getMessageType()
     {
-        $dataFields = array();
+        $dataFields = [];
         $this->collateDataFields($dataFields);
 
         /** @var FormField $subfield */

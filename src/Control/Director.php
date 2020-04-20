@@ -60,7 +60,7 @@ class Director implements TemplateGlobalProvider
      * @config
      * @var array
      */
-    private static $rules = array();
+    private static $rules = [];
 
     /**
      * Set current page
@@ -122,11 +122,11 @@ class Director implements TemplateGlobalProvider
     public static function test(
         $url,
         $postVars = [],
-        $session = array(),
+        $session = [],
         $httpMethod = null,
         $body = null,
-        $headers = array(),
-        $cookies = array(),
+        $headers = [],
+        $cookies = [],
         &$request = null
     ) {
         return static::mockRequest(
@@ -226,7 +226,7 @@ class Director implements TemplateGlobalProvider
         // Setup cookies
         $cookieJar = $cookies instanceof Cookie_Backend
             ? $cookies
-            : Injector::inst()->createWithArgs(Cookie_Backend::class, array($cookies ?: []));
+            : Injector::inst()->createWithArgs(Cookie_Backend::class, [$cookies ?: []]);
         $newVars['_COOKIE'] = $cookieJar->getAll(false);
         Cookie::config()->update('report_errors', false);
         Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
@@ -326,9 +326,9 @@ class Director implements TemplateGlobalProvider
             // Normalise route rule
             if (is_string($controllerOptions)) {
                 if (substr($controllerOptions, 0, 2) == '->') {
-                    $controllerOptions = array('Redirect' => substr($controllerOptions, 2));
+                    $controllerOptions = ['Redirect' => substr($controllerOptions, 2)];
                 } else {
-                    $controllerOptions = array('Controller' => $controllerOptions);
+                    $controllerOptions = ['Controller' => $controllerOptions];
                 }
             }
             $request->setRouteParams($controllerOptions);
@@ -1131,13 +1131,13 @@ class Director implements TemplateGlobalProvider
      */
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'absoluteBaseURL',
             'baseURL',
             'is_ajax',
             'isAjax' => 'is_ajax',
             'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
-        );
+        ];
     }
 
     /**

@@ -9,7 +9,7 @@ class Model extends DataObject implements TestOnly
 {
     private static $table_name = 'DatetimeFieldTest_Model';
 
-    private static $db = array(
+    private static $db = [
         'MyDatetime' => 'Datetime'
-    );
+    ];
 }

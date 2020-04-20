@@ -35,20 +35,20 @@ class LoginAttempt extends DataObject
      */
     const FAILURE = 'Failure';
 
-    private static $db = array(
+    private static $db = [
         'Email' => 'Varchar(255)', // Remove in 5.0
         'EmailHashed' => 'Varchar(255)',
         'Status' => "Enum('Success,Failure')",
         'IP' => 'Varchar(255)',
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Member' => Member::class, // only linked if the member actually exists
-    );
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         "EmailHashed" => true
-    );
+    ];
 
     private static $table_name = "LoginAttempt";
 
@@ -89,8 +89,8 @@ class LoginAttempt extends DataObject
      */
     public static function getByEmail($email)
     {
-        return static::get()->filterAny(array(
+        return static::get()->filterAny([
             'EmailHashed' => sha1($email),
-        ));
+        ]);
     }
 }

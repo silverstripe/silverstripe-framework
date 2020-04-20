@@ -9,15 +9,15 @@ class Controller1 extends Controller
 
     const OK_MSG = 'DevAdminControllerTest_Controller1 TEST OK';
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '' => 'index',
         'y1' => 'y1Action'
-    );
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index',
         'y1Action',
-    );
+    ];
 
 
     public function index()

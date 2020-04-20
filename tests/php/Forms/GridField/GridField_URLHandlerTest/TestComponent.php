@@ -19,7 +19,7 @@ use SilverStripe\View\SSViewer;
 class TestComponent extends RequestHandler implements GridField_URLHandler
 {
 
-    private static $allowed_actions = array('Form', 'showform', 'testpage', 'handleItem');
+    private static $allowed_actions = ['Form', 'showform', 'testpage', 'handleItem'];
 
     /**
      * @var GridField
@@ -31,12 +31,12 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'showform' => 'showform',
             'testpage' => 'testpage',
             'Form' => 'Form',
             'item/$ID' => 'handleItem',
-        );
+        ];
     }
 
     public function handleItem(GridField $gridField, HTTPRequest $request)

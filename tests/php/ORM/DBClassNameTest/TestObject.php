@@ -9,10 +9,10 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DBClassNameTest_Object';
 
-    private static $db = array(
+    private static $db = [
         'DefaultClass' => 'DBClassName',
         'AnyClass' => 'DBClassName(\'SilverStripe\\ORM\\DataObject\')',
         'ChildClass' => 'DBClassName(\'SilverStripe\\ORM\\Tests\\DBClassNameTest\\ObjectSubClass\')',
         'LeafClass' => 'DBClassName(\'SilverStripe\\ORM\\Tests\\DBClassNameTest\\ObjectSubSubClass\')'
-    );
+    ];
 }

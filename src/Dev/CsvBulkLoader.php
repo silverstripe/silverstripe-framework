@@ -179,7 +179,7 @@ class CsvBulkLoader extends BulkLoader
             fwrite($to, $header);
         }
 
-        $files = array();
+        $files = [];
         $files[] = $new;
 
         $count = 0;
@@ -360,7 +360,7 @@ class CsvBulkLoader extends BulkLoader
             } elseif ($obj->hasMethod("import{$fieldName}")) {
                 $obj->{"import{$fieldName}"}($val, $record);
             } else {
-                $obj->update(array($fieldName => $val));
+                $obj->update([$fieldName => $val]);
             }
         }
 

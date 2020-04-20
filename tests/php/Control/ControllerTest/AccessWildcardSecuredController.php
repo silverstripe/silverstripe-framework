@@ -8,7 +8,7 @@ class AccessWildcardSecuredController extends AccessBaseController implements Te
 {
     private static $url_segment = 'AccessWildcardSecuredController';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         "*" => "ADMIN", // should throw exception
-    );
+    ];
 }

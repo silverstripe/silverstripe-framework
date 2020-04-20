@@ -32,7 +32,7 @@ class MemberTest extends FunctionalTest
 {
     protected static $fixture_file = 'MemberTest.yml';
 
-    protected $orig = array();
+    protected $orig = [];
 
     protected static $illegal_extensions = [
         Member::class => '*',
@@ -250,7 +250,7 @@ class MemberTest extends FunctionalTest
         $this->assertNotNull($member);
 
         // Initiate a password-reset
-        $response = $this->post('Security/lostpassword/LostPasswordForm', array('Email' => $member->Email));
+        $response = $this->post('Security/lostpassword/LostPasswordForm', ['Email' => $member->Email]);
 
         $this->assertEquals($response->getStatusCode(), 302);
 
@@ -417,15 +417,15 @@ class MemberTest extends FunctionalTest
         $ceogroup = $this->objFromFixture(Group::class, 'ceogroup');
 
         $this->assertTrue(
-            $staffmember->inGroups(array($staffgroup, $managementgroup)),
+            $staffmember->inGroups([$staffgroup, $managementgroup]),
             'inGroups() succeeds if a membership is detected on one of many passed groups'
         );
         $this->assertFalse(
-            $staffmember->inGroups(array($ceogroup, $managementgroup)),
+            $staffmember->inGroups([$ceogroup, $managementgroup]),
             'inGroups() fails if a membership is detected on none of the passed groups'
         );
         $this->assertFalse(
-            $ceomember->inGroups(array($staffgroup, $managementgroup), true),
+            $ceomember->inGroups([$staffgroup, $managementgroup], true),
             'inGroups() fails if no direct membership is detected on any of the passed groups (in strict mode)'
         );
     }
@@ -441,7 +441,7 @@ class MemberTest extends FunctionalTest
         $managementgroup = $this->objFromFixture(Group::class, 'managementgroup');
 
         $this->assertTrue(
-            $staffmember->inGroups(array($staffgroup, $managementgroup)),
+            $staffmember->inGroups([$staffgroup, $managementgroup]),
             'inGroups() succeeds if a membership is detected on one of many passed groups'
         );
 
@@ -480,9 +480,9 @@ class MemberTest extends FunctionalTest
         /** @var Group $group */
         $group = DataObject::get_one(
             Group::class,
-            array(
+            [
             '"Group"."Code"' => 'somegroupthatwouldneverexist'
-            )
+            ]
         );
         $this->assertNotNull($group);
         $this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
@@ -711,34 +711,34 @@ class MemberTest extends FunctionalTest
         $adminMember = $this->objFromFixture(Member::class, 'admin');
 
         // Construct admin and non-admin gruops
-        $newAdminGroup = new Group(array('Title' => 'newadmin'));
+        $newAdminGroup = new Group(['Title' => 'newadmin']);
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');
-        $newOtherGroup = new Group(array('Title' => 'othergroup'));
+        $newOtherGroup = new Group(['Title' => 'othergroup']);
         $newOtherGroup->write();
 
         $this->assertTrue(
-            $staffMember->onChangeGroups(array($staffGroup->ID)),
+            $staffMember->onChangeGroups([$staffGroup->ID]),
             'Adding existing non-admin group relation is allowed for non-admin members'
         );
         $this->assertTrue(
-            $staffMember->onChangeGroups(array($newOtherGroup->ID)),
+            $staffMember->onChangeGroups([$newOtherGroup->ID]),
             'Adding new non-admin group relation is allowed for non-admin members'
         );
         $this->assertFalse(
-            $staffMember->onChangeGroups(array($newAdminGroup->ID)),
+            $staffMember->onChangeGroups([$newAdminGroup->ID]),
             'Adding new admin group relation is not allowed for non-admin members'
         );
 
         $this->logInAs($adminMember);
         $this->assertTrue(
-            $staffMember->onChangeGroups(array($newAdminGroup->ID)),
+            $staffMember->onChangeGroups([$newAdminGroup->ID]),
             'Adding new admin group relation is allowed for normal users, when granter is logged in as admin'
         );
         $this->logOut();
 
         $this->assertTrue(
-            $adminMember->onChangeGroups(array($newAdminGroup->ID)),
+            $adminMember->onChangeGroups([$newAdminGroup->ID]),
             'Adding new admin group relation is allowed for admin members'
         );
     }
@@ -785,12 +785,12 @@ class MemberTest extends FunctionalTest
         $adminMember = $this->objFromFixture(Member::class, 'admin');
 
         // Setup new admin group
-        $newAdminGroup = new Group(array('Title' => 'newadmin'));
+        $newAdminGroup = new Group(['Title' => 'newadmin']);
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');
 
         // Setup non-admin group
-        $newOtherGroup = new Group(array('Title' => 'othergroup'));
+        $newOtherGroup = new Group(['Title' => 'othergroup']);
         $newOtherGroup->write();
 
         // Test staff can be added to other group
@@ -836,13 +836,13 @@ class MemberTest extends FunctionalTest
         $staffMember = $this->objFromFixture(Member::class, 'staffmember');
 
         // Setup new admin group
-        $newAdminGroup = new Group(array('Title' => 'newadmin'));
+        $newAdminGroup = new Group(['Title' => 'newadmin']);
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');
 
         // Test staff member can't be added to admin groups
         $this->assertFalse($staffMember->inGroup($newAdminGroup));
-        $staffMember->Groups()->setByIDList(array($newAdminGroup->ID));
+        $staffMember->Groups()->setByIDList([$newAdminGroup->ID]);
         $this->assertFalse(
             $staffMember->inGroup($newAdminGroup),
             'Adding new admin group relation is not allowed for non-admin members'
@@ -998,16 +998,16 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $message = Convert::raw2xml(
             _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
-                array('name' => $m1->FirstName)
+                ['name' => $m1->FirstName]
             )
         );
         $this->assertContains($message, $response->getBody());
@@ -1019,10 +1019,10 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':asdfasd' . str_rot13($token),
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $this->assertNotContains($message, $response->getBody());
 
@@ -1030,10 +1030,10 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => str_rot13($firstHash->DeviceID)
-            )
+            ]
         );
         $this->assertNotContains($message, $response->getBody());
 
@@ -1041,17 +1041,17 @@ class MemberTest extends FunctionalTest
         // should remove all previous hashes for this device
         $response = $this->post(
             'Security/login/default/LoginForm',
-            array(
+            [
                 'Email' => $m1->Email,
                 'Password' => '1nitialPassword',
                 'action_doLogin' => 'action_doLogin'
-            ),
+            ],
             null,
             $this->session(),
             null,
-            array(
+            [
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $this->assertContains($message, $response->getBody());
         $this->assertEquals(RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(), 0);
@@ -1078,16 +1078,16 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $message = Convert::raw2xml(
             _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
-                array('name' => $m1->FirstName)
+                ['name' => $m1->FirstName]
             )
         );
         $this->assertContains($message, $response->getBody());
@@ -1106,10 +1106,10 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $token,
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $this->assertNotContains($message, $response->getBody());
         $this->logOut();
@@ -1154,16 +1154,16 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $firstToken,
                 'alc_device' => $firstHash->DeviceID
-            )
+            ]
         );
         $message = Convert::raw2xml(
             _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
-                array('name' => $m1->FirstName)
+                ['name' => $m1->FirstName]
             )
         );
         $this->assertContains($message, $response->getBody());
@@ -1179,10 +1179,10 @@ class MemberTest extends FunctionalTest
             'Security/login',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $secondToken,
                 'alc_device' => $secondHash->DeviceID
-            )
+            ]
         );
         $this->assertContains($message, $response->getBody());
 
@@ -1192,13 +1192,13 @@ class MemberTest extends FunctionalTest
             'Security/logout',
             $this->session(),
             null,
-            array(
+            [
                 'alc_enc' => $m1->ID . ':' . $secondToken,
                 'alc_device' => $secondHash->DeviceID
-            )
+            ]
         );
         $this->assertEquals(
-            RememberLoginHash::get()->filter(array('MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID))->count(),
+            RememberLoginHash::get()->filter(['MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID])->count(),
             1
         );
 
@@ -1284,10 +1284,10 @@ class MemberTest extends FunctionalTest
 
         // Simulate creation of a new member via form, but use an existing member identifier
         $fail = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Email' => $memberA->Email
-            )
+            ]
         );
 
         $this->assertFalse(
@@ -1304,27 +1304,27 @@ class MemberTest extends FunctionalTest
 
         // Simulate update of a member via form and use an existing member Email
         $fail = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Email' => $memberA->Email
-            )
+            ]
         );
 
         // Simulate update to a new Email address
         $pass1 = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Email' => 'membervalidatortest@testing.com'
-            )
+            ]
         );
 
         // Pass in the same Email address that the member already has. Ensure that case is valid
         $pass2 = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Surname' => 'User',
             'Email' => $memberB->Email
-            )
+            ]
         );
 
         $this->assertFalse(
@@ -1358,19 +1358,19 @@ class MemberTest extends FunctionalTest
 
         // This test should fail, since the extension enforces FirstName == Surname
         $fail = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Surname' => 'User',
             'Email' => 'test-member-validator-extension@testing.com'
-            )
+            ]
         );
 
         $pass = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Surname' => 'Test',
             'Email' => 'test-member-validator-extension@testing.com'
-            )
+            ]
         );
 
         $this->assertFalse(
@@ -1390,11 +1390,11 @@ class MemberTest extends FunctionalTest
 
         // Even though the data is valid, This test should still fail, since one extension always returns false
         $fail = $validator->php(
-            array(
+            [
             'FirstName' => 'Test',
             'Surname' => 'Test',
             'Email' => 'test-member-validator-extension@testing.com'
-            )
+            ]
         );
 
         $this->assertFalse(
@@ -1421,17 +1421,17 @@ class MemberTest extends FunctionalTest
         $validator->setForm($form);
 
         $pass = $validator->php(
-            array(
+            [
             'FirstName' => 'Borris',
             'Email' => 'borris@silverstripe.com'
-            )
+            ]
         );
 
         $fail = $validator->php(
-            array(
+            [
             'Email' => 'borris@silverstripe.com',
             'Surname' => ''
-            )
+            ]
         );
 
         $this->assertTrue($pass, 'Validator requires a FirstName and Email');
@@ -1441,26 +1441,26 @@ class MemberTest extends FunctionalTest
         $ext->updateValidator($validator);
 
         $pass = $validator->php(
-            array(
+            [
             'FirstName' => 'Borris',
             'Email' => 'borris@silverstripe.com'
-            )
+            ]
         );
 
         $fail = $validator->php(
-            array(
+            [
             'Email' => 'borris@silverstripe.com'
-            )
+            ]
         );
 
         $this->assertFalse($pass, 'Missing surname');
         $this->assertFalse($fail, 'Missing surname value');
 
         $fail = $validator->php(
-            array(
+            [
             'Email' => 'borris@silverstripe.com',
             'Surname' => 'Silverman'
-            )
+            ]
         );
 
         $this->assertTrue($fail, 'Passes with email and surname now (no firstname)');

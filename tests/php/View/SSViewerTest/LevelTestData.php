@@ -23,7 +23,7 @@ class LevelTestData extends ViewableData implements TestOnly
 
     public function forLoop($number)
     {
-        $ret = array();
+        $ret = [];
         for ($i = 0; $i < (int)$number; ++$i) {
             $ret[] = new TestObject("!$i");
         }

@@ -13,7 +13,7 @@ class Component2 implements GridField_DataManipulator, TestOnly
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
         $dataList = clone $dataList;
-        $dataList->merge(new ArrayList(array(7, 8, 9, 10, 11, 12)));
+        $dataList->merge(new ArrayList([7, 8, 9, 10, 11, 12]));
         return $dataList;
     }
 }

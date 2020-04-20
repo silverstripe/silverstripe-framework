@@ -9,14 +9,14 @@ class SubController extends Controller implements TestOnly
 {
     private static $url_segment = 'SubController';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'subaction',
         'subvieweraction',
-    );
+    ];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         'substring/subvieweraction' => 'subvieweraction',
-    );
+    ];
 
     public function subaction()
     {

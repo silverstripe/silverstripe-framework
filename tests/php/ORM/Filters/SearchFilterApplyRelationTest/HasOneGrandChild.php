@@ -9,11 +9,11 @@ class HasOneGrandChild extends HasOneChild implements TestOnly
     private static $table_name = 'SearchFilterApplyRelationTest_HasOneGrantChild';
 
     // This is to create an seperate Table only.
-    private static $db = array(
+    private static $db = [
         "GrantChildField" => "Varchar",
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         "SearchFilterApplyRelationTest_DOs" => TestObject::class,
-    );
+    ];
 }

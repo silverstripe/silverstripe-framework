@@ -27,25 +27,25 @@ class Email extends ViewableData
      * @var array
      * @config
      */
-    private static $send_all_emails_to = array();
+    private static $send_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $cc_all_emails_to = array();
+    private static $cc_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $bcc_all_emails_to = array();
+    private static $bcc_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $send_all_emails_from = array();
+    private static $send_all_emails_from = [];
 
     /**
      * This will be set in the config on a site-by-site basis
@@ -80,12 +80,12 @@ class Email extends ViewableData
      * @var array|ViewableData Additional data available in a template.
      * Used in the same way than {@link ViewableData->customize()}.
      */
-    private $data = array();
+    private $data = [];
 
     /**
      * @var array
      */
-    private $failedRecipients = array();
+    private $failedRecipients = [];
 
     /**
      * Checks for RFC822-valid email format.
@@ -188,7 +188,7 @@ class Email extends ViewableData
 
                 return '<span class="codedirection">' . strrev($email) . '</span>';
             case 'visible':
-                $obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
+                $obfuscated = ['@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] '];
 
                 return strtr($email, $obfuscated);
             case 'hex':
@@ -362,7 +362,7 @@ class Email extends ViewableData
      * Set recipient(s) of the email
      *
      * To send to many, pass an array:
-     * array('me@example.com' => 'My Name', 'other@example.com');
+     * ['me@example.com' => 'My Name', 'other@example.com'];
      *
      * @param string|array $address The message recipient(s) - if sending to multiple, use an array of address => name
      * @param string|null $name The name of the recipient (if one)

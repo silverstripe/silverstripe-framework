@@ -28,7 +28,7 @@ class PjaxResponseNegotiator
      *
      * @var array
      */
-    protected $callbacks = array();
+    protected $callbacks = [];
 
     protected $response = null;
 
@@ -41,7 +41,7 @@ class PjaxResponseNegotiator
      * @param array $callbacks
      * @param HTTPResponse $response An existing response to reuse (optional)
      */
-    public function __construct($callbacks = array(), $response = null)
+    public function __construct($callbacks = [], $response = null)
     {
         $this->callbacks = $callbacks;
         $this->response = $response;
@@ -71,13 +71,13 @@ class PjaxResponseNegotiator
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function respond(HTTPRequest $request, $extraCallbacks = array())
+    public function respond(HTTPRequest $request, $extraCallbacks = [])
     {
         // Prepare the default options and combine with the others
         $callbacks = array_merge($this->callbacks, $extraCallbacks);
         $response = $this->getResponse();
 
-        $responseParts = array();
+        $responseParts = [];
 
         if (isset($this->fragmentOverride)) {
             $fragments = $this->fragmentOverride;

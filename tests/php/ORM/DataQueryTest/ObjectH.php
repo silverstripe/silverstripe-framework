@@ -9,13 +9,13 @@ class ObjectH extends DataObject implements TestOnly
 {
     private static $table_name = 'DataQueryTest_H';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'SortOrder' => 'Int',
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'ManyTestEs' => ObjectE::class,
         'ManyTestIs' => ObjectI::class,
-    );
+    ];
 }

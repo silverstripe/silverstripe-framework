@@ -168,7 +168,7 @@ class ModuleManifest
         $this->modules = [];
 
         $finder = new ManifestFileFinder();
-        $finder->setOptions(array(
+        $finder->setOptions([
             'min_depth' => 0,
             'ignore_tests' => !$includeTests,
             'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
@@ -176,7 +176,7 @@ class ModuleManifest
                     $this->addModule($pathname);
                 }
             }
-        ));
+        ]);
         $finder->find($this->base);
 
         // Include root itself if module

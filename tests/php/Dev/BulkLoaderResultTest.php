@@ -16,13 +16,13 @@ class BulkLoaderResultTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        Player::create(array('Name' => 'Vincent', 'Status' => 'Available'))->write();
+        Player::create(['Name' => 'Vincent', 'Status' => 'Available'])->write();
     }
 
     public function testBulkLoaderResultCreated()
     {
         $results = BulkLoader_Result::create();
-        $player = Player::create(array('Name' => 'Rangi', 'Status' => 'Possible'));
+        $player = Player::create(['Name' => 'Rangi', 'Status' => 'Possible']);
         $player->write();
         $results->addCreated($player, 'Speedster');
 

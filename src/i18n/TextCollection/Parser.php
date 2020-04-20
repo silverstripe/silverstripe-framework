@@ -48,7 +48,7 @@ class Parser extends SSTemplateParser
         $this->string = $string;
         $this->pos = 0;
         $this->depth = 0;
-        $this->regexps = array();
+        $this->regexps = [];
         $this->warnIfEmpty = $warnIfEmpty;
     }
 

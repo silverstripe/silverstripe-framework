@@ -206,7 +206,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             $itemStack[$upIndex][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
 
             $this->setItemStack($itemStack);
-            $this->overlay = array();
+            $this->overlay = [];
         }
 
         return $scope;

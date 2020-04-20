@@ -65,7 +65,7 @@ class Deprecation
      *
      * @var array
      */
-    protected static $module_version_overrides = array();
+    protected static $module_version_overrides = [];
 
     /**
      * @var int - the notice level to raise on a deprecation notice. Defaults to E_USER_DEPRECATED if that exists,
@@ -247,12 +247,12 @@ class Deprecation
      */
     public static function dump_settings()
     {
-        return array(
+        return [
             'level' => self::$notice_level,
             'version' => self::$version,
             'moduleVersions' => self::$module_version_overrides,
             'enabled' => self::$enabled,
-        );
+        ];
     }
 
     /**

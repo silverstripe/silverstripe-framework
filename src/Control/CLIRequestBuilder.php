@@ -19,7 +19,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
         }
 
         // We update the $_SERVER variable to contain data consistent with the rest of the application.
-        $variables['_SERVER'] = array_merge(array(
+        $variables['_SERVER'] = array_merge([
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'HTTP_ACCEPT' => 'text/plain;q=0.5',
             'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
@@ -31,7 +31,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
             'REMOTE_ADDR' => '127.0.0.1',
             'REQUEST_METHOD' => 'GET',
             'HTTP_USER_AGENT' => 'CLI',
-        ), $variables['_SERVER']);
+        ], $variables['_SERVER']);
 
         /**
          * Process arguments and load them into the $_GET and $_REQUEST arrays
@@ -51,7 +51,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
                 if (strpos($arg, '=') == false) {
                     $variables['_GET']['args'][] = $arg;
                 } else {
-                    $newItems = array();
+                    $newItems = [];
                     parse_str((substr($arg, 0, 2) == '--') ? substr($arg, 2) : $arg, $newItems);
                     $variables['_GET'] = array_merge($variables['_GET'], $newItems);
                 }

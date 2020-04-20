@@ -396,14 +396,14 @@ class DBDate extends DBField
                 'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFAGO',
                 "{difference} ago",
                 'Natural language time difference, e.g. 2 hours ago',
-                array('difference' => $this->TimeDiff($includeSeconds, $significance))
+                ['difference' => $this->TimeDiff($includeSeconds, $significance)]
             );
         } else {
             return _t(
                 'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
                 "in {difference}",
                 'Natural language time difference, e.g. in 2 hours',
-                array('difference' => $this->TimeDiff($includeSeconds, $significance))
+                ['difference' => $this->TimeDiff($includeSeconds, $significance)]
             );
         }
     }
@@ -511,8 +511,8 @@ class DBDate extends DBField
 
     public function requireField()
     {
-        $parts = array('datatype' => 'date', 'arrayValue' => $this->arrayValue);
-        $values = array('type' => 'date', 'parts' => $parts);
+        $parts = ['datatype' => 'date', 'arrayValue' => $this->arrayValue];
+        $values = ['type' => 'date', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 

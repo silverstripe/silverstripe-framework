@@ -216,7 +216,7 @@ JS;
     public function iShouldSeeAField($negative, $text)
     {
         $page = $this->getSession()->getPage();
-        $els = $page->findAll('named', array('field', "'$text'"));
+        $els = $page->findAll('named', ['field', "'$text'"]);
         $matchedEl = null;
         /** @var NodeElement $el */
         foreach ($els as $el) {
@@ -458,7 +458,7 @@ JS;
             $dropdownButton->click();
         }
 
-        $button = $name->getParent()->find('named', array('link_or_button', $buttonLabel));
+        $button = $name->getParent()->find('named', ['link_or_button', $buttonLabel]);
 
         return $button;
     }

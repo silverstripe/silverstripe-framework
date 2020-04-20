@@ -9,22 +9,22 @@ class ExtraFieldsObject extends DataObject implements TestOnly
 {
     private static $table_name = 'ManyManyListTest_ExtraFields';
 
-    private static $many_many = array(
+    private static $many_many = [
         'Clients' => ExtraFieldsObject::class,
         'Products' => Product::class,
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'WorksWith' => ExtraFieldsObject::class
-    );
+    ];
 
-    private static $many_many_extraFields = array(
-        'Clients' => array(
+    private static $many_many_extraFields = [
+        'Clients' => [
             'Reference' => 'Varchar',
             'Worth' => 'Money'
-        ),
-        'Products' => array(
+        ],
+        'Products' => [
             'Reference' => 'Varchar',
-        ),
-    );
+        ],
+    ];
 }

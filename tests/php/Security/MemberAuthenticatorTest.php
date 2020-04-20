@@ -176,10 +176,10 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNotEmpty($tempID);
         $this->assertFalse(DefaultAdminService::hasDefaultAdmin());
 
-        $result = $authenticator->authenticate(array(
+        $result = $authenticator->authenticate([
             'tempid' => $tempID,
             'Password' => 'notmypassword'
-        ), Controller::curr()->getRequest(), $validationResult);
+        ], Controller::curr()->getRequest(), $validationResult);
 
         $this->assertNull($result);
         $this->assertFalse($validationResult->isValid());
@@ -253,7 +253,7 @@ class MemberAuthenticatorTest extends SapphireTest
             ->set('lock_out_delay_mins', 10);
 
         $email = 'notreal@example.com';
-        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertFalse(Member::get()->filter(['Email' => $email])->exists());
         $this->assertCount(0, LoginAttempt::get());
         $authenticator = new MemberAuthenticator();
         $result = new ValidationResult();
@@ -281,7 +281,7 @@ class MemberAuthenticatorTest extends SapphireTest
             ->set('lock_out_delay_mins', 10);
 
         $email = 'notreal@example.com';
-        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertFalse(Member::get()->filter(['Email' => $email])->exists());
 
         $authenticator = new MemberAuthenticator();
         $result = new ValidationResult();

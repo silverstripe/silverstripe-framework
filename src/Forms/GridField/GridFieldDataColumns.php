@@ -15,19 +15,19 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     /**
      * @var array
      */
-    public $fieldCasting = array();
+    public $fieldCasting = [];
 
     /**
      * @var array
      */
-    public $fieldFormatting = array();
+    public $fieldFormatting = [];
 
     /**
      * This is the columns that will be visible
      *
      * @var array
      */
-    protected $displayFields = array();
+    protected $displayFields = [];
 
     /**
      * Modify the list of columns displayed in the table.
@@ -186,7 +186,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName));
+        return ['class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName)];
     }
 
     /**
@@ -208,9 +208,9 @@ class GridFieldDataColumns implements GridField_ColumnProvider
             $title = $columns[$column]['title'];
         }
 
-        return array(
+        return [
             'title' => $title,
-        );
+        ];
     }
 
     /**

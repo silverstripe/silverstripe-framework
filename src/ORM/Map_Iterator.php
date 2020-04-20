@@ -21,10 +21,10 @@ class Map_Iterator implements Iterator
 
     protected $endItemIdx;
 
-    protected $firstItems = array();
-    protected $lastItems = array();
+    protected $firstItems = [];
+    protected $lastItems = [];
 
-    protected $excludedItems = array();
+    protected $excludedItems = [];
 
     /**
      * @param Iterator $items The iterator to build this map from
@@ -42,14 +42,14 @@ class Map_Iterator implements Iterator
 
         if ($firstItems) {
             foreach ($firstItems as $k => $v) {
-                $this->firstItems[] = array($k, $v);
+                $this->firstItems[] = [$k, $v];
                 $this->excludedItems[] = $k;
             }
         }
 
         if ($lastItems) {
             foreach ($lastItems as $k => $v) {
-                $this->lastItems[] = array($k, $v);
+                $this->lastItems[] = [$k, $v];
                 $this->excludedItems[] = $k;
             }
         }

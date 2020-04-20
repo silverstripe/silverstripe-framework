@@ -43,9 +43,9 @@ trait Extensible
      *
      * @var array
      */
-    private static $unextendable_classes = array(
+    private static $unextendable_classes = [
         ViewableData::class,
-    );
+    ];
 
     /**
      * @var Extension[] all current extension instances, or null if not declared yet.
@@ -60,7 +60,7 @@ trait Extensible
      *
      * @var callable[][]
      */
-    protected $beforeExtendCallbacks = array();
+    protected $beforeExtendCallbacks = [];
 
     /**
      * List of callbacks to call after extensions having extend called on them,
@@ -70,7 +70,7 @@ trait Extensible
      *
      * @var callable[][]
      */
-    protected $afterExtendCallbacks = array();
+    protected $afterExtendCallbacks = [];
 
     /**
      * Allows user code to hook into Object::extend prior to control
@@ -83,7 +83,7 @@ trait Extensible
     protected function beforeExtending($method, $callback)
     {
         if (empty($this->beforeExtendCallbacks[$method])) {
-            $this->beforeExtendCallbacks[$method] = array();
+            $this->beforeExtendCallbacks[$method] = [];
         }
         $this->beforeExtendCallbacks[$method][] = $callback;
     }
@@ -99,7 +99,7 @@ trait Extensible
     protected function afterExtending($method, $callback)
     {
         if (empty($this->afterExtendCallbacks[$method])) {
-            $this->afterExtendCallbacks[$method] = array();
+            $this->afterExtendCallbacks[$method] = [];
         }
         $this->afterExtendCallbacks[$method][] = $callback;
     }
@@ -207,9 +207,9 @@ trait Extensible
         }
 
         Config::modify()
-            ->merge($class, 'extensions', array(
+            ->merge($class, 'extensions', [
                 $extension
-            ));
+            ]);
 
         Injector::inst()->unregisterNamedObject($class);
         return true;
@@ -283,7 +283,7 @@ trait Extensible
 
         $extensions = Config::forClass($class)->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
         if (empty($extensions)) {
-            return array();
+            return [];
         }
 
         // Clean nullified named extensions
@@ -292,7 +292,7 @@ trait Extensible
         if ($includeArgumentString) {
             return $extensions;
         } else {
-            $extensionClassnames = array();
+            $extensionClassnames = [];
             if ($extensions) {
                 foreach ($extensions as $extension) {
                     $extensionClassnames[] = Extension::get_classname_without_arguments($extension);
@@ -331,7 +331,7 @@ trait Extensible
         }
 
         // Build a list of all sources;
-        $sources = array();
+        $sources = [];
 
         foreach ($extensions as $extension) {
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
@@ -343,7 +343,7 @@ trait Extensible
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in \$extensions");
             }
 
-            call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+            call_user_func([$extensionClass, 'add_to_class'], $class, $extensionClass, $extensionArgs);
 
             foreach (array_reverse(ClassInfo::ancestry($extensionClass)) as $extensionClassParent) {
                 if (ClassInfo::has_method_from($extensionClassParent, 'get_extra_config', $extensionClassParent)) {
@@ -414,7 +414,7 @@ trait Extensible
      */
     public function invokeWithExtensions($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
     {
-        $result = array();
+        $result = [];
         if (method_exists($this, $method)) {
             $thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
             if ($thisResult !== null) {
@@ -449,16 +449,16 @@ trait Extensible
      */
     public function extend($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
     {
-        $values = array();
+        $values = [];
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
             foreach (array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, [&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7]);
                 if ($value !== null) {
                     $values[] = $value;
                 }
             }
-            $this->beforeExtendCallbacks[$method] = array();
+            $this->beforeExtendCallbacks[$method] = [];
         }
 
         foreach ($this->getExtensionInstances() as $instance) {
@@ -477,12 +477,12 @@ trait Extensible
 
         if (!empty($this->afterExtendCallbacks[$method])) {
             foreach (array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+                $value = call_user_func_array($callback, [&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7]);
                 if ($value !== null) {
                     $values[] = $value;
                 }
             }
-            $this->afterExtendCallbacks[$method] = array();
+            $this->afterExtendCallbacks[$method] = [];
         }
 
         return $values;

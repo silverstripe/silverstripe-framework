@@ -19,7 +19,7 @@ class TestObject extends DataObject implements TestOnly
         'ColumnE' => 'Varchar(255)',
     ];
 
-    private static $indexes = array(
+    private static $indexes = [
         'SearchFields' => [
             'type' => 'fulltext',
             'name' => 'SearchFields',
@@ -33,5 +33,5 @@ class TestObject extends DataObject implements TestOnly
             'type' => 'fulltext',
             'columns' => ['ColumnE'],
         ],
-    );
+    ];
 }

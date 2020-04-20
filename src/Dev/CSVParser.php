@@ -54,7 +54,7 @@ class CSVParser implements Iterator
      *
      * @var array
      */
-    protected $columnMap = array();
+    protected $columnMap = [];
 
     /**
      * The header row used to map data in the CSV file.
@@ -139,7 +139,7 @@ class CSVParser implements Iterator
     public function mapColumns($columnMap)
     {
         if ($columnMap) {
-            $lowerColumnMap = array();
+            $lowerColumnMap = [];
 
             foreach ($columnMap as $k => $v) {
                 $lowerColumnMap[strtolower($k)] = $v;
@@ -216,7 +216,7 @@ class CSVParser implements Iterator
      */
     protected function remapHeader($header)
     {
-        $mappedHeader = array();
+        $mappedHeader = [];
 
         foreach ($header as $item) {
             if (isset($this->columnMap[strtolower($item)])) {
@@ -253,13 +253,13 @@ class CSVParser implements Iterator
         );
 
         if ($srcRow) {
-            $row = array();
+            $row = [];
 
             foreach ($srcRow as $i => $value) {
                 // Allow escaping of quotes and commas in the data
                 $value = str_replace(
-                    array('\\' . $this->enclosure,'\\' . $this->delimiter),
-                    array($this->enclosure, $this->delimiter),
+                    ['\\' . $this->enclosure,'\\' . $this->delimiter],
+                    [$this->enclosure, $this->delimiter],
                     $value
                 );
                 // Trim leading tab

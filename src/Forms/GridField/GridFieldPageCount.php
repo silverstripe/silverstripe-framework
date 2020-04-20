@@ -68,9 +68,9 @@ class GridFieldPageCount implements GridField_HTMLProvider
         $paginator = $this->getPaginator($gridField);
         if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
             $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
-            return array(
+            return [
                 $this->targetFragment => $forTemplate->renderWith($template)
-            );
+            ];
         }
 
         return null;

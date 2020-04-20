@@ -131,7 +131,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals(123, $varchar->prepValueForDB(123));
 
         /* AllowEmpty Varchar behaviour */
-        $varcharField = DBVarchar::create("testfield", 50, array("nullifyEmpty"=>false));
+        $varcharField = DBVarchar::create("testfield", 50, ["nullifyEmpty"=>false]);
         $this->assertSame('0', $varcharField->prepValueForDB(0));
         $this->assertSame(null, $varcharField->prepValueForDB(null));
         $this->assertSame('', $varcharField->prepValueForDB(false));
@@ -162,7 +162,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals('123', $text->prepValueForDB(123));
 
         /* AllowEmpty Text behaviour */
-        $textField = DBText::create("testfield", array("nullifyEmpty"=>false));
+        $textField = DBText::create("testfield", ["nullifyEmpty"=>false]);
         $this->assertSame('0', $textField->prepValueForDB(0));
         $this->assertSame(null, $textField->prepValueForDB(null));
         $this->assertSame('', $textField->prepValueForDB(false));
@@ -263,7 +263,7 @@ class DBFieldTest extends SapphireTest
         $varcharField->setValue(null);
         $this->assertFalse($varcharField->exists());
 
-        $varcharField = new DBVarchar("testfield", 50, array('nullifyEmpty'=>false));
+        $varcharField = new DBVarchar("testfield", 50, ['nullifyEmpty'=>false]);
         $this->assertFalse($varcharField->getNullifyEmpty());
         $varcharField->setValue('abc');
         $this->assertTrue($varcharField->exists());
@@ -281,7 +281,7 @@ class DBFieldTest extends SapphireTest
         $textField->setValue(null);
         $this->assertFalse($textField->exists());
 
-        $textField = new DBText("testfield", array('nullifyEmpty'=>false));
+        $textField = new DBText("testfield", ['nullifyEmpty'=>false]);
         $this->assertFalse($textField->getNullifyEmpty());
         $textField->setValue('abc');
         $this->assertTrue($textField->exists());
@@ -293,8 +293,8 @@ class DBFieldTest extends SapphireTest
 
     public function testStringFieldsWithMultibyteData()
     {
-        $plainFields = array('Varchar', 'Text');
-        $htmlFields = array('HTMLVarchar', 'HTMLText', 'HTMLFragment');
+        $plainFields = ['Varchar', 'Text'];
+        $htmlFields = ['HTMLVarchar', 'HTMLText', 'HTMLFragment'];
         $allFields = array_merge($plainFields, $htmlFields);
 
         $value = 'üåäöÜÅÄÖ';

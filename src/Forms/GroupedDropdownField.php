@@ -79,10 +79,10 @@ class GroupedDropdownField extends DropdownField
             $options->push($this->getFieldOption($childValue, $childTitle));
         }
 
-        return new ArrayData(array(
+        return new ArrayData([
             'Title' => $valueOrGroup,
             'Options' => $options
-        ));
+        ]);
     }
 
     public function Type()
@@ -93,7 +93,7 @@ class GroupedDropdownField extends DropdownField
     public function getSourceValues()
     {
         // Flatten values
-        $values = array();
+        $values = [];
         $source = $this->getSource();
         array_walk_recursive(
             $source,

@@ -11,7 +11,7 @@ use tidy;
 class TidyHTMLCleaner extends HTMLCleaner
 {
 
-    protected $defaultConfig = array(
+    protected $defaultConfig = [
         'clean' => true,
         'output-xhtml' => true,
         'show-body-only' => true,
@@ -19,7 +19,7 @@ class TidyHTMLCleaner extends HTMLCleaner
         'doctype' => 'omit',
         'input-encoding' => 'utf8',
         'output-encoding' => 'utf8'
-    );
+    ];
 
     public function cleanHTML($content)
     {

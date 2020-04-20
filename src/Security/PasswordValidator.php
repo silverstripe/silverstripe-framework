@@ -273,7 +273,7 @@ class PasswordValidator
         $historicCount = $this->getHistoricCount();
         if ($historicCount) {
             $previousPasswords = MemberPassword::get()
-                ->where(array('"MemberPassword"."MemberID"' => $member->ID))
+                ->where(['"MemberPassword"."MemberID"' => $member->ID])
                 ->sort('"Created" DESC, "ID" DESC')
                 ->limit($historicCount);
             /** @var MemberPassword $previousPassword */

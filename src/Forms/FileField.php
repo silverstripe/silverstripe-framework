@@ -31,7 +31,7 @@ use SilverStripe\ORM\DataObjectInterface;
  *      $actions = new FieldList(
  *          new FormAction('doUpload', 'Upload file')
  *      );
- *    $validator = new RequiredFields(array('MyName', 'MyFile'));
+ *    $validator = new RequiredFields(['MyName', 'MyFile']);
  *
  *      return new Form($this, 'Form', $fields, $actions, $validator);
  *  }
@@ -77,11 +77,11 @@ class FileField extends FormField implements FileHandleField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
-        ));
+        ]);
 
         return parent::Field($properties);
     }

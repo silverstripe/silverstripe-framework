@@ -9,9 +9,9 @@ class ObjectF extends DataObject implements TestOnly
 {
     private static $table_name = 'DataQueryTest_F';
 
-    private static $db = array(
+    private static $db = [
         'SortOrder' => 'Int',
         'MyDate' => 'Datetime',
         'MyString' => 'Text'
-    );
+    ];
 }

@@ -18,14 +18,14 @@ class GridField_URLHandlerTest extends FunctionalTest
     public function testFormSubmission()
     {
         $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
-        $formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar'));
+        $formResult = $this->submitForm('Form_Form', 'action_doAction', ['Test' => 'foo bar']);
         $this->assertEquals("Submitted foo bar to component", $formResult->getBody());
     }
 
     public function testNestedRequestHandlerFormSubmission()
     {
         $result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/3/showform");
-        $formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar'));
+        $formResult = $this->submitForm('Form_Form', 'action_doAction', ['Test' => 'foo bar']);
         $this->assertEquals("Submitted foo bar to item #3", $formResult->getBody());
     }
 

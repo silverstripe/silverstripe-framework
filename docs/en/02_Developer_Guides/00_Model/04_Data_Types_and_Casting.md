@@ -62,7 +62,7 @@ class Car extends DataObject
 {   
     private static $db = [
         'Wheels' => 'Int',
-        'Condition' => 'Enum(array("New","Fair","Junk"))'
+        'Condition' => 'Enum(["New","Fair","Junk"])'
     ];
     
     private static $defaults = [
@@ -93,7 +93,7 @@ class Car extends DataObject
 {   
     private static $db = [
         'Wheels' => 'Int(4)',
-        'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
+        'Condition' => 'Enum(["New","Fair","Junk"], "New")',
         'Make' => 'Varchar(["default" => "Honda"])',
     );
 }
@@ -229,7 +229,7 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject 
 {
     private static $db = [
-        "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
+        "Status" => "Enum(['Active', 'Injured', 'Retired'])"
     ];
     
     public function getStatus() 

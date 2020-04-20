@@ -28,19 +28,19 @@ use Exception;
 class DevelopmentAdmin extends Controller
 {
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '' => 'index',
         'build/defaults' => 'buildDefaults',
         'generatesecuretoken' => 'generatesecuretoken',
         '$Action' => 'runRegisteredController',
-    );
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index',
         'buildDefaults',
         'runRegisteredController',
         'generatesecuretoken',
-    );
+    ];
 
     /**
      * Assume that CLI equals admin permissions

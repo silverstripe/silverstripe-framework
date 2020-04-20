@@ -8,12 +8,12 @@ use SilverStripe\Dev\TestOnly;
 class AccessBaseControllerExtension extends Extension implements TestOnly
 {
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         "extensionmethod1" => true, // granted because defined on this class
         "method1" => true, // ignored because method not defined on this class
         "method2" => true, // ignored because method not defined on this class
         "protectedextensionmethod" => true, // ignored because method is protected
-    );
+    ];
 
     // Allowed for all
     public function extensionmethod1()

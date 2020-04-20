@@ -9,11 +9,11 @@ class ObjectA extends DataObject implements TestOnly
 {
     private static $table_name = 'DataQueryTest_A';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'TestC' => ObjectC::class,
-    );
+    ];
 }

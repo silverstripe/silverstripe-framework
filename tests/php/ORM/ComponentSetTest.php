@@ -9,10 +9,10 @@ class ComponentSetTest extends SapphireTest
 
     protected static $fixture_file = 'ComponentSetTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         ComponentSetTest\Player::class,
         ComponentSetTest\Team::class,
-    );
+    ];
 
     public function testSetByIDListManyMany()
     {
@@ -21,10 +21,10 @@ class ComponentSetTest extends SapphireTest
         $player2 = $this->objFromFixture(ComponentSetTest\Player::class, 'player2');
 
         $team1->Players()->setByIdList(
-            array(
+            [
             $player1_team1->ID,
             $player2->ID
-            )
+            ]
         );
         $team1->flushCache();
         $this->assertContains(
@@ -39,9 +39,9 @@ class ComponentSetTest extends SapphireTest
         );
 
         $team1->Players()->setByIdList(
-            array(
+            [
             $player1_team1->ID
-            )
+            ]
         );
         $team1->flushCache();
         $this->assertNotContains(
@@ -55,7 +55,7 @@ class ComponentSetTest extends SapphireTest
             'Can retain existing entry'
         );
 
-        $team1->Players()->setByIdList(array());
+        $team1->Players()->setByIdList([]);
         $team1->flushCache();
         $this->assertEquals(
             0,

@@ -45,12 +45,12 @@ class GridFieldEditButtonTest extends SapphireTest
     /**
      * @var array
      */
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Cheerleader::class,
         Player::class,
         Permissions::class,
-    );
+    ];
 
     protected function setUp()
     {
@@ -58,7 +58,7 @@ class GridFieldEditButtonTest extends SapphireTest
         $this->list = new DataList(Team::class);
         $config = GridFieldConfig::create()->addComponent(new GridFieldEditButton());
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList([$this->gridField]), new FieldList());
     }
 
     public function testShowEditLinks()

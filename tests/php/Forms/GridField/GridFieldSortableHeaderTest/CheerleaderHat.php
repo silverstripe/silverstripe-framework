@@ -9,11 +9,11 @@ class CheerleaderHat extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldSortableHeaderTest_CheerleaderHat';
 
-    private static $db = array(
+    private static $db = [
         'Colour' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Cheerleader' => Cheerleader::class
-    );
+    ];
 }

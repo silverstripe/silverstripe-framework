@@ -10,17 +10,17 @@ class BacktraceTest extends SapphireTest
 
     public function testFullFuncNameWithArgsAndCustomCharLimit()
     {
-        $func = array(
+        $func = [
             'class' => 'MyClass',
             'type' => '->',
             'file' => 'MyFile.php',
             'line' => 99,
             'function' => 'myFunction',
-            'args' => array(
+            'args' => [
                 'number' => 1,
                 'mylongstring' => 'more than 20 characters 1234567890',
-            )
-        );
+            ]
+        ];
         $this->assertEquals(
             'MyClass->myFunction(1, more than 20 charact...)',
             Backtrace::full_func_name($func, true, 20)
@@ -29,37 +29,37 @@ class BacktraceTest extends SapphireTest
 
     public function testIgnoredFunctionArgs()
     {
-        $bt = array(
-            array(
+        $bt = [
+            [
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myIgnoredGlobalFunction',
-                'args' => array('password' => 'secred',)
-            ),
-            array(
+                'args' => ['password' => 'secred',]
+            ],
+            [
                 'class' => 'MyClass',
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myIgnoredClassFunction',
-                'args' => array('password' => 'secred',)
-            ),
-            array(
+                'args' => ['password' => 'secred',]
+            ],
+            [
                 'class' => 'MyClass',
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myFunction',
-                'args' => array('myarg' => 'myval')
-            )
-        );
+                'args' => ['myarg' => 'myval']
+            ]
+        ];
         Backtrace::config()->update(
             'ignore_function_args',
-            array(
-                array('MyClass', 'myIgnoredClassFunction'),
+            [
+                ['MyClass', 'myIgnoredClassFunction'],
                 'myIgnoredGlobalFunction'
-            )
+            ]
         );
 
         $filtered = Backtrace::filter_backtrace($bt);
@@ -71,36 +71,36 @@ class BacktraceTest extends SapphireTest
 
     public function testFilteredWildCard()
     {
-        $bt = array(
-            array(
+        $bt = [
+            [
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myIgnoredGlobalFunction',
-                'args' => array('password' => 'secred',)
-            ),
-            array(
+                'args' => ['password' => 'secred',]
+            ],
+            [
                 'class' => 'MyClass',
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myIgnoredClassFunction',
-                'args' => array('password' => 'secred',)
-            ),
-            array(
+                'args' => ['password' => 'secred',]
+            ],
+            [
                 'class' => 'MyClass',
                 'type' => '->',
                 'file' => 'MyFile.php',
                 'line' => 99,
                 'function' => 'myFunction',
-                'args' => array('myarg' => 'myval')
-            )
-        );
+                'args' => ['myarg' => 'myval']
+            ]
+        ];
         Backtrace::config()->update(
             'ignore_function_args',
-            array(
-                array('*', 'myIgnoredClassFunction'),
-            )
+            [
+                ['*', 'myIgnoredClassFunction'],
+            ]
         );
 
         $filtered = Backtrace::filter_backtrace($bt);

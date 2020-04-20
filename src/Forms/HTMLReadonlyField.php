@@ -22,7 +22,7 @@ class HTMLReadonlyField extends ReadonlyField
      */
     protected $schemaComponent = 'HtmlReadonlyField';
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         return $this->renderWith($this->getTemplates());
     }

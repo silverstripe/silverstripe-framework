@@ -56,7 +56,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $existinggroup = $this->objFromFixture(Group::class, 'existinggroup');
 
         $loader = new MemberCsvBulkLoader();
-        $loader->setGroups(array($existinggroup));
+        $loader->setGroups([$existinggroup]);
 
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 
@@ -77,9 +77,9 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 
         $newgroup = DataObject::get_one(
             Group::class,
-            array(
+            [
             '"Group"."Code"' => 'newgroup'
-            )
+            ]
         );
         $this->assertEquals($newgroup->Title, 'newgroup');
 

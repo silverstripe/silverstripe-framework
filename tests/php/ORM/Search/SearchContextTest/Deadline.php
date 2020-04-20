@@ -9,11 +9,11 @@ class Deadline extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Deadline';
 
-    private static $db = array(
+    private static $db = [
         'CompletionDate' => 'Datetime'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Project' => Project::class,
-    );
+    ];
 }

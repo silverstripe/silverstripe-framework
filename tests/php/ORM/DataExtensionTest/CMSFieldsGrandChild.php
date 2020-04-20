@@ -14,9 +14,9 @@ class CMSFieldsGrandChild extends CMSFieldsChild implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_CMSFieldsGrandChild';
 
-    private static $db = array(
+    private static $db = [
         'GrandchildField' => 'Varchar(255)'
-    );
+    ];
 
     public function getCMSFields()
     {

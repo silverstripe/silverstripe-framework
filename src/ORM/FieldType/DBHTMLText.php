@@ -28,13 +28,13 @@ class DBHTMLText extends DBText
 {
     private static $escape_type = 'xml';
 
-    private static $casting = array(
+    private static $casting = [
         "AbsoluteLinks" => "HTMLFragment",
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
         "LowerCase" => "HTMLFragment",
         "UpperCase" => "HTMLFragment",
-    );
+    ];
 
     /**
      * Enable shortcode parsing on this field
@@ -114,7 +114,7 @@ class DBHTMLText extends DBText
      *
      * @return $this
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         if (array_key_exists("shortcodes", $options)) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
@@ -180,7 +180,7 @@ class DBHTMLText extends DBText
         if ($this->whitelist) {
             $dom = HTMLValue::create($value);
 
-            $query = array();
+            $query = [];
             $textFilter = ' | //body/text()';
             foreach ($this->whitelist as $tag) {
                 if ($tag === 'text()') {

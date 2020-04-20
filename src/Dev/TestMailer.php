@@ -77,7 +77,7 @@ class TestMailer implements Mailer
      */
     public function clearEmails()
     {
-        $this->emailsSent = array();
+        $this->emailsSent = [];
     }
 
     /**
@@ -103,7 +103,7 @@ class TestMailer implements Mailer
         foreach ($this->emailsSent as $email) {
             $matched = true;
 
-            foreach (array('To', 'From', 'Subject', 'Content') as $field) {
+            foreach (['To', 'From', 'Subject', 'Content'] as $field) {
                 if ($value = $compare[$field]) {
                     if ($value[0] == '/') {
                         $matched = preg_match($value, $email[$field]);

@@ -9,7 +9,7 @@ class TestStaticInjections implements TestOnly
     public $backend;
 
     /** @config */
-    private static $dependencies = array(
+    private static $dependencies = [
         'backend' => '%$SilverStripe\\Core\\Tests\\Injector\\InjectorTest\\NewRequirementsBackend'
-    );
+    ];
 }

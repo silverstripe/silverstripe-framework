@@ -9,11 +9,11 @@ class ShortcodeParserTest extends SapphireTest
 {
 
     protected $arguments, $contents, $tagName, $parser;
-    protected $extra = array();
+    protected $extra = [];
 
     protected function setUp()
     {
-        ShortcodeParser::get('test')->register('test_shortcode', array($this, 'shortcodeSaver'));
+        ShortcodeParser::get('test')->register('test_shortcode', [$this, 'shortcodeSaver']);
         $this->parser = ShortcodeParser::get('test');
 
         parent::setUp();
@@ -81,15 +81,15 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testSimpleTag()
     {
-        $tests = array(
+        $tests = [
             '[test_shortcode]',
             '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]' . '[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
-        );
+        ];
 
         foreach ($tests as $test) {
             $this->parser->parse($test);
 
-            $this->assertEquals(array(), $this->arguments, $test);
+            $this->assertEquals([], $this->arguments, $test);
             $this->assertEquals('', $this->contents, $test);
             $this->assertEquals('test_shortcode', $this->tagName, $test);
         }
@@ -97,16 +97,16 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testOneArgument()
     {
-        $tests = array (
+        $tests = [
             '[test_shortcode foo="bar"]', '[test_shortcode,foo="bar"]',
             "[test_shortcode foo='bar']", "[test_shortcode,foo='bar']",
             '[test_shortcode  foo  =  "bar"  /]', '[test_shortcode,  foo  =  "bar"  /]'
-        );
+        ];
 
         foreach ($tests as $test) {
             $this->parser->parse($test);
 
-            $this->assertEquals(array('foo' => 'bar'), $this->arguments, $test);
+            $this->assertEquals(['foo' => 'bar'], $this->arguments, $test);
             $this->assertEquals('', $this->contents, $test);
             $this->assertEquals('test_shortcode', $this->tagName, $test);
         }
@@ -116,7 +116,7 @@ class ShortcodeParserTest extends SapphireTest
     {
         $this->parser->parse('[test_shortcode foo = "bar",bar=\'foo\', baz="buz"]');
 
-        $this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'), $this->arguments);
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'], $this->arguments);
         $this->assertEquals('', $this->contents);
         $this->assertEquals('test_shortcode', $this->tagName);
     }
@@ -125,7 +125,7 @@ class ShortcodeParserTest extends SapphireTest
     {
         $this->parser->parse('[test_shortcode]foo[/test_shortcode]');
 
-        $this->assertEquals(array(), $this->arguments);
+        $this->assertEquals([], $this->arguments);
         $this->assertEquals('foo', $this->contents);
         $this->assertEquals('test_shortcode', $this->tagName);
     }
@@ -134,7 +134,7 @@ class ShortcodeParserTest extends SapphireTest
     {
         $this->parser->parse('[test_shortcode,foo = "bar",bar=\'foo\',baz="buz"]foo[/test_shortcode]');
 
-        $this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'), $this->arguments);
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'], $this->arguments);
         $this->assertEquals('foo', $this->contents);
         $this->assertEquals('test_shortcode', $this->tagName);
     }
@@ -182,13 +182,13 @@ class ShortcodeParserTest extends SapphireTest
     public function testUnquotedArguments()
     {
         $this->assertEquals('', $this->parser->parse('[test_shortcode,foo=bar!,baz = buz123]'));
-        $this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
+        $this->assertEquals(['foo' => 'bar!', 'baz' => 'buz123'], $this->arguments);
     }
 
     public function testSpacesForDelimiter()
     {
         $this->assertEquals('', $this->parser->parse('[test_shortcode foo=bar! baz = buz123]'));
-        $this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
+        $this->assertEquals(['foo' => 'bar!', 'baz' => 'buz123'], $this->arguments);
     }
 
     public function testSelfClosingTag()
@@ -265,9 +265,9 @@ class ShortcodeParserTest extends SapphireTest
         $this->parser->parse('<p>[test_shortcode falsey=0]');
 
         $this->assertEquals(
-            array(
+            [
             'falsey' => '',
-            ),
+            ],
             $this->arguments
         );
     }
@@ -322,7 +322,7 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testNoParseAttemptIfNoCode()
     {
-        $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(array('replaceElementTagsWithMarkers'))
+        $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(['replaceElementTagsWithMarkers'])
             ->getMock();
         $stub->register(
             'test',
@@ -332,7 +332,7 @@ class ShortcodeParserTest extends SapphireTest
         );
 
         $stub->expects($this->never())
-            ->method('replaceElementTagsWithMarkers')->will($this->returnValue(array('', '')));
+            ->method('replaceElementTagsWithMarkers')->will($this->returnValue(['', '']));
 
         $stub->parse('<p>test</p>');
     }

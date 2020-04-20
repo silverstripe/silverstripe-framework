@@ -10,14 +10,14 @@ abstract class DBString extends DBField
     /**
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         "LimitCharacters" => "Text",
         "LimitCharactersToClosestWord" => "Text",
         "LimitWordCount" => "Text",
         "LowerCase" => "Text",
         "UpperCase" => "Text",
         "Plain" => "Text",
-    );
+    ];
 
     /**
      * Set the default value for "nullify empty"

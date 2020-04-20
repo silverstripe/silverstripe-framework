@@ -6,7 +6,7 @@ use SilverStripe\Core\Injector\Factory;
 
 class EmptyFactory implements Factory
 {
-    public function create($service, array $params = array())
+    public function create($service, array $params = [])
     {
         return null;
     }

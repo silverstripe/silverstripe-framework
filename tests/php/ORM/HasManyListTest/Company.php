@@ -7,12 +7,12 @@ use SilverStripe\ORM\DataObject;
 
 class Company extends DataObject implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar(100)',
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'Employees' => Employee::class,
         'CompanyCars' => CompanyCar::class,
-    );
+    ];
 }

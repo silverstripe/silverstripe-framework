@@ -42,13 +42,13 @@ class GridFieldFilterHeaderTest extends SapphireTest
 
     protected static $fixture_file = 'GridFieldFilterHeaderTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         TeamGroup::class,
         Cheerleader::class,
         CheerleaderHat::class,
         Mom::class,
-    );
+    ];
 
     protected function setUp()
     {

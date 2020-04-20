@@ -68,7 +68,7 @@ class Diff extends \Diff
         $diff = new Diff($set1, $set2);
 
         $tagStack[1] = $tagStack[2] = 0;
-        $rechunked[1] = $rechunked[2] = array();
+        $rechunked[1] = $rechunked[2] = [];
 
         // Go through everything, converting edited tags (and their content) into single chunks.  Otherwise
         // the generated HTML gets crusty
@@ -179,7 +179,7 @@ class Diff extends \Diff
             $content = implode(',', $content);
         }
 
-        $content = str_replace(array("&nbsp;", "<", ">"), array(" "," <", "> "), $content);
+        $content = str_replace(["&nbsp;", "<", ">"], [" "," <", "> "], $content);
         $candidateChunks = preg_split("/[\t\r\n ]+/", $content);
         $chunks = [];
         for ($i = 0; $i < count($candidateChunks); $i++) {

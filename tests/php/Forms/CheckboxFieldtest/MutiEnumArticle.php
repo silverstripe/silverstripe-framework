@@ -9,8 +9,8 @@ class MultiEnumArticle extends DataObject implements TestOnly
 {
     private static $table_name = 'CheckboxSetFieldTest_MultiEnumArticle';
 
-    private static $db = array(
+    private static $db = [
         "Content" => "Text",
         "Colours" => "MultiEnum('Red,Blue,Green')",
-    );
+    ];
 }

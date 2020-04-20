@@ -7,10 +7,10 @@ use SilverStripe\View\ViewableData;
 class ItemC extends ViewableData
 {
     // ItemC tests fields - Title has casting, Content doesn't.
-    private static $casting = array(
+    private static $casting = [
         'Title' => 'Varchar',
         'AltContent' => 'Text',
-    );
+    ];
 
     public $Title = "ItemC";
     public $Content = "ItemC Content";

@@ -204,7 +204,7 @@ class ThemeResourceLoader implements Flushable
             // Templates are either nested in 'templates' or just the rest of the list
             $templateList = array_key_exists('templates', $template) ? $template['templates'] : $template;
         } else {
-            $templateList = array($template);
+            $templateList = [$template];
         }
 
         foreach ($templateList as $i => $template) {

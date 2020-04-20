@@ -10,11 +10,11 @@ class HierarchyTest extends SapphireTest
 {
     protected static $fixture_file = 'HierarchyTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         HierarchyTest\TestObject::class,
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
-    );
+    ];
 
     public static function getExtraDataObjects()
     {
@@ -66,7 +66,7 @@ class HierarchyTest extends SapphireTest
 
         // Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
         $this->assertEquals(
-            array("Obj 1", "Obj 2", "Obj 3"),
+            ["Obj 1", "Obj 2", "Obj 3"],
             HierarchyTest\TestObject::singleton()->AllHistoricalChildren()->column('Title')
         );
 
@@ -77,7 +77,7 @@ class HierarchyTest extends SapphireTest
         /** @var HierarchyTest\TestObject $obj2 */
         $obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
         $this->assertEquals(
-            array("Obj 2a", "Obj 2b"),
+            ["Obj 2a", "Obj 2b"],
             $obj2->AllHistoricalChildren()->column('Title')
         );
 
@@ -94,7 +94,7 @@ class HierarchyTest extends SapphireTest
 
         // Check that all obj 3 children are returned
         $this->assertEquals(
-            array("Obj 3a", "Obj 3b", "Obj 3c", "Obj 3d"),
+            ["Obj 3a", "Obj 3b", "Obj 3c", "Obj 3d"],
             $obj3->AllHistoricalChildren()->column('Title')
         );
 

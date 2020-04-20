@@ -266,7 +266,7 @@ class FormField extends RequestHandler
      */
     protected $schemaData = [];
 
-    private static $casting = array(
+    private static $casting = [
         'FieldHolder' => 'HTMLFragment',
         'SmallFieldHolder' => 'HTMLFragment',
         'Field' => 'HTMLFragment',
@@ -280,7 +280,7 @@ class FormField extends RequestHandler
         'Title' => 'Text',
         'RightTitle' => 'Text',
         'Description' => 'HTMLFragment',
-    );
+    ];
 
     /**
      * Structured schema state representing the FormField's current data and validation.
@@ -561,7 +561,7 @@ class FormField extends RequestHandler
      */
     public function extraClass()
     {
-        $classes = array();
+        $classes = [];
 
         $classes[] = $this->Type();
 
@@ -679,7 +679,7 @@ class FormField extends RequestHandler
      */
     public function getAttributes()
     {
-        $attributes = array(
+        $attributes = [
             'type' => $this->getInputType(),
             'name' => $this->getName(),
             'value' => $this->Value(),
@@ -688,7 +688,7 @@ class FormField extends RequestHandler
             'disabled' => $this->isDisabled(),
             'readonly' => $this->isReadonly(),
             'autofocus' => $this->isAutofocus()
-        );
+        ];
 
         if ($this->Required()) {
             $attributes['required'] = 'required';
@@ -737,7 +737,7 @@ class FormField extends RequestHandler
         }
 
         // Create markup
-        $parts = array();
+        $parts = [];
 
         foreach ($attributes as $name => $value) {
             if ($value === true) {
@@ -1000,7 +1000,7 @@ class FormField extends RequestHandler
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $context = $this;
 
@@ -1035,7 +1035,7 @@ class FormField extends RequestHandler
      *
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         $context = $this;
 
@@ -1055,7 +1055,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function SmallFieldHolder($properties = array())
+    public function SmallFieldHolder($properties = [])
     {
         $context = $this;
 

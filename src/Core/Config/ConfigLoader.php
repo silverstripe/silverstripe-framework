@@ -19,7 +19,7 @@ class ConfigLoader
     /**
      * @var ConfigCollectionInterface[] map of config collections
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self

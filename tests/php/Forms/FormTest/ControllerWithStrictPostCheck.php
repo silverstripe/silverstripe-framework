@@ -15,7 +15,7 @@ use SilverStripe\Forms\FormAction;
 class ControllerWithStrictPostCheck extends Controller implements TestOnly
 {
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     protected $template = 'BlankPage';
 

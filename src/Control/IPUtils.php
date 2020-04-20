@@ -36,7 +36,7 @@ class IPUtils
     public static function checkIP($requestIP, $ips)
     {
         if (!is_array($ips)) {
-            $ips = array($ips);
+            $ips = [$ips];
         }
 
         $method = substr_count($requestIP, ':') > 1 ? 'checkIP6' : 'checkIP4';
