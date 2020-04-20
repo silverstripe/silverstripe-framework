@@ -71,7 +71,7 @@ class ExtensionMiddleware implements Middleware
             }
 
             // Init extension
-            call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+            call_user_func([$extensionClass, 'add_to_class'], $class, $extensionClass, $extensionArgs);
 
             // Check class hierarchy from root up
             foreach (ClassInfo::ancestry($extensionClass) as $extensionClassParent) {

@@ -19,14 +19,14 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @var array
      */
-    protected $select = array();
+    protected $select = [];
 
     /**
      * An array of GROUP BY clauses.
      *
      * @var array
      */
-    protected $groupby = array();
+    protected $groupby = [];
 
     /**
      * An array of having clauses.
@@ -35,7 +35,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @var array
      */
-    protected $having = array();
+    protected $having = [];
 
     /**
      * If this is true DISTINCT will be added to the SQL.
@@ -52,7 +52,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @var array
      */
-    protected $orderby = array();
+    protected $orderby = [];
 
     /**
      * An array containing limit and offset keys for LIMIT clause.
@@ -61,7 +61,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @var array
      */
-    protected $limit = array();
+    protected $limit = [];
 
     /**
      * Construct a new SQLSelect.
@@ -78,12 +78,12 @@ class SQLSelect extends SQLConditionalExpression
      */
     public static function create(
         $select = "*",
-        $from = array(),
-        $where = array(),
-        $orderby = array(),
-        $groupby = array(),
-        $having = array(),
-        $limit = array()
+        $from = [],
+        $where = [],
+        $orderby = [],
+        $groupby = [],
+        $having = [],
+        $limit = []
     ) {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
@@ -102,12 +102,12 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function __construct(
         $select = "*",
-        $from = array(),
-        $where = array(),
-        $orderby = array(),
-        $groupby = array(),
-        $having = array(),
-        $limit = array()
+        $from = [],
+        $where = [],
+        $orderby = [],
+        $groupby = [],
+        $having = [],
+        $limit = []
     ) {
 
         parent::__construct($from, $where);
@@ -138,11 +138,11 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function setSelect($fields)
     {
-        $this->select = array();
+        $this->select = [];
         if (func_num_args() > 1) {
             $fields = func_get_args();
         } elseif (!is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
         return $this->addSelect($fields);
     }
@@ -160,7 +160,7 @@ class SQLSelect extends SQLConditionalExpression
         if (func_num_args() > 1) {
             $fields = func_get_args();
         } elseif (!is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
         foreach ($fields as $idx => $field) {
             $this->selectField($field, is_numeric($idx) ? null : $idx);
@@ -259,10 +259,10 @@ class SQLSelect extends SQLConditionalExpression
         }
 
         if (is_numeric($limit) && ($limit || $offset)) {
-            $this->limit = array(
+            $this->limit = [
                 'start' => (int)$offset,
                 'limit' => (int)$limit,
-            );
+            ];
         } elseif ($limit && is_string($limit)) {
             if (strpos($limit, ',') !== false) {
                 list($start, $innerLimit) = explode(',', $limit, 2);
@@ -270,15 +270,15 @@ class SQLSelect extends SQLConditionalExpression
                 list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
             }
 
-            $this->limit = array(
+            $this->limit = [
                 'start' => (int)$start,
                 'limit' => (int)$innerLimit,
-            );
+            ];
         } elseif ($limit === null && $offset) {
-            $this->limit = array(
+            $this->limit = [
                 'start' => (int)$offset,
                 'limit' => $limit
-            );
+            ];
         } else {
             $this->limit = $limit;
         }
@@ -302,7 +302,7 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function setOrderBy($clauses = null, $direction = null)
     {
-        $this->orderby = array();
+        $this->orderby = [];
         return $this->addOrderBy($clauses, $direction);
     }
 
@@ -332,7 +332,7 @@ class SQLSelect extends SQLConditionalExpression
                 $sort = explode(",", $clauses);
             }
 
-            $clauses = array();
+            $clauses = [];
 
             foreach ($sort as $clause) {
                 list($column, $direction) = $this->getDirectionFromString($clause, $direction);
@@ -362,7 +362,7 @@ class SQLSelect extends SQLConditionalExpression
         // directly in the ORDER BY
         if ($this->orderby) {
             $i = 0;
-            $orderby = array();
+            $orderby = [];
             foreach ($this->orderby as $clause => $dir) {
                 // public function calls and multi-word columns like "CASE WHEN ..."
                 if (strpos($clause, '(') !== false || strpos($clause, " ") !== false) {
@@ -399,7 +399,7 @@ class SQLSelect extends SQLConditionalExpression
             $column = $value;
             $direction = $defaultDirection ? $defaultDirection : "ASC";
         }
-        return array($column, $direction);
+        return [$column, $direction];
     }
 
     /**
@@ -413,7 +413,7 @@ class SQLSelect extends SQLConditionalExpression
     {
         $orderby = $this->orderby;
         if (!$orderby) {
-            $orderby = array();
+            $orderby = [];
         }
 
         if (!is_array($orderby)) {
@@ -445,7 +445,7 @@ class SQLSelect extends SQLConditionalExpression
     public function reverseOrderBy()
     {
         $order = $this->getOrderBy();
-        $this->orderby = array();
+        $this->orderby = [];
 
         foreach ($order as $clause => $dir) {
             $dir = (strtoupper($dir) == 'DESC') ? 'ASC' : 'DESC';
@@ -463,7 +463,7 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function setGroupBy($groupby)
     {
-        $this->groupby = array();
+        $this->groupby = [];
         return $this->addGroupBy($groupby);
     }
 
@@ -496,7 +496,7 @@ class SQLSelect extends SQLConditionalExpression
     public function setHaving($having)
     {
         $having = func_num_args() > 1 ? func_get_args() : $having;
-        $this->having = array();
+        $this->having = [];
         return $this->addHaving($having);
     }
 
@@ -589,18 +589,18 @@ class SQLSelect extends SQLConditionalExpression
                 // @todo Test case required here
                 $countQuery = new SQLSelect();
                 $countQuery->setSelect("count(*)");
-                $countQuery->setFrom(array('(' . $clone->sql($innerParameters) . ') all_distinct'));
+                $countQuery->setFrom(['(' . $clone->sql($innerParameters) . ') all_distinct']);
                 $sql = $countQuery->sql($parameters); // $parameters should be empty
                 $result = DB::prepared_query($sql, $innerParameters);
                 return (int)$result->value();
             } else {
-                $clone->setSelect(array("count(*)"));
+                $clone->setSelect(["count(*)"]);
             }
         } else {
-            $clone->setSelect(array("count($column)"));
+            $clone->setSelect(["count($column)"]);
         }
 
-        $clone->setGroupBy(array());
+        $clone->setGroupBy([]);
         return (int)$clone->execute()->value();
     }
 
@@ -640,7 +640,7 @@ class SQLSelect extends SQLConditionalExpression
         }
 
         $clone = clone $this;
-        $clone->select = array('Count' => "count($column)");
+        $clone->select = ['Count' => "count($column)"];
         $clone->limit = null;
         $clone->orderby = null;
         $clone->groupby = null;
@@ -682,12 +682,12 @@ class SQLSelect extends SQLConditionalExpression
             $clone->setLimit($this->limit);
             $clone->setOrderBy($this->orderby);
         } else {
-            $clone->setOrderBy(array());
+            $clone->setOrderBy([]);
         }
 
         $clone->setGroupBy($this->groupby);
         if ($alias) {
-            $clone->setSelect(array());
+            $clone->setSelect([]);
             $clone->selectField($column, $alias);
         } else {
             $clone->setSelect($column);

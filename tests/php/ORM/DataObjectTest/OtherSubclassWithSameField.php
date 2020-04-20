@@ -8,7 +8,7 @@ class OtherSubclassWithSameField extends Team implements TestOnly
 {
     private static $table_name = 'DataObjectTest_OtherSubclassWithSameField';
 
-    private static $db = array(
+    private static $db = [
         'SubclassDatabaseField' => 'Varchar',
-    );
+    ];
 }

@@ -151,7 +151,7 @@ class TempDatabase
         // Some DataExtensions keep a static cache of information that needs to
         // be reset whenever the database is killed
         foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
-            $toCall = array($class, 'on_db_reset');
+            $toCall = [$class, 'on_db_reset'];
             if (is_callable($toCall)) {
                 call_user_func($toCall);
             }
@@ -178,7 +178,7 @@ class TempDatabase
             ClassInfo::subclassesFor(DataObject::class)
         );
         foreach ($classes as $class) {
-            $toCall = array($class, 'on_db_reset');
+            $toCall = [$class, 'on_db_reset'];
             if (is_callable($toCall)) {
                 call_user_func($toCall);
             }

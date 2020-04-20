@@ -9,13 +9,13 @@ class MySubObject extends MyObject implements TestOnly
 {
     private static $table_name = 'i18nTest_MySubObject';
 
-    private static $db = array(
+    private static $db = [
         'SubProperty' => 'Varchar',
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'SubRelation' => Group::class
-    );
+    ];
 
     private static $singular_name = "My Sub Object";
 

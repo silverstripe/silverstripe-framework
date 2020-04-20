@@ -27,12 +27,12 @@ class DatabaseAdmin extends Controller
 {
 
     /// SECURITY ///
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index',
         'build',
         'cleanup',
         'import'
-    );
+    ];
 
     /**
      * Obsolete classname values that should be remapped in dev/build
@@ -94,7 +94,7 @@ class DatabaseAdmin extends Controller
         $rootClasses = [];
         foreach ($allClasses as $class) {
             if (get_parent_class($class) == DataObject::class) {
-                $rootClasses[$class] = array();
+                $rootClasses[$class] = [];
             }
         }
 
@@ -207,7 +207,7 @@ class DatabaseAdmin extends Controller
         $file = TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(array('\\','/',':'), '.', Director::baseFolder());
+            . str_replace(['\\','/',':'], '.', Director::baseFolder());
 
         if (file_exists($file)) {
             return filemtime($file);
@@ -391,7 +391,7 @@ class DatabaseAdmin extends Controller
         touch(TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(array('\\', '/', ':'), '.', Director::baseFolder()));
+            . str_replace(['\\', '/', ':'], '.', Director::baseFolder()));
 
         if (isset($_REQUEST['from_installer'])) {
             echo "OK";

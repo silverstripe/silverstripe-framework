@@ -15,7 +15,7 @@ class ModuleLoader
     /**
      * @var ModuleManifest[] Module manifests
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self

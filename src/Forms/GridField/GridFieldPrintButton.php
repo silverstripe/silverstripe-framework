@@ -70,9 +70,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
         $button->addExtraClass('font-icon-print grid-print-button btn btn-secondary');
 
-        return array(
+        return [
             $this->targetFragment =>  $button->Field(),
-        );
+        ];
     }
 
     /**
@@ -84,7 +84,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
      */
     public function getActions($gridField)
     {
-        return array('print');
+        return ['print'];
     }
 
     /**
@@ -111,9 +111,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'print' => 'handlePrint',
-        );
+        ];
     }
 
     /**
@@ -214,9 +214,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
             $header = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
-                $header->push(new ArrayData(array(
+                $header->push(new ArrayData([
                     "CellString" => $label,
-                )));
+                ]));
             }
         }
 
@@ -235,26 +235,26 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
                     ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
                     : $gridField->getDataFieldValue($item, $field);
 
-                $itemRow->push(new ArrayData(array(
+                $itemRow->push(new ArrayData([
                     "CellString" => $value,
-                )));
+                ]));
             }
 
-            $itemRows->push(new ArrayData(array(
+            $itemRows->push(new ArrayData([
                 "ItemRow" => $itemRow
-            )));
+            ]));
             if ($item->hasMethod('destroy')) {
                 $item->destroy();
             }
         }
 
-        $ret = new ArrayData(array(
+        $ret = new ArrayData([
             "Title" => $this->getTitle($gridField),
             "Header" => $header,
             "ItemRows" => $itemRows,
             "Datetime" => DBDatetime::now(),
             "Member" => Security::getCurrentUser(),
-        ));
+        ]);
 
         return $ret;
     }

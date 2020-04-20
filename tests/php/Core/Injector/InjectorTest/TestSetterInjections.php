@@ -16,9 +16,9 @@ class TestSetterInjections extends ViewableData implements TestOnly
     /**
  * @config
 */
-    private static $dependencies = array(
+    private static $dependencies = [
         'backend' => '%$SilverStripe\\Core\\Tests\\Injector\\InjectorTest\\NewRequirementsBackend'
-    );
+    ];
 
     public function getBackend()
     {

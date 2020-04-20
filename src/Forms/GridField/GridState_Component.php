@@ -10,8 +10,8 @@ class GridState_Component implements GridField_HTMLProvider
 
     public function getHTMLFragments($gridField)
     {
-        return array(
+        return [
             'before' => $gridField->getState(false)->Field()
-        );
+        ];
     }
 }

@@ -46,11 +46,11 @@ class DBClassNameTest extends SapphireTest
         $midClass = $object2->dbObject('MidClass');
 
         // Default fields always default to children of base class (even if put in a subclass)
-        $mainSubclasses = array (
+        $mainSubclasses =  [
             DBClassNameTest\TestObject::class,
             DBClassNameTest\ObjectSubClass::class,
             DBClassNameTest\ObjectSubSubClass::class,
-        );
+        ];
         $this->assertEquals($mainSubclasses, $defaultClass->getEnumObsolete());
         $this->assertEquals($mainSubclasses, $midDefault->getEnumObsolete());
 
@@ -62,10 +62,10 @@ class DBClassNameTest extends SapphireTest
         $this->assertContains(DBClassNameTest\ObjectSubSubClass::class, $anyClasses);
 
         // Classes bound to the middle of a tree
-        $midSubClasses = $mainSubclasses = array (
+        $midSubClasses = $mainSubclasses =  [
             DBClassNameTest\ObjectSubClass::class,
             DBClassNameTest\ObjectSubSubClass::class,
-        );
+        ];
         $this->assertEquals($midSubClasses, $childClass->getEnumObsolete());
         $this->assertEquals($midSubClasses, $midClass->getEnumObsolete());
 

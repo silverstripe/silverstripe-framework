@@ -59,14 +59,14 @@ class NamespacedClassManifestTest extends SapphireTest
 
     public function testGetItemPath()
     {
-        $expect = array(
+        $expect = [
             'SILVERSTRIPE\\TEST\\CLASSA'     => 'module/classes/ClassA.php',
             'Silverstripe\\Test\\ClassA'     => 'module/classes/ClassA.php',
             'silverstripe\\test\\classa'     => 'module/classes/ClassA.php',
             'SILVERSTRIPE\\TEST\\INTERFACEA' => 'module/interfaces/InterfaceA.php',
             'Silverstripe\\Test\\InterfaceA' => 'module/interfaces/InterfaceA.php',
             'silverstripe\\test\\interfacea' => 'module/interfaces/InterfaceA.php'
-        );
+        ];
 
         foreach ($expect as $name => $path) {
             $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));
@@ -75,7 +75,7 @@ class NamespacedClassManifestTest extends SapphireTest
 
     public function testGetClasses()
     {
-        $expect = array(
+        $expect = [
             'silverstripe\\test\\classa' => "{$this->base}/module/classes/ClassA.php",
             'silverstripe\\test\\classb' => "{$this->base}/module/classes/ClassB.php",
             'silverstripe\\test\\classc' => "{$this->base}/module/classes/ClassC.php",
@@ -85,7 +85,7 @@ class NamespacedClassManifestTest extends SapphireTest
             'silverstripe\\test\\classg' => "{$this->base}/module/classes/ClassG.php",
             'silverstripe\\test\\classh' => "{$this->base}/module/classes/ClassH.php",
             'silverstripe\\framework\\tests\\classi' => "{$this->base}/module/classes/ClassI.php",
-        );
+        ];
 
         $this->assertEquals($expect, $this->manifest->getClasses());
     }
@@ -140,9 +140,9 @@ class NamespacedClassManifestTest extends SapphireTest
 
     public function testGetInterfaces()
     {
-        $expect = array(
+        $expect = [
             'silverstripe\\test\\interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
-        );
+        ];
         $this->assertEquals($expect, $this->manifest->getInterfaces());
     }
 

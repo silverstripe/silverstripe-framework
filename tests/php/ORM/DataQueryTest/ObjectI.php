@@ -9,8 +9,8 @@ class ObjectI extends DataObject implements TestOnly
 {
     private static $table_name = 'DataQueryTest_I';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'SortOrder' => 'Int',
-    );
+    ];
 }

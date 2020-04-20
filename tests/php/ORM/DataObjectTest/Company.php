@@ -21,8 +21,8 @@ class Company extends DataObject implements TestOnly
         'Owner' => DataObject::class // polymorphic
     ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'CurrentStaff' => Staff::class . '.CurrentCompany',
         'PreviousStaff' => Staff::class . '.PreviousCompany'
-    );
+    ];
 }

@@ -105,12 +105,12 @@ class DropdownField extends SingleSelectField
             $disabled = 'disabled';
         }
 
-        return new ArrayData(array(
+        return new ArrayData([
             'Title' => (string)$title,
             'Value' => $value,
             'Selected' => $selected,
             'Disabled' => $disabled,
-        ));
+        ]);
     }
 
     /**
@@ -128,18 +128,18 @@ class DropdownField extends SingleSelectField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $options = array();
+        $options = [];
 
         // Add all options
         foreach ($this->getSourceEmpty() as $value => $title) {
             $options[] = $this->getFieldOption($value, $title);
         }
 
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'Options' => new ArrayList($options)
-        ));
+        ]);
 
         return parent::Field($properties);
     }

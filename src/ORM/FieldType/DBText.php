@@ -28,14 +28,14 @@ use InvalidArgumentException;
 class DBText extends DBString
 {
 
-    private static $casting = array(
+    private static $casting = [
         "BigSummary" => "Text",
         "ContextSummary" => "HTMLFragment", // Always returns HTML as it contains formatting and highlighting
         "FirstParagraph" => "Text",
         "FirstSentence" => "Text",
         "LimitSentences" => "Text",
         "Summary" => "Text",
-    );
+    ];
 
     /**
      * (non-PHPdoc)

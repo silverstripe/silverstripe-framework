@@ -8,13 +8,13 @@ class ObjectE extends ObjectC implements TestOnly
 {
     private static $table_name = 'DataQueryTest_E';
 
-    private static $db = array(
+    private static $db = [
         'SortOrder' => 'Int'
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'ManyTestGs' => ObjectG::class,
-    );
+    ];
 
     private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }

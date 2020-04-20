@@ -19,7 +19,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @var array
      */
-    protected $defaultItems = array();
+    protected $defaultItems = [];
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
 
@@ -172,7 +172,7 @@ abstract class MultiSelectField extends SelectField
     {
         // Handle empty case
         if (empty($value)) {
-            return array();
+            return [];
         }
 
         // If json deserialisation fails, then fallover to legacy format
@@ -257,7 +257,7 @@ abstract class MultiSelectField extends SelectField
             _t(
                 'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
-                array('value' => implode(',', $invalidValues))
+                ['value' => implode(',', $invalidValues)]
             ),
             "validation"
         );

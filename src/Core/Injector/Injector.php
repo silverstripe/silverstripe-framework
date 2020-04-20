@@ -213,14 +213,14 @@ class Injector implements ContainerInterface
      */
     public function __construct($config = null)
     {
-        $this->injectMap = array();
-        $this->serviceCache = array(
+        $this->injectMap = [];
+        $this->serviceCache = [
             'Injector' => $this,
-        );
+        ];
         $this->specs = [
             'Injector' => ['class' => static::class]
         ];
-        $this->autoProperties = array();
+        $this->autoProperties = [];
         $creatorClass = isset($config['creator'])
             ? $config['creator']
             : InjectionCreator::class;
@@ -349,9 +349,9 @@ class Injector implements ContainerInterface
      */
     public function setInjectMapping($class, $property, $toInject, $injectVia = 'property')
     {
-        $mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : array();
+        $mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : [];
 
-        $mapping[$property] = array('name' => $toInject, 'type' => $injectVia);
+        $mapping[$property] = ['name' => $toInject, 'type' => $injectVia];
 
         $this->injectMap[$class] = $mapping;
     }
@@ -382,11 +382,11 @@ class Injector implements ContainerInterface
      * @param array $config
      * @return $this
      */
-    public function load($config = array())
+    public function load($config = [])
     {
         foreach ($config as $specId => $spec) {
             if (is_string($spec)) {
-                $spec = array('class' => $spec);
+                $spec = ['class' => $spec];
             }
 
             $file = isset($spec['src']) ? $spec['src'] : null;
@@ -480,7 +480,7 @@ class Injector implements ContainerInterface
             // and reload the object; existing bindings don't get
             // updated though! (for now...)
             if (isset($this->serviceCache[$id])) {
-                $this->instantiate(array('class'=>$id), $id);
+                $this->instantiate(['class'=>$id], $id);
             }
         }
     }
@@ -510,7 +510,7 @@ class Injector implements ContainerInterface
     public function convertServiceProperty($value)
     {
         if (is_array($value)) {
-            $newVal = array();
+            $newVal = [];
             foreach ($value as $k => $v) {
                 $newVal[$k] = $this->convertServiceProperty($v);
             }
@@ -572,12 +572,12 @@ class Injector implements ContainerInterface
     protected function instantiate($spec, $id = null, $type = null)
     {
         if (is_string($spec)) {
-            $spec = array('class' => $spec);
+            $spec = ['class' => $spec];
         }
         $class = $spec['class'];
 
         // create the object, using any constructor bindings
-        $constructorParams = array();
+        $constructorParams = [];
         if (isset($spec['constructor']) && is_array($spec['constructor'])) {
             $constructorParams = $spec['constructor'];
         }
@@ -587,7 +587,7 @@ class Injector implements ContainerInterface
         if ((!$type || $type !== self::PROTOTYPE)
             && empty($constructorParams)
             && is_subclass_of($class, DataObject::class)) {
-            $constructorParams = array(null, true);
+            $constructorParams = [null, true];
         }
 
         $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
@@ -641,7 +641,7 @@ class Injector implements ContainerInterface
         $objtype = $asType ? $asType : get_class($object);
         $mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
-        $spec = empty($this->specs[$objtype]) ? array() : $this->specs[$objtype];
+        $spec = empty($this->specs[$objtype]) ? [] : $this->specs[$objtype];
 
         // first off, set any properties defined in the service specification for this
         // object type
@@ -674,7 +674,7 @@ class Injector implements ContainerInterface
                 }
 
                 // Check that the method exists and is callable
-                $objectMethod = array($object, $method[0]);
+                $objectMethod = [$object, $method[0]];
                 if (!is_callable($objectMethod)) {
                     throw new InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
                 }
@@ -683,7 +683,7 @@ class Injector implements ContainerInterface
                 call_user_func_array(
                     $objectMethod,
                     $this->convertServiceProperty(
-                        isset($method[1]) ? $method[1] : array()
+                        isset($method[1]) ? $method[1] : []
                     )
                 );
             }
@@ -709,7 +709,7 @@ class Injector implements ContainerInterface
                             // Pull the name out of the registry
                             $value = $this->get($name);
                             $propertyObject->setValue($object, $value);
-                            $mapping[$origName] = array('name' => $name, 'type' => 'property');
+                            $mapping[$origName] = ['name' => $name, 'type' => 'property'];
                         }
                     }
                 }
@@ -726,7 +726,7 @@ class Injector implements ContainerInterface
                             // Pull the name out of the registry
                             $value = $this->get($pname);
                             $methodObj->invoke($object, $value);
-                            $mapping[$methName] = array('name' => $pname, 'type' => 'method');
+                            $mapping[$methName] = ['name' => $pname, 'type' => 'method'];
                         }
                     }
                 }
@@ -742,7 +742,7 @@ class Injector implements ContainerInterface
                     if (empty($object->$property)) {
                         $convertedValue = $this->convertServiceProperty($value);
                         $this->setObjectProperty($object, $property, $convertedValue);
-                        $mapping[$property] = array('service' => $value, 'type' => 'service');
+                        $mapping[$property] = ['service' => $value, 'type' => 'service'];
                     }
                 }
             }
@@ -883,7 +883,7 @@ class Injector implements ContainerInterface
             $registerAt = $replace;
         }
 
-        $this->specs[$registerAt] = array('class' => get_class($service));
+        $this->specs[$registerAt] = ['class' => get_class($service)];
         $this->serviceCache[$registerAt] = $service;
         return $this;
     }

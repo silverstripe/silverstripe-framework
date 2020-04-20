@@ -290,14 +290,14 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @var array
      */
-    protected $plugins = array(
+    protected $plugins = [
         'table' => null,
         'emoticons' => null,
         'paste' => null,
         'code' => null,
         'importcss' => null,
         'lists' => null,
-    );
+    ];
 
     /**
      * Theme name
@@ -502,7 +502,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             $buttons = func_get_args();
             array_shift($buttons);
         }
-        $this->buttons[$line] = is_array($buttons) ? $buttons : array($buttons);
+        $this->buttons[$line] = is_array($buttons) ? $buttons : [$buttons];
         return $this;
     }
 
@@ -632,7 +632,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         $settings['baseURL'] = $tinyMCEBaseURL;
 
         // map all plugins to absolute urls for loading
-        $plugins = array();
+        $plugins = [];
         foreach ($this->getPlugins() as $plugin => $path) {
             if ($path instanceof ModuleResource) {
                 $path = Director::absoluteURL($path->getURL());

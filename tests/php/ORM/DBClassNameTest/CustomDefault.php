@@ -11,7 +11,7 @@ class CustomDefault extends DataObject implements TestOnly
 
     private static $default_classname = CustomDefaultSubclass::class;
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar'
-    );
+    ];
 }

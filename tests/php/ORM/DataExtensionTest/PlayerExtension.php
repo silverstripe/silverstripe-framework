@@ -13,19 +13,19 @@ class PlayerExtension extends DataExtension implements TestOnly
 
     public static function get_extra_config($class = null, $extensionClass = null, $args = null)
     {
-        $config = array();
+        $config = [];
 
         // Only add these extensions if the $class is set to DataExtensionTest_Player, to
         // test that the argument works.
         if (strcasecmp($class, Player::class) === 0) {
-            $config['db'] = array(
+            $config['db'] = [
                 'Address' => 'Text',
                 'DateBirth' => 'Date',
                 'Status' => "Enum('Shooter,Goalie')"
-            );
-            $config['defaults'] = array(
+            ];
+            $config['defaults'] = [
                 'Status' => 'Goalie'
-            );
+            ];
         }
 
         return $config;

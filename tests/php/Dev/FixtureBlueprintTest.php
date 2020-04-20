@@ -17,12 +17,12 @@ class FixtureBlueprintTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestDataObject::class,
         DataObjectRelation::class,
         TestSiteTree::class,
         TestPage::class,
-    );
+    ];
 
     public function testCreateWithRelationshipExtraFields()
     {
@@ -40,25 +40,25 @@ class FixtureBlueprintTest extends SapphireTest
         //   - =>..
         $obj = $blueprint->createObject(
             'one',
-            array(
+            [
                 'ManyManyRelation' =>
-                    array(
-                        array(
-                            "=>" . DataObjectRelation::class . ".relation1" => array(),
+                    [
+                        [
+                            "=>" . DataObjectRelation::class . ".relation1" => [],
                             "Label" => 'This is a label for relation 1'
-                        ),
-                        array(
-                            "=>" . DataObjectRelation::class . ".relation2" => array(),
+                        ],
+                        [
+                            "=>" . DataObjectRelation::class . ".relation2" => [],
                             "Label" => 'This is a label for relation 2'
-                        )
-                    )
-            ),
-            array(
-                DataObjectRelation::class => array(
+                        ]
+                    ]
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => $relation1->ID,
                     'relation2' => $relation2->ID
-                )
-            )
+                ]
+            ]
         );
 
         $this->assertEquals(2, $obj->ManyManyRelation()->Count());
@@ -66,12 +66,12 @@ class FixtureBlueprintTest extends SapphireTest
         $this->assertNotNull($obj->ManyManyRelation()->find('ID', $relation2->ID));
 
         $this->assertEquals(
-            array('Label' => 'This is a label for relation 1'),
+            ['Label' => 'This is a label for relation 1'],
             $obj->ManyManyRelation()->getExtraData('ManyManyRelation', $relation1->ID)
         );
 
         $this->assertEquals(
-            array('Label' => 'This is a label for relation 2'),
+            ['Label' => 'This is a label for relation 2'],
             $obj->ManyManyRelation()->getExtraData('ManyManyRelation', $relation2->ID)
         );
     }
@@ -89,7 +89,7 @@ class FixtureBlueprintTest extends SapphireTest
     public function testCreateWithData()
     {
         $blueprint = new FixtureBlueprint(TestDataObject::class);
-        $obj = $blueprint->createObject('one', array('Name' => 'My Name'));
+        $obj = $blueprint->createObject('one', ['Name' => 'My Name']);
         $this->assertNotNull($obj);
         $this->assertGreaterThan(0, $obj->ID);
         $this->assertEquals('My Name', $obj->Name);
@@ -107,16 +107,16 @@ class FixtureBlueprintTest extends SapphireTest
 
         $obj = $blueprint->createObject(
             'one',
-            array(
+            [
                 'ManyManyRelation' =>
                     '=>' . DataObjectRelation::class . '.relation1,' . '=>' . DataObjectRelation::class . '.relation2'
-            ),
-            array(
-                DataObjectRelation::class => array(
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => $relation1->ID,
                     'relation2' => $relation2->ID
-                )
-            )
+                ]
+            ]
         );
 
         $this->assertEquals(2, $obj->ManyManyRelation()->Count());
@@ -125,19 +125,19 @@ class FixtureBlueprintTest extends SapphireTest
 
         $obj2 = $blueprint->createObject(
             'two',
-            array(
+            [
                 // Note; using array format here, not comma separated
-                'HasManyRelation' => array(
+                'HasManyRelation' => [
                     '=>' . DataObjectRelation::class . '.relation1',
                     '=>' . DataObjectRelation::class . '.relation2'
-                )
-            ),
-            array(
-                DataObjectRelation::class => array(
+                ]
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => $relation1->ID,
                     'relation2' => $relation2->ID
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(2, $obj2->HasManyRelation()->Count());
         $this->assertNotNull($obj2->HasManyRelation()->find('ID', $relation1->ID));
@@ -154,14 +154,14 @@ class FixtureBlueprintTest extends SapphireTest
 
         $obj = $blueprint->createObject(
             'one',
-            array(
+            [
                 'ManyManyRelation' => '=>UnknownClass.relation1'
-            ),
-            array(
-                DataObjectRelation::class => array(
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => 99
-                )
-            )
+                ]
+            ]
         );
     }
 
@@ -175,14 +175,14 @@ class FixtureBlueprintTest extends SapphireTest
 
         $obj = $blueprint->createObject(
             'one',
-            array(
+            [
                 'ManyManyRelation' => '=>' . DataObjectRelation::class . '.unknown_identifier'
-            ),
-            array(
-                DataObjectRelation::class => array(
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => 99
-                )
-            )
+                ]
+            ]
         );
     }
 
@@ -200,21 +200,21 @@ class FixtureBlueprintTest extends SapphireTest
 
         $obj = $blueprint->createObject(
             'one',
-            array(
+            [
                 'ManyManyRelation' => DataObjectRelation::class . '.relation1'
-            ),
-            array(
-                DataObjectRelation::class => array(
+            ],
+            [
+                DataObjectRelation::class => [
                     'relation1' => $relation1->ID
-                )
-            )
+                ]
+            ]
         );
     }
 
     public function testCreateWithId()
     {
         $blueprint = new FixtureBlueprint(TestDataObject::class);
-        $obj = $blueprint->createObject('ninetynine', array('ID' => 99));
+        $obj = $blueprint->createObject('ninetynine', ['ID' => 99]);
         $this->assertNotNull($obj);
         $this->assertEquals(99, $obj->ID);
     }
@@ -223,7 +223,7 @@ class FixtureBlueprintTest extends SapphireTest
     {
         $extpectedDate = '2010-12-14 16:18:20';
         $blueprint = new FixtureBlueprint(TestDataObject::class);
-        $obj = $blueprint->createObject('lastedited', array('LastEdited' => $extpectedDate));
+        $obj = $blueprint->createObject('lastedited', ['LastEdited' => $extpectedDate]);
         $this->assertNotNull($obj);
         $this->assertEquals($extpectedDate, $obj->LastEdited);
 
@@ -233,12 +233,12 @@ class FixtureBlueprintTest extends SapphireTest
 
     public function testCreateWithClassAncestry()
     {
-        $data = array(
+        $data = [
             'Title' => 'My Title',
             'Created' => '2010-12-14 16:18:20',
             'LastEdited' => '2010-12-14 16:18:20',
             'PublishDate' => '2015-12-09 06:03:00'
-        );
+        ];
         $blueprint = new FixtureBlueprint(Article::class);
         $obj = $blueprint->createObject('home', $data);
         $this->assertNotNull($obj);
@@ -296,17 +296,17 @@ class FixtureBlueprintTest extends SapphireTest
         $blueprint = new FixtureBlueprint(
             TestDataObject::class,
             null,
-            array(
+            [
             'Name' => function ($obj, $data, $fixtures) {
                 return 'Default Name';
             }
-            )
+            ]
         );
 
         $obj1 = $blueprint->createObject('one');
         $this->assertEquals('Default Name', $obj1->Name);
 
-        $obj2 = $blueprint->createObject('one', array('Name' => 'Override Name'));
+        $obj2 = $blueprint->createObject('one', ['Name' => 'Override Name']);
         $this->assertEquals('Override Name', $obj2->Name);
     }
 }

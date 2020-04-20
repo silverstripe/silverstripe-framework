@@ -25,18 +25,18 @@ use SilverStripe\ORM\ManyManyList;
  */
 class PermissionRole extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         "Title" => "Varchar",
         "OnlyAdminCanApply" => "Boolean"
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         "Codes" => "SilverStripe\\Security\\PermissionRoleCode",
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         "Groups" => "SilverStripe\\Security\\Group",
-    );
+    ];
 
     private static $table_name = "PermissionRole";
 
@@ -98,7 +98,7 @@ class PermissionRole extends DataObject
         return Permission::check('APPLY_ROLES', 'any', $member);
     }
 
-    public function canCreate($member = null, $context = array())
+    public function canCreate($member = null, $context = [])
     {
         return Permission::check('APPLY_ROLES', 'any', $member);
     }

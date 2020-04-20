@@ -103,7 +103,7 @@ class SecurityTest extends FunctionalTest
         $controller->setResponse(new HTTPResponse());
 
         $session = Controller::curr()->getRequest()->getSession();
-        Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
+        Security::permissionFailure($controller, ['default' => 'Oops, not allowed']);
         $this->assertEquals('Oops, not allowed', $session->get('Security.Message.message'));
 
         // Test that config values are used correctly
@@ -116,7 +116,7 @@ class SecurityTest extends FunctionalTest
         );
 
         Config::modify()->remove(Security::class, 'default_message_set');
-        Config::modify()->merge(Security::class, 'default_message_set', array('default' => 'arrayvalue'));
+        Config::modify()->merge(Security::class, 'default_message_set', ['default' => 'arrayvalue']);
         Security::permissionFailure($controller);
         $this->assertEquals(
             'arrayvalue',
@@ -132,7 +132,7 @@ class SecurityTest extends FunctionalTest
         Config::modify()->set(
             Security::class,
             'default_message_set',
-            array('default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!')
+            ['default' => 'default', 'alreadyLoggedIn' => 'You are already logged in!']
         );
         Security::permissionFailure($controller);
         $this->assertContains(
@@ -143,7 +143,7 @@ class SecurityTest extends FunctionalTest
 
         Security::permissionFailure(
             $controller,
-            array('default' => 'default', 'alreadyLoggedIn' => 'One-off failure message')
+            ['default' => 'default', 'alreadyLoggedIn' => 'One-off failure message']
         );
         $this->assertContains(
             'One-off failure message',
@@ -252,9 +252,9 @@ class SecurityTest extends FunctionalTest
         $response = $this->submitForm(
             'MemberLoginForm_LoginForm',
             null,
-            array(
+            [
                 'action_logout' => 1,
-            )
+            ]
         );
 
         /* We get a good response */
@@ -348,9 +348,9 @@ class SecurityTest extends FunctionalTest
         $response = $this->submitForm(
             'LogoutForm_Form',
             null,
-            array(
+            [
                 'action_doLogout' => 1,
-            )
+            ]
         );
 
         /* We get a good response */
@@ -500,7 +500,7 @@ class SecurityTest extends FunctionalTest
 
         // Request new password by email
         $this->get('Security/lostpassword');
-        $this->post('Security/lostpassword/LostPasswordForm', array('Email' => 'testuser@example.com'));
+        $this->post('Security/lostpassword/LostPasswordForm', ['Email' => 'testuser@example.com']);
 
         $this->assertEmailSent('testuser@example.com');
 
@@ -576,7 +576,7 @@ class SecurityTest extends FunctionalTest
             'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
             'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
             null,
-            array('count' => 15)
+            ['count' => 15]
         );
         $this->assertHasMessage($msg);
         $this->doTestLoginForm('testuser@example.com', '1nitialPassword');
@@ -765,12 +765,12 @@ class SecurityTest extends FunctionalTest
         return $this->submitForm(
             "MemberLoginForm_LoginForm",
             null,
-            array(
+            [
                 'Email' => $email,
                 'Password' => $password,
                 'AuthenticationMethod' => MemberAuthenticator::class,
                 'action_doLogin' => 1,
-            )
+            ]
         );
     }
 
@@ -786,12 +786,12 @@ class SecurityTest extends FunctionalTest
         return $this->submitForm(
             "ChangePasswordForm_ChangePasswordForm",
             null,
-            array(
+            [
                 'OldPassword' => $oldPassword,
                 'NewPassword1' => $newPassword,
                 'NewPassword2' => $newPassword,
                 'action_doChangePassword' => 1,
-            )
+            ]
         );
     }
 

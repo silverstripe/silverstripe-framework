@@ -9,19 +9,19 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldFilterHeaderTest_Team';
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Name' => 'Name',
         'City.Initial' => 'City',
         'Cheerleader.Hat.Colour' => 'Cheerleader Hat'
-    );
+    ];
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'City' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Cheerleader' => Cheerleader::class,
         'CheerleadersMom' => Mom::class
-    );
+    ];
 }

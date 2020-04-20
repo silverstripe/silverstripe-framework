@@ -52,7 +52,7 @@ class ArrayLib
             return [];
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($arr as $columnName => $column) {
             foreach ($column as $rowName => $cell) {
@@ -188,7 +188,7 @@ class ArrayLib
     public static function array_merge_recursive($array)
     {
         $arrays = func_get_args();
-        $merged = array();
+        $merged = [];
 
         if (count($arrays) == 1) {
             return $array;
@@ -230,7 +230,7 @@ class ArrayLib
      *
      * @return array
      */
-    public static function flatten($array, $preserveKeys = true, &$out = array())
+    public static function flatten($array, $preserveKeys = true, &$out = [])
     {
         array_walk_recursive(
             $array,

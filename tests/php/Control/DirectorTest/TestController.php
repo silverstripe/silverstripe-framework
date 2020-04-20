@@ -18,13 +18,13 @@ class TestController extends Controller implements TestOnly
 
     private static $url_segment = 'TestController';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'returnGetValue',
         'returnPostValue',
         'returnRequestValue',
         'returnCookieValue',
         'returnIsSSL',
-    );
+    ];
 
     public function returnGetValue($request)
     {

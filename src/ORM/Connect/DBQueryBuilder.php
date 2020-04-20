@@ -36,7 +36,7 @@ class DBQueryBuilder
     public function buildSQL(SQLExpression $query, &$parameters)
     {
         $sql = null;
-        $parameters = array();
+        $parameters = [];
 
         // Ignore null queries
         if ($query->isEmpty()) {
@@ -113,12 +113,12 @@ class DBQueryBuilder
         $sql .= "{$nl}VALUES";
 
         // Build all rows
-        $rowParts = array();
+        $rowParts = [];
         foreach ($query->getRows() as $row) {
             // Build all columns in this row
             $assignments = $row->getAssignments();
             // Join SET components together, considering parameters
-            $parts = array();
+            $parts = [];
             foreach ($columns as $column) {
                 // Check if this column has a value for this row
                 if (isset($assignments[$column])) {
@@ -166,7 +166,7 @@ class DBQueryBuilder
     {
         $distinct = $query->getDistinct();
         $select = $query->getSelect();
-        $clauses = array();
+        $clauses = [];
 
         foreach ($select as $alias => $field) {
             // Don't include redundant aliases.
@@ -218,7 +218,7 @@ class DBQueryBuilder
         $text = "UPDATE $table";
 
         // Join SET components together, considering parameters
-        $parts = array();
+        $parts = [];
         foreach ($query->getAssignments() as $column => $assignment) {
             // Assigment is a single item array, expand with a loop here
             foreach ($assignment as $assignmentSQL => $assignmentParameters) {
@@ -284,7 +284,7 @@ class DBQueryBuilder
         }
 
         // Build orders, each with direction considered
-        $statements = array();
+        $statements = [];
         foreach ($orderBy as $clause => $dir) {
             $statements[] = trim("$clause $dir");
         }

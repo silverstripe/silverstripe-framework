@@ -127,7 +127,7 @@ class Requirements implements Flushable
      * - 'async' : Boolean value to set async attribute to script tag
      * - 'defer' : Boolean value to set defer attribute to script tag
      */
-    public static function javascript($file, $options = array())
+    public static function javascript($file, $options = [])
     {
         self::backend()->javascript($file, $options);
     }
@@ -389,7 +389,7 @@ class Requirements implements Flushable
      * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
      * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
      */
-    public static function combine_files($combinedFileName, $files, $options = array())
+    public static function combine_files($combinedFileName, $files, $options = [])
     {
         if (is_string($options)) {
             throw new InvalidArgumentException("Invalid $options");

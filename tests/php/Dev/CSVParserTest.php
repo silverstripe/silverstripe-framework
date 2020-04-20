@@ -26,7 +26,7 @@ class CSVParserTest extends SapphireTest
         /* By default, a CSV file will be interpreted as having headers */
         $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the header row */
             $this->assertEquals(
@@ -80,7 +80,7 @@ class CSVParserTest extends SapphireTest
             'bIoGrApHy' => '__BG',
         ]);
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
             * left as-is. */
@@ -111,7 +111,7 @@ class CSVParserTest extends SapphireTest
             "1982-06-30",
             "2000-04-30",
         ], $birthdays);
-        $this->assertEquals(array('1', '0', '1', '1', '0'), $registered);
+        $this->assertEquals(['1', '0', '1', '1', '0'], $registered);
     }
 
     public function testParsingWithExplicitHeaderRow()
@@ -119,12 +119,12 @@ class CSVParserTest extends SapphireTest
         /* If your CSV file doesn't have a header row */
         $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
-        $csv->provideHeaderRow(array('__fn','__bio','__bd','__reg'));
+        $csv->provideHeaderRow(['__fn','__bio','__bd','__reg']);
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the header row that you gave */
-            $this->assertEquals(array('__fn','__bio','__bd','__reg'), array_keys($record));
+            $this->assertEquals(['__fn','__bio','__bd','__reg'], array_keys($record));
             $firstNames[] = $record['__fn'];
             $biographies[] = $record['__bio'];
             $birthdays[] = $record['__bd'];

@@ -16,7 +16,7 @@ class GridState_Data
      */
     protected $data;
 
-    public function __construct($data = array())
+    public function __construct($data = [])
     {
         $this->data = $data;
     }
@@ -79,7 +79,7 @@ class GridState_Data
 
     public function toArray()
     {
-        $output = array();
+        $output = [];
 
         foreach ($this->data as $k => $v) {
             $output[$k] = (is_object($v) && method_exists($v, 'toArray')) ? $v->toArray() : $v;

@@ -18,10 +18,10 @@ use SilverStripe\ORM\DB;
 class DBVarchar extends DBString
 {
 
-    private static $casting = array(
+    private static $casting = [
         "Initial" => "Text",
         "URL" => "Text",
-    );
+    ];
 
     /**
      * Max size of this field
@@ -38,7 +38,7 @@ class DBVarchar extends DBString
      * @param array $options Optional parameters, e.g. array("nullifyEmpty"=>false).
      *                       See {@link StringField::setOptions()} for information on the available options
      */
-    public function __construct($name = null, $size = 255, $options = array())
+    public function __construct($name = null, $size = 255, $options = [])
     {
         $this->size = $size ? $size : 255;
         parent::__construct($name, $options);
@@ -67,18 +67,18 @@ class DBVarchar extends DBString
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
-        $parts = array(
+        $parts = [
             'datatype'=>'varchar',
             'precision'=>$this->size,
             'character set'=> $charset,
             'collate'=> $collation,
             'arrayValue'=>$this->arrayValue
-        );
+        ];
 
-        $values = array(
+        $values = [
             'type' => 'varchar',
             'parts' => $parts
-        );
+        ];
 
         DB::require_field($this->tableName, $this->name, $values);
     }

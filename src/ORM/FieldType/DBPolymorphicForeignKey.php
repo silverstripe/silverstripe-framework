@@ -11,10 +11,10 @@ class DBPolymorphicForeignKey extends DBComposite
 {
     private static $index = true;
 
-    private static $composite_db = array(
+    private static $composite_db = [
         'ID' => 'Int',
         'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
-    );
+    ];
 
     public function scaffoldFormField($title = null, $params = null)
     {
@@ -70,10 +70,10 @@ class DBPolymorphicForeignKey extends DBComposite
     {
         // Map dataobject value to array
         if ($value instanceof DataObject) {
-            $value = array(
+            $value = [
                 'ID' => $value->ID,
                 'Class' => get_class($value),
-            );
+            ];
         }
 
         parent::setValue($value, $record, $markChanged);

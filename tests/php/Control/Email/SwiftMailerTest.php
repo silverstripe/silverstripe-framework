@@ -21,7 +21,7 @@ class SwiftMailerTest extends SapphireTest
         $this->assertEquals($swift, $mailer->getSwiftMailer());
 
         SwiftMailer::config()->remove('swift_plugins');
-        SwiftMailer::config()->update('swift_plugins', array(Swift_Plugins_AntiFloodPlugin::class));
+        SwiftMailer::config()->update('swift_plugins', [Swift_Plugins_AntiFloodPlugin::class]);
 
         /** @var Swift_MailTransport $transport */
         $transport = $this->getMockBuilder(Swift_MailTransport::class)->getMock();
@@ -52,7 +52,7 @@ class SwiftMailerTest extends SapphireTest
         $email->setSubject('Subject');
 
         $mailer = $this->getMockBuilder(SwiftMailer::class)
-            ->setMethods(array('sendSwift'))
+            ->setMethods(['sendSwift'])
             ->getMock();
         $mailer->expects($this->once())->method('sendSwift')->with(
             $this->isInstanceOf(Swift_Message::class)

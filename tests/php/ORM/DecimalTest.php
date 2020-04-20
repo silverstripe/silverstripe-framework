@@ -15,9 +15,9 @@ class DecimalTest extends SapphireTest
      */
     protected $testDataObject;
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DecimalTest\TestObject::class
-    );
+    ];
 
     protected function setUp()
     {

@@ -40,28 +40,28 @@ class MySQLStatement extends Query
      *
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * Map of column types, keyed by column name
      *
      * @var array
      */
-    protected $types = array();
+    protected $types = [];
 
     /**
      * List of bound variables in the current row
      *
      * @var array
      */
-    protected $boundValues = array();
+    protected $boundValues = [];
 
     /**
      * Binds this statement to the variables
      */
     protected function bind()
     {
-        $variables = array();
+        $variables = [];
 
         // Bind each field
         while ($field = $this->metadata->fetch_field()) {
@@ -79,7 +79,7 @@ class MySQLStatement extends Query
         // Buffer all results
         $this->statement->store_result();
 
-        call_user_func_array(array($this->statement, 'bind_result'), $variables);
+        call_user_func_array([$this->statement, 'bind_result'], $variables);
     }
 
     /**
@@ -126,7 +126,7 @@ class MySQLStatement extends Query
         }
 
         // Dereferenced row
-        $row = array();
+        $row = [];
         foreach ($this->boundValues as $key => $value) {
             $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
             if (in_array($this->types[$key], $floatTypes)) {

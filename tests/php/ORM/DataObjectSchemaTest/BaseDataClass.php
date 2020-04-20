@@ -9,7 +9,7 @@ class BaseDataClass extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectSchemaTest_BaseDataClass';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar'
-    );
+    ];
 }

@@ -9,12 +9,12 @@ class HasAction extends Controller implements TestOnly
 {
     private static $url_segment = 'HasAction';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'allowed_action',
         //'other_action' => 'lowercase_permission'
-    );
+    ];
 
-    protected $templates = array(
+    protected $templates = [
         'template_action' => 'template'
-    );
+    ];
 }

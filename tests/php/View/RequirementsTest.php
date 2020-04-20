@@ -114,10 +114,10 @@ class RequirementsTest extends SapphireTest
         // require two of those files as combined includes
         $backend->combineFiles(
             'RequirementsTest_bc.js',
-            array(
+            [
                 'javascript/RequirementsTest_b.js',
                 'javascript/RequirementsTest_c.js'
-            )
+            ]
         );
     }
 
@@ -133,10 +133,10 @@ class RequirementsTest extends SapphireTest
         // require files as combined includes
         $backend->combineFiles(
             'RequirementsTest_bc.js',
-            array(
+            [
                 'javascript/RequirementsTest_b.js',
                 'javascript/RequirementsTest_c.js'
-            )
+            ]
         );
     }
 
@@ -564,12 +564,12 @@ class RequirementsTest extends SapphireTest
         );
         $backend->combineFiles(
             'style.css',
-            array(
+            [
                 'css/RequirementsTest_b.css',
                 'css/RequirementsTest_c.css',
                 'css/RequirementsTest_d.css',
                 'public/css/RequirementsTest_e.css',
-            )
+            ]
         );
 
         $html = $backend->includeInHTML(self::$html_template);
@@ -784,9 +784,9 @@ class RequirementsTest extends SapphireTest
         );
         $backend->clear();
         $data = new ArrayData(
-            array(
+            [
             'FailTest' => false,
-            )
+            ]
         );
         $data->renderWith('RequirementsTest_Conditionals');
         $this->assertFileNotIncluded($backend, 'css', 'css/RequirementsTest_a.css');
@@ -1037,7 +1037,7 @@ EOS
         $includedFiles = $this->getBackendFiles($backend, $type);
 
         if (is_array($files)) {
-            $failedMatches = array();
+            $failedMatches = [];
             foreach ($files as $file) {
                 if (!array_key_exists($file, $includedFiles)) {
                     $failedMatches[] = $file;
@@ -1065,7 +1065,7 @@ EOS
     {
         $includedFiles = $this->getBackendFiles($backend, $type);
         if (is_array($files)) {
-            $failedMatches = array();
+            $failedMatches = [];
             foreach ($files as $file) {
                 if (array_key_exists($file, $includedFiles)) {
                     $failedMatches[] = $file;
@@ -1108,7 +1108,7 @@ EOS
             case 'script':
                 return $backend->getJavascript();
         }
-        return array();
+        return [];
     }
 
     public function testAddI18nJavascript()

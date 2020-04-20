@@ -39,7 +39,7 @@ class FormTemplateHelper
         }
 
         $reflection = new ReflectionClass($form);
-        $shortName = str_replace(array('.', '/'), '', $form->getName());
+        $shortName = str_replace(['.', '/'], '', $form->getName());
         return Convert::raw2htmlid($reflection->getShortName() . '_' . $shortName);
     }
 

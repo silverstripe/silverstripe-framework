@@ -17,7 +17,7 @@ class CurrencyField_Readonly extends ReadonlyField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $currencySymbol = DBCurrency::config()->get('currency_symbol');
         if ($this->value) {

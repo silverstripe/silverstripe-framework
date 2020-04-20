@@ -20,8 +20,8 @@ class GridFieldToolbarHeader implements GridField_HTMLProvider
     public function getHTMLFragments($gridField)
     {
         $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
-        return array(
+        return [
             'header' => $gridField->renderWith($templates)
-        );
+        ];
     }
 }

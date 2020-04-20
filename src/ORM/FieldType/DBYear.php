@@ -13,8 +13,8 @@ class DBYear extends DBField
 
     public function requireField()
     {
-        $parts=array('datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue);
-        $values=array('type'=>'year', 'parts'=>$parts);
+        $parts=['datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue];
+        $values=['type'=>'year', 'parts'=>$parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
@@ -43,7 +43,7 @@ class DBYear extends DBField
         if (!$end) {
             $end = 1900;
         }
-        $years = array();
+        $years = [];
         for ($i=$start; $i>=$end; $i--) {
             $years[$i] = $i;
         }

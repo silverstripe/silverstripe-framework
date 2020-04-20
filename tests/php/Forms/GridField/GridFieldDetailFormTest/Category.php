@@ -11,13 +11,13 @@ class Category extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldDetailFormTest_Category';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar'
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'People' => Person::class
-    );
+    ];
 
     private static $default_sort = '"Name"';
 

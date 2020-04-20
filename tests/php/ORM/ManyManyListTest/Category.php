@@ -13,11 +13,11 @@ class Category extends DataObject implements TestOnly
 {
     private static $table_name = 'ManyManyListTest_Category';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar'
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Products' => Product::class
-    );
+    ];
 }

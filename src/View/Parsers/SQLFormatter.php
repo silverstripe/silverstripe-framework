@@ -16,7 +16,7 @@ class SQLFormatter
 {
     use Injectable;
 
-    protected static $newline_before_tokens = array(
+    protected static $newline_before_tokens = [
         'SELECT',
         'UPDATE',
         'INSERT',
@@ -30,7 +30,7 @@ class SQLFormatter
         'ORDER BY',
         'GROUP BY',
         'LIMIT',
-    );
+    ];
 
     public function formatPlain($sql)
     {

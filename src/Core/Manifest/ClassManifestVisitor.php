@@ -34,7 +34,7 @@ class ClassManifestVisitor extends NodeVisitorAbstract
             $interfaces = [];
 
             if ($node->extends) {
-                $extends = array((string)$node->extends);
+                $extends = [(string)$node->extends];
             }
 
             if ($node->implements) {
@@ -48,9 +48,9 @@ class ClassManifestVisitor extends NodeVisitorAbstract
                 'interfaces' => $interfaces,
             ];
         } elseif ($node instanceof Node\Stmt\Trait_) {
-            $this->traits[(string)$node->namespacedName] = array();
+            $this->traits[(string)$node->namespacedName] = [];
         } elseif ($node instanceof Node\Stmt\Interface_) {
-            $extends = array();
+            $extends = [];
             foreach ($node->extends as $ancestor) {
                 $extends[] = (string)$ancestor;
             }

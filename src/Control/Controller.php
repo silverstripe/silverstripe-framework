@@ -52,7 +52,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @var array
      */
-    protected static $controller_stack = array();
+    protected static $controller_stack = [];
 
     /**
      * Assign templates for this controller.
@@ -83,17 +83,17 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @var array
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action//$ID/$OtherID' => 'handleAction',
-    );
+    ];
 
     /**
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'handleAction',
         'handleIndex',
-    );
+    ];
 
     /**
      * Initialisation function that is run before any action on the controller is called.
@@ -495,7 +495,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $parentClass = static::class;
-        $templates   = array();
+        $templates   = [];
 
         while ($parentClass != __CLASS__) {
             $templates[] = strtok($parentClass, '_') . '_' . $action;
@@ -583,7 +583,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $member = Security::getCurrentUser();
         }
         if (is_array($perm)) {
-            $perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
+            $perm = array_map([$this, 'can'], $perm, array_fill(0, count($perm), $member));
             return min($perm);
         }
         if ($this->hasMethod($methodName = 'can' . $perm)) {
@@ -672,7 +672,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $args = func_get_args();
         }
         $result = "";
-        $queryargs = array();
+        $queryargs = [];
         $fragmentIdentifier = null;
 
         foreach ($args as $arg) {
@@ -712,8 +712,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'CurrentPage' => 'curr',
-        );
+        ];
     }
 }

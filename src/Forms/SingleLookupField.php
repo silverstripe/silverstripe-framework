@@ -124,10 +124,10 @@ class SingleLookupField extends SingleSelectField
             $inputValue = '';
         }
 
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
             'InputValue' => $inputValue
-        ));
+        ]);
 
         return parent::Field($properties);
     }

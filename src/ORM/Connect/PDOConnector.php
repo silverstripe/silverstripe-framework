@@ -72,7 +72,7 @@ class PDOConnector extends DBConnector implements TransactionManager
      *
      * @var array
      */
-    protected $cachedStatements = array();
+    protected $cachedStatements = [];
 
     /**
      * Driver
@@ -91,7 +91,7 @@ class PDOConnector extends DBConnector implements TransactionManager
      */
     public function flushStatements()
     {
-        $this->cachedStatements = array();
+        $this->cachedStatements = [];
     }
 
     /**
@@ -111,7 +111,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         // Generate new statement
         $statement = $this->pdoConnection->prepare(
             $sql,
-            array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+            [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
         );
 
         // Wrap in a PDOStatementHandle, to cache column metadata
@@ -146,7 +146,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         $this->driver = $parameters['driver'];
 
         // Build DSN string
-        $dsn = array();
+        $dsn = [];
 
         // Typically this is false, but some drivers will request this
         if ($selectDB) {
@@ -436,7 +436,7 @@ class PDOConnector extends DBConnector implements TransactionManager
      * @param array $parameters
      * @return PDOQuery
      */
-    protected function prepareResults(PDOStatementHandle $statement, $errorLevel, $sql, $parameters = array())
+    protected function prepareResults(PDOStatementHandle $statement, $errorLevel, $sql, $parameters = [])
     {
 
         // Catch error

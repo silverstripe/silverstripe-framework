@@ -51,7 +51,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
 
     public function conditionSQL(&$parameters)
     {
-        $parameters = array();
+        $parameters = [];
 
         // Ignore empty conditions
         $where = $this->whereQuery->getWhere();

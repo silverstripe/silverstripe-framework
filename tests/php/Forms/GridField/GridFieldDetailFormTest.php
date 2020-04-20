@@ -23,11 +23,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 {
     protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Person::class,
         PeopleGroup::class,
         Category::class,
-    );
+    ];
 
     protected static $extra_controllers = [
         CategoryController::class,
@@ -56,11 +56,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'FirstName' => 'Jeremiah',
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
 
         $parser = new CSSContentParser($response->getBody());
@@ -69,10 +69,10 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
 
         $parser = new CSSContentParser($response->getBody());
@@ -104,11 +104,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'FirstName' => 'Jeremiah',
                 'Surname' => 'BullFrog',
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
@@ -165,11 +165,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'FirstName' => 'Bilbo',
                 'Surname' => 'Baggins',
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
@@ -177,7 +177,7 @@ class GridFieldDetailFormTest extends FunctionalTest
             ->filter('Name', 'My Group')
             ->sort('Name')
             ->First();
-        $this->assertListContains(array(array('Surname' => 'Baggins')), $group->People());
+        $this->assertListContains([['Surname' => 'Baggins']], $group->People());
     }
 
     public function testEditFormWithManyMany()
@@ -199,11 +199,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'Name' => 'My Favourite Group',
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
@@ -238,46 +238,46 @@ class GridFieldDetailFormTest extends FunctionalTest
         // Test save of IsPublished field
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'Name' => 'Updated Category',
-                'ManyMany' => array(
+                'ManyMany' => [
                     'IsPublished' => 1,
                     'PublishedBy' => 'Richard'
-                ),
+                ],
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
         $person = Person::get()->sort('FirstName')->First();
-        $category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+        $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
-            array(
+            [
                 'IsPublished' => 1,
                 'PublishedBy' => 'Richard'
-            ),
+            ],
             $person->Categories()->getExtraData('', $category->ID)
         );
 
         // Test update of value with falsey value
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'Name' => 'Updated Category',
-                'ManyMany' => array(
+                'ManyMany' => [
                     'PublishedBy' => ''
-                ),
+                ],
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
         $person = Person::get()->sort('FirstName')->First();
-        $category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+        $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
-            array(
+            [
                 'IsPublished' => 0,
                 'PublishedBy' => ''
-            ),
+            ],
             $person->Categories()->getExtraData('', $category->ID)
         );
     }

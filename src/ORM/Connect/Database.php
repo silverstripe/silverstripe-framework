@@ -221,7 +221,7 @@ abstract class Database
      * @param array $parameters Parameters for any parameterised query
      * @return mixed Result of query
      */
-    protected function benchmarkQuery($sql, $callback, $parameters = array())
+    protected function benchmarkQuery($sql, $callback, $parameters = [])
     {
         if (isset($_REQUEST['showqueries']) && Director::isDev()) {
             $displaySql = true;
@@ -364,7 +364,7 @@ abstract class Database
      */
     protected function escapeColumnKeys($fieldValues)
     {
-        $out = array();
+        $out = [];
         foreach ($fieldValues as $field => $value) {
             $out[$this->escapeIdentifier($field)] = $value;
         }
@@ -408,7 +408,7 @@ abstract class Database
                     if (!empty($writeInfo['where'])) {
                         $query->addWhere($writeInfo['where']);
                     } elseif (!empty($writeInfo['id'])) {
-                        $query->addWhere(array('"ID"' => $writeInfo['id']));
+                        $query->addWhere(['"ID"' => $writeInfo['id']]);
                     }
 
                     // Test to see if this update query shouldn't, in fact, be an insert

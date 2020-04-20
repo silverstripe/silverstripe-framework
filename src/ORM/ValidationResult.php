@@ -62,7 +62,7 @@ class ValidationResult implements Serializable
      *
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * Create a new ValidationResult.
@@ -164,12 +164,12 @@ class ValidationResult implements Serializable
         if (is_bool($cast)) {
             $cast = $cast ? self::CAST_TEXT : self::CAST_HTML;
         }
-        $metadata = array(
+        $metadata = [
             'message' => $message,
             'fieldName' => $fieldName,
             'messageType' => $messageType,
             'messageCast' => $cast,
-        );
+        ];
 
         if ($code) {
             $this->messages[$code] = $metadata;

@@ -9,11 +9,11 @@ class Article extends DataObject implements TestOnly
 {
     private static $table_name = 'CheckboxSetFieldTest_Article';
 
-    private static $db = array(
+    private static $db = [
         "Content" => "Text",
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         "Tags" => Tag::class,
-    );
+    ];
 }

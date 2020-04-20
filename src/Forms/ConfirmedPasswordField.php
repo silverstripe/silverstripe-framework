@@ -185,7 +185,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         // Build inner content
         $fieldContent = '';

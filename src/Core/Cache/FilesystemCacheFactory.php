@@ -24,7 +24,7 @@ class FilesystemCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = array())
+    public function create($service, array $params = [])
     {
         return Injector::inst()->create(FilesystemCache::class, false, [
             (isset($params['namespace'])) ? $params['namespace'] : '',

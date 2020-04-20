@@ -106,7 +106,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             return [];
         }
 
-        return array('paginate');
+        return ['paginate'];
     }
 
     /**
@@ -236,13 +236,13 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         // to sort out those first page, last page, pre and next pages, etc
         // we are not render those in to the paginator.
         if ($totalPages === 1) {
-            return new ArrayData(array(
+            return new ArrayData([
                 'OnlyOnePage' => true,
                 'FirstShownRecord' => $firstShownRecord,
                 'LastShownRecord' => $lastShownRecord,
                 'NumRecords' => $totalRows,
                 'NumPages' => $totalPages
-            ));
+            ]);
         } else {
             // First page button
             $firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
@@ -287,7 +287,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             }
 
             // Render in template
-            return new ArrayData(array(
+            return new ArrayData([
                 'OnlyOnePage' => false,
                 'FirstPage' => $firstPage,
                 'PreviousPage' => $previousPage,
@@ -298,7 +298,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
                 'FirstShownRecord' => $firstShownRecord,
                 'LastShownRecord' => $lastShownRecord,
                 'NumRecords' => $totalRows
-            ));
+            ]);
         }
     }
 
@@ -314,12 +314,12 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             return null;
         }
         $template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
-        return array(
+        return [
             'footer' => $forTemplate->renderWith(
                 $template,
-                array('Colspan' => count($gridField->getColumns()))
+                ['Colspan' => count($gridField->getColumns())]
             )
-        );
+        ];
     }
 
     /**

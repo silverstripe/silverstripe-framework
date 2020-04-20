@@ -20,21 +20,21 @@ class DevAdminControllerTest extends FunctionalTest
 
         DevelopmentAdmin::config()->update(
             'registered_controllers',
-            array(
-            'x1' => array(
+            [
+            'x1' => [
                 'controller' => Controller1::class,
-                'links' => array(
+                'links' => [
                     'x1' => 'x1 link description',
                     'x1/y1' => 'x1/y1 link description'
-                )
-            ),
-            'x2' => array(
+                ]
+            ],
+            'x2' => [
                 'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
-                'links' => array(
+                'links' => [
                     'x2' => 'x2 link description'
-                )
-            )
-            )
+                ]
+            ]
+            ]
         );
     }
 

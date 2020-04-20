@@ -26,7 +26,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $where List of where clauses
      * @return static
      */
-    public static function create($table = null, $assignment = array(), $where = array())
+    public static function create($table = null, $assignment = [], $where = [])
     {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
@@ -38,7 +38,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $assignment List of column assignments
      * @param array $where List of where clauses
      */
-    function __construct($table = null, $assignment = array(), $where = array())
+    function __construct($table = null, $assignment = [], $where = [])
     {
         parent::__construct(null, $where);
         $this->assignment = new SQLAssignmentRow();

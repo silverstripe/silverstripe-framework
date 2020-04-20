@@ -26,15 +26,15 @@ class GridFieldButtonRow implements GridField_HTMLProvider
 
     public function getHTMLFragments($gridField)
     {
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             "TargetFragmentName" => $this->targetFragment,
             "LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
             "RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
-        ));
+        ]);
 
         $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
-        return array(
+        return [
             $this->targetFragment => $data->renderWith($templates)
-        );
+        ];
     }
 }

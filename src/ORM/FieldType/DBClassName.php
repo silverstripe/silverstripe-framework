@@ -60,7 +60,7 @@ class DBClassName extends DBEnum
      */
     public function requireField()
     {
-        $parts = array(
+        $parts = [
             'datatype' => 'enum',
             'enums' => $this->getEnumObsolete(),
             'character set' => 'utf8',
@@ -68,12 +68,12 @@ class DBClassName extends DBEnum
             'default' => $this->getDefault(),
             'table' => $this->getTable(),
             'arrayValue' => $this->arrayValue
-        );
+        ];
 
-        $values = array(
+        $values = [
             'type' => 'enum',
             'parts' => $parts
-        );
+        ];
 
         DB::require_field($this->getTable(), $this->getName(), $values);
     }

@@ -74,10 +74,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                     if (array_key_exists('ssl_key', $databaseConfig) &&
                         array_key_exists('ssl_cert', $databaseConfig)
                     ) {
-                        $ssl = array(
+                        $ssl = [
                             PDO::MYSQL_ATTR_SSL_KEY => $databaseConfig['ssl_key'],
                             PDO::MYSQL_ATTR_SSL_CERT => $databaseConfig['ssl_cert'],
-                        );
+                        ];
                         if (array_key_exists('ssl_ca', $databaseConfig)) {
                             $ssl[PDO::MYSQL_ATTR_SSL_CA] = $databaseConfig['ssl_ca'];
                         }
@@ -118,7 +118,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
      */
     protected function column($results)
     {
-        $array = array();
+        $array = [];
         if ($results instanceof mysqli_result) {
             while ($row = $results->fetch_array()) {
                 $array[] = $row[0];
@@ -142,10 +142,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $connection = $this->createConnection($databaseConfig, $error);
         $success = !empty($connection);
 
-        return array(
+        return [
             'success' => $success,
             'error' => $error
-        );
+        ];
     }
 
     public function getDatabaseVersion($databaseConfig)
@@ -180,10 +180,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         } else {
             $error = "Could not determine your MySQL version.";
         }
-        return array(
+        return [
             'success' => $success,
             'error' => $error
-        );
+        ];
     }
 
     public function requireDatabaseConnection($databaseConfig)
@@ -197,10 +197,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
             $error = 'Invalid characters in database name.';
         }
 
-        return array(
+        return [
             'success' => $success,
             'error' => $error
-        );
+        ];
     }
 
     /**
@@ -287,19 +287,19 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
             }
         }
 
-        return array(
+        return [
             'success' => $success,
             'alreadyExists' => $alreadyExists
-        );
+        ];
     }
 
     public function requireDatabaseAlterPermissions($databaseConfig)
     {
         $conn = $this->createConnection($databaseConfig, $error);
         $success = $this->checkDatabasePermission($conn, $databaseConfig['database'], 'ALTER');
-        return array(
+        return [
             'success' => $success,
             'applies' => true
-        );
+        ];
     }
 }

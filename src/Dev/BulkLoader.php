@@ -75,7 +75,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @var array
      */
-    public $columnMap = array();
+    public $columnMap = [];
 
     /**
      * Find a has_one relation based on a specific column value.
@@ -93,7 +93,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @var array
      */
-    public $relationCallbacks = array();
+    public $relationCallbacks = [];
 
     /**
      * Specifies how to determine duplicates based on one or more provided fields
@@ -122,7 +122,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @var array
      */
-    public $duplicateChecks = array();
+    public $duplicateChecks = [];
 
     /**
      * @var Boolean $clearBeforeImport Delete ALL records before importing.

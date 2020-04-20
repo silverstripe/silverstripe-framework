@@ -48,12 +48,12 @@ class GridFieldActionMenuTest extends SapphireTest
     /**
      * @var array
      */
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Cheerleader::class,
         Player::class,
         Permissions::class,
-    );
+    ];
 
     protected function setUp()
     {
@@ -64,7 +64,7 @@ class GridFieldActionMenuTest extends SapphireTest
             ->addComponent(new GridFieldDeleteAction())
             ->addComponent(new GridField_ActionMenu());
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList([$this->gridField]), new FieldList());
     }
 
     public function testShowActionMenu()

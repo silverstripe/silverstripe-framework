@@ -34,12 +34,12 @@ class HTMLEditorSanitiser
     private static $link_rel_value = 'noopener noreferrer';
 
     /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
-    protected $elements = array();
+    protected $elements = [];
     /** @var [stdClass] - Sequential list of whitelist element rules where the element name is a pattern */
-    protected $elementPatterns = array();
+    protected $elementPatterns = [];
 
     /** @var [stdClass] - The list of attributes that apply to all further whitelisted elements added */
-    protected $globalAttributes = array();
+    protected $globalAttributes = [];
 
     /**
      * Construct a sanitiser from a given HTMLEditorConfig
@@ -96,14 +96,14 @@ class HTMLEditorSanitiser
 
                 // Create the new element
                 $element = new stdClass();
-                $element->attributes = array();
-                $element->attributePatterns = array();
+                $element->attributes = [];
+                $element->attributePatterns = [];
 
-                $element->attributesRequired = array();
-                $element->attributesDefault = array();
-                $element->attributesForced = array();
+                $element->attributesRequired = [];
+                $element->attributesDefault = [];
+                $element->attributesForced = [];
 
-                foreach (array('#' => 'paddEmpty', '-' => 'removeEmpty') as $match => $means) {
+                foreach (['#' => 'paddEmpty', '-' => 'removeEmpty'] as $match => $means) {
                     $element->$means = ($prefix === $match);
                 }
 

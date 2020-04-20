@@ -12,7 +12,7 @@ class TestShortcode implements ShortcodeHandler, TestOnly
         return 'test';
     }
 
-    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
+    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = [])
     {
         return 'shortcode content';
     }

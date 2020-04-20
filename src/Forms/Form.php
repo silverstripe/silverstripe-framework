@@ -200,13 +200,13 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @var array
      */
-    protected $extraClasses = array();
+    protected $extraClasses = [];
 
     /**
      * @config
      * @var array $default_classes The default classes to apply to the Form
      */
-    private static $default_classes = array();
+    private static $default_classes = [];
 
     /**
      * @var string|null
@@ -219,23 +219,23 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @var array
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * @var array
      */
-    protected $validationExemptActions = array();
+    protected $validationExemptActions = [];
 
     /**
      * @config
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'AttributesHTML' => 'HTMLFragment',
         'FormAttributes' => 'HTMLFragment',
         'FormName' => 'Text',
         'Legend' => 'HTMLFragment',
-    );
+    ];
 
     /**
      * @var FormTemplateHelper
@@ -844,14 +844,14 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function getAttributes()
     {
-        $attrs = array(
+        $attrs = [
             'id' => $this->FormName(),
             'action' => $this->FormAction(),
             'method' => $this->FormMethod(),
             'enctype' => $this->getEncType(),
             'target' => $this->target,
             'class' => $this->extraClass(),
-        );
+        ];
 
         if ($this->validator && $this->validator->getErrors()) {
             if (!isset($attrs['class'])) {
@@ -895,7 +895,7 @@ class Form extends ViewableData implements HasRequestHandler
         }
 
         // Create markup
-        $parts = array();
+        $parts = [];
         foreach ($attrs as $name => $value) {
             if ($value === true) {
                 $value = $name;
@@ -1070,7 +1070,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function FormMethod()
     {
-        if (in_array($this->formMethod, array('GET','POST'))) {
+        if (in_array($this->formMethod, ['GET','POST'])) {
             return $this->formMethod;
         } else {
             return 'POST';
@@ -1555,7 +1555,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function getData()
     {
         $dataFields = $this->fields->dataFields();
-        $data = array();
+        $data = [];
 
         if ($dataFields) {
             /** @var FormField $field */
@@ -1645,9 +1645,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function renderWithoutActionButton($template)
     {
-        $custom = $this->customise(array(
+        $custom = $this->customise([
             "Actions" => "",
-        ));
+        ]);
 
         if (is_string($template)) {
             $template = SSViewer::create($template);

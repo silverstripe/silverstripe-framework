@@ -9,7 +9,7 @@ class ObjectD extends DataObject implements TestOnly
 {
     private static $table_name = 'DataQueryTest_D';
 
-    private static $has_one = array(
+    private static $has_one = [
         'Relation' => ObjectB::class,
-    );
+    ];
 }

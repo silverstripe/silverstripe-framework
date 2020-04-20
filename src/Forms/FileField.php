@@ -77,11 +77,11 @@ class FileField extends FormField implements FileHandleField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
-        ));
+        ]);
 
         return parent::Field($properties);
     }

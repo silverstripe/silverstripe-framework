@@ -75,9 +75,9 @@ class GridFieldDetailForm implements GridField_URLHandler
 
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'item/$ID' => 'handleItem'
-        );
+        ];
     }
 
     /**
@@ -165,7 +165,7 @@ class GridFieldDetailForm implements GridField_URLHandler
         /** @var GridFieldDetailForm_ItemRequest $handler */
         $handler = Injector::inst()->createWithArgs(
             $class,
-            array($gridField, $this, $record, $requestHandler, $this->name)
+            [$gridField, $this, $record, $requestHandler, $this->name]
         );
         if ($template = $this->getTemplate()) {
             $handler->setTemplate($template);

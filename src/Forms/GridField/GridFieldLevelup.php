@@ -34,7 +34,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
     /**
      * @var array Extra attributes for the link
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      *
@@ -80,15 +80,15 @@ class GridFieldLevelup implements GridField_HTMLProvider
         }
 
         // Attributes
-        $attrs = array_merge($this->attributes, array(
+        $attrs = array_merge($this->attributes, [
             'href' => sprintf($this->linkSpec, $parentID),
             'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
-        ));
+        ]);
         $linkTag = HTML::createTag('a', $attrs);
 
-        $forTemplate = new ArrayData(array(
+        $forTemplate = new ArrayData([
             'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
-        ));
+        ]);
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return [

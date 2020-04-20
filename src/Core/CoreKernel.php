@@ -104,7 +104,7 @@ class CoreKernel implements Kernel
         // Initialise the dependency injector as soon as possible, as it is
         // subsequently used by some of the following code
         $injectorLoader = InjectorLoader::inst();
-        $injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
+        $injector = new Injector(['locator' => SilverStripeServiceConfigurationLocator::class]);
         $injectorLoader->pushManifest($injector);
         $this->setInjectorLoader($injectorLoader);
 

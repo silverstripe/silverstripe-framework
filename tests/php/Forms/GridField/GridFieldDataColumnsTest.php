@@ -32,7 +32,7 @@ class GridFieldDataColumnsTest extends SapphireTest
         /**
  * @skipUpgrade
 */
-        $expected = array('Email' => 'Email');
+        $expected = ['Email' => 'Email'];
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields($expected);
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
@@ -59,9 +59,9 @@ class GridFieldDataColumnsTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
-        $this->assertEquals(array(), $columns->getFieldCasting());
-        $columns->setFieldCasting(array("MyShortText"=>"Text->FirstSentence"));
-        $this->assertEquals(array("MyShortText"=>"Text->FirstSentence"), $columns->getFieldCasting());
+        $this->assertEquals([], $columns->getFieldCasting());
+        $columns->setFieldCasting(["MyShortText"=>"Text->FirstSentence"]);
+        $this->assertEquals(["MyShortText"=>"Text->FirstSentence"], $columns->getFieldCasting());
     }
 
     /**
@@ -72,10 +72,10 @@ class GridFieldDataColumnsTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
-        $this->assertEquals(array(), $columns->getFieldFormatting());
-        $columns->setFieldFormatting(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'));
+        $this->assertEquals([], $columns->getFieldFormatting());
+        $columns->setFieldFormatting(["myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>']);
         $this->assertEquals(
-            array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'),
+            ["myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'],
             $columns->getFieldFormatting()
         );
     }

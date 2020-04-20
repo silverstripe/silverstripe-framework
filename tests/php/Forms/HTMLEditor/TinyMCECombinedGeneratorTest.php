@@ -43,7 +43,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $c->setOption('language', 'en');
         $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(
-            array(
+            [
                 'plugin1' => 'mycode/plugin1.js', //
                 'plugin2' => '/anotherbase/mycode/plugin2.js',
                 'plugin3' => 'https://www.google.com/mycode/plugin3.js',
@@ -52,7 +52,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
                 'plugin6' => '/basedir/mycode/plugin6.js',
                 'plugin7' => '/basedir/mycode/plugin7.js',
                 'plugin8' => $module->getResource('plugin8.js'),
-            )
+            ]
         );
         HTMLEditorConfig::set_config('testconfig', $c);
 

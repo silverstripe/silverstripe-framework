@@ -15,9 +15,9 @@ use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 class DatabaseTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         MyObject::class,
-    );
+    ];
 
     protected $usesDatabase = true;
 

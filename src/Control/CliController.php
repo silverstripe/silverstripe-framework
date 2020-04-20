@@ -17,9 +17,9 @@ use SilverStripe\Security\Security;
 abstract class CliController extends Controller
 {
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index'
-    );
+    ];
 
     protected function init()
     {

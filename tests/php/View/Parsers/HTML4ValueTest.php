@@ -42,11 +42,11 @@ class HTML4ValueTest extends SapphireTest
     {
         $value = new HTML4Value();
 
-        $invalid = array(
+        $invalid = [
             '<p><div><a href="test-link"></p></div>',
             '<html><div><a href="test-link"></a></a></html_>',
             '""\'\'\'"""\'""<<<>/</<htmlbody><a href="test-link"<<>'
-        );
+        ];
 
         foreach ($invalid as $input) {
             $value->setContent($input);

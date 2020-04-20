@@ -27,11 +27,11 @@ class RSSFeed extends ViewableData
      * Casting information for this object's methods.
      * Let's us use $Title.XML in templates
      */
-    private static $casting = array(
+    private static $casting = [
         "Title" => "Varchar",
         "Description" => "Varchar",
         "Link" => "Varchar",
-    );
+    ];
 
     /**
      * Holds the feed entries

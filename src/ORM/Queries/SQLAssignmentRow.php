@@ -26,14 +26,14 @@ class SQLAssignmentRow
      *
      * @var array
      */
-    protected $assignments = array();
+    protected $assignments = [];
 
     /**
      * Instantiate a new SQLAssignmentRow object with the given values
      *
      * @param array $values
      */
-    function __construct(array $values = array())
+    function __construct(array $values = [])
     {
         $this->setAssignments($values);
     }
@@ -52,7 +52,7 @@ class SQLAssignmentRow
         // Assume string values (or values saved as customised array objects)
         // represent simple assignment
         if (!is_array($value) || isset($value['type'])) {
-            return array('?' => array($value));
+            return ['?' => [$value]];
         }
 
         // If given as array then extract and check both the SQL as well as the parameter(s)
@@ -65,12 +65,12 @@ class SQLAssignmentRow
                     continue;
                 }
                 if (!is_array($parameters)) {
-                    $parameters = array($parameters);
+                    $parameters = [$parameters];
                 }
 
                 // @todo Some input sanitisation checking the key contains the
                 // correct number of ? placeholders as the number of parameters
-                return array($sql => $parameters);
+                return [$sql => $parameters];
             }
         }
 
@@ -91,7 +91,7 @@ class SQLAssignmentRow
      */
     protected function normaliseAssignments(array $assignments)
     {
-        $normalised = array();
+        $normalised = [];
         foreach ($assignments as $field => $value) {
             $normalised[$field] = $this->parseAssignment($value);
         }
@@ -190,7 +190,7 @@ class SQLAssignmentRow
      */
     public function assign($field, $value)
     {
-        return $this->addAssignments(array($field => $value));
+        return $this->addAssignments([$field => $value]);
     }
 
     /**
@@ -203,7 +203,7 @@ class SQLAssignmentRow
      */
     public function assignSQL($field, $sql)
     {
-        return $this->assign($field, array($sql => array()));
+        return $this->assign($field, [$sql => []]);
     }
 
     /**
@@ -233,7 +233,7 @@ class SQLAssignmentRow
      */
     public function clear()
     {
-        $this->assignments = array();
+        $this->assignments = [];
         return $this;
     }
 }

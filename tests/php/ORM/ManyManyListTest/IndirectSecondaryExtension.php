@@ -14,11 +14,11 @@ use SilverStripe\ORM\ManyManyList;
  */
 class IndirectSecondaryExtension extends DataExtension implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)'
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Primary' => IndirectPrimary::class
-    );
+    ];
 }

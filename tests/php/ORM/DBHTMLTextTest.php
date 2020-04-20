@@ -26,7 +26,7 @@ class DBHTMLTextTest extends SapphireTest
 
         // Set test handler
         ShortcodeParser::get('htmltest')
-            ->register('test_shortcode', array(TestShortcode::class, 'handle_shortcode'));
+            ->register('test_shortcode', [TestShortcode::class, 'handle_shortcode']);
         ShortcodeParser::set_active('htmltest');
     }
 
@@ -181,11 +181,11 @@ class DBHTMLTextTest extends SapphireTest
 
     public function testSummaryEndings()
     {
-        $cases = array(
+        $cases = [
             '...',
             ' -> more',
             ''
-        );
+        ];
 
         $orig = '<p>Cut it off, cut it off</p>';
         $match = 'Cut it off, cut';
@@ -495,9 +495,9 @@ class DBHTMLTextTest extends SapphireTest
         $this->assertEquals('<p>replaced</p>', (string)$field);
 
         $field->setOptions(
-            array(
+            [
             'shortcodes' => false,
-            )
+            ]
         );
 
         $this->assertEquals('<p>[shortcode]</p>', $field->RAW());
@@ -613,7 +613,7 @@ class DBHTMLTextTest extends SapphireTest
     {
         // Install a UTF-8 locale
         $this->previousLocaleSetting = setlocale(LC_CTYPE, 0);
-        $locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+        $locales = ['en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8'];
         $localeInstalled = false;
         foreach ($locales as $locale) {
             if ($localeInstalled = setlocale(LC_CTYPE, $locale)) {

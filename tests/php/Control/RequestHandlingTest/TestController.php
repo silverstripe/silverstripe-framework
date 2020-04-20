@@ -18,7 +18,7 @@ class TestController extends Controller implements TestOnly
 {
     private static $url_segment = 'TestController';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'method',
         'legacymethod',
         'virtualfile',
@@ -26,17 +26,17 @@ class TestController extends Controller implements TestOnly
         'throwexception',
         'throwresponseexception',
         'throwhttperror',
-    );
+    ];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         // The double-slash is need here to ensure that
         '$Action//$ID/$OtherID' => "handleAction",
-    );
+    ];
 
-    private static $extensions = array(
+    private static $extensions = [
         ControllerExtension::class,
         AllowedControllerExtension::class,
-    );
+    ];
 
     public function __construct()
     {

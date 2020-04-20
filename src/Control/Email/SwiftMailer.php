@@ -22,9 +22,9 @@ class SwiftMailer implements Mailer
      * @var array
      * @config
      */
-    private static $swift_plugins = array(
+    private static $swift_plugins = [
         SwiftPlugin::class,
-    );
+    ];
 
     /**
      * @var Swift_Mailer
@@ -38,7 +38,7 @@ class SwiftMailer implements Mailer
     public function send($message)
     {
         $swiftMessage = $message->getSwiftMessage();
-        $failedRecipients = array();
+        $failedRecipients = [];
         $result = $this->sendSwift($swiftMessage, $failedRecipients);
         $message->setFailedRecipients($failedRecipients);
 

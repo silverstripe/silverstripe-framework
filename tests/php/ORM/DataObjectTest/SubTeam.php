@@ -8,21 +8,21 @@ class SubTeam extends Team implements TestOnly
 {
     private static $table_name = 'DataObjectTest_SubTeam';
 
-    private static $db = array(
+    private static $db = [
         'SubclassDatabaseField' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "ParentTeam" => Team::class,
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'FormerPlayers' => Player::class
-    );
+    ];
 
-    private static $many_many_extraFields = array(
-        'FormerPlayers' => array(
+    private static $many_many_extraFields = [
+        'FormerPlayers' => [
             'Position' => 'Varchar(100)'
-        )
-    );
+        ]
+    ];
 }

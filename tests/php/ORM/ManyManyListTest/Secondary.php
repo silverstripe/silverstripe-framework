@@ -15,7 +15,7 @@ class Secondary extends DataObject implements TestOnly
 
     // Possibly not required, but want to simulate a real test failure case where
     // database tables are present.
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)'
-    );
+    ];
 }

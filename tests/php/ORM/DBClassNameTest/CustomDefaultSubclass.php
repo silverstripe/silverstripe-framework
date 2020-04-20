@@ -8,7 +8,7 @@ class CustomDefaultSubclass extends CustomDefault implements TestOnly
 {
     private static $table_name = 'DBClassNameTest_CustomDefaultSubclass';
 
-    private static $db = array(
+    private static $db = [
         'Content' => 'HTMLText'
-    );
+    ];
 }

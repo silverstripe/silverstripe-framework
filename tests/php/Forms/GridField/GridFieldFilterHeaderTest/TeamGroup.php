@@ -8,7 +8,7 @@ class TeamGroup extends Team implements TestOnly
 {
     private static $table_name = 'GridFieldFilterHeaderTest_TeamGroup';
 
-    private static $db = array(
+    private static $db = [
         'GroupName' => 'Varchar'
-    );
+    ];
 }

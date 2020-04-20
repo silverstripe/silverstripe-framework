@@ -32,7 +32,7 @@ class GridField_FormAction extends FormAction
     /**
      * @var array
      */
-    protected $args = array();
+    protected $args = [];
 
     /**
      * @var string
@@ -69,7 +69,7 @@ class GridField_FormAction extends FormAction
      */
     public function nameEncode($value)
     {
-        return (string)preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $value);
+        return (string)preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value);
     }
 
     /**
@@ -88,11 +88,11 @@ class GridField_FormAction extends FormAction
     public function getAttributes()
     {
         // Determine the state that goes with this action
-        $state = array(
+        $state = [
             'grid' => $this->getNameFromParent(),
             'actionName' => $this->actionName,
             'args' => $this->args,
-        );
+        ];
 
         // Generate a key and attach it to the action name
         $key = static::STATE_KEY_PREFIX . substr(md5(serialize($state)), 0, 8);
@@ -100,11 +100,11 @@ class GridField_FormAction extends FormAction
         $name = 'action_gridFieldAlterAction?StateID=' . $key;
 
         // Define attributes
-        $attributes = array(
+        $attributes = [
             'name' => $name,
             'data-url' => $this->gridField->Link(),
             'type' => "button",
-        );
+        ];
 
         // Create a "store" for the "state" of this action
         /** @var StateStore $store */
@@ -127,7 +127,7 @@ class GridField_FormAction extends FormAction
     protected function getNameFromParent()
     {
         $base = $this->gridField;
-        $name = array();
+        $name = [];
 
         do {
             array_unshift($name, $base->getName());

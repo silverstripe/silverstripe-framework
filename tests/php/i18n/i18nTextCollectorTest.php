@@ -60,13 +60,13 @@ _t(
 "Line 5");
 PHP;
         $this->assertEquals(
-            array(
+            [
                 'Test.CONCATENATED' => [
                     'default' => "Line 1 and Line '2' and Line \"3\"",
                     'comment' => 'Comment'
                 ],
                 'Test.CONCATENATED2' => "Line \"4\" and Line 5"
-            ),
+            ],
             $c->collectFromCode($php, null, $module)
         );
     }
@@ -696,7 +696,7 @@ PHP;
         $conflictsA = $collector->getConflicts_Test($data2);
         sort($conflictsA);
         $this->assertEquals(
-            array('i18ntestmodule.THREE', 'i18ntestmodule.TWO'),
+            ['i18ntestmodule.THREE', 'i18ntestmodule.TWO'],
             $conflictsA
         );
 
@@ -704,7 +704,7 @@ PHP;
         unset($data2['module3']);
         $conflictsB = $collector->getConflicts_Test($data2);
         $this->assertEquals(
-            array('i18ntestmodule.THREE'),
+            ['i18ntestmodule.THREE'],
             $conflictsB
         );
     }

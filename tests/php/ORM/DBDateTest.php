@@ -210,7 +210,7 @@ class DBDateTest extends SapphireTest
         $date = DBField::create_field('Date', false);
         $this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
 
-        $date = DBField::create_field('Date', array());
+        $date = DBField::create_field('Date', []);
         $this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
 
         $date = DBField::create_field('Date', '0');

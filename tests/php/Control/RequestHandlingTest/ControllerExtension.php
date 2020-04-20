@@ -15,7 +15,7 @@ class ControllerExtension extends Extension implements TestOnly
 
     public static $called_404_error = false;
 
-    private static $allowed_actions = array('extendedMethod');
+    private static $allowed_actions = ['extendedMethod'];
 
     public function extendedMethod()
     {

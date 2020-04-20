@@ -10,11 +10,11 @@ class Castable extends ViewableData implements TestOnly
 
     private static $default_cast = Caster::class;
 
-    private static $casting = array(
+    private static $casting = [
         'alwaysCasted' => RequiresCasting::class,
         'castedUnsafeXML' => UnescapedCaster::class,
         'test' => 'Text',
-    );
+    ];
 
     public $test = 'test';
 

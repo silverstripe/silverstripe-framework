@@ -325,7 +325,7 @@ class DBTextTest extends SapphireTest
     {
         // Install a UTF-8 locale
         $this->previousLocaleSetting = setlocale(LC_CTYPE, 0);
-        $locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+        $locales = ['en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8'];
         $localeInstalled = false;
         foreach ($locales as $locale) {
             if ($localeInstalled = setlocale(LC_CTYPE, $locale)) {

@@ -47,7 +47,7 @@ class DefaultCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $args = array())
+    public function create($service, array $args = [])
     {
         // merge args with default
         $args = array_merge($this->args, $args);

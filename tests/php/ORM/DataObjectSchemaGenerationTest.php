@@ -14,11 +14,11 @@ use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
 
 class DataObjectSchemaGenerationTest extends SapphireTest
 {
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestObject::class,
         TestIndexObject::class,
         SortedObject::class,
-    );
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -104,9 +104,9 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Let's insert a new field here
         TestObject::config()->update(
             'db',
-            array(
+            [
             'SecretField' => 'Varchar(100)'
-            )
+            ]
         );
 
         // Verify that the above extra field triggered a schema update

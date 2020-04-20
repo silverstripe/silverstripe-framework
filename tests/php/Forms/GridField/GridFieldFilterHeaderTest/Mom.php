@@ -12,7 +12,7 @@ class Mom extends Cheerleader implements TestOnly
 
     private static $table_name = 'GridFieldFilterHeaderTest_Mom';
 
-    private static $db = array(
+    private static $db = [
         'NumberOfCookiesBaked' => 'Int'
-    );
+    ];
 }

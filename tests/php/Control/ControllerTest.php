@@ -417,7 +417,7 @@ class ControllerTest extends FunctionalTest
         $response = $this->get(
             'TestController/redirectbacktest',
             null,
-            array('Referer' => $internalRelativeUrl)
+            ['Referer' => $internalRelativeUrl]
         );
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
@@ -429,7 +429,7 @@ class ControllerTest extends FunctionalTest
         $response = $this->get(
             'TestController/redirectbacktest',
             null,
-            array('Referer' => $internalAbsoluteUrl)
+            ['Referer' => $internalAbsoluteUrl]
         );
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
@@ -442,7 +442,7 @@ class ControllerTest extends FunctionalTest
         $response = $this->get(
             'TestController/redirectbacktest',
             null,
-            array('Referer' => $externalAbsoluteUrl)
+            ['Referer' => $externalAbsoluteUrl]
         );
         $this->assertEquals(
             Director::absoluteBaseURL(),

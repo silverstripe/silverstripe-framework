@@ -18,10 +18,10 @@ class OptionsetFieldTest extends SapphireTest
         $f = new OptionsetField(
             'Test',
             false,
-            array(0 => 'Zero', 1 => 'One')
+            [0 => 'Zero', 1 => 'One']
         );
 
-        $f->setDisabledItems(array(0));
+        $f->setDisabledItems([0]);
         $p = new CSSContentParser($f->Field());
         $item0 = $p->getBySelector('#Test_0');
         $item1 = $p->getBySelector('#Test_1');
@@ -43,11 +43,11 @@ class OptionsetFieldTest extends SapphireTest
         $field = OptionsetField::create(
             'Test',
             'Testing',
-            array(
+            [
             "One" => "One",
             "Two" => "Two",
             "Five" => "Five"
-            )
+            ]
         );
         $validator = new RequiredFields('Test');
         $form = new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
@@ -67,14 +67,14 @@ class OptionsetFieldTest extends SapphireTest
         $this->assertFalse($form->validationResult()->isValid());
 
         //disabled items shouldn't validate
-        $field->setDisabledItems(array('Five'));
+        $field->setDisabledItems(['Five']);
         $field->setValue('Five');
         $this->assertFalse($field->validate($validator));
     }
 
     public function testReadonlyField()
     {
-        $sourceArray = array(0 => 'No', 1 => 'Yes');
+        $sourceArray = [0 => 'No', 1 => 'Yes'];
         $field = new OptionsetField('FeelingOk', 'are you feeling ok?', $sourceArray, 1);
         $field->setEmptyString('(Select one)');
         $field->setValue(1);
@@ -88,11 +88,11 @@ class OptionsetFieldTest extends SapphireTest
         $field1 = new OptionsetField(
             'Options',
             'Options',
-            array(
+            [
             1 => 'One',
             2 => 'Two & Three',
             3 => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six')
-            )
+            ]
         );
         $fieldHTML = (string)$field1->Field();
         $this->assertContains('One', $fieldHTML);

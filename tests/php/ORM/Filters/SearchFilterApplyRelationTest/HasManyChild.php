@@ -9,7 +9,7 @@ class HasManyChild extends HasManyParent implements TestOnly
     private static $table_name = 'SearchFilterApplyRelationTest_HasManyChild';
 
     // This is to create an separate Table only.
-    private static $db = array(
+    private static $db = [
         "ChildField" => "Varchar"
-    );
+    ];
 }

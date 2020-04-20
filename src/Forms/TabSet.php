@@ -129,7 +129,7 @@ class TabSet extends CompositeField
      * @param array $properties
      * @return DBHTMLText|string
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         $obj = $properties ? $this->customise($properties) : $this;
 
@@ -180,10 +180,10 @@ class TabSet extends CompositeField
     {
         return array_merge(
             $this->attributes,
-            array(
+            [
                 'id' => $this->ID(),
                 'class' => $this->extraClass()
-            )
+            ]
         );
     }
 

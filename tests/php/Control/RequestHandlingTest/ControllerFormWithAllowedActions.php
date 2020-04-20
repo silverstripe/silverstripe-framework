@@ -11,7 +11,7 @@ class ControllerFormWithAllowedActions extends Controller implements TestOnly
 {
     private static $url_segment = 'ControllerFormWithAllowedActions';
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     /**
      * @skipUpgrade

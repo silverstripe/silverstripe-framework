@@ -152,7 +152,7 @@ class DB
         if ($connection) {
             return $connection->getQueryBuilder()->buildSQL($expression, $parameters);
         } else {
-            $parameters = array();
+            $parameters = [];
             return null;
         }
     }

@@ -78,7 +78,7 @@ class TempFolder
         $tempPath = Path::join(
             sys_get_temp_dir(),
             'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION) .
-            str_replace(array(' ', '/', ':', '\\'), '-', $base)
+            str_replace([' ', '/', ':', '\\'], '-', $base)
         );
         if (!@file_exists($tempPath)) {
             $oldUMask = umask(0);

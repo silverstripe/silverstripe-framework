@@ -9,9 +9,9 @@ use SilverStripe\ORM\DataExtension;
 
 class ArticleExtension extends DataExtension implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'ExtendedField' => 'Varchar'
-    );
+    ];
 
     public function updateCMSFields(FieldList $fields)
     {

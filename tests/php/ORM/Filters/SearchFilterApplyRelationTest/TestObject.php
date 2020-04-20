@@ -9,15 +9,15 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchFilterApplyRelationTest_DO';
 
-    private static $has_one = array(
+    private static $has_one = [
         'SearchFilterApplyRelationTest_HasOneGrandChild' => HasOneGrandChild::class
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'SearchFilterApplyRelationTest_HasManyGrandChildren' => HasManyGrandChild::class
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'ManyManyGrandChildren' => ManyManyGrandChild::class
-    );
+    ];
 }

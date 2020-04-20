@@ -12,7 +12,7 @@ class SelectionGroupTest extends SapphireTest
 {
     public function testFieldHolder()
     {
-        $items = array(
+        $items = [
             new SelectionGroup_Item(
                 'one',
                 new LiteralField('one', 'one view'),
@@ -23,7 +23,7 @@ class SelectionGroupTest extends SapphireTest
                 new LiteralField('two', 'two view'),
                 'two title'
             ),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');
@@ -42,7 +42,7 @@ class SelectionGroupTest extends SapphireTest
 
     public function testSelectedFieldHolder()
     {
-        $items = array(
+        $items = [
             new SelectionGroup_Item(
                 'one',
                 new LiteralField('one', 'one view'),
@@ -53,7 +53,7 @@ class SelectionGroupTest extends SapphireTest
                 new LiteralField('two', 'two view'),
                 'two title'
             ),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $field->setValue('two');
 
@@ -70,10 +70,10 @@ class SelectionGroupTest extends SapphireTest
 
     public function testLegacyItemsFieldHolder()
     {
-        $items = array(
+        $items = [
             'one' => new LiteralField('one', 'one view'),
             'two' => new LiteralField('two', 'two view'),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');
@@ -89,10 +89,10 @@ class SelectionGroupTest extends SapphireTest
 
     public function testLegacyItemsFieldHolderWithTitle()
     {
-        $items = array(
+        $items = [
             'one//one title' => new LiteralField('one', 'one view'),
             'two//two title' => new LiteralField('two', 'two view'),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');

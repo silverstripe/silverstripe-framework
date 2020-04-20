@@ -9,11 +9,11 @@ class ManyManyListExtensionTest extends SapphireTest
 
     protected static $fixture_file = 'ManyManyListExtensionTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         ManyManyListTest\IndirectPrimary::class,
         ManyManyListTest\Secondary::class,
         ManyManyListTest\SecondarySub::class
-    );
+    ];
 
     // Test that when one side of a many-many relationship is added by extension, both
     // sides still see the extra fields.

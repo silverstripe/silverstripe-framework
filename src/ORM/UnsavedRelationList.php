@@ -46,7 +46,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @var array
      */
-    protected $extraFields = array();
+    protected $extraFields = [];
 
     /**
      * Create a new UnsavedRelationList
@@ -136,7 +136,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function toArray()
     {
-        $items = array();
+        $items = [];
         foreach ($this->items as $key => $item) {
             if (is_numeric($item)) {
                 $item = DataObject::get_by_id($this->dataClass, $item);
@@ -168,8 +168,8 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function removeAll()
     {
-        $this->items = array();
-        $this->extraFields = array();
+        $this->items = [];
+        $this->extraFields = [];
     }
 
     /**

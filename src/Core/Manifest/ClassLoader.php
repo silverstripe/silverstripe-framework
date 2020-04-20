@@ -23,7 +23,7 @@ class ClassLoader
      *
      * @var array
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return ClassLoader
@@ -61,7 +61,7 @@ class ClassLoader
      */
     public function pushManifest(ClassManifest $manifest, $exclusive = true)
     {
-        $this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
+        $this->manifests[] = ['exclusive' => $exclusive, 'instance' => $manifest];
     }
 
     /**
@@ -75,7 +75,7 @@ class ClassLoader
 
     public function registerAutoloader()
     {
-        spl_autoload_register(array($this, 'loadClass'));
+        spl_autoload_register([$this, 'loadClass']);
     }
 
     /**

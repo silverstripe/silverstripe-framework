@@ -4,10 +4,10 @@ namespace SilverStripe\Core\Tests\ObjectTest;
 
 class ExtendTest extends BaseObject
 {
-    private static $extensions = array(
+    private static $extensions = [
         ExtendTest1::class,
         ExtendTest2::class,
-    );
+    ];
 
     public function extendableMethod(&$argument = null, &$argument2 = null)
     {

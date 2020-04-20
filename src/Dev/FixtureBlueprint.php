@@ -22,7 +22,7 @@ class FixtureBlueprint
     /**
      * @var array Map of field names to values. Supersedes {@link DataObject::$defaults}.
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * @var String Arbitrary name by which this fixture type can be referenced.
@@ -37,22 +37,22 @@ class FixtureBlueprint
     /**
      * @var array
      */
-    protected $callbacks = array(
-        'beforeCreate' => array(),
-        'afterCreate' => array(),
-    );
+    protected $callbacks = [
+        'beforeCreate' => [],
+        'afterCreate' => [],
+    ];
 
     /** @config */
-    private static $dependencies = array(
+    private static $dependencies = [
         'factory' => '%$' . FixtureFactory::class,
-    );
+    ];
 
     /**
      * @param String $name
      * @param String $class Defaults to $name
      * @param array $defaults
      */
-    public function __construct($name, $class = null, $defaults = array())
+    public function __construct($name, $class = null, $defaults = [])
     {
         if (!$class) {
             $class = $name;
@@ -89,7 +89,7 @@ class FixtureBlueprint
         Config::modify()->set(DataObject::class, 'validation_enabled', false);
         Config::modify()->set(File::class, 'update_filesystem', false);
 
-        $this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
+        $this->invokeCallbacks('beforeCreate', [$identifier, &$data, &$fixtures]);
 
         try {
             $class = $this->class;
@@ -147,7 +147,7 @@ class FixtureBlueprint
 
             // Save to fixture before relationship processing in case of reflexive relationships
             if (!isset($fixtures[$class])) {
-                $fixtures[$class] = array();
+                $fixtures[$class] = [];
             }
             $fixtures[$class][$identifier] = $obj->ID;
 
@@ -242,7 +242,7 @@ class FixtureBlueprint
         }
 
         Config::unnest();
-        $this->invokeCallbacks('afterCreate', array($obj, $identifier, &$data, &$fixtures));
+        $this->invokeCallbacks('afterCreate', [$obj, $identifier, &$data, &$fixtures]);
 
         return $obj;
     }
@@ -305,7 +305,7 @@ class FixtureBlueprint
         return $this;
     }
 
-    protected function invokeCallbacks($type, $args = array())
+    protected function invokeCallbacks($type, $args = [])
     {
         foreach ($this->callbacks[$type] as $callback) {
             call_user_func_array($callback, $args);
@@ -353,14 +353,14 @@ class FixtureBlueprint
         $table = DataObject::getSchema()->tableForField($class, $fieldName);
         $value = $this->parseValue($value, $fixtures);
 
-        DB::manipulate(array(
-            $table => array(
+        DB::manipulate([
+            $table => [
                 "command" => "update",
                 "id" => $obj->ID,
                 "class" => $class,
-                "fields" => array($fieldName => $value),
-            )
-        ));
+                "fields" => [$fieldName => $value],
+            ]
+        ]);
         $obj->$fieldName = $value;
     }
 }

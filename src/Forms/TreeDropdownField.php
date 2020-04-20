@@ -60,13 +60,13 @@ class TreeDropdownField extends FormField
     /** @skipUpgrade */
     protected $schemaComponent = 'TreeDropdownField';
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action!/$ID' => '$Action'
-    );
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'tree'
-    );
+    ];
 
     /**
      * @config
@@ -425,7 +425,7 @@ class TreeDropdownField extends FormField
 
     public function extraClass()
     {
-        return implode(' ', array(parent::extraClass(), ($this->getShowSearch() ? "searchable" : null)));
+        return implode(' ', [parent::extraClass(), ($this->getShowSearch() ? "searchable" : null)]);
     }
 
     /**
@@ -602,12 +602,12 @@ class TreeDropdownField extends FormField
      */
     public function getAttributes()
     {
-        $attributes = array(
+        $attributes = [
             'class' => $this->extraClass(),
             'id' => $this->ID(),
             'data-schema' => json_encode($this->getSchemaData()),
             'data-state' => json_encode($this->getSchemaState()),
-        );
+        ];
 
         $attributes = array_merge($attributes, $this->attributes);
 
@@ -759,7 +759,7 @@ class TreeDropdownField extends FormField
         while (!empty($parents)) {
             $items = DataObject::get($sourceObject)
                 ->filter("ID", array_keys($parents));
-            $parents = array();
+            $parents = [];
 
             foreach ($items as $item) {
                 if ($item->ParentID) {
@@ -784,7 +784,7 @@ class TreeDropdownField extends FormField
         }
 
         $sourceObject = $this->getSourceObject();
-        $filters = array();
+        $filters = [];
         $sourceObjectInstance = DataObject::singleton($sourceObject);
         $candidates = array_unique([
             $this->getLabelField(),

@@ -42,10 +42,10 @@ class FormTest extends FunctionalTest
 
     protected static $fixture_file = 'FormTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Player::class,
         Team::class,
-    );
+    ];
 
     protected static $extra_controllers = [
         TestController::class,
@@ -94,22 +94,22 @@ class FormTest extends FunctionalTest
         );
 
         // url would be ?key1=val1&namespace[key2]=val2&namespace[key3][key4]=val4&othernamespace[key5][key6][key7]=val7
-        $requestData = array(
+        $requestData = [
             'key1' => 'val1',
-            'namespace' => array(
+            'namespace' => [
                 'key2' => 'val2',
-                'key3' => array(
+                'key3' => [
                     'key4' => 'val4',
-                )
-            ),
-            'othernamespace' => array(
-                'key5' => array(
-                    'key6' =>array(
+                ]
+            ],
+            'othernamespace' => [
+                'key5' => [
+                    'key6' =>[
                         'key7' => 'val7'
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
 
         $form->loadDataFrom($requestData);
 
@@ -127,12 +127,12 @@ class FormTest extends FunctionalTest
         // Submitting a value for a readonly field should be ignored
         $response = $this->post(
             'FormTest_Controller/Form',
-            array(
+            [
                 'Email' => 'invalid',
                 'Number' => '888',
                 'ReadonlyField' => '<script>alert("hacxzored")</script>'
                 // leaving out "Required" field
-            )
+            ]
         );
 
         // Number field updates its value
@@ -160,18 +160,18 @@ class FormTest extends FunctionalTest
             new FieldList()
         );
         $form->loadDataFrom(
-            array(
+            [
             'key1' => 'save',
             'key2' => 'dontsave',
             'key2_unchanged' => '1'
-            )
+            ]
         );
         $this->assertEquals(
             $form->getData(),
-            array(
+            [
                 'key1' => 'save',
                 'key2' => null,
-            ),
+            ],
             'loadDataFrom() doesnt save a field if a matching "<fieldname>_unchanged" flag is set'
         );
     }
@@ -195,12 +195,12 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($captainWithDetails);
         $this->assertEquals(
             $form->getData(),
-            array(
+            [
                 'Name' => 'Captain Details',
                 'Biography' => 'Bio 1',
                 'Birthday' => '1982-01-01',
                 'BirthdayYear' => '1982',
-            ),
+            ],
             'LoadDataFrom() loads simple fields and dynamic getters'
         );
 
@@ -208,12 +208,12 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($captainNoDetails);
         $this->assertEquals(
             $form->getData(),
-            array(
+            [
                 'Name' => 'Captain No Details',
                 'Biography' => null,
                 'Birthday' => null,
                 'BirthdayYear' => 0,
-            ),
+            ],
             'LoadNonBlankDataFrom() loads only fields with values, and doesnt overwrite existing values'
         );
     }
@@ -240,13 +240,13 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($captainWithDetails);
         $this->assertEquals(
             $form->getData(),
-            array(
+            [
                 'Name' => 'Captain Details',
                 'Biography' => 'Bio 1',
                 'Birthday' => '1982-01-01',
                 'BirthdayYear' => '1982',
                 'UnrelatedFormField' => 'random value',
-            ),
+            ],
             'LoadDataFrom() doesnt overwrite fields not found in the object'
         );
 
@@ -256,13 +256,13 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($team2, Form::MERGE_CLEAR_MISSING);
         $this->assertEquals(
             $form->getData(),
-            array(
+            [
                 'Name' => 'Team 2',
                 'Biography' => '',
                 'Birthday' => '',
                 'BirthdayYear' => 0,
                 'UnrelatedFormField' => null,
-            ),
+            ],
             'LoadDataFrom() overwrites fields not found in the object with $clearMissingFields=true'
         );
     }
@@ -319,13 +319,13 @@ class FormTest extends FunctionalTest
             new FieldList()
         );
         $form->loadDataFrom(
-            array(
-            'Players' => array(
+            [
+            'Players' => [
                     14,
                     18,
                     22
-                ),
-            )
+                ],
+            ]
         );
         $form->saveInto($object);
         $playersIds = $object->Players()->getIDList();
@@ -333,7 +333,7 @@ class FormTest extends FunctionalTest
         $this->assertTrue($form->validationResult()->isValid());
         $this->assertEquals(
             $playersIds,
-            array(),
+            [],
             'saveInto() should not save into the DataObject for the LookupField'
         );
     }
@@ -355,14 +355,14 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($captainNoDetails, Form::MERGE_IGNORE_FALSEISH);
         $this->assertEquals(
             $form->getData(),
-            array('Biography' => 'Custom Default'),
+            ['Biography' => 'Custom Default'],
             'LoadDataFrom() doesn\'t overwrite fields when MERGE_IGNORE_FALSEISH set and values are false-ish'
         );
 
         $form->loadDataFrom($captainWithDetails, Form::MERGE_IGNORE_FALSEISH);
         $this->assertEquals(
             $form->getData(),
-            array('Biography' => 'Bio 1'),
+            ['Biography' => 'Bio 1'],
             'LoadDataFrom() does overwrite fields when MERGE_IGNORE_FALSEISH set and values arent false-ish'
         );
     }
@@ -407,15 +407,15 @@ class FormTest extends FunctionalTest
         $this->submitForm(
             'Form_Form',
             'action_doSubmit',
-            array(
+            [
                 'Email' => 'test@test.com'
-            )
+            ]
         );
 
         // Firstly, assert that required fields still work when not using an exempt action
         $this->assertPartialMatchBySelector(
             '#Form_Form_SomeRequiredField_Holder .required',
-            array('"Some required field" is required'),
+            ['"Some required field" is required'],
             'Required fields show a notification on field when left blank'
         );
 
@@ -423,9 +423,9 @@ class FormTest extends FunctionalTest
         $this->submitForm(
             'Form_Form',
             'action_doSubmitValidationExempt',
-            array(
+            [
                 'Email' => 'test@test.com'
-            )
+            ]
         );
 
         // The required message should be empty if validation was skipped
@@ -435,9 +435,9 @@ class FormTest extends FunctionalTest
         // And the session message should show up is submitted successfully
         $this->assertPartialMatchBySelector(
             '#Form_Form_error',
-            array(
+            [
                 'Validation skipped'
-            ),
+            ],
             'Form->sessionMessage() shows up after reloading the form'
         );
 
@@ -445,9 +445,9 @@ class FormTest extends FunctionalTest
         $this->submitForm(
             'Form_Form',
             'action_doSubmitActionExempt',
-            array(
+            [
                 'Email' => 'test@test.com'
-            )
+            ]
         );
 
         // The required message should be empty if validation was skipped
@@ -457,9 +457,9 @@ class FormTest extends FunctionalTest
         // And the session message should show up is submitted successfully
         $this->assertPartialMatchBySelector(
             '#Form_Form_error',
-            array(
+            [
                 'Validation bypassed!'
-            ),
+            ],
             'Form->sessionMessage() shows up after reloading the form'
         );
     }
@@ -470,25 +470,25 @@ class FormTest extends FunctionalTest
 
         $response = $this->post(
             'FormTest_Controller/Form',
-            array(
+            [
                 'Email' => 'invalid',
                 'Number' => '<a href="http://mysite.com">link</a>' // XSS attempt
                 // leaving out "Required" field
-            )
+            ]
         );
 
         $this->assertPartialMatchBySelector(
             '#Form_Form_Email_Holder span.message',
-            array(
+            [
                 'Please enter an email address'
-            ),
+            ],
             'Formfield validation shows note on field if invalid'
         );
         $this->assertPartialMatchBySelector(
             '#Form_Form_SomeRequiredField_Holder span.required',
-            array(
+            [
                 '"Some required field" is required'
-            ),
+            ],
             'Required fields show a notification on field when left blank'
         );
 
@@ -510,16 +510,16 @@ class FormTest extends FunctionalTest
 
         $this->post(
             'FormTest_Controller/Form',
-            array(
+            [
                 'Email' => 'test@test.com',
                 'SomeRequiredField' => 'test',
-            )
+            ]
         );
         $this->assertPartialMatchBySelector(
             '#Form_Form_error',
-            array(
+            [
                 'Test save was successful'
-            ),
+            ],
             'Form->sessionMessage() shows up after reloading the form'
         );
     }
@@ -530,24 +530,24 @@ class FormTest extends FunctionalTest
 
         $this->post(
             'FormTest_Controller/Form',
-            array(
+            [
                 'Email' => 'test@test.com',
                 'SomeRequiredField' => 'test',
                 'action_doTriggerException' => 1,
-            )
+            ]
         );
         $this->assertPartialMatchBySelector(
             '#Form_Form_Email_Holder span.message',
-            array(
+            [
                 'Error on Email field'
-            ),
+            ],
             'Formfield validation shows note on field if invalid'
         );
         $this->assertPartialMatchBySelector(
             '#Form_Form_error',
-            array(
+            [
                 'Error at top of form'
-            ),
+            ],
             'Required fields show a notification on field when left blank'
         );
     }
@@ -595,11 +595,11 @@ class FormTest extends FunctionalTest
         // can't use submitForm() as it'll automatically insert SecurityID into the POST data
         $response = $this->post(
             'FormTest_ControllerWithSecurityToken/Form',
-            array(
+            [
                 'Email' => 'test@test.com',
                 'action_doSubmit' => 1
                 // leaving out security token
-            )
+            ]
         );
         $this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
 
@@ -612,11 +612,11 @@ class FormTest extends FunctionalTest
         $this->get('FormTest_ControllerWithSecurityToken');
         $response = $this->post(
             'FormTest_ControllerWithSecurityToken/Form',
-            array(
+            [
                 'Email' => 'test@test.com',
                 'action_doSubmit' => 1,
                 'SecurityID' => $invalidToken
-            )
+            ]
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
         $this->assertTrue(
@@ -643,10 +643,10 @@ class FormTest extends FunctionalTest
         $response = $this->submitForm(
             'Form_Form',
             null,
-            array(
+            [
                 'Email' => 'test@test.com',
                 'SecurityID' => $token
-            )
+            ]
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
     }
@@ -662,10 +662,10 @@ class FormTest extends FunctionalTest
         $this->get('FormTest_ControllerWithStrictPostCheck');
         $response = $this->post(
             'FormTest_ControllerWithStrictPostCheck/Form',
-            array(
+            [
                 'Email' => 'test@test.com',
                 'action_doSubmit' => 1
-            )
+            ]
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with correct method');
     }
@@ -771,9 +771,9 @@ class FormTest extends FunctionalTest
     {
         Form::config()->update(
             'default_classes',
-            array(
+            [
             'class1',
-            )
+            ]
         );
 
         $form = $this->getStubForm();
@@ -782,10 +782,10 @@ class FormTest extends FunctionalTest
 
         Form::config()->update(
             'default_classes',
-            array(
+            [
             'class1',
             'class2',
-            )
+            ]
         );
 
         $form = $this->getStubForm();
@@ -794,9 +794,9 @@ class FormTest extends FunctionalTest
 
         Form::config()->update(
             'default_classes',
-            array(
+            [
             'class3',
-            )
+            ]
         );
 
         $form = $this->getStubForm();
@@ -832,12 +832,12 @@ class FormTest extends FunctionalTest
         $request = new HTTPRequest(
             'POST',
             'FormTest_Controller/Form',
-            array(),
-            array(
+            [],
+            [
             'Email' => 'test@test.com',
             'SomeRequiredField' => 1,
             'action_doSubmit' => 1
-            )
+            ]
         );
         $request->setSession(new Session([]));
 
@@ -855,10 +855,10 @@ class FormTest extends FunctionalTest
         $request = new HTTPRequest(
             'POST',
             'FormTest_Controller/Form',
-            array(),
-            array(
+            [],
+            [
             'action_doSubmit' => 1
-            )
+            ]
         );
         $request->setSession(new Session([]));
 
@@ -966,10 +966,10 @@ class FormTest extends FunctionalTest
             new FieldList()
         );
 
-        $data = array(
+        $data = [
             'key1' => 'test',
             'ExtraFieldCheckbox' => false,
-        );
+        ];
 
         $form->loadDataFrom($data);
 
@@ -1031,7 +1031,7 @@ class FormTest extends FunctionalTest
         // Posting our form. This should fail and redirect us to the form page and preload our submit value
         $response = $this->post(
             'FormTest_ControllerWithSpecialSubmittedValueFields/Form',
-            array(
+            [
                 'SomeDateField' => '15/06/2018',
                 'SomeFrenchNumericField' => '9 876,5432',
                 'SomeFrenchMoneyField' => [
@@ -1039,7 +1039,7 @@ class FormTest extends FunctionalTest
                     'Currency' => 'NZD'
                 ]
                 // Validation will fail because we leave out SomeRequiredField
-            ),
+            ],
             []
         );
 

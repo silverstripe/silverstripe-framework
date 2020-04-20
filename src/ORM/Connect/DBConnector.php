@@ -21,7 +21,7 @@ abstract class DBConnector
      * @config
      * @var array
      */
-    private static $write_operations = array('insert', 'update', 'delete', 'replace');
+    private static $write_operations = ['insert', 'update', 'delete', 'replace'];
 
     /**
      * List of operations to treat as DDL
@@ -29,7 +29,7 @@ abstract class DBConnector
      * @config
      * @var array
      */
-    private static $ddl_operations = array('alter', 'drop', 'create', 'truncate');
+    private static $ddl_operations = ['alter', 'drop', 'create', 'truncate'];
 
     /**
      * Error handler for database errors.
@@ -44,7 +44,7 @@ abstract class DBConnector
      * @param array $parameters Parameters passed to the query
      * @throws DatabaseException
      */
-    protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = array())
+    protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = [])
     {
         // Prevent errors when error checking is set at zero level
         if (empty($errorLevel)) {
@@ -135,7 +135,7 @@ abstract class DBConnector
      */
     protected function parameterValues($parameters)
     {
-        $values = array();
+        $values = [];
         foreach ($parameters as $value) {
             $values[] = is_array($value) ? $value['value'] : $value;
         }

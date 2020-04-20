@@ -31,7 +31,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     public static function get_shortcodes()
     {
-        return array('embed');
+        return ['embed'];
     }
 
     /**
@@ -46,7 +46,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      *
      * @return string
      */
-    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
+    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = [])
     {
         // Get service URL
         if (!empty($content)) {

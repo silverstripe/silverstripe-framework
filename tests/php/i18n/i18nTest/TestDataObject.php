@@ -10,22 +10,22 @@ class TestDataObject extends DataObject implements TestOnly
 {
     private static $table_name = 'i18nTest_TestDataObject';
 
-    private static $db = array(
+    private static $db = [
         'MyProperty' => 'Varchar',
         'MyUntranslatedProperty' => 'Text'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'HasOneRelation' => Member::class
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'HasManyRelation' => Member::class
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'ManyManyRelation' => Member::class
-    );
+    ];
 
     /**
      * @param bool $includerelations a boolean value to indicate if the labels returned include relation fields

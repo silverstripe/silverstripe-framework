@@ -26,10 +26,10 @@ class GridFieldReadonlyTest extends SapphireTest
 {
     protected static $fixture_file = 'GridFieldReadonlyTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Cheerleader::class,
-    );
+    ];
 
     /**
      * The CMS can set the value of a GridField to be a hasMany relation, which needs a readonly state.

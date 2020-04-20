@@ -145,15 +145,15 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $properties = array_merge(
             $properties,
-            array(
+            [
                 'Name' => $this->action,
                 'Title' => ($this->description && !$this->useButtonTag) ? $this->description : $this->Title(),
                 'UseButtonTag' => $this->useButtonTag
-            )
+            ]
         );
 
         return parent::Field($properties);
@@ -163,7 +163,7 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return $this->Field($properties);
     }

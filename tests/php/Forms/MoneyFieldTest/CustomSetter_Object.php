@@ -14,9 +14,9 @@ class CustomSetter_Object extends DataObject implements TestOnly
 
     private static $table_name = 'MoneyFieldTest_CustomSetter_Object';
 
-    private static $db = array(
+    private static $db = [
         'MyMoney' => 'Money',
-    );
+    ];
 
     public function getCustomMoney()
     {

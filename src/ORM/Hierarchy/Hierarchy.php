@@ -59,7 +59,7 @@ class Hierarchy extends DataExtension
      * @var array
      * @config
      */
-    private static $hide_from_hierarchy = array();
+    private static $hide_from_hierarchy = [];
 
     /**
      * A list of classnames to exclude from display in the page tree views of the CMS,
@@ -72,7 +72,7 @@ class Hierarchy extends DataExtension
      * @var array
      * @config
      */
-    private static $hide_from_cms_tree = array();
+    private static $hide_from_cms_tree = [];
 
     /**
      * Used to enable or disable the prepopulation of the numchildren cache.
@@ -104,9 +104,9 @@ class Hierarchy extends DataExtension
 
     public static function get_extra_config($class, $extension, $args)
     {
-        return array(
-            'has_one' => array('Parent' => $class)
-        );
+        return [
+            'has_one' => ['Parent' => $class]
+        ];
     }
 
     /**
@@ -141,7 +141,7 @@ class Hierarchy extends DataExtension
                         __CLASS__ . '.InfiniteLoopNotAllowed',
                         'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
                         'First argument is the class that makes up the hierarchy.',
-                        array('type' => get_class($owner))
+                        ['type' => get_class($owner)]
                     ),
                     'bad',
                     'INFINITE_LOOP'
@@ -160,7 +160,7 @@ class Hierarchy extends DataExtension
      */
     public function getDescendantIDList()
     {
-        $idList = array();
+        $idList = [];
         $this->loadDescendantIDListInto($idList);
         return $idList;
     }
@@ -406,7 +406,7 @@ class Hierarchy extends DataExtension
         }
         $controller = Controller::curr();
         return $controller instanceof LeftAndMain
-            && in_array($controller->getAction(), array("treeview", "listview", "getsubtree"));
+            && in_array($controller->getAction(), ["treeview", "listview", "getsubtree"]);
     }
 
     /**
@@ -471,10 +471,10 @@ class Hierarchy extends DataExtension
         $children = DataObject::get($owner->baseClass())
             ->filter('ParentID', (int)$owner->ID)
             ->exclude('ID', (int)$owner->ID)
-            ->setDataQueryParam(array(
+            ->setDataQueryParam([
                 'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
                 'Versioned.stage' => 'Live'
-            ));
+            ]);
         if ($hideFromHierarchy) {
             $children = $children->exclude('ClassName', $hideFromHierarchy);
         }
@@ -538,7 +538,7 @@ class Hierarchy extends DataExtension
      */
     public function getBreadcrumbs($separator = ' &raquo; ')
     {
-        $crumbs = array();
+        $crumbs = [];
         $ancestors = array_reverse($this->owner->getAncestors()->toArray());
         /** @var DataObject $ancestor */
         foreach ($ancestors as $ancestor) {

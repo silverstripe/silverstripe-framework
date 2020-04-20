@@ -42,7 +42,7 @@ class ToggleCompositeField extends CompositeField
      * @param array $properties
      * @return string
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         $context = $this;
 
@@ -60,10 +60,10 @@ class ToggleCompositeField extends CompositeField
      */
     public function getAttributes()
     {
-        $attributes = array(
+        $attributes = [
             'id' => $this->ID(),
             'class' => $this->extraClass(),
-        );
+        ];
 
         if ($this->getStartClosed()) {
             $attributes['class'] .= ' ss-toggle ss-toggle-start-closed';

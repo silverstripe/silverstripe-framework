@@ -7,14 +7,14 @@ use SilverStripe\ORM\DataObject;
 
 class Team extends DataObject implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
         'TeamSize' => 'Int',
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'Players' => Player::class,
-    );
+    ];
 
     private static $table_name = 'CsvBulkLoaderTest_Team';
 }

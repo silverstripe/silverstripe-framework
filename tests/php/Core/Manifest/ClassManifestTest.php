@@ -137,10 +137,10 @@ class ClassManifestTest extends SapphireTest
 
     public function testGetInterfaces()
     {
-        $expect = array(
+        $expect = [
             'interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
             'interfaceb' => "{$this->base}/module/interfaces/InterfaceB.php"
-        );
+        ];
         $this->assertEquals($expect, $this->manifest->getInterfaces());
     }
 

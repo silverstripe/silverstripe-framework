@@ -123,16 +123,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $form = $this->ItemEditForm();
         $form->makeReadonly();
 
-        $data = new ArrayData(array(
+        $data = new ArrayData([
             'Backlink'     => $controller->Link(),
             'ItemEditForm' => $form
-        ));
+        ]);
         $return = $data->renderWith($this->getTemplates());
 
         if ($request->isAjax()) {
             return $return;
         } else {
-            return $controller->customise(array('Content' => $return));
+            return $controller->customise(['Content' => $return]);
         }
     }
 
@@ -145,19 +145,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $controller = $this->getToplevelController();
         $form = $this->ItemEditForm();
 
-        $return = $this->customise(array(
+        $return = $this->customise([
             'Backlink' => $controller->hasMethod('Backlink') ? $controller->Backlink() : $controller->Link(),
             'ItemEditForm' => $form,
-        ))->renderWith($this->getTemplates());
+        ])->renderWith($this->getTemplates());
 
         if ($request->isAjax()) {
             return $return;
         } else {
             // If not requested by ajax, we need to render it within the controller context+template
-            return $controller->customise(array(
+            return $controller->customise([
                 // TODO CMS coupling
                 'Content' => $return,
-            ));
+            ]);
         }
     }
 
@@ -243,7 +243,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         // Fields with the correct 'ManyMany' namespace need to be added manually through getCMSFields().
         if ($list instanceof ManyManyList) {
             $extraData = $list->getExtraData('', $this->record->ID);
-            $form->loadDataFrom(array('ManyMany' => $extraData));
+            $form->loadDataFrom(['ManyMany' => $extraData]);
         }
 
         // TODO Coupling with CMS
@@ -481,7 +481,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return null;
         }
 
-        $data = array();
+        $data = [];
         foreach ($list->getExtraFields() as $field => $dbSpec) {
             $savedField = "ManyMany[{$field}]";
             if ($record->hasField($savedField)) {
@@ -514,10 +514,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $message = _t(
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Saved',
             'Saved {name} {link}',
-            array(
+            [
                 'name' => $this->record->i18n_singular_name(),
                 'link' => $link
-            )
+            ]
         );
 
         $form->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
@@ -775,15 +775,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         if ($this->record && $this->record->ID) {
             $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
-            $items->push(new ArrayData(array(
+            $items->push(new ArrayData([
                 'Title' => $title,
                 'Link' => $this->Link()
-            )));
+            ]));
         } else {
-            $items->push(new ArrayData(array(
+            $items->push(new ArrayData([
                 'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
                 'Link' => false
-            )));
+            ]));
         }
 
         $this->extend('updateBreadcrumbs', $items);

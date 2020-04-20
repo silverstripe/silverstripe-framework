@@ -9,11 +9,11 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldExportButtonTest_Team';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'City' => 'Varchar',
         'RugbyTeamNumber' => 'Int'
-    );
+    ];
 
     public function canView($member = null)
     {

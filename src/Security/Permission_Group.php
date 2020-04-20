@@ -24,7 +24,7 @@ class Permission_Group
      * interface.
      * @var string
      */
-    protected $permissions = array();
+    protected $permissions = [];
 
 
     /**

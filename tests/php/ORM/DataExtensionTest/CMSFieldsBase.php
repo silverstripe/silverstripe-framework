@@ -14,13 +14,13 @@ class CMSFieldsBase extends DataObject implements TestOnly
 
     private static $table_name = 'DataExtensionTest_CMSFieldsBase';
 
-    private static $db = array(
+    private static $db = [
         'PageField' => 'Varchar(255)'
-    );
+    ];
 
-    private static $extensions = array(
+    private static $extensions = [
         CMSFieldsBaseExtension::class
-    );
+    ];
 
     public function getCMSFields()
     {

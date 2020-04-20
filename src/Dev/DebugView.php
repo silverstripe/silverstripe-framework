@@ -29,93 +29,93 @@ class DebugView
      */
     private static $columns = 100;
 
-    protected static $error_types = array(
-        0 => array(
+    protected static $error_types = [
+        0 => [
             'title' => 'Emergency',
             'class' => 'error'
-        ),
-        1 => array(
+        ],
+        1 => [
             'title' => 'Alert',
             'class' => 'error'
-        ),
-        2 => array(
+        ],
+        2 => [
             'title' => 'Critical',
             'class' => 'error'
-        ),
-        3 => array(
+        ],
+        3 => [
             'title' => 'Error',
             'class' => 'error'
-        ),
-        4 =>  array(
+        ],
+        4 =>  [
             'title' => 'Warning',
             'class' => 'warning'
-        ),
-        5 => array(
+        ],
+        5 => [
             'title' => 'Notice',
             'class' => 'notice'
-        ),
-        6 => array(
+        ],
+        6 => [
             'title' => 'Information',
             'class' => 'info'
-        ),
-        7=> array(
+        ],
+        7=> [
             'title' => 'SilverStripe\\Dev\\Debug',
             'class' => 'debug'
-        ),
-        E_USER_ERROR => array(
+        ],
+        E_USER_ERROR => [
             'title' => 'User Error',
             'class' => 'error'
-        ),
-        E_CORE_ERROR => array(
+        ],
+        E_CORE_ERROR => [
             'title' => 'Core Error',
             'class' => 'error'
-        ),
-        E_NOTICE => array(
+        ],
+        E_NOTICE => [
             'title' => 'Notice',
             'class' => 'notice'
-        ),
-        E_USER_NOTICE => array(
+        ],
+        E_USER_NOTICE => [
             'title' => 'User Notice',
             'class' => 'notice'
-        ),
-        E_DEPRECATED => array(
+        ],
+        E_DEPRECATED => [
             'title' => 'Deprecated',
             'class' => 'notice'
-        ),
-        E_USER_DEPRECATED => array(
+        ],
+        E_USER_DEPRECATED => [
             'title' => 'User Deprecated',
             'class' => 'notice'
-        ),
-        E_CORE_ERROR => array(
+        ],
+        E_CORE_ERROR => [
             'title' => 'Core Error',
             'class' => 'error'
-        ),
-        E_WARNING => array(
+        ],
+        E_WARNING => [
             'title' => 'Warning',
             'class' => 'warning'
-        ),
-        E_CORE_WARNING => array(
+        ],
+        E_CORE_WARNING => [
             'title' => 'Core Warning',
             'class' => 'warning'
-        ),
-        E_USER_WARNING => array(
+        ],
+        E_USER_WARNING => [
             'title' => 'User Warning',
             'class' => 'warning'
-        ),
-        E_STRICT => array(
+        ],
+        E_STRICT => [
             'title' => 'Strict Notice',
             'class' => 'notice'
-        ),
-        E_RECOVERABLE_ERROR => array(
+        ],
+        E_RECOVERABLE_ERROR => [
             'title' => 'Recoverable Error',
             'class' => 'warning'
-        )
-    );
+        ]
+    ];
 
-    protected static $unknown_error = array(
+    protected static $unknown_error = [
         'title' => 'Unknown Error',
         'class' => 'error'
-    );
+    ];
 
     /**
      * Generate breadcrumb links to the URL path being displayed
@@ -132,7 +132,7 @@ class DebugView
         $parts = explode('/', $relPath);
         $base = Director::absoluteBaseURL();
         $pathPart = "";
-        $pathLinks = array();
+        $pathLinks = [];
         foreach ($parts as $part) {
             if ($part != '') {
                 $pathPart .= "$part/";

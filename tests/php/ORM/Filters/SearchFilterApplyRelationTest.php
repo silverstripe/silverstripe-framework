@@ -17,7 +17,7 @@ class SearchFilterApplyRelationTest extends SapphireTest
 
     protected static $fixture_file = 'SearchFilterApplyRelationTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         SearchFilterApplyRelationTest\TestObject::class,
         SearchFilterApplyRelationTest\HasOneParent::class,
         SearchFilterApplyRelationTest\HasOneChild::class,
@@ -28,7 +28,7 @@ class SearchFilterApplyRelationTest extends SapphireTest
         SearchFilterApplyRelationTest\ManyManyParent::class,
         SearchFilterApplyRelationTest\ManyManyChild::class,
         SearchFilterApplyRelationTest\ManyManyGrandChild::class,
-    );
+    ];
 
     public function testApplyRelationHasOne()
     {
@@ -39,9 +39,9 @@ class SearchFilterApplyRelationTest extends SapphireTest
         $filter = new ExactMatchFilter("SearchFilterApplyRelationTest_HasOneGrandChild.Title");
         $context->setFilters(null);
         $context->addFilter($filter);
-        $params = array(
+        $params = [
             "Title" => "I am has_one object",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(2, $results->count());
     }
@@ -57,29 +57,29 @@ class SearchFilterApplyRelationTest extends SapphireTest
         $filter = new PartialMatchFilter("SearchFilterApplyRelationTest_HasManyGrandChildren.Title");
         $context->setFilters(null);
         $context->addFilter($filter);
-        $params = array(
+        $params = [
             "SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object1",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->count());
-        $this->assertEquals(array($do1->ID), $results->column('ID'));
+        $this->assertEquals([$do1->ID], $results->column('ID'));
 
-        $params = array(
+        $params = [
             "SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object3",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->count());
-        $this->assertEquals(array($do2->ID), $results->column('ID'));
+        $this->assertEquals([$do2->ID], $results->column('ID'));
 
-        $params = array(
+        $params = [
             "SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(2, $results->count());
 
-        $params = array(
+        $params = [
             "SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "not exist",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(0, $results->count());
     }
@@ -92,27 +92,27 @@ class SearchFilterApplyRelationTest extends SapphireTest
         $filter = new PartialMatchFilter("ManyManyGrandChildren.Title");
         $context->setFilters(null);
         $context->addFilter($filter);
-        $params = array(
+        $params = [
             "ManyManyGrandChildren__Title" => "I am many_many object1",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(2, $results->count());
 
-        $params = array(
+        $params = [
             "ManyManyGrandChildren__Title" => "I am many_many object2",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(2, $results->count());
 
-        $params = array(
+        $params = [
             "ManyManyGrandChildren__Title" => "I am many_many object",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(2, $results->count());
 
-        $params = array(
+        $params = [
             "ManyManyGrandChildren__Title" => "not exist",
-        );
+        ];
         $results = $context->getResults($params);
         $this->assertEquals(0, $results->count());
     }

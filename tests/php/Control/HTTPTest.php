@@ -65,11 +65,11 @@ class HTTPTest extends FunctionalTest
         $this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
 
         // Still "live": Ensure header's aren't overridden if already set (using purposefully different values).
-        $headers = array(
+        $headers = [
             'Vary' => '*',
             'Pragma' => 'no-cache',
             'Cache-Control' => 'max-age=0, no-cache, no-store',
-        );
+        ];
         foreach ($headers as $header => $value) {
             $response->addHeader($header, $value);
         }
@@ -208,10 +208,10 @@ class HTTPTest extends FunctionalTest
 			</p>
 		';
 
-        $expected = array (
+        $expected =  [
             '/', 'home/', 'mother/', '$Journey', 'space travel', 'unquoted', 'single quote', '/father', 'attributes',
             'journey', 'CAPS LOCK', 'quotes \'mixed\' up'
-        );
+        ];
 
         $result = HTTP::getLinksIn($content);
 
@@ -275,7 +275,7 @@ class HTTPTest extends FunctionalTest
             'Absolute URL and PHP array query string notation'
         );
 
-        $urls = array(
+        $urls = [
             'http://www.test.com:8080',
             'http://test.com:3000/',
             'http://test.com:3030/baz/',
@@ -283,7 +283,7 @@ class HTTPTest extends FunctionalTest
             'http://baz@test.com/',
             'http://baz:foo@test.com:8080',
             'http://baz@test.com:8080'
-        );
+        ];
 
         foreach ($urls as $testURL) {
             $this->assertEquals(

@@ -16,6 +16,6 @@ class TestObject
 
     public function toMap()
     {
-        return array('First' => $this->First, 'Second' => $this->Second);
+        return ['First' => $this->First, 'Second' => $this->Second];
     }
 }

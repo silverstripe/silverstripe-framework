@@ -211,9 +211,9 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
 
     public static function get_template_global_variables()
     {
-        return array(
-            'Now' => array('method' => 'now', 'casting' => 'Datetime'),
-        );
+        return [
+            'Now' => ['method' => 'now', 'casting' => 'Datetime'],
+        ];
     }
 
     /**

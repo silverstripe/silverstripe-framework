@@ -133,12 +133,12 @@ class ThemeManifest implements ThemeList
     public function regenerate($includeTests = false)
     {
         $finder = new ManifestFileFinder();
-        $finder->setOptions(array(
+        $finder->setOptions([
             'include_themes' => false,
-            'ignore_dirs' => array('node_modules', THEMES_DIR),
+            'ignore_dirs' => ['node_modules', THEMES_DIR],
             'ignore_tests'  => !$includeTests,
-            'dir_callback'  => array($this, 'handleDirectory')
-        ));
+            'dir_callback'  => [$this, 'handleDirectory']
+        ]);
 
         $this->themes = [];
 

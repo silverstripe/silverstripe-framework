@@ -35,26 +35,26 @@ class BulkLoader_Result implements \Countable
      *
      * @var array
      */
-    protected $created = array();
+    protected $created = [];
 
     /**
      * see {@link $created}
      *
      * @var array
      */
-    protected $updated = array();
+    protected $updated = [];
 
     /**
      * @var array (see {@link $created})
      */
-    protected $deleted = array();
+    protected $deleted = [];
 
     /**
      * Stores the last change.
      * It is in the same format as {@link $created} but with an additional key, "ChangeType", which will be set to
      * one of 3 strings: "created", "updated", or "deleted"
      */
-    protected $lastChange = array();
+    protected $lastChange = [];
 
     /**
      * Returns the count of all objects which were
@@ -138,11 +138,11 @@ class BulkLoader_Result implements \Countable
      */
     public function addCreated($obj, $message = null)
     {
-        $this->created[] = $this->lastChange = array(
+        $this->created[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
             'Message' => $message
-        );
+        ];
         $this->lastChange['ChangeType'] = 'created';
     }
 
@@ -152,11 +152,11 @@ class BulkLoader_Result implements \Countable
      */
     public function addUpdated($obj, $message = null)
     {
-        $this->updated[] = $this->lastChange = array(
+        $this->updated[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
             'Message' => $message
-        );
+        ];
         $this->lastChange['ChangeType'] = 'updated';
     }
 

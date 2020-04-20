@@ -11,7 +11,7 @@ class DataExtensionTest extends SapphireTest
 {
     protected static $fixture_file = 'DataExtensionTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DataExtensionTest\TestMember::class,
         DataExtensionTest\Player::class,
         DataExtensionTest\RelatedObject::class,
@@ -19,7 +19,7 @@ class DataExtensionTest extends SapphireTest
         DataExtensionTest\CMSFieldsBase::class,
         DataExtensionTest\CMSFieldsChild::class,
         DataExtensionTest\CMSFieldsGrandChild::class
-    );
+    ];
 
     protected static $required_extensions = [
         DataObject::class => [
@@ -51,15 +51,15 @@ class DataExtensionTest extends SapphireTest
 
         $contact = DataObject::get_one(
             DataExtensionTest\TestMember::class,
-            array(
+            [
             '"DataExtensionTest_Member"."Website"' => 'http://www.example.com'
-            )
+            ]
         );
         $object = DataObject::get_one(
             DataExtensionTest\RelatedObject::class,
-            array(
+            [
             '"DataExtensionTest_RelatedObject"."ContactID"' => $contactID
-            )
+            ]
         );
 
         $this->assertNotNull($object, 'Related object not null');

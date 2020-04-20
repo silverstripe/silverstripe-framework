@@ -16,9 +16,9 @@ class CheckboxFieldTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Article::class,
-    );
+    ];
 
     public function testFieldValueTrue()
     {

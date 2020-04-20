@@ -54,11 +54,11 @@ class CheckboxSetField extends MultiSelectField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'Options' => $this->getOptions()
-        ));
+        ]);
 
         return FormField::Field($properties);
     }
@@ -87,7 +87,7 @@ class CheckboxSetField extends MultiSelectField
             $itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
             $itemDisabled = $this->isDisabled() || in_array($itemValue, $disabledItems);
 
-            $options->push(new ArrayData(array(
+            $options->push(new ArrayData([
                 'ID' => $itemID,
                 'Class' => $extraClass,
                 'Role' => 'option',
@@ -96,7 +96,7 @@ class CheckboxSetField extends MultiSelectField
                 'Title' => $title,
                 'isChecked' => $itemChecked,
                 'isDisabled' => $itemDisabled,
-            )));
+            ]));
         }
         $this->extend('updateGetOptions', $options);
         return $options;
@@ -111,7 +111,7 @@ class CheckboxSetField extends MultiSelectField
     {
         $attributes = array_merge(
             parent::getAttributes(),
-            array('role' => 'listbox')
+            ['role' => 'listbox']
         );
 
         // Remove invalid attributes from wrapper.

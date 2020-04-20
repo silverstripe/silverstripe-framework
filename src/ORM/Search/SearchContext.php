@@ -96,7 +96,7 @@ class SearchContext
     {
         $this->modelClass = $modelClass;
         $this->fields = ($fields) ? $fields : new FieldList();
-        $this->filters = ($filters) ? $filters : array();
+        $this->filters = ($filters) ? $filters : [];
     }
 
     /**
@@ -119,7 +119,7 @@ class SearchContext
     {
         $classes = ClassInfo::dataClassesFor($this->modelClass);
         $baseTable = DataObject::getSchema()->baseDataTable($this->modelClass);
-        $fields = array("\"{$baseTable}\".*");
+        $fields = ["\"{$baseTable}\".*"];
         if ($this->modelClass != $classes[0]) {
             $fields[] = '"' . $classes[0] . '".*';
         }
@@ -179,7 +179,7 @@ class SearchContext
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery(array($filter, 'apply'));
+                    $query = $query->alterDataQuery([$filter, 'apply']);
                 }
             }
         }
@@ -204,7 +204,7 @@ class SearchContext
      */
     public function getResults($searchParams, $sort = false, $limit = false)
     {
-        $searchParams = array_filter((array)$searchParams, array($this, 'clearEmptySearchFields'));
+        $searchParams = array_filter((array)$searchParams, [$this, 'clearEmptySearchFields']);
 
         // getQuery actually returns a DataList
         return $this->getQuery($searchParams, $sort, $limit);

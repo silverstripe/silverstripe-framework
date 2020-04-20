@@ -35,7 +35,7 @@ class FieldList extends ArrayList
      */
     protected $containerField;
 
-    public function __construct($items = array())
+    public function __construct($items = [])
     {
         if (!is_array($items) || func_num_args() > 1) {
             $items = func_get_args();
@@ -191,7 +191,7 @@ class FieldList extends ArrayList
     {
         Deprecation::notice('5.0', 'Please use dataFields or SaveableFields');
         if (!isset($list)) {
-            $list = array();
+            $list = [];
         }
         /** @var FormField $field */
         foreach ($this as $field) {
@@ -577,7 +577,7 @@ class FieldList extends ArrayList
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
             Deprecation::notice('5.0', 'Incorrect order of arguments for insertBefore');
-            list($item, $name) = array($name, $item);
+            list($item, $name) = [$name, $item];
         }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -585,7 +585,7 @@ class FieldList extends ArrayList
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i, 0, array($item));
+                array_splice($this->items, $i, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertBefore($name, $item, false);
@@ -619,7 +619,7 @@ class FieldList extends ArrayList
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
             Deprecation::notice('5.0', 'Incorrect order of arguments for insertAfter');
-            list($item, $name) = array($name, $item);
+            list($item, $name) = [$name, $item];
         }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -627,7 +627,7 @@ class FieldList extends ArrayList
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i+1, 0, array($item));
+                array_splice($this->items, $i+1, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertAfter($name, $item, false);
@@ -858,7 +858,7 @@ class FieldList extends ArrayList
         }
 
         // Build a map of fields indexed by their name.  This will make the 2nd step much easier.
-        $fieldMap = array();
+        $fieldMap = [];
         foreach ($this->dataFields() as $field) {
             $fieldMap[$field->getName()] = $field;
         }
@@ -866,7 +866,7 @@ class FieldList extends ArrayList
         // Iterate through the ordered list of names, building a new array to be put into $this->items.
         // While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
         // Unrecognised field names are okay; just ignore them
-        $fields = array();
+        $fields = [];
         foreach ($fieldNames as $fieldName) {
             if (isset($fieldMap[$fieldName])) {
                 $fields[] = $fieldMap[$fieldName];

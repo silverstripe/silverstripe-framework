@@ -72,6 +72,6 @@ abstract class ComparisonFilter extends SearchFilter
 
     public function isEmpty()
     {
-        return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+        return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
     }
 }

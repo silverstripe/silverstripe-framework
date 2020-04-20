@@ -26,11 +26,11 @@ class FormScaffolderTest extends SapphireTest
         ]
     ];
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Article::class,
         Tag::class,
         Author::class,
-    );
+    ];
 
 
     public function testGetCMSFieldsSingleton()
@@ -115,9 +115,9 @@ class FormScaffolderTest extends SapphireTest
         $article1 = $this->objFromFixture(Article::class, 'article1');
 
         $fields = $article1->scaffoldFormFields(
-            array(
-            'restrictFields' => array('Title')
-            )
+            [
+            'restrictFields' => ['Title']
+            ]
         );
         $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);
@@ -137,9 +137,9 @@ class FormScaffolderTest extends SapphireTest
         $article1 = $this->objFromFixture(Article::class, 'article1');
 
         $fields = $article1->scaffoldFormFields(
-            array(
-            'fieldClasses' => array('Title' => 'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField')
-            )
+            [
+            'fieldClasses' => ['Title' => 'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField']
+            ]
         );
         $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);

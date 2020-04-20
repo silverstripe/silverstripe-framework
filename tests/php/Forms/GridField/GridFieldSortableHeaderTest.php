@@ -21,13 +21,13 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
     protected static $fixture_file = 'GridFieldSortableHeaderTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         TeamGroup::class,
         Cheerleader::class,
         CheerleaderHat::class,
         Mom::class,
-    );
+    ];
 
     /**
      * Tests that the appropriate sortable headers are generated
@@ -84,11 +84,11 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $listB = $compontent->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
-            array('Auckland', 'Cologne', 'Melbourne', 'Wellington'),
+            ['Auckland', 'Cologne', 'Melbourne', 'Wellington'],
             $listA->column('City')
         );
         $this->assertEquals(
-            array('Wellington', 'Melbourne', 'Cologne', 'Auckland'),
+            ['Wellington', 'Melbourne', 'Cologne', 'Auckland'],
             $listB->column('City')
         );
 
@@ -101,11 +101,11 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $relationListB = $compontent->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
-            array('Wellington', 'Melbourne', 'Cologne', 'Auckland'),
+            ['Wellington', 'Melbourne', 'Cologne', 'Auckland'],
             $relationListA->column('City')
         );
         $this->assertEquals(
-            array('Auckland', 'Cologne', 'Melbourne', 'Wellington'),
+            ['Auckland', 'Cologne', 'Melbourne', 'Wellington'],
             $relationListB->column('City')
         );
 
@@ -118,11 +118,11 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $relationListD = $compontent->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
-            array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+            ['Cologne', 'Auckland', 'Wellington', 'Melbourne'],
             $relationListC->column('City')
         );
         $this->assertEquals(
-            array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+            ['Melbourne', 'Wellington', 'Auckland', 'Cologne'],
             $relationListD->column('City')
         );
     }
@@ -168,13 +168,13 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
         // Test sorting is correct
         $this->assertEquals(
-            array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+            ['Cologne', 'Auckland', 'Wellington', 'Melbourne'],
             $relationListA->column('City')
         );
         $state->SortDirection = 'desc';
         $relationListAdesc = $component->getManipulatedData($gridField, $list);
         $this->assertEquals(
-            array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+            ['Melbourne', 'Wellington', 'Auckland', 'Cologne'],
             $relationListAdesc->column('City')
         );
 
@@ -219,13 +219,13 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
         // Test sorting is correct
         $this->assertEquals(
-            array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+            ['Cologne', 'Auckland', 'Wellington', 'Melbourne'],
             $relationListB->column('City')
         );
         $state->SortDirection = 'desc';
         $relationListBdesc = $component->getManipulatedData($gridField, $list);
         $this->assertEquals(
-            array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+            ['Melbourne', 'Wellington', 'Auckland', 'Cologne'],
             $relationListBdesc->column('City')
         );
     }

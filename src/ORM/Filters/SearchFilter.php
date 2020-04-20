@@ -85,7 +85,7 @@ abstract class SearchFilter
      * @param mixed $value
      * @param array $modifiers
      */
-    public function __construct($fullName = null, $value = false, array $modifiers = array())
+    public function __construct($fullName = null, $value = false, array $modifiers = [])
     {
         $this->fullName = $fullName;
 

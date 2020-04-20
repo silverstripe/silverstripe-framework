@@ -13,10 +13,10 @@ class Player extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldTest_Player';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Email' => 'Varchar',
-    );
+    ];
 
     private static $belongs_many_many = [
         'Teams' => Team::class

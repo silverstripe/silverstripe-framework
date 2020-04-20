@@ -43,11 +43,11 @@ class SSViewerTest extends SapphireTest
      *
      * @var array
      */
-    protected $oldServer = array();
+    protected $oldServer = [];
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         SSViewerTest\TestObject::class,
-    );
+    ];
 
     protected function setUp()
     {
@@ -122,27 +122,27 @@ class SSViewerTest extends SapphireTest
     public function testIncludeScopeInheritance()
     {
         $data = $this->getScopeInheritanceTestData();
-        $expected = array(
+        $expected = [
         'Item 1 - First-ODD top:Item 1',
         'Item 2 - EVEN top:Item 2',
         'Item 3 - ODD top:Item 3',
         'Item 4 - EVEN top:Item 4',
         'Item 5 - ODD top:Item 5',
         'Item 6 - Last-EVEN top:Item 6',
-        );
+        ];
 
         $result = $data->renderWith('SSViewerTestIncludeScopeInheritance');
         $this->assertExpectedStrings($result, $expected);
 
         // reset results for the tests that include arguments (the title is passed as an arg)
-        $expected = array(
+        $expected = [
         'Item 1 _ Item 1 - First-ODD top:Item 1',
         'Item 2 _ Item 2 - EVEN top:Item 2',
         'Item 3 _ Item 3 - ODD top:Item 3',
         'Item 4 _ Item 4 - EVEN top:Item 4',
         'Item 5 _ Item 5 - ODD top:Item 5',
         'Item 6 _ Item 6 - Last-EVEN top:Item 6',
-        );
+        ];
 
         $result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
         $this->assertExpectedStrings($result, $expected);
@@ -224,7 +224,7 @@ class SSViewerTest extends SapphireTest
         /** @var Requirements_Backend|PHPUnit_Framework_MockObject_MockObject $requirements */
         $requirements = $this
             ->getMockBuilder(Requirements_Backend::class)
-            ->setMethods(array("javascript", "css"))
+            ->setMethods(["javascript", "css"])
             ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
         $cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
@@ -254,7 +254,7 @@ class SSViewerTest extends SapphireTest
 
         $jsFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/bad.js';
         $jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
-        $testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
+        $testBackend->combineFiles('testRequirementsCombine.js', [$jsFile]);
 
         // secondly, make sure that requirements is generated, even though minification failed
         $testBackend->processCombinedFiles();
@@ -293,7 +293,7 @@ class SSViewerTest extends SapphireTest
             $testFile
         );
         $testBackend->setMinifier($mockMinifier);
-        $testBackend->combineFiles('testRequirementsMinified.js', array($testFile));
+        $testBackend->combineFiles('testRequirementsMinified.js', [$testFile]);
         $testBackend->processCombinedFiles();
 
         $testBackend->setMinifyCombinedFiles(false);
@@ -992,7 +992,7 @@ after'
         $this->assertEquals(
             $this->render(
                 '<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
-                new ArrayData(array('B' => 'Bar'))
+                new ArrayData(['B' => 'Bar'])
             ),
             '<p>A</p><p>Bar</p>'
         );
@@ -1000,7 +1000,7 @@ after'
         $this->assertEquals(
             $this->render(
                 '<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
-                new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))
+                new ArrayData(['Arg1' => 'Foo', 'Arg2' => 'Bar'])
             ),
             '<p>A</p><p>Bar</p>'
         );
@@ -1009,12 +1009,12 @@ after'
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
                 new ArrayData(
-                    array('Items' => new ArrayList(
-                        array(
-                        new ArrayData(array('Title' => 'Foo')),
-                        new ArrayData(array('Title' => 'Bar'))
-                        )
-                    ))
+                    ['Items' => new ArrayList(
+                        [
+                        new ArrayData(['Title' => 'Foo']),
+                        new ArrayData(['Title' => 'Bar'])
+                        ]
+                    )]
                 )
             ),
             'SomeArg - Foo - Bar - SomeArg'
@@ -1023,7 +1023,7 @@ after'
         $this->assertEquals(
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithArgsInWith Title="A" %>',
-                new ArrayData(array('Item' => new ArrayData(array('Title' =>'B'))))
+                new ArrayData(['Item' => new ArrayData(['Title' =>'B'])])
             ),
             'A - B - A'
         );
@@ -1032,12 +1032,12 @@ after'
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithArgsInNestedWith Title="A" %>',
                 new ArrayData(
-                    array(
+                    [
                     'Item' => new ArrayData(
-                        array(
-                        'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
-                        )
-                    ))
+                        [
+                        'Title' =>'B', 'NestedItem' => new ArrayData(['Title' => 'C'])
+                        ]
+                    )]
                 )
             ),
             'A - B - C - B - A'
@@ -1047,26 +1047,26 @@ after'
             $this->render(
                 '<% include SSViewerTestIncludeScopeInheritanceWithUpAndTop Title="A" %>',
                 new ArrayData(
-                    array(
+                    [
                     'Item' => new ArrayData(
-                        array(
-                        'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
-                        )
-                    ))
+                        [
+                        'Title' =>'B', 'NestedItem' => new ArrayData(['Title' => 'C'])
+                        ]
+                    )]
                 )
             ),
             'A - A - A'
         );
 
         $data = new ArrayData(
-            array(
+            [
             'Nested' => new ArrayData(
-                array(
-                'Object' => new ArrayData(array('Key' => 'A'))
-                )
+                [
+                'Object' => new ArrayData(['Key' => 'A'])
+                ]
             ),
-            'Object' => new ArrayData(array('Key' => 'B'))
-            )
+            'Object' => new ArrayData(['Key' => 'B'])
+            ]
         );
 
         $tmpl = SSViewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
@@ -1125,29 +1125,29 @@ after'
 
     public function testRecursiveInclude()
     {
-        $view = new SSViewer(array('Includes/SSViewerTestRecursiveInclude'));
+        $view = new SSViewer(['Includes/SSViewerTestRecursiveInclude']);
 
         $data = new ArrayData(
-            array(
+            [
             'Title' => 'A',
             'Children' => new ArrayList(
-                array(
+                [
                 new ArrayData(
-                    array(
+                    [
                     'Title' => 'A1',
                     'Children' => new ArrayList(
-                        array(
-                        new ArrayData(array( 'Title' => 'A1 i', )),
-                        new ArrayData(array( 'Title' => 'A1 ii', )),
-                        )
+                        [
+                        new ArrayData([ 'Title' => 'A1 i', ]),
+                        new ArrayData([ 'Title' => 'A1 ii', ]),
+                        ]
                     ),
-                    )
+                    ]
                 ),
-                new ArrayData(array( 'Title' => 'A2', )),
-                new ArrayData(array( 'Title' => 'A3', )),
-                )
+                new ArrayData([ 'Title' => 'A2', ]),
+                new ArrayData([ 'Title' => 'A3', ]),
+                ]
             ),
-            )
+            ]
         );
 
         $result = $view->process($data);
@@ -1221,9 +1221,9 @@ after'
     public function testSSViewerBasicIteratorSupport()
     {
         $data = new ArrayData(
-            array(
+            [
             'Set' => new ArrayList(
-                array(
+                [
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),
                 new SSViewerTest\TestObject("3"),
@@ -1234,9 +1234,9 @@ after'
                 new SSViewerTest\TestObject("8"),
                 new SSViewerTest\TestObject("9"),
                 new SSViewerTest\TestObject("10"),
-                )
+                ]
             )
-            )
+            ]
         );
 
         //base test
@@ -1360,29 +1360,29 @@ after'
 
         // Data to run the loop tests on - three levels deep
         $data = new ArrayData(
-            array(
+            [
             'Name' => 'Top',
             'Foo' => new ArrayData(
-                array(
+                [
                 'Name' => 'Foo',
                 'Bar' => new ArrayData(
-                    array(
+                    [
                     'Name' => 'Bar',
                     'Baz' => new ArrayData(
-                        array(
+                        [
                         'Name' => 'Baz'
-                        )
+                        ]
                     ),
                     'Qux' => new ArrayData(
-                        array(
+                        [
                         'Name' => 'Qux'
-                        )
+                        ]
                     )
-                    )
+                    ]
                 )
-                )
+                ]
             )
-            )
+            ]
         );
 
         // Basic functionality
@@ -1448,43 +1448,43 @@ after'
 
         // Data to run the loop tests on - one sequence of three items, each with a subitem
         $data = new ArrayData(
-            array(
+            [
             'Name' => 'Top',
             'Foo' => new ArrayList(
-                array(
+                [
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '1',
                     'Sub' => new ArrayData(
-                        array(
+                        [
                         'Name' => 'Bar'
-                        )
+                        ]
                     )
-                    )
+                    ]
                 ),
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '2',
                     'Sub' => new ArrayData(
-                        array(
+                        [
                         'Name' => 'Baz'
-                        )
+                        ]
                     )
-                    )
+                    ]
                 ),
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '3',
                     'Sub' => new ArrayData(
-                        array(
+                        [
                         'Name' => 'Qux'
-                        )
+                        ]
                     )
-                    )
+                    ]
                 )
-                )
+                ]
             )
-            )
+            ]
         );
 
         // Make sure inside a loop, $Up refers to the current item of the loop
@@ -1542,43 +1542,43 @@ after'
         // Data to run the loop tests on - one sequence of three items, one with child elements
         // (of a different size to the main sequence)
         $data = new ArrayData(
-            array(
+            [
             'Foo' => new ArrayList(
-                array(
+                [
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '1',
                     'Children' => new ArrayList(
-                        array(
+                        [
                         new ArrayData(
-                            array(
+                            [
                             'Name' => 'a'
-                            )
+                            ]
                         ),
                         new ArrayData(
-                            array(
+                            [
                             'Name' => 'b'
-                            )
+                            ]
                         ),
-                        )
+                        ]
                     ),
-                    )
+                    ]
                 ),
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '2',
                     'Children' => new ArrayList(),
-                    )
+                    ]
                 ),
                 new ArrayData(
-                    array(
+                    [
                     'Name' => '3',
                     'Children' => new ArrayList(),
-                    )
+                    ]
                 ),
-                )
+                ]
             ),
-            )
+            ]
         );
 
         // Make sure that including a loop inside a loop will not destroy the internal count of
@@ -1599,11 +1599,11 @@ after'
             __DIR__ . '/SSViewerTest',
             'layouttest',
             function () {
-                $template = new SSViewer(array('Page'));
-                $this->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
+                $template = new SSViewer(['Page']);
+                $this->assertEquals("Foo\n\n", $template->process(new ArrayData([])));
 
-                $template = new SSViewer(array('Shortcodes', 'Page'));
-                $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
+                $template = new SSViewer(['Shortcodes', 'Page']);
+                $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData([])));
             }
         );
     }
@@ -1802,8 +1802,8 @@ EOC;
         SSViewer::config()->update('source_file_comments', true);
         $i = __DIR__ . '/SSViewerTest/templates/Includes';
         $f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';
-        $templates = array(
-        array(
+        $templates = [
+        [
             'name' => 'SSViewerTestCommentsFullSource',
             'expected' => ""
                 . "<!doctype html>"
@@ -1813,8 +1813,8 @@ EOC;
                 . "\t<body></body>"
                 . "</html>"
                 . "<!-- end template $f/SSViewerTestCommentsFullSource.ss -->",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsFullSourceHTML4Doctype',
             'expected' => ""
                 . "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML "
@@ -1825,16 +1825,16 @@ EOC;
                 . "\t<body></body>"
                 . "</html>"
                 . "<!-- end template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsFullSourceNoDoctype',
             'expected' => ""
                 . "<html><!-- template $f/SSViewerTestCommentsFullSourceNoDoctype.ss -->"
                 . "\t<head></head>"
                 . "\t<body></body>"
                 . "<!-- end template $f/SSViewerTestCommentsFullSourceNoDoctype.ss --></html>",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsFullSourceIfIE',
             'expected' => ""
                 . "<!doctype html>"
@@ -1846,8 +1846,8 @@ EOC;
                 . "\t<body></body>"
                 . "</html>"
                 . "<!-- end template $f/SSViewerTestCommentsFullSourceIfIE.ss -->",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsFullSourceIfIENoDoctype',
             'expected' => ""
                 . "<!--[if lte IE 8]> <html class='old-ie'> <![endif]-->"
@@ -1858,15 +1858,15 @@ EOC;
                 . "\t<head></head>"
                 . "\t<body></body>"
                 . "<!-- end template $f/SSViewerTestCommentsFullSourceIfIENoDoctype.ss --></html>",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsPartialSource',
             'expected' =>
             "<!-- template $f/SSViewerTestCommentsPartialSource.ss -->"
                 . "<div class='typography'></div>"
                 . "<!-- end template $f/SSViewerTestCommentsPartialSource.ss -->",
-        ),
-        array(
+        ],
+        [
             'name' => 'SSViewerTestCommentsWithInclude',
             'expected' =>
             "<!-- template $f/SSViewerTestCommentsWithInclude.ss -->"
@@ -1878,19 +1878,19 @@ EOC;
                 . "<!-- end include 'SSViewerTestCommentsInclude' -->"
                 . "</div>"
                 . "<!-- end template $f/SSViewerTestCommentsWithInclude.ss -->",
-        ),
-        );
+        ],
+        ];
         foreach ($templates as $template) {
             $this->_renderWithSourceFileComments('SSViewerTestComments/' . $template['name'], $template['expected']);
         }
     }
     private function _renderWithSourceFileComments($name, $expected)
     {
-        $viewer = new SSViewer(array($name));
-        $data = new ArrayData(array());
+        $viewer = new SSViewer([$name]);
+        $data = new ArrayData([]);
         $result = $viewer->process($data);
-        $expected = str_replace(array("\r", "\n"), '', $expected);
-        $result = str_replace(array("\r", "\n"), '', $result);
+        $expected = str_replace(["\r", "\n"], '', $expected);
+        $result = str_replace(["\r", "\n"], '', $result);
         $this->assertEquals($result, $expected);
     }
 
@@ -1898,23 +1898,23 @@ EOC;
     {
         $list = new PaginatedList(new ArrayList());
         $viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
-        $result = $viewer->process(new ArrayData(array('List' => $list)));
+        $result = $viewer->process(new ArrayData(['List' => $list]));
         $this->assertEquals($result, '');
     }
 
     public function testProcessOnlyIncludesRequirementsOnce()
     {
-        $template = new SSViewer(array('SSViewerTestProcess'));
+        $template = new SSViewer(['SSViewerTestProcess']);
         $basePath = $this->getCurrentRelativePath() . '/SSViewerTest';
 
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $backend->setCombinedFilesEnabled(false);
         $backend->combineFiles(
             'RequirementsTest_ab.css',
-            array(
+            [
             $basePath . '/css/RequirementsTest_a.css',
             $basePath . '/css/RequirementsTest_b.css'
-            )
+            ]
         );
 
         Requirements::set_backend($backend);
@@ -1932,7 +1932,7 @@ EOC;
     {
         //TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
         if (FRAMEWORK_DIR === 'framework') {
-            $template = new SSViewer(array('SSViewerTestProcess'));
+            $template = new SSViewer(['SSViewerTestProcess']);
 
             Requirements::set_suffix_requirements(false);
 
@@ -1954,24 +1954,24 @@ EOC;
     public function testCallsWithArguments()
     {
         $data = new ArrayData(
-            array(
+            [
             'Set' => new ArrayList(
-                array(
+                [
                 new SSViewerTest\TestObject("1"),
                 new SSViewerTest\TestObject("2"),
                 new SSViewerTest\TestObject("3"),
                 new SSViewerTest\TestObject("4"),
                 new SSViewerTest\TestObject("5"),
-                )
+                ]
             ),
             'Level' => new SSViewerTest\LevelTestData(1),
-            'Nest' => array(
+            'Nest' => [
             'Level' => new SSViewerTest\LevelTestData(2),
-            ),
-            )
+            ],
+            ]
         );
 
-        $tests = array(
+        $tests = [
         '$Level.output(1)' => '1-1',
         '$Nest.Level.output($Set.First.Number)' => '2-1',
         '<% with $Set %>$Up.Level.output($First.Number)<% end_with %>' => '1-1',
@@ -1988,7 +1988,7 @@ EOC;
         '<% with $Nest %>
 				<% loop $Level.forLoop($Top.Set.Last.Number) %>$Number<% end_loop %>
 			<% end_with %>' => '!0!1!2!3!4',
-        );
+        ];
 
         foreach ($tests as $template => $expected) {
             $this->assertEquals($expected, trim($this->render($template, $data)));

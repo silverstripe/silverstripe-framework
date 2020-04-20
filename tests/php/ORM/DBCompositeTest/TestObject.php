@@ -9,9 +9,9 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DBCompositeTest_DataObject';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Text',
         'MyMoney' => 'Money',
         'OverriddenMoney' => 'Money'
-    );
+    ];
 }

@@ -74,7 +74,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $classes = array();
+    protected $classes = [];
 
     /**
      * Map of lowercase class names to case-correct names
@@ -91,7 +91,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $roots = array();
+    protected $roots = [];
 
     /**
      * List of direct children for any class.
@@ -102,7 +102,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $children = array();
+    protected $children = [];
 
     /**
      * List of descendents for any class (direct + indirect children)
@@ -111,7 +111,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $descendants = array();
+    protected $descendants = [];
 
     /**
      * Map of lowercase interface name to path those files
@@ -134,7 +134,7 @@ class ClassManifest
      *
      * @var array
      */
-    protected $implementors = array();
+    protected $implementors = [];
 
     /**
      * Map of lowercase trait names to paths
@@ -480,7 +480,7 @@ class ClassManifest
         if (array_key_exists($lowerInterface, $this->implementors)) {
             return $this->implementors[$lowerInterface];
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -509,14 +509,14 @@ class ClassManifest
         $this->children = [];
 
         $finder = new ManifestFileFinder();
-        $finder->setOptions(array(
+        $finder->setOptions([
             'name_regex' => '/^[^_].*\\.php$/',
-            'ignore_files' => array('index.php', 'cli-script.php'),
+            'ignore_files' => ['index.php', 'cli-script.php'],
             'ignore_tests' => !$includeTests,
             'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
-        ));
+        ]);
         $finder->find($this->base);
 
         foreach ($this->roots as $root) {
@@ -640,11 +640,11 @@ class ClassManifest
 
         // Save back to cache if configured
         if ($changed && $this->cache) {
-            $cache = array(
+            $cache = [
                 'classes' => $classes,
                 'interfaces' => $interfaces,
                 'traits' => $traits,
-            );
+            ];
             $this->cache->set($key, $cache);
         }
     }

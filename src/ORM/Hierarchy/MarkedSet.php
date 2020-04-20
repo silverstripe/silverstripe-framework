@@ -483,10 +483,10 @@ class MarkedSet
      */
     public function setMarkingFilter($parameterName, $parameterValue)
     {
-        $this->markingFilter = array(
+        $this->markingFilter = [
             "parameter" => $parameterName,
             "value" => $parameterValue
-        );
+        ];
         return $this;
     }
 
@@ -499,9 +499,9 @@ class MarkedSet
      */
     public function setMarkingFilterFunction($callback)
     {
-        $this->markingFilter = array(
+        $this->markingFilter = [
             "func" => $callback,
-        );
+        ];
         return $this;
     }
 

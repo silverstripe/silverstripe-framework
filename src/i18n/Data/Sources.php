@@ -143,7 +143,7 @@ class Sources implements Resettable
         $allLocales = $localesData->getLocales();
 
         // Find installed locales
-        $locales = array();
+        $locales = [];
         foreach ($this->getLangFiles() as $locale) {
             // Normalize locale to include likely region tag, avoid repetition in locale labels
             $fullLocale = $localesData->localeFromLang($locale);

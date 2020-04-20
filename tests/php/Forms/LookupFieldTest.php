@@ -13,7 +13,7 @@ class LookupFieldTest extends SapphireTest
 
     public function testNullValueWithNumericArraySource()
     {
-        $source = array(1 => 'one', 2 => 'two', 3 => 'three');
+        $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue(null);
         $result = trim($field->Field()->getValue());
@@ -24,7 +24,7 @@ class LookupFieldTest extends SapphireTest
 
     public function testStringValueWithNumericArraySource()
     {
-        $source = array(1 => 'one', 2 => 'two', 3 => 'three');
+        $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue(1);
         $result = trim($field->Field()->getValue());
@@ -34,7 +34,7 @@ class LookupFieldTest extends SapphireTest
 
     public function testUnknownStringValueWithNumericArraySource()
     {
-        $source = array(1 => 'one', 2 => 'two', 3 => 'three');
+        $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue('w00t');
         $result = trim($field->Field()->getValue());
@@ -46,9 +46,9 @@ class LookupFieldTest extends SapphireTest
     public function testArrayValueWithAssociativeArraySource()
     {
         // Array values (= multiple selections) might be set e.g. from ListboxField
-        $source = array('one' => 'one val', 'two' => 'two val', 'three' => 'three val');
+        $source = ['one' => 'one val', 'two' => 'two val', 'three' => 'three val'];
         $field = new LookupField('test', 'test', $source);
-        $field->setValue(array('one','two'));
+        $field->setValue(['one','two']);
         $result = trim($field->Field()->getValue());
 
         $this->assertContains('<span class="readonly" id="test">one val, two val</span>', $result);
@@ -58,9 +58,9 @@ class LookupFieldTest extends SapphireTest
     public function testArrayValueWithNumericArraySource()
     {
         // Array values (= multiple selections) might be set e.g. from ListboxField
-        $source = array(1 => 'one', 2 => 'two', 3 => 'three');
+        $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
-        $field->setValue(array(1,2));
+        $field->setValue([1,2]);
         $result = trim($field->Field()->getValue());
 
         $this->assertContains('<span class="readonly" id="test">one, two</span>', $result);
@@ -75,7 +75,7 @@ class LookupFieldTest extends SapphireTest
 
         $source = DataObject::get(Member::class);
         $field = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
-        $field->setValue(array($member1->ID, $member2->ID));
+        $field->setValue([$member1->ID, $member2->ID]);
         $result = trim($field->Field()->getValue());
 
         $this->assertContains('<span class="readonly" id="test">member1, member2</span>', $result);
@@ -88,17 +88,17 @@ class LookupFieldTest extends SapphireTest
 
     public function testWithMultiDimensionalSource()
     {
-        $choices = array(
-            "Non-vegetarian" => array(
+        $choices = [
+            "Non-vegetarian" => [
                 0 => 'Carnivore',
-            ),
-            "Vegetarian" => array(
+            ],
+            "Vegetarian" => [
                 3 => 'Carrots',
-            ),
-            "Other" => array(
+            ],
+            "Other" => [
                 9 => 'Vegan'
-            )
-        );
+            ]
+        ];
 
         $field = new LookupField('test', 'test', $choices);
         $field->setValue(3);

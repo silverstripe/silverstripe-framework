@@ -11,7 +11,7 @@ use ReflectionException;
 class InjectionCreator implements Factory
 {
 
-    public function create($class, array $params = array())
+    public function create($class, array $params = [])
     {
         try {
             $reflector = new ReflectionClass($class);

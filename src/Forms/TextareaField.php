@@ -24,10 +24,10 @@ class TextareaField extends FormField
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'Value' => 'Text',
         'ValueEntities' => 'HTMLFragment(array(\'shortcodes\' => false))',
-    );
+    ];
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
 
@@ -136,12 +136,12 @@ class TextareaField extends FormField
     {
         $attributes = array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'rows' => $this->getRows(),
                 'cols' => $this->getColumns(),
                 'value' => null,
                 'type' => null,
-            )
+            ]
         );
 
         $maxLength = $this->getMaxLength();

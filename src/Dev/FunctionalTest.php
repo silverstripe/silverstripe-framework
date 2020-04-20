@@ -207,7 +207,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param array $data Map of GET/POST data.
      * @return HTTPResponse
      */
-    public function submitForm($formID, $button = null, $data = array())
+    public function submitForm($formID, $button = null, $data = [])
     {
         $this->cssParser = null;
         $response = $this->mainSession->submitForm($formID, $button, $data);
@@ -272,12 +272,12 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
-            $expectedMatches = array($expectedMatches);
+            $expectedMatches = [$expectedMatches];
         }
 
         $items = $this->cssParser()->getBySelector($selector);
 
-        $actuals = array();
+        $actuals = [];
         if ($items) {
             foreach ($items as $item) {
                 $actuals[trim(preg_replace('/\s+/', ' ', (string)$item))] = true;
@@ -309,12 +309,12 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function assertExactMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
-            $expectedMatches = array($expectedMatches);
+            $expectedMatches = [$expectedMatches];
         }
 
         $items = $this->cssParser()->getBySelector($selector);
 
-        $actuals = array();
+        $actuals = [];
         if ($items) {
             foreach ($items as $item) {
                 $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item));
@@ -344,12 +344,12 @@ class FunctionalTest extends SapphireTest implements TestOnly
     public function assertPartialHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
-            $expectedMatches = array($expectedMatches);
+            $expectedMatches = [$expectedMatches];
         }
 
         $items = $this->cssParser()->getBySelector($selector);
 
-        $actuals = array();
+        $actuals = [];
         if ($items) {
             /** @var SimpleXMLElement $item */
             foreach ($items as $item) {
@@ -383,7 +383,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     {
         $items = $this->cssParser()->getBySelector($selector);
 
-        $actuals = array();
+        $actuals = [];
         if ($items) {
             /** @var SimpleXMLElement $item */
             foreach ($items as $item) {

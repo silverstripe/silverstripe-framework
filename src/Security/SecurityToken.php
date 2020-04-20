@@ -302,9 +302,9 @@ class SecurityToken implements TemplateGlobalProvider
 
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'getSecurityID',
             'SecurityID' => 'getSecurityID'
-        );
+        ];
     }
 }

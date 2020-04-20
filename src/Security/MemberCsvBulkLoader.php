@@ -17,7 +17,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
      * @var array Array of {@link Group} records. Import into a specific group.
      *  Is overruled by any "Groups" columns in the import.
      */
-    protected $groups = array();
+    protected $groups = [];
 
     public function __construct($objectClass = null)
     {
@@ -32,15 +32,15 @@ class MemberCsvBulkLoader extends CsvBulkLoader
      * @skipUpgrade
      * @var array
      */
-    public $duplicateChecks = array(
+    public $duplicateChecks = [
         'Email' => 'Email',
-    );
+    ];
 
     public function processRecord($record, $columnMap, &$results, $preview = false)
     {
         $objID = parent::processRecord($record, $columnMap, $results, $preview);
 
-        $_cache_groupByCode = array();
+        $_cache_groupByCode = [];
 
         // Add to predefined groups
         /** @var Member $member */

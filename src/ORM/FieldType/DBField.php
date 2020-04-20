@@ -107,7 +107,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     private static $index = false;
 
-    private static $casting = array(
+    private static $casting = [
         'ATT' => 'HTMLFragment',
         'CDATA' => 'HTMLFragment',
         'HTML' => 'HTMLFragment',
@@ -118,7 +118,7 @@ abstract class DBField extends ViewableData implements DBIndexable
         'URLATT' => 'HTMLFragment',
         'XML' => 'HTMLFragment',
         'ProcessedRAW' => 'HTMLFragment',
-    );
+    ];
 
     /**
      * @var $default mixed Default-value in the database.

@@ -25,7 +25,7 @@ use SilverStripe\View\ViewableData;
 class ClassInfoTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         BaseClass::class,
         BaseDataClass::class,
         ChildClass::class,
@@ -38,7 +38,7 @@ class ClassInfoTest extends SapphireTest
         ExtendTest::class,
         ExtendTest2::class,
         ExtendTest3::class,
-    );
+    ];
 
     protected function setUp()
     {
@@ -176,11 +176,11 @@ class ClassInfoTest extends SapphireTest
             'silverstripe\\core\\tests\\classinfotest\\withrelation' => WithRelation::class,
             'silverstripe\\core\\tests\\classinfotest\\withcustomtable' => WithCustomTable::class,
         ];
-        $classes = array(
+        $classes = [
             BaseDataClass::class,
             NoFields::class,
             HasFields::class,
-        );
+        ];
 
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[0]));

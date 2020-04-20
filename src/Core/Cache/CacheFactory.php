@@ -16,5 +16,5 @@ interface CacheFactory extends InjectorFactory
      * @param array $params
      * @return CacheInterface
      */
-    public function create($service, array $params = array());
+    public function create($service, array $params = []);
 }

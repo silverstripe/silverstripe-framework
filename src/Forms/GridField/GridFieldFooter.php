@@ -53,22 +53,22 @@ class GridFieldFooter implements GridField_HTMLProvider
     {
         $count = $gridField->getList()->count();
 
-        $forTemplate = new ArrayData(array(
+        $forTemplate = new ArrayData([
             'ShowRecordCount' => $this->showrecordcount,
             'Message' => $this->message,
             'FirstShownRecord' => 1,
             'LastShownRecord' => $count,
             'NumRecords' => $count
-        ));
+        ]);
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
-        return array(
+        return [
             'footer' => $forTemplate->renderWith(
                 $template,
-                array(
+                [
                     'Colspan' => count($gridField->getColumns())
-                )
+                ]
             )
-        );
+        ];
     }
 }

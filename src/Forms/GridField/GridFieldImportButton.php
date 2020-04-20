@@ -88,9 +88,9 @@ class GridFieldImportButton implements GridField_HTMLProvider
             $button->setAttribute('data-state', 'open');
         }
 
-        return array(
+        return [
             $this->targetFragment => $button->Field()
-        );
+        ];
     }
 
     /**

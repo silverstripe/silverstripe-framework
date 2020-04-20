@@ -60,7 +60,7 @@ abstract class Query implements Iterator
      */
     public function column($column = null)
     {
-        $result = array();
+        $result = [];
 
         while ($record = $this->next()) {
             if ($column) {
@@ -81,7 +81,7 @@ abstract class Query implements Iterator
      */
     public function keyedColumn()
     {
-        $column = array();
+        $column = [];
         foreach ($this as $record) {
             $val = $record[key($record)];
             $column[$val] = $val;
@@ -96,7 +96,7 @@ abstract class Query implements Iterator
      */
     public function map()
     {
-        $column = array();
+        $column = [];
         foreach ($this as $record) {
             $key = reset($record);
             $val = next($record);

@@ -146,14 +146,14 @@ abstract class DBSchemaManager
         $this->schemaIsUpdating = true;
 
         // Update table list
-        $this->tableList = array();
+        $this->tableList = [];
         $tables = $this->tableList();
         foreach ($tables as $table) {
             $this->tableList[strtolower($table)] = $table;
         }
 
         // Clear update list for client code to mess around with
-        $this->schemaUpdateTransaction = array();
+        $this->schemaUpdateTransaction = [];
 
         /** @var Exception $error */
         $error = null;
@@ -239,13 +239,13 @@ abstract class DBSchemaManager
      */
     public function transCreateTable($table, $options = null, $advanced_options = null)
     {
-        $this->schemaUpdateTransaction[$table] = array(
+        $this->schemaUpdateTransaction[$table] = [
             'command' => 'create',
-            'newFields' => array(),
-            'newIndexes' => array(),
+            'newFields' => [],
+            'newIndexes' => [],
             'options' => $options,
             'advancedOptions' => $advanced_options
-        );
+        ];
     }
 
     /**
@@ -323,14 +323,14 @@ abstract class DBSchemaManager
     protected function transInitTable($table)
     {
         if (!isset($this->schemaUpdateTransaction[$table])) {
-            $this->schemaUpdateTransaction[$table] = array(
+            $this->schemaUpdateTransaction[$table] = [
                 'command' => 'alter',
-                'newFields' => array(),
-                'newIndexes' => array(),
-                'alteredFields' => array(),
-                'alteredIndexes' => array(),
+                'newFields' => [],
+                'newIndexes' => [],
+                'alteredFields' => [],
+                'alteredIndexes' => [],
                 'alteredOptions' => ''
-            );
+            ];
         }
     }
 
@@ -356,7 +356,7 @@ abstract class DBSchemaManager
         $fieldSchema = null,
         $indexSchema = null,
         $hasAutoIncPK = true,
-        $options = array(),
+        $options = [],
         $extensions = false
     ) {
         if (!isset($this->tableList[strtolower($table)])) {
@@ -723,7 +723,7 @@ MESSAGE
                 $new = preg_split("/'\\s*,\\s*'/", $specMatches['values']);
                 $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values']);
 
-                $holder = array();
+                $holder = [];
                 foreach ($old as $check) {
                     if (!in_array($check, $new)) {
                         $holder[] = $check;

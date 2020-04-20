@@ -22,18 +22,18 @@ class TestController extends Controller implements TestOnly
 
     public $Content = "default content";
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'methodaction',
         'stringaction',
         'redirectbacktest',
         'templateaction'
-    );
+    ];
 
     public function methodaction()
     {
-        return array(
+        return [
             "Content" => "methodaction content"
-        );
+        ];
     }
 
     public function stringaction()

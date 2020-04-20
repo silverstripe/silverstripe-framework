@@ -9,12 +9,12 @@ class RelatedObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_RelatedObject';
 
-    private static $db = array(
+    private static $db = [
         "FieldOne" => "Varchar",
         "FieldTwo" => "Varchar"
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "Contact" => TestMember::class
-    );
+    ];
 }

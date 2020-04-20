@@ -9,10 +9,10 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'GridFieldTest_Team';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'City' => 'Varchar'
-    );
+    ];
 
     private static $many_many = [
         'Players' => Player::class
@@ -22,11 +22,11 @@ class Team extends DataObject implements TestOnly
         'Cheerleaders' => Cheerleader::class
     ];
 
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Name',
         'City',
         'Cheerleaders.Name'
-    );
+    ];
 
     public function canView($member = null)
     {
