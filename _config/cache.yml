@@ -33,3 +33,7 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: 'ThemeResourceLoader'
+  Psr\SimpleCache\CacheInterface.DatabaseAdapterRegistry:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'DatabaseAdapterRegistry'
