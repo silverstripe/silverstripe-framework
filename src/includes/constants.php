@@ -148,9 +148,9 @@ if (!defined('BASE_URL')) {
         }
 
         $requestURI = $_SERVER['REQUEST_URI'];
-        // Check if /base/public or /base are in the request
+        // Check if /base/public or /base are in the request (delimited by /)
         foreach ([$baseURL, dirname($baseURL)] as $candidate) {
-            if (stripos($requestURI, $candidate) === 0) {
+            if (stripos($requestURI, rtrim($candidate, '/') . '/') === 0) {
                 return $candidate;
             }
         }
