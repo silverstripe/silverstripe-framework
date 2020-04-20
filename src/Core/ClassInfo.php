@@ -560,4 +560,40 @@ class ClassInfo
         static::$_cache_parse[$classSpec] = $result;
         return $result;
     }
+
+    /**
+     * Returns a list of classes with a particular extension applied
+     *
+     * This reflects all extensions added (or removed) both via the configuration API as well as dynamically
+     * using Extensible::add_extension() and Extensible::remove_extension().
+     *
+     * @param string $extensionClass        Extension class name
+     * @param string $baseClassOrObject     Class or object to find subclasses of with the extension applied
+     * @param bool $includeBaseClass        Include the base class itself if it has the extension applied?
+     * @return string[] Class names with the extension applied
+     * @throws \ReflectionException
+     */
+    public static function classesWithExtension(
+        string $extensionClass,
+        string $baseClassOrObject = DataObject::class,
+        bool $includeBaseClass = false
+    ): array {
+        // get class names
+        $baseClass = self::class_name($baseClassOrObject);
+
+        // get a list of all subclasses for a given class
+        $classes = ClassInfo::subclassesFor($baseClass, $includeBaseClass);
+
+        // include the base class if required
+        if ($includeBaseClass) {
+            $classes = array_merge([strtolower($baseClass) => $baseClass], $classes);
+        }
+
+        // only keep classes with the Extension applied
+        $classes = array_filter($classes, function ($class) use ($extensionClass) {
+            return Extensible::has_extension($class, $extensionClass);
+        });
+
+        return $classes;
+    }
 }
