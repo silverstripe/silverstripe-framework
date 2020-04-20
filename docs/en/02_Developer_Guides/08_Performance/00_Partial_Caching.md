@@ -93,7 +93,7 @@ If your caching logic is complex or re-usable, you can define a method on your c
 fragment.
 
 For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
-`Page::$many_many = array('Slides' => 'Slide')` changes. In `PageController`:
+`Page::$many_many = ['Slides' => 'Slide']` changes. In `PageController`:
 
 
 ```php

@@ -42,12 +42,12 @@ function checkenv($envs)
     return true;
 }
 
-$opts = getopt('', array(
+$opts = getopt('', [
     'artifacts-path:',
     'target-path:',
     'if-env:',
     'artifacts-base-url:',
-));
+]);
 
 // --if-env=BEHAT_TEST means that this script will only be executed if the given environment var is set
 if (empty($opts['if-env'])) {

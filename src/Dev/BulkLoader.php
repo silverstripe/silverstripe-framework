@@ -57,19 +57,19 @@ abstract class BulkLoader extends ViewableData
      * <code>
      * <?php
      *  // simple example
-     *  array(
+     *  [
      *      'Title',
      *      'Birthday'
-     *  )
+     *  ]
      *
      * // complex example
-     *  array(
+     *  [
      *      'first name' => 'FirstName', // custom column name
      *      null, // ignored column
      *      'RegionID', // direct has_one/has_many ID setting
      *      'OrganisationTitle', // create has_one relation to existing record using $relationCallbacks
      *      'street' => 'Organisation.StreetName', // match an existing has_one or create one and write property.
-     *  );
+     *  ];
      * ?>
      * </code>
      *
@@ -82,12 +82,12 @@ abstract class BulkLoader extends ViewableData
      *
      * <code>
      * <?php
-     * array(
-     *      'OrganisationTitle' => array(
+     * [
+     *      'OrganisationTitle' => [
      *          'relationname' => 'Organisation', // relation accessor name
      *          'callback' => 'getOrganisationByTitle',
-     *      );
-     * );
+     *      ];
+     * ];
      * ?>
      * </code>
      *
@@ -111,12 +111,12 @@ abstract class BulkLoader extends ViewableData
      *
      *  <code>
      * <?php
-     * array(
+     * [
      *      'customernumber' => 'ID',
-     *      'phonenumber' => array(
+     *      'phonenumber' => [
      *          'callback' => 'getByImportedPhoneNumber'
-     *      )
-     * );
+     *      ]
+     * ];
      * ?>
      * </code>
      *
@@ -211,10 +211,10 @@ abstract class BulkLoader extends ViewableData
      *
      * Return Format:
      * <code>
-     * array(
-     *   'fields' => array('myFieldName'=>'myDescription'),
-     *   'relations' => array('myRelationName'=>'myDescription'),
-     * )
+     * [
+     *   'fields' => ['myFieldName'=>'myDescription'],
+     *   'relations' => ['myRelationName'=>'myDescription'],
+     * ]
      * </code>
      *
      * @todo Mix in custom column mappings

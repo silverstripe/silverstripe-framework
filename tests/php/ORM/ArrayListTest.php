@@ -446,7 +446,7 @@ class ArrayListTest extends SapphireTest
             ['Name' => 'John'],
             ['Name' => 'bonny'],
             ['Name' => 'bonny1'],
-            //array('Name' => 'bonny10'),
+            //['Name' => 'bonny10'],
             ['Name' => 'bonny2'],
         ];
 
@@ -456,7 +456,7 @@ class ArrayListTest extends SapphireTest
             (object) ['Name' => 'Bob'],
             ['Name' => 'bonny'],
             ['Name' => 'bonny1'],
-            //array('Name' => 'bonny10'),
+            //['Name' => 'bonny10'],
             ['Name' => 'bonny2'],
             ['Name' => 'John'],
             ['Name' => 'Steve'],
@@ -756,7 +756,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter('Name', array('Steve', 'John'); // Steve and John in list
+     * $list->filter('Name', ['Steve', 'John']; // Steve and John in list
      */
     public function testSimpleFilterWithMultiple()
     {
@@ -777,7 +777,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter('Name', array('Steve', 'John'); // negative version
+     * $list->filter('Name', ['Steve', 'John']; // negative version
      */
     public function testSimpleFilterWithMultipleNoMatch()
     {
@@ -793,7 +793,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
+     * $list->filter(['Name'=>'bob, 'Age'=>21]); // bob with the Age 21 in list
      */
     public function testMultipleFilter()
     {
@@ -813,7 +813,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter(array('Name'=>'bob, 'Age'=>21)); // negative version
+     * $list->filter(['Name'=>'bob, 'Age'=>21]); // negative version
      */
     public function testMultipleFilterNoMatch()
     {
@@ -829,7 +829,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter(array('Name'=>'Steve', 'Age'=>array(21, 43))); // Steve with the Age 21 or 43
+     * $list->filter(['Name'=>'Steve', 'Age'=>[21, 43]]); // Steve with the Age 21 or 43
      */
     public function testMultipleWithArrayFilter()
     {
@@ -853,7 +853,7 @@ class ArrayListTest extends SapphireTest
     }
 
     /**
-     * $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
+     * $list->filter(['Name'=>['aziz','bob'], 'Age'=>[21, 43]]);
      */
     public function testMultipleWithArrayFilterAdvanced()
     {
@@ -900,7 +900,7 @@ class ArrayListTest extends SapphireTest
         $this->assertContains($bob, $filteredList);
 
         // azis or bob in the list
-        //$list = $list->filterAny('Name', array('aziz', 'bob');
+        //$list = $list->filterAny('Name', ['aziz', 'bob']);
         $filteredList = $list->filterAny('Name', ['Aziz', 'Bob'])->toArray();
         $this->assertCount(1, $filteredList);
         $this->assertContains($bob, $filteredList);
@@ -911,7 +911,7 @@ class ArrayListTest extends SapphireTest
         $this->assertContains($bob, $filteredList);
 
         // bob or anyone aged 21 in the list
-        //$list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+        //$list = $list->filterAny(['Name'=>'bob, 'Age'=>21]);
         $filteredList = $list->filterAny(['Name' => 'Bob', 'Age' => 21])->toArray();
         $this->assertCount(4, $filteredList);
         $this->assertContains($bob, $filteredList);
@@ -920,7 +920,7 @@ class ArrayListTest extends SapphireTest
         $this->assertContains($phil, $filteredList);
 
         // bob or anyone aged 21 or 43 in the list
-        // $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+        // $list = $list->filterAny(['Name'=>'bob, 'Age'=>[21, 43]]);
         $filteredList = $list->filterAny(['Name' => 'Bob', 'Age' => [21, 43]])->toArray();
         $this->assertCount(5, $filteredList);
         $this->assertContains($bob, $filteredList);
@@ -930,7 +930,7 @@ class ArrayListTest extends SapphireTest
         $this->assertContains($phil, $filteredList);
 
         // all bobs, phils or anyone aged 21 or 43 in the list
-        //$list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+        //$list = $list->filterAny(['Name'=>['bob','phil'], 'Age'=>[21, 43]]);
         $filteredList = $list->filterAny(['Name' => ['Bob', 'Phil'], 'Age' => [21, 43]])->toArray();
         $this->assertCount(5, $filteredList);
         $this->assertContains($bob, $filteredList);

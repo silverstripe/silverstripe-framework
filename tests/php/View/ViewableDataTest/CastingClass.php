@@ -10,6 +10,6 @@ class CastingClass extends ViewableData implements TestOnly
     private static $casting = [
         'Field' => 'CastingType',
         'Argument' => 'ArgumentType(Argument)',
-        'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
+        'ArrayArgument' => 'ArrayArgumentType([foo, bar])'
     ];
 }

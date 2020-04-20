@@ -31,7 +31,7 @@ use SilverStripe\ORM\DataObjectInterface;
  *      $actions = new FieldList(
  *          new FormAction('doUpload', 'Upload file')
  *      );
- *    $validator = new RequiredFields(array('MyName', 'MyFile'));
+ *    $validator = new RequiredFields(['MyName', 'MyFile']);
  *
  *      return new Form($this, 'Form', $fields, $actions, $validator);
  *  }

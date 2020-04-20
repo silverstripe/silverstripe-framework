@@ -441,7 +441,7 @@ class ObjectTest extends SapphireTest
         // True, false and null values
         $this->assertEquals(
             ['ClassName', ['string', true, ['string', false]]],
-            ClassInfo::parse_class_spec('ClassName("string", true, array("string", false))')
+            ClassInfo::parse_class_spec('ClassName("string", true, ["string", false])')
         );
         $this->assertEquals(
             ['ClassName', [true, false, null]],
@@ -451,7 +451,7 @@ class ObjectTest extends SapphireTest
         // Array
         $this->assertEquals(
             ['Enum', [['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted']],
-            ClassInfo::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
+            ClassInfo::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
         );
         // Nested array
         $this->assertEquals(
@@ -463,7 +463,7 @@ class ObjectTest extends SapphireTest
                 ]
             ],
             ClassInfo::parse_class_spec(
-                "Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')"
+                "Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')"
             )
         );
         // 5.4 Shorthand Array
@@ -488,12 +488,12 @@ class ObjectTest extends SapphireTest
         // Associative array
         $this->assertEquals(
             ['Varchar', [255, ['nullifyEmpty' => false]]],
-            ClassInfo::parse_class_spec("Varchar(255, array('nullifyEmpty' => false))")
+            ClassInfo::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
         );
         // Nested associative array
         $this->assertEquals(
             ['Test', ['string', ['nested' => ['foo' => 'bar']]]],
-            ClassInfo::parse_class_spec("Test('string', array('nested' => array('foo' => 'bar')))")
+            ClassInfo::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
         );
         // 5.4 shorthand associative array
         $this->assertEquals(

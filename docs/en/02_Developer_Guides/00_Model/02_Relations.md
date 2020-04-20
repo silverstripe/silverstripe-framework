@@ -209,7 +209,7 @@ If you're using the default scaffolded form fields with multiple `has_one` relat
 public function getCMSFields()
 {
     $fields = parent::getCMSFields();
-    $fields->removeByName(array('ManagerID', 'CleanerID'));
+    $fields->removeByName(['ManagerID', 'CleanerID']);
     return $fields;
 }
 ```

@@ -31,7 +31,7 @@ class SQLSelect extends SQLConditionalExpression
     /**
      * An array of having clauses.
      * Each item in this array will be in the form of a single-length array
-     * in the format array('predicate' => array($parameters))
+     * in the format ['predicate' => [$parameters]]
      *
      * @var array
      */
@@ -124,13 +124,13 @@ class SQLSelect extends SQLConditionalExpression
      *
      * <code>
      *  // pass fields to select as single parameter array
-     *  $query->setSelect(array('"Col1"', '"Col2"'))->setFrom('"MyTable"');
+     *  $query->setSelect(['"Col1"', '"Col2"'])->setFrom('"MyTable"');
      *
      *  // pass fields to select as multiple parameters
      *  $query->setSelect('"Col1"', '"Col2"')->setFrom('"MyTable"');
      *
      *  // Set a list of selected fields as aliases
-     *  $query->setSelect(array('Name' => '"Col1"', 'Details' => '"Col2"')->setFrom('"MyTable"');
+     *  $query->setSelect(['Name' => '"Col1"', 'Details' => '"Col2"'])->setFrom('"MyTable"');
      * </code>
      *
      * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
@@ -293,7 +293,7 @@ class SQLSelect extends SQLConditionalExpression
      * @example $sql->setOrderBy("Column DESC");
      * @example $sql->setOrderBy("Column DESC, ColumnTwo ASC");
      * @example $sql->setOrderBy("Column", "DESC");
-     * @example $sql->setOrderBy(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+     * @example $sql->setOrderBy(["Column" => "ASC", "ColumnTwo" => "DESC"]);
      *
      * @param string|array $clauses Clauses to add (escaped SQL statement)
      * @param string $direction Sort direction, ASC or DESC
@@ -313,7 +313,7 @@ class SQLSelect extends SQLConditionalExpression
      * @example $sql->addOrderBy("Column DESC");
      * @example $sql->addOrderBy("Column DESC, ColumnTwo ASC");
      * @example $sql->addOrderBy("Column", "DESC");
-     * @example $sql->addOrderBy(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+     * @example $sql->addOrderBy(["Column" => "ASC", "ColumnTwo" => "DESC"]);
      *
      * @param string|array $clauses Clauses to add (escaped SQL statements)
      * @param string $direction Sort direction, ASC or DESC
@@ -388,7 +388,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @param string $value
      * @param string $defaultDirection
-     * @return array A two element array: array($column, $direction)
+     * @return array A two element array: [$column, $direction]
      */
     private function getDirectionFromString($value, $defaultDirection = null)
     {

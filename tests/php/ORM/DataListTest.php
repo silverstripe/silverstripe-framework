@@ -774,7 +774,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+     * $list->filter('Name', ['aziz', 'bob']); // aziz and bob in list
      */
     public function testSimpleFilterWithMultiple()
     {
@@ -794,7 +794,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     *  $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
+     *  $list->filter(['Name'=>'bob, 'Age'=>21]); // bob with the age 21
      */
     public function testFilterMultipleArray()
     {
@@ -833,7 +833,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
+     * $list->filter(['Name'=>['aziz','bob'], 'Age'=>[21, 43]]);
      */
     public function testFilterArrayInArray()
     {
@@ -1499,7 +1499,7 @@ class DataListTest extends SapphireTest
     }
     //
     /**
-     * $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+     * $list->exclude('Name', ['aziz', 'bob']); // exclude aziz and bob from list
      */
     public function testSimpleExcludeWithMultiple()
     {
@@ -1510,7 +1510,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // negative version
+     * $list->exclude(['Name'=>'bob, 'Age'=>21]); // negative version
      */
     public function testMultipleExcludeWithMiss()
     {
@@ -1520,7 +1520,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+     * $list->exclude(['Name'=>'bob, 'Age'=>21]); // exclude bob that has Age 21
      */
     public function testMultipleExclude()
     {
@@ -1531,7 +1531,7 @@ class DataListTest extends SapphireTest
 
     /**
      * Test doesn't exclude if only matches one
-     * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+     * $list->exclude(['Name'=>'bob, 'Age'=>21]); // exclude bob that has Age 21
      */
     public function testMultipleExcludeMultipleMatches()
     {
@@ -1711,7 +1711,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+     * $list->exclude(['Name'=>'bob, 'Age'=>[21, 43]]); // exclude bob with Age 21 or 43
      */
     public function testMultipleExcludeWithMultipleThatCheersEitherTeam()
     {
@@ -1729,7 +1729,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // negative version
+     * $list->exclude(['Name'=>'bob, 'Age'=>[21, 43]]); // negative version
      */
     public function testMultipleExcludeWithMultipleThatCheersOnNonExistingTeam()
     {
@@ -1739,7 +1739,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); //negative version
+     * $list->exclude(['Name'=>['bob','phil'], 'Age'=>[21, 43]]); //negative version
      */
     public function testMultipleExcludeWithNoExclusion()
     {

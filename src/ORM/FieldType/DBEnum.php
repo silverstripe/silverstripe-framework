@@ -56,7 +56,7 @@ class DBEnum extends DBString
      *  "MyField" => "Enum('Val1, Val2, Val3')" // First item 'Val1' is default implicitly
      *  "MyField" => "Enum('Val1, Val2, Val3', 'Val2')" // 'Val2' is default explicitly
      *  "MyField" => "Enum('Val1, Val2, Val3', null)" // Force empty (no) default
-     *  "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')" // Supports array notation as well
+     *  "MyField" => "Enum(['Val1', 'Val2', 'Val3'], 'Val1')" // Supports array notation as well
      * </code>
      *
      * @param string $name

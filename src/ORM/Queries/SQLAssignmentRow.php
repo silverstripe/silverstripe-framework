@@ -14,12 +14,12 @@ class SQLAssignmentRow
      * List of field values to store for this query
      *
      * Each item in this array will be in the form of a single-length array
-     * in the format array('sql' => array($parameters)).
+     * in the format ['sql' => [$parameters]].
      * The field name is stored as the key
      *
      * E.g.
      *
-     * <code>$assignments['ID'] = array('?' => array(1));</code>
+     * <code>$assignments['ID'] = ['?' => [1]];</code>
      *
      * This allows for complex, parameterised updates, or explict field values set
      * without any prameters
@@ -45,7 +45,7 @@ class SQLAssignmentRow
      *
      * @param mixed $value Either a literal field value, or an array with
      * placeholder => parameter(s) as a pair
-     * @return array A single item array in the format array($sql => array($parameters))
+     * @return array A single item array in the format [$sql => [$parameters]]
      */
     protected function parseAssignment($value)
     {
@@ -57,7 +57,7 @@ class SQLAssignmentRow
 
         // If given as array then extract and check both the SQL as well as the parameter(s)
         // Note that there could be multiple parameters, e.g.
-        // array('MAX(?,?)' => array(1,2)) although the container should
+        // ['MAX(?,?)' => [1,2]] although the container should
         // have a single item
         if (count($value) == 1) {
             foreach ($value as $sql => $parameters) {
@@ -76,13 +76,13 @@ class SQLAssignmentRow
 
         throw new InvalidArgumentException(
             "Nested field assignments should be given as a single parameterised item array in "
-            . "array('?' => array('value')) format)"
+            . "['?' => ['value']] format)"
         );
     }
 
     /**
      * Given a list of assignments in any user-acceptible format, normalise the
-     * value to a common array('SQL' => array(parameters)) format
+     * value to a common ['SQL' => [parameters]] format
      *
      * @param array $assignments List of assignments.
      * The key of this array should be the field name, and the value the assigned
@@ -107,27 +107,27 @@ class SQLAssignmentRow
      * <code>
      *
      * // Basic assignments
-     * $query->addAssignments(array(
+     * $query->addAssignments([
      *      '"Object"."Title"' => 'Bob',
      *      '"Object"."Description"' => 'Bob was here'
-     * ))
+     * ])
      *
      * // Parameterised assignments
-     * $query->addAssignments(array(
-     *      '"Object"."Title"' => array('?' => 'Bob')),
-     *      '"Object"."Description"' => array('?' => null))
-     * ))
+     * $query->addAssignments([
+     *      '"Object"."Title"' => ['?' => 'Bob'],
+     *      '"Object"."Description"' => ['?' => null]
+     * ])
      *
      * // Complex parameters
-     * $query->addAssignments(array(
-     *      '"Object"."Score"' => array('MAX(?,?)' => array(1, 3))
-     * ));
+     * $query->addAssignments([
+     *      '"Object"."Score"' => ['MAX(?,?)' => [1, 3]]
+     * ]);
      *
-     * // Assigment of literal SQL for a field. The empty array is
+     * // Assignment of literal SQL for a field. The empty array is
      * // important to denote the zero-number paramater list
-     * $query->addAssignments(array(
-     *      '"Object"."Score"' => array('NOW()' => array())
-     * ));
+     * $query->addAssignments([
+     *      '"Object"."Score"' => ['NOW()' => []]
+     * ]);
      *
      * </code>
      *
@@ -159,7 +159,7 @@ class SQLAssignmentRow
      *
      * @return array List of assigments. The key of this array will be the
      * column to assign, and the value a parameterised array in the format
-     * array('SQL' => array(parameters));
+     * ['SQL' => [parameters]];
      */
     public function getAssignments()
     {
@@ -176,10 +176,10 @@ class SQLAssignmentRow
      * $query->assign('"Object"."Description"', 'lorum ipsum');
      *
      * // Single parameter
-     * $query->assign('"Object"."Title"', array('?' => 'Bob'));
+     * $query->assign('"Object"."Title"', ['?' => 'Bob']);
      *
      * // Complex parameters
-     * $query->assign('"Object"."Score"', array('MAX(?,?)' => array(1, 3));
+     * $query->assign('"Object"."Score"', ['MAX(?,?)' => [1, 3]]);
      * </code>
      *
      * @param string $field The field name to update

@@ -173,7 +173,7 @@ class DataObjectTest extends SapphireTest
         );
 
         // assertEquals doesn't verify the order of array elements, so access keys manually to check order:
-        // expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+        // expected: ['Name' => 'Varchar', 'Comment' => 'HTMLText']
         $this->assertEquals(
             [
                 'Name',

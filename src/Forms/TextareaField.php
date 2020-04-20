@@ -26,7 +26,7 @@ class TextareaField extends FormField
      */
     private static $casting = [
         'Value' => 'Text',
-        'ValueEntities' => 'HTMLFragment(array(\'shortcodes\' => false))',
+        'ValueEntities' => 'HTMLFragment([\'shortcodes\' => false])',
     ];
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
