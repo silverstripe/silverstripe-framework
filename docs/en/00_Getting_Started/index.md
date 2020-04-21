@@ -39,7 +39,7 @@ SS_DATABASE_NAME="<database>"
 SS_DATABASE_SERVER="localhost"
 SS_DATABASE_USERNAME="<user>"
 SS_DATABASE_PASSWORD="<password>"
-SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_EMAIL="admin@email.here"
 SS_DEFAULT_ADMIN_PASSWORD="password"
 SS_ENVIRONMENT_TYPE="<dev|test|live>"
 ```
