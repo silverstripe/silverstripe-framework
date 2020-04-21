@@ -60,7 +60,7 @@ SS_DEFAULT_ADMIN_EMAIL="admin@email.here"
 SS_DEFAULT_ADMIN_PASSWORD="password"
 ```
 
-When a user logs in with these credentials, then a [Member](api:SilverStripe\Security\Member) with the Email 'admin' will be generated in
+When a user logs in with these credentials, then a [Member](api:SilverStripe\Security\Member) with the Email 'admin@email.here' will be generated in
 the database, but without any password information. This means that the password can be reset or changed by simply
 updating the `.env` file.
 
