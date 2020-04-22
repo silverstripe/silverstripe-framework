@@ -62,7 +62,7 @@ class DefaultAdminService
             );
         }
 
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
         if (empty($email) || empty($password || (empty($uniqueIdentifier) && $uniqueIdentifierFieldName != 'Email'))) {
             throw new InvalidArgumentException("Default admin ". ($uniqueIdentifierFieldName != 'Email' ? strtolower($uniqueIdentifierFieldName)." / " : "") ."email / password cannot be empty");
@@ -80,7 +80,7 @@ class DefaultAdminService
      */
     public static function getDefaultAdminUniqueIdentifier() 
     {
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
         
         if($uniqueIdentifierFieldName == 'Email')
             return static::getDefaultAdminEmail();
@@ -132,7 +132,7 @@ class DefaultAdminService
         // Check environment if not explicitly set
         if (!isset(static::$has_default_admin)) {
 
-            $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+            $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
             return ($uniqueIdentifierFieldName == 'Email' || ($uniqueIdentifierFieldName != 'Email' && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName))))) 
                 && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL'))
@@ -190,7 +190,7 @@ class DefaultAdminService
         // Find member
         /** @var Member $admin */
 
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
         $admin = Member::get()
             ->filter($uniqueIdentifierFieldName, $uniqueIdentifier) 
