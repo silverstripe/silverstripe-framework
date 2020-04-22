@@ -633,7 +633,7 @@ class SSViewer implements Flushable
 
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache'
             . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
-        $lastEdited = filemtime($template);
+        $lastEdited = file_exists($template) ? filemtime($template) : false;
 
         if (!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
             $content = file_get_contents($template);
