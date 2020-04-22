@@ -35,6 +35,11 @@ class DefaultAdminService
     /**
      * @var string
      */
+    protected static $default_username = null; 
+
+    /**
+     * @var string
+     */
     protected static $default_email = null; 
 
     /**
@@ -91,6 +96,20 @@ class DefaultAdminService
             );
         }
         return static::$default_uniqueIdentifier ?: Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName));
+    }
+
+    /**
+     * @return string The default admin username (for backward compatibility)
+     * @throws BadMethodCallException Throws exception if there is no default admin
+     */
+    public static function getDefaultUsername() 
+    {
+        if (!static::hasDefaultAdmin()) {
+            throw new BadMethodCallException(
+                "No default admin configured. Please call hasDefaultAdmin() before getting default admin email"
+            );
+        }
+        return static::$default_username ?: Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
     }
 
     /**
