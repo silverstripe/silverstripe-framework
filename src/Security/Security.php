@@ -166,7 +166,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Enable or disable recording of login attempts
-     * through the {@link LoginRecord} object.
+     * through the {@link LoginAttempt} object.
      *
      * @config
      * @var boolean $login_recording
@@ -505,7 +505,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Perform pre-login checking and prepare a response if available prior to login
      *
-     * @return HTTPResponse Substitute response object if the login process should be curcumvented.
+     * @return HTTPResponse Substitute response object if the login process should be circumvented.
      * Returns null if should proceed as normal.
      */
     protected function preLogin()
@@ -526,7 +526,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         // If arriving on the login page already logged in, with no security error, and a ReturnURL then redirect
-        // back. The login message check is neccesary to prevent infinite loops where BackURL links to
+        // back. The login message check is necessary to prevent infinite loops where BackURL links to
         // an action that triggers Security::permissionFailure.
         // This step is necessary in cases such as automatic redirection where a user is authenticated
         // upon landing on an SSL secured site and is automatically logged in, or some other case
