@@ -99,7 +99,7 @@ class Member extends DataObject
     private static $indexes = [
         'Email' => true,
         //Removed due to duplicate null values causing MSSQL problems
-        //'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true)
+        //'AutoLoginHash' => ['type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true]
     ];
 
     /**
@@ -382,8 +382,7 @@ class Member extends DataObject
             return false;
         }
 
-        $idField = static::config()->get('unique_identifier_field');
-        $attempts = LoginAttempt::getByEmail($this->{$idField})
+        $attempts = LoginAttempt::getByEmail($this->Email) 
             ->sort('Created', 'DESC')
             ->limit($maxAttempts);
 

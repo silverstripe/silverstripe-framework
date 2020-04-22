@@ -5,6 +5,7 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\EmailField; 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
@@ -45,7 +46,6 @@ class MemberLoginForm extends BaseLoginForm
      * @var array
      */
     private static $required_fields = [
-        'Email',
         'Password',
     ];
 
@@ -113,7 +113,10 @@ class MemberLoginForm extends BaseLoginForm
         if (isset($logoutAction)) {
             $this->setFormAction($logoutAction);
         }
-        $this->setValidator(RequiredFields::create(self::config()->get('required_fields')));
+
+        $requiredFields = self::config()->get('required_fields'); 
+        $requiredFields[] = Member::config()->get('unique_identifier_field'); 
+        $this->setValidator(RequiredFields::create($requiredFields)); 
     }
 
     /**
@@ -131,23 +134,25 @@ class MemberLoginForm extends BaseLoginForm
             $backURL = $request->getSession()->get('BackURL');
         }
 
-        $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
+
+        $label = Member::singleton()->fieldLabel($uniqueIdentifierFieldName); 
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
             // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
-            $emailField = TextField::create("Email", $label, null, null, $this),
+            $uniqueIdentifierField = ($uniqueIdentifierFieldName == 'Email') ? EmailField::create("Email", $label, null, null, $this) : TextField::create($uniqueIdentifierFieldName, $label, null, null, $this), 
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         );
-        $emailField->setAttribute('autofocus', 'true');
+        $uniqueIdentifierField->setAttribute('autofocus', 'true'); 
 
-        if (Security::config()->get('remember_username')) {
-            $emailField->setValue($this->getSession()->get('SessionForms.MemberLoginForm.Email'));
+        if (Security::config()->get('remember_' . strtolower($uniqueIdentifierFieldName))) { 
+            $uniqueIdentifierField->setValue($this->getSession()->get('SessionForms.MemberLoginForm.' . $uniqueIdentifierFieldName)); 
         } else {
             // Some browsers won't respect this attribute unless it's added to the form
             $this->setAttribute('autocomplete', 'off');
-            $emailField->setAttribute('autocomplete', 'off');
+            $uniqueIdentifierField->setAttribute('autocomplete', 'off'); 
         }
         if (Security::config()->get('autologin_enabled')) {
             $fields->push(
