@@ -54,6 +54,11 @@ class Member_Validator extends RequiredFields
 
         $required = array_merge($required, $this->customRequired);
 
+        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+
+        if($uniqueIdentifierFieldName != 'Email') 
+            $required[] = $uniqueIdentifierFieldName; 
+
         // check for config API values and merge them in
         $config = $this->config()->customRequired;
         if (is_array($config)) {
