@@ -29,7 +29,7 @@ class MemberAuthenticatorTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    protected $defaultUsername = null;
+    protected $defaultEmail = null;
     protected $defaultPassword = null;
 
     protected function setUp()
@@ -37,11 +37,11 @@ class MemberAuthenticatorTest extends SapphireTest
         parent::setUp();
 
         if (DefaultAdminService::hasDefaultAdmin()) {
-            $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();
+            $this->defaultEmail = DefaultAdminService::getDefaultAdminEmail();
             $this->defaultPassword = DefaultAdminService::getDefaultAdminPassword();
             DefaultAdminService::clearDefaultAdmin();
         } else {
-            $this->defaultUsername = null;
+            $this->defaultEmail = null;
             $this->defaultPassword = null;
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
@@ -54,8 +54,8 @@ class MemberAuthenticatorTest extends SapphireTest
     protected function tearDown()
     {
         DefaultAdminService::clearDefaultAdmin();
-        if ($this->defaultUsername) {
-            DefaultAdminService::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        if ($this->defaultEmail) {
+            DefaultAdminService::setDefaultAdmin($this->defaultEmail, $this->defaultPassword);
         }
         parent::tearDown();
     }
@@ -203,7 +203,7 @@ class MemberAuthenticatorTest extends SapphireTest
             $message
         );
         $this->assertNotEmpty($result);
-        $this->assertEquals($result->Email, DefaultAdminService::getDefaultAdminUsername());
+        $this->assertEquals($result->Email, DefaultAdminService::getDefaultAdminEmail());
         $this->assertTrue($message->isValid());
 
         // Test incorrect login

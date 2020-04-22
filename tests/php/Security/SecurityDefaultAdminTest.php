@@ -12,7 +12,7 @@ class SecurityDefaultAdminTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
-    protected $defaultUsername = null;
+    protected $defaultEmail = null;
 
     protected $defaultPassword = null;
 
@@ -28,11 +28,11 @@ class SecurityDefaultAdminTest extends SapphireTest
         static::$tempDB->clearAllData();
 
         if (DefaultAdminService::hasDefaultAdmin()) {
-            $this->defaultUsername = DefaultAdminService::getDefaultAdminUsername();
+            $this->defaultEmail = DefaultAdminService::getDefaultAdminEmail();
             $this->defaultPassword = DefaultAdminService::getDefaultAdminPassword();
             DefaultAdminService::clearDefaultAdmin();
         } else {
-            $this->defaultUsername = null;
+            $this->defaultEmail = null;
             $this->defaultPassword = null;
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
@@ -42,8 +42,8 @@ class SecurityDefaultAdminTest extends SapphireTest
     protected function tearDown()
     {
         DefaultAdminService::clearDefaultAdmin();
-        if ($this->defaultUsername) {
-            DefaultAdminService::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
+        if ($this->defaultEmail) {
+            DefaultAdminService::setDefaultAdmin($this->defaultEmail, $this->defaultPassword);
         }
         Permission::reset();
         parent::tearDown();
@@ -75,7 +75,7 @@ class SecurityDefaultAdminTest extends SapphireTest
 
         $this->assertInstanceOf(Member::class, $admin);
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
-        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
+        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminEmail());
         $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertNull($admin->Password);
         $this->assertArrayHasKey($admin->PasswordEncryption, PasswordEncryptor::get_encryptors());
@@ -125,7 +125,7 @@ class SecurityDefaultAdminTest extends SapphireTest
         $admin = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
         $this->assertInstanceOf(Member::class, $admin);
         $this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
-        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
+        $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminEmail());
         $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertNull($admin->Password);
     }
