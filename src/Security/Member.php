@@ -953,6 +953,10 @@ class Member extends DataObject
         // prevent orphaned records remaining in the DB
         $this->deletePasswordLogs();
         $this->Groups()->removeAll();
+
+        // remove (any) failed log in attempts
+        $idField = static::config()->get('unique_identifier_field');
+        LoginAttempt::getByEmail($this->{$idField})->removeAll();
     }
 
     /**
