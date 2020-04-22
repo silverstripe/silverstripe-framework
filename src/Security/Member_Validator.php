@@ -54,7 +54,7 @@ class Member_Validator extends RequiredFields
 
         $required = array_merge($required, $this->customRequired);
 
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
         if($uniqueIdentifierFieldName != 'Email') 
             $required[] = $uniqueIdentifierFieldName; 
@@ -102,7 +102,7 @@ class Member_Validator extends RequiredFields
     {
         $valid = parent::php($data);
 
-        $identifierField = (string)Member::config()->unique_identifier_field;
+        $identifierField = (string)Member::config()->get('unique_identifier_field');
 
         // Only validate identifier field if it's actually set. This could be the case if
         // somebody removes `Email` from the list of required fields.
