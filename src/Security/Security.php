@@ -1140,14 +1140,14 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin username
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminEmail()
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminUsername()
      * @return string
      */
     public static function default_admin_username()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminEmail()');
+        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminUsername()');
 
-        return DefaultAdminService::getDefaultAdminEmail();
+        return DefaultAdminService::getDefaultAdminUsername();
     }
 
     /**
