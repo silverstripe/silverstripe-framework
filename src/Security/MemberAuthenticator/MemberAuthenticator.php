@@ -140,7 +140,7 @@ class MemberAuthenticator implements Authenticator
 
         $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
         // Allow default admin to login as self
-        if (DefaultAdminService::isDefaultAdminCredentials($member->$uniqueIdentifier, $password)) { 
+        if (DefaultAdminService::isDefaultAdminCredentials($member->$uniqueIdentifierFieldName, $password)) { 
             return $result;
         }
 
