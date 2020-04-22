@@ -61,7 +61,7 @@ SS_DATABASE_PASSWORD=""
 SS_DATABASE_CHOOSE_NAME=1
 
 # So you can test releases
-SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_EMAIL="admin@email.here"
 SS_DEFAULT_ADMIN_PASSWORD="password"
 
 # Basic CLI request url default

@@ -467,7 +467,7 @@ For example, take the following `_ss_environment.php` file.
 <?php
 // Environment
 define('SS_ENVIRONMENT_TYPE', 'dev');
-define('SS_DEFAULT_ADMIN_USERNAME', 'admin');
+define('SS_DEFAULT_ADMIN_EMAIL', 'admin@email.here');
 define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 $_FILE_TO_URL_MAPPING[__DIR__] = 'http://localhost';
 
@@ -483,7 +483,7 @@ The equivalent `.env` file will look like this.
 ```bash
 ## Environment
 SS_ENVIRONMENT_TYPE="dev"
-SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_EMAIL="admin@email.here"
 SS_DEFAULT_ADMIN_PASSWORD="password"
 SS_BASE_URL="http://localhost/"
 

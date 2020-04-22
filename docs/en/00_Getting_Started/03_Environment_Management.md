@@ -102,7 +102,7 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_CHOOSE_NAME`| Boolean/Int.  If defined, then the system will choose a default database name for you if one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to alter any files.  This helps prevent accidental changes to the environment. If `SS_DATABASE_CHOOSE_NAME` is an integer greater than one, then an ancestor folder will be used for the  database name.  This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build. If it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.|
 | `SS_DEPRECATION_ENABLED` | Enable deprecation notices for this environment.|
 | `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
-| `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin. This is a user with administrative privileges.|
+| `SS_DEFAULT_ADMIN_EMAIL`| The email address of the default admin. This is a user with administrative privileges.|
 | `SS_DEFAULT_ADMIN_PASSWORD`| The password of the default admin. This will not be stored in the database.|
 | `SS_USE_BASIC_AUTH`| Baseline protection for requests handled by SilverStripe. Usually requires additional security measures for comprehensive protection. See [Environment Types](/developer_guides/debugging/environment_types) for caveats.|
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
