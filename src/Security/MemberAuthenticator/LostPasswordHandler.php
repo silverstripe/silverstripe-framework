@@ -218,8 +218,7 @@ class LostPasswordHandler extends RequestHandler
     protected function getMemberFromData(array $data)
     {
         if (!empty($data['Email'])) {
-            $uniqueIdentifier = Member::config()->get('unique_identifier_field');
-            return Member::get()->filter([$uniqueIdentifier => $data['Email']])->first();
+            return Member::get()->filter(['Email' => $data['Email']])->first();
         }
     }
 
