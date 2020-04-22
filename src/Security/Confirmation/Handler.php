@@ -50,7 +50,6 @@ class Handler extends RequestHandler
             'Title' => _t(__CLASS__ . '.FORM_TITLE', 'Confirm potentially dangerous action'),
             'Form' => $this->Form()
         ];
-        return $this;
     }
 
     /**
