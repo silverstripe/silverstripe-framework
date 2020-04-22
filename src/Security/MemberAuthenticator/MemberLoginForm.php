@@ -115,7 +115,7 @@ class MemberLoginForm extends BaseLoginForm
         }
 
         $requiredFields = self::config()->get('required_fields'); 
-        $requiredFields[] = Member::config()->unique_identifier_field; 
+        $requiredFields[] = Member::config()->get('unique_identifier_field'); 
         $this->setValidator(RequiredFields::create($requiredFields)); 
     }
 
@@ -134,7 +134,7 @@ class MemberLoginForm extends BaseLoginForm
             $backURL = $request->getSession()->get('BackURL');
         }
 
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
         $label = Member::singleton()->fieldLabel($uniqueIdentifierFieldName); 
         $fields = FieldList::create(
