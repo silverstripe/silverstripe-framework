@@ -74,6 +74,7 @@ class DefaultAdminService
         }
 
         static::$default_uniqueIdentifier = $uniqueIdentifier;
+        static::$default_username = $email;
         static::$default_email = $email;
         static::$default_password = $password;
         static::$has_default_admin = true;
@@ -102,7 +103,7 @@ class DefaultAdminService
      * @return string The default admin username (for backward compatibility)
      * @throws BadMethodCallException Throws exception if there is no default admin
      */
-    public static function getDefaultUsername() 
+    public static function getDefaultAdminUsername() 
     {
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
@@ -151,10 +152,17 @@ class DefaultAdminService
         // Check environment if not explicitly set
         if (!isset(static::$has_default_admin)) {
 
-            $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
+            $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field');
 
-            return ($uniqueIdentifierFieldName == 'Email' || ($uniqueIdentifierFieldName != 'Email' && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName))))) 
-                && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL'))
+            if($uniqueIdentifierFieldName == 'Email') {
+                if(!empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL')))
+                    $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL');
+                else
+                    $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
+            } else
+                $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName));
+
+            return !empty($default_admin_identifier)
                 && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD'));
         }
         return static::$has_default_admin;
@@ -166,7 +174,8 @@ class DefaultAdminService
     public static function clearDefaultAdmin()
     {
         static::$has_default_admin = false;
-        static::$default_uniqueIdentifier = null; 
+        static::$default_uniqueIdentifier = null;
+        static::$default_username = null; 
         static::$default_email = null; 
         static::$default_password = null;
     }
