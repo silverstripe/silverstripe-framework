@@ -56,7 +56,7 @@ class MemberAuthenticator implements Authenticator
      */
     protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
     {
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
         $uniqueIdentifier = !empty($data[$uniqueIdentifierFieldName]) ? $data[$uniqueIdentifierFieldName] : null; 
         $result = $result ?: ValidationResult::create();
 
@@ -138,7 +138,7 @@ class MemberAuthenticator implements Authenticator
             return $result;
         }
 
-        $uniqueIdentifierFieldName = Member::config()->unique_identifier_field; 
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
         // Allow default admin to login as self
         if (DefaultAdminService::isDefaultAdminCredentials($member->$uniqueIdentifier, $password)) { 
             return $result;
