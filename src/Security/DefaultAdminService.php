@@ -28,11 +28,8 @@ class DefaultAdminService
     protected static $has_default_admin = null;
 
     /**
-     * @var string
-     */
-    protected static $default_uniqueIdentifier = null; 
-
-    /**
+     * $default_username is a generic variable to mask 'unique_identifier_field': can be a custom unique_identifier_field,
+     * a username, an email or other things
      * @var string
      */
     protected static $default_username = null; 
@@ -54,11 +51,11 @@ class DefaultAdminService
     /**
      * Set the default admin credentials
      *
-     * @param string $email 
+     * @param string $username 
      * @param string $password
-     * @param string $uniqueIdentifier 
+     * @param string $email
      */
-    public static function setDefaultAdmin($email, $password, $uniqueIdentifier = null) 
+    public static function setDefaultAdmin($username, $password, $email = null) 
     {
         // don't overwrite if already set
         if (static::hasDefaultAdmin()) {
@@ -67,55 +64,70 @@ class DefaultAdminService
             );
         }
 
+        $adminEmptyParams = [];
         $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
-        if (empty($email) || empty($password) || (empty($uniqueIdentifier) && $uniqueIdentifierFieldName != 'Email')) {
-            throw new InvalidArgumentException("Default admin ". ($uniqueIdentifierFieldName != 'Email' ? strtolower($uniqueIdentifierFieldName)." / " : "") ."email / password cannot be empty");
+        if($uniqueIdentifierFieldName =! 'Email') {
+            // $username treated like $uniqueIdentifierFieldName
+            if(empty($username))
+                $adminEmptyParams[] = strtolower($uniqueIdentifierFieldName);
+
+            if(empty($email))
+                $adminEmptyParams[] = 'email';    
+
+        } else {
+            if(empty($username)) {
+                if(empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL')))
+                    $adminEmptyParams[] = 'username';
+                else
+                    $adminEmptyParams[] = 'email';
+            }   
         }
 
-        static::$default_uniqueIdentifier = $uniqueIdentifier;
-        static::$default_username = $email;
-        static::$default_email = $email;
+        if(empty($password))
+            $adminEmptyParams[] = 'password';
+
+        if(count($adminEmptyParams) > 0)
+            throw new InvalidArgumentException("Default admin ". implode(" and ", $adminEmptyParams) ." cannot be empty");
+
+        static::$default_username = $username;
         static::$default_password = $password;
+
+        if(!empty($email))
+            static::$default_email = $email;
+            
         static::$has_default_admin = true;
     }
 
     /**
-     * @return string The default admin uniqueIdentifier with fallback to the default admin email 
-     * @throws BadMethodCallException Throws exception if there is no default admin
-     */
-    public static function getDefaultAdminUniqueIdentifier() 
-    {
-        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
-        
-        if($uniqueIdentifierFieldName == 'Email')
-            return static::getDefaultAdminEmail();
-
-        if (!static::hasDefaultAdmin()) {
-            throw new BadMethodCallException(
-                "No default admin configured. Please call hasDefaultAdmin() before getting default admin " . strtolower($uniqueIdentifierFieldName)
-            );
-        }
-        return static::$default_uniqueIdentifier ?: Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName));
-    }
-
-    /**
-     * @return string The default admin username (for backward compatibility)
+     * @return string The default admin identifier
      * @throws BadMethodCallException Throws exception if there is no default admin
      */
     public static function getDefaultAdminUsername() 
     {
+        $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field');
+        $defaultAdminEmail = static::$default_email ?: Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL');
+
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
-                "No default admin configured. Please call hasDefaultAdmin() before getting default admin email"
+                "No default admin configured. Please call hasDefaultAdmin() before getting default admin " . ($uniqueIdentifierFieldName != 'email' ? strtolower($uniqueIdentifierFieldName) : (!empty($defaultAdminEmail) ? "email" : "username"))
             );
         }
-        return static::$default_username ?: Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
+
+        if($uniqueIdentifierFieldName != 'Email')
+            $identifierVariable = 'SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName);
+        else {
+            if(empty($defaultAdminEmail))
+                $identifierVariable = 'SS_DEFAULT_ADMIN_USERNAME';
+            else
+                $identifierVariable = 'SS_DEFAULT_ADMIN_EMAIL';
+        }
+
+        return static::$default_username ?: Environment::getEnv($identifierVariable);
     }
 
     /**
-     * @return string The default admin email
-     * @throws BadMethodCallException Throws exception if there is no default admin
+     * @return string The default admin email or NULL
      */
     public static function getDefaultAdminEmail() 
     {
@@ -126,7 +138,6 @@ class DefaultAdminService
         }
         return static::$default_email ?: Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL');
     }
-
 
     /**
      * @return string The default admin password
@@ -151,19 +162,19 @@ class DefaultAdminService
     {
         // Check environment if not explicitly set
         if (!isset(static::$has_default_admin)) {
-
             $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field');
-
-            if($uniqueIdentifierFieldName == 'Email') {
+            if($uniqueIdentifierFieldName != 'Email') {
+                return !empty(Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName)))
+                    && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL'))
+                    && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD'));
+            } else {
                 if(!empty(Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL')))
                     $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_EMAIL');
                 else
                     $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
-            } else
-                $default_admin_identifier = Environment::getEnv('SS_DEFAULT_ADMIN_' . strtoupper($uniqueIdentifierFieldName));
-
-            return !empty($default_admin_identifier)
-                && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD'));
+                return !empty($default_admin_identifier)
+                    && !empty(Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD'));
+            }
         }
         return static::$has_default_admin;
     }
@@ -174,7 +185,6 @@ class DefaultAdminService
     public static function clearDefaultAdmin()
     {
         static::$has_default_admin = false;
-        static::$default_uniqueIdentifier = null;
         static::$default_username = null; 
         static::$default_email = null; 
         static::$default_password = null;
@@ -189,12 +199,16 @@ class DefaultAdminService
 
         // Check if we have default admins
         if (!static::hasDefaultAdmin()) {
+            $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field');
+            throw new BadMethodCallException(
+                "No default admin configured. Please check the environment configuration. Did you set the SS_DEFAULT_ADMIN_". ($uniqueIdentifierFieldName != 'Email' ? strtoupper($uniqueIdentifierFieldName) . "? Did you set the SS_DEFAULT_ADMIN_EMAIL?" : "USERNAME?")." Did you set the SS_DEFAULT_ADMIN_PASSWORD?"
+            );
             return null;
         }
 
         // Create admin with default admin uniqueIdentifier 
         $admin = $this->findOrCreateAdmin(
-            static::getDefaultAdminUniqueIdentifier(), 
+            static::getDefaultAdminUsername(), 
             _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin')
         );
 
@@ -207,13 +221,13 @@ class DefaultAdminService
      * Find or create a Member with admin permissions
      *
      * @skipUpgrade
-     * @param string $uniqueIdentifier 
+     * @param string $username 
      * @param string $name
      * @return Member
      */
-    public function findOrCreateAdmin($uniqueIdentifier, $name = null) 
+    public function findOrCreateAdmin($username, $name = null) 
     {
-        $this->extend('beforeFindOrCreateAdmin', $uniqueIdentifier, $name); 
+        $this->extend('beforeFindOrCreateAdmin', $username, $name); 
 
         // Find member
         /** @var Member $admin */
@@ -221,7 +235,7 @@ class DefaultAdminService
         $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
 
         $admin = Member::get()
-            ->filter($uniqueIdentifierFieldName, $uniqueIdentifier) 
+            ->filter($uniqueIdentifierFieldName, $username) 
             ->first();
 
         // Find or create admin group
@@ -232,16 +246,17 @@ class DefaultAdminService
             $inGroup = $admin->inGroup($adminGroup);
         } else {
             // Note: This user won't be able to login until a password is set
-            // Set 'uniqueIdentifierFieldName' to identify this as the default admin 
-            
+            // Set '$uniqueIdentifierFieldName' to identify this as the default admin 
             $inGroup = false;
             $admin = Member::create();
-            $admin->FirstName = $name ?: static::getDefaultAdminUniqueIdentifier(); 
+            $admin->FirstName = $name ?: $username; 
             
-            if($uniqueIdentifierFieldName != 'Email')
-                $admin->$uniqueIdentifierFieldName = $uniqueIdentifier; 
+            //if($uniqueIdentifierFieldName != 'Email')
+            $admin->$uniqueIdentifierFieldName = $username;
+
+            if($uniqueIdentifierFieldName != 'Email' && !empty(static::getDefaultAdminEmail()))
+                $admin->Email = static::getDefaultAdminEmail();
             
-            $admin->Email = static::getDefaultAdminEmail();
             $admin->PasswordEncryption = 'none';
             $admin->write();
         }
@@ -294,14 +309,14 @@ class DefaultAdminService
      * Check if the user is a default admin.
      * Returns false if there is no default admin.
      *
-     * @param string $uniqueIdentifier 
+     * @param string $username 
      * @return bool
      */
-    public static function isDefaultAdmin($uniqueIdentifier) 
+    public static function isDefaultAdmin($username) 
     {
         return static::hasDefaultAdmin()
-            && $uniqueIdentifier 
-            && $uniqueIdentifier === static::getDefaultAdminUniqueIdentifier(); 
+            && $username 
+            && $username === static::getDefaultAdminUsername(); 
     }
 
     /**
@@ -312,9 +327,9 @@ class DefaultAdminService
      * @param string $password
      * @return bool
      */
-    public static function isDefaultAdminCredentials($uniqueIdentifier, $password)
+    public static function isDefaultAdminCredentials($username, $password)
     {
-        return static::isDefaultAdmin($uniqueIdentifier)
+        return static::isDefaultAdmin($username)
             && $password
             && $password === static::getDefaultAdminPassword();
     }

@@ -57,18 +57,18 @@ class MemberAuthenticator implements Authenticator
     protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
     {
         $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
-        $uniqueIdentifier = !empty($data[$uniqueIdentifierFieldName]) ? $data[$uniqueIdentifierFieldName] : null; 
+        $username = !empty($data[$uniqueIdentifierFieldName]) ? $data[$uniqueIdentifierFieldName] : null; 
         $result = $result ?: ValidationResult::create();
 
         // Check default login (see Security::setDefaultAdmin())
-        $asDefaultAdmin = DefaultAdminService::isDefaultAdmin($uniqueIdentifier); 
+        $asDefaultAdmin = DefaultAdminService::isDefaultAdmin($username); 
         if ($asDefaultAdmin) {
             // If logging is as default admin, ensure record is setup correctly
             $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
             $member->validateCanLogin($result);
             if ($result->isValid()) {
                 // Check if default admin credentials are correct
-                if (DefaultAdminService::isDefaultAdminCredentials($uniqueIdentifier, $data['Password'])) { 
+                if (DefaultAdminService::isDefaultAdminCredentials($username, $data['Password'])) { 
                     return $member;
                 } else {
                     $result->addError(_t(
@@ -79,12 +79,12 @@ class MemberAuthenticator implements Authenticator
             }
         }
 
-        // Attempt to identify user by uniqueIdentifier
-        if (!$member && $uniqueIdentifier) { 
+        // Attempt to identify user by $username (a generic variable to mask unique_identifier_field)
+        if (!$member && $username) { 
             // Find user by uniqueIdentifier
             /** @var Member $member */
             $member = Member::get()
-                ->filter([$uniqueIdentifierFieldName => $uniqueIdentifier]) 
+                ->filter([$uniqueIdentifierFieldName => $username]) 
                 ->first();
         }
 
@@ -94,9 +94,13 @@ class MemberAuthenticator implements Authenticator
         } elseif (!$asDefaultAdmin) {
             // spoof a login attempt
             $tempMember = Member::create();
+
             if($uniqueIdentifierFieldName != 'Email')
-                $tempMember->$uniqueIdentifierFieldName = $uniqueIdentifier;
-            $tempMember->Email = DefaultAdminService::getDefaultAdminEmail();
+                $tempMember->$uniqueIdentifierFieldName = $username;
+
+            if(!empty(DefaultAdminService::getDefaultAdminEmail()))
+                $tempMember->Email = DefaultAdminService::getDefaultAdminEmail();
+                
             $tempMember->validateCanLogin($result);
         }
 

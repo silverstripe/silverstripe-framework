@@ -14,6 +14,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\LoginForm as BaseLoginForm;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
@@ -135,14 +136,14 @@ class MemberLoginForm extends BaseLoginForm
         }
 
         $uniqueIdentifierFieldName = Member::config()->get('unique_identifier_field'); 
-
-        $label = Member::singleton()->fieldLabel($uniqueIdentifierFieldName); 
+        $label = Member::singleton()->fieldLabel($uniqueIdentifierFieldName);
+        
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
             // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
-            $uniqueIdentifierField = ($uniqueIdentifierFieldName == 'Email') ? EmailField::create("Email", $label, null, null, $this) : TextField::create($uniqueIdentifierFieldName, $label, null, null, $this), 
+            $uniqueIdentifierField = ($uniqueIdentifierFieldName == 'Email' && !empty(DefaultAdminService::getDefaultAdminEmail())) ? EmailField::create("Email", $label, null, null, $this) : TextField::create($uniqueIdentifierFieldName, $label, null, null, $this), 
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         );
         $uniqueIdentifierField->setAttribute('autofocus', 'true'); 
