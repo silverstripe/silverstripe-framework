@@ -86,7 +86,7 @@ class CMSSecurity extends Security {
 				'CMSSecurity.TimedOutTitleMember',
 				'Hey {name}!<br />Your session has timed out.',
 				'Title for CMS popup login form for a known user',
-				array('name' => $member->FirstName)
+				array('name' => Convert::raw2xml($member->FirstName))
 			);
 		} else {
 			return _t(
