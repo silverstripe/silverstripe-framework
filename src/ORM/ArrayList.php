@@ -607,7 +607,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Filter the list to include items with these characteristics
      *
      * @return ArrayList
-     * @see SS_List::filter()
+     * @see Filterable::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
      * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
