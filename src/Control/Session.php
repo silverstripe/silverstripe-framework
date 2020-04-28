@@ -648,7 +648,7 @@ class Session
      */
     public function regenerateSessionId()
     {
-        if (!headers_sent()) {
+        if (!headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
             session_regenerate_id(true);
         }
     }
