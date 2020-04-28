@@ -182,7 +182,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     }
 
     /**
-     * Filter the list to include items with these charactaristics
+     * Filter the list to include items with these characteristics
      *
      * @example $list->filter('Name', 'bob'); // only bob in list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -195,7 +195,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     }
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -275,7 +275,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     }
 
     /**
-     * Exclude the list to not contain items with these charactaristics
+     * Exclude the list to not contain items with these characteristics
      *
      * @example $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list

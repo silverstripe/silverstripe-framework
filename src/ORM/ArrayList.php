@@ -604,7 +604,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Filter the list to include items with these charactaristics
+     * Filter the list to include items with these characteristics
      *
      * @return ArrayList
      * @see SS_List::filter()
@@ -642,7 +642,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -765,7 +765,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Exclude the list to not contain items with these charactaristics
+     * Exclude the list to not contain items with these characteristics
      *
      * @return ArrayList
      * @see SS_List::exclude()
