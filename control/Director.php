@@ -117,9 +117,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		$req = new SS_HTTPRequest(
-			(isset($_SERVER['X-HTTP-Method-Override']))
-				? $_SERVER['X-HTTP-Method-Override']
-				: $_SERVER['REQUEST_METHOD'],
+			$_SERVER['REQUEST_METHOD'],
 			$url,
 			$_GET,
 			ArrayLib::array_merge_recursive((array) $_POST, (array) $_FILES),

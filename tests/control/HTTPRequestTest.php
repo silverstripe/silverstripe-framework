@@ -51,8 +51,12 @@ class HTTPRequestTest extends SapphireTest {
 			array('_method' => 'DELETE')
 		);
 		$this->assertTrue(
+			$request->isPOST(),
+			'_method override is no longer honored.'
+		);
+		$this->assertFalse(
 			$request->isDELETE(),
-			'POST with valid method override to DELETE'
+			'DELETE _method override is not honored.'
 		);
 
 		$request = new SS_HTTPRequest(
@@ -61,9 +65,9 @@ class HTTPRequestTest extends SapphireTest {
 			array(),
 			array('_method' => 'put')
 		);
-		$this->assertTrue(
+		$this->assertFalse(
 			$request->isPUT(),
-			'POST with valid method override to PUT'
+			'PUT _method override is not honored.'
 		);
 
 		$request = new SS_HTTPRequest(
@@ -72,31 +76,90 @@ class HTTPRequestTest extends SapphireTest {
 			array(),
 			array('_method' => 'head')
 		);
-		$this->assertTrue(
+		$this->assertFalse(
 			$request->isHEAD(),
-			'POST with valid method override to HEAD '
+			'HEAD _method override is not honored.'
 		);
 
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'head')
+			array('_method' => 'delete')
 		);
-		$this->assertTrue(
-			$request->isHEAD(),
-			'POST with valid method override to HEAD'
+		$this->assertFalse(
+			$request->isDELETE(),
+			'DELETE _method override is not honored.'
 		);
+	}
 
-		$request = new SS_HTTPRequest(
-			'POST',
-			'admin/crm',
-			array('_method' => 'head')
+	public function detectMethodDataProvider()
+	{
+		return array(
+			'Plain POST request' => array('POST', array(), 'POST'),
+			'Plain GET request' => array('GET', array(), 'GET'),
+			'Plain DELETE request' => array('DELETE', array(), 'DELETE'),
+			'Plain PUT request' => array('PUT', array(), 'PUT'),
+			'Plain HEAD request' => array('HEAD', array(), 'HEAD'),
+
+			'Request with GET method override' => array('POST', array('_method' => 'GET'), 'GET'),
+			'Request with HEAD method override' => array('POST', array('_method' => 'HEAD'), 'HEAD'),
+			'Request with DELETE method override' => array('POST', array('_method' => 'DELETE'), 'DELETE'),
+			'Request with PUT method override' => array('POST', array('_method' => 'PUT'), 'PUT'),
+			'Request with POST method override' => array('POST', array('_method' => 'POST'), 'POST'),
+
+			'Request with mixed case method override' => array('POST', array('_method' => 'gEt'), 'GET'),
 		);
-		$this->assertTrue(
-			$request->isPOST(),
-			'POST with invalid method override by GET parameters to HEAD'
+	}
+
+
+	/**
+	 * @dataProvider detectMethodDataProvider
+	 */
+	public function testDetectMethod($realMethod, $post, $expected)
+	{
+		$actual = SS_HTTPRequest::detect_method($realMethod, $post);
+		$this->assertEquals($expected, $actual);
+	}
+
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function testBadDetectMethod()
+	{
+		SS_HTTPRequest::detect_method('POST', array('_method' => 'Boom'));
+	}
+
+	public function setHttpMethodDataProvider()
+	{
+		return array(
+			'POST request' => array('POST','POST'),
+			'GET request' => array('GET', 'GET'),
+			'DELETE request' => array('DELETE', 'DELETE'),
+			'PUT request' => array('PUT', 'PUT'),
+			'HEAD request' => array('HEAD', 'HEAD'),
+			'Mixed case POST' => array('gEt', 'GET'),
 		);
+	}
+
+	/**
+	 * @dataProvider setHttpMethodDataProvider
+	 */
+	public function testSetHttpMethod($method, $expected)
+	{
+		$request = new SS_HTTPRequest('GET', '/hello');
+		$returnedRequest  = $request->setHttpMethod($method);
+		$this->assertEquals($expected, $request->httpMethod());
+		$this->assertEquals($request, $returnedRequest);
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function testBadSetHttpMethod()
+	{
+		$request = new SS_HTTPRequest('GET', '/hello');
+		$request->setHttpMethod('boom');
 	}
 
 	public function testRequestVars() {

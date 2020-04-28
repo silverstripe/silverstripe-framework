@@ -10,12 +10,7 @@ class FakeController extends Controller {
 
 		$this->pushCurrent();
 
-		$request = new SS_HTTPRequest(
-			(isset($_SERVER['X-HTTP-Method-Override']))
-				? $_SERVER['X-HTTP-Method-Override']
-				: $_SERVER['REQUEST_METHOD'],
-			'/'
-		);
+		$request = new SS_HTTPRequest($_SERVER['REQUEST_METHOD'], '/');
 		$this->setRequest($request);
 
 		$this->setResponse(new SS_HTTPResponse());
