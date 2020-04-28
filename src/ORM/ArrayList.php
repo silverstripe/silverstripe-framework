@@ -604,10 +604,10 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Filter the list to include items with these charactaristics
+     * Filter the list to include items with these characteristics
      *
      * @return ArrayList
-     * @see SS_List::filter()
+     * @see Filterable::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
      * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
@@ -642,7 +642,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -765,7 +765,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Exclude the list to not contain items with these charactaristics
+     * Exclude the list to not contain items with these characteristics
      *
      * @return ArrayList
      * @see SS_List::exclude()

@@ -440,7 +440,7 @@ Requirements::set_write_js_to_body(false);
 
 ## Direct resource urls
 
-In templates you can use the `$resourcePath()` or `$resourceURL()` helper methods to inject links to
+In templates, you can use the `$resourcePath()` or `$resourceURL()` helper methods to inject links to
 resources directly. If you want to link to resources within a specific module you can use 
 the `vendor/module:some/path/to/file.jpg` syntax.
 

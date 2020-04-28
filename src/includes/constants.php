@@ -15,7 +15,8 @@ use SilverStripe\Core\TempFolder;
  * - BASE_URL: Full URL to the webroot, e.g. "http://my-host.com/my-webroot" (no trailing slash).
  * - BASE_PATH: Absolute path to the webroot, e.g. "/var/www/my-webroot" (no trailing slash).
  *   See Director::baseFolder(). Can be overwritten by Config::modify()->set(Director::class, 'alternate_base_folder', ).
- * - TEMP_PATH: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
+ * - TEMP_PATH: Absolute path to temporary folder, used as base for $TEMP_FOLDER. Example: "/var/tmp"
+ * - TEMP_FOLDER: folder name for manifest and template caches. Example: "silverstripe-cache-php7.2"
  *   See getTempFolder(). No trailing slash.
  * - ASSETS_DIR: Dir for assets folder. e.g. "assets"
  * - ASSETS_PATH: Full path to assets folder. e.g. "/var/www/my-webroot/assets"
