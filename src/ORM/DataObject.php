@@ -4235,6 +4235,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
     }
 
+    /**
+     * Use this extension point to add more key components
+     * for example:
+     * public function cacheKeyComponent()
+     * {
+     *      return $this->owner->MyColumn;
+     * }
+     *
+     * @return array
+     */
     private function getUniqueKeyComponents(): array
     {
         return $this->extend('cacheKeyComponent');
