@@ -15,8 +15,6 @@ use SilverStripe\ORM\DataObject;
  * recommended use:
  * - when you need unique key for caching purposes
  * - when you need unique id on the front end (for example JavaScript needs to target specific element)
- *
- * @package SilverStripe\ORM\UniqueKey
  */
 class UniqueKeyService implements UniqueKeyInterface
 {
@@ -24,7 +22,7 @@ class UniqueKeyService implements UniqueKeyInterface
 
     /**
      * @param DataObject $object
-     * @param array $keyComponents
+     * @param array $keyComponents key components are expected to be strings (or at least scalar values)
      * @return string
      * @throws Exception
      */
@@ -33,11 +31,10 @@ class UniqueKeyService implements UniqueKeyInterface
         $id = $object->isInDB() ? (string) $object->ID : bin2hex(random_bytes(16));
         $class = ClassInfo::shortName($object);
         $keyComponents = json_encode($keyComponents);
-
-        $hash = md5(sprintf('%s-%s-%s', $keyComponents, $object->ClassName, $id));
+        $hash = md5($keyComponents . $object->ClassName . $id);
 
         // note: class name and id are added just for readability as the hash already contains all parts
         // needed to create a unique key
-        return sprintf('ss-%s-%s-%s', $class, $id, $hash);
+        return sprintf('%s-%s-%s', $class, $id, $hash);
     }
 }

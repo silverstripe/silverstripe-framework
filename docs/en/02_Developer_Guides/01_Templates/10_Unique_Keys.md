@@ -42,7 +42,7 @@ This value will be used when unique key is generated. Common cases are:
 ```yaml
 SilverStripe\Core\Injector\Injector:
   SilverStripe\ORM\UniqueKey\UniqueKeyService:
-    class: App\Service\MuCustomService
+    class: App\Service\MyCustomService
 ```
 
 Your custom service has to implement `UniqueKeyInterface`.

@@ -4203,11 +4203,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function getUniqueKey(): string
     {
         /** @var UniqueKeyInterface $service */
-        $service = UniqueKeyService::singleton();
-        if (!$service instanceof UniqueKeyInterface) {
-            return bin2hex(random_bytes(16));
-        }
-
+        $service = Injector::inst()->get(UniqueKeyInterface::class);
         $keyComponents = $this->getUniqueKeyComponents();
 
         return $service->generateKey($this, $keyComponents);

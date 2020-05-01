@@ -43,14 +43,14 @@ class ServiceTest extends SapphireTest
     public function uniqueKeysProvider(): array
     {
         return [
-            [1, River::class, false, 'ss-River-1-e64cc160ce00cc28cb0f8a3096cf3ed5'],
-            [1, River::class, true, 'ss-River-1-1484f5b9c7d403b7fd2ba944efead0a6'],
-            [2, River::class, false, 'ss-River-2-93608031dbdb53167fce1c700e71adfd'],
-            [2, River::class, true, 'ss-River-2-cfb8c8328ca792cfe83859b0ef28d3f4'],
-            [1, Mountain::class, false, 'ss-Mountain-1-8d1e32d7d9a5f55b9c5e87facc6a0acc'],
-            [1, Mountain::class, true, 'ss-Mountain-1-7d286845ff54b023fb43450ecd55aeb8'],
-            [2, Mountain::class, false, 'ss-Mountain-2-813dc6d6a905b6d3720130b9fb46e01a'],
-            [2, Mountain::class, true, 'ss-Mountain-2-d1133d717d00c944732ac25e6043ce5e'],
+            [1, River::class, false, 'River-1-8d3310e232f75a01f5a0c9344655263d'],
+            [1, River::class, true, 'River-1-ff2ea6e873a9e28538dd4af278f35e08'],
+            [2, River::class, false, 'River-2-c562c31e5c2caaabb124b46e274097c1'],
+            [2, River::class, true, 'River-2-410c1eb12697a26742bbe4b059625ab2'],
+            [1, Mountain::class, false, 'Mountain-1-93164c0f65fa28778fb75163c1e3e2f0'],
+            [1, Mountain::class, true, 'Mountain-1-2daf208e0b89252e5d239fbc0464a517'],
+            [2, Mountain::class, false, 'Mountain-2-62366f2b970a64de6f2a8e8654f179d5'],
+            [2, Mountain::class, true, 'Mountain-2-a724046b14d331a1486841eaa591d109'],
         ];
     }
 }
