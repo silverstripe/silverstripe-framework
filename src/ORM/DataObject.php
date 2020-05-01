@@ -4236,11 +4236,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Use this extension point to add more key components
-     * for example:
+     * Extension point to add more cache key components.
+     * The framework extend method will return combined values from DataExtension method(s) as an array
+     * The method on your DataExtension class should return a single scalar value. For example:
+     *
      * public function cacheKeyComponent()
      * {
-     *      return $this->owner->MyColumn;
+     *      return (string) $this->owner->MyColumn;
      * }
      *
      * @return array
