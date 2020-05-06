@@ -118,7 +118,7 @@ SilverStripe\Control\Director:
       Controller: %$SpecialRouteMiddleware
 ```
 
-## Low-level application middleware
+## Application middleware
 
 Some use cases will require a middleware to run before the Silverstripe CMS has been fully bootstrapped (e.g.: Updating 
 the HTTPRequest before Silverstripe CMS routes it to a controller). This can be achieved by editing the Silverstripe 
@@ -134,14 +134,14 @@ before the request is handled.
 $kernel = new CoreKernel(BASE_PATH);
 $app = new HTTPApplication($kernel);
 
-$app->addMiddleware( new MyLowLevelApplicationMiddleware() );
+$app->addMiddleware(new MyApplicationMiddleware());
 
 $response = $app->handle($request);
 $response->output();
 ```
 
-Beware that by this point, many of the regular Silverstripe framework features you normally rely on won't be 
-available in your middleware or in `index.php` because they won't have been initialised yet.
+Beware that by this point, the Silverstripe framework features you normally rely on won't be 
+available in your middleware or in `index.php` because they won't have been initialised yet. (e.g.: ORM, Injector, services configured by Injector)
 
 For example, Silverstripe's autoloading functionality won't work in `index.php`. So you might have to take additional
 steps to load your custom middleware class.
@@ -150,7 +150,7 @@ steps to load your custom middleware class.
 way to achieve this. Remember to call `composer dump-autoload` to regenerate your autoloader. 
 
 Alternatively, you can manually include the file containing your custom middleware with a `require` call. e.g.: 
-`require __DIR__.'/../app/src/MyLowLevelApplicationMiddleware.php';`
+`require __DIR__.'/../app/src/MyApplicationMiddleware.php';`
 
 ## API Documentation
 
