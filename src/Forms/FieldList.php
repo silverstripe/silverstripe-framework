@@ -320,9 +320,8 @@ class FieldList extends ArrayList
         $this->flushFieldsCache();
 
         // Find the tab
-        $tab = $this->findTab($tabName);
-        if ($tab) {
-            // Add the fields to the end of this set
+        if ($tab = $this->findTab($tabName)) {
+            // Remove the fields from this set
             foreach ($fields as $field) {
                 $tab->removeByName($field);
             }
