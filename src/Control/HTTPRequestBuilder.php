@@ -135,16 +135,6 @@ class HTTPRequestBuilder
      */
     public static function cleanEnvironment(array $variables)
     {
-        // IIS will sometimes generate this.
-        if (!empty($variables['_SERVER']['HTTP_X_ORIGINAL_URL'])) {
-            $variables['_SERVER']['REQUEST_URI'] = $variables['_SERVER']['HTTP_X_ORIGINAL_URL'];
-        }
-
-        // Override REQUEST_METHOD
-        if (isset($variables['_SERVER']['X-HTTP-Method-Override'])) {
-            $variables['_SERVER']['REQUEST_METHOD'] = $variables['_SERVER']['X-HTTP-Method-Override'];
-        }
-
         // Merge $_FILES into $_POST
         $variables['_POST'] = array_merge((array)$variables['_POST'], (array)$variables['_FILES']);
 
