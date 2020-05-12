@@ -50,8 +50,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      */
     public function setNonceStyle($nonceStyle)
     {
-        if ($nonceStyle && $nonceStyle !== 'mtime') {
-            throw new InvalidArgumentException('The only allowed NonceStyle is mtime');
+        if ($nonceStyle && !in_array($nonceStyle, ['mtime', 'sha1', 'md5'])) {
+            throw new InvalidArgumentException("NonceStyle '$nonceStyle' is not supported");
         }
         $this->nonceStyle = $nonceStyle;
         return $this;
@@ -104,12 +104,20 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         if ($this->nonceStyle && $exists && is_file($absolutePath)) {
             switch ($this->nonceStyle) {
                 case 'mtime':
-                    if ($query) {
-                        $query .= '&';
-                    }
-                    $query .= "m=" . filemtime($absolutePath);
+                    $method = 'filemtime';
+                    break;
+                case 'sha1':
+                    $method = 'sha1_file';
+                    break;
+                case 'md5':
+                    $method = 'md5_file';
                     break;
             }
+
+            if ($query) {
+                $query .= '&';
+            }
+            $query .= "m=" . call_user_func($method, $absolutePath);
         }
 
         // Add back querystring
