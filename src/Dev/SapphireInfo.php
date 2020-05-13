@@ -9,6 +9,7 @@ use SilverStripe\Security\Security;
 
 /**
  * Returns information about the current site instance.
+ * @deprecated 4.4.7 This class will be removed in Silverstripe Framework 5.
  */
 class SapphireInfo extends Controller
 {
