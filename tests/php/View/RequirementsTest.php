@@ -642,6 +642,9 @@ class RequirementsTest extends SapphireTest
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
 
+        $generator = Injector::inst()->get(ResourceURLGenerator::class);
+        $generator->setNonceStyle('mtime');
+
         $backend->javascript('javascript/RequirementsTest_a.js?test=1&test=2&test=3');
         $backend->css('css/RequirementsTest_a.css?test=1&test=2&test=3');
         $html = $backend->includeInHTML(self::$html_template);
