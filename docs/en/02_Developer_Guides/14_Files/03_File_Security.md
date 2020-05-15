@@ -302,6 +302,13 @@ correctly to skip `Pragma: no-cache` headers and the `bypassStaticCache` cookie.
 
 ## Configuring protected assets
 
+In most cases, developers can just interact with File and Image objects without worrying about how
+Silverstripe CMS resolve file names or responds to requests. Some advanced use cases may occasionally
+require developers to adjust the HTTP response to file request.
+
+Most of the routing logic for serving Files is controlled via the `AssetStore` interface. The default
+implementation of the `AssetStore` is `FlysystemAssetStore`.
+
 ### Configuring: Protected folder location
 
 In the default SilverStripe configuration, protected assets are placed within the web root into the
@@ -331,6 +338,67 @@ You can customise this with the below config:
 SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
   file_response_headers:
     Pragma: 'no-cache'
+```
+
+### Configuring file HTTP response code
+
+When a user tries to access a file that exists, but for which they do not have access,
+Silverstripe CMS will return a "404 Not found" response rather than a "403 Denied" to
+avoid revealing the existence of the file.
+
+You can customise the response codes for various types of requests via
+configuration flags on `FlysystemAssetStore`.
+
+```yml
+SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
+  denied_response_code: 403 # The default for this is 404
+  missing_response_code: 404
+  redirect_response_code: 302
+  permanent_redirect_response_code: 301
+```
+
+### Updating a file HTTP response before it's sent back to the browser
+
+`silverstripe/assets` 1.6 and above allows you to intercept the file HTTP response
+before it's sent to the client by applying an `Extension` to `FlysystemAssetStore`.
+
+To achieve this create an `Extension` and implement the `updateResponse` method.
+
+```php
+<?php
+
+namespace App\MySite;
+
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Extension;
+
+class AssetStoreExtension extends Extension
+{
+    /**
+     * @param HTTPResponse $response Update this object to modify the response
+     * @param string $asset Path of the request minus the `assets` prefix
+     * @param array $context This array contains some resolution information from
+     *   FlysystemAssetStore. It may be empty. It may contain a `visibility` key
+     *   to say if we are serving a public or protected file. It may contain a
+     *   `parsedFileID` detailing how FlysystemAssetStore has resolved $asset.
+     */
+    public function updateResponse(
+        HTTPResponse $response,
+        string $asset,
+        array $context
+    ): void
+    {
+        // Do something to the response
+    }
+}
+```
+
+Enable the extension with YML configuration:
+
+```yml
+SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
+  extensions:
+    - App\MySite\AssetStoreExtension
 ```
 
 ### Configuring: Archive behaviour
