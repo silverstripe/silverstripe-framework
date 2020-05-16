@@ -147,10 +147,10 @@ API methods:
    but also supports SQL expressions as values if necessary
  * `setAssignments` - Replaces all existing assignments with the specified list
  * `getAssignments` - Returns all currently given assignments, as an associative array
-   in the format `array('Column' => array('SQL' => array('parameters)))`
+   in the format `['Column' => ['SQL' => ['parameters]]]`
  * `assign` - Singular form of addAssignments, but only assigns a single column value
  * `assignSQL` - Assigns a column the value of a specified SQL expression without parameters
-   `assignSQL('Column', 'SQL)` is shorthand for `assign('Column', array('SQL' => array()))`
+   `assignSQL('Column', 'SQL)` is shorthand for `assign('Column', ['SQL' => []])`
 
 SQLUpdate also includes the following API methods:
 
@@ -225,7 +225,7 @@ $insert->assign('"Content"', '<p>This is about us</p>');
 $insert->addRow(['"Title"' => 'Contact Us']);
 
 $columns = $insert->getColumns();
-// $columns will be array('"Title"', '"Content"', '"ClassName"');
+// $columns will be ['"Title"', '"Content"', '"ClassName"'];
 
 $insert->execute();
 ```

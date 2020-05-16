@@ -388,11 +388,11 @@ PHP;
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
 _t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
-	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
-		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 _t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
 	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
@@ -429,7 +429,7 @@ PHP;
         $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
 
         $php = <<<PHP
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
         $c->setWarnOnEmptyDefault(true);
         $c->collectFromCode($php, null, $mymodule);

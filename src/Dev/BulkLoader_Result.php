@@ -30,7 +30,7 @@ class BulkLoader_Result implements \Countable
      *
      * Example:
      * <code>
-     * array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
+     * [['ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation']]
      * </code>
      *
      * @var array

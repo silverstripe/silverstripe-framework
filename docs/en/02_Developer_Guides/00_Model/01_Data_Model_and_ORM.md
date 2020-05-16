@@ -481,10 +481,10 @@ $players = Player::get()->exclude([
 `Exclude` follows the same pattern as filter, so for removing only Sam Minnée from the list:
 
 ```php
-$players = Player::get()->exclude(array(
+$players = Player::get()->exclude([
     'FirstName' => 'Sam',
     'Surname' => 'Minnée',
-));
+]);
 
 // SELECT * FROM Player WHERE (FirstName != 'Sam' OR LastName != 'Minnée')
 ```

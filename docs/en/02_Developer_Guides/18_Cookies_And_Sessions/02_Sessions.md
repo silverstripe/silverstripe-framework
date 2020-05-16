@@ -72,7 +72,7 @@ echo $session->get('MyValue');
 // returns 6
 
 $data = $session->get('MyArrayOfValues'); 
-// $data = array(1,2,3)
+// $data = [1,2,3]
 
 $object = unserialize($session->get('MyObject', $object)); 
 // $object = Object()

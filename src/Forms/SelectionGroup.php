@@ -13,7 +13,7 @@ use SilverStripe\View\HTML;
  * button is selected. Each item is defined through {@link SelectionGroup_Item}.
  *
  * @example <code>
- * $items = array(
+ * $items = [
  *  new SelectionGroup_Item(
  *      'one',
  *      new LiteralField('one', 'one view'),
@@ -24,7 +24,7 @@ use SilverStripe\View\HTML;
  *      new LiteralField('two', 'two view'),
  *      'two title'
  *  ),
- * );
+ * ];
  * $field = new SelectionGroup('MyGroup', $items);
  * </code>
  *

@@ -194,7 +194,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
     }
 
     /**
-     * Clears all currently set assigment values on the current row
+     * Clears all currently set assignment values on the current row
      *
      * @return $this The self reference to this query
      */

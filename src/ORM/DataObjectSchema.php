@@ -729,7 +729,7 @@ class DataObjectSchema
      *
      * Standard many_many return type is:
      *
-     * array(
+     * [
      *  <manyManyClass>,        Name of class for relation. E.g. "Categories"
      *  <classname>,            The class that relation is defined in e.g. "Product"
      *  <candidateName>,        The target class of the relation e.g. "Category"
@@ -738,7 +738,7 @@ class DataObjectSchema
      *  <joinTableOrRelation>   The join table between the two classes e.g. "Product_Categories".
      *                          If the class name is 'ManyManyThroughList' then this is the name of the
      *                          has_many relation.
-     * )
+     * ]
      *
      * @param string $class Name of class to get component for
      * @param string $component The component name

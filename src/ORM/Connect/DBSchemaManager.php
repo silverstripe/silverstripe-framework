@@ -345,7 +345,7 @@ abstract class DBSchemaManager
      * @param array $indexSchema A list of indexes to create. See {@link requireIndex()}
      * The values of the array can be one of:
      *   - true: Create a single column index on the field named the same as the index.
-     *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
+     *   - ['fields' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
      *     control over the index.
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
      * @param array $options Create table options (ENGINE, etc.)
@@ -478,7 +478,7 @@ MESSAGE
      * The keys of the array are the names of the index.
      * The values of the array can be one of:
      *  - true: Create a single column index on the field named the same as the index.
-     *  - array('type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB'): This gives you full
+     *  - ['type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB']: This gives you full
      *    control over the index.
      *
      * @param string $table The table name.
@@ -536,7 +536,7 @@ MESSAGE
         $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec);
 
         // Split potentially quoted modifiers
-        // E.g. 'Title, "QuotedColumn"' => array('Title', 'QuotedColumn')
+        // E.g. 'Title, "QuotedColumn"' => ['Title', 'QuotedColumn']
         return preg_split('/"?\s*,\s*"?/', trim($containedSpec, '(") '));
     }
 

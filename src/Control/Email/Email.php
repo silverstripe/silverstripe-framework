@@ -362,7 +362,7 @@ class Email extends ViewableData
      * Set recipient(s) of the email
      *
      * To send to many, pass an array:
-     * array('me@example.com' => 'My Name', 'other@example.com');
+     * ['me@example.com' => 'My Name', 'other@example.com'];
      *
      * @param string|array $address The message recipient(s) - if sending to multiple, use an array of address => name
      * @param string|null $name The name of the recipient (if one)

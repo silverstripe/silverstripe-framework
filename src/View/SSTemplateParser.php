@@ -63,30 +63,30 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /**
      * Stores the user-supplied closed block extension rules in the form:
-     * array(
+     * [
      *   'name' => function (&$res) {}
-     * )
+     * ]
      * See SSTemplateParser::ClosedBlock_Handle_Loop for an example of what the callable should look like
      * @var array
      */
-    protected $closedBlocks = array();
+    protected $closedBlocks = [];
 
     /**
      * Stores the user-supplied open block extension rules in the form:
-     * array(
+     * [
      *   'name' => function (&$res) {}
-     * )
+     * ]
      * See SSTemplateParser::OpenBlock_Handle_Base_tag for an example of what the callable should look like
      * @var array
      */
-    protected $openBlocks = array();
+    protected $openBlocks = [];
 
     /**
      * Allow the injection of new closed & open block callables
      * @param array $closedBlocks
      * @param array $openBlocks
      */
-    public function __construct($closedBlocks = array(), $openBlocks = array())
+    public function __construct($closedBlocks = [], $openBlocks = [])
     {
         parent::__construct(null);
         $this->setClosedBlocks($closedBlocks);
@@ -115,7 +115,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      */
     public function setClosedBlocks($closedBlocks)
     {
-        $this->closedBlocks = array();
+        $this->closedBlocks = [];
         foreach ((array) $closedBlocks as $name => $callable) {
             $this->addClosedBlock($name, $callable);
         }
@@ -131,7 +131,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      */
     public function setOpenBlocks($openBlocks)
     {
-        $this->openBlocks = array();
+        $this->openBlocks = [];
         foreach ((array) $openBlocks as $name => $callable) {
             $this->addOpenBlock($name, $callable);
         }
@@ -743,7 +743,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function Lookup__construct(&$res)
     {
         $res['php'] = '$scope->locally()';
-        $res['LookupSteps'] = array();
+        $res['LookupSteps'] = [];
     }
 
     /**
@@ -758,7 +758,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         $property = $sub['Call']['Method']['text'];
 
         if (isset($sub['Call']['CallArguments']) && $arguments = $sub['Call']['CallArguments']['php']) {
-            $res['php'] .= "->$method('$property', array($arguments), true)";
+            $res['php'] .= "->$method('$property', [$arguments], true)";
         } else {
             $res['php'] .= "->$method('$property', null, true)";
         }
@@ -980,7 +980,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function InjectionVariables__construct(&$res)
     {
-        $res['php'] = "array(";
+        $res['php'] = "[";
     }
 
     function InjectionVariables_InjectionName(&$res, $sub)
@@ -998,7 +998,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         if (substr($res['php'], -1) == ',') {
             $res['php'] = substr($res['php'], 0, -1); //remove last comma in the array
         }
-        $res['php'] .= ')';
+        $res['php'] .= ']';
     }
 
 
@@ -1118,7 +1118,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     	$matchrule = "QuotedString"; $result = $this->construct($matchrule, $matchrule, null);
     	$_143 = NULL;
     	do {
-    		$stack[] = $result; $result = $this->construct( $matchrule, "q" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "q" ); 
     		if (( $subres = $this->rx( '/[\'"]/' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -1128,7 +1128,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$result = array_pop($stack);
     			$_143 = FALSE; break;
     		}
-    		$stack[] = $result; $result = $this->construct( $matchrule, "String" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "String" ); 
     		if (( $subres = $this->rx( '/ (\\\\\\\\ | \\\\. | [^'.$this->expression($result, $stack, 'q').'\\\\])* /' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -1481,7 +1481,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$pos_200 = $this->pos;
     		$_199 = NULL;
     		do {
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Not" );
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Not" ); 
     			if (( $subres = $this->literal( 'not' ) ) !== FALSE) {
     				$result["text"] .= $subres;
     				$subres = $result; $result = array_pop($stack);
@@ -1876,7 +1876,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		else { $_275 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_275 = FALSE; break; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Call" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Call" ); 
     		$_271 = NULL;
     		do {
     			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
@@ -2363,7 +2363,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$_364 = NULL;
     		do {
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
     			$_360 = NULL;
     			do {
     				$_358 = NULL;
@@ -2769,7 +2769,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_492 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" ); 
     		$_445 = NULL;
     		do {
     			$_443 = NULL;
@@ -2828,7 +2828,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$_461 = NULL;
     		do {
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
     			$_457 = NULL;
     			do {
     				$_455 = NULL;
@@ -3481,7 +3481,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function Include__construct(&$res)
     {
-        $res['arguments'] = array();
+        $res['arguments'] = [];
     }
 
     function Include_Template(&$res, $sub)
@@ -3500,8 +3500,8 @@ class SSTemplateParser extends Parser implements TemplateParser
         $arguments = $res['arguments'];
 
         // Note: 'type' here is important to disable subTemplates in SSViewer::getSubtemplateFor()
-        $res['php'] = '$val .= \\SilverStripe\\View\\SSViewer::execute_template([["type" => "Includes", '.$template.'], '.$template.'], $scope->getItem(), array(' .
-            implode(',', $arguments)."), \$scope, true);\n";
+        $res['php'] = '$val .= \\SilverStripe\\View\\SSViewer::execute_template([["type" => "Includes", '.$template.'], '.$template.'], $scope->getItem(), [' .
+            implode(',', $arguments)."], \$scope, true);\n";
 
         if ($this->includeDebuggingComments) { // Add include filename comments on dev sites
             $res['php'] =
@@ -3768,7 +3768,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			unset( $pos_622 );
     		}
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Zap" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Zap" ); 
     		if (( $subres = $this->literal( '%>' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -3833,7 +3833,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function ClosedBlock_BlockArguments(&$res, $sub)
     {
         if (isset($sub['Argument']['ArgumentMode'])) {
-            $res['Arguments'] = array($sub['Argument']);
+            $res['Arguments'] = [$sub['Argument']];
             $res['ArgumentCount'] = 1;
         } else {
             $res['Arguments'] = $sub['Argument'];
@@ -3981,7 +3981,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function OpenBlock_BlockArguments(&$res, $sub)
     {
         if (isset($sub['Argument']['ArgumentMode'])) {
-            $res['Arguments'] = array($sub['Argument']);
+            $res['Arguments'] = [$sub['Argument']];
             $res['ArgumentCount'] = 1;
         } else {
             $res['Arguments'] = $sub['Argument'];
@@ -4178,7 +4178,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_680 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Tag" );
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Tag" ); 
     		$_674 = NULL;
     		do {
     			if (( $subres = $this->literal( 'end_' ) ) !== FALSE) { $result["text"] .= $subres; }

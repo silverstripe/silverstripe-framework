@@ -27,7 +27,7 @@ interface TemplateGlobalProvider
      * @return array Returns an array of items. Each key => value pair is one of three forms:
      *  - template name (no key)
      *  - template name => method name
-     *  - template name => array(), where the array can contain these key => value pairs
+     *  - template name => [], where the array can contain these key => value pairs
      *     - "method" => method name
      *     - "casting" => casting class to use (i.e., Varchar, HTMLFragment, etc)
      */

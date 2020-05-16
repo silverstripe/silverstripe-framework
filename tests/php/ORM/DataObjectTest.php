@@ -173,7 +173,7 @@ class DataObjectTest extends SapphireTest
         );
 
         // assertEquals doesn't verify the order of array elements, so access keys manually to check order:
-        // expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+        // expected: ['Name' => 'Varchar', 'Comment' => 'HTMLText']
         $this->assertEquals(
             [
                 'Name',
@@ -594,7 +594,7 @@ class DataObjectTest extends SapphireTest
         // Test the IDs on the DataObjects are set correctly
         $this->assertListEquals($team1Comments, $team1->Comments());
 
-        // Test that has_many can be infered from the has_one via getNonReciprocalComponent
+        // Test that has_many can be inferred from the has_one via getNonReciprocalComponent
         $this->assertListEquals(
             $team1Comments,
             $team1->inferReciprocalComponent(DataObjectTest\TeamComment::class, 'Team')
@@ -1704,7 +1704,7 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(ManyManyList::class, $teamWithoutSponsor->Sponsors());
         $this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
-        // Test that belongs_many_many can be infered from with getNonReciprocalComponent
+        // Test that belongs_many_many can be inferred from with getNonReciprocalComponent
         $this->assertListEquals(
             [
                 ['Name' => 'Company corp'],
@@ -1713,7 +1713,7 @@ class DataObjectTest extends SapphireTest
             $team->inferReciprocalComponent(DataObjectTest\EquipmentCompany::class, 'SponsoredTeams')
         );
 
-        // Test that many_many can be infered from getNonReciprocalComponent
+        // Test that many_many can be inferred from getNonReciprocalComponent
         $this->assertListEquals(
             [
                 ['Title' => 'Team 1'],
@@ -2149,20 +2149,20 @@ class DataObjectTest extends SapphireTest
 
         $this->assertEquals($company->ID, $ceo->Company()->ID, 'belongs_to returns the right results.');
 
-        // Test belongs_to can be infered via getNonReciprocalComponent
+        // Test belongs_to can be inferred via getNonReciprocalComponent
         // Note: Will be returned as has_many since the belongs_to is ignored.
         $this->assertListEquals(
             [['Name' => 'New Company']],
             $ceo->inferReciprocalComponent(DataObjectTest\Company::class, 'CEO')
         );
 
-        // Test has_one to a belongs_to can be infered via getNonReciprocalComponent
+        // Test has_one to a belongs_to can be inferred via getNonReciprocalComponent
         $this->assertEquals(
             $ceo->ID,
             $company->inferReciprocalComponent(DataObjectTest\CEO::class, 'Company')->ID
         );
 
-        // Test automatic creation of class where no assigment exists
+        // Test automatic creation of class where no assignment exists
         $ceo = new DataObjectTest\CEO();
         $ceo->write();
 
@@ -2443,7 +2443,7 @@ class DataObjectTest extends SapphireTest
         $root->CycleID = $grandchild->ID;
         $root->write();
 
-        // Our count will have been set while loading our fixtures, let's reset eveything back to 0
+        // Our count will have been set while loading our fixtures, let's reset everything back to 0
         TreeNode::singleton()->resetCounts();
         $root = TreeNode::get()->byID($root->ID);
         $child = TreeNode::get()->byID($child->ID);
@@ -2487,7 +2487,7 @@ class DataObjectTest extends SapphireTest
         $root->CycleID = $grandchild->ID;
         $root->write();
 
-        // Our count will have been set while loading our fixtures, let's reset eveything back to 0
+        // Our count will have been set while loading our fixtures, let's reset everything back to 0
         TreeNode::singleton()->resetCounts();
         $root = TreeNode::get()->byID($root->ID);
         $child = TreeNode::get()->byID($child->ID);

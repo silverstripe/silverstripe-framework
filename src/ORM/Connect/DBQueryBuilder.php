@@ -122,7 +122,7 @@ class DBQueryBuilder
             foreach ($columns as $column) {
                 // Check if this column has a value for this row
                 if (isset($assignments[$column])) {
-                    // Assigment is a single item array, expand with a loop here
+                    // Assignment is a single item array, expand with a loop here
                     foreach ($assignments[$column] as $assignmentSQL => $assignmentParameters) {
                         $parts[] = $assignmentSQL;
                         $parameters = array_merge($parameters, $assignmentParameters);
@@ -220,7 +220,7 @@ class DBQueryBuilder
         // Join SET components together, considering parameters
         $parts = [];
         foreach ($query->getAssignments() as $column => $assignment) {
-            // Assigment is a single item array, expand with a loop here
+            // Assignment is a single item array, expand with a loop here
             foreach ($assignment as $assignmentSQL => $assignmentParameters) {
                 $parts[] = "$column = $assignmentSQL";
                 $parameters = array_merge($parameters, $assignmentParameters);

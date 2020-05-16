@@ -38,12 +38,12 @@ class DataQuery
      * Map of all field names to an array of conflicting column SQL
      *
      * E.g.
-     * array(
-     *   'Title' => array(
+     * [
+     *   'Title' => [
      *     '"MyTable"."Title"',
      *     '"AnotherTable"."Title"',
-     *   )
-     * )
+     *   ]
+     * ]
      *
      * @var array
      */

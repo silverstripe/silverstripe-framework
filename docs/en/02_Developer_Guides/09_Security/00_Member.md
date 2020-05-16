@@ -41,10 +41,10 @@ You can define subclasses of [Member](api:SilverStripe\Security\Member) to add e
 use SilverStripe\Security\Member;
 
 class MyMember extends Member {
-    private static $db = array(
+    private static $db = [
         "Age" => "Int",
         "Address" => "Text",
-    );
+    ];
 }
 ```
 
