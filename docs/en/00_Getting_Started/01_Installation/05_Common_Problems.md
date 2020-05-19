@@ -8,7 +8,7 @@ icon: help
 
 From time to time, things will go wrong.  Here's a few things to try when you're confused.
 
-See ["8 Common SilverStripe Errors Explain (and solved!) (leftandmain.com)"](http://www.leftandmain.com/silverstripe-tips/2010/09/08/8-common-silverstripe-errors-explained-and-solved/)
+See ["8 Common SilverStripe Errors Explain (and solved!) (web archive / leftandmain.com)"](https://web.archive.org/web/20110724033601/http://www.leftandmain.com/silverstripe-tips/2010/09/08/8-common-silverstripe-errors-explained-and-solved)
 for more common problems.
 
 ## The output shows only "Website Error"
