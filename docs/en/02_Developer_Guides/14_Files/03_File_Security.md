@@ -302,9 +302,9 @@ correctly to skip `Pragma: no-cache` headers and the `bypassStaticCache` cookie.
 
 ## Configuring protected assets
 
-In most cases, developers can just interact with File and Image objects without worrying about how
-Silverstripe CMS resolve file names or responds to requests. Some advanced use cases may occasionally
-require developers to adjust the HTTP response to file request.
+In most cases, developers can interact with File and Image objects without worrying about how
+Silverstripe CMS resolves file names or responds to requests. Some advanced use cases may occasionally
+require developers to adjust the HTTP response for file requests.
 
 Most of the routing logic for serving Files is controlled via the `AssetStore` interface. The default
 implementation of the `AssetStore` is `FlysystemAssetStore`.
