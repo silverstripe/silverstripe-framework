@@ -221,6 +221,7 @@ class CompositeValidator extends Validator
     }
 
     /**
+     * @internal This method may be updated to public in the future. Let us know if you feel there is a use case for it.
      * @param int $key
      * @return CompositeValidator
      */
