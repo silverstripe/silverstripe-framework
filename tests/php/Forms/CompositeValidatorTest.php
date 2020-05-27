@@ -2,13 +2,14 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use ReflectionClass;
+use ReflectionException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
-use SilverStripe\Forms\Tests\ValidatorTest\TestCompositeValidator;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\CompositeValidator;
 
@@ -45,23 +46,30 @@ class CompositeValidatorTest extends SapphireTest
         $this->assertCount(2, $compositeValidator->getValidators());
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function testSetForm(): void
     {
         $form = $this->getForm();
 
-        $compositeValidator = new TestCompositeValidator();
+        $reflectionClass = new ReflectionClass(CompositeValidator::class);
+        $property = $reflectionClass->getProperty('form');
+        $property->setAccessible(true);
+
+        $compositeValidator = new CompositeValidator();
         $validator = new TestValidator();
 
         $compositeValidator->addValidator($validator);
 
         $compositeValidator->setForm($form);
 
-        $this->assertNotNull($compositeValidator->getForm());
+        $this->assertNotNull($property->getValue($compositeValidator));
         $this->assertCount(1, $compositeValidator->getValidators());
 
         foreach ($compositeValidator->getValidators() as $validator) {
             /** @var TestValidator $validator */
-            $this->assertNotNull($validator->getForm());
+            $this->assertNotNull($property->getValue($validator));
         }
     }
 
