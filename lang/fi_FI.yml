@@ -16,11 +16,22 @@ fi_FI:
     TEXT1: 'Tässä sinun'
     TEXT2: 'salasanasi palautuslinkki'
     TEXT3: henkilölle
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET parametri'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'URL-osoite on: "{url}"'
+    CONFIRMATION_NAME: 'URL on suojattu'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'Kokonainen URL-osoite on: "{url}"'
+    CONFIRMATION_NAME: 'URL alkaa "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
     REQUEST_ABORTED: 'Pyyntö keskeytetty'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Tuntematon
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Vahvista mahdollisesti kohtalokas toimenpide'
+    INFO_TITLE: Suojausvahvistus
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -46,6 +57,7 @@ fi_FI:
     VALIDDATETIMEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun päivämäärän ja ajan minimiarvoon  ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Valitse)
+    SEARCH_OR_CHOOSE_MODEL: '(Etsi tai valitse {name})'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -95,6 +107,10 @@ fi_FI:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    NEW: 'Lisää uusi tietue'
+    NEXT: 'Siirry seuraavaan tietueeseen'
+    PREVIOUS: 'Siirry edelliseen tietueeseen'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Muokkaa
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -108,6 +124,10 @@ fi_FI:
     View: Näytä
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: Näkymä
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Paras osuma'
+    ORIGINAL: Alkuperäinen
+    PIXEL_WIDTH: '{width} pikseliä'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -176,6 +196,12 @@ fi_FI:
     SUCCESS: Onnistui
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
     SUCCESS_TITLE: 'Kirjautuminen onnistui'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Suorita tehtävä'
+    EMPTY_TITLE: 'Ei vahvistettavia'
+    REFUSE: Peruuta
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Vahvista mahdollisesti kohtalokas toimenpide'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: Oletusylläpitäjä
   SilverStripe\Security\Group:

@@ -7,7 +7,7 @@ de_DE:
     EDITINFO: 'Datei bearbeiten'
     REMOVE: Entfernen
   SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Das Passwort für das Konto mit der E-Mail-Adresse {email} wurde geändert. Wenn Sie Ihr Passwort nicht geändert haben, ändern Sie bitte Ihr Passwort mit dem folgenden Link'
+    CHANGEPASSWORDFOREMAIL: 'Das Passwort für das Konto mit der E-Mail-Adresse {email} wurde geändert. Wenn Sie Ihr Passwort nicht geändert haben, ändern Sie bitte Ihr Passwort mit folgendem Link'
     CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort für geändert'
     CHANGEPASSWORDTEXT3: 'Passwort ändern'
     HELLO: Hallo
@@ -124,7 +124,7 @@ de_DE:
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
-    CURRENT_PASSWORD: 'Derzeitiges Passwort'
+    CURRENT_PASSWORD: 'Aktuelles Passwort'
     EDIT_PASSWORD: 'Neues Passwort'
     EMAIL: E-Mail
     EMPTYNEWPASSWORD: 'Das neue Passwort kann nicht leer sein, bitte versuchen Sie es erneut'

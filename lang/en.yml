@@ -67,6 +67,7 @@ en:
     BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -107,11 +108,12 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
+    Saved: 'Saved {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'It seems you don''t have the necessary permissions to edit "{ObjectTitle}"'
     NEW: 'Add new record'
     NEXT: 'Go to next record'
     PREVIOUS: 'Go to previous record'
-    EditPermissionsFailure: 'It seems you don''t have the necessary permissions to edit "{ObjectTitle}"'
     ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
@@ -140,6 +142,8 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   SilverStripe\ORM\DataObject:
@@ -277,6 +281,7 @@ en:
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
     VALIDATIONADMINLOSTACCESS: 'Cannot remove all admin groups from your profile'
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same {identifier}'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
