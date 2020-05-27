@@ -101,17 +101,17 @@ class DefaultFormFactory implements FormFactory
             return null;
         }
 
-        $validatorList = $context['Record']->getValidatorList();
+        $compositeValidator = $context['Record']->getCompositeValidator();
 
         // Extend validator - legacy support, will be removed in 5.0.0
-        foreach ($validatorList->getValidators() as $validator) {
+        foreach ($compositeValidator->getValidators() as $validator) {
             $this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
         }
 
         // Extend validator - forward support, will be supported beyond 5.0.0
-        $this->invokeWithExtensions('updateValidatorList', $validatorList);
+        $this->invokeWithExtensions('updateCompositeValidator', $compositeValidator);
 
-        return $validatorList;
+        return $compositeValidator;
     }
 
     /**

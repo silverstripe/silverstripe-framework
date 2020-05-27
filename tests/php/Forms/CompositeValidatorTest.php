@@ -8,15 +8,15 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
-use SilverStripe\Forms\Tests\ValidatorTest\TestValidatorList;
+use SilverStripe\Forms\Tests\ValidatorTest\TestCompositeValidator;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\ValidatorList;
+use SilverStripe\Forms\CompositeValidator;
 
 /**
  * @package framework
  * @subpackage tests
  */
-class ValidatorListTest extends SapphireTest
+class CompositeValidatorTest extends SapphireTest
 {
     /**
      * Common method for setting up form, since that will always be a dependency for the validator.
@@ -38,28 +38,28 @@ class ValidatorListTest extends SapphireTest
 
     public function testAddValidator(): void
     {
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new RequiredFields());
-        $validatorList->addValidator(new RequiredFields());
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new RequiredFields());
+        $compositeValidator->addValidator(new RequiredFields());
 
-        $this->assertCount(2, $validatorList->getValidators());
+        $this->assertCount(2, $compositeValidator->getValidators());
     }
 
     public function testSetForm(): void
     {
         $form = $this->getForm();
 
-        $validatorList = new TestValidatorList();
+        $compositeValidator = new TestCompositeValidator();
         $validator = new TestValidator();
 
-        $validatorList->addValidator($validator);
+        $compositeValidator->addValidator($validator);
 
-        $validatorList->setForm($form);
+        $compositeValidator->setForm($form);
 
-        $this->assertNotNull($validatorList->getForm());
-        $this->assertCount(1, $validatorList->getValidators());
+        $this->assertNotNull($compositeValidator->getForm());
+        $this->assertCount(1, $compositeValidator->getValidators());
 
-        foreach ($validatorList->getValidators() as $validator) {
+        foreach ($compositeValidator->getValidators() as $validator) {
             /** @var TestValidator $validator */
             $this->assertNotNull($validator->getForm());
         }
@@ -67,46 +67,46 @@ class ValidatorListTest extends SapphireTest
 
     public function testGetValidatorsByType(): void
     {
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new RequiredFields());
-        $validatorList->addValidator(new TestValidator());
-        $validatorList->addValidator(new RequiredFields());
-        $validatorList->addValidator(new TestValidator());
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new RequiredFields());
+        $compositeValidator->addValidator(new TestValidator());
+        $compositeValidator->addValidator(new RequiredFields());
+        $compositeValidator->addValidator(new TestValidator());
 
-        $this->assertCount(4, $validatorList->getValidators());
-        $this->assertCount(2, $validatorList->getValidatorsByType(RequiredFields::class));
+        $this->assertCount(4, $compositeValidator->getValidators());
+        $this->assertCount(2, $compositeValidator->getValidatorsByType(RequiredFields::class));
     }
 
     public function testRemoveValidatorsByType(): void
     {
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new RequiredFields());
-        $validatorList->addValidator(new TestValidator());
-        $validatorList->addValidator(new RequiredFields());
-        $validatorList->addValidator(new TestValidator());
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new RequiredFields());
+        $compositeValidator->addValidator(new TestValidator());
+        $compositeValidator->addValidator(new RequiredFields());
+        $compositeValidator->addValidator(new TestValidator());
 
-        $this->assertCount(4, $validatorList->getValidators());
+        $this->assertCount(4, $compositeValidator->getValidators());
 
-        $validatorList->removeValidatorsByType(RequiredFields::class);
-        $this->assertCount(2, $validatorList->getValidators());
+        $compositeValidator->removeValidatorsByType(RequiredFields::class);
+        $this->assertCount(2, $compositeValidator->getValidators());
     }
 
     public function testCanBeCached(): void
     {
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new RequiredFields());
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new RequiredFields());
 
-        $this->assertTrue($validatorList->canBeCached());
+        $this->assertTrue($compositeValidator->canBeCached());
 
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new RequiredFields(['Foor']));
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new RequiredFields(['Foor']));
 
-        $this->assertFalse($validatorList->canBeCached());
+        $this->assertFalse($compositeValidator->canBeCached());
     }
 
     public function testFieldIsRequired(): void
     {
-        $validatorList = new ValidatorList();
+        $compositeValidator = new CompositeValidator();
 
         $fieldNames = [
             'Title',
@@ -124,12 +124,12 @@ class ValidatorListTest extends SapphireTest
             ]
         );
 
-        $validatorList->addValidator($requiredFieldsFirst);
-        $validatorList->addValidator($requiredFieldsSecond);
+        $compositeValidator->addValidator($requiredFieldsFirst);
+        $compositeValidator->addValidator($requiredFieldsSecond);
 
         foreach ($fieldNames as $field) {
             $this->assertTrue(
-                $validatorList->fieldIsRequired($field),
+                $compositeValidator->fieldIsRequired($field),
                 sprintf('Failed to find "%s" field in required list', $field)
             );
         }
@@ -137,10 +137,10 @@ class ValidatorListTest extends SapphireTest
 
     public function testValidate(): void
     {
-        $validatorList = new ValidatorList();
+        $compositeValidator = new CompositeValidator();
         // Add two separate validators, each with one required field
-        $validatorList->addValidator(new RequiredFields(['Foo']));
-        $validatorList->addValidator(new RequiredFields(['Bar']));
+        $compositeValidator->addValidator(new RequiredFields(['Foo']));
+        $compositeValidator->addValidator(new RequiredFields(['Bar']));
 
         // Setup a form with the fields/data we're testing (a form is a dependency for validation right now)
         // We'll add three empty fields, but only two of them should be required
@@ -153,7 +153,7 @@ class ValidatorListTest extends SapphireTest
         $form = $this->getForm(array_keys($data));
         $form->disableSecurityToken();
         // Setup validator now that we've got our form
-        $form->setValidator($validatorList);
+        $form->setValidator($compositeValidator);
         // Put data into the form so the validator can pull it back out again
         $form->loadDataFrom($data);
 
@@ -164,8 +164,8 @@ class ValidatorListTest extends SapphireTest
 
     public function testRemoveValidation(): void
     {
-        $validatorList = new ValidatorList();
-        $validatorList->addValidator(new TestValidator());
+        $compositeValidator = new CompositeValidator();
+        $compositeValidator->addValidator(new TestValidator());
 
         // Setup a form with the fields/data we're testing (a form is a dependency for validation right now)
         $data = [
@@ -175,7 +175,7 @@ class ValidatorListTest extends SapphireTest
         $form = $this->getForm(array_keys($data));
         $form->disableSecurityToken();
         // Setup validator now that we've got our form
-        $form->setValidator($validatorList);
+        $form->setValidator($compositeValidator);
         // Put data into the form so the validator can pull it back out again
         $form->loadDataFrom($data);
 
@@ -185,7 +185,7 @@ class ValidatorListTest extends SapphireTest
 
         // Make sure it doesn't fail after removing validation AND has no errors (since calling validate should reset
         // errors)
-        $validatorList->removeValidation();
+        $compositeValidator->removeValidation();
         $result = $form->validationResult();
         $this->assertTrue($result->isValid());
         $this->assertEmpty($result->getMessages());

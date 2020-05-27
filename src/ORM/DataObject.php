@@ -15,7 +15,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
-use SilverStripe\Forms\ValidatorList;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -2449,25 +2449,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @return ValidatorList
+     * @return CompositeValidator
      */
-    public function getValidatorList(): ValidatorList
+    public function getCompositeValidator(): CompositeValidator
     {
-        $validatorList = new ValidatorList();
+        $compositeValidator = new CompositeValidator();
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
             Deprecation::notice(
                 '4.6',
-                'getCMSValidator() is removed in 5.0 in favour of getValidatorList()'
+                'getCMSValidator() is removed in 5.0 in favour of getCompositeValidator()'
             );
 
-            $validatorList->addValidator($this->getCMSValidator());
+            $compositeValidator->addValidator($this->getCMSValidator());
         }
 
-        $this->invokeWithExtensions('updateValidatorList', $validatorList);
+        // Extend validator - forward support, will be supported beyond 5.0.0
+        $this->invokeWithExtensions('updateCompositeValidator', $compositeValidator);
 
-        return $validatorList;
+        return $compositeValidator;
     }
 
     /**

@@ -4,14 +4,14 @@ namespace SilverStripe\Forms\Tests\ValidatorTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\ValidatorList;
+use SilverStripe\Forms\CompositeValidator;
 
 /**
- * Class TestValidatorList
+ * Class TestCompositeValidator
  *
  * @package SilverStripe\Forms\Tests\ValidatorTest
  */
-class TestValidatorList extends ValidatorList implements TestOnly
+class TestCompositeValidator extends CompositeValidator implements TestOnly
 {
     /**
      * Allow us to access the form for test purposes.

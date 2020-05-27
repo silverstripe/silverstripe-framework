@@ -5,7 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\ValidatorList;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\ORM\Queries\SQLSelect;
 use Exception;
 
@@ -137,11 +137,11 @@ abstract class DataExtension extends Extension
     /**
      * This function is used to provide modifications to the Validators used on a DataObject.
      *
-     * Caution: Use {@link ValidatorList->addValidator()} to add Validators.
+     * Caution: Use {@link CompositeValidator->addValidator()} to add Validators.
      *
-     * @param ValidatorList $validatorList
+     * @param CompositeValidator $compositeValidator
      */
-    public function updateValidatorList(ValidatorList $validatorList): void
+    public function updateCompositeValidator(CompositeValidator $compositeValidator): void
     {
     }
 

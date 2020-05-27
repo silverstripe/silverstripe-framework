@@ -6,11 +6,35 @@ use InvalidArgumentException;
 use SilverStripe\ORM\ValidationResult;
 
 /**
- * Class ValidatorList
+ * CompositeValidator can contain between 0 and many different types of Validators. Each Validator is itself still
+ * responsible for Validating its form and generating its ValidationResult.
+ *
+ * Once each Validator has generated its ValidationResult, the CompositeValidator will combine these results into a
+ * single ValidationResult. This single ValidationResult is what will be returned by the CompositeValidator.
+ *
+ * You can add Validators to the CompositeValidator in any DataObject by extending the getCompositeValidator() method:
+ *
+ * public function getCompositeValidator(): CompositeValidator
+ * {
+ *   $compositeValidator = parent::getCompositeValidator();
+ *
+ *   $compositeValidator->addValidator(RequiredFields::create(['MyRequiredField']));
+ *
+ *   return $compositeValidator
+ * }
+ *
+ * Or by implementing the updateCompositeValidator() method in a DataExtension:
+ *
+ * public function updateCompositeValidator(CompositeValidator $compositeValidator): void
+ * {
+ *   $compositeValidator->addValidator(RequiredFields::create(['AdditionalContent']));
+ * }
+ *
+ * Class CompositeValidator
  *
  * @package SilverStripe\Forms
  */
-class ValidatorList extends Validator
+class CompositeValidator extends Validator
 {
     /**
      * @var array|Validator[]
@@ -18,7 +42,7 @@ class ValidatorList extends Validator
     private $validators;
 
     /**
-     * ValidatorList constructor.
+     * CompositeValidator constructor.
      *
      * @param array|Validator[] $validators
      */
@@ -30,6 +54,8 @@ class ValidatorList extends Validator
     }
 
     /**
+     * Set the provided Form to the CompositeValidator and each Validator that has been added.
+     *
      * @param Form $form
      * @return Validator
      */
@@ -44,9 +70,9 @@ class ValidatorList extends Validator
 
     /**
      * @param Validator $validator
-     * @return ValidatorList
+     * @return CompositeValidator
      */
-    public function addValidator(Validator $validator): ValidatorList
+    public function addValidator(Validator $validator): CompositeValidator
     {
         $this->validators[] = $validator;
 
@@ -54,8 +80,8 @@ class ValidatorList extends Validator
     }
 
     /**
-     * Returns any errors there may be. This method considers the enabled status of the ValidatorList as a whole
-     * (exiting early if the List is disabled), as well as the enabled status of each individual Validator.
+     * Returns any errors there may be. This method considers the enabled status of the CompositeValidator as a whole
+     * (exiting early if the Composite is disabled), as well as the enabled status of each individual Validator.
      *
      * @return ValidationResult
      */
@@ -63,7 +89,7 @@ class ValidatorList extends Validator
     {
         $this->resetResult();
 
-        // This ValidatorList has been disabled in full
+        // This CompositeValidator has been disabled in full
         if (!$this->getEnabled()) {
             return $this->result;
         }
@@ -142,6 +168,8 @@ class ValidatorList extends Validator
     }
 
     /**
+     * Return all Validators that match a certain class name. EG: RequiredFields::class
+     *
      * @param string $className
      * @return array|Validator[]
      */
@@ -161,10 +189,12 @@ class ValidatorList extends Validator
     }
 
     /**
+     * Remove all Validators that match a certain class name. EG: RequiredFields::class
+     *
      * @param string $className
-     * @return ValidatorList
+     * @return CompositeValidator
      */
-    public function removeValidatorsByType(string $className): ValidatorList
+    public function removeValidatorsByType(string $className): CompositeValidator
     {
         foreach ($this->getValidatorsByType($className) as $key => $validator) {
             $this->removeValidatorByKey($key);
@@ -174,23 +204,9 @@ class ValidatorList extends Validator
     }
 
     /**
-     * @param int $key
-     * @return ValidatorList
-     */
-    public function removeValidatorByKey(int $key): ValidatorList
-    {
-        if (!array_key_exists($key, $this->validators)) {
-            throw new InvalidArgumentException(
-                sprintf('Key "%s" does not exist in $validators array', $key)
-            );
-        }
-
-        unset($this->validators[$key]);
-
-        return $this;
-    }
-
-    /**
+     * Each Validator is aware of whether or not it can be cached. If even one Validator cannot be cached, then the
+     * CompositeValidator as a whole also cannot be cached.
+     *
      * @return bool
      */
     public function canBeCached(): bool
@@ -202,5 +218,22 @@ class ValidatorList extends Validator
         }
 
         return true;
+    }
+
+    /**
+     * @param int $key
+     * @return CompositeValidator
+     */
+    protected function removeValidatorByKey(int $key): CompositeValidator
+    {
+        if (!array_key_exists($key, $this->validators)) {
+            throw new InvalidArgumentException(
+                sprintf('Key "%s" does not exist in $validators array', $key)
+            );
+        }
+
+        unset($this->validators[$key]);
+
+        return $this;
     }
 }
