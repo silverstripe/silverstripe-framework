@@ -101,7 +101,7 @@ class DefaultFormFactory implements FormFactory
             return null;
         }
 
-        $compositeValidator = $context['Record']->getCompositeValidator();
+        $compositeValidator = $context['Record']->getCMSCompositeValidator();
 
         // Extend validator - legacy support, will be removed in 5.0.0
         foreach ($compositeValidator->getValidators() as $validator) {
@@ -109,7 +109,7 @@ class DefaultFormFactory implements FormFactory
         }
 
         // Extend validator - forward support, will be supported beyond 5.0.0
-        $this->invokeWithExtensions('updateCompositeValidator', $compositeValidator);
+        $this->invokeWithExtensions('updateCMSCompositeValidator', $compositeValidator);
 
         return $compositeValidator;
     }

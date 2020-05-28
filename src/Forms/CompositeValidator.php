@@ -12,20 +12,21 @@ use SilverStripe\ORM\ValidationResult;
  * Once each Validator has generated its ValidationResult, the CompositeValidator will combine these results into a
  * single ValidationResult. This single ValidationResult is what will be returned by the CompositeValidator.
  *
- * You can add Validators to the CompositeValidator in any DataObject by extending the getCompositeValidator() method:
+ * You can add Validators to the CompositeValidator in any DataObject by extending the getCMSCompositeValidator()
+ * method:
  *
- * public function getCompositeValidator(): CompositeValidator
+ * public function getCMSCompositeValidator(): CompositeValidator
  * {
- *   $compositeValidator = parent::getCompositeValidator();
+ *   $compositeValidator = parent::getCMSCompositeValidator();
  *
  *   $compositeValidator->addValidator(RequiredFields::create(['MyRequiredField']));
  *
  *   return $compositeValidator
  * }
  *
- * Or by implementing the updateCompositeValidator() method in a DataExtension:
+ * Or by implementing the updateCMSCompositeValidator() method in a DataExtension:
  *
- * public function updateCompositeValidator(CompositeValidator $compositeValidator): void
+ * public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
  * {
  *   $compositeValidator->addValidator(RequiredFields::create(['AdditionalContent']));
  * }
@@ -221,7 +222,7 @@ class CompositeValidator extends Validator
     }
 
     /**
-     * @internal This method may be updated to public in the future. Let us know if you feel there is a use case for it.
+     * @internal This method may be updated to public in the future. Let us know if you feel there's a use case for it
      * @param int $key
      * @return CompositeValidator
      */

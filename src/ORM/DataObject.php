@@ -2449,9 +2449,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * When extending this class and overriding this method, you will need to instantiate the CompositeValidator by
+     * calling parent::getCMSCompositeValidator(). This will ensure that the appropriate extension point is also
+     * invoked.
+     *
+     * You can also update the CompositeValidator by creating an Extension and implementing the
+     * updateCMSCompositeValidator(CompositeValidator $compositeValidator) method.
+     *
+     * @see CompositeValidator for examples of implementation
      * @return CompositeValidator
      */
-    public function getCompositeValidator(): CompositeValidator
+    public function getCMSCompositeValidator(): CompositeValidator
     {
         $compositeValidator = new CompositeValidator();
 
@@ -2459,14 +2467,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($this->hasMethod('getCMSValidator')) {
             Deprecation::notice(
                 '4.6',
-                'getCMSValidator() is removed in 5.0 in favour of getCompositeValidator()'
+                'getCMSValidator() is removed in 5.0 in favour of getCMSCompositeValidator()'
             );
 
             $compositeValidator->addValidator($this->getCMSValidator());
         }
 
         // Extend validator - forward support, will be supported beyond 5.0.0
-        $this->invokeWithExtensions('updateCompositeValidator', $compositeValidator);
+        $this->invokeWithExtensions('updateCMSCompositeValidator', $compositeValidator);
 
         return $compositeValidator;
     }

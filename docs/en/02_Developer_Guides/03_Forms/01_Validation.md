@@ -275,7 +275,7 @@ class MyController extends Controller
 
 In the CMS, we're not creating the forms for editing CMS records. The `Form` instance is generated for us so we cannot
 call `setValidator` easily. However, a `DataObject` can provide its' own `Validator` instance/s through the 
-`getCompositeValidator()` method. The CMS interfaces such as [LeftAndMain](api:SilverStripe\Admin\LeftAndMain),
+`getCMSCompositeValidator()` method. The CMS interfaces such as [LeftAndMain](api:SilverStripe\Admin\LeftAndMain),
 [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) and [GridField](api:SilverStripe\Forms\GridField\GridField) will 
 respect the provided `Validator`/s and handle displaying error and success responses to the user. 
 

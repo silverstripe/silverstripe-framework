@@ -191,8 +191,8 @@ class CompositeValidatorTest extends SapphireTest
         $this->assertFalse($result->isValid());
         $this->assertCount(1, $result->getMessages());
 
-        // Make sure it doesn't fail after removing validation AND has no errors (since calling validate should reset
-        // errors)
+        // Make sure it doesn't fail after removing validation AND has no errors (since calling validate should
+        // reset errors)
         $compositeValidator->removeValidation();
         $result = $form->validationResult();
         $this->assertTrue($result->isValid());

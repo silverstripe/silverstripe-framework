@@ -141,7 +141,7 @@ abstract class DataExtension extends Extension
      *
      * @param CompositeValidator $compositeValidator
      */
-    public function updateCompositeValidator(CompositeValidator $compositeValidator): void
+    public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
     {
     }
 
