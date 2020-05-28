@@ -1386,10 +1386,10 @@ class Form extends ViewableData implements HasRequestHandler
      *
      *  You can pass a bitmask here to change this behaviour.
      *
-     *  Passing CLEAR_MISSING means that any fields that don't match any property/key in
+     *  Passing MERGE_CLEAR_MISSING means that any fields that don't match any property/key in
      *  {@link $data} are cleared.
      *
-     *  Passing IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
+     *  Passing MERGE_IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
      *  a field's value.
      *
      *  Passing MERGE_AS_INTERNAL_VALUE forces the data to be parsed using the internal representation of the matching
@@ -1398,7 +1398,7 @@ class Form extends ViewableData implements HasRequestHandler
      *  parsed as it would be submitted from a form.
      *
      *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
-     *  CLEAR_MISSING
+     *  MERGE_CLEAR_MISSING
      *
      * @param array $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
