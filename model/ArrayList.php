@@ -475,7 +475,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			return false;
 		}
 
-		return array_key_exists($by, $firstRecord);
+        return is_array($firstRecord) ? array_key_exists($by, $firstRecord) : property_exists($by, $firstRecord);
 	}
 
 	/**
