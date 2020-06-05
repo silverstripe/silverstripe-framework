@@ -1171,7 +1171,7 @@ class DataObjectSchema
         }
 
         // Validate bad types on parent relation
-        if ($key === 'from' && $relationClass !== $parentClass) {
+        if ($key === 'from' && $relationClass !== $parentClass && !is_subclass_of($parentClass, $relationClass)) {
             throw new InvalidArgumentException(
                 "many_many through relation {$parentClass}.{$component} {$key} references a field name "
                 . "{$joinClass}::{$relation} of type {$relationClass}; {$parentClass} expected"
