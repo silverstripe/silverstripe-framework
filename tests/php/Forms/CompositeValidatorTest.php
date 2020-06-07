@@ -25,7 +25,7 @@ class CompositeValidatorTest extends SapphireTest
      * @param array $fieldNames
      * @return Form
      */
-    protected function getForm(array $fieldNames = array()): Form
+    protected function getForm(array $fieldNames = []): Form
     {
         // Setup field list now. We're only worried about names right now
         $fieldList = new FieldList();
