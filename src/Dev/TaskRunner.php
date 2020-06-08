@@ -2,15 +2,19 @@
 
 namespace SilverStripe\Dev;
 
+use ReflectionClass;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use ReflectionClass;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\ViewableData;
 
 class TaskRunner extends Controller
 {
@@ -44,33 +48,48 @@ class TaskRunner extends Controller
 
     public function index()
     {
+        $baseUrl = Director::absoluteBaseURL();
         $tasks = $this->getTasks();
 
-        // Web mode
-        if (!Director::is_cli()) {
-            $renderer = new DebugView();
-            echo $renderer->renderHeader();
-            echo $renderer->renderInfo("SilverStripe Development Tools: Tasks", Director::absoluteBaseURL());
-            $base = Director::absoluteBaseURL();
+        if (Director::is_cli()) {
+            // CLI mode
+            $output = 'SILVERSTRIPE DEVELOPMENT TOOLS: Tasks' . PHP_EOL . '--------------------------' . PHP_EOL . PHP_EOL;
 
-            echo "<div class=\"options\">";
-            echo "<ul>";
             foreach ($tasks as $task) {
-                echo "<li><p>";
-                echo "<a href=\"{$base}dev/tasks/" . $task['segment'] . "\">" . $task['title'] . "</a><br />";
-                echo "<span class=\"description\">" . $task['description'] . "</span>";
-                echo "</p></li>\n";
+                $output .= sprintf(' * %s: sake dev/tasks/%s%s', $task['title'], $task['segment'], PHP_EOL);
             }
-            echo "</ul></div>";
 
-            echo $renderer->renderFooter();
-        // CLI mode
-        } else {
-            echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
-            foreach ($tasks as $task) {
-                echo " * $task[title]: sake dev/tasks/" . $task['segment'] . "\n";
-            }
+            return $output;
         }
+
+        $list = ArrayList::create();
+
+        foreach ($tasks as $task) {
+            $list->push(ArrayData::create([
+                'TaskLink' => $baseUrl . 'dev/tasks/' . $task['segment'],
+                'Title' => $task['title'],
+                'Description' => $task['description'],
+            ]));
+        }
+
+        $renderer = DebugView::create();
+        $header = $renderer->renderHeader();
+        $cssPath = ModuleResourceLoader::singleton()->resolveURL(
+            'silverstripe/framework:client/styles/task-runner.css'
+        );
+
+        // inject task runner CSS into the heaader
+        $cssInclude = sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssPath);
+        $header = str_replace('</head>', $cssInclude . '</head>', $header);
+
+        $data = [
+            'Tasks' => $list,
+            'Header' => $header,
+            'Footer' => $renderer->renderFooter(),
+            'Info' => $renderer->renderInfo('SilverStripe Development Tools: Tasks', $baseUrl),
+        ];
+
+        return ViewableData::create()->renderWith(static::class, $data);
     }
 
     /**
