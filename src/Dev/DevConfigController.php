@@ -37,22 +37,24 @@ class DevConfigController extends Controller
      */
     public function index()
     {
+        $body = '';
+
         if (Director::is_cli()) {
-            echo "\nCONFIG MANIFEST\n\n";
-            echo Yaml::dump(Config::inst()->getAll(), 99, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
+            $body .= "\nCONFIG MANIFEST\n\n";
+            $body .= Yaml::dump(Config::inst()->getAll(), 99, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
         } else {
             $renderer = DebugView::create();
-            echo $renderer->renderHeader();
-            echo $renderer->renderInfo("Configuration", Director::absoluteBaseURL());
-            echo "<div class=\"options\">";
-            echo "<h2>Config manifest</h2>";
-            echo "<pre>";
-            echo Yaml::dump(Config::inst()->getAll(), 99, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
-            echo "</pre>";
-            echo "</div>";
-            echo $renderer->renderFooter();
+            $body .= $renderer->renderHeader();
+            $body .= $renderer->renderInfo("Configuration", Director::absoluteBaseURL());
+            $body .= "<div class=\"options\">";
+            $body .= "<h2>Config manifest</h2>";
+            $body .= "<pre>";
+            $body .= Yaml::dump(Config::inst()->getAll(), 99, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
+            $body .= "</pre>";
+            $body .= "</div>";
+            $body .= $renderer->renderFooter();
         }
 
-        return $this->getResponse();
+        return $this->getResponse()->setBody($body);
     }
 }
