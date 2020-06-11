@@ -3543,6 +3543,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Invoked after every database build is complete (including after table creation and
+     * default record population).
+     *
+     * See {@link DatabaseAdmin::doBuild()} for context.
+     */
+    public function onAfterBuild()
+    {
+        $this->extend('onAfterBuild', $dummy);
+    }
+
+    /**
      * Get the default searchable fields for this object, as defined in the
      * $searchable_fields list. If searchable fields are not defined on the
      * data object, uses a default selection of summary fields.
