@@ -16,6 +16,9 @@ use Exception;
 abstract class DataExtension extends Extension
 {
 
+    /**
+     * @deprecated No longer used by internal code
+     */
     public static function unload_extra_statics($class, $extension)
     {
         throw new Exception('unload_extra_statics gone');
@@ -60,42 +63,112 @@ abstract class DataExtension extends Extension
     {
     }
 
+    /**
+     * Extend the owner's onBeforeWrite() logic
+     *
+     * See {@link DataObject::onBeforeWrite()} for context.
+     */
     public function onBeforeWrite()
     {
     }
 
+    /**
+     * Extend the owner's onAfterWrite() logic
+     *
+     * See {@link DataObject::onAfterWrite()} for context.
+     */
     public function onAfterWrite()
     {
     }
 
+    /**
+     * Extend the owner's onBeforeDelete() logic
+     *
+     * See {@link DataObject::onBeforeDelete()} for context.
+     */
     public function onBeforeDelete()
     {
     }
 
+    /**
+     * Extend the owner's onAfterDelete() logic
+     *
+     * See {@link DataObject::onAfterDelete()} for context.
+     */
     public function onAfterDelete()
     {
     }
 
+    /**
+     * Extend the owner's requireDefaultRecords() logic
+     *
+     * See {@link DataObject::requireDefaultRecords()} for context.
+     */
     public function requireDefaultRecords()
     {
     }
 
+    /**
+     * Extend the owner's populateDefaults() logic
+     *
+     * See {@link DataObject::populateDefaults()} for context.
+     */
     public function populateDefaults()
     {
     }
 
+    /**
+     * Influence the owner's can() permission check value to be disallowed (false),
+     * or allowed (true) if no other processed results are to disallow.
+     *
+     * See {@link DataObject::can()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @param array $context
+     * @return bool
+     */
     public function can($member)
     {
     }
 
+    /**
+     * Influence the owner's canEdit() permission check value to be disallowed (false),
+     * or allowed (true) if no other processed results are to disallow.
+     *
+     * See {@link DataObject::canEdit()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @param array $context
+     * @return bool
+     */
     public function canEdit($member)
     {
     }
 
+    /**
+     * Influence the owner's canDelete() permission check value to be disallowed (false),
+     * or allowed (true) if no other processed results are to disallow.
+     *
+     * See {@link DataObject::canDelete()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @param array $context
+     * @return bool
+     */
     public function canDelete($member)
     {
     }
 
+    /**
+     * Influence the owner's canCreate() permission check value to be disallowed (false),
+     * or allowed (true) if no other processed results are to disallow.
+     *
+     * See {@link DataObject::canCreate()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @param array $context
+     * @return bool
+     */
     public function canCreate($member)
     {
     }
