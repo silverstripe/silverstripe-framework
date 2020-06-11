@@ -43,6 +43,23 @@ class DevelopmentAdmin extends Controller
     ];
 
     /**
+     * Controllers for dev admin views
+     *
+     * e.g [
+     *     'urlsegment' => [
+     *         'controller' => 'SilverStripe\Dev\DevelopmentAdmin',
+     *         'links' => [
+     *             'urlsegment' => 'description',
+     *             ...
+     *         ]
+     *     ]
+     * ]
+     *
+     * @var array
+     */
+    private static $registered_controllers;
+
+    /**
      * Assume that CLI equals admin permissions
      * If set to false, normal permission model will apply even in CLI mode
      * Applies to all development admin tasks (E.g. TaskRunner, DatabaseAdmin)

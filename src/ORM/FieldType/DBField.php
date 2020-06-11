@@ -107,15 +107,6 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     private static $index = false;
 
-    /**
-     * The filters to be used by graphql form field front-end
-     *
-     * e.g [ contains, gt, lt, gte, lte ]
-     *
-     * @var array
-     */
-    private static $graphql_default_filters;
-
     private static $casting = [
         'ATT' => 'HTMLFragment',
         'CDATA' => 'HTMLFragment',
