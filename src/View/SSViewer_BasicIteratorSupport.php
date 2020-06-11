@@ -2,6 +2,8 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Defines an extra set of basic methods that can be used in templates
  * that are not defined on sub-classes of {@link ViewableData}.
@@ -24,6 +26,8 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     public static function get_template_iterator_variables()
     {
         return [
+            'isFirst',
+            'isLast',
             'First',
             'Last',
             'FirstLast',
@@ -57,9 +61,19 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function First()
+    public function isFirst()
     {
         return $this->iteratorPos == 0;
+    }
+
+    /**
+     * @deprecated
+     * @return bool
+     */
+    public function First()
+    {
+        Deprecation::notice("5.0.0 please use isFirst() to avoid clashes with SS_Lists");
+        return $this->isFirst();
     }
 
     /**
@@ -67,9 +81,19 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function Last()
+    public function isLast()
     {
         return $this->iteratorPos == $this->iteratorTotalItems - 1;
+    }
+
+    /**
+     * @deprecated
+     * @return bool
+     */
+    public function Last()
+    {
+        Deprecation::notice("5.0.0 please use isLast() to avoid clashes with SS_Lists");
+        return $this->isLast();
     }
 
     /**
@@ -79,13 +103,13 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function FirstLast()
     {
-        if ($this->First() && $this->Last()) {
+        if ($this->isFirst() && $this->isLast()) {
             return 'first last';
         }
-        if ($this->First()) {
+        if ($this->isFirst()) {
             return 'first';
         }
-        if ($this->Last()) {
+        if ($this->isLast()) {
             return 'last';
         }
         return null;
@@ -98,7 +122,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function Middle()
     {
-        return !$this->First() && !$this->Last();
+        return !$this->isFirst() && !$this->isLast();
     }
 
     /**
