@@ -17,7 +17,7 @@ abstract class DataExtension extends Extension
 {
 
     /**
-     * @deprecated No longer used by internal code
+     * @deprecated 4.7.0 No longer used by internal code
      */
     public static function unload_extra_statics($class, $extension)
     {
@@ -119,7 +119,8 @@ abstract class DataExtension extends Extension
 
     /**
      * Influence the owner's can() permission check value to be disallowed (false),
-     * or allowed (true) if no other processed results are to disallow.
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
      *
      * See {@link DataObject::can()} and {@link DataObject::extendedCan()} for context.
      *
@@ -133,7 +134,8 @@ abstract class DataExtension extends Extension
 
     /**
      * Influence the owner's canEdit() permission check value to be disallowed (false),
-     * or allowed (true) if no other processed results are to disallow.
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
      *
      * See {@link DataObject::canEdit()} and {@link DataObject::extendedCan()} for context.
      *
@@ -147,7 +149,8 @@ abstract class DataExtension extends Extension
 
     /**
      * Influence the owner's canDelete() permission check value to be disallowed (false),
-     * or allowed (true) if no other processed results are to disallow.
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
      *
      * See {@link DataObject::canDelete()} and {@link DataObject::extendedCan()} for context.
      *
@@ -161,7 +164,8 @@ abstract class DataExtension extends Extension
 
     /**
      * Influence the owner's canCreate() permission check value to be disallowed (false),
-     * or allowed (true) if no other processed results are to disallow.
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
      *
      * See {@link DataObject::canCreate()} and {@link DataObject::extendedCan()} for context.
      *
