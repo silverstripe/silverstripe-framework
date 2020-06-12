@@ -126,7 +126,7 @@ abstract class DataExtension extends Extension
      *
      * @param Member $member
      * @param array $context
-     * @return bool
+     * @return bool|null
      */
     public function can($member)
     {
@@ -141,7 +141,7 @@ abstract class DataExtension extends Extension
      *
      * @param Member $member
      * @param array $context
-     * @return bool
+     * @return bool|null
      */
     public function canEdit($member)
     {
@@ -156,7 +156,7 @@ abstract class DataExtension extends Extension
      *
      * @param Member $member
      * @param array $context
-     * @return bool
+     * @return bool|null
      */
     public function canDelete($member)
     {
@@ -171,7 +171,7 @@ abstract class DataExtension extends Extension
      *
      * @param Member $member
      * @param array $context
-     * @return bool
+     * @return bool|null
      */
     public function canCreate($member)
     {
