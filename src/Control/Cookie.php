@@ -32,7 +32,7 @@ class Cookie
     /**
      * Set a cookie variable.
      *
-     * Expiry time is set in days, and defaults to 90.
+     * Expiry time is a Unix timestamp; 0 expires at the end of the current session
      *
      * @param string $name
      * @param mixed $value
@@ -47,7 +47,7 @@ class Cookie
     public static function set(
         $name,
         $value,
-        $expiry = 90,
+        $expiry = 0,
         $path = null,
         $domain = null,
         $secure = false,

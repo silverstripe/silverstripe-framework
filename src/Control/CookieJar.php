@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
 
@@ -63,14 +64,21 @@ class CookieJar implements Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string $value The value for the cookie to hold
-     * @param int $expiry The number of days until expiry; 0 indicates a cookie valid for the current session
+     * @param int $expiry A Unix timestamp of the time the cookie expires; 0 expires at the end of the current session
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
      */
-    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public function set($name, $value, $expiry = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
+        if ($expiry > 0 && $expiry < time()) {
+            Deprecation::notice(
+                '5.0',
+                'Cookie::set() requires $expiry to be a Unix timestamp of the time the cookie expires'
+            );
+        }
+
         //are we setting or clearing a cookie? false values are reserved for clearing cookies (see PHP manual)
         $clear = false;
         if ($value === false || $value === '' || $expiry < 0) {
@@ -78,11 +86,9 @@ class CookieJar implements Cookie_Backend
             $value = false;
         }
 
-        //expiry === 0 is a special case where we set a cookie for the current user session
-        if ($expiry !== 0) {
-            //don't do the maths if we are clearing
-            $expiry = $clear ? -1 : DBDatetime::now()->getTimestamp() + (86400 * $expiry);
-        }
+        // Override expiry if we are clearing
+        $expiry = $clear ? -1 : $expiry;
+
         //set the path up
         $path = $path ? $path : Director::baseURL();
         //send the cookie
@@ -152,7 +158,7 @@ class CookieJar implements Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string|array $value The value for the cookie to hold
-     * @param int $expiry The number of days until expiry
+     * @param int $expiry A Unix timestamp of the time the cookie expires
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
@@ -162,7 +168,7 @@ class CookieJar implements Cookie_Backend
     protected function outputCookie(
         $name,
         $value,
-        $expiry = 90,
+        $expiry = 0,
         $path = null,
         $domain = null,
         $secure = false,

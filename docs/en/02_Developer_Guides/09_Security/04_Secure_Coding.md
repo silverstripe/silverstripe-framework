@@ -759,7 +759,7 @@ as this prevents an attacker who achieves cross-site scripting from accessing th
 ```php
 use SilverStripe\Control\Cookie;
 
-Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
+Cookie::set('cookie-name', 'chocolate-chip', $expiry = strtotime('+30 days'), $path = null, $domain = null, $secure = true, 
     $httpOnly = false
 );
 ```

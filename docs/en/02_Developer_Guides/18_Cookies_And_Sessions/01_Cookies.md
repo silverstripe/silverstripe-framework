@@ -17,7 +17,7 @@ Sets the value of cookie with configuration.
 ```php
 use SilverStripe\Control\Cookie;
 
-Cookie::set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false);
+Cookie::set($name, $value, $expiry = strtotime('+90 days'), $path = null, $domain = null, $secure = false, $httpOnly = false);
 
 // Cookie::set('MyApplicationPreference', 'Yes');
 ```
