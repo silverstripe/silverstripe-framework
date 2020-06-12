@@ -617,6 +617,7 @@ In addition, you can tighten password security with the following configuration 
     the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
  * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts. Only applies if `lock_out_after_incorrect_logins` is greater than 0.
  * `Security.remember_username`: Set to false to disable autocomplete on login form
+ * `Session.timeout`: Set timeout to attenuate the risk of active sessions being exploited
 
 ## Clickjacking: Prevent iframe Inclusion
 
