@@ -57,7 +57,7 @@ class DevelopmentAdmin extends Controller
      *
      * @var array
      */
-    private static $registered_controllers;
+    private static $registered_controllers = [];
 
     /**
      * Assume that CLI equals admin permissions
