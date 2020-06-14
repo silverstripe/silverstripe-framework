@@ -46,7 +46,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @var array
      */
-    private static $formActions;
+    private static $formActions = [];
 
     /**
      *
