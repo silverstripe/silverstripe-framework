@@ -30,7 +30,7 @@ class VersionProvider
     /**
      * @var array
      */
-    private static $modules;
+    private static $modules = [];
 
     /**
      * Gets a comma delimited string of package titles and versions
