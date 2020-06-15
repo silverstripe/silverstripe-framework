@@ -242,7 +242,6 @@ eo:
     SURNAME: 'Familia nomo'
     VALIDATIONADMINLOSTACCESS: 'Ne povas forigi ĉiujn administrajn grupojn el via profilo'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
-    WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
     belongs_many_many_Groups: Grupoj
     db_Locale: 'Interfaca Lokaĵaro'

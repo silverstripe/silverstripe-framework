@@ -133,7 +133,6 @@ fa_IR:
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما تغییر یافته است'
     SUBJECTPASSWORDRESET: 'لینک ازنوسازی گذرواژه شما'
     SURNAME: 'نام خانوادگی'
-    WELCOMEBACK: 'خوش آمدید، {firstname}'
     YOUROLDPASSWORD: 'گذرواژه قدیمی شما'
     belongs_many_many_Groups: گروه‌ها
     db_LockedOutUntil: 'بسته شده تا '

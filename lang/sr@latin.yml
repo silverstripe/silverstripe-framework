@@ -113,7 +113,6 @@ sr@latin:
     SUBJECTPASSWORDRESET: 'Link za resetovanje Vaše lozinke'
     SURNAME: Prezime
     ValidationIdentifierFailed: 'Nije moguće prepisati preko postojećeg člana  #{id} sa istim identifikatorom ({name} = {value}))'
-    WELCOMEBACK: 'Dobro došli ponovo, {firstname}'
     YOUROLDPASSWORD: 'Vaša stara lozinka'
     belongs_many_many_Groups: Grupe
     db_Locale: 'Lokalitet interfejsa'

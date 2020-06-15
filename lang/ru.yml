@@ -250,7 +250,6 @@ ru:
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
-    WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
     db_Locale: 'Локаль интерфейса'

@@ -128,7 +128,6 @@ id_ID:
     SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
     SURNAME: 'Nama Belakang'
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
-    WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
     YOUROLDPASSWORD: 'Kata kunci lama'
     belongs_many_many_Groups: Kelompok
     db_Locale: 'Lokal Antarmuka'

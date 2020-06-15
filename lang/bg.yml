@@ -234,7 +234,6 @@ bg:
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
     SURNAME: Фамилия
     ValidationIdentifierFailed: 'Не може да се презапише съществуващия потребител #{id} с ({name} = {value}))'
-    WELCOMEBACK: 'Добре дошли отново, {firstname}'
     YOUROLDPASSWORD: 'Вашата стара парола'
     belongs_many_many_Groups: Групи
     db_Locale: 'Език на интерфейса'

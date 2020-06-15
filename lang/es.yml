@@ -182,7 +182,6 @@ es:
     SUBJECTPASSWORDRESET: 'Enlace para restaurar su contraseña'
     SURNAME: Apellidos
     ValidationIdentifierFailed: 'No se puede sobrescribir el miembro existente #{id} con identificador idéntico ({name} = {value}))'
-    WELCOMEBACK: 'Bienvenido de nuevo, {firstname}'
     YOUROLDPASSWORD: 'Su contraseña anterior'
     belongs_many_many_Groups: Grupos
     db_Locale: 'Intefaz Local'

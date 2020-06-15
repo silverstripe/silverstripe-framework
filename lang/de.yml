@@ -276,7 +276,6 @@ de:
     SURNAME: Nachname
     VALIDATIONADMINLOSTACCESS: 'Sie können nicht alle Admin Gruppen von Ihrem Profil entfernen'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
-    WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Gruppe
     db_Locale: 'Interface Sprachumgebung'

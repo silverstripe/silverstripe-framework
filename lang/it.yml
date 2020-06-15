@@ -242,7 +242,6 @@ it:
     SURNAME: Cognome
     VALIDATIONADMINLOSTACCESS: 'Non è possibile rimuovere tutti i gruppi admin dal tuo profilo'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
-    WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
     belongs_many_many_Groups: Gruppi
     db_Locale: 'Localizzazione interfaccia'

@@ -113,7 +113,6 @@ nb:
     SUBJECTPASSWORDRESET: 'Lenke for nullstilling av passord'
     SURNAME: Etternavn
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende medlem #{id} med identisk identifikator ({name})={value}))'
-    WELCOMEBACK: 'Velkommen tilbake, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamle passord'
     belongs_many_many_Groups: Grupper
     db_Locale: 'Lokaltilpasning av grensesnitt'
