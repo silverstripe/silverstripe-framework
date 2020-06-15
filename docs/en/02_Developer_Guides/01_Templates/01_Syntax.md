@@ -358,6 +358,8 @@ iteration.
  * `$Even`, `$Odd`: Returns boolean, handy for zebra striping.
  * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
  * `$First`, `$Last`, `$Middle`: Booleans about the position in the list.
+    * Note: as of CMS 4.7.0 `$IsFirst` and `$IsLast` will be preferred. The original
+    syntax will continue to work, but will be deprecated in a future release.
  * `$FirstLast`: Returns a string, "first", "last", "first last" (if both), or "". Useful for CSS classes.
  * `$Pos`: The current position in the list (integer).
    Will start at 1, but can take a starting index as a parameter.

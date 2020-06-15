@@ -26,8 +26,8 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     public static function get_template_iterator_variables()
     {
         return [
-            'isFirst',
-            'isLast',
+            'IsFirst',
+            'IsLast',
             'First',
             'Last',
             'FirstLast',
@@ -61,19 +61,19 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function isFirst()
+    public function IsFirst()
     {
         return $this->iteratorPos == 0;
     }
 
     /**
-     * @deprecated 4.7.0 Use isFirst() to avoid clashes with SS_Lists
+     * @deprecated 5.0 Use IsFirst() to avoid clashes with SS_Lists
      * @return bool
      */
     public function First()
     {
-        Deprecation::notice('4.7.0', 'Use isFirst() to avoid clashes with SS_Lists');
-        return $this->isFirst();
+        Deprecation::notice('5.0', 'Use IsFirst() to avoid clashes with SS_Lists');
+        return $this->IsFirst();
     }
 
     /**
@@ -81,19 +81,19 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function isLast()
+    public function IsLast()
     {
         return $this->iteratorPos == $this->iteratorTotalItems - 1;
     }
 
     /**
-     * @deprecated 4.7.0 Use isLast() to avoid clashes with SS_Lists
+     * @deprecated 5.0 Use IsLast() to avoid clashes with SS_Lists
      * @return bool
      */
     public function Last()
     {
-        Deprecation::notice('4.7.0', 'Use isLast() to avoid clashes with SS_Lists');
-        return $this->isLast();
+        Deprecation::notice('5.0', 'Use IsLast() to avoid clashes with SS_Lists');
+        return $this->IsLast();
     }
 
     /**
@@ -103,13 +103,13 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function FirstLast()
     {
-        if ($this->isFirst() && $this->isLast()) {
+        if ($this->IsFirst() && $this->IsLast()) {
             return 'first last';
         }
-        if ($this->isFirst()) {
+        if ($this->IsFirst()) {
             return 'first';
         }
-        if ($this->isLast()) {
+        if ($this->IsLast()) {
             return 'last';
         }
         return null;
@@ -122,7 +122,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function Middle()
     {
-        return !$this->isFirst() && !$this->isLast();
+        return !$this->IsFirst() && !$this->IsLast();
     }
 
     /**
