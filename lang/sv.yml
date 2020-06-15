@@ -234,7 +234,6 @@ sv:
     SURNAME: Efternamn
     VALIDATIONADMINLOSTACCESS: 'Kan inte radera alla admin-grupper från din profil'
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
-    WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'
     belongs_many_many_Groups: Grupper
     db_Locale: Gränssnittsspråk

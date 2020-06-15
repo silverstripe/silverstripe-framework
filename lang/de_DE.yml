@@ -139,7 +139,6 @@ de_DE:
       other: '{count} Mitglieder'
     SINGULARNAME: Mitglied
     SURNAME: Nachname
-    WELCOMEBACK: 'Willkommen zurück, {firstname}'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Grouppen
     db_Password: Passwort

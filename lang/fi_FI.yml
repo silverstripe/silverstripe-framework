@@ -276,7 +276,6 @@ fi_FI:
     SURNAME: Sukunimi
     VALIDATIONADMINLOSTACCESS: 'Ylläpitäjäryhmää ei voi poistaa profiilistasi'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
-    WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'
     belongs_many_many_Groups: Ryhmät
     db_Locale: 'Käyttöliittymän kieli'

@@ -112,7 +112,6 @@ mi:
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
     SURNAME: 'Ingoa Whānau'
     ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
-    WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
     YOUROLDPASSWORD: 'Tō kupuhipa tawhito'
     belongs_many_many_Groups: 'Ngā Rōpū'
     db_Locale: 'Tauwāhi Atanga'

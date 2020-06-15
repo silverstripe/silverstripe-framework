@@ -96,7 +96,6 @@ af:
     SUBJECTPASSWORDRESET: 'U wagwoord herlaai skakel'
     SURNAME: Van
     ValidationIdentifierFailed: 'Kan nie bestaande lid #{id} met identiese identiteit ({name}={value})) oorskryf nie'
-    WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'U ou wagwoord'
     belongs_many_many_Groups: Groepe
     db_Locale: 'Plaaslike koppelvalk'

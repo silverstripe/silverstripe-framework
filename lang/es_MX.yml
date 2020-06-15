@@ -89,7 +89,6 @@ es_MX:
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
-    WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
     db_Locale: 'Interfaz Local'

@@ -113,7 +113,6 @@ sr_RS:
     SUBJECTPASSWORDRESET: 'Линк за ресетовање Ваше лозинке'
     SURNAME: Презиме
     ValidationIdentifierFailed: 'Није могуће преписати преко постојећег члана  #{id} са истим идентификатором ({name} = {value}))'
-    WELCOMEBACK: 'Добро дошли поново, {firstname}'
     YOUROLDPASSWORD: 'Ваша стара лозинка'
     belongs_many_many_Groups: Групе
     db_Locale: 'Локалитет интерфејса'

@@ -128,7 +128,6 @@ lt:
     SUBJECTPASSWORDRESET: 'Slaptažodžio atstatymo nuoroda'
     SURNAME: Pavardė
     ValidationIdentifierFailed: 'Nepavyko atnaujinti vartotojo #{id} duomenų su atpažinimo kodu ({name} = {value})'
-    WELCOMEBACK: 'Sveiki, {firstname}'
     YOUROLDPASSWORD: 'Jūsų senas slaptažodis'
     belongs_many_many_Groups: Grupės
     db_Locale: 'Vartotojo sąsajos kalba'

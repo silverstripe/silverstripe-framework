@@ -238,7 +238,6 @@ fr:
     SURNAME: 'Nom de famille'
     VALIDATIONADMINLOSTACCESS: 'Impossible de retirer tous les groupes d''administrateur à partir de votre profil'
     ValidationIdentifierFailed: 'Impossible de réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
-    WELCOMEBACK: 'Bienvenue de nouveau,  {firstname}'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
     db_Locale: 'Langue de l''Interface'

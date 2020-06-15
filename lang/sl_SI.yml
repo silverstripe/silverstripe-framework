@@ -59,7 +59,6 @@ sl_SI:
     PASSWORD: Geslo
     SUBJECTPASSWORDCHANGED: 'Vaše geslo je bilo posodobljeno'
     SURNAME: Priimek
-    WELCOMEBACK: 'Dobrodošli nazaj, {firstname}'
     YOUROLDPASSWORD: 'Vaše staro geslo'
     belongs_many_many_Groups: Grupe
     db_Password: Geslo

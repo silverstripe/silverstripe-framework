@@ -284,7 +284,6 @@ pl:
     SURNAME: Nazwisko
     VALIDATIONADMINLOSTACCESS: 'Nie można usunąć wszystkich grup administracyjnych z Twojego profilu'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego użytkownika #{id} o identycznym identyfikatorze ({name} = {value})'
-    WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
     db_Locale: 'Język Interfejsu'

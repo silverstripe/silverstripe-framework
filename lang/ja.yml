@@ -112,7 +112,6 @@ ja:
     SUBJECTPASSWORDRESET: パスワード再発行
     SURNAME: 姓
     ValidationIdentifierFailed: '同一の識別名 ({name} = {value})) を持つ既存のメンバー #{id} を上書きすることはできません'
-    WELCOMEBACK: '{firstname}さん、おかえりなさい'
     YOUROLDPASSWORD: 古いパスワード
     belongs_many_many_Groups: グループ
     db_Locale: インターフェースの言語地域

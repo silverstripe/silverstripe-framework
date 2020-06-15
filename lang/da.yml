@@ -238,7 +238,6 @@ da:
     SURNAME: Efternavn
     VALIDATIONADMINLOSTACCESS: 'Kan ikke fjerne alle admin grupper fra din profil'
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende bruger #{id} med identisk identifikator ({name} = {value}))'
-    WELCOMEBACK: 'Velkommen tilbage, {firstname}'
     YOUROLDPASSWORD: 'Dit gamle kodeord'
     belongs_many_many_Groups: Grupper
     db_Locale: 'Sprog i brugerfladen'

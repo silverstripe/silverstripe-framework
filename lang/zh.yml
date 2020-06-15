@@ -127,7 +127,6 @@ zh:
     SUBJECTPASSWORDRESET: 您的密码重设链接
     SURNAME: 姓氏
     ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
-    WELCOMEBACK: '欢迎回来， {firstname}'
     YOUROLDPASSWORD: 您的旧密码
     belongs_many_many_Groups: 群组
     db_Locale: 界面区域设置
