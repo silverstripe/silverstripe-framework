@@ -22,10 +22,54 @@ Cookie::set($name, $value, $expiry = strtotime('+90 days'), $path = null, $domai
 // Cookie::set('MyApplicationPreference', 'Yes');
 ```
 
+#### Expiry
+
+Expiry value is a Unix timestamp of the time the cookie expires (0 expires at the end of the current session).
+
+##### Default expiry
+
+The default expiry is 90 days. This can be configured:
+
+```yaml
+SilverStripe\Control\Cookie:
+  default_cookie_expiry_days: 90
+```
+
+##### Deprecation: `Cookie::set()` `$expiry` in days
+
+In previous versions of SilverStripe, expiry was expressed in days e.g `Cookie::set($name, $value, $expiry = 90)`. This has been deprecated, and will invoke a deprecation notice. If you are experience the deprecation notice, but are unable to control or resolve the cause, the notice can be suppressed using the configuration:
+
+```yaml
+SilverStripe\Control\Cookie:
+  suppress_expiry_as_timestamp_notice: true
+```
+**WARNING Notice should only be suppressed if no further resolution can be met.**
+
+
+###### Customising legacy expiry support
+
+The legacy expiry behaviour can be extended.
+
+```yaml
+SilverStripe\Control\CookieJar:
+  extensions:
+    - CookieJarExtension
+```
+
+```php
+class CookieJarExtension extends DataExtension
+{
+
+    public function updateLegacyExpiry($expiry)
+    {
+        // Customisation goes here
+    }
+}
+```
+
 ### get
 
 Returns the value of cookie.
-
 
 ```php
 Cookie::get($name);

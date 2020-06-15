@@ -183,7 +183,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         // Renew the token
         $rememberLoginHash->renew();
         $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-        $tokenExpiry = time()+($tokenExpiryDays*86400);
+        $tokenExpiry = DBDatetime::now()->getTimestamp()+($tokenExpiryDays*86400);
         Cookie::set(
             $this->getTokenCookieName(),
             $member->ID . ':' . $rememberLoginHash->getToken(),
@@ -217,8 +217,8 @@ class CookieAuthenticationHandler implements AuthenticationHandler
             $rememberLoginHash = RememberLoginHash::generate($member);
             $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
             $deviceExpiryDays = RememberLoginHash::config()->uninherited('device_expiry_days');
-            $tokenExpiry = time()+($tokenExpiryDays*86400);
-            $deviceExpiry = time()+($deviceExpiryDays*86400);
+            $tokenExpiry = DBDatetime::now()->getTimestamp()+($tokenExpiryDays*86400);
+            $deviceExpiry = DBDatetime::now()->getTimestamp()+($deviceExpiryDays*86400);
             $secure = $this->getTokenCookieSecure();
             Cookie::set(
                 $this->getTokenCookieName(),

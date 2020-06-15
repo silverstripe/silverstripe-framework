@@ -5,6 +5,8 @@ namespace SilverStripe\Control;
 use BadMethodCallException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * Handles all manipulation of the session.
@@ -327,7 +329,15 @@ class Session
                 // Session start emits a cookie, but only if there's no existing session. If there is a session timeout
                 // tied to this request, make sure the session is held for the entire timeout by refreshing the cookie age.
                 if ($timeout && $this->requestContainsSessionId($request)) {
-                    Cookie::set(session_name(), session_id(), time()+$timeout, $path, $domain ?: null, $secure, true);
+                    Cookie::set(
+                        session_name(),
+                        session_id(),
+                        DBDatetime::now()->getTimestamp()+$timeout,
+                        $path,
+                        $domain ?: null,
+                        $secure,
+                        true
+                    );
                 }
             } else {
                 // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning

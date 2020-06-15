@@ -4,6 +4,8 @@ namespace SilverStripe\Control;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * A set of static methods for manipulating cookies.
@@ -18,6 +20,16 @@ class Cookie
      * @var bool
      */
     private static $report_errors = true;
+
+    /**
+     * @var bool
+     */
+    private static $suppress_expiry_as_timestamp_notice = false;
+
+    /**
+     * @var int
+     */
+    private static $default_cookie_expiry_days = 90;
 
     /**
      * Fetch the current instance of the cookie backend.
@@ -53,6 +65,15 @@ class Cookie
         $secure = false,
         $httpOnly = true
     ) {
+        if ($expiry > 0 && $expiry < DBDatetime::now()->getTimestamp()
+            && !Config::inst()->get(Cookie::class, 'suppress_expiry_as_timestamp_notice')
+        ) {
+            Deprecation::notice(
+                '5.0',
+                'Cookie::set() requires $expiry to be a Unix timestamp of the time the cookie expires'
+            );
+        }
+
         return self::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
     }
 
