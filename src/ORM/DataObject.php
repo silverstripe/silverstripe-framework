@@ -3451,6 +3451,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             );
         }
 
+        // Sanity check for fields that conflict with parent
+        foreach (array_keys($fields) as $fieldName) {
+            if (method_exists(get_parent_class($this), $fieldName)) {
+                throw new LogicException(sprintf(
+                    '\'%s\' has a $db field named "%s" that coincides with an inherited method of the same name.',
+                    static::class,
+                    $fieldName
+                ));
+            }
+        }
+
         if ($fields) {
             $hasAutoIncPK = get_parent_class($this) === self::class;
             DB::require_table(
