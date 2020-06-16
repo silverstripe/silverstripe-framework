@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use SilverStripe\Core\Config\Config;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 
@@ -24,6 +25,13 @@ use SilverStripe\Core\Injector\Injector;
  */
 class VersionProvider
 {
+    use Configurable;
+
+    /**
+     * @var array
+     */
+    private static $modules = [];
+
     /**
      * Gets a comma delimited string of package titles and versions
      *

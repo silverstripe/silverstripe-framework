@@ -37,6 +37,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     ];
 
     /**
+     * The default form actions available to this item request
+     *
+     * e.g [
+     *     'showPagination': true,
+     *     'showAdd': true
+     * ]
+     *
+     * @var array
+     */
+    private static $formActions = [];
+
+    /**
      *
      * @var GridField
      */
