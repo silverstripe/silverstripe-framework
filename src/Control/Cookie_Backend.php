@@ -30,7 +30,7 @@ interface Cookie_Backend
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
      */
-    public function set($name, $value, $expiry = 0, $path = null, $domain = null, $secure = false, $httpOnly = true);
+    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true);
 
     /**
      * Get the cookie value by name

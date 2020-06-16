@@ -183,11 +183,10 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         // Renew the token
         $rememberLoginHash->renew();
         $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-        $tokenExpiry = DBDatetime::now()->getTimestamp()+($tokenExpiryDays*86400);
         Cookie::set(
             $this->getTokenCookieName(),
             $member->ID . ':' . $rememberLoginHash->getToken(),
-            $tokenExpiry,
+            $tokenExpiryDays,
             null,
             null,
             false,
@@ -217,13 +216,11 @@ class CookieAuthenticationHandler implements AuthenticationHandler
             $rememberLoginHash = RememberLoginHash::generate($member);
             $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
             $deviceExpiryDays = RememberLoginHash::config()->uninherited('device_expiry_days');
-            $tokenExpiry = DBDatetime::now()->getTimestamp()+($tokenExpiryDays*86400);
-            $deviceExpiry = DBDatetime::now()->getTimestamp()+($deviceExpiryDays*86400);
             $secure = $this->getTokenCookieSecure();
             Cookie::set(
                 $this->getTokenCookieName(),
                 $member->ID . ':' . $rememberLoginHash->getToken(),
-                $tokenExpiry,
+                $tokenExpiryDays,
                 null,
                 null,
                 $secure,
@@ -232,7 +229,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
             Cookie::set(
                 $this->getDeviceCookieName(),
                 $rememberLoginHash->DeviceID,
-                $deviceExpiry,
+                $deviceExpiryDays,
                 null,
                 null,
                 $secure,
@@ -268,8 +265,8 @@ class CookieAuthenticationHandler implements AuthenticationHandler
     protected function clearCookies()
     {
         $secure = $this->getTokenCookieSecure();
-        Cookie::set($this->getTokenCookieName(), null, null, null, null, $secure);
-        Cookie::set($this->getDeviceCookieName(), null, null, null, null, $secure);
+        Cookie::set($this->getTokenCookieName(), null, 0, null, null, $secure);
+        Cookie::set($this->getDeviceCookieName(), null, 0, null, null, $secure);
         Cookie::force_expiry($this->getTokenCookieName(), null, null, null, null, $secure);
         Cookie::force_expiry($this->getDeviceCookieName(), null, null, null, null, $secure);
     }

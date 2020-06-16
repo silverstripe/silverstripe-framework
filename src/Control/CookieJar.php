@@ -2,11 +2,8 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Extensible;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * A default backend for the setting and getting of cookies
@@ -21,7 +18,6 @@ use LogicException;
  */
 class CookieJar implements Cookie_Backend
 {
-    use Extensible;
 
     /**
      * Hold the cookies that were existing at time of instantiation (ie: The ones
@@ -67,16 +63,23 @@ class CookieJar implements Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string $value The value for the cookie to hold
-     * @param int $expiry A Unix timestamp of the time the cookie expires; 0 expires at the end of the current session
+     * @param int $expiry A Unix timestamp of, or the number of days until, the time the cookie expires;
+     *                    0 expires at the end of the current session
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
      */
-    public function set($name, $value, $expiry = -2, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
-        // Provide backwards compatibility support for 4.x
-        $expiry = $this->legacyExpiry($expiry);
+        // Treat null as 0
+        $expiry = is_null($expiry) ? 0 : $expiry;
+
+        // Provide backwards compatibility for expiry in days (4.x)
+        if ($expiry > 0 && $expiry < DBDatetime::now()->getTimestamp()) {
+            // Convert days to supported expression
+            $expiry = DBDatetime::now()->getTimestamp()+($expiry*86400);
+        }
 
         // Are we setting or clearing a cookie?
         $clear = $value === false || $value === '' || $expiry < 0;
@@ -86,11 +89,8 @@ class CookieJar implements Cookie_Backend
             $expiry = -1;
         }
 
-        // Set the path up
-        $path = $path ?: Director::baseURL();
-
         // Send the cookie
-        $this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        $this->outputCookie($name, $value, $expiry, $path ?: Director::baseURL(), $domain, $secure, $httpOnly);
 
         if ($clear) {
             // Clear cookie
@@ -101,36 +101,6 @@ class CookieJar implements Cookie_Backend
 
         // Set cookie
         $this->new[$name] = $this->current[$name] = $value;
-    }
-
-    /**
-     * Support $expiry values that are supplied in days (SilverStripe 4.x)
-     *
-     * @param $expiry
-     * @return float|int
-     */
-    protected function legacyExpiry($expiry)
-    {
-        // Establish fallback
-        $default = (int) Config::inst()->get(Cookie::class, 'default_cookie_expiry_days');
-
-        // Treat null as 0
-        $expiry = (int) $expiry;
-
-        if ($expiry > 0 && $expiry < time()) {
-            // Convert days to supported expression
-            $expiry = DBDatetime::now()->getTimestamp()+($expiry*86400);
-        }
-
-        if ($expiry <= -2) {
-            // Supply default expiry
-            $expiry = DBDatetime::now()->getTimestamp()+($default*86400);
-        }
-
-        // Let's provide an extension hook to allow users to clarify legacy behavior as needed
-        $this->extend('updateLegacyExpiry', $expiry);
-
-        return $expiry;
     }
 
     /**

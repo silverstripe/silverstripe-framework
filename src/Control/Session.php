@@ -332,7 +332,7 @@ class Session
                     Cookie::set(
                         session_name(),
                         session_id(),
-                        DBDatetime::now()->getTimestamp()+$timeout,
+                        $timeout / 86400, // Convert seconds to days
                         $path,
                         $domain ?: null,
                         $secure,
