@@ -3217,7 +3217,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Return the first item matching the given query.
-     * All calls to get_one() are cached.
+     *
+     * The object returned is cached, unlike DataObject::get()->first() {@link DataList::first()}
+     * and DataObject::get()->last() {@link DataList::last()}
      *
      * The filter argument supports parameterised queries (see SQLSelect::addWhere() for syntax examples). Because
      * of that (and differently from e.g. DataList::filter()) you need to manually escape the field names:
@@ -3325,6 +3327,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * This can be called either via `DataObject::get_by_id(MyClass::class, $id)`
      * or `MyClass::get_by_id($id)`
+     *
+     * The object returned is cached, unlike DataObject::get()->byID() {@link DataList::byID()}
      *
      * @param string|int $classOrID The class of the object to be returned, or id if called on target class
      * @param int|bool $idOrCache The id of the element, or cache if called on target class

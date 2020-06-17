@@ -186,6 +186,12 @@ $members = Player::get()->filter([
 Provided `filter` values are automatically escaped and do not require any escaping.
 [/info]
 
+[info]
+`DataObject::get()->byID()` and `DataObject::get_by_id()` achieve similar results, but the object returned by `DataObject::get_by_id()` is cached against a `static` property within `DataObject`.
+
+`DataObject::get_by_id()` is a legacy ORM method, and it is recommended that you use `DataObject::get()->byID()` wherever possible
+[/info]
+
 ## Lazy Loading
 
 The `ORM` doesn't actually execute the [SQLSelect](api:SilverStripe\ORM\Queries\SQLSelect) until you iterate on the result with a `foreach()` or `<% loop %>`.

@@ -926,6 +926,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns the first item in this DataList
      *
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
      * @return DataObject
      */
     public function first()
@@ -939,7 +941,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns the last item in this DataList
      *
-     *  @return DataObject
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
+     * @return DataObject
      */
     public function last()
     {
@@ -961,6 +965,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Find the first DataObject of this DataList where the given key = value
+     *
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
      * @param string $key
      * @param string $value
@@ -997,6 +1003,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Return the first DataObject with the given ID
+     *
+     * The object returned is not cached, unlike {@link DataObject::get_by_id()}
      *
      * @param int $id
      * @return DataObject
@@ -1243,6 +1251,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Returns item stored in list with index $key
+     *
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
      * @param mixed $key
      * @return DataObject
