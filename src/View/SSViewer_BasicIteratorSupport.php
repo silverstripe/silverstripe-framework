@@ -72,7 +72,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function First()
     {
-        Deprecation::notice('5.0', 'Use IsFirst() to avoid clashes with SS_Lists');
+        Deprecation::notice('5.0.0', 'Use IsFirst() to avoid clashes with SS_Lists');
         return $this->IsFirst();
     }
 
