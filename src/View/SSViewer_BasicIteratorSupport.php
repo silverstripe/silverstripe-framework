@@ -67,7 +67,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     }
 
     /**
-     * @deprecated 5.0 Use IsFirst() to avoid clashes with SS_Lists
+     * @deprecated 5.0.0 Use IsFirst() to avoid clashes with SS_Lists
      * @return bool
      */
     public function First()
@@ -87,12 +87,12 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     }
 
     /**
-     * @deprecated 5.0 Use IsLast() to avoid clashes with SS_Lists
+     * @deprecated 5.0.0 Use IsLast() to avoid clashes with SS_Lists
      * @return bool
      */
     public function Last()
     {
-        Deprecation::notice('5.0', 'Use IsLast() to avoid clashes with SS_Lists');
+        Deprecation::notice('5.0.0', 'Use IsLast() to avoid clashes with SS_Lists');
         return $this->IsLast();
     }
 
