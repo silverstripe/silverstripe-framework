@@ -24,7 +24,7 @@ interface Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string $value The value for the cookie to hold
-     * @param int $expiry The number of days until expiry
+     * @param float $expiry The number of days until expiry
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?

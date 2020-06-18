@@ -36,7 +36,7 @@ class Cookie
      *
      * @param string $name
      * @param mixed $value
-     * @param int $expiry
+     * @param float $expiry
      * @param string $path
      * @param string $domain
      * @param bool $secure
