@@ -62,3 +62,25 @@ read our guide on [how to write secure code](/developer_guides/security/secure_c
 
 * [forum.silverstripe.org](http://forum.silverstripe.org): Forums on silverstripe.org
 * [All issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
+
+## Identifying issues and pull request relevant to your own project
+
+Our [issue browser](https://silverstripe-github-issues.now.sh/) can be helpful to identify known issues and pending pull requests in
+[supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/).
+But you're usually only running some of these modules, and others
+from the [wider module ecosystem](https://addons.silverstripe.org).
+
+In order to only show issues and pull requests relevant to your project,
+we've written a little [composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util)
+which inspects your own `composer.lock` file dependencies,
+and searches across all Silverstripe modules in there.
+
+After [installing the composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util),
+use this command to pass through a lock file, and get a URL to open in your favourite browser.
+
+```
+cat /my/project/composer.lock | ss-issue-search get-url
+```
+
+Protip: You can further filter to certain [issue labels](code#labels)
+such as `label:impact/high` to make the results more relevant.
