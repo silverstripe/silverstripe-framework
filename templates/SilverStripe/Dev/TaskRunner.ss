@@ -3,8 +3,10 @@ $Info.RAW
 
 <div class="task">
     <div class="task__panel">
-        <h2>Tasks</h2>
-        <p>These tasks can be run immediately.</p>
+        <div class="task__intro">
+            <h2>Tasks</h2>
+            <p>These tasks can be run immediately.</p>
+        </div>
         <% if $Tasks.Count > 0 %>
             <div class="task__list">
                 <% loop $Tasks %>

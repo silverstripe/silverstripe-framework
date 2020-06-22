@@ -1,7 +1,11 @@
 /* This file is manually maintained, it is not generated from SCSS sources */
 
 .task__panel {
-  margin: 15px;
+  margin-top: 10px;
+}
+
+.task__intro {
+  margin: 0 15px;
 }
 
 .task__list {
@@ -24,7 +28,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px;
+  padding: 8px;
   transition: background-color 0.2s;
 }
 
@@ -33,7 +37,7 @@
 }
 
 .task__item .description {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .task__button {
@@ -41,7 +45,7 @@
   border-radius: 5px;
   background-color: #f6f7f8;
   display: inline-block;
-  padding: 10px 15px;
+  padding: 5px 8px;
   text-decoration: none;
   transition: background-color 0.2s;
 }
