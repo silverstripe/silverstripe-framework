@@ -319,6 +319,8 @@ class TempDatabase
             $this->kill();
             $this->build();
             $this->rebuildTables($extraDataObjects);
+
+            $this->skippedException = null;
         }
     }
 }
