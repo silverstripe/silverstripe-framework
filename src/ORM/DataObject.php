@@ -140,6 +140,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_classname = null;
 
     /**
+     * Used by onAfterWrite() to track whether onAfterFirstWrite() needs to be called
+     * @var boolean
+     */
+    protected static $isFirstWrite = false;
+
+    /**
      * @deprecated 4.0.0:5.0.0
      * @var bool
      */
@@ -218,12 +224,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var boolean
      */
     protected $brokenOnWrite = false;
-
-    /**
-     * Used by onAfterWrite() to track whether onAfterFirstWrite() needs to be called
-     * @var boolean
-     */
-    protected $isFirstWrite = false;
 
     /**
      * Should dataobjects be validated before they are written?
@@ -1211,7 +1211,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     protected function onBeforeFirstWrite()
     {
         $this->brokenOnWrite = false;
-        $this->isFirstWrite = true;
+        static::$isFirstWrite = true;
 
         $dummy = null;
         $this->extend('onBeforeFirstWrite', $dummy);
