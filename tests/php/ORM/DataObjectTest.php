@@ -18,6 +18,7 @@ use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
+use SilverStripe\ORM\Tests\DataObjectTest\FirstTimer;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
 use SilverStripe\Security\Member;
@@ -61,6 +62,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationChildSecond::class,
         DataObjectTest\MockDynamicAssignmentDataObject::class,
         DataObjectTest\TreeNode::class,
+        DataObjectTest\FirstTimer::class,
     );
 
     protected function setUp() : void
@@ -864,6 +866,25 @@ class DataObjectTest extends SapphireTest
             ),
             $obj->getChangedFields(true, DataObject::CHANGE_VALUE)
         );
+    }
+
+    public function testOnBeforeAndOnAfterFirstAndAnyWrite()
+    {
+        /** @var DataObjectTest\FirstTimer $rookie */
+        $rookie = $this->objFromFixture(DataObjectTest\FirstTimer::class, 'rookie');
+        $rookie->ChangeMeToForceWrites = 'Debut!';
+        $rookie->write();
+        $this->assertEquals(1, $rookie->CalledOnBeforeFirstWrite);
+        $this->assertEquals(1, $rookie->CalledOnBeforeWrite);
+        $this->assertEquals(1, $rookie->CalledOnAfterFirstWrite);
+        $this->assertEquals(1, $rookie->CalledOnAfterWrite);
+
+        $rookie->ChangeMeToForceWrites = 'Player of the match!';
+        $rookie->write();
+        $this->assertEquals(1, $rookie->CalledOnBeforeFirstWrite);
+        $this->assertEquals(2, $rookie->CalledOnBeforeWrite);
+        $this->assertEquals(1, $rookie->CalledOnAfterFirstWrite);
+        $this->assertEquals(2, $rookie->CalledOnAfterWrite);
     }
 
     public function testForceChangeCantBeCancelledUntilWrite()

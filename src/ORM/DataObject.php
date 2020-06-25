@@ -220,6 +220,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     protected $brokenOnWrite = false;
 
     /**
+     * Used by onAfterWrite() to track whether onAfterFirstWrite() needs to be called
+     * @var boolean
+     */
+    protected $isFirstWrite = false;
+
+    /**
      * Should dataobjects be validated before they are written?
      *
      * Caution: Validation can contain safeguards against invalid/malicious data,
@@ -1184,10 +1190,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     protected function onBeforeWrite()
     {
+        if (!$this->exists()) {
+            $this->onBeforeFirstWrite();
+        }
         $this->brokenOnWrite = false;
 
         $dummy = null;
         $this->extend('onBeforeWrite', $dummy);
+    }
+
+    /**
+     * Event handler called before writing to the database for the first time
+     * You can overload this to clean up or otherwise process data before writing it to the
+     * database.  Don't forget to call parent::onBeforeFirstWrite(), though!
+     *
+     * This called after {@link $this->validate()}, so you can be sure that your data is valid.
+     *
+     * @uses DataExtension->onBeforeFirstWrite()
+     */
+    protected function onBeforeFirstWrite()
+    {
+        $this->brokenOnWrite = false;
+        $this->isFirstWrite = true;
+
+        $dummy = null;
+        $this->extend('onBeforeFirstWrite', $dummy);
     }
 
     /**
@@ -1200,8 +1227,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     protected function onAfterWrite()
     {
+        if ($this->isFirstWrite) {
+            $this->onAfterFirstWrite();
+        }
         $dummy = null;
         $this->extend('onAfterWrite', $dummy);
+    }
+
+    /**
+     * Event handler called after writing to the database for the first time.
+     * You can overload this to act upon changes made to the data after it is written.
+     * $this->changed will have a record
+     * database.  Don't forget to call parent::onAfterFirstWrite(), though!
+     *
+     * @uses DataExtension->onAfterFirstWrite()
+     */
+    protected function onAfterFirstWrite()
+    {
+        $dummy = null;
+        $this->extend('onAfterFirstWrite', $dummy);
     }
 
     /**

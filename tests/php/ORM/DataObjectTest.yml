@@ -189,3 +189,11 @@ SilverStripe\ORM\Tests\DataObjectTest\TreeNode:
   grandchild:
     Title: GrandChildren
     Parent: =>SilverStripe\ORM\Tests\DataObjectTest\TreeNode.child
+
+SilverStripe\ORM\Tests\DataObjectTest\FirstTimer:
+  rookie:
+    ChangeMeToForceWrites: rookie
+    CalledOnBeforeFirstWrite: 0
+    CalledOnBeforeWrite: 0
+    CalledOnAfterFirstWrite: 0
+    CalledOnAfterWrite: 0

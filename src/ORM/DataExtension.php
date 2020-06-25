@@ -64,7 +64,15 @@ abstract class DataExtension extends Extension
     {
     }
 
+    public function onBeforeFirstWrite()
+    {
+    }
+
     public function onAfterWrite()
+    {
+    }
+
+    public function onAfterFirstWrite()
     {
     }
 
