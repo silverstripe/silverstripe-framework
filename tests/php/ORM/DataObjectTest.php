@@ -875,16 +875,23 @@ class DataObjectTest extends SapphireTest
         $rookie->ChangeMeToForceWrites = 'Debut!';
         $rookie->write();
         $this->assertEquals(1, $rookie->CalledOnBeforeFirstWrite);
-        $this->assertEquals(1, $rookie->CalledOnBeforeWrite);
         $this->assertEquals(1, $rookie->CalledOnAfterFirstWrite);
-        $this->assertEquals(1, $rookie->CalledOnAfterWrite);
+
+        // Has to be done this way as onAfter and onBefore are called multiple times
+        $onBeforeCount = $rookie->CalledOnBeforeWrite;
+        $onAfterCount = $rookie->CalledOnAfterWrite;
+
+        $this->assertGreaterThanOrEqual(1, $onBeforeCount);
+        $this->assertGreaterThanOrEqual(1, $onAfterCount);
 
         $rookie->ChangeMeToForceWrites = 'Player of the match!';
         $rookie->write();
+
+        // Confirm these values haven't been updated the second time of asking
         $this->assertEquals(1, $rookie->CalledOnBeforeFirstWrite);
-        $this->assertEquals(2, $rookie->CalledOnBeforeWrite);
         $this->assertEquals(1, $rookie->CalledOnAfterFirstWrite);
-        $this->assertEquals(2, $rookie->CalledOnAfterWrite);
+        $this->assertGreaterThan($onBeforeCount, $rookie->CalledOnBeforeWrite);
+        $this->assertGreaterThan($onAfterCount, $rookie->CalledOnAfterWrite);
     }
 
     public function testForceChangeCantBeCancelledUntilWrite()
