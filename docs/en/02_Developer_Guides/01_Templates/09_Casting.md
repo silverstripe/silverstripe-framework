@@ -20,7 +20,7 @@ $Content.FirstParagraph
 <!-- returns the result of HtmlText::FirstParagragh() -->
 
 $LastEdited.Format("d/m/Y")
-<!-- returns the result of SS_Datetime::Format("d/m/Y") -->
+<!-- returns the result of DBDatetime::Format("d/m/Y") -->
 ```
 
 Any public method from the object in scope can be called within the template. If that method returns another 
