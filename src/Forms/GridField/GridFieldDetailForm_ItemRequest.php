@@ -464,8 +464,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($toplevelController->hasMethod('Backlink')) {
                 $backlink = $toplevelController->Backlink();
             } elseif ($this->popupController->hasMethod('Breadcrumbs')) {
-                $parents = $this->popupController->Breadcrumbs(false)->items;
-                $backlink = array_pop($parents)->Link;
+                $parents = $this->popupController->Breadcrumbs(false);
+                if ($parents && $parents = $parents->items) {
+                    $backlink = array_pop($parents)->Link;
+                }
             }
         }
         if (!$backlink) {
@@ -785,6 +787,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         /** @var ArrayList $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
+
+        if (!$items) {
+            $items = new ArrayList();
+        }
 
         if ($this->record && $this->record->ID) {
             $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
