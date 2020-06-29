@@ -246,6 +246,6 @@ Only:
   environment: dev
 ---
 SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
-  defaultState: 'disabled'
+  defaultState: 'enabled'
   defaultForcingLevel: 0
 ```
