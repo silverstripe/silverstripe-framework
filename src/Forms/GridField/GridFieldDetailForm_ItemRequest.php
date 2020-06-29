@@ -464,8 +464,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($toplevelController->hasMethod('Backlink')) {
                 $backlink = $toplevelController->Backlink();
             } elseif ($this->popupController->hasMethod('Breadcrumbs')) {
-                $parents = $this->popupController->Breadcrumbs(false)->items;
-                $backlink = array_pop($parents)->Link;
+                $parents = $this->popupController->Breadcrumbs(false);
+                if ($parents && $parents = $parents->items) {
+                    $backlink = array_pop($parents)->Link;
+                }
             }
         }
         if (!$backlink) {
@@ -786,19 +788,21 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         /** @var ArrayList $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
 
-        if ($items) {
-            if ($this->record && $this->record->ID) {
-                $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
-                $items->push(new ArrayData([
-                    'Title' => $title,
-                    'Link' => $this->Link()
-                ]));
-            } else {
-                $items->push(new ArrayData([
-                    'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
-                    'Link' => false
-                ]));
-            }
+        if (!$items) {
+            $items = new ArrayList();
+        }
+
+        if ($this->record && $this->record->ID) {
+            $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
+            $items->push(new ArrayData([
+                'Title' => $title,
+                'Link' => $this->Link()
+            ]));
+        } else {
+            $items->push(new ArrayData([
+                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
+                'Link' => false
+            ]));
         }
 
         $this->extend('updateBreadcrumbs', $items);
