@@ -786,17 +786,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         /** @var ArrayList $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
 
-        if ($this->record && $this->record->ID) {
-            $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
-            $items->push(new ArrayData([
-                'Title' => $title,
-                'Link' => $this->Link()
-            ]));
-        } else {
-            $items->push(new ArrayData([
-                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
-                'Link' => false
-            ]));
+        if ($items) {
+            if ($this->record && $this->record->ID) {
+                $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
+                $items->push(new ArrayData([
+                    'Title' => $title,
+                    'Link' => $this->Link()
+                ]));
+            } else {
+                $items->push(new ArrayData([
+                    'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
+                    'Link' => false
+                ]));
+            }
         }
 
         $this->extend('updateBreadcrumbs', $items);
