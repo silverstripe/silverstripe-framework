@@ -44,11 +44,13 @@ To fully customise your form fields, start with an empty FieldList.
 public function getCMSFields() 
 {
     $fields = FieldList::create(
-        TabSet::create("Root.Main",
-            CheckboxSetField::create('IsActive','Is active?'),
-            TextField::create('Title'),
-            TextareaField::create('Content')
-                ->setRows(5)
+        TabSet::create("Root",
+            Tab::create("Main",
+                CheckboxSetField::create('IsActive','Is active?'),
+                TextField::create('Title'),
+                TextareaField::create('Content')
+                    ->setRows(5)
+            )
         )
     );
     
