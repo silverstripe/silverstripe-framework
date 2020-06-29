@@ -21,6 +21,7 @@ class ManyManyListTest extends SapphireTest {
 		'ManyManyListTest_ExtraFields',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
+        'MockDynamicAssignmentDataObject',
 	);
 
 
@@ -306,7 +307,40 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals(1, $productsRelatedToProductB->count());
 	}
 
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $left = MockDynamicAssignmentDataObject::create();
+        $left->write();
+        $right = MockDynamicAssignmentDataObject::create();
+        $right->write();
+        $left->MockManyMany()->add($right, array(
+            'ManyManyStaticScalarOnlyField' => true,
+            'ManyManyDynamicScalarOnlyField' => false,
+            'ManyManyDynamicField' => true
+        ));
+        $pivot = $left->MockManyMany()->first();
+        $this->assertEquals(1, $pivot->ManyManyStaticScalarOnlyField);
+        $this->assertEquals(0, $pivot->ManyManyDynamicScalarOnlyField);
+        $this->assertEquals(1, $pivot->ManyManyDynamicField);
+    }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     * @expectedExceptionMessageRegExp /parameterised field assignments are disallowed/
+     */
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+        $left = MockDynamicAssignmentDataObject::create();
+        $left->write();
+        $right = MockDynamicAssignmentDataObject::create();
+        $right->write();
+
+        $left->MockManyMany()->add($right, array(
+            'ManyManyStaticScalarOnlyField' => false,
+            'ManyManyDynamicScalarOnlyField' => true,
+            'ManyManyDynamicField' => false
+        ));
+    }
 }
 
 /**

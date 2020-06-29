@@ -193,9 +193,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$member) return false;
 
 		// alternative extended checks
-		if($this->hasMethod('alternateAccessCheck')) {
-			$alternateAllowed = $this->alternateAccessCheck();
-			if($alternateAllowed === FALSE) return false;
+		if ($this->hasMethod('alternateAccessCheck')) {
+			$alternateAllowed = $this->alternateAccessCheck($member);
+			if ($alternateAllowed === false) {
+				return false;
+			}
 		}
 
 		// Check for "CMS admin" permission

@@ -32,6 +32,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Sortable',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
+        'MockDynamicAssignmentDataObject'
 	);
 
 	/**
@@ -1773,6 +1774,35 @@ class DataObjectTest extends SapphireTest {
         $this->assertNotEmpty($do->CompositeMoneyField);
     }
 
+
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $do = MockDynamicAssignmentDataObject::create();
+        $do->write();
+        $do->StaticScalarOnlyField = true;
+        $do->DynamicScalarOnlyField = false;
+        $do->DynamicField = true;
+        $do->write();
+        $this->assertEquals(1, $do->StaticScalarOnlyField);
+        $this->assertEquals(0, $do->DynamicScalarOnlyField);
+        $this->assertEquals(1, $do->DynamicField);
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     * @expectedExceptionMessageRegExp /parameterised field assignments are disallowed/
+     */
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+
+        $do = MockDynamicAssignmentDataObject::create();
+        $do->write();
+        $do->StaticScalarOnlyField = false;
+        $do->DynamicScalarOnlyField = true;
+        $do->DynamicField = false;
+
+        $do->write();
+    }
 }
 
 class DataObjectTest_Sortable extends DataObject implements TestOnly {

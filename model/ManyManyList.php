@@ -254,8 +254,10 @@ class ManyManyList extends RelationList {
 				);
 			}
 
+            /** @var DBField[] $fieldObjects */
+            $fieldObjects = array();
 			if($extraFields && $this->extraFields) {
-				// Write extra field to manipluation in the same way
+				// Write extra field to manipulation in the same way
 				// that DataObject::prepareManipulationTable writes fields
 				foreach($this->extraFields as $fieldName => $fieldSpec) {
 					// Skip fields without an assignment
@@ -263,6 +265,7 @@ class ManyManyList extends RelationList {
 						$fieldObject = SS_Object::create_from_string($fieldSpec, $fieldName);
 						$fieldObject->setValue($extraFields[$fieldName]);
 						$fieldObject->writeToManipulation($manipulation[$this->joinTable]);
+                        $fieldObjects[$fieldName] = $fieldObject;
 					}
 				}
 			}
@@ -275,12 +278,15 @@ class ManyManyList extends RelationList {
                 if (!isset($tableManipulation['fields'])) {
                     continue;
                 }
-                foreach ($tableManipulation['fields'] as $fieldValue) {
+                foreach ($tableManipulation['fields'] as $fieldName => $fieldValue) {
                     if (is_array($fieldValue)) {
-                        user_error(
-                            'ManyManyList::add: parameterised field assignments are disallowed',
-                            E_USER_ERROR
-                        );
+                        // If the field allows non-scalar values we'll let it do dynamic assignments
+                        if (isset($fieldObjects[$fieldName]) && $fieldObjects[$fieldName]->scalarValueOnly()) {
+                            user_error(
+                                'ManyManyList::add: parameterised field assignments are disallowed',
+                                E_USER_ERROR
+                            );
+                        }
                     }
                 }
             }
