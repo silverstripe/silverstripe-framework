@@ -3,6 +3,7 @@
 namespace SilverStripe\Core;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -71,6 +72,16 @@ trait Extensible
      * @var callable[][]
      */
     protected $afterExtendCallbacks = [];
+
+    /**
+     * @var bool Whether to record calls to the `extend` method.
+     */
+    private $recordExtendCalls = false;
+
+    /**
+     * @var array[] List of recorded calls to the extend methods.
+     */
+    private $extendCalls = [];
 
     /**
      * Allows user code to hook into Object::extend prior to control
@@ -449,6 +460,10 @@ trait Extensible
      */
     public function extend($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
     {
+        if ($this->recordExtendCalls) {
+            // Record this call to extend for our unit tests.
+            $this->extendCalls[] = [$method, $a1, $a2, $a3, $a4, $a5, $a6, $a7];
+        }
         $values = [];
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
@@ -568,5 +583,50 @@ trait Extensible
         }
 
         return $this->extension_instances;
+    }
+
+    /**
+     * Once called, this object will keep a record of all calls to `extend` alongs with the provided argument. This
+     * feature is meant to validate that extension hooks are called when running unit tests.
+     *
+     * Don't forgot to call `disabledRecordExtendCalls` when you're done.
+     */
+    public function enableRecordExtendCalls()
+    {
+        $this->recordExtendCalls = true;
+    }
+
+    /**
+     * Once called, this object will keep a record of all calls to `extend` alongs with the provided argument. This
+     * feature is meant to validate that extension hooks are called when running unit tests.
+     */
+    public function disabledRecordExtendCalls()
+    {
+        $this->extendCalls = [];
+        $this->recordExtendCalls = false;
+    }
+
+    /**
+     * Return the recorded extend calls matching the provided $method name or all calls if no method name is provided.
+     * @param string $method
+     * @return array[] List of calls. Each call is reprensented as array where the first element is the method name.
+     * @throws LogicException if `enableRecordExtendCalls` has not been called.
+     */
+    public function extendCallsFor($method = '')
+    {
+        if (!$this->recordExtendCalls) {
+            throw new LogicException(sprintf(
+                '%s: Cannot call `extendCallsFor` without calling `enableRecordExtendCalls` first',
+                __CLASS__
+            ));
+        }
+
+        if (empty($method)) {
+            return $this->extendCalls;
+        }
+
+        return array_filter($this->extendCalls, function ($item) use ($method) {
+            return $item[0] === $method;
+        });
     }
 }
