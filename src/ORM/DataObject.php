@@ -3550,7 +3550,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function onAfterBuild()
     {
-        $this->extend('onAfterBuild', $dummy);
+        $this->extend('onAfterBuild');
     }
 
     /**
