@@ -37,7 +37,7 @@ use SilverStripe\View\ViewableData;
  * <code>
  * class Blob extends DBField {
  *  function requireField() {
- *      DB::requireField($this->tableName, $this->name, "blob");
+ *      DB::require_field($this->tableName, $this->name, "blob");
  *  }
  * }
  * </code>
