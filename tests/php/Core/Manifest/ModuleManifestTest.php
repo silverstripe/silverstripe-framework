@@ -92,7 +92,7 @@ class ModuleManifestTest extends SapphireTest
         $modulec = $this->manifest->getModule('silverstripe/modulec');
         $this->assertTrue($modulec->getResource('composer.json')->exists());
         $this->assertFalse($modulec->getResource('package.json')->exists());
-        $this->assertSame(
+        $this->assertEquals(
             'vendor/silverstripe/modulec/composer.json',
             $modulec->getResource('composer.json')->getRelativePath()
         );
