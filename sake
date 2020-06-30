@@ -9,6 +9,11 @@ Executes a SilverStripe command"
 	exit 1
 fi
 
+if ! [ -x "$(command -v which)" ]; then
+  echo "Error: sake requires the 'which' command to operate." >&2
+  exit 1
+fi
+
 # find the silverstripe installation, looking first at sake
 # bin location, but falling back to current directory
 sakedir=`dirname $0`
