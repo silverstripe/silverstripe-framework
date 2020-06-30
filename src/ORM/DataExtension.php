@@ -118,6 +118,15 @@ abstract class DataExtension extends Extension
     }
 
     /**
+     * Extend the owner's onAfterBuild() logic
+     *
+     * See {@link DataObject::onAfterBuild()} for context.
+     */
+    public function onAfterBuild()
+    {
+    }
+
+    /**
      * Influence the owner's can() permission check value to be disallowed (false),
      * allowed (true) if no other processed results are to disallow, or open (null) to not
      * affect the outcome.

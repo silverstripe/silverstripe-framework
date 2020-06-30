@@ -401,6 +401,10 @@ class DatabaseAdmin extends Controller
             echo (Director::is_cli()) ? "\n Database build completed!\n\n" :"<p>Database build completed!</p>";
         }
 
+        foreach ($dataClasses as $dataClass) {
+            DataObject::singleton($dataClass)->onAfterBuild();
+        }
+
         ClassInfo::reset_db_cache();
     }
 
