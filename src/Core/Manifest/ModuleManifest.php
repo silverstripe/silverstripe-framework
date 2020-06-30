@@ -272,6 +272,8 @@ class ModuleManifest
         foreach ($modules as $module) {
             // Check if path is in module
             $realPath = realpath($module->getPath());
+            // we add separator to ensure that we are not matching substrings
+            $realPath = rtrim($realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             if ($realPath && stripos($path, $realPath) !== 0) {
                 continue;
             }
@@ -280,7 +282,7 @@ class ModuleManifest
             if (empty($module->getRelativePath())) {
                 $rootModule = $module;
             } else {
-                return $module;
+                // return $module;
             }
         }
 

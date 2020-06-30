@@ -34,6 +34,7 @@ class ModuleManifestTest extends SapphireTest
                 'module',
                 'silverstripe/awesome-module',
                 'silverstripe/modulec',
+                'silverstripe/modulecbetter',
                 'silverstripe/root-module',
             ],
             array_keys($modules)
@@ -104,5 +105,31 @@ class ModuleManifestTest extends SapphireTest
             'composer.json',
             $module->getResource('composer.json')->getRelativePath()
         );
+    }
+
+
+    /**
+     * @return array
+     */
+    public function providerTestGetModuleByPath()
+    {
+        return [
+            // ['vendor/silverstripe/module/classes/classA.php', 'module'],
+            ['vendor/silverstripe/modulec/code/VendorClassA.php', 'silverstripe/modulec'],
+            ['vendor/silverstripe/modulecbetter/code/VendorClassX.php', 'silverstripe/modulecbetter'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestGetModuleByPath
+     * @param string $path
+     * @param string $expectedModuleName
+     */
+    public function testGetModuleByPath($path, $expectedModuleName)
+    {
+        $path = $this->base . '/' . $path;
+        $module = $this->manifest->getModuleByPath($path);
+        $actualModuleName = $module->getName();
+        $this->assertEquals($expectedModuleName, $actualModuleName);
     }
 }
