@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
 
@@ -91,7 +92,7 @@ class ModuleManifestTest extends SapphireTest
         $modulec = $this->manifest->getModule('silverstripe/modulec');
         $this->assertTrue($modulec->getResource('composer.json')->exists());
         $this->assertFalse($modulec->getResource('package.json')->exists());
-        $this->assertEquals(
+        $this->assertSame(
             'vendor/silverstripe/modulec/composer.json',
             $modulec->getResource('composer.json')->getRelativePath()
         );
@@ -106,7 +107,6 @@ class ModuleManifestTest extends SapphireTest
             $module->getResource('composer.json')->getRelativePath()
         );
     }
-
 
     /**
      * @return array
@@ -127,9 +127,15 @@ class ModuleManifestTest extends SapphireTest
      */
     public function testGetModuleByPath($path, $expectedModuleName)
     {
+        // important - load the manifest that we are working with to the ModuleLoader
+        ModuleLoader::inst()->pushManifest($this->manifest);
+
+        // work out variables
         $path = $this->base . '/' . $path;
         $module = $this->manifest->getModuleByPath($path);
         $actualModuleName = $module->getName();
+
+        // it is testing time!
         $this->assertEquals($expectedModuleName, $actualModuleName);
     }
 }

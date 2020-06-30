@@ -282,7 +282,7 @@ class ModuleManifest
             if (empty($module->getRelativePath())) {
                 $rootModule = $module;
             } else {
-                // return $module;
+                return $module;
             }
         }
 
