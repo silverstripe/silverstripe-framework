@@ -11,9 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 use SilverStripe\Core\Injector\Injector;
 
 /**
- * Class DevConfigController
- *
- * @package SilverStripe\Dev
+ * Outputs the full configuration.
  */
 class DevConfigController extends Controller
 {
@@ -140,7 +138,7 @@ class DevConfigController extends Controller
      * @param array $arrayKeys
      * @return array
      */
-    protected function array_keys_recursive($array, $maxdepth = 20, $depth = 0, $arrayKeys = [])
+    private function array_keys_recursive($array, $maxdepth = 20, $depth = 0, $arrayKeys = [])
     {
         if ($depth < $maxdepth) {
             $depth++;
