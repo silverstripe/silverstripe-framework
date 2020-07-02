@@ -14,6 +14,7 @@ SilverStripe\Core\Injector\Injector:
         ChangeDetectionMiddleware: '%$SilverStripe\Control\Middleware\ChangeDetectionMiddleware'
         HTTPCacheControleMiddleware: '%$SilverStripe\Control\Middleware\HTTPCacheControlMiddleware'
         CanonicalURLMiddleware: '%$SilverStripe\Control\Middleware\CanonicalURLMiddleware'
+        RewriteHashLinksMiddleware: '%$SilverStripe\Control\Middleware\RewriteHashLinksMiddleware'
   SilverStripe\Control\Middleware\AllowedHostsMiddleware:
     properties:
       AllowedHosts: '`SS_ALLOWED_HOSTS`'
