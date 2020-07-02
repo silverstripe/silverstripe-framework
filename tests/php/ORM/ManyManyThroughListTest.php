@@ -6,11 +6,14 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
+use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\Item;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -361,5 +364,96 @@ class ManyManyThroughListTest extends SapphireTest
         list($firstReverse, $secondReverse) = $reverse;
         $this->assertSame('International', $firstReverse->Title);
         $this->assertSame('Argentina', $secondReverse->Title);
+    }
+
+    public function testCallbackOnSetById()
+    {
+        $addedIds = [];
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+        $add = new Item();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item, $extraFields) use (&$removedIds) {
+            $addedIds[] = $item;
+        });
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->setByIDList(array_merge(
+            $base->Items()->exclude('ID', $remove->ID)->column('ID'),
+            [$add->ID]
+        ));
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testAddCallbackWithExtraFields()
+    {
+        $added = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $add = new Item();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item, $extraFields) use (&$added) {
+            $added[] = [$item, $extraFields];
+        });
+
+        $relation->add($add, ['Sort' => '99']);
+        $this->assertEquals([[$add, ['Sort' => '99']]], $added);
+    }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveAll()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->column('ID');
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeAll();
+        $this->assertEquals(sort($remove), sort($removedIds));
     }
 }

@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\HasManyListTest\Company;
 use SilverStripe\ORM\Tests\HasManyListTest\CompanyCar;
@@ -112,5 +113,80 @@ class HasManyListTest extends SapphireTest
             ['Model' => 'E Type'],
             ['Model' => 'F40'],
         ], $company->CompanyCars()->sort('"Model" ASC'));
+    }
+
+    public function testCallbackOnSetById()
+    {
+        $addedIds = [];
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $remove = $relation->First();
+        $add = new Employee();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item) use (&$addedIds) {
+            $addedIds[] = $item;
+        });
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->setByIDList(array_merge(
+            $base->Employees()->exclude('ID', $remove->ID)->column('ID'),
+            [$add->ID]
+        ));
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testAddCallback()
+    {
+        $added = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $add = new Employee();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item) use (&$added) {
+            $added[] = $item;
+        });
+
+        $relation->add($add);
+        $this->assertEquals([$add], $added);
+    }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
     }
 }
