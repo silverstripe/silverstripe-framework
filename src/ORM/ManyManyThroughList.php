@@ -217,6 +217,11 @@ class ManyManyThroughList extends RelationList
         $record = $hasManyList->createDataObject($extraFields ?: []);
         $record->$localKey = $itemID;
         $hasManyList->add($record);
+
+        // Link the join object to the $item, as if it were queried from within this list
+        if ($item instanceof DataObject) {
+            $item->setJoin($record, $this->manipulator->getJoinAlias());
+        }
     }
 
     /**
