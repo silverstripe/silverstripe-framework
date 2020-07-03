@@ -25,7 +25,7 @@ How easy will it be to update my project? It's a fair question, and sometimes a 
 
 There are some fundamental changes in SilverStripe 4:
 
-* PHP 5.6 is now the minimum required version and up to PHP 7.3 is supported. We strongly recommend you only use [supported versions of PHP](https://www.php.net/supported-versions.php).
+* PHP 7.1 is now the minimum required version for SilverStripe 4.5.0 and above and up to PHP 7.3 is supported. We strongly recommend you only use [supported versions of PHP](https://www.php.net/supported-versions.php). Note: SilverStripe 4.0.0 through 4.4.0 still support PHP 5.6.
 * SilverStripe is now even more modular which allows you to remove functionality your project might not need.
 * Common functionality sets can now be installed via SilverStripe _recipes_.
 * SilverStripe modules can now be installed in the `vendor/` folder along with your regular PHP packages.
@@ -105,7 +105,7 @@ For a description on how to handle issues with pre-existing composer installs or
 through the [Step 1 - Upgrade your dependencies](#step1) section.
 
 ### Install or update the upgrader tool
-Using the upgrader is not mandatory, but it can speed up the process. Although SilverStripe 4 can run in both PHP 5.6 and PHP 7, the upgrader itself requires PHP 7.1.
+Using the upgrader is not mandatory, but it can speed up the process. 
 
 The upgrader is available as a phar executable. 
 
