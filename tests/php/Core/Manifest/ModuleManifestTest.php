@@ -114,7 +114,6 @@ class ModuleManifestTest extends SapphireTest
     public function providerTestGetModuleByPath()
     {
         return [
-            // ['vendor/silverstripe/module/classes/classA.php', 'module'],
             ['vendor/silverstripe/modulec/code/VendorClassA.php', 'silverstripe/modulec'],
             ['vendor/silverstripe/modulecbetter/code/VendorClassX.php', 'silverstripe/modulecbetter'],
         ];
