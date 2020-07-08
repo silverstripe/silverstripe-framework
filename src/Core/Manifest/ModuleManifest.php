@@ -272,10 +272,10 @@ class ModuleManifest
         foreach ($modules as $module) {
             // Check if path is in module
             $modulePath = realpath($module->getPath());
-            // we add separator to ensure that we are not matching substrings
-            $modulePathWithSlash = rtrim($modulePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             // if there is a real path
-            if($realPath) {
+            if($modulePath) {
+                // we add separator to ensure that we are not matching substrings
+                $modulePathWithSlash = rtrim($modulePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
                 // if the paths are not the same
                 if($modulePath !== $path && $modulePathWithSlash !== $path) {
                     // if the module path is not the same as the start of the path being tested
