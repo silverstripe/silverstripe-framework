@@ -271,12 +271,19 @@ class ModuleManifest
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // Check if path is in module
-            $realPath = realpath($module->getPath());
+            $modulePath = realpath($module->getPath());
             // we add separator to ensure that we are not matching substrings
-            $realPath = rtrim($realPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-            if ($realPath && stripos($path, $realPath) !== 0) {
-                continue;
-            }
+            $modulePathWithSlash = rtrim($modulePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            // if there is a real path
+            if($realPath) {
+                // if the paths are not the same
+                if($modulePath !== $path && $modulePathWithSlash !== $path) {
+                    // if the module path is not the same as the start of the path being tested
+                    if (stripos($path, $modulePathWithSlash) !== 0) {
+                        // then we need to test the next module
+                        continue;
+                    }
+                }
 
             // If this is the root module, keep looking in case there is a more specific module later
             if (empty($module->getRelativePath())) {
