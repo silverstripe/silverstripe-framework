@@ -284,7 +284,7 @@ class ModuleManifest
                         continue;
                     }
                 }
-
+            }
             // If this is the root module, keep looking in case there is a more specific module later
             if (empty($module->getRelativePath())) {
                 $rootModule = $module;
