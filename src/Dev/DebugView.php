@@ -223,6 +223,7 @@ class DebugView
             ->resolveURL('silverstripe/framework:client/styles/debug.css');
         $output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';
         $output .= '<link rel="stylesheet" type="text/css" href="' . $debugCSS . '" />';
+        $output .= '<meta name="robots" content="noindex">';
         $output .= '</head>';
         $output .= '<body>';
 
