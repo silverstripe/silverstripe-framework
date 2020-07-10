@@ -362,4 +362,52 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertSame('International', $firstReverse->Title);
         $this->assertSame('Argentina', $secondReverse->Title);
     }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveAll()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->column('ID');
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeAll();
+        $this->assertEquals(sort($remove), sort($removedIds));
+    }
 }

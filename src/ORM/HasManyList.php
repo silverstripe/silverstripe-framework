@@ -136,5 +136,11 @@ class HasManyList extends RelationList
             $item->$foreignKey = null;
             $item->write();
         }
+
+        // Call removeCallback, if applicable
+        if ($this->removeCallback) {
+            $callback = $this->removeCallback;
+            $callback($this, [$item->ID]);
+        }
     }
 }

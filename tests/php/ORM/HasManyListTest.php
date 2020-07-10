@@ -113,4 +113,36 @@ class HasManyListTest extends SapphireTest
             ['Model' => 'F40'],
         ], $company->CompanyCars()->sort('"Model" ASC'));
     }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Company::class, 'silverstripe');
+        $relation = $base->Employees();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
 }

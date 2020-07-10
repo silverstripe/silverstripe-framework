@@ -13,6 +13,49 @@ abstract class RelationList extends DataList implements Relation
 {
 
     /**
+     * @var Callable
+     */
+    protected $removeCallback;
+
+    /**
+     * Set a callback that is called after the remove() action is completed.
+     * Callback will be passed ($this, $removedIds).
+     *
+     * Needs to be defined through an overloaded relationship getter
+     * to ensure it is set consistently. These getters return a new object
+     * every time they're called. Example:
+     *
+     * ```php
+     * class MyObject extends DataObject()
+     * {
+     *   private static $many_many = [
+     *     'MyRelationship' => '...',
+     *   ];
+     *   public function MyRelationship()
+     *   {
+     *     $list = $this->getManyManyComponents('MyRelationship');
+     *     $list->setRemoveCallback(function ($removedIds) {
+     *       // ...
+     *     });
+     *     return $list;
+     *   }
+     * }
+     * ```
+     *
+     * If a relation methods is manually defined, this can be called to adjust the behaviour
+     * when adding records to this list.
+     *
+     * Subclasses of RelationList must implement the callback for it to function
+     *
+     * @return this
+     */
+    public function setRemoveCallback($callback): self
+    {
+        $this->removeCallback = $callback;
+        return $this;
+    }
+
+    /**
      * Any number of foreign keys to apply to this list
      *
      * @return string|array|null

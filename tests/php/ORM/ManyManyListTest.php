@@ -457,4 +457,52 @@ class ManyManyListTest extends SapphireTest
             'ManyManyDynamicField' => false,
         ]);
     }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Team::class, 'team1');
+        $relation = $base->Players();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Team::class, 'team1');
+        $relation = $base->Players();
+        $remove = $relation->First();
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveAll()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(Team::class, 'team1');
+        $relation = $base->Players();
+        $remove = $relation->column('ID');
+
+        $relation->setRemoveCallback(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeAll();
+        $this->assertEquals(sort($remove), sort($removedIds));
+    }
 }

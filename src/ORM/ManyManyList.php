@@ -338,7 +338,9 @@ class ManyManyList extends RelationList
             throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
         }
 
-        return $this->removeByID($item->ID);
+        $result = $this->removeByID($item->ID);
+
+        return $result;
     }
 
     /**
@@ -366,7 +368,14 @@ class ManyManyList extends RelationList
         $query->addWhere([
             "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
         ]);
+
+        // Perform the deletion
         $query->execute();
+
+        if ($this->removeCallback) {
+            $callback = $this->removeCallback;
+            $callback($this, [$itemID]);
+        }
     }
 
     /**
@@ -403,7 +412,23 @@ class ManyManyList extends RelationList
         $delete->addWhere([
             "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
         ]);
+
+        $affectedIds = [];
+        if ($this->removeCallback) {
+            $affectedIds = $delete
+                ->toSelect()
+                ->setSelect("\"{$this->joinTable}\".\"{$this->localKey}\"")
+                ->execute()
+                ->column();
+        }
+
+        // Perform the deletion
         $delete->execute();
+
+        if ($this->removeCallback && $affectedIds) {
+            $callback = $this->removeCallback;
+            $callback($this, $affectedIds);
+        }
     }
 
     /**
