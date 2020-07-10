@@ -211,6 +211,39 @@ JS;
     }
 
     /**
+     * Selects the first image match in the HTML editor
+     *
+     * @When /^I select the image "(?P<filename>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field$/
+     */
+    public function stepISelectTheImageInHtmlField($filename, $field)
+    {
+        $inputField = $this->getHtmlField($field);
+        $inputFieldId = $inputField->getAttribute('id');
+        $filename = addcslashes($filename, "'");
+
+        $js = <<<JS
+var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
+	doc = editor.getInstance().getDoc(),
+	sel = editor.getInstance().selection,
+	rng = document.createRange(),
+	matched = false;
+
+editor.getInstance().focus();
+jQuery(doc).find("img[src*='$filename']").each(function() {
+	if(!matched) {
+		rng.setStart(this, 0);
+		rng.setEnd(this, 0);
+		sel.setRng(rng);
+		editor.getInstance().nodeChanged();
+		matched = true;
+	}
+});
+JS;
+
+        $this->getSession()->executeScript($js);
+    }
+
+    /**
      * @Given /^I should( not? |\s*)see a "([^"]*)" field$/
      */
     public function iShouldSeeAField($negative, $text)
