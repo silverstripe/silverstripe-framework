@@ -269,17 +269,23 @@ class ModuleManifest
 
         // Find based on loaded modules
         $modules = ModuleLoader::inst()->getManifest()->getModules();
+
         foreach ($modules as $module) {
             // Check if path is in module
             $modulePath = realpath($module->getPath());
             // if there is a real path
             if($modulePath) {
-                // we add separator to ensure that we are not matching substrings
-                $modulePathWithSlash = rtrim($modulePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                // we remove separator to ensure that we are comparing fairly
+                $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR) ;
+                $path = rtrim($path, DIRECTORY_SEPARATOR);
                 // if the paths are not the same
-                if($modulePath !== $path && $modulePathWithSlash !== $path) {
-                    // if the module path is not the same as the start of the path being tested
-                    if (stripos($path, $modulePathWithSlash) !== 0) {
+                if($modulePath !== $path) {
+                    //add separator to avoid mixing up, for example:
+                    //silverstripe/framework and silverstripe/framework-extension
+                    $modulePath .= DIRECTORY_SEPARATOR;
+                    $path .= DIRECTORY_SEPARATOR;
+                    // if the module path is not the same as the start of the module path being tested
+                    if (stripos($path, $modulePath) !== 0) {
                         // then we need to test the next module
                         continue;
                     }
