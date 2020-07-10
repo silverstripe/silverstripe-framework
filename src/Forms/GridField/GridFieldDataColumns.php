@@ -159,7 +159,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
         // Allow callbacks
         if (is_array($columnInfo) && isset($columnInfo['callback'])) {
             $method = $columnInfo['callback'];
-            $value = $method($record);
+            $value = $method($record, $columnName, $gridField);
 
         // This supports simple FieldName syntax
         } else {
