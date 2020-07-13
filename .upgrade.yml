@@ -205,8 +205,6 @@ mappings:
   FunctionalTest: SilverStripe\Dev\FunctionalTest
   InstallerTest: SilverStripe\Dev\InstallerTest
   MigrationTask: SilverStripe\Dev\MigrationTask
-  SapphireInfo: SilverStripe\Dev\SapphireInfo
-  SapphireREPL: SilverStripe\Dev\SapphireREPL
   SapphireTest: SilverStripe\Dev\SapphireTest
   TaskRunner: SilverStripe\Dev\TaskRunner
   TestMailer: SilverStripe\Dev\TestMailer
@@ -1016,6 +1014,14 @@ warnings:
       message: 'Use SilverStripe\CMS\BatchActions\CMSBatchAction_Archive instead'
     'EncryptAllPasswordsTask':
       message: 'Removed'
+    'SapphireInfo':
+      message: 'Removed'
+    'SilverStripe\Dev\SapphireREPL':
+      message: 'Removed'
+    'SilverStripe\Dev\SapphireInfo':
+      message: 'Deprecated'
+    'SilverStripe\Dev\InstallerTest':
+      message: 'Deprecated'
   methods:
     'SilverStripe\Security\Authenticator::register()':
       message: 'Custom authenticators work differently now'

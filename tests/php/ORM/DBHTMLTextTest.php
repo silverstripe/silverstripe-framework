@@ -265,6 +265,10 @@ class DBHTMLTextTest extends SapphireTest
             [
                 '<p>Collapses</p><p></p><p>Excessive<br/><br /><br>Newlines</p>',
                 "Collapses\n\nExcessive\n\nNewlines",
+            ],
+            'Unicode character that could be confused for a line break' =>[
+                '充美好实的一天',
+                '充美好实的一天'
             ]
         ];
     }
