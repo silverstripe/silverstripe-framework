@@ -136,8 +136,8 @@ class ModuleManifestTest extends SapphireTest
 
         // it is testing time!
         $this->assertEquals($expectedModuleName, $actualModuleName);
-	
-	// bye bye bogus manifest
+
+        // bye bye bogus manifest
         ModuleLoader::inst()->popManifest();
     }
 }
