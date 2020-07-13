@@ -115,7 +115,7 @@ class ModuleManifest
     public function moduleExists($name)
     {
         $module = $this->getModule($name);
-        return ! empty($module);
+        return !empty($module);
     }
 
     /**
@@ -133,7 +133,7 @@ class ModuleManifest
         }
 
         // Unless we're forcing regen, try loading from cache
-        if (! $forceRegen && $this->cache) {
+        if (!$forceRegen && $this->cache) {
             $this->modules = $this->cache->get($this->cacheKey) ?: [];
         }
         if (empty($this->modules)) {
@@ -170,7 +170,7 @@ class ModuleManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions([
             'min_depth' => 0,
-            'ignore_tests' => ! $includeTests,
+            'ignore_tests' => !$includeTests,
             'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);
@@ -203,7 +203,7 @@ class ModuleManifest
         }
 
         // Fall back to lookup by shortname
-        if (! strstr($name, '/')) {
+        if (!strstr($name, '/')) {
             foreach ($this->modules as $module) {
                 if (strcasecmp($module->getShortName(), $name) === 0) {
                     return $module;
@@ -258,7 +258,7 @@ class ModuleManifest
     {
         // Ensure path exists
         $path = realpath($path);
-        if (! $path) {
+        if (!$path) {
             return null;
         }
 
