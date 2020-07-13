@@ -67,6 +67,20 @@ class ModuleManifest
     private static $project = null;
 
     /**
+     * Constructs and initialises a new configuration object, either loading
+     * from the cache or re-scanning for classes.
+     *
+     * @param string $base The project base path.
+     * @param CacheFactory $cacheFactory Cache factory to use
+     */
+    public function __construct($base, CacheFactory $cacheFactory = null)
+    {
+        $this->base = $base;
+        $this->cacheKey = sha1($base) . '_modules';
+        $this->cacheFactory = $cacheFactory;
+    }
+
+    /**
      * Adds a path as a module
      *
      * @param string $path
@@ -101,21 +115,7 @@ class ModuleManifest
     public function moduleExists($name)
     {
         $module = $this->getModule($name);
-        return !empty($module);
-    }
-
-    /**
-     * Constructs and initialises a new configuration object, either loading
-     * from the cache or re-scanning for classes.
-     *
-     * @param string $base The project base path.
-     * @param CacheFactory $cacheFactory Cache factory to use
-     */
-    public function __construct($base, CacheFactory $cacheFactory = null)
-    {
-        $this->base = $base;
-        $this->cacheKey = sha1($base) . '_modules';
-        $this->cacheFactory = $cacheFactory;
+        return ! empty($module);
     }
 
     /**
@@ -133,7 +133,7 @@ class ModuleManifest
         }
 
         // Unless we're forcing regen, try loading from cache
-        if (!$forceRegen && $this->cache) {
+        if (! $forceRegen && $this->cache) {
             $this->modules = $this->cache->get($this->cacheKey) ?: [];
         }
         if (empty($this->modules)) {
@@ -170,12 +170,12 @@ class ModuleManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions([
             'min_depth' => 0,
-            'ignore_tests' => !$includeTests,
+            'ignore_tests' => ! $includeTests,
             'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);
                 }
-            }
+            },
         ]);
         $finder->find($this->base);
 
@@ -203,7 +203,7 @@ class ModuleManifest
         }
 
         // Fall back to lookup by shortname
-        if (!strstr($name, '/')) {
+        if (! strstr($name, '/')) {
             foreach ($this->modules as $module) {
                 if (strcasecmp($module->getShortName(), $name) === 0) {
                     return $module;
@@ -226,20 +226,18 @@ class ModuleManifest
 
     /**
      * Sort modules sorted by priority
-     *
-     * @return void
      */
     public function sort()
     {
         $order = static::config()->uninherited('module_priority');
         $project = static::config()->get('project');
 
-        /* @var PrioritySorter $sorter */
+        /** @var PrioritySorter $sorter */
         $sorter = Injector::inst()->createWithArgs(
             PrioritySorter::class . '.modulesorter',
             [
                 $this->modules,
-                $order ?: []
+                $order ?: [],
             ]
         );
 
@@ -260,7 +258,7 @@ class ModuleManifest
     {
         // Ensure path exists
         $path = realpath($path);
-        if (!$path) {
+        if (! $path) {
             return null;
         }
 
@@ -274,12 +272,12 @@ class ModuleManifest
             // Check if path is in module
             $modulePath = realpath($module->getPath());
             // if there is a real path
-            if($modulePath) {
+            if ($modulePath) {
                 // we remove separator to ensure that we are comparing fairly
-                $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR) ;
+                $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
                 // if the paths are not the same
-                if($modulePath !== $path) {
+                if ($modulePath !== $path) {
                     //add separator to avoid mixing up, for example:
                     //silverstripe/framework and silverstripe/framework-extension
                     $modulePath .= DIRECTORY_SEPARATOR;
