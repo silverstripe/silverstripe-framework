@@ -48,7 +48,7 @@ class Page extends SiteTree
 UploadField options include:
 
  - setIsMultiUpload() - Set to allow many files per field, or one only.
- - setAllowedExtensions() - Set list of extensionse this field can accept.
+ - setAllowedExtensions() - Set list of extensions this field can accept.
  - setAllowedFileCategories() - Alternatively specify allowed extensions via category instead.
  - setFolderName() - Name of folder to upload into
  - getValidator() - Get instance of validator to specify custom validation rules
