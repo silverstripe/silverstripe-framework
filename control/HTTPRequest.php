@@ -11,9 +11,6 @@
  * match() to get the information that they need out of the URL.  This is generally handled by
  * {@link RequestHandler::handleRequest()}.
  *
- * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for
- *       webclients not supporting PUT and DELETE)
- *
  * @package framework
  * @subpackage control
  */
@@ -106,7 +103,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Construct a SS_HTTPRequest from a URL relative to the site root.
 	 */
 	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
-		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->httpMethod = strtoupper($httpMethod);
 		$this->setUrl($url);
 
 		$this->getVars = (array) $getVars;
@@ -726,24 +723,40 @@ class SS_HTTPRequest implements ArrayAccess {
 	}
 
 	/**
-	 * Gets the "real" HTTP method for a request.
+	 * Explicitly set the HTTP method for this request.
+	 * @param string $method
+	 * @return $this
+	 */
+	public function setHttpMethod($method) {
+		if(!self::isValidHttpMethod($method)) {
+			user_error('SS_HTTPRequest::setHttpMethod: Invalid HTTP method', E_USER_ERROR);
+		}
+
+		$this->httpMethod = strtoupper($method);
+		return $this;
+	}
+
+	/**
+	 * @param string $method
+	 * @return bool
+	 */
+	private static function isValidHttpMethod($method) {
+		return in_array(strtoupper($method), array('GET','POST','PUT','DELETE','HEAD'));
+	}
+
+	/**
+	 * Gets the "real" HTTP method for a request. This method is no longer used to mitigate the risk of web cache
+	 * poisoning.
 	 *
-	 * Used to work around browser limitations of form
-	 * submissions to GET and POST, by overriding the HTTP method
-	 * with a POST parameter called "_method" for PUT, DELETE, HEAD.
-	 * Using GET for the "_method" override is not supported,
-	 * as GET should never carry out state changes.
-	 * Alternatively you can use a custom HTTP header 'X-HTTP-Method-Override'
-	 * to override the original method in {@link Director::direct()}.
-	 * The '_method' POST parameter overrules the custom HTTP header.
-	 *
+	 * @see https://www.silverstripe.org/download/security-releases/CVE-2019-19326
 	 * @param string $origMethod Original HTTP method from the browser request
 	 * @param array $postVars
 	 * @return string HTTP method (all uppercase)
+	 * @deprecated 3.7.5
 	 */
 	public static function detect_method($origMethod, $postVars) {
 		if(isset($postVars['_method'])) {
-			if(!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
+			if (!self::isValidHttpMethod($postVars['_method'])) {
 				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
 			}
 			return strtoupper($postVars['_method']);

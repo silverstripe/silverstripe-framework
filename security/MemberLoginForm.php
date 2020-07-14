@@ -139,7 +139,7 @@ JS;
 			$this->message = _t(
 				'Member.LOGGEDINAS',
 				"You're logged in as {name}.",
-				array('name' => $member->{$this->loggedInAsField})
+				array('name' => Convert::raw2xml($member->{$this->loggedInAsField}))
 			);
 		}
 
