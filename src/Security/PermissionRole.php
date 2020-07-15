@@ -31,11 +31,11 @@ class PermissionRole extends DataObject
     ];
 
     private static $has_many = [
-        "Codes" => "SilverStripe\\Security\\PermissionRoleCode",
+        "Codes" => PermissionRoleCode::class,
     ];
 
     private static $belongs_many_many = [
-        "Groups" => "SilverStripe\\Security\\Group",
+        "Groups" => Group::class,
     ];
 
     private static $table_name = "PermissionRole";
