@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\ORM\Queries\SQLSelect;
 use Exception;
 
@@ -216,6 +217,17 @@ abstract class DataExtension extends Extension
      * @param FieldList $fields FieldList with a contained TabSet
      */
     public function updateCMSFields(FieldList $fields)
+    {
+    }
+
+    /**
+     * This function is used to provide modifications to the Validators used on a DataObject.
+     *
+     * Caution: Use {@link CompositeValidator->addValidator()} to add Validators.
+     *
+     * @param CompositeValidator $compositeValidator
+     */
+    public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
     {
     }
 

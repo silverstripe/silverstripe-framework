@@ -15,6 +15,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -2447,6 +2448,36 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $actions;
     }
 
+    /**
+     * When extending this class and overriding this method, you will need to instantiate the CompositeValidator by
+     * calling parent::getCMSCompositeValidator(). This will ensure that the appropriate extension point is also
+     * invoked.
+     *
+     * You can also update the CompositeValidator by creating an Extension and implementing the
+     * updateCMSCompositeValidator(CompositeValidator $compositeValidator) method.
+     *
+     * @see CompositeValidator for examples of implementation
+     * @return CompositeValidator
+     */
+    public function getCMSCompositeValidator(): CompositeValidator
+    {
+        $compositeValidator = new CompositeValidator();
+
+        // Support for the old method during the deprecation period
+        if ($this->hasMethod('getCMSValidator')) {
+            Deprecation::notice(
+                '4.6',
+                'getCMSValidator() is removed in 5.0 in favour of getCMSCompositeValidator()'
+            );
+
+            $compositeValidator->addValidator($this->getCMSValidator());
+        }
+
+        // Extend validator - forward support, will be supported beyond 5.0.0
+        $this->invokeWithExtensions('updateCMSCompositeValidator', $compositeValidator);
+
+        return $compositeValidator;
+    }
 
     /**
      * Used for simple frontend forms without relation editing
