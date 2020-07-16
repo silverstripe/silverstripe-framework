@@ -3,20 +3,16 @@ $Info.RAW
 
 <div class="task">
     <div class="task__panel">
-        <div class="task__intro">
-            <h2>Tasks</h2>
-            <p>These tasks can be run immediately.</p>
-        </div>
         <% if $Tasks.Count > 0 %>
             <div class="task__list">
                 <% loop $Tasks %>
                     <div class="task__item">
                         <div>
-                            <h3>$Title</h3>
-                            <p class="description">$Description</p>
+                            <h3 class="task__title">$Title</h3>
+                            <p class="task__description">$Description</p>
                         </div>
                         <div>
-                            <a href="{$TaskLink.ATT}" class="task__button task__button--warning">Run immediately</a>
+                            <a href="{$TaskLink.ATT}" class="task__button">Run task</a>
                         </div>
                     </div>
                 <% end_loop %>
