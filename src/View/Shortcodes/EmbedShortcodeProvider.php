@@ -14,7 +14,9 @@ use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use Embed\Adapters\Adapter;
 use Embed\Embed;
+use Embed\Exceptions\InvalidUrlException;
 use SilverStripe\View\Parsers\ShortcodeParser;
+use SilverStripe\Control\Director;
 
 /**
  * Provider for the [embed] shortcode tag used by the embedding service
@@ -89,7 +91,24 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         }
 
         // Process embed
-        $embed = $embed->getEmbed();
+        try {
+            $embed = $embed->getEmbed();
+        } catch (InvalidUrlException $e) {
+            $message = (Director::isDev())
+                ? $e->getMessage()
+                : _t(__CLASS__ . '.INVALID_URL', 'There was a problem loading the media.');
+
+            $attr = [
+                'class' => 'ss-media-exception embed'
+            ];
+
+            $result = HTML::createTag(
+                'div',
+                $attr,
+                HTML::createTag('p', [], $message)
+            );
+            return $result;
+        }
 
         // Convert embed object into HTML
         if ($embed && $embed instanceof Adapter) {
