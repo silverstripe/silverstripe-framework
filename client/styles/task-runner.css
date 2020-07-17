@@ -10,10 +10,8 @@
 
 @media (min-width:992px) {
   .task__list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    columns: 2;
     column-gap: 100px;
-    row-gap: 30px;
   }
 }
 
@@ -23,12 +21,9 @@
 
 @media (min-width:992px) {
   .task__item {
-    padding-bottom: 0;
+    display: inline-block;
+    width: 100%;
   }
-}
-
-.task__item:last-child {
-  padding-bottom: 0;
 }
 
 .task__title {
