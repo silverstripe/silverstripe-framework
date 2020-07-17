@@ -9,7 +9,7 @@ $Info.RAW
                     <div class="task__item">
                         <div>
                             <h3 class="task__title">$Title</h3>
-                            <p class="task__description">$Description</p>
+                            <div class="task__description">$Description</div>
                         </div>
                         <div>
                             <a href="{$TaskLink.ATT}" class="task__button">Run task</a>

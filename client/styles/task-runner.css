@@ -38,6 +38,7 @@
 .task__description {
   color: #43536d;
   margin-bottom: 20px;
+  margin-top: 15px;
 }
 
 .task__button {
@@ -56,6 +57,7 @@
   margin-right: 0;
 }
 
+.task__button:focus,
 .task__button:hover {
   background-color: #ced5e1;
 }
