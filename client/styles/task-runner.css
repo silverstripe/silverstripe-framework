@@ -28,12 +28,12 @@
 
 .task__title {
   color: #303b4d;
+  margin: 0 0 8px;
 }
 
 .task__description {
   color: #43536d;
-  margin-bottom: 20px;
-  margin-top: 15px;
+  margin-bottom: 12px;
 }
 
 .task__button {
