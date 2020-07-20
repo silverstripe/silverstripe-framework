@@ -145,10 +145,12 @@ class TaskRunner extends Controller
             }
 
             $singleton = BuildTask::singleton($class);
+            $description = $singleton->getDescription();
+            $description = trim($description);
 
             $desc = (Director::is_cli())
-                ? Convert::html2raw($singleton->getDescription())
-                : $singleton->getDescription();
+                ? Convert::html2raw($description)
+                : $description;
 
             $availableTasks[] = [
                 'class' => $class,
