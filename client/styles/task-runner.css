@@ -53,7 +53,6 @@
 }
 
 .task__button:focus,
-.task__button:hover,
-.task__button:focus {
+.task__button:hover {
   background-color: #ced5e1;
 }
