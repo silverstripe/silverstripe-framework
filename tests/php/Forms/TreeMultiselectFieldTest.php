@@ -135,8 +135,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(
             [
-                'id' => $fieldId,
-                'name' => $this->fieldName,
+                'id'    => $fieldId,
+                'name'  => $this->fieldName,
                 'value' => 'unchanged'
             ],
             $schemaStateDefaults,
@@ -146,20 +146,20 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaDataDefaults = $field->getSchemaDataDefaults();
         $this->assertArraySubset(
             [
-                'id' => $fieldId,
-                'name' => $this->fieldName,
-                'type' => 'text',
+                'id'         => $fieldId,
+                'name'       => $this->fieldName,
+                'type'       => 'text',
                 'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $fieldId),
-                'title' => 'Test tree',
+                'component'  => 'TreeDropdownField',
+                'holderId'   => sprintf('%s_Holder', $fieldId),
+                'title'      => 'Test tree',
                 'extraClass' => 'treemultiselect multiple searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
+                'data'       => [
+                    'urlTree'         => 'field/TestTree/tree',
+                    'showSearch'      => true,
+                    'emptyString'     => '(Search or choose File)',
                     'hasEmptyDefault' => false,
-                    'multiple' => true
+                    'multiple'        => true
                 ]
             ],
             $schemaDataDefaults,
@@ -187,8 +187,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(
             [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
+                'id'    => $field->ID(),
+                'name'  => 'TestTree',
                 'value' => $this->folderIds
             ],
             $schemaStateDefaults,
@@ -213,8 +213,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(
             [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
+                'id'    => $field->ID(),
+                'name'  => 'TestTree',
                 'value' => 'unchanged'
             ],
             $schemaStateDefaults,
@@ -224,20 +224,20 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaDataDefaults = $field->getSchemaDataDefaults();
         $this->assertArraySubset(
             [
-                'id' => $field->ID(),
-                'name' => $this->fieldName,
-                'type' => 'text',
+                'id'         => $field->ID(),
+                'name'       => $this->fieldName,
+                'type'       => 'text',
                 'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $field->ID()),
-                'title' => 'Test tree',
+                'component'  => 'TreeDropdownField',
+                'holderId'   => sprintf('%s_Holder', $field->ID()),
+                'title'      => 'Test tree',
                 'extraClass' => 'treemultiselectfield_readonly multiple  searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
+                'data'       => [
+                    'urlTree'         => 'field/TestTree/tree',
+                    'showSearch'      => true,
+                    'emptyString'     => '(Search or choose File)',
                     'hasEmptyDefault' => false,
-                    'multiple' => true
+                    'multiple'        => true
                 ]
             ],
             $schemaDataDefaults,
@@ -263,8 +263,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaStateDefaults = $field->getSchemaStateDefaults();
         $this->assertArraySubset(
             [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
+                'id'    => $field->ID(),
+                'name'  => 'TestTree',
                 'value' => $this->folderIds
             ],
             $schemaStateDefaults,
@@ -274,20 +274,20 @@ class TreeMultiselectFieldTest extends SapphireTest
         $schemaDataDefaults = $field->getSchemaDataDefaults();
         $this->assertArraySubset(
             [
-                'id' => $field->ID(),
-                'name' => $this->fieldName,
-                'type' => 'text',
+                'id'         => $field->ID(),
+                'name'       => $this->fieldName,
+                'type'       => 'text',
                 'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $field->ID()),
-                'title' => 'Test tree',
+                'component'  => 'TreeDropdownField',
+                'holderId'   => sprintf('%s_Holder', $field->ID()),
+                'title'      => 'Test tree',
                 'extraClass' => 'treemultiselectfield_readonly multiple  searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
+                'data'       => [
+                    'urlTree'         => 'field/TestTree/tree',
+                    'showSearch'      => true,
+                    'emptyString'     => '(Search or choose File)',
                     'hasEmptyDefault' => false,
-                    'multiple' => true
+                    'multiple'        => true
                 ]
             ],
             $schemaDataDefaults,
@@ -300,5 +300,30 @@ class TreeMultiselectFieldTest extends SapphireTest
         $html = $field->Field();
         $this->assertContains($field->ID(), $html);
         $this->assertContains($this->fieldValue, $html);
+    }
+
+    public function testGetItems()
+    {
+        // Default items scaffolded from 'unchanged' value (empty)
+        $field = $this->field;
+        $this->assertListEquals(
+            [],
+            $field->getItems()
+        );
+
+
+        // Set list of items by array of ids
+        $field->setValue($this->folderIds);
+        $this->assertListEquals(
+            $this->loadFolders(),
+            $field->getItems()
+        );
+
+        // Set list of items by comma separated ids
+        $field->satValue($this->fieldValue);
+        $this->assertListEquals(
+            $this->loadFolders(),
+            $field->getItems()
+        );
     }
 }
