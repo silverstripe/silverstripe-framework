@@ -2,46 +2,47 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\DB;
 
-/**
- * @requires extension mysqli
- */
-class MySQLiConnectorTest extends SapphireTest implements TestOnly
+class MySQLiConnectorTest extends SapphireTest
 {
     /**
-     * @param $charset
-     * @param $customCollation
-     * @dataProvider charsetProvider
+     * @var bool
      */
-    public function testConnectionCollationControl($charset, $customCollation)
+    protected $usesDatabase = true;
+
+    /**
+     * This test validates that the encoding and collation conrol works for MySQLiConnector
+     */
+    public function testConnectionCollationControl()
     {
-        $config = DB::getConfig();
-        $config['charset'] = $charset;
-        $config['collation'] = $customCollation;
+        if (!(DB::get_connector() instanceof MySQLiConnector)) {
+            $this->markTestSkipped('This test requires the current DB connector is MySQLi');
+        }
 
-        $connector = new MySQLiConnector();
-        $connector->connect($config);
-        $connection = $connector->getMysqliConnection();
+        Config::withConfig(function (MutableConfigCollectionInterface $config) {
+            $config
+                ->set(MySQLDatabase::class, 'connection_charset', 'utf8mb4')
+                ->set(MySQLDatabase::class, 'connection_collation', 'utf8mb4_unicode_ci')
+                ->set(MySQLDatabase::class, 'charset', 'utf8mb4')
+                ->set(MySQLDatabase::class, 'collation', 'utf8mb4_unicode_ci');
 
-        $connectionCharset = $connection->get_charset();
+            // this query creates a temporary DB column
+            // if the collation is not set correctly for this DB connection this will throw
+            $sql = 'SELECT \'arbitrary_value\' AS "arbitrary_alias"'
+                . 'FROM "SiteTree"'
+                . 'HAVING "arbitrary_alias" = ?';
 
-        $this->assertEquals($charset, $connectionCharset->charset);
-        $this->assertEquals($customCollation, $connectionCharset->collation);
+            $params = [
+                'arbitrary_condition',
+            ];
 
-        $connection->close();
-        unset($connectionCharset, $connection, $connector, $config);
-    }
-
-    public function charsetProvider()
-    {
-        return [
-            ['ascii', 'ascii_bin'],
-            ['utf8', 'utf8_unicode_520_ci'],
-            ['utf8mb4', 'utf8mb4_unicode_520_ci']
-        ];
+            DB::prepared_query($sql, $params);
+        });
     }
 }
