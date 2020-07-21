@@ -133,6 +133,13 @@ class MySQLiConnector extends DBConnector
         if (!empty($collation)) {
             $this->dbConn->query("SET collation_connection = {$collation}");
         }
+
+        if (!$charset || !$collation) {
+            return;
+        }
+
+        // workaround for https://www.php.net/manual/en/mysqli.set-charset.php#121647
+        $this->dbConn->query(sprintf('SET NAMES %s COLLATE %s', $charset, $collation));
     }
 
     public function __destruct()
