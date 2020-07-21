@@ -311,18 +311,26 @@ class TreeMultiselectFieldTest extends SapphireTest
             $field->getItems()
         );
 
+        $expectedItem = array_map(
+            function ($folder) {
+                return [
+                    'Filename' => $folder->Filename,
+                ];
+            },
+            $this->loadFolders()
+        );
 
         // Set list of items by array of ids
         $field->setValue($this->folderIds);
         $this->assertListEquals(
-            $this->loadFolders(),
+            $expectedItem,
             $field->getItems()
         );
 
         // Set list of items by comma separated ids
-        $field->satValue($this->fieldValue);
+        $field->setValue($this->fieldValue);
         $this->assertListEquals(
-            $this->loadFolders(),
+            $expectedItem,
             $field->getItems()
         );
     }
