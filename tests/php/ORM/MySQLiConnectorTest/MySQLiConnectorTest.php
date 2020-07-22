@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Tests;
+namespace SilverStripe\ORM\Tests\MySQLiConnectorTest;
 
 use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
 use SilverStripe\Core\Config\Config;
@@ -15,6 +15,13 @@ class MySQLiConnectorTest extends SapphireTest
      * @var bool
      */
     protected $usesDatabase = true;
+
+    /**
+     * @var array
+     */
+    protected static $extra_dataobjects = [
+        DummyObject::class,
+    ];
 
     /**
      * This test validates that the encoding and collation conrol works for MySQLiConnector
@@ -34,9 +41,10 @@ class MySQLiConnectorTest extends SapphireTest
 
             // this query creates a temporary DB column
             // if the collation is not set correctly for this DB connection this will throw
-            $sql = 'SELECT \'arbitrary_value\' AS "arbitrary_alias"'
-                . 'FROM "SiteTree"'
-                . 'HAVING "arbitrary_alias" = ?';
+            $sql = sprintf(
+                'SELECT \'arbitrary_value\' AS "arbitrary_alias" FROM "%s" HAVING "arbitrary_alias" = ?',
+                DummyObject::config()->get('table_name')
+            );
 
             $params = [
                 'arbitrary_condition',
