@@ -70,6 +70,6 @@ Webserver setup is covered in
 
 ## Troubleshooting
 
-If you run into trouble, see [common-problems](common_problems) or
+If you run into trouble, see [the Tips & Tricks forum](https://forum.silverstripe.org/c/tips) or
 check our [community help options](https://www.silverstripe.org/community/).
 
