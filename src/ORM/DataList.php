@@ -924,11 +924,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
 
     /**
-     * Returns the first item in this DataList
+     * Returns the first item in this DataList (instanceof DataObject)
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
-     * @return DataObject
+     * @return DataObject|null
      */
     public function first()
     {
@@ -939,11 +939,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Returns the last item in this DataList
+     * Returns the last item in this DataList (instanceof DataObject)
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
-     * @return DataObject
+     * @return DataObject|null
      */
     public function last()
     {
@@ -1007,7 +1007,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * The object returned is not cached, unlike {@link DataObject::get_by_id()}
      *
      * @param int $id
-     * @return DataObject
+     * @return DataObject|null
      */
     public function byID($id)
     {
