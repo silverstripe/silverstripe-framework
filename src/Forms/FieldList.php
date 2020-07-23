@@ -380,7 +380,7 @@ class FieldList extends ArrayList
      * @param FormField $newField The field object to replace with
      * @param boolean $dataFieldOnly If this is true, then a field will only be replaced if it's a data field.  Dataless
      *                               fields, such as tabs, will be not be considered for replacement.
-     * @return boolean TRUE field was successfully replaced
+     * @return bool TRUE field was successfully replaced
      *                   FALSE field wasn't found, nothing changed
      */
     public function replaceField($fieldName, $newField, $dataFieldOnly = true)
@@ -404,7 +404,7 @@ class FieldList extends ArrayList
      *
      * @param string $fieldName Name of field to rename title of
      * @param string $newFieldTitle New title of field
-     * @return boolean
+     * @return bool
      */
     public function renameField($fieldName, $newFieldTitle)
     {
@@ -419,7 +419,7 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasTabSet()
     {
@@ -512,7 +512,7 @@ class FieldList extends ArrayList
      * @todo Implement similarly to dataFieldByName() to support nested sets - or merge with dataFields()
      *
      * @param string $name
-     * @return FormField
+     * @return FormField|null
      */
     public function fieldByName($name)
     {
@@ -548,7 +548,7 @@ class FieldList extends ArrayList
      * Use this if you're using nested FormFields.
      *
      * @param string $name The name of the field to return
-     * @return FormField instance
+     * @return FormField|null
      */
     public function dataFieldByName($name)
     {
