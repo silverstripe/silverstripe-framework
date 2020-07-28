@@ -129,4 +129,39 @@ class GroupedDropdownFieldTest extends SapphireTest
             preg_replace('/\s+/', ' ', (string)$field->Field())
         );
     }
+
+    /**
+     * Test that readonly version of GroupedDropdownField displays all values
+     */
+    public function testReadonlyValue()
+    {
+        $field = GroupedDropdownField::create(
+            'Test',
+            'Testing',
+            [
+                "1" => "One",
+                "Group One" => [
+                    "2" => "Two",
+                    "3" => "Three"
+                ],
+                "Group Two" => [
+                    "4" => "Four"
+                ],
+            ]
+        );
+
+        // value on first level
+        $field->setValue("1");
+        $this->assertRegExp(
+            '/<span class="readonly" id="Test">One<\/span><input type="hidden" name="Test" value="1" \/>/',
+            (string)$field->performReadonlyTransformation()->Field()
+        );
+
+        // value on first level
+        $field->setValue("2");
+        $this->assertRegExp(
+            '/<span class="readonly" id="Test">Two<\/span><input type="hidden" name="Test" value="2" \/>/',
+            (string)$field->performReadonlyTransformation()->Field()
+        );
+    }
 }

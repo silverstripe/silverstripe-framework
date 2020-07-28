@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
@@ -103,5 +104,15 @@ class GroupedDropdownField extends DropdownField
             }
         );
         return $values;
+    }
+
+    /**
+     * @return SingleLookupField
+     */
+    public function performReadonlyTransformation()
+    {
+        $field = parent::performReadonlyTransformation();
+        $field->setSource(ArrayLib::flatten($this->getSource()));
+        return $field;
     }
 }

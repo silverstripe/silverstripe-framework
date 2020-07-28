@@ -37,8 +37,8 @@ class EmbedShortcodeProviderTest extends SapphireTest
             [
                 'url' => static::$test_youtube,
                 'caption' => 'A nice video',
-                'width' => 480,
-                'height' => 360,
+                'width' => 777,
+                'height' => 437,
             ],
             [
                 'version' => '1.0',
@@ -58,7 +58,7 @@ class EmbedShortcodeProviderTest extends SapphireTest
         );
         $this->assertEqualIgnoringWhitespace(
             <<<EOS
-<div style="width: 480px;"><iframe width="480" height="270" src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>
+<div style="width: 777px;"><iframe width="777" height="437" src="https://www.youtube.com/embed/dM15HfUYwF0?feature=oembed" frameborder="0" allowfullscreen></iframe>
 <p class="caption">A nice video</p></div>
 EOS
             ,
