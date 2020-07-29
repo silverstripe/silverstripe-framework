@@ -167,9 +167,10 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 */
 } else {
 	/**
-	 * Fix magic quotes setting
+	 * Check if magic quotes are enabled (only relevant for php 5.3)
+	 * get_magic_quotes_gpc() call is suppressed to avoid php7.4 deprecation notice
 	 */
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+	if (function_exists('get_magic_quotes_gpc') && @get_magic_quotes_gpc()) {
 		if($_REQUEST) stripslashes_recursively($_REQUEST);
 		if($_GET) stripslashes_recursively($_GET);
 		if($_POST) stripslashes_recursively($_POST);
