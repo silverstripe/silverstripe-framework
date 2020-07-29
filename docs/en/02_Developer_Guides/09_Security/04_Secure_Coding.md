@@ -648,7 +648,7 @@ This is a recommended option to secure any controller which displays
 or submits sensitive user input, and is enabled by default in all CMS controllers,
 as well as the login form.
 
-## Request hostname forgery
+## Request hostname forgery {#request-hostname-forgery}
 
 To prevent a forged hostname appearing being used by the application, SilverStripe
 allows the configure of a whitelist of hosts that are allowed to access the system. By defining
