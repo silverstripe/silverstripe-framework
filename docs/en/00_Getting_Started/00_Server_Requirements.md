@@ -112,6 +112,16 @@ For example, Apache allows this through `Header setifempty` (see [docs](https://
 See [Developer Guide: Performance](/developer_guides/performance/)
 and [Developer Guides: File Security](/developer_guides/files/file_security) for more details.
 
+Silverstripe relies on the `Host` header to construct URLs such as "reset password" links,
+so you'll need to ensure that the systems hosting it only allow valid values for this header.
+See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery).
+
+### CDNs and other Reverse Proxies
+
+If your Silverstripe site is hosted behind multiple HTTP layers,
+you're in charge of controlling which forwarded headers are considered valid,
+and which IPs can set them. See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery).
+
 ### Symlinks
 
 SilverStripe is a modular system, with modules installed and updated
