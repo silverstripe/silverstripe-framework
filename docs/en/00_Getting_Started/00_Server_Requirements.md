@@ -120,7 +120,7 @@ See [Developer Guide: Security - Request hostname forgery](/developer_guides/sec
 
 If your Silverstripe site is hosted behind multiple HTTP layers,
 you're in charge of controlling which forwarded headers are considered valid,
-and which IPs can set them. See See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery).
+and which IPs can set them. See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery).
 
 ### Symlinks
 
