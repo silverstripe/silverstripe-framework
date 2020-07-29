@@ -63,7 +63,7 @@ read our guide on [how to write secure code](/developer_guides/security/secure_c
 * [forum.silverstripe.org](http://forum.silverstripe.org): Forums on silverstripe.org
 * [All issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
 
-## Identifying issues and pull request relevant to your own project
+## Identifying issues and pull request relevant to your own project {#identifying-issues}
 
 Our [issue browser](https://silverstripe-github-issues.now.sh/) can be helpful to identify known issues and pending pull requests in
 [supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/).
