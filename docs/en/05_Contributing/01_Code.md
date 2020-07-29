@@ -122,7 +122,7 @@ If your change is particularly significant, it may be referred to the [forum](ht
 
 A core committer will also "label" your PR using the labels defined in GitHub, these are to correctly classify and help find your work at a later date.
 
-#### GitHub Labels
+#### GitHub Labels {#labels}
 
 The current GitHub labels are grouped into five sections:
 
