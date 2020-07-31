@@ -108,7 +108,7 @@ class HTTPResponse
     /**
      * @var string
      */
-    protected $statusDescription = "OK";
+    protected $statusDescription = 'OK';
 
     /**
      * HTTP Headers like "content-type: text/xml"
@@ -117,7 +117,7 @@ class HTTPResponse
      * @var array
      */
     protected $headers = [
-        "content-type" => "text/html; charset=utf-8",
+        'content-type' => 'text/html; charset=utf-8',
     ];
 
     /**
@@ -140,7 +140,7 @@ class HTTPResponse
         if ($statusCode) {
             $this->setStatusCode($statusCode, $statusDescription);
         }
-        if (!$protocolVersion) {
+        if (! $protocolVersion) {
             if (preg_match('/HTTP\/(?<version>\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'], $matches)) {
                 $protocolVersion = $matches['version'];
             }
@@ -177,7 +177,7 @@ class HTTPResponse
         if (isset(self::$status_codes[$code])) {
             $this->statusCode = $code;
         } else {
-            throw new InvalidArgumentException("Unrecognised HTTP status code '$code'");
+            throw new InvalidArgumentException("Unrecognised HTTP status code '${code}'");
         }
 
         if ($description) {
@@ -244,7 +244,7 @@ class HTTPResponse
      */
     public function setBody($body)
     {
-        $this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
+        $this->body = $body ? (string) $body : $body; // Don't type-cast false-ish values, eg null is null not ''
         return $this;
     }
 
@@ -318,7 +318,7 @@ class HTTPResponse
      */
     public function redirect($dest, $code = 302)
     {
-        if (!in_array($code, self::$redirect_codes)) {
+        if (! in_array($code, self::$redirect_codes, true)) {
             trigger_error("Invalid HTTP redirect code {$code}", E_USER_WARNING);
             $code = 302;
         }
@@ -355,7 +355,7 @@ class HTTPResponse
         $url = Director::absoluteURL($location);
         $urlATT = Convert::raw2htmlatt($url);
         $urlJS = Convert::raw2js($url);
-        $title = (Director::isDev() && $headersSent)
+        $title = Director::isDev() && $headersSent
             ? "{$urlATT}... (output started on {$file}, line {$line})"
             : "{$urlATT}...";
         echo <<<EOT
@@ -374,9 +374,9 @@ EOT
     protected function outputHeaders()
     {
         $headersSent = headers_sent($file, $line);
-        if (!$headersSent) {
+        if (! $headersSent) {
             $method = sprintf(
-                "%s %d %s",
+                '%s %d %s',
                 $_SERVER['SERVER_PROTOCOL'],
                 $this->getStatusCode(),
                 $this->getStatusDescription()
@@ -438,7 +438,7 @@ EOT
      */
     public function isRedirect()
     {
-        return in_array($this->getStatusCode(), self::$redirect_codes);
+        return in_array($this->getStatusCode(), self::$redirect_codes, true);
     }
 
     /**
@@ -450,12 +450,11 @@ EOT
     {
         $headers = [];
         foreach ($this->getHeaders() as $header => $values) {
-            foreach ((array)$values as $value) {
+            foreach ((array) $values as $value) {
                 $headers[] = sprintf('%s: %s', $header, $value);
             }
         }
-        return
-            sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
+        return sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), $this->getStatusDescription()) . "\r\n" .
             implode("\r\n", $headers) . "\r\n" . "\r\n" .
             $this->getBody();
     }

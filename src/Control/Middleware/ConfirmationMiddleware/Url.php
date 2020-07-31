@@ -41,7 +41,7 @@ class Url implements Rule, Bypass
 
         if (is_array($httpMethods)) {
             $this->addHttpMethods(...$httpMethods);
-        } elseif (!is_null($httpMethods)) {
+        } elseif ($httpMethods !== null) {
             $this->addHttpMethods($httpMethods);
         }
     }
@@ -80,7 +80,7 @@ class Url implements Rule, Bypass
      * against parameter values accordingly. Null
      * as a value in the array matches any parameter values.
      *
-     * @param string|null $httpMethods
+     * @param string|null $params
      *
      * @return $this
      */
@@ -97,7 +97,7 @@ class Url implements Rule, Bypass
 
     public function getRequestConfirmationItem(HTTPRequest $request)
     {
-        if (!$this->checkRequest($request)) {
+        if (! $this->checkRequest($request)) {
             return null;
         }
 
@@ -118,33 +118,33 @@ class Url implements Rule, Bypass
     {
         $httpMethods = $this->getHttpMethods();
 
-        if (count($httpMethods) && !in_array($request->httpMethod(), $httpMethods, true)) {
+        if (count($httpMethods) && ! in_array($request->httpMethod(), $httpMethods, true)) {
             return false;
         }
 
-        if (!$this->checkPath($request->getURL())) {
+        if (! $this->checkPath($request->getURL())) {
             return false;
         }
 
-        if (!is_null($this->params)) {
+        if ($this->params !== null) {
             $getVars = $request->getVars();
 
             // compare the request parameters with the declared ones
             foreach ($this->params as $key => $val) {
-                if (is_null($val)) {
+                if ($val === null) {
                     $cmp = array_key_exists($key, $getVars);
                 } else {
                     $cmp = isset($getVars[$key]) && $getVars[$key] === strval($val);
                 }
 
-                if (!$cmp) {
+                if (! $cmp) {
                     return false;
                 }
             }
 
             // check only declared parameters exist in the request
             foreach ($getVars as $key => $val) {
-                if (!array_key_exists($key, $this->params)) {
+                if (! array_key_exists($key, $this->params)) {
                     return false;
                 }
             }

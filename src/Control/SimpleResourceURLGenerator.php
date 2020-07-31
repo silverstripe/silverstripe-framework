@@ -50,8 +50,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      */
     public function setNonceStyle($nonceStyle)
     {
-        if ($nonceStyle && !in_array($nonceStyle, ['mtime', 'sha1', 'md5'])) {
-            throw new InvalidArgumentException("NonceStyle '$nonceStyle' is not supported");
+        if ($nonceStyle && ! in_array($nonceStyle, ['mtime', 'sha1', 'md5'], true)) {
+            throw new InvalidArgumentException("NonceStyle '${nonceStyle}' is not supported");
         }
         $this->nonceStyle = $nonceStyle;
         return $this;
@@ -80,13 +80,13 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
 
             // Determine lookup mechanism based on existence of public/ folder.
             // From 5.0 onwards only resolvePublicResource() will be used.
-            if (!Director::publicDir()) {
+            if (! Director::publicDir()) {
                 list($exists, $absolutePath, $relativePath) = $this->resolveUnsecuredResource($relativePath);
             } else {
                 list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
             }
         }
-        if (!$exists) {
+        if (! $exists) {
             trigger_error("File {$relativePath} does not exist", E_USER_NOTICE);
         }
 
@@ -117,10 +117,10 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             if ($query) {
                 $query .= '&';
             }
-            if(! $method) {
-                user_error('No nonceStyle defined.", E_USER_ERROR);
+            if (! $method) {
+                user_error('No nonceStyle defined.', E_USER_ERROR);
             }
-            $query .= "m=" . call_user_func($method, $absolutePath);
+            $query .= 'm=' . call_user_func($method, $absolutePath);
         }
 
         // Add back querystring
@@ -230,7 +230,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
 
         // Fall back to private path (and assume expose will make this available to _resources/)
         $privatePath = Path::join(Director::baseFolder(), $relativePath);
-        if (!$publicOnly && file_exists($privatePath)) {
+        if (! $publicOnly && file_exists($privatePath)) {
             // String is private but exposed to _resources/, so rewrite to the symlinked base
             $relativePath = Path::join(RESOURCES_DIR, $relativePath);
             return [true, $privatePath, $relativePath];

@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Control\Middleware\URLSpecialsMiddleware;
 
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
 use SilverStripe\Control\HTTPRequest;
 
 /**
@@ -24,7 +22,7 @@ trait SessionEnvTypeSwitcher
         $session = $request->getSession();
 
         if (array_key_exists('isTest', $request->getVars())) {
-            if (!is_null($isTest = $request->getVar('isTest'))) {
+            if (($isTest = $request->getVar('isTest')) !== null) {
                 if ($isTest === $session->get('isTest')) {
                     return false;
                 }
@@ -35,7 +33,7 @@ trait SessionEnvTypeSwitcher
 
             return true;
         } elseif (array_key_exists('isDev', $request->getVars())) {
-            if (!is_null($isDev = $request->getVar('isDev'))) {
+            if (($isDev = $request->getVar('isDev')) !== null) {
                 if ($isDev === $session->get('isDev')) {
                     return false;
                 }

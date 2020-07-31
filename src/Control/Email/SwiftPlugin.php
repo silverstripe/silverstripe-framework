@@ -15,26 +15,26 @@ class SwiftPlugin implements \Swift_Events_SendListener
         $message = $evt->getMessage();
 
         $sendAllTo = Email::getSendAllEmailsTo();
-        if (!empty($sendAllTo)) {
+        if (! empty($sendAllTo)) {
             $this->setTo($message, $sendAllTo);
         }
 
         $ccAllTo = Email::getCCAllEmailsTo();
-        if (!empty($ccAllTo)) {
+        if (! empty($ccAllTo)) {
             foreach ($ccAllTo as $address => $name) {
                 $message->addCc($address, $name);
             }
         }
 
         $bccAllTo = Email::getBCCAllEmailsTo();
-        if (!empty($bccAllTo)) {
+        if (! empty($bccAllTo)) {
             foreach ($bccAllTo as $address => $name) {
                 $message->addBcc($address, $name);
             }
         }
 
         $sendAllFrom = Email::getSendAllEmailsFrom();
-        if (!empty($sendAllFrom)) {
+        if (! empty($sendAllFrom)) {
             $this->setFrom($message, $sendAllFrom);
         }
     }

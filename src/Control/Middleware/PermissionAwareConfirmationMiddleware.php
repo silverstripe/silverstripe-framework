@@ -141,16 +141,15 @@ class PermissionAwareConfirmationMiddleware extends ConfirmationMiddleware
 
     protected function processItems(HTTPRequest $request, callable $delegate, $items)
     {
-        if (!Security::getCurrentUser()) {
+        if (! Security::getCurrentUser()) {
             if ($this->getEnforceAuthentication()) {
                 return $this->getAuthenticationRedirect($request);
-            } else {
-                // assume the user does not have permissions anyway
-                return $delegate($request);
             }
+            // assume the user does not have permissions anyway
+            return $delegate($request);
         }
 
-        if (!$this->hasAccess($request)) {
+        if (! $this->hasAccess($request)) {
             return $delegate($request);
         }
 

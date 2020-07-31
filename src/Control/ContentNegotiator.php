@@ -75,21 +75,20 @@ class ContentNegotiator
      */
     public static function enabled_for($response)
     {
-        $contentType = $response->getHeader("Content-Type");
+        $contentType = $response->getHeader('Content-Type');
 
         // Disable content negotiation for other content types
         if ($contentType
-            && substr($contentType, 0, 9) != 'text/html'
-            && substr($contentType, 0, 21) != 'application/xhtml+xml'
+            && substr($contentType, 0, 9) !== 'text/html'
+            && substr($contentType, 0, 21) !== 'application/xhtml+xml'
         ) {
             return false;
         }
 
         if (ContentNegotiator::getEnabled()) {
             return true;
-        } else {
-            return (substr($response->getBody(), 0, 5) == '<' . '?xml');
         }
+        return substr($response->getBody(), 0, 5) === '<' . '?xml';
     }
 
     /**
@@ -120,13 +119,13 @@ class ContentNegotiator
      */
     public static function process(HTTPResponse $response)
     {
-        if (!self::enabled_for($response)) {
+        if (! self::enabled_for($response)) {
             return;
         }
 
         $mimes = [
-            "xhtml" => "application/xhtml+xml",
-            "html" => "text/html",
+            'xhtml' => 'application/xhtml+xml',
+            'html' => 'text/html',
         ];
         $q = [];
         if (headers_sent()) {
@@ -136,14 +135,14 @@ class ContentNegotiator
         } else {
             // The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml. We put this
             // special case in here so that designers don't get worried that their templates are HTML4.
-            if (isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
-                $chosenFormat = "xhtml";
+            if (isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) === 'W3C_Validator/') {
+                $chosenFormat = 'xhtml';
             } else {
                 foreach ($mimes as $format => $mime) {
                     $regExp = '/' . str_replace(['+', '/'], ['\+', '\/'], $mime) . '(;q=(\d+\.\d+))?/i';
                     if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
                         $preference = isset($matches[2]) ? $matches[2] : 1;
-                        if (!isset($q[$preference])) {
+                        if (! isset($q[$preference])) {
                             $q[$preference] = $format;
                         }
                     }
@@ -160,7 +159,7 @@ class ContentNegotiator
         }
 
         $negotiator = new ContentNegotiator();
-        $negotiator->$chosenFormat($response);
+        $negotiator->{$chosenFormat}($response);
     }
 
     /**
@@ -179,11 +178,11 @@ class ContentNegotiator
 
         $contentType = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'content_type');
         if (empty($contentType)) {
-            $response->addHeader("Content-Type", "application/xhtml+xml; charset=" . $encoding);
+            $response->addHeader('Content-Type', 'application/xhtml+xml; charset=' . $encoding);
         } else {
-            $response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
+            $response->addHeader('Content-Type', $contentType . '; charset=' . $encoding);
         }
-        $response->addHeader("Vary", "Accept");
+        $response->addHeader('Vary', 'Accept');
 
         // Fix base tag
         $content = preg_replace(
@@ -198,8 +197,8 @@ class ContentNegotiator
         $content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
         $content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
         $content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content);
-        $content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
-        $content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
+        $content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", '$1="selected"$2', $content);
+        $content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", '$1="checked"$2', $content);
 
         $response->setBody($content);
     }
@@ -219,14 +218,14 @@ class ContentNegotiator
         $encoding = $this->config()->get('encoding');
         $contentType = $this->config()->get('content_type');
         if (empty($contentType)) {
-            $response->addHeader("Content-Type", "text/html; charset=" . $encoding);
+            $response->addHeader('Content-Type', 'text/html; charset=' . $encoding);
         } else {
-            $response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
+            $response->addHeader('Content-Type', $contentType . '; charset=' . $encoding);
         }
-        $response->addHeader("Vary", "Accept");
+        $response->addHeader('Vary', 'Accept');
 
         $content = $response->getBody();
-        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml');
+        $hasXMLHeader = (substr($content, 0, 5) === '<' . '?xml');
 
         // Fix base tag
         $content = preg_replace(

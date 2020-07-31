@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 
 /**
@@ -22,7 +21,6 @@ use InvalidArgumentException;
  */
 class PjaxResponseNegotiator
 {
-
     /**
      * See {@link respond()}
      *
@@ -49,7 +47,7 @@ class PjaxResponseNegotiator
 
     public function getResponse()
     {
-        if (!$this->response) {
+        if (! $this->response) {
             $this->response = new HTTPResponse();
         }
         return $this->response;
@@ -85,9 +83,9 @@ class PjaxResponseNegotiator
             $fragments = explode(',', $fragmentStr);
         } else {
             if ($request->isAjax()) {
-                throw new HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+                throw new HTTPResponse_Exception('Ajax requests to this URL require an X-Pjax header.', 400);
             } elseif (empty($callbacks['default'])) {
-                throw new HTTPResponse_Exception("Missing default response handler for this URL", 400);
+                throw new HTTPResponse_Exception('Missing default response handler for this URL', 400);
             }
             $response->setBody(call_user_func($callbacks['default']));
             return $response;
@@ -99,7 +97,7 @@ class PjaxResponseNegotiator
                 $res = call_user_func($callbacks[$fragment]);
                 $responseParts[$fragment] = $res ? (string) $res : $res;
             } else {
-                throw new HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+                throw new HTTPResponse_Exception("X-Pjax = '${fragment}' not supported for this URL.", 400);
             }
         }
         $response->setBody(json_encode($responseParts));
@@ -110,7 +108,7 @@ class PjaxResponseNegotiator
 
     /**
      * @param string   $fragment
-     * @param Callable $callback
+     * @param callable $callback
      */
     public function setCallback($fragment, $callback)
     {
@@ -125,8 +123,8 @@ class PjaxResponseNegotiator
      */
     public function setFragmentOverride($fragments)
     {
-        if (!is_array($fragments)) {
-            throw new InvalidArgumentException("fragments must be an array");
+        if (! is_array($fragments)) {
+            throw new InvalidArgumentException('fragments must be an array');
         }
 
         $this->fragmentOverride = $fragments;

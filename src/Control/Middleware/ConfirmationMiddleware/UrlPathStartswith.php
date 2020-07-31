@@ -72,7 +72,7 @@ class UrlPathStartswith implements Rule, Bypass
 
     public function getRequestConfirmationItem(HTTPRequest $request)
     {
-        if (!$this->checkPath($request->getURL())) {
+        if (! $this->checkPath($request->getURL())) {
             return null;
         }
 

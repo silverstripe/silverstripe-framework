@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Control;
 
+use finfo;
+use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Control\Middleware\ChangeDetectionMiddleware;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use InvalidArgumentException;
-use finfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 
@@ -96,7 +96,7 @@ class HTTP
     public static function filename2url($filename)
     {
         $filename = realpath($filename);
-        if (!$filename) {
+        if (! $filename) {
             return null;
         }
 
@@ -156,33 +156,33 @@ class HTTP
      */
     public static function urlRewriter($content, $code)
     {
-        if (!is_callable($code)) {
+        if (! is_callable($code)) {
             throw new InvalidArgumentException(
                 'HTTP::urlRewriter expects a callable as the second parameter'
             );
         }
 
         // Replace attributes
-        $attribs = ["src", "background", "a" => "href", "link" => "href", "base" => "href"];
+        $attribs = ['src', 'background', 'a' => 'href', 'link' => 'href', 'base' => 'href'];
         $regExps = [];
         foreach ($attribs as $tag => $attrib) {
-            if (!is_numeric($tag)) {
-                $tagPrefix = "$tag ";
+            if (! is_numeric($tag)) {
+                $tagPrefix = "${tag} ";
             } else {
-                $tagPrefix = "";
+                $tagPrefix = '';
             }
 
-            $regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/i";
-            $regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/i";
-            $regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/i";
+            $regExps[] = "/(<{$tagPrefix}[^>]*${attrib} *= *\")([^\"]*)(\")/i";
+            $regExps[] = "/(<{$tagPrefix}[^>]*${attrib} *= *')([^']*)(')/i";
+            $regExps[] = "/(<{$tagPrefix}[^>]*${attrib} *= *)([^\"' ]*)( )/i";
         }
         // Replace css styles
         // @todo - http://www.css3.info/preview/multiple-backgrounds/
         $styles = ['background-image', 'background', 'list-style-image', 'list-style', 'content'];
         foreach ($styles as $style) {
-            $regExps[] = "/($style:[^;]*url *\\(\")([^\"]+)(\"\\))/i";
-            $regExps[] = "/($style:[^;]*url *\\(')([^']+)('\\))/i";
-            $regExps[] = "/($style:[^;]*url *\\()([^\"\\)')]+)(\\))/i";
+            $regExps[] = "/(${style}:[^;]*url *\\(\")([^\"]+)(\"\\))/i";
+            $regExps[] = "/(${style}:[^;]*url *\\(')([^']+)('\\))/i";
+            $regExps[] = "/(${style}:[^;]*url *\\()([^\"\\)')]+)(\\))/i";
         }
 
         // Callback for regexp replacement
@@ -219,7 +219,7 @@ class HTTP
      */
     public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&')
     {
-        if (!isset($currentURL)) {
+        if (! isset($currentURL)) {
             $request = Controller::curr()->getRequest();
             $currentURL = $request->getURL(true);
         }
@@ -234,7 +234,7 @@ class HTTP
 
         // try to parse uri
         $parts = parse_url($uri);
-        if (!$parts) {
+        if (! $parts) {
             throw new InvalidArgumentException("Can't parse URL: " . $uri);
         }
 
@@ -246,23 +246,23 @@ class HTTP
         $params[$varname] = $varvalue;
 
         // Generate URI segments and formatting
-        $scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
-        $user = (isset($parts['user']) && $parts['user'] != '') ? $parts['user'] : '';
+        $scheme = isset($parts['scheme']) ? $parts['scheme'] : 'http';
+        $user = isset($parts['user']) && $parts['user'] !== '' ? $parts['user'] : '';
 
-        if ($user != '') {
+        if ($user !== '') {
             // format in either user:pass@host.com or user@host.com
-            $user .= (isset($parts['pass']) && $parts['pass'] != '') ? ':' . $parts['pass'] . '@' : '@';
+            $user .= isset($parts['pass']) && $parts['pass'] !== '' ? ':' . $parts['pass'] . '@' : '@';
         }
 
-        $host = (isset($parts['host'])) ? $parts['host'] : '';
-        $port = (isset($parts['port']) && $parts['port'] != '') ? ':' . $parts['port'] : '';
-        $path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
+        $host = isset($parts['host']) ? $parts['host'] : '';
+        $port = isset($parts['port']) && $parts['port'] !== '' ? ':' . $parts['port'] : '';
+        $path = isset($parts['path']) && $parts['path'] !== '' ? $parts['path'] : '';
 
         // handle URL params which are existing / new
-        $params = ($params) ? '?' . http_build_query($params, null, $separator) : '';
+        $params = $params ? '?' . http_build_query($params, null, $separator) : '';
 
         // keep fragments (anchors) intact.
-        $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ? '#' . $parts['fragment'] : '';
+        $fragment = isset($parts['fragment']) && $parts['fragment'] !== '' ? '#' . $parts['fragment'] : '';
 
         // Recompile URI segments
         $newUri = $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
@@ -277,7 +277,7 @@ class HTTP
     /**
      * @param string $varname
      * @param string $varvalue
-     * @param null|string $currentURL
+     * @param string|null $currentURL
      *
      * @return string
      */
@@ -301,8 +301,8 @@ class HTTP
         $regexes = [];
 
         foreach ($attributes as $tag => $attribute) {
-            $regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
-            $regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
+            $regexes[] = "/<{$tag} [^>]*${attribute} *= *([\"'])(.*?)\\1[^>]*>/i";
+            $regexes[] = "/<{$tag} [^>]*${attribute} *= *([^ \"'>]+)/i";
         }
 
         $result = [];
@@ -325,7 +325,7 @@ class HTTP
      */
     public static function getLinksIn($content)
     {
-        return self::findByTagAndAttribute($content, ["a" => "href"]);
+        return self::findByTagAndAttribute($content, ['a' => 'href']);
     }
 
     /**
@@ -335,7 +335,7 @@ class HTTP
      */
     public static function getImagesIn($content)
     {
-        return self::findByTagAndAttribute($content, ["img" => "src"]);
+        return self::findByTagAndAttribute($content, ['img' => 'src']);
     }
 
     /**
@@ -362,7 +362,7 @@ class HTTP
         $mimeTypes = HTTP::config()->uninherited('MimeTypes');
 
         // The mime type doesn't exist
-        if (!isset($mimeTypes[$ext])) {
+        if (! isset($mimeTypes[$ext])) {
             return 'application/unknown';
         }
 
@@ -410,7 +410,7 @@ class HTTP
     {
         Deprecation::notice('5.0', 'Use ChangeDetectionMiddleware instead');
         if (strpos($etag, '"') !== 0) {
-            $etag =  "\"{$etag}\"";
+            $etag = "\"{$etag}\"";
         }
         self::$etag = $etag;
     }
@@ -438,8 +438,8 @@ class HTTP
         }
 
         // Ensure a valid response object is provided
-        if (!$response instanceof HTTPResponse) {
-            user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
+        if (! $response instanceof HTTPResponse) {
+            user_error('HTTP::add_cache_headers() must be passed an HTTPResponse object', E_USER_WARNING);
             return;
         }
 
@@ -454,8 +454,8 @@ class HTTP
         }
 
         // Ensure a valid request object exists in the current context
-        if (!Injector::inst()->has(HTTPRequest::class)) {
-            user_error("HTTP::add_cache_headers() cannot work without a current HTTPRequest object", E_USER_WARNING);
+        if (! Injector::inst()->has(HTTPRequest::class)) {
+            user_error('HTTP::add_cache_headers() cannot work without a current HTTPRequest object', E_USER_WARNING);
             return;
         }
 
@@ -496,7 +496,7 @@ class HTTP
         }
 
         // if no caching ajax requests, disable ajax if is ajax request
-        if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
+        if (! $config->get('cache_ajax_requests') && Director::is_ajax()) {
             Deprecation::notice(
                 '5.0',
                 'HTTP.cache_ajax_requests config is deprecated. Use HTTPCacheControlMiddleware::disableCache() instead'
@@ -530,15 +530,15 @@ class HTTP
             }
 
             if (isset($configCacheControl['no-cache'])) {
-                $cacheControlMiddleware->setNoCache((bool)$configCacheControl['no-cache']);
+                $cacheControlMiddleware->setNoCache((bool) $configCacheControl['no-cache']);
             }
 
             if (isset($configCacheControl['no-store'])) {
-                $cacheControlMiddleware->setNoStore((bool)$configCacheControl['no-store']);
+                $cacheControlMiddleware->setNoStore((bool) $configCacheControl['no-store']);
             }
 
             if (isset($configCacheControl['must-revalidate'])) {
-                $cacheControlMiddleware->setMustRevalidate((bool)$configCacheControl['must-revalidate']);
+                $cacheControlMiddleware->setMustRevalidate((bool) $configCacheControl['must-revalidate']);
             }
         }
 
@@ -549,7 +549,7 @@ class HTTP
         }
 
         // Ensure deprecated $etag property is assigned
-        if (self::$etag && !$cacheControlMiddleware->hasDirective('no-store') && !$response->getHeader('ETag')) {
+        if (self::$etag && ! $cacheControlMiddleware->hasDirective('no-store') && ! $response->getHeader('ETag')) {
             Deprecation::notice('5.0', 'Etag should not be set explicitly');
             $response->addHeader('ETag', self::$etag);
         }

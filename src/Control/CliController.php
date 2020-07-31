@@ -16,16 +16,15 @@ use SilverStripe\Security\Security;
  */
 abstract class CliController extends Controller
 {
-
     private static $allowed_actions = [
-        'index'
+        'index',
     ];
 
     protected function init()
     {
         parent::init();
         // Unless called from the command line, all CliControllers need ADMIN privileges
-        if (!Director::is_cli() && !Permission::check("ADMIN")) {
+        if (! Director::is_cli() && ! Permission::check('ADMIN')) {
             Security::permissionFailure();
         }
     }

@@ -19,7 +19,7 @@ class HttpMethodBypass implements Bypass
     /**
      * Initialize the bypass with HTTP methods
      *
-     * @param string[] ...$method
+     * @param string[] ...$methods
      */
     public function __construct(...$methods)
     {
@@ -59,7 +59,7 @@ class HttpMethodBypass implements Bypass
         );
 
         foreach ($methods as $method) {
-            if (!in_array($method, $this->methods, true)) {
+            if (! in_array($method, $this->methods, true)) {
                 $this->methods[] = $method;
             }
         }

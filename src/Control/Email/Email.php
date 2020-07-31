@@ -22,7 +22,6 @@ use Swift_MimePart;
  */
 class Email extends ViewableData
 {
-
     /**
      * @var array
      * @config
@@ -153,9 +152,9 @@ class Email extends ViewableData
     {
         // Normalise config list
         $normalised = [];
-        $source = (array)static::config()->get($config);
+        $source = (array) static::config()->get($config);
         foreach ($source as $address => $name) {
-            if ($address && !is_numeric($address)) {
+            if ($address && ! is_numeric($address)) {
                 $normalised[$address] = $name;
             } elseif ($name) {
                 $normalised[$name] = null;
@@ -255,7 +254,7 @@ class Email extends ViewableData
      */
     public function getSwiftMessage()
     {
-        if (!$this->swiftMessage) {
+        if (! $this->swiftMessage) {
             $this->setSwiftMessage(new Swift_Message(null, null, 'text/html', 'utf-8'));
         }
 
@@ -270,7 +269,7 @@ class Email extends ViewableData
     public function setSwiftMessage($swiftMessage)
     {
         $swiftMessage->setDate(DBDatetime::now()->getTimestamp());
-        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
+        if (! $swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
             $swiftMessage->setFrom($defaultFrom);
         }
         $this->swiftMessage = $swiftMessage;
@@ -586,7 +585,7 @@ class Email extends ViewableData
         } elseif (is_array($this->data)) {
             $this->data[$name] = $value;
         } else {
-            $this->data->$name = $value;
+            $this->data->{$name} = $value;
         }
 
         return $this;
@@ -603,7 +602,7 @@ class Email extends ViewableData
         if (is_array($this->data)) {
             unset($this->data[$name]);
         } else {
-            $this->data->$name = null;
+            $this->data->{$name} = null;
         }
 
         return $this;
@@ -679,7 +678,7 @@ class Email extends ViewableData
      */
     public function setHTMLTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
+        if (substr($template, -3) === '.ss') {
             $template = substr($template, 0, -3);
         }
         $this->HTMLTemplate = $template;
@@ -705,7 +704,7 @@ class Email extends ViewableData
      */
     public function setPlainTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
+        if (substr($template, -3) === '.ss') {
             $template = substr($template, 0, -3);
         }
         $this->plainTemplate = $template;
@@ -749,10 +748,10 @@ class Email extends ViewableData
      */
     public function send()
     {
-        if (!$this->getBody()) {
+        if (! $this->getBody()) {
             $this->render();
         }
-        if (!$this->hasPlainPart()) {
+        if (! $this->hasPlainPart()) {
             $this->generatePlainPartFromBody();
         }
         return Injector::inst()->get(Mailer::class)->send($this);
@@ -763,7 +762,7 @@ class Email extends ViewableData
      */
     public function sendPlain()
     {
-        if (!$this->hasPlainPart()) {
+        if (! $this->hasPlainPart()) {
             $this->render(true);
         }
         return Injector::inst()->get(Mailer::class)->send($this);
@@ -788,7 +787,7 @@ class Email extends ViewableData
         // Ensure we can at least render something
         $htmlTemplate = $this->getHTMLTemplate();
         $plainTemplate = $this->getPlainTemplate();
-        if (!$htmlTemplate && !$plainTemplate && !$plainPart && !$htmlPart) {
+        if (! $htmlTemplate && ! $plainTemplate && ! $plainPart && ! $htmlPart) {
             return $this;
         }
 
@@ -796,17 +795,17 @@ class Email extends ViewableData
         Requirements::clear();
 
         // Render plain part
-        if ($plainTemplate && !$plainPart) {
+        if ($plainTemplate && ! $plainPart) {
             $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
         }
 
         // Render HTML part, either if sending html email, or a plain part is lacking
-        if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
+        if (! $htmlPart && $htmlTemplate && (! $plainOnly || empty($plainPart))) {
             $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
         }
 
         // Plain part fails over to generated from html
-        if (!$plainPart && $htmlPart) {
+        if (! $plainPart && $htmlPart) {
             /** @var DBHTMLText $htmlPartObject */
             $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
             $plainPart = $htmlPartObject->Plain();
@@ -816,12 +815,12 @@ class Email extends ViewableData
         Requirements::restore();
 
         // Fail if no email to send
-        if (!$plainPart && !$htmlPart) {
+        if (! $plainPart && ! $htmlPart) {
             return $this;
         }
 
         // Build HTML / Plain components
-        if ($htmlPart && !$plainOnly) {
+        if ($htmlPart && ! $plainOnly) {
             $this->setBody($htmlPart);
             $this->getSwiftMessage()->setContentType('text/html');
             $this->getSwiftMessage()->setCharset('utf-8');
@@ -845,7 +844,7 @@ class Email extends ViewableData
     public function findPlainPart()
     {
         foreach ($this->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
+            if ($child instanceof Swift_MimePart && $child->getContentType() === 'text/plain') {
                 return $child;
             }
         }

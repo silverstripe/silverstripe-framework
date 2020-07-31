@@ -202,7 +202,7 @@ class Session
     /**
      * Start PHP session, then create a new Session object with the given start data.
      *
-     * @param array|null|Session $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+     * @param array|Session|null $data Can be an array of data (such as $_SESSION) or another Session object to clone.
      * If null, this session is treated as unstarted.
      */
     public function __construct($data)
@@ -225,7 +225,7 @@ class Session
      */
     public function init(HTTPRequest $request)
     {
-        if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
+        if (! $this->isStarted() && $this->requestContainsSessionId($request)) {
             $this->start($request);
         }
 
@@ -267,7 +267,7 @@ class Session
     {
         $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
-        return (bool)Cookie::get($name);
+        return (bool) Cookie::get($name);
     }
 
     /**
@@ -280,11 +280,11 @@ class Session
     public function start(HTTPRequest $request)
     {
         if ($this->isStarted()) {
-            throw new BadMethodCallException("Session has already started");
+            throw new BadMethodCallException('Session has already started');
         }
 
         $path = $this->config()->get('cookie_path');
-        if (!$path) {
+        if (! $path) {
             $path = Director::baseURL();
         }
         $domain = $this->config()->get('cookie_domain');
@@ -297,7 +297,7 @@ class Session
         if (Director::is_absolute_url($path)) {
             $urlParts = parse_url($path);
             $path = $urlParts['path'];
-            if (!$domain) {
+            if (! $domain) {
                 $domain = $urlParts['host'];
             }
         }
@@ -305,8 +305,8 @@ class Session
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
         $data = [];
-        if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
-            if (!headers_sent()) {
+        if (! session_id() && (! headers_sent() || $this->requestContainsSessionId($request))) {
+            if (! headers_sent()) {
                 session_set_cookie_params($timeout ?: 0, $path, $domain ?: null, $secure, true);
 
                 $limiter = $this->config()->get('sessionCacheLimiter');
@@ -340,10 +340,10 @@ class Session
             }
 
             // Initialise data from session store if present
-            $data = empty($_SESSION)? [] : $_SESSION;
+            $data = empty($_SESSION) ? [] : $_SESSION;
 
             // Merge in existing in-memory data, taking priority over session store data
-            $this->recursivelyApply((array)$this->data, $data);
+            $this->recursivelyApply((array) $this->data, $data);
         }
 
         // Save any modified session data back to the session store if present, otherwise initialise it to an array.
@@ -404,7 +404,7 @@ class Session
     {
         $diffVar = &$this->changedData;
         foreach (explode('.', $name) as $namePart) {
-            if (!isset($diffVar[$namePart])) {
+            if (! isset($diffVar[$namePart])) {
                 $diffVar[$namePart] = [];
             }
             $diffVar = &$diffVar[$namePart];
@@ -522,7 +522,7 @@ class Session
         if ($this->changedData) {
             $this->finalize($request);
 
-            if (!$this->isStarted()) {
+            if (! $this->isStarted()) {
                 $this->start($request);
             }
 
@@ -544,7 +544,7 @@ class Session
         Deprecation::notice('5.0', 'Use recursivelyApplyChanges() instead');
         foreach ($data as $k => $v) {
             if (is_array($v)) {
-                if (!isset($dest[$k]) || !is_array($dest[$k])) {
+                if (! isset($dest[$k]) || ! is_array($dest[$k])) {
                     $dest[$k] = [];
                 }
                 $this->recursivelyApply($v, $dest[$k]);
@@ -578,10 +578,10 @@ class Session
         // Find var to change
         $var = &$source;
         foreach (explode('.', $name) as $namePart) {
-            if (!isset($var)) {
+            if (! isset($var)) {
                 $var = [];
             }
-            if (!isset($var[$namePart])) {
+            if (! isset($var[$namePart])) {
                 $var[$namePart] = null;
             }
             $var = &$var[$namePart];
@@ -603,7 +603,7 @@ class Session
         // Find var to change
         $var = $source;
         foreach (explode('.', $name) as $namePart) {
-            if (!isset($var[$namePart])) {
+            if (! isset($var[$namePart])) {
                 return null;
             }
             $var = $var[$namePart];
@@ -646,7 +646,7 @@ class Session
      */
     public function regenerateSessionId()
     {
-        if (!headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
+        if (! headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
             session_regenerate_id(true);
         }
     }

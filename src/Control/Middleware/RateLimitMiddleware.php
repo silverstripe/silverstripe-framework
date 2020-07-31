@@ -10,7 +10,6 @@ use SilverStripe\Security\Security;
 
 class RateLimitMiddleware implements HTTPMiddleware
 {
-
     /**
      * @var string Optional extra data to add to request key generation
      */
@@ -38,7 +37,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
-        if (!$limiter = $this->getRateLimiter()) {
+        if (! $limiter = $this->getRateLimiter()) {
             $limiter = RateLimiter::create(
                 $this->getKeyFromRequest($request),
                 $this->getMaxAttempts(),

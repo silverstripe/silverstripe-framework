@@ -59,7 +59,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @var array|bool
      */
     protected $enabledEnvs = [
-        CoreKernel::LIVE
+        CoreKernel::LIVE,
     ];
 
     /**
@@ -207,7 +207,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     protected function getRedirect(HTTPRequest $request)
     {
         // Check global disable
-        if (!$this->isEnabled()) {
+        if (! $this->isEnabled()) {
             return null;
         }
 
@@ -247,7 +247,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     public function throwRedirectIfNeeded(HTTPRequest $request = null)
     {
         $request = $this->getOrValidateRequest($request);
-        if (!$request) {
+        if (! $request) {
             return;
         }
         $response = $this->getRedirect($request);
@@ -282,7 +282,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     protected function requiresSSL(HTTPRequest $request)
     {
         // Check if force SSL is enabled
-        if (!$this->getForceSSL()) {
+        if (! $this->getForceSSL()) {
             return false;
         }
 
@@ -293,7 +293,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
 
         // Veto if any existing patterns fail
         $patterns = $this->getForceSSLPatterns();
-        if (!$patterns) {
+        if (! $patterns) {
             return true;
         }
 
@@ -357,7 +357,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     protected function isEnabled()
     {
         // At least one redirect must be enabled
-        if (!$this->getForceWWW() && !$this->getForceSSL()) {
+        if (! $this->getForceWWW() && ! $this->getForceSSL()) {
             return false;
         }
 
@@ -368,12 +368,12 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         // If CLI, EnabledEnvs must contain CLI
-        if (Director::is_cli() && !in_array('cli', $enabledEnvs)) {
+        if (Director::is_cli() && ! in_array('cli', $enabledEnvs, true)) {
             return false;
         }
 
         // Check other envs
-        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs);
+        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs, true);
     }
 
     /**
@@ -384,10 +384,10 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      */
     protected function hasBasicAuthPrompt(HTTPResponse $response = null)
     {
-        if (!$response) {
+        if (! $response) {
             return false;
         }
-        return ($response->getStatusCode() === 401 && $response->getHeader('WWW-Authenticate'));
+        return $response->getStatusCode() === 401 && $response->getHeader('WWW-Authenticate');
     }
 
     /**
@@ -400,7 +400,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      */
     protected function redirectToScheme(HTTPRequest $request, $scheme, $host = null)
     {
-        if (!$host) {
+        if (! $host) {
             $host = $request->getHost();
         }
 

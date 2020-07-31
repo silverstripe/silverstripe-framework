@@ -24,7 +24,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * @var array
      */
     private $proxyHostHeaders = [
-        'X-Forwarded-Host'
+        'X-Forwarded-Host',
     ];
 
     /**
@@ -34,7 +34,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      */
     private $proxyIPHeaders = [
         'Client-IP',
-        'X-Forwarded-For'
+        'X-Forwarded-For',
     ];
 
     /**
@@ -222,7 +222,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         $filters = [
             FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
             FILTER_FLAG_NO_PRIV_RANGE,
-            null
+            null,
         ];
         foreach ($filters as $filter) {
             // Find best IP

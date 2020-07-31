@@ -43,7 +43,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         } catch (HTTPResponse_Exception $ex) {
             $response = $ex->getResponse();
         }
-        if (!$response) {
+        if (! $response) {
             return null;
         }
 
@@ -90,7 +90,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         self::STATE_ENABLED => [
             'no-cache' => true,
             'must-revalidate' => true,
-        ]
+        ],
     ];
 
     /**
@@ -136,7 +136,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @var array
      */
     private static $defaultVary = [
-        "X-Forwarded-Protocol" => true,
+        'X-Forwarded-Protocol' => true,
     ];
 
     /**
@@ -255,7 +255,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         return array_unique($merged);
     }
 
-
     /**
      * Register a modification date. Used to calculate the "Last-Modified" HTTP header.
      * Can be called multiple times, and will automatically retain the most recent date.
@@ -280,7 +279,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function setState($state)
     {
-        if (!array_key_exists($state, $this->stateDirectives)) {
+        if (! array_key_exists($state, $this->stateDirectives)) {
             throw new InvalidArgumentException("Invalid state {$state}");
         }
         $this->state = $state;
@@ -335,16 +334,16 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setStateDirective($states, $directive, $value = true)
     {
         if ($value === null) {
-            throw new InvalidArgumentException("Invalid directive value");
+            throw new InvalidArgumentException('Invalid directive value');
         }
         // make sure the directive is in the list of allowed directives
         $allowedDirectives = $this->config()->get('allowed_directives');
         $directive = strtolower($directive);
-        if (!in_array($directive, $allowedDirectives)) {
+        if (! in_array($directive, $allowedDirectives, true)) {
             throw new InvalidArgumentException('Directive ' . $directive . ' is not allowed');
         }
-        foreach ((array)$states as $state) {
-            if (!array_key_exists($state, $this->stateDirectives)) {
+        foreach ((array) $states as $state) {
+            if (! array_key_exists($state, $this->stateDirectives)) {
                 throw new InvalidArgumentException("Invalid state {$state}");
             }
             // Set or unset directive
@@ -579,7 +578,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $this->setState(self::STATE_ENABLED);
         }
 
-        if (!is_null($maxAge)) {
+        if ($maxAge !== null) {
             $this->setMaxAge($maxAge);
         }
 
@@ -651,7 +650,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $this->setState(self::STATE_PUBLIC);
         }
 
-        if (!is_null($maxAge)) {
+        if ($maxAge !== null) {
             $this->setMaxAge($maxAge);
         }
 
@@ -669,7 +668,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     {
         $headers = $this->generateHeadersFor($response);
         foreach ($headers as $name => $value) {
-            if (!$response->getHeader($name)) {
+            if (! $response->getHeader($name)) {
                 $response->addHeader($name, $value);
             }
         }
@@ -756,7 +755,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function generateLastModifiedHeader()
     {
-        if (!$this->modificationDate) {
+        if (! $this->modificationDate) {
             return null;
         }
         return gmdate('D, d M Y H:i:s', $this->modificationDate) . ' GMT';
@@ -765,7 +764,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Generate Expires http header
      *
-     * @return null|string
+     * @return string|null
      */
     protected function generateExpiresHeader()
     {

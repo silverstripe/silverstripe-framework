@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Control\Middleware\URLSpecialsMiddleware;
 
-use SilverStripe\Core\Kernel;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
 
 /**
  * Schedule flush operation for a following request
@@ -30,7 +30,7 @@ trait FlushScheduler
     {
         $flush = array_key_exists('flush', $request->getVars()) || ($request->getURL() === 'dev/build');
 
-        if (!$flush || Director::isManifestFlushed()) {
+        if (! $flush || Director::isManifestFlushed()) {
             return false;
         }
 
