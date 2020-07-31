@@ -33,7 +33,6 @@ use SilverStripe\View\HTML;
  */
 class SelectionGroup extends CompositeField
 {
-
     /**
      * Create a new selection group.
      *
@@ -55,7 +54,7 @@ class SelectionGroup extends CompositeField
             } else {
                 // Convert legacy format
                 if (strpos($key, '//') !== false) {
-                    list($key,$title) = explode('//', $key, 2);
+                    list($key, $title) = explode('//', $key, 2);
                 } else {
                     $title = null;
                 }
@@ -81,7 +80,7 @@ class SelectionGroup extends CompositeField
 
         /** @var SelectionGroup_Item $item */
         foreach ($items as $item) {
-            if ($this->value == $item->getValue()) {
+            if ($this->value === $item->getValue()) {
                 $firstSelected = true;
                 $checked = true;
             } else {
@@ -92,7 +91,7 @@ class SelectionGroup extends CompositeField
             $itemID = $this->ID() . '_' . (++$count);
             // @todo Move into SelectionGroup_Item.ss template at some point.
             $extra = [
-                "RadioButton" => DBField::create_field('HTMLFragment', HTML::createTag(
+                'RadioButton' => DBField::create_field('HTMLFragment', HTML::createTag(
                     'input',
                     [
                         'class' => 'selector',
@@ -103,8 +102,8 @@ class SelectionGroup extends CompositeField
                         'checked' => $checked,
                     ]
                 )),
-                "RadioLabel" => $item->getTitle(),
-                "Selected" => $firstSelected,
+                'RadioLabel' => $item->getTitle(),
+                'Selected' => $firstSelected,
             ];
             $newItems[] = $item->customise($extra);
         }

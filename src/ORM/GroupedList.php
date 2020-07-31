@@ -10,7 +10,6 @@ use SilverStripe\View\ArrayData;
  */
 class GroupedList extends ListDecorator
 {
-
     /**
      * @param  string $index
      * @return array
@@ -22,7 +21,7 @@ class GroupedList extends ListDecorator
         foreach ($this->list as $item) {
             // if $item is an Object, $index can be a method or a value,
             // if $item is an array, $index is used as the index
-            $key = is_object($item) ? ($item->hasMethod($index) ? $item->$index() : $item->$index) : $item[$index];
+            $key = is_object($item) ? ($item->hasMethod($index) ? $item->{$index}() : $item->{$index}) : $item[$index];
 
             if (array_key_exists($key, $result)) {
                 $result[$key]->push($item);
@@ -45,13 +44,13 @@ class GroupedList extends ListDecorator
     public function GroupedBy($index, $children = 'Children')
     {
         $grouped = $this->groupBy($index);
-        $result  = new ArrayList();
+        $result = new ArrayList();
 
         foreach ($grouped as $indVal => $list) {
             $list = GroupedList::create($list);
             $result->push(new ArrayData([
-                $index    => $indVal,
-                $children => $list
+                $index => $indVal,
+                $children => $list,
             ]));
         }
 

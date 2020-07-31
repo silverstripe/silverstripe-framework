@@ -2,13 +2,13 @@
 
 namespace SilverStripe\View\Parsers;
 
+use DOMElement;
 use DOMNodeList;
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use InvalidArgumentException;
-use DOMElement;
 
 /**
  * A simple parser that allows you to map BBCode-like "shortcodes" to an arbitrary callback.
@@ -107,7 +107,7 @@ class ShortcodeParser
         if (is_callable($callback)) {
             $this->shortcodes[$shortcode] = $callback;
         } else {
-            throw new InvalidArgumentException("Callback is not callable");
+            throw new InvalidArgumentException('Callback is not callable');
         }
         return $this;
     }
@@ -190,11 +190,11 @@ class ShortcodeParser
 
         // Missing tag
         if ($content === false) {
-            if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
+            if (ShortcodeParser::$error_behavior === ShortcodeParser::ERROR) {
                 user_error('Unknown shortcode tag ' . $tag['open'], E_USER_ERROR);
-            } elseif (self::$error_behavior == self::WARN && $isHTMLAllowed) {
+            } elseif (self::$error_behavior === self::WARN && $isHTMLAllowed) {
                 $content = '<strong class="warning">' . $tag['text'] . '</strong>';
-            } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
+            } elseif (ShortcodeParser::$error_behavior === ShortcodeParser::STRIP) {
                 return '';
             } else {
                 return $tag['text'];
@@ -256,7 +256,7 @@ class ShortcodeParser
     protected static $block_level_elements = [
         'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
         'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
-        'pre', 'section', 'table', 'ul'
+        'pre', 'section', 'table', 'ul',
     ];
 
     protected static $attrrx = '
@@ -300,12 +300,14 @@ class ShortcodeParser
     }
 
     const WARN = 'warn';
+
     const STRIP = 'strip';
+
     const LEAVE = 'leave';
+
     const ERROR = 'error';
 
     public static $error_behavior = self::LEAVE;
-
 
     /**
      * Look through a string that contains shortcode tags and pull out the locations and details
@@ -355,11 +357,11 @@ class ShortcodeParser
                     'text' => $match[0][0],
                     's' => $match[0][1],
                     'e' => $match[0][1] + strlen($match[0][0]),
-                    'open' =>  isset($match['open'][0]) ? $match['open'][0] : null,
+                    'open' => isset($match['open'][0]) ? $match['open'][0] : null,
                     'close' => isset($match['close'][0]) ? $match['close'][0] : null,
                     'attrs' => $attrs,
                     'content' => '',
-                    'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
+                    'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0]),
                 ];
             }
         }
@@ -371,35 +373,35 @@ class ShortcodeParser
                 // If the tag just before this one isn't the related opening tag, throw an error
                 $err = null;
 
-                if ($i == 0) {
+                if ($i === 0) {
                     $err = 'Close tag "' . $tags[$i]['close'] . '" is the first found tag, so has no related open tag';
-                } elseif (!$tags[$i-1]['open']) {
-                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "' . $tags[$i-1]['close'] . '"';
-                } elseif ($tags[$i]['close'] != $tags[$i-1]['open']) {
-                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "' . $tags[$i-1]['open'] . '"';
+                } elseif (!$tags[$i - 1]['open']) {
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "' . $tags[$i - 1]['close'] . '"';
+                } elseif ($tags[$i]['close'] !== $tags[$i - 1]['open']) {
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "' . $tags[$i - 1]['open'] . '"';
                 }
 
                 if ($err) {
-                    if (self::$error_behavior == self::ERROR) {
+                    if (self::$error_behavior === self::ERROR) {
                         user_error($err, E_USER_ERROR);
                     }
                 } else {
                     if ($tags[$i]['escaped']) {
-                        if (!$tags[$i-1]['escaped']) {
-                            $tags[$i]['e'] -= 1;
+                        if (!$tags[$i - 1]['escaped']) {
+                            --$tags[$i]['e'];
                             $tags[$i]['escaped'] = false;
                         }
                     } else {
-                        if ($tags[$i-1]['escaped']) {
-                            $tags[$i-1]['s'] += 1;
-                            $tags[$i-1]['escaped'] = false;
+                        if ($tags[$i - 1]['escaped']) {
+                            ++$tags[$i - 1]['s'];
+                            $tags[$i - 1]['escaped'] = false;
                         }
                     }
 
                     // Otherwise, grab content between tags, save in opening tag & delete the closing one
-                    $tags[$i-1]['text'] = substr($content, $tags[$i-1]['s'], $tags[$i]['e'] - $tags[$i-1]['s']);
-                    $tags[$i-1]['content'] = substr($content, $tags[$i-1]['e'], $tags[$i]['s'] - $tags[$i-1]['e']);
-                    $tags[$i-1]['e'] = $tags[$i]['e'];
+                    $tags[$i - 1]['text'] = substr($content, $tags[$i - 1]['s'], $tags[$i]['e'] - $tags[$i - 1]['s']);
+                    $tags[$i - 1]['content'] = substr($content, $tags[$i - 1]['e'], $tags[$i]['s'] - $tags[$i - 1]['e']);
+                    $tags[$i - 1]['e'] = $tags[$i]['e'];
 
                     unset($tags[$i]);
                 }
@@ -409,7 +411,7 @@ class ShortcodeParser
         // Step 3: remove any tags that don't have handlers registered
         // Only do this if self::$error_behavior == self::LEAVE
         // This is optional but speeds things up.
-        if (self::$error_behavior == self::LEAVE) {
+        if (self::$error_behavior === self::LEAVE) {
             foreach ($tags as $i => $tag) {
                 if (empty($this->shortcodes[$tag['open']])) {
                     unset($tags[$i]);
@@ -445,7 +447,7 @@ class ShortcodeParser
             }
 
             if ($tags[$i]['escaped']) {
-                $str = substr($content, $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
+                $str = substr($content, $tags[$i]['s'] + 1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
             } else {
                 $str = $generator($i, $tags[$i]) . $tail . $str;
             }
@@ -522,7 +524,7 @@ class ShortcodeParser
             do {
                 $parent = $parent->parentNode;
             } while ($parent instanceof DOMElement &&
-                !in_array(strtolower($parent->tagName), self::$block_level_elements)
+                !in_array(strtolower($parent->tagName), self::$block_level_elements, true)
             );
 
             $node->setAttribute('data-parentid', count($parents));
@@ -533,8 +535,11 @@ class ShortcodeParser
     }
 
     const BEFORE = 'before';
+
     const AFTER = 'after';
+
     const SPLIT = 'split';
+
     const INLINE = 'inline';
 
     /**
@@ -566,14 +571,14 @@ class ShortcodeParser
     protected function moveMarkerToCompliantHome($node, $parent, $location)
     {
         // Move before block parent
-        if ($location == self::BEFORE) {
+        if ($location === self::BEFORE) {
             if (isset($parent->parentNode)) {
                 $parent->parentNode->insertBefore($node, $parent);
             }
-        } elseif ($location == self::AFTER) {
+        } elseif ($location === self::AFTER) {
             // Move after block parent
             $this->insertAfter($node, $parent);
-        } elseif ($location == self::SPLIT) {
+        } elseif ($location === self::SPLIT) {
             // Split parent at node
             $at = $node;
             $splitee = $node->parentNode;
@@ -593,9 +598,9 @@ class ShortcodeParser
             }
 
             $this->insertAfter($node, $parent);
-        } elseif ($location == self::INLINE) {
+        } elseif ($location === self::INLINE) {
             // Do nothing
-            if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
+            if (in_array(strtolower($node->tagName), self::$block_level_elements, true)) {
                 user_error(
                     'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
@@ -658,12 +663,12 @@ class ShortcodeParser
             // use a proper DOM
             list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
-        /** @var HTMLValue $htmlvalue */
+            /** @var HTMLValue $htmlvalue */
             $htmlvalue = Injector::inst()->create('HTMLValue', $content);
 
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {
-                if (self::$error_behavior == self::ERROR) {
+                if (self::$error_behavior === self::ERROR) {
                     user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERROR);
                 } else {
                     $continue = false;
@@ -681,7 +686,7 @@ class ShortcodeParser
             // Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
             $parents = $this->findParentsForMarkers($shortcodes);
 
-        /** @var DOMElement $shortcode */
+            /** @var DOMElement $shortcode */
             foreach ($shortcodes as $shortcode) {
                 $tag = $tags[$shortcode->getAttribute('data-tagid')];
                 $parent = $parents[$shortcode->getAttribute('data-parentid')];
@@ -694,13 +699,11 @@ class ShortcodeParser
                 }
 
                 $location = self::INLINE;
-                if ($class == 'left' || $class == 'right') {
+                if ($class === 'left' || $class === 'right') {
                     $location = self::BEFORE;
                 }
                 /**
                  * Below code disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987
-                if ($class == 'center' || $class == 'leftAlone') {
-                    $location = self::SPLIT;
                 }
                  */
 

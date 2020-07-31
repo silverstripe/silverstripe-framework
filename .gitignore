@@ -12,3 +12,4 @@ coverage/
 /vendor/
 composer.lock
 silverstripe-cache/
+/resources/

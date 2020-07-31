@@ -43,7 +43,7 @@ class BasicAuth
 
     /**
      * @config
-     * @var Boolean Flag set by {@link self::protect_entire_site()}
+     * @var boolean Flag set by {@link self::protect_entire_site()}
      */
     private static $entire_site_protected = false;
 
@@ -56,7 +56,7 @@ class BasicAuth
 
     /**
      * @config
-     * @var String|array Holds a {@link Permission} code that is required
+     * @var string|array Holds a {@link Permission} code that is required
      * when calling {@link protect_site_if_necessary()}. Set this value through
      * {@link protect_entire_site()}.
      */
@@ -64,7 +64,7 @@ class BasicAuth
 
     /**
      * @config
-     * @var String Message that shows in the authentication box.
+     * @var string Message that shows in the authentication box.
      * Set this value through {@link protect_entire_site()}.
      */
     private static $entire_site_protected_message = 'SilverStripe test website. Use your CMS login.';
@@ -121,7 +121,7 @@ class BasicAuth
         // If we've failed the authentication mechanism, then show the login form
         if (!$member) {
             $response = new HTTPResponse(null, 401);
-            $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
+            $response->addHeader('WWW-Authenticate', "Basic realm=\"${realm}\"");
 
             if ($request->getHeader('PHP_AUTH_USER')) {
                 $response->setBody(
@@ -147,7 +147,7 @@ class BasicAuth
 
         if ($permissionCode && !Permission::checkMember($member->ID, $permissionCode)) {
             $response = new HTTPResponse(null, 401);
-            $response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
+            $response->addHeader('WWW-Authenticate', "Basic realm=\"${realm}\"");
 
             if ($request->getHeader('PHP_AUTH_USER')) {
                 $response->setBody(

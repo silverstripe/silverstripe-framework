@@ -2,6 +2,7 @@
 
 namespace SilverStripe\i18n;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -9,7 +10,6 @@ use SilverStripe\i18n\Data\Locales;
 use SilverStripe\i18n\Data\Sources;
 use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\View\TemplateGlobalProvider;
-use InvalidArgumentException;
 
 /**
  * Base-class for storage and retrieval of translated entities.
@@ -171,7 +171,7 @@ class i18n implements TemplateGlobalProvider
 
         // Encourage the provision of default values so that text collector can discover new strings
         if (!$default && i18n::config()->uninherited('missing_default_warning')) {
-            user_error("Missing default for localisation key $entity", E_USER_WARNING);
+            user_error("Missing default for localisation key ${entity}", E_USER_WARNING);
         }
 
         // Deprecate legacy injection format (`string %s, %d`)
@@ -241,7 +241,7 @@ class i18n implements TemplateGlobalProvider
         if (strstr($string, '|') && strstr($string, '{count}')) {
             $keys = i18n::config()->uninherited('default_plurals');
             $values = explode('|', $string);
-            if (count($keys) == count($values)) {
+            if (count($keys) === count($values)) {
                 return array_combine($keys, $values);
             }
         }

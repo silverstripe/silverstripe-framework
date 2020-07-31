@@ -43,8 +43,7 @@ class PDOQuery extends Query
 
         if (isset($this->results[$index])) {
             return $this->results[$index];
-        } else {
-            return false;
         }
+        return false;
     }
 }

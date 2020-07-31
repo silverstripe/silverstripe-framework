@@ -30,8 +30,9 @@ use SilverStripe\ORM\Filterable;
  */
 class GridFieldDetailForm implements GridField_URLHandler
 {
-
-    use Extensible, Injectable, GridFieldStateAware;
+    use Extensible;
+    use Injectable;
+    use GridFieldStateAware;
 
     /**
      * @var string
@@ -69,14 +70,14 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $itemRequestClass;
 
     /**
-     * @var callable With two parameters: $form and $component
+     * @var callable With two parameters: and
      */
     protected $itemEditFormCallback;
 
     public function getURLHandlers($gridField)
     {
         return [
-            'item/$ID' => 'handleItem'
+            'item/$ID' => 'handleItem',
         ];
     }
 
@@ -100,7 +101,6 @@ class GridFieldDetailForm implements GridField_URLHandler
     }
 
     /**
-     *
      * @param GridField $gridField
      * @param HTTPRequest $request
      * @return HTTPResponse
@@ -184,7 +184,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getTemplate()
     {
@@ -202,7 +202,7 @@ class GridFieldDetailForm implements GridField_URLHandler
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getName()
     {

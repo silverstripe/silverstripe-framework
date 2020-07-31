@@ -14,7 +14,6 @@ use Swift_Message;
  */
 class SwiftMailer implements Mailer
 {
-
     use Configurable;
     use Injectable;
 
@@ -42,7 +41,7 @@ class SwiftMailer implements Mailer
         $result = $this->sendSwift($swiftMessage, $failedRecipients);
         $message->setFailedRecipients($failedRecipients);
 
-        return $result != 0;
+        return $result !== 0;
     }
 
     /**

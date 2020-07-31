@@ -10,7 +10,6 @@ use SilverStripe\Core\Config\Config;
  */
 class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLocator
 {
-
     /**
      * List of Injector configurations cached from Config in class => config format.
      * If any config is false, this denotes that this class and all its parents

@@ -19,14 +19,14 @@ class SSListExporter extends Exporter implements TestOnly
     /**
      * @param mixed $value
      * @param int $indentation
-     * @param null|Context $processed
+     * @param Context|null $processed
      * @return string
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function recursiveExport(&$value, $indentation, $processed = null)
     {
         if (!$processed) {
-            $processed = new Context;
+            $processed = new Context();
         }
 
         $whitespace = str_repeat(' ', 4 * $indentation);
@@ -67,7 +67,6 @@ class SSListExporter extends Exporter implements TestOnly
                 $this->recursiveExport($data, $indentation + 2, $processed)
             );
         }
-
 
         return parent::recursiveExport($value, $indentation, $processed);
     }

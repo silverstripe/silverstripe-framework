@@ -8,7 +8,6 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use PhpParser\ErrorHandler\ErrorHandler;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Dev\TestOnly;
@@ -195,12 +194,11 @@ class ClassManifest
             return $this->cache;
         } elseif (!$this->cacheFactory) {
             return null;
-        } else {
-            return $this->cacheFactory->create(
-                CacheInterface::class . '.classmanifest',
-                ['namespace' => 'classmanifest' . ($includeTests ? '_tests' : '')]
-            );
         }
+        return $this->cacheFactory->create(
+            CacheInterface::class . '.classmanifest',
+            ['namespace' => 'classmanifest' . ($includeTests ? '_tests' : '')]
+        );
     }
 
     /**
@@ -286,7 +284,7 @@ class ClassManifest
     public function getParser()
     {
         if (!$this->parser) {
-            $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+            $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         }
 
         return $this->parser;
@@ -300,8 +298,8 @@ class ClassManifest
     public function getTraverser()
     {
         if (!$this->traverser) {
-            $this->traverser = new NodeTraverser;
-            $this->traverser->addVisitor(new NameResolver);
+            $this->traverser = new NodeTraverser();
+            $this->traverser->addVisitor(new NameResolver());
             $this->traverser->addVisitor($this->getVisitor());
         }
 
@@ -316,7 +314,7 @@ class ClassManifest
     public function getVisitor()
     {
         if (!$this->visitor) {
-            $this->visitor = new ClassManifestVisitor;
+            $this->visitor = new ClassManifestVisitor();
         }
 
         return $this->visitor;
@@ -333,10 +331,10 @@ class ClassManifest
     {
         $lowerName = strtolower($name);
         foreach ([
-             $this->classes,
-             $this->interfaces,
-             $this->traits,
-         ] as $source) {
+            $this->classes,
+            $this->interfaces,
+            $this->traits,
+        ] as $source) {
             if (isset($source[$lowerName]) && file_exists($source[$lowerName])) {
                 return $source[$lowerName];
             }
@@ -354,10 +352,10 @@ class ClassManifest
     {
         $lowerName = strtolower($name);
         foreach ([
-             $this->classNames,
-             $this->interfaceNames,
-             $this->traitNames,
-         ] as $source) {
+            $this->classNames,
+            $this->interfaceNames,
+            $this->traitNames,
+        ] as $source) {
             if (isset($source[$lowerName])) {
                 return $source[$lowerName];
             }
@@ -479,9 +477,8 @@ class ClassManifest
         $lowerInterface = strtolower($interface);
         if (array_key_exists($lowerInterface, $this->implementors)) {
             return $this->implementors[$lowerInterface];
-        } else {
-            return [];
         }
+        return [];
     }
 
     /**
@@ -513,7 +510,7 @@ class ClassManifest
             'name_regex' => '/^[^_].*\\.php$/',
             'ignore_files' => ['index.php', 'cli-script.php'],
             'ignore_tests' => !$includeTests,
-            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
+            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
         ]);
@@ -592,7 +589,7 @@ class ClassManifest
 
             // Skip if implements TestOnly, but doesn't include tests
             $lowerInterfaces = array_map('strtolower', $classInfo['interfaces']);
-            if (!$includeTests && in_array(strtolower(TestOnly::class), $lowerInterfaces)) {
+            if (!$includeTests && in_array(strtolower(TestOnly::class), $lowerInterfaces, true)) {
                 $changed = true;
                 unset($classes[$className]);
                 continue;
@@ -692,7 +689,7 @@ class ClassManifest
             } else {
                 $value = $data[$property];
             }
-            $this->$property = $value;
+            $this->{$property} = $value;
         }
         return $success;
     }
@@ -706,7 +703,7 @@ class ClassManifest
     {
         $data = [];
         foreach ($this->serialisedProperties as $property) {
-            $data[$property] = $this->$property;
+            $data[$property] = $this->{$property};
         }
         return $data;
     }

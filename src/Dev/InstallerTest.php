@@ -10,13 +10,12 @@ use SilverStripe\Control\Controller;
  */
 class InstallerTest extends Controller
 {
-
     private static $allowed_actions = [
-        'testrewrite'
+        'testrewrite',
     ];
 
     public function testrewrite()
     {
-        echo "OK";
+        echo 'OK';
     }
 }

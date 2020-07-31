@@ -59,7 +59,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @var array|bool
      */
     protected $enabledEnvs = [
-        CoreKernel::LIVE
+        CoreKernel::LIVE,
     ];
 
     /**
@@ -368,12 +368,12 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         // If CLI, EnabledEnvs must contain CLI
-        if (Director::is_cli() && !in_array('cli', $enabledEnvs)) {
+        if (Director::is_cli() && !in_array('cli', $enabledEnvs, true)) {
             return false;
         }
 
         // Check other envs
-        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs);
+        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs, true);
     }
 
     /**
@@ -387,7 +387,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         if (!$response) {
             return false;
         }
-        return ($response->getStatusCode() === 401 && $response->getHeader('WWW-Authenticate'));
+        return $response->getStatusCode() === 401 && $response->getHeader('WWW-Authenticate');
     }
 
     /**

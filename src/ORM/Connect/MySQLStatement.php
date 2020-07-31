@@ -13,7 +13,6 @@ use mysqli_stmt;
  */
 class MySQLStatement extends Query
 {
-
     /**
      * The related mysqli statement object if generated using a prepared query
      *
@@ -129,8 +128,8 @@ class MySQLStatement extends Query
         $row = [];
         foreach ($this->boundValues as $key => $value) {
             $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
-            if (in_array($this->types[$key], $floatTypes)) {
-                $value = (float)$value;
+            if (in_array($this->types[$key], $floatTypes, true)) {
+                $value = (float) $value;
             }
             $row[$key] = $value;
         }

@@ -9,7 +9,6 @@ namespace SilverStripe\Control;
  */
 interface Cookie_Backend
 {
-
     /**
      * When creating the backend we want to store the existing cookies in our
      * "existing" array. This allows us to distinguish between cookies we recieved

@@ -4,7 +4,6 @@ namespace SilverStripe\Forms;
 
 class TreeMultiselectField_Readonly extends TreeMultiselectField
 {
-
     protected $readonly = true;
 
     public function Field($properties = [])
@@ -14,16 +13,16 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField
         $items = $this->getItems();
         $titleArray = [];
         foreach ($items as $item) {
-            $titleArray[] = $item->$titleField;
+            $titleArray[] = $item->{$titleField};
         }
-        $titleList = implode(", ", $titleArray);
+        $titleList = implode(', ', $titleArray);
 
         // Build list of values
         $itemIDs = [];
         foreach ($items as $item) {
             $itemIDs[] = $item->ID;
         }
-        $itemIDsList = implode(",", $itemIDs);
+        $itemIDsList = implode(',', $itemIDs);
 
         // Readonly field for display
         $field = new ReadonlyField($this->name . '_ReadonlyValue', $this->title);

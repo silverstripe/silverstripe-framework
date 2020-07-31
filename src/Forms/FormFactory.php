@@ -9,7 +9,6 @@ use SilverStripe\Control\RequestHandler;
  */
 interface FormFactory
 {
-
     /**
      * Default form name.
      */

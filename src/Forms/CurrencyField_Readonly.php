@@ -10,7 +10,6 @@ use SilverStripe\ORM\FieldType\DBCurrency;
  */
 class CurrencyField_Readonly extends ReadonlyField
 {
-
     /**
      * Overloaded to display the correctly formatted value for this data type
      *
@@ -28,8 +27,8 @@ class CurrencyField_Readonly extends ReadonlyField
             $val = '<i>' . $currencySymbol . '0.00</i>';
             $valforInput = '';
         }
-        return "<span class=\"readonly " . $this->extraClass() . "\" id=\"" . $this->ID() . "\">$val</span>"
-        . "<input type=\"hidden\" name=\"" . $this->name . "\" value=\"" . $valforInput . "\" />";
+        return '<span class="readonly ' . $this->extraClass() . '" id="' . $this->ID() . "\">${val}</span>"
+        . '<input type="hidden" name="' . $this->name . '" value="' . $valforInput . '" />';
     }
 
     /**

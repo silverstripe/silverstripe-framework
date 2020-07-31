@@ -77,7 +77,7 @@ class OptionsetField extends SingleSelectField
             'Value' => $value,
             'Title' => $title,
             'isChecked' => $this->isSelectedValue($value, $this->Value()),
-            'isDisabled' => $this->isDisabledValue($value)
+            'isDisabled' => $this->isDisabledValue($value),
         ]);
     }
 
@@ -116,7 +116,6 @@ class OptionsetField extends SingleSelectField
         return $oddClass . $valueClass;
     }
 
-
     public function Field($properties = [])
     {
         $options = [];
@@ -129,7 +128,7 @@ class OptionsetField extends SingleSelectField
         }
 
         $properties = array_merge($properties, [
-            'Options' => new ArrayList($options)
+            'Options' => new ArrayList($options),
         ]);
 
         return FormField::Field($properties);

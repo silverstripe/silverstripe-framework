@@ -1,4 +1,5 @@
 <?php
+
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\ORM\DataObject;
@@ -10,7 +11,6 @@ use SilverStripe\ORM\DataObject;
  */
 interface GridField_ColumnProvider extends GridFieldComponent
 {
-
     /**
      * Modify the list of columns displayed in the table.
      *

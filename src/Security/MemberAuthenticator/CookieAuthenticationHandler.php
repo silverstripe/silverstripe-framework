@@ -16,7 +16,6 @@ use SilverStripe\Security\Security;
  */
 class CookieAuthenticationHandler implements AuthenticationHandler
 {
-
     /**
      * @var string
      */

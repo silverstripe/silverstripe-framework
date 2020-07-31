@@ -2,13 +2,13 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\Limitable;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
-use LogicException;
 
 /**
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
@@ -37,7 +37,6 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     protected $throwExceptionOnBadDataType = true;
 
     /**
-     *
      * @param int $itemsPerPage - How many items should be displayed per page
      */
     public function __construct($itemsPerPage = null)
@@ -85,18 +84,16 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     {
         if ($dataList instanceof Limitable) {
             return true;
-        } else {
-            if ($this->throwExceptionOnBadDataType) {
-                throw new LogicException(
-                    static::class . " expects an SS_Limitable list to be passed to the GridField."
-                );
-            }
-            return false;
         }
+        if ($this->throwExceptionOnBadDataType) {
+            throw new LogicException(
+                static::class . ' expects an SS_Limitable list to be passed to the GridField.'
+            );
+        }
+        return false;
     }
 
     /**
-     *
      * @param GridField $gridField
      * @return array
      */
@@ -110,12 +107,10 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     }
 
     /**
-     *
      * @param GridField $gridField
      * @param string $actionName
      * @param string $arguments
      * @param array $data
-     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
@@ -127,7 +122,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             return;
         }
         $state = $this->getGridPagerState($gridField);
-        $state->currentPage = (int)$arguments;
+        $state->currentPage = (int) $arguments;
     }
 
     protected $totalItems = 0;
@@ -150,7 +145,6 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     }
 
     /**
-     *
      * @param GridField $gridField
      * @param SS_List $dataList
      * @return SS_List
@@ -178,7 +172,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
             return $dataList;
         }
 
-        return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
+        return $dataList->limit((int) $this->itemsPerPage, (int) $startRow);
     }
 
     /**
@@ -218,8 +212,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         $firstShownRecord = 1;
         $lastShownRecord = $totalRows;
         if ($itemsPerPage = $this->getItemsPerPage()) {
-            $totalPages = (int)ceil($totalRows / $itemsPerPage);
-            if ($totalPages == 0) {
+            $totalPages = (int) ceil($totalRows / $itemsPerPage);
+            if ($totalPages === 0) {
                 $totalPages = 1;
             }
             $firstShownRecord = ($state->currentPage - 1) * $itemsPerPage + 1;
@@ -241,69 +235,67 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
                 'FirstShownRecord' => $firstShownRecord,
                 'LastShownRecord' => $lastShownRecord,
                 'NumRecords' => $totalRows,
-                'NumPages' => $totalPages
-            ]);
-        } else {
-            // First page button
-            $firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
-            $firstPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-left ss-gridfield-pagination-action ss-gridfield-firstpage');
-            if ($state->currentPage == 1) {
-                $firstPage = $firstPage->performDisabledTransformation();
-            }
-
-            // Previous page button
-            $previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
-            $previousPage = new GridField_FormAction(
-                $gridField,
-                'pagination_prev',
-                'Previous',
-                'paginate',
-                $previousPageNum
-            );
-            $previousPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-left ss-gridfield-pagination-action ss-gridfield-previouspage');
-            if ($state->currentPage == 1) {
-                $previousPage = $previousPage->performDisabledTransformation();
-            }
-
-            // Next page button
-            $nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
-            $nextPage = new GridField_FormAction(
-                $gridField,
-                'pagination_next',
-                'Next',
-                'paginate',
-                $nextPageNum
-            );
-            $nextPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-right ss-gridfield-pagination-action ss-gridfield-nextpage');
-            if ($state->currentPage == $totalPages) {
-                $nextPage = $nextPage->performDisabledTransformation();
-            }
-
-            // Last page button
-            $lastPage = new GridField_FormAction($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
-            $lastPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-right ss-gridfield-pagination-action ss-gridfield-lastpage');
-            if ($state->currentPage == $totalPages) {
-                $lastPage = $lastPage->performDisabledTransformation();
-            }
-
-            // Render in template
-            return new ArrayData([
-                'OnlyOnePage' => false,
-                'FirstPage' => $firstPage,
-                'PreviousPage' => $previousPage,
-                'CurrentPageNum' => $state->currentPage,
                 'NumPages' => $totalPages,
-                'NextPage' => $nextPage,
-                'LastPage' => $lastPage,
-                'FirstShownRecord' => $firstShownRecord,
-                'LastShownRecord' => $lastShownRecord,
-                'NumRecords' => $totalRows
             ]);
         }
+        // First page button
+        $firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
+        $firstPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-left ss-gridfield-pagination-action ss-gridfield-firstpage');
+        if ($state->currentPage === 1) {
+            $firstPage = $firstPage->performDisabledTransformation();
+        }
+
+        // Previous page button
+        $previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
+        $previousPage = new GridField_FormAction(
+            $gridField,
+            'pagination_prev',
+            'Previous',
+            'paginate',
+            $previousPageNum
+        );
+        $previousPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-left ss-gridfield-pagination-action ss-gridfield-previouspage');
+        if ($state->currentPage === 1) {
+            $previousPage = $previousPage->performDisabledTransformation();
+        }
+
+        // Next page button
+        $nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
+        $nextPage = new GridField_FormAction(
+            $gridField,
+            'pagination_next',
+            'Next',
+            'paginate',
+            $nextPageNum
+        );
+        $nextPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-right ss-gridfield-pagination-action ss-gridfield-nextpage');
+        if ($state->currentPage === $totalPages) {
+            $nextPage = $nextPage->performDisabledTransformation();
+        }
+
+        // Last page button
+        $lastPage = new GridField_FormAction($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
+        $lastPage->addExtraClass('btn btn-secondary btn--hide-text btn-sm font-icon-angle-double-right ss-gridfield-pagination-action ss-gridfield-lastpage');
+        if ($state->currentPage === $totalPages) {
+            $lastPage = $lastPage->performDisabledTransformation();
+        }
+
+        // Render in template
+        return new ArrayData([
+            'OnlyOnePage' => false,
+            'FirstPage' => $firstPage,
+            'PreviousPage' => $previousPage,
+            'CurrentPageNum' => $state->currentPage,
+            'NumPages' => $totalPages,
+            'NextPage' => $nextPage,
+            'LastPage' => $lastPage,
+            'FirstShownRecord' => $firstShownRecord,
+            'LastShownRecord' => $lastShownRecord,
+            'NumRecords' => $totalRows,
+        ]);
     }
 
     /**
-     *
      * @param GridField $gridField
      * @return array
      */
@@ -313,12 +305,12 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
         if (!$forTemplate) {
             return null;
         }
-        $template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '_Row', self::class);
         return [
             'footer' => $forTemplate->renderWith(
                 $template,
                 ['Colspan' => count($gridField->getColumns())]
-            )
+            ),
         ];
     }
 
@@ -333,7 +325,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
     }
 
     /**
-     * @return Int
+     * @return int
      */
     public function getItemsPerPage()
     {

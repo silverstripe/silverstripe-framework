@@ -46,8 +46,7 @@ trait PathAware
     {
         if (substr($path, -1) !== '/') {
             return $path . '/';
-        } else {
-            return $path;
         }
+        return $path;
     }
 }

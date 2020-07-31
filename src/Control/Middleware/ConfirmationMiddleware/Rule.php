@@ -16,7 +16,7 @@ interface Rule
      *
      * @param HTTPRequest $request
      *
-     * @return null|Confirmation\Item Confirmation item if necessary to protect the request or null otherwise
+     * @return Confirmation\Item|null Confirmation item if necessary to protect the request or null otherwise
      */
     public function getRequestConfirmationItem(HTTPRequest $request);
 }

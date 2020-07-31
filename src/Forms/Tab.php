@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Convert;
 use InvalidArgumentException;
+use SilverStripe\Core\Convert;
 
 /**
  * Implements a single tab in a {@link TabSet}.
@@ -21,7 +21,6 @@ use InvalidArgumentException;
  */
 class Tab extends CompositeField
 {
-
     /**
      * Use custom react component
      *
@@ -79,9 +78,8 @@ class Tab extends CompositeField
     {
         if ($this->tabSet) {
             return $this->tabSet->ID() . '_' . $this->id;
-        } else {
-            return $this->id;
         }
+        return $this->id;
     }
 
     /**
@@ -130,7 +128,7 @@ class Tab extends CompositeField
 
     public function extraClass()
     {
-        $classes = (array)$this->extraClasses;
+        $classes = (array) $this->extraClasses;
 
         return implode(' ', $classes);
     }
@@ -141,7 +139,7 @@ class Tab extends CompositeField
             $this->attributes,
             [
                 'id' => $this->ID(),
-                'class' => 'tab ' . $this->extraClass()
+                'class' => 'tab ' . $this->extraClass(),
             ]
         );
     }

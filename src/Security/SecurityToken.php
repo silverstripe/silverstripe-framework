@@ -58,7 +58,7 @@ class SecurityToken implements TemplateGlobalProvider
     protected static $enabled = true;
 
     /**
-     * @var string $name
+     * @var string
      */
     protected $name = null;
 
@@ -213,7 +213,7 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public function check($compare)
     {
-        return ($compare && $this->getValue() && $compare == $this->getValue());
+        return $compare && $this->getValue() && $compare === $this->getValue();
     }
 
     /**
@@ -260,9 +260,8 @@ class SecurityToken implements TemplateGlobalProvider
             $field = new HiddenField($this->getName(), null, $this->getValue());
             $fieldset->push($field);
             return $field;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -304,7 +303,7 @@ class SecurityToken implements TemplateGlobalProvider
     {
         return [
             'getSecurityID',
-            'SecurityID' => 'getSecurityID'
+            'SecurityID' => 'getSecurityID',
         ];
     }
 }

@@ -54,9 +54,9 @@ use SilverStripe\View\ArrayData;
  */
 class GroupedDropdownField extends DropdownField
 {
-
     // TODO remove this when GroupedDropdownField is implemented
     // This should be one of SCHEMA_DATA_TYPE_* constants instead
+
     /** @skipUpgrade */
     protected $schemaDataType = 'GroupedDropdownField';
 
@@ -82,7 +82,7 @@ class GroupedDropdownField extends DropdownField
 
         return new ArrayData([
             'Title' => $valueOrGroup,
-            'Options' => $options
+            'Options' => $options,
         ]);
     }
 

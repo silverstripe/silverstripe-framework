@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use Exception;
 use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use Exception;
 use SilverStripe\View\Parsers\HTMLValue;
 
 /**
@@ -19,7 +19,6 @@ use SilverStripe\View\Parsers\HTMLValue;
  */
 class HTMLEditorField extends TextareaField
 {
-
     private static $casting = [
         'Value' => 'HTMLText',
     ];
@@ -136,7 +135,7 @@ class HTMLEditorField extends TextareaField
      */
     public function saveInto(DataObjectInterface $record)
     {
-        if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
+        if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) !== 'xml') {
             throw new Exception(
                 'HTMLEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
             );

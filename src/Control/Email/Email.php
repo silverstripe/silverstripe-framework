@@ -22,7 +22,6 @@ use Swift_MimePart;
  */
 class Email extends ViewableData
 {
-
     /**
      * @var array
      * @config
@@ -153,7 +152,7 @@ class Email extends ViewableData
     {
         // Normalise config list
         $normalised = [];
-        $source = (array)static::config()->get($config);
+        $source = (array) static::config()->get($config);
         foreach ($source as $address => $name) {
             if ($address && !is_numeric($address)) {
                 $normalised[$address] = $name;
@@ -586,7 +585,7 @@ class Email extends ViewableData
         } elseif (is_array($this->data)) {
             $this->data[$name] = $value;
         } else {
-            $this->data->$name = $value;
+            $this->data->{$name} = $value;
         }
 
         return $this;
@@ -603,7 +602,7 @@ class Email extends ViewableData
         if (is_array($this->data)) {
             unset($this->data[$name]);
         } else {
-            $this->data->$name = null;
+            $this->data->{$name} = null;
         }
 
         return $this;
@@ -679,7 +678,7 @@ class Email extends ViewableData
      */
     public function setHTMLTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
+        if (substr($template, -3) === '.ss') {
             $template = substr($template, 0, -3);
         }
         $this->HTMLTemplate = $template;
@@ -705,7 +704,7 @@ class Email extends ViewableData
      */
     public function setPlainTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
+        if (substr($template, -3) === '.ss') {
             $template = substr($template, 0, -3);
         }
         $this->plainTemplate = $template;
@@ -845,7 +844,7 @@ class Email extends ViewableData
     public function findPlainPart()
     {
         foreach ($this->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
+            if ($child instanceof Swift_MimePart && $child->getContentType() === 'text/plain') {
                 return $child;
             }
         }

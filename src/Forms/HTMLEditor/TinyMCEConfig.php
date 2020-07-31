@@ -210,7 +210,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      */
     protected $contentCSS = null;
 
-
     /**
      * List of image size preset that will appear when you select an image. Each preset can have the following:
      * * `name` to store an internal name for the preset (required)
@@ -221,7 +220,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @var array[]
      * @config
      */
-    private static $image_size_presets = [ ];
+    private static $image_size_presets = [];
 
     /**
      * TinyMCE JS settings
@@ -236,37 +235,37 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'alignleft' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-left'
+                    'classes' => 'text-left',
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'left'
-                ]
+                    'classes' => 'left',
+                ],
             ],
             'aligncenter' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-center'
+                    'classes' => 'text-center',
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'center'
-                ]
+                    'classes' => 'center',
+                ],
             ],
             'alignright' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-right'
+                    'classes' => 'text-right',
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'right'
-                ]
+                    'classes' => 'right',
+                ],
             ],
             'alignjustify' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-justify'
+                    'classes' => 'text-justify',
                 ],
             ],
         ],
@@ -345,9 +344,9 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'formatselect', '|',
             'paste', 'pastetext', '|',
             'table', 'sslink', 'unlink', '|',
-            'code'
+            'code',
         ],
-        3 => []
+        3 => [],
     ];
 
     public function getOption($key)
@@ -541,7 +540,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     protected function modifyButtons($name, $offset, $del = 0, $add = null)
     {
         foreach ($this->buttons as &$buttons) {
-            if (($idx = array_search($name, $buttons)) !== false) {
+            if (($idx = array_search($name, $buttons, true)) !== false) {
                 if ($add) {
                     array_splice($buttons, $idx + $offset, $del, $add);
                 } else {
@@ -866,7 +865,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
         throw new Exception(sprintf(
             'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
-            __CLASS__
+            self::class
         ));
     }
 
@@ -888,7 +887,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
     }
-
 
     /**
      * Sets the upload folder name used by the insert media dialog

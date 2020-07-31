@@ -8,7 +8,6 @@ namespace SilverStripe\ORM\Connect;
  */
 class MySQLQuery extends Query
 {
-
     /**
      * The internal MySQL handle that points to the result set.
      * Select queries will have mysqli_result as a value.
@@ -73,16 +72,15 @@ class MySQLQuery extends Query
             $data = [];
             foreach ($row as $i => $value) {
                 if (!isset($this->columns[$i])) {
-                    throw new DatabaseException("Can't get metadata for column $i");
+                    throw new DatabaseException("Can't get metadata for column ${i}");
                 }
-                if (in_array($this->columns[$i]->type, $floatTypes)) {
-                    $value = (float)$value;
+                if (in_array($this->columns[$i]->type, $floatTypes, true)) {
+                    $value = (float) $value;
                 }
                 $data[$this->columns[$i]->name] = $value;
             }
             return $data;
-        } else {
-            return false;
         }
+        return false;
     }
 }

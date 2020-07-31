@@ -8,7 +8,6 @@ use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
 
 abstract class Config
 {
-
     // -- Source options bitmask --
 
     /**
@@ -63,7 +62,7 @@ abstract class Config
             return $instance;
         }
 
-        throw new InvalidArgumentException("Nested config could not be made mutable");
+        throw new InvalidArgumentException('Nested config could not be made mutable');
     }
 
     /**

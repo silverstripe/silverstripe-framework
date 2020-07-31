@@ -13,7 +13,6 @@ use SilverStripe\View\ViewableData;
  */
 trait FormMessage
 {
-
     /**
      * @var string
      */
@@ -30,7 +29,6 @@ trait FormMessage
      * @var string
      */
     protected $messageCast = null;
-
 
     /**
      * Returns the field message, used by form validation.
@@ -83,8 +81,8 @@ trait FormMessage
         $messageType = ValidationResult::TYPE_ERROR,
         $messageCast = ValidationResult::CAST_TEXT
     ) {
-        if (!in_array($messageCast, [ValidationResult::CAST_TEXT, ValidationResult::CAST_HTML])) {
-            throw new InvalidArgumentException("Invalid message cast type");
+        if (!in_array($messageCast, [ValidationResult::CAST_TEXT, ValidationResult::CAST_HTML], true)) {
+            throw new InvalidArgumentException('Invalid message cast type');
         }
         $this->message = $message;
         $this->messageType = $messageType;

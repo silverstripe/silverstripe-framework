@@ -19,7 +19,6 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
  */
 class FormAction extends FormField
 {
-
     /**
      * @config
      * @var array
@@ -75,11 +74,11 @@ class FormAction extends FormField
      *
      * @param string $action The method to call when the button is clicked
      * @param string $title The label on the button. This should be plain text, not escaped as HTML.
-     * @param Form form The parent form, auto-set when the field is placed inside a form
+     * @param Form $form The parent form, auto-set when the field is placed inside a form
      */
-    public function __construct($action, $title = "", $form = null)
+    public function __construct($action, $title = '', $form = null)
     {
-        $this->action = "action_$action";
+        $this->action = "action_${action}";
         $this->setForm($form);
 
         parent::__construct($this->action, $title);
@@ -151,8 +150,8 @@ class FormAction extends FormField
             $properties,
             [
                 'Name' => $this->action,
-                'Title' => ($this->description && !$this->useButtonTag) ? $this->description : $this->Title(),
-                'UseButtonTag' => $this->useButtonTag
+                'Title' => $this->description && !$this->useButtonTag ? $this->description : $this->Title(),
+                'UseButtonTag' => $this->useButtonTag,
             ]
         );
 
@@ -177,9 +176,8 @@ class FormAction extends FormField
     {
         if (isset($this->attributes['type'])) {
             return $this->attributes['type'];
-        } else {
-            return (isset($this->attributes['src'])) ? 'image' : 'submit';
         }
+        return isset($this->attributes['src']) ? 'image' : 'submit';
     }
 
     public function getAttributes()
@@ -188,8 +186,8 @@ class FormAction extends FormField
             parent::getAttributes(),
             [
                 'disabled' => ($this->isReadonly() || $this->isDisabled()),
-                'value'    => $this->Title(),
-                'type'     => $this->getInputType(),
+                'value' => $this->Title(),
+                'type' => $this->getInputType(),
             ]
         );
 
@@ -225,7 +223,7 @@ class FormAction extends FormField
     /**
      * Enable or disable the rendering of this action as a <button />
      *
-     * @param boolean
+     * @param $bool
      * @return $this
      */
     public function setUseButtonTag($bool)

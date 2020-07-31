@@ -53,7 +53,7 @@ class Backtrace
      * Return debug_backtrace() results with functions filtered
      * specific to the debugging system, and not the trace.
      *
-     * @param null|array $ignoredFunctions If an array, filter these functions out of the trace
+     * @param array|null $ignoredFunctions If an array, filter these functions out of the trace
      * @return array
      */
     public static function filtered_backtrace($ignoredFunctions = null)
@@ -66,7 +66,7 @@ class Backtrace
      * debugging system, which is useless information.
      *
      * @param array $bt Backtrace to filter
-     * @param null|array $ignoredFunctions List of extra functions to filter out
+     * @param array|null $ignoredFunctions List of extra functions to filter out
      * @return array
      */
     public static function filter_backtrace($bt, $ignoredFunctions = null)
@@ -88,7 +88,7 @@ class Backtrace
             'errorHandler',
             'SilverStripe\\Dev\\Debug::showError',
             'SilverStripe\\Dev\\Debug::backtrace',
-            'exceptionHandler'
+            'exceptionHandler',
         ];
 
         if ($ignoredFunctions) {
@@ -97,7 +97,7 @@ class Backtrace
             }
         }
 
-        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions)) {
+        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions, true)) {
             array_shift($bt);
         }
 
@@ -109,14 +109,14 @@ class Backtrace
             if (!empty($bt[$i]['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
                     if (is_array($fnSpec) &&
-                        ('*' == $fnSpec[0] || $bt[$i]['class'] == $fnSpec[0]) &&
-                        $bt[$i]['function'] == $fnSpec[1]
+                        ($fnSpec[0] === '*' || $bt[$i]['class'] === $fnSpec[0]) &&
+                        $bt[$i]['function'] === $fnSpec[1]
                     ) {
                         $match = true;
                     }
                 }
             } else {
-                if (in_array($bt[$i]['function'], $ignoredArgs)) {
+                if (in_array($bt[$i]['function'], $ignoredArgs, true)) {
                     $match = true;
                 }
             }
@@ -144,17 +144,16 @@ class Backtrace
         $result = self::get_rendered_backtrace(debug_backtrace(), $plainText, $ignoredFunctions);
         if ($returnVal) {
             return $result;
-        } else {
-            echo $result;
-            return null;
         }
+        echo $result;
+        return null;
     }
 
     /**
      * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be
      * shown
      *
-     * @param Object $item
+     * @param object $item
      * @param bool $showArgs
      * @param int $argCharLimit
      * @return string
@@ -177,13 +176,13 @@ class Backtrace
             foreach ($item['args'] as $arg) {
                 if (!is_object($arg) || method_exists($arg, '__toString')) {
                     $sarg = is_array($arg) ? 'Array' : strval($arg);
-                    $args[] = (strlen($sarg) > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
+                    $args[] = strlen($sarg) > $argCharLimit ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
                 } else {
                     $args[] = get_class($arg);
                 }
             }
 
-            $funcName .= "(" . implode(", ", $args) . ")";
+            $funcName .= '(' . implode(', ', $args) . ')';
         }
 
         return $funcName;
@@ -203,23 +202,23 @@ class Backtrace
             return '';
         }
         $bt = self::filter_backtrace($bt, $ignoredFunctions);
-        $result = ($plainText) ? '' : '<ul>';
+        $result = $plainText ? '' : '<ul>';
         foreach ($bt as $item) {
             if ($plainText) {
                 $result .= self::full_func_name($item, true) . "\n";
                 if (isset($item['line']) && isset($item['file'])) {
-                    $result .= basename($item['file']) . ":$item[line]\n";
+                    $result .= basename($item['file']) . ":{$item['line']}\n";
                 }
                 $result .= "\n";
             } else {
-                if ($item['function'] == 'user_error') {
+                if ($item['function'] === 'user_error') {
                     $name = $item['args'][0];
                 } else {
                     $name = self::full_func_name($item, true);
                 }
-                $result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
-                $result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';
-                $result .= isset($item['line']) ? ":$item[line]" : '';
+                $result .= '<li><b>' . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
+                $result .= isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';
+                $result .= isset($item['line']) ? ":{$item['line']}" : '';
                 $result .= "</li>\n";
             }
         }

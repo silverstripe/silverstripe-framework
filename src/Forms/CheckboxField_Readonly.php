@@ -7,7 +7,6 @@ namespace SilverStripe\Forms;
  */
 class CheckboxField_Readonly extends ReadonlyField
 {
-
     public function performReadonlyTransformation()
     {
         return clone $this;

@@ -11,20 +11,23 @@ use IteratorAggregate;
  */
 class Map implements ArrayAccess, Countable, IteratorAggregate
 {
+    protected $list;
 
-    protected $list, $keyField, $valueField;
+    protected $keyField;
+
+    protected $valueField;
 
     /**
      * @see Map::unshift()
      *
-     * @var array $firstItems
+     * @var array
      */
     protected $firstItems = [];
 
     /**
      * @see Map::push()
      *
-     * @var array $lastItems
+     * @var array
      */
     protected $lastItems = [];
 
@@ -35,7 +38,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @param string $keyField The field to use as the key of each map entry
      * @param string $valueField The field to use as the value of each map entry
      */
-    public function __construct(SS_List $list, $keyField = "ID", $valueField = "Title")
+    public function __construct(SS_List $list, $keyField = 'ID', $valueField = 'Title')
     {
         $this->list = $list;
         $this->keyField = $keyField;
@@ -45,7 +48,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Set the key field for this map.
      *
-     * @var string $keyField
+     * @var string
      */
     public function setKeyField($keyField)
     {
@@ -55,7 +58,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Set the value field for this map.
      *
-     * @var string $valueField
+     * @var string
      */
     public function setValueField($valueField)
     {
@@ -103,19 +106,19 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * Stores the value in addition to the {@link DataQuery} for the map.
      *
-     * @var string $key
-     * @var mixed $value
+     * @var string
+     * @var mixed
      * @return $this
      */
     public function unshift($key, $value)
     {
         $oldItems = $this->firstItems;
         $this->firstItems = [
-            $key => $value
+            $key => $value,
         ];
 
         if ($oldItems) {
-            $this->firstItems = $this->firstItems + $oldItems;
+            $this->firstItems += $oldItems;
         }
 
         return $this;
@@ -124,8 +127,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Pushes an item onto the end of the map.
      *
-     * @var string $key
-     * @var mixed $value
+     * @var string
+     * @var mixed
      * @return $this
      */
     public function push($key, $value)
@@ -133,11 +136,11 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         $oldItems = $this->lastItems;
 
         $this->lastItems = [
-            $key => $value
+            $key => $value,
         ];
 
         if ($oldItems) {
-            $this->lastItems = $this->lastItems + $oldItems;
+            $this->lastItems += $oldItems;
         }
 
         return $this;
@@ -146,7 +149,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     // ArrayAccess
 
     /**
-     * @var string $key
+     * @var string
      *
      * @return boolean
      */
@@ -162,11 +165,11 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
 
         $record = $this->list->find($this->keyField, $key);
 
-        return $record != null;
+        return $record !== null;
     }
 
     /**
-     * @var string $key
+     * @var string
      *
      * @return mixed
      */
@@ -185,7 +188,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         if ($record) {
             $col = $this->valueField;
 
-            return $record->$col;
+            return $record->{$col};
         }
 
         return null;
@@ -199,8 +202,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
      * and manipulate the resulting array.
      *
-     * @var string $key
-     * @var mixed $value
+     * @var string
+     * @var mixed
      */
     public function offsetSet($key, $value)
     {
@@ -226,8 +229,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
      * and manipulate the resulting array.
      *
-     * @var string $key
-     * @var mixed $value
+     * @var string
+     * @var mixed
      */
     public function offsetUnset($key)
     {
@@ -244,7 +247,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         }
 
         user_error(
-            "Map is read-only. Unset cannot be called on keys derived from the DataQuery",
+            'Map is read-only. Unset cannot be called on keys derived from the DataQuery',
             E_USER_ERROR
         );
     }

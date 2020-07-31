@@ -2,13 +2,12 @@
 
 namespace SilverStripe\Core\Cache;
 
+use Memcached;
 use SilverStripe\Core\Injector\Injector;
 use Symfony\Component\Cache\Simple\MemcachedCache;
-use Memcached;
 
 class MemcachedCacheFactory implements CacheFactory
 {
-
     /**
      * @var Memcached
      */
@@ -34,7 +33,7 @@ class MemcachedCacheFactory implements CacheFactory
         return Injector::inst()->createWithArgs(MemcachedCache::class, [
             $this->memcachedClient,
             $namespace,
-            $defaultLifetime
+            $defaultLifetime,
         ]);
     }
 }

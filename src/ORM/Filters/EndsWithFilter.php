@@ -13,9 +13,8 @@ namespace SilverStripe\ORM\Filters;
  */
 class EndsWithFilter extends PartialMatchFilter
 {
-
     protected function getMatchPattern($value)
     {
-        return "%$value";
+        return "%${value}";
     }
 }

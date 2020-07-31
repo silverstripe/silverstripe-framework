@@ -8,7 +8,6 @@ namespace SilverStripe\Forms;
  */
 class PrintableTransformation extends ReadonlyTransformation
 {
-
     /**
      * @param TabSet $field
      * @return PrintableTransformation_TabSet

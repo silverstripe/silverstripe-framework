@@ -16,7 +16,6 @@ use SilverStripe\View\ViewableData;
  */
 class LiteralField extends DatalessField
 {
-
     private static $casting = [
         'Value' => 'HTMLFragment',
     ];

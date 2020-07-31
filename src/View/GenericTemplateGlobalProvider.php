@@ -7,12 +7,11 @@ use SilverStripe\ORM\DataList;
 
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider
 {
-
     public static function get_template_global_variables()
     {
         return [
             'ModulePath',
-            'List' => 'getDataList'
+            'List' => 'getDataList',
         ];
     }
 

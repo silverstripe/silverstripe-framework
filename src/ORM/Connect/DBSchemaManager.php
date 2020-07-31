@@ -15,9 +15,7 @@ use SilverStripe\ORM\FieldType\DBPrimaryKey;
  */
 abstract class DBSchemaManager
 {
-
     /**
-     *
      * @config
      * Check tables when running /dev/build, and repair them if necessary.
      * In case of large databases or more fine-grained control on how to handle
@@ -57,7 +55,7 @@ abstract class DBSchemaManager
     protected static $table_name_warnings = [];
 
     /**
-     * @param string
+     * @param string $table
      * @deprecated 4.0.0:5.0.0
      */
     public static function showTableNameWarning($table, $class)
@@ -120,7 +118,6 @@ abstract class DBSchemaManager
     {
         return $this->database->query($sql, $errorLevel);
     }
-
 
     /**
      * Execute the given SQL parameterised query with the specified arguments
@@ -213,7 +210,7 @@ abstract class DBSchemaManager
      *
      * @return boolean
      */
-    function isSchemaUpdating()
+    public function isSchemaUpdating()
     {
         return $this->schemaIsUpdating;
     }
@@ -244,7 +241,7 @@ abstract class DBSchemaManager
             'newFields' => [],
             'newIndexes' => [],
             'options' => $options,
-            'advancedOptions' => $advanced_options
+            'advancedOptions' => $advanced_options,
         ];
     }
 
@@ -329,7 +326,7 @@ abstract class DBSchemaManager
                 'newIndexes' => [],
                 'alteredFields' => [],
                 'alteredIndexes' => [],
-                'alteredOptions' => ''
+                'alteredOptions' => '',
             ];
         }
     }
@@ -361,7 +358,7 @@ abstract class DBSchemaManager
     ) {
         if (!isset($this->tableList[strtolower($table)])) {
             $this->transCreateTable($table, $options, $extensions);
-            $this->alterationMessage("Table $table: created", "created");
+            $this->alterationMessage("Table ${table}: created", 'created');
         } else {
             if (Config::inst()->get(static::class, 'fix_table_case_on_build')) {
                 $this->fixTableCase($table);
@@ -379,7 +376,7 @@ abstract class DBSchemaManager
                 if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
                     $alteredEngine = $alteredEngineMatches[1];
                     $tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->first();
-                    $tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
+                    $tableOptionsChanged = ($tableStatus['Engine'] !== $alteredEngine);
                 }
             }
 
@@ -463,13 +460,13 @@ MESSAGE
         $renameTo = $prefix . $suffix;
         while (isset($this->tableList[strtolower($renameTo)])) {
             $suffix = $suffix
-                    ? ((int)$suffix + 1)
+                    ? ((int) $suffix + 1)
                     : 2;
             $renameTo = $prefix . $suffix;
         }
         $renameFrom = $this->tableList[strtolower($table)];
         $this->renameTable($renameFrom, $renameTo);
-        $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
+        $this->alterationMessage("Table ${table}: renamed to ${renameTo}", 'obsolete');
     }
 
     /**
@@ -511,13 +508,13 @@ MESSAGE
         if ($newTable || !isset($indexList[$indexKey])) {
             // New index
             $this->transCreateIndex($table, $index, $spec);
-            $this->alterationMessage("Index $table.$index: created as $specString", "created");
-        } elseif ($oldSpecString != $specString) {
+            $this->alterationMessage("Index ${table}.${index}: created as ${specString}", 'created');
+        } elseif ($oldSpecString !== $specString) {
             // Updated index
             $this->transAlterIndex($table, $index, $spec);
             $this->alterationMessage(
-                "Index $table.$index: changed to $specString <i class=\"build-info-before\">(from $oldSpecString)</i>",
-                "changed"
+                "Index ${table}.${index}: changed to ${specString} <i class=\"build-info-before\">(from ${oldSpecString})</i>",
+                'changed'
             );
         }
     }
@@ -581,9 +578,8 @@ MESSAGE
             return $spec['type'];
         } elseif (!is_array($spec) && preg_match('/(?<type>\w+)\s*\(/', $spec, $matchType)) {
             return strtolower($matchType['type']);
-        } else {
-            return 'index';
         }
+        return 'index';
     }
 
     /**
@@ -683,13 +679,13 @@ MESSAGE
         }
 
         if (is_array($spec)) {
-            $specValue = $this->$spec_orig['type']($spec_orig['parts']);
+            $specValue = $this->{$spec_orig}['type']($spec_orig['parts']);
         } else {
             $specValue = $spec;
         }
 
         // We need to get db-specific versions of the ID column:
-        if ($spec_orig == $this->IdColumn() || $spec_orig == $this->IdColumn(true)) {
+        if ($spec_orig === $this->IdColumn() || $spec_orig === $this->IdColumn(true)) {
             $specValue = $this->IdColumn(true);
         }
 
@@ -710,10 +706,10 @@ MESSAGE
             $spec_orig = $this->{$spec_orig['type']}($spec_orig['parts']);
         }
 
-        if ($newTable || $fieldValue == '') {
+        if ($newTable || $fieldValue === '') {
             $this->transCreateField($table, $field, $spec_orig);
-            $this->alterationMessage("Field $table.$field: created as $spec_orig", "created");
-        } elseif ($fieldValue != $specValue) {
+            $this->alterationMessage("Field ${table}.${field}: created as ${spec_orig}", 'created');
+        } elseif ($fieldValue !== $specValue) {
             // If enums/sets are being modified, then we need to fix existing data in the table.
             // Update any records where the enum is set to a legacy value to be set to the default.
             $enumValuesExpr = "/^(enum|set)\\s*\\(['\"](?<values>[^'\"]+)['\"]\\).*/i";
@@ -725,7 +721,7 @@ MESSAGE
 
                 $holder = [];
                 foreach ($old as $check) {
-                    if (!in_array($check, $new)) {
+                    if (!in_array($check, $new, true)) {
                         $holder[] = $check;
                     }
                 }
@@ -733,22 +729,22 @@ MESSAGE
                 if (count($holder)) {
                     // Get default pre-escaped for SQL. We just use this directly, as we don't have a real way to
                     // de-encode SQL values
-                        $default = explode('default ', $spec_orig);
+                    $default = explode('default ', $spec_orig);
                     $defaultSQL = isset($default[1]) ? $default[1] : 'NULL';
                     // Reset to default any value in that is in the old enum, but not the new one
                     $placeholders = DB::placeholders($holder);
                     $query = "UPDATE \"{$table}\" SET \"{$field}\" = {$defaultSQL} WHERE \"{$field}\" IN ({$placeholders})";
                     $this->preparedQuery($query, $holder);
-                        $amount = $this->database->affectedRows();
+                    $amount = $this->database->affectedRows();
                     $this->alterationMessage(
-                        "Changed $amount rows to default value of field $field (Value: $defaultSQL)"
+                        "Changed ${amount} rows to default value of field ${field} (Value: ${defaultSQL})"
                     );
                 }
             }
             $this->transAlterField($table, $field, $spec_orig);
             $this->alterationMessage(
-                "Field $table.$field: changed to $specValue <i class=\"build-info-before\">(from {$fieldValue})</i>",
-                "changed"
+                "Field ${table}.${field}: changed to ${specValue} <i class=\"build-info-before\">(from {$fieldValue})</i>",
+                'changed'
             );
         }
     }
@@ -766,13 +762,13 @@ MESSAGE
             $suffix = '';
             while (isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
                 $suffix = $suffix
-                        ? ((int)$suffix + 1)
+                        ? ((int) $suffix + 1)
                         : 2;
             }
             $this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
             $this->alterationMessage(
-                "Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix",
-                "obsolete"
+                "Field ${table}.${fieldName}: renamed to ${table}._obsolete_{$fieldName}$suffix",
+                'obsolete'
             );
         }
     }
@@ -783,58 +779,58 @@ MESSAGE
      * @param string $message to display
      * @param string $type one of [created|changed|repaired|obsolete|deleted|error]
      */
-    public function alterationMessage($message, $type = "")
+    public function alterationMessage($message, $type = '')
     {
         if (!$this->supressOutput) {
             if (Director::is_cli()) {
                 switch ($type) {
-                    case "created":
-                    case "changed":
-                    case "repaired":
-                        $sign = "+";
+                    case 'created':
+                    case 'changed':
+                    case 'repaired':
+                        $sign = '+';
                         break;
-                    case "obsolete":
-                    case "deleted":
+                    case 'obsolete':
+                    case 'deleted':
                         $sign = '-';
                         break;
-                    case "notice":
+                    case 'notice':
                         $sign = '*';
                         break;
-                    case "error":
-                        $sign = "!";
+                    case 'error':
+                        $sign = '!';
                         break;
                     default:
-                        $sign = " ";
+                        $sign = ' ';
                 }
                 $message = strip_tags($message);
-                echo "  $sign $message\n";
+                echo "  ${sign} ${message}\n";
             } else {
                 switch ($type) {
-                    case "created":
-                        $class = "success";
+                    case 'created':
+                        $class = 'success';
                         break;
-                    case "obsolete":
-                        $class = "error";
+                    case 'obsolete':
+                        $class = 'error';
                         break;
-                    case "notice":
-                        $class = "warning";
+                    case 'notice':
+                        $class = 'warning';
                         break;
-                    case "error":
-                        $class = "error";
+                    case 'error':
+                        $class = 'error';
                         break;
-                    case "deleted":
-                        $class = "error";
+                    case 'deleted':
+                        $class = 'error';
                         break;
-                    case "changed":
-                        $class = "info";
+                    case 'changed':
+                        $class = 'info';
                         break;
-                    case "repaired":
-                        $class = "info";
+                    case 'repaired':
+                        $class = 'info';
                         break;
                     default:
-                        $class = "";
+                        $class = '';
                 }
-                echo "<li class=\"$class\">$message</li>";
+                echo "<li class=\"${class}\">${message}</li>";
             }
         }
     }
@@ -856,7 +852,6 @@ MESSAGE
      */
     abstract public function checkAndRepairTable($tableName);
 
-
     /**
      * Ensure the given table has the correct case
      *
@@ -877,8 +872,8 @@ MESSAGE
         }
 
         $this->alterationMessage(
-            "Table $tableName: renamed from $currentName",
-            "repaired"
+            "Table ${tableName}: renamed from ${currentName}",
+            'repaired'
         );
 
         // Rename via temp table to avoid case-sensitivity issues
@@ -895,7 +890,6 @@ MESSAGE
      * @return array List of enum values
      */
     abstract public function enumValuesForField($tableName, $fieldName);
-
 
     /*
      * This is a lookup table for data types.
@@ -1057,7 +1051,6 @@ MESSAGE
     abstract public function fieldList($table);
 
     /**
-     *
      * This allows the cached values for a table's field list to be erased.
      * If $tablename is empty, then the whole cache is erased.
      *
@@ -1068,7 +1061,6 @@ MESSAGE
     {
         return true;
     }
-
 
     /**
      * Returns data type for 'boolean' column

@@ -10,7 +10,6 @@ use SilverStripe\Core\Injector\Injector;
  */
 class SQLDelete extends SQLConditionalExpression
 {
-
     /**
      * List of tables to limit the delete to, if multiple tables
      * are specified in the condition clause
@@ -32,7 +31,7 @@ class SQLDelete extends SQLConditionalExpression
      */
     public static function create($from = [], $where = [], $delete = [])
     {
-        return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
+        return Injector::inst()->createWithArgs(self::class, func_get_args());
     }
 
     /**
@@ -43,7 +42,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param array $where An array of WHERE clauses.
      * @param array|string $delete The table(s) to delete, if multiple tables are queried from
      */
-    function __construct($from = [], $where = [], $delete = [])
+    public function __construct($from = [], $where = [], $delete = [])
     {
         parent::__construct($from, $where);
         $this->setDelete($delete);
@@ -85,7 +84,7 @@ class SQLDelete extends SQLConditionalExpression
         if (is_array($tables)) {
             $this->delete = array_merge($this->delete, $tables);
         } elseif (!empty($tables)) {
-            $this->delete[str_replace(['"','`'], '', $tables)] = $tables;
+            $this->delete[str_replace(['"', '`'], '', $tables)] = $tables;
         }
         return $this;
     }

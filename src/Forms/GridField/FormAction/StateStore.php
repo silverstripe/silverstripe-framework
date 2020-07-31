@@ -1,4 +1,5 @@
 <?php
+
 namespace SilverStripe\Forms\GridField\FormAction;
 
 interface StateStore

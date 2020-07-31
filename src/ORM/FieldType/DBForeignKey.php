@@ -23,7 +23,6 @@ use SilverStripe\ORM\DataObject;
  */
 class DBForeignKey extends DBInt
 {
-
     /**
      * @var DataObject
      */
@@ -79,7 +78,7 @@ class DBForeignKey extends DBInt
         }
 
         // Build selector / numeric field
-        $titleField = $hasOneSingleton->hasField('Title') ? "Title" : "Name";
+        $titleField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
         $list = DataList::create($hasOneClass);
         // Don't scaffold a dropdown for large tables, as making the list concrete
         // might exceed the available PHP memory in creating too many DataObject instances
@@ -100,7 +99,7 @@ class DBForeignKey extends DBInt
             $result = $dataQuery->execute()->column('over_threshold');
 
             // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
-            $overThreshold = !empty($result) && ($result[0] === 't' ||  (int) $result[0] === 1);
+            $overThreshold = !empty($result) && ($result[0] === 't' || (int) $result[0] === 1);
 
             static::$foreignListCache[$hasOneClass] = [
                 'overThreshold' => $overThreshold,

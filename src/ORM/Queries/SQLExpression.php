@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM\Queries;
 
+use Exception;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
-use Exception;
 
 /**
  * Abstract base class for an object representing an SQL query.
@@ -13,7 +13,6 @@ use Exception;
  */
 abstract class SQLExpression
 {
-
     /**
      * Keep an internal register of find/replace pairs to execute when it's time to actually get the
      * query SQL.
@@ -54,11 +53,11 @@ abstract class SQLExpression
         try {
             $sql = $this->sql($parameters);
             if (!empty($parameters)) {
-                $sql .= " <" . var_export($parameters, true) . ">";
+                $sql .= ' <' . var_export($parameters, true) . '>';
             }
             return $sql;
         } catch (Exception $e) {
-            return "<sql query>";
+            return '<sql query>';
         }
     }
 
@@ -70,8 +69,8 @@ abstract class SQLExpression
      */
     public function renameTable($old, $new)
     {
-        $this->replaceText("`$old`", "`$new`");
-        $this->replaceText("\"$old\"", "\"$new\"");
+        $this->replaceText("`${old}`", "`${new}`");
+        $this->replaceText("\"${old}\"", "\"${new}\"");
         $this->replaceText(Convert::symbol2sql($old), Convert::symbol2sql($new));
     }
 
@@ -125,8 +124,8 @@ abstract class SQLExpression
     {
         $target = array_keys(get_object_vars($object));
         foreach (get_object_vars($this) as $variable => $value) {
-            if (in_array($variable, $target)) {
-                $object->$variable = $value;
+            if (in_array($variable, $target, true)) {
+                $object->{$variable} = $value;
             }
         }
     }

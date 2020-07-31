@@ -25,12 +25,12 @@ class TextField extends FormField implements TippableFieldInterface
      * Returns an input field.
      *
      * @param string $name
-     * @param null|string $title
+     * @param string|null $title
      * @param string $value
-     * @param null|int $maxLength Max characters to allow for this field. If this value is stored
+     * @param int|null $maxLength Max characters to allow for this field. If this value is stored
      * against a DB field with a fixed size it's recommended to set an appropriate max length
      * matching this size.
-     * @param null|Form $form
+     * @param Form|null $form
      */
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
@@ -57,7 +57,7 @@ class TextField extends FormField implements TippableFieldInterface
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getMaxLength()
     {
@@ -110,7 +110,7 @@ class TextField extends FormField implements TippableFieldInterface
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-        $data['data']['maxlength'] =  $this->getMaxLength();
+        $data['data']['maxlength'] = $this->getMaxLength();
 
         if ($this->getTip() instanceof Tip) {
             $data['tip'] = $this->getTip()->getTipSchema();
@@ -141,7 +141,7 @@ class TextField extends FormField implements TippableFieldInterface
      */
     public function validate($validator)
     {
-        if (!is_null($this->maxLength) && mb_strlen($this->value) > $this->maxLength) {
+        if ($this->maxLength !== null && mb_strlen($this->value) > $this->maxLength) {
             $validator->validationError(
                 $this->name,
                 _t(
@@ -149,7 +149,7 @@ class TextField extends FormField implements TippableFieldInterface
                     'The value for {name} must not exceed {maxLength} characters in length',
                     ['name' => $this->getName(), 'maxLength' => $this->maxLength]
                 ),
-                "validation"
+                'validation'
             );
             return false;
         }

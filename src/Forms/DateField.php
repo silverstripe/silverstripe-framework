@@ -3,8 +3,8 @@
 namespace SilverStripe\Forms;
 
 use IntlDateFormatter;
-use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
@@ -287,8 +287,8 @@ class DateField extends TextField
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->getMinDate(),
-                'max' => $this->getMaxDate()
-            ])
+                'max' => $this->getMaxDate(),
+            ]),
         ]);
     }
 
@@ -352,13 +352,11 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this
+        return $this
             ->castedCopy(DateField_Disabled::class)
             ->setValue($this->dataValue())
             ->setLocale($this->getLocale())
             ->setReadonly(true);
-
-        return $field;
     }
 
     /**
@@ -378,7 +376,7 @@ class DateField extends TextField
                 $this->name,
                 _t(
                     'SilverStripe\\Forms\\DateField.VALIDDATEFORMAT2',
-                    "Please enter a valid date format ({format})",
+                    'Please enter a valid date format ({format})',
                     ['format' => $this->getDateFormat()]
                 )
             );
@@ -394,13 +392,13 @@ class DateField extends TextField
                     $this->name,
                     _t(
                         'SilverStripe\\Forms\\DateField.VALIDDATEMINDATE',
-                        "Your date has to be newer or matching the minimum allowed date ({date})",
+                        'Your date has to be newer or matching the minimum allowed date ({date})',
                         [
                             'date' => sprintf(
                                 '<time datetime="%s">%s</time>',
                                 $min,
                                 $this->internalToFrontend($min)
-                            )
+                            ),
                         ]
                     ),
                     ValidationResult::TYPE_ERROR,
@@ -419,13 +417,13 @@ class DateField extends TextField
                     $this->name,
                     _t(
                         'SilverStripe\\Forms\\DateField.VALIDDATEMAXDATE',
-                        "Your date has to be older or matching the maximum allowed date ({date})",
+                        'Your date has to be older or matching the maximum allowed date ({date})',
                         [
                             'date' => sprintf(
                                 '<time datetime="%s">%s</time>',
                                 $max,
                                 $this->internalToFrontend($max)
-                            )
+                            ),
                         ]
                     ),
                     ValidationResult::TYPE_ERROR,

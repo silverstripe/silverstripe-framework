@@ -31,7 +31,7 @@ trait HTTPMiddlewareAware
     public function setMiddlewares($middlewares)
     {
         // Allow nulls in the middlewares array to deal with limitations of yml config
-        $this->middlewares = array_filter((array)$middlewares);
+        $this->middlewares = array_filter((array) $middlewares);
         return $this;
     }
 

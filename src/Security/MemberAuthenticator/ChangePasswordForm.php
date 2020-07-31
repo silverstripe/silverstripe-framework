@@ -3,7 +3,6 @@
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -70,13 +69,11 @@ class ChangePasswordForm extends Form
      */
     protected function getFormActions()
     {
-        $actions = FieldList::create(
+        return FieldList::create(
             FormAction::create(
                 'doChangePassword',
                 _t('SilverStripe\\Security\\Member.BUTTONCHANGEPASSWORD', 'Change Password')
             )
         );
-
-        return $actions;
     }
 }

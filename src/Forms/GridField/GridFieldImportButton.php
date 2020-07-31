@@ -38,7 +38,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
     /**
      * @param string $targetFragment The HTML fragment to write the button into
      */
-    public function __construct($targetFragment = "after")
+    public function __construct($targetFragment = 'after')
     {
         $this->targetFragment = $targetFragment;
     }
@@ -89,7 +89,7 @@ class GridFieldImportButton implements GridField_HTMLProvider
         }
 
         return [
-            $this->targetFragment => $button->Field()
+            $this->targetFragment => $button->Field(),
         ];
     }
 

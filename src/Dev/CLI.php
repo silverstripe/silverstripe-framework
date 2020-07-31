@@ -19,7 +19,7 @@ class CLI
         }
 
         if (!defined('STDOUT')) {
-            define('STDOUT', fopen("php://stdout", "w"));
+            define('STDOUT', fopen('php://stdout', 'w'));
         }
         return function_exists('posix_isatty') ? @posix_isatty(STDOUT) : false;
     }
@@ -45,7 +45,7 @@ class CLI
             $prefix = self::start_colour($fgColour, $bgColour, $bold);
             $suffix = self::end_colour();
         } else {
-            $prefix = $suffix = "";
+            $prefix = $suffix = '';
         }
 
         return $prefix . $text . $suffix;
@@ -63,7 +63,7 @@ class CLI
     public static function start_colour($fgColour = null, $bgColour = null, $bold = false)
     {
         if (!self::supports_colour()) {
-            return "";
+            return '';
         }
         $colours = [
             'black' => 0,
@@ -76,18 +76,17 @@ class CLI
             'white' => 7,
         ];
 
-        $prefix = "";
+        $prefix = '';
 
         if ($fgColour || $bold) {
             if (!$fgColour) {
-                $fgColour = "white";
+                $fgColour = 'white';
             }
-            $prefix .= "\033[" . ($bold ? "1;" :"") . "3" . $colours[$fgColour] . "m";
+            $prefix .= "\033[" . ($bold ? '1;' : '') . '3' . $colours[$fgColour] . 'm';
         }
 
-
         if ($bgColour) {
-            $prefix .= "\033[4" . $colours[$bgColour] . "m";
+            $prefix .= "\033[4" . $colours[$bgColour] . 'm';
         }
 
         return $prefix;
@@ -98,6 +97,6 @@ class CLI
      */
     public static function end_colour()
     {
-        return self::supports_colour() ? "\033[0m" : "";
+        return self::supports_colour() ? "\033[0m" : '';
     }
 }

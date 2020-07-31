@@ -8,5 +8,4 @@ namespace SilverStripe\ORM;
  */
 interface HiddenClass
 {
-
 }

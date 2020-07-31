@@ -11,7 +11,6 @@ use Exception;
  */
 abstract class RelationList extends DataList implements Relation
 {
-
     /**
      * Any number of foreign keys to apply to this list
      *
@@ -48,14 +47,14 @@ abstract class RelationList extends DataList implements Relation
     public function forForeignID($id)
     {
         // Turn a 1-element array into a simple value
-        if (is_array($id) && sizeof($id) == 1) {
+        if (is_array($id) && sizeof($id) === 1) {
             $id = reset($id);
         }
 
         // Calculate the new filter
         $filter = $this->foreignIDFilter($id);
 
-        $list = $this->alterDataQuery(function (DataQuery $query) use ($id, $filter) {
+        return $this->alterDataQuery(function (DataQuery $query) use ($id, $filter) {
             // Check if there is an existing filter, remove if there is
             $currentFilter = $query->getQueryParam('Foreign.Filter');
             if ($currentFilter) {
@@ -71,14 +70,11 @@ abstract class RelationList extends DataList implements Relation
             $query->setQueryParam('Foreign.Filter', $filter);
             $query->where($filter);
         });
-
-        return $list;
     }
 
     /**
      * Returns a where clause that filters the members of this relationship to
      * just the related items.
-     *
      *
      * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current ids as
      * per getForeignID

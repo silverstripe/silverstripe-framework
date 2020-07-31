@@ -14,7 +14,7 @@ class CompositeFlushDiscoverer extends \ArrayIterator implements FlushDiscoverer
         foreach ($this as $discoverer) {
             $flush = $discoverer->shouldFlush();
 
-            if (!is_null($flush)) {
+            if ($flush !== null) {
                 return $flush;
             }
         }

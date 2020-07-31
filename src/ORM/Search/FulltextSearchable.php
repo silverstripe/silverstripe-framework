@@ -2,13 +2,12 @@
 
 namespace SilverStripe\ORM\Search;
 
+use Exception;
 use SilverStripe\Assets\File;
+use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataExtension;
-use Exception;
 
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index.
@@ -24,7 +23,6 @@ use Exception;
  */
 class FulltextSearchable extends DataExtension
 {
-
     /**
      * Comma-separated list of database column names
      * that can be searched on. Used for generation of the database index defintions.
@@ -56,8 +54,8 @@ class FulltextSearchable extends DataExtension
     public static function enable($searchableClasses = [SiteTree::class, File::class])
     {
         $defaultColumns = [
-            SiteTree::class => ['Title','MenuTitle','Content','MetaDescription'],
-            File::class => ['Name','Title'],
+            SiteTree::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
+            File::class => ['Name', 'Title'],
         ];
 
         if (!is_array($searchableClasses)) {
@@ -72,13 +70,13 @@ class FulltextSearchable extends DataExtension
                 $class::add_extension(sprintf('%s(%s)', static::class, "'" . implode("','", $defaultColumns[$class]) . "''"));
             } else {
                 throw new Exception(
-                    "FulltextSearchable::enable() I don't know the default search columns for class '$class'"
+                    "FulltextSearchable::enable() I don't know the default search columns for class '${class}'"
                 );
             }
         }
         self::$searchable_classes = $searchableClasses;
-        if (class_exists("SilverStripe\\CMS\\Controllers\\ContentController")) {
-            ContentController::add_extension("SilverStripe\\CMS\\Search\\ContentControllerSearchExtension");
+        if (class_exists('SilverStripe\\CMS\\Controllers\\ContentController')) {
+            ContentController::add_extension('SilverStripe\\CMS\\Search\\ContentControllerSearchExtension');
         }
     }
 
@@ -107,8 +105,8 @@ class FulltextSearchable extends DataExtension
                     'type' => 'fulltext',
                     'name' => 'SearchFields',
                     'columns' => $args,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

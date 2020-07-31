@@ -12,14 +12,13 @@ use SilverStripe\Dev\Deprecation;
  */
 trait Configurable
 {
-
     /**
      * Get a configuration accessor for this class. Short hand for Config::inst()->get($this->class, .....).
      * @return Config_ForClass
      */
     public static function config()
     {
-        return Config::forClass(get_called_class());
+        return Config::forClass(static::class);
     }
 
     /**

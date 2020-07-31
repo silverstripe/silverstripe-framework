@@ -2,16 +2,16 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use BadMethodCallException;
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Backtrace;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
-use BadMethodCallException;
-use Exception;
-use SilverStripe\Dev\Backtrace;
+use SilverStripe\ORM\Queries\SQLUpdate;
 
 /**
  * Abstract database connectivity class.
@@ -19,8 +19,8 @@ use SilverStripe\Dev\Backtrace;
  */
 abstract class Database
 {
-
     const PARTIAL_QUERY = 'partial_query';
+
     const FULL_QUERY = 'full_query';
 
     /**
@@ -161,7 +161,6 @@ abstract class Database
         );
     }
 
-
     /**
      * Execute the given SQL parameterised query with the specified arguments
      *
@@ -206,11 +205,10 @@ abstract class Database
             && $this->connector->isQueryMutable($sql)
         ) {
             // output preview message
-            Debug::message("Will execute: $sql");
+            Debug::message("Will execute: ${sql}");
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -230,7 +228,7 @@ abstract class Database
             $result = $callback($sql);
             $endtime = round(microtime(true) - $starttime, 4);
             // replace parameters as closely as possible to what we'd expect the DB to put in
-            if (in_array(strtolower($_REQUEST['showqueries']), ['inline', 'backtrace'])) {
+            if (in_array(strtolower($_REQUEST['showqueries']), ['inline', 'backtrace'], true)) {
                 $sql = DB::inline_parameters($sql, $parameters);
             } elseif (strtolower($_REQUEST['showqueries']) === 'whitelist') {
                 $displaySql = false;
@@ -254,9 +252,8 @@ abstract class Database
                 Backtrace::backtrace();
             }
             return $result;
-        } else {
-            return $callback($sql);
         }
+        return $callback($sql);
     }
 
     /**
@@ -267,8 +264,8 @@ abstract class Database
      */
     protected function displayQuery($query, $endtime)
     {
-        $queryCount = sprintf("%04d", $this->queryCount);
-        Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
+        $queryCount = sprintf('%04d', $this->queryCount);
+        Debug::message("\n${queryCount}: ${query}\n{$endtime}s\n", false);
     }
 
     /**
@@ -400,9 +397,9 @@ abstract class Database
 
             // Switch command type
             switch ($writeInfo['command']) {
-                case "update":
+                case 'update':
                     // Build update
-                    $query = new SQLUpdate("\"$table\"", $this->escapeColumnKeys($fieldValues));
+                    $query = new SQLUpdate("\"${table}\"", $this->escapeColumnKeys($fieldValues));
 
                     // Set best condition to use
                     if (!empty($writeInfo['where'])) {
@@ -418,14 +415,15 @@ abstract class Database
                     }
                     // ...if not, we'll skip on to the insert code
 
-                case "insert":
+                    // no break
+                case 'insert':
                     // Ensure that the ID clause is given if possible
                     if (!isset($fieldValues['ID']) && isset($writeInfo['id'])) {
                         $fieldValues['ID'] = $writeInfo['id'];
                     }
 
                     // Build insert
-                    $query = new SQLInsert("\"$table\"", $this->escapeColumnKeys($fieldValues));
+                    $query = new SQLInsert("\"${table}\"", $this->escapeColumnKeys($fieldValues));
 
                     $query->execute();
                     break;
@@ -465,7 +463,7 @@ abstract class Database
      */
     public function clearTable($table)
     {
-        $this->query("TRUNCATE \"$table\"");
+        $this->query("TRUNCATE \"${table}\"");
     }
 
     /**
@@ -478,16 +476,16 @@ abstract class Database
     public function nullCheckClause($field, $isNull)
     {
         $clause = $isNull
-            ? "%s IS NULL"
-            : "%s IS NOT NULL";
+            ? '%s IS NULL'
+            : '%s IS NOT NULL';
         return sprintf($clause, $field);
     }
 
     /**
      * Generate a WHERE clause for text matching.
      *
-     * @param String $field Quoted field name
-     * @param String $value Escaped search. Can include percentage wildcards.
+     * @param string $field Quoted field name
+     * @param string $value Escaped search. Can include percentage wildcards.
      * Ignored if $parameterised is true.
      * @param boolean $exact Exact matches or wildcard support.
      * @param boolean $negate Negate the clause.
@@ -495,7 +493,7 @@ abstract class Database
      * Fallback to default collation if set to NULL.
      * @param boolean $parameterised Insert the ? placeholder rather than the
      * given value. If this is true then $value is ignored.
-     * @return String SQL
+     * @return string SQL
      */
     abstract public function comparisonClause(
         $field,
@@ -580,7 +578,7 @@ abstract class Database
      * Can the database override timezone as a connection setting,
      * or does it use the system timezone exclusively?
      *
-     * @return Boolean
+     * @return boolean
      */
     abstract public function supportsTimezoneOverride();
 
@@ -631,10 +629,10 @@ abstract class Database
         $keywords,
         $start,
         $pageLength,
-        $sortBy = "Relevance DESC",
-        $extraFilter = "",
+        $sortBy = 'Relevance DESC',
+        $extraFilter = '',
         $booleanSearch = false,
-        $alternativeFileFilter = "",
+        $alternativeFileFilter = '',
         $invertedMatch = false
     );
 
@@ -655,7 +653,6 @@ abstract class Database
     {
         return false;
     }
-
 
     /**
      * Determines if the used database supports given transactionMode as an argument to startTransaction()
@@ -688,7 +685,7 @@ abstract class Database
     ) {
         $supported = $this->supportsTransactions();
         if (!$supported && $errorIfTransactionsUnsupported) {
-            throw new BadMethodCallException("Transactions not supported by this database.");
+            throw new BadMethodCallException('Transactions not supported by this database.');
         }
         if ($supported) {
             $this->transactionStart($transactionMode);
@@ -770,7 +767,7 @@ abstract class Database
     {
         // Placeholder error for transactional DBs that don't expose depth
         if ($this->supportsTransactions()) {
-            user_error(get_class($this) . " does not support transactionDepth", E_USER_WARNING);
+            user_error(static::class . ' does not support transactionDepth', E_USER_WARNING);
         }
         return 0;
     }
@@ -908,7 +905,7 @@ abstract class Database
         // Check DB creation permisson
         if (!$create) {
             if ($errorLevel !== false) {
-                user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
+                user_error("Attempted to connect to non-existing database \"${name}\"", $errorLevel);
             }
             // Unselect database
             $this->connector->unloadDatabase();

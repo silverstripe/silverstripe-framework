@@ -12,7 +12,6 @@ namespace SilverStripe\Core\Manifest;
  */
 class ClassContentRemover
 {
-
     /**
      * @param string $filePath
      * @param int $cutOffDepth The number of levels of curly braces to go before ignoring the content
@@ -45,12 +44,12 @@ class ClassContentRemover
                 $token = [
                     T_STRING,
                     $token,
-                    null
+                    null,
                 ];
             }
 
             // only count if we see a class/interface/trait keyword
-            if (!$startCounting && in_array($token[0], [T_CLASS, T_INTERFACE, T_TRAIT])) {
+            if (!$startCounting && in_array($token[0], [T_CLASS, T_INTERFACE, T_TRAIT], true)) {
                 $startCounting = true;
             }
 

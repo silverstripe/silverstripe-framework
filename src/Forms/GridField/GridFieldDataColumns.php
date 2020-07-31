@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Convert;
 use InvalidArgumentException;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -11,7 +11,6 @@ use SilverStripe\ORM\DataObject;
  */
 class GridFieldDataColumns implements GridField_ColumnProvider
 {
-
     /**
      * @var array
      */
@@ -34,7 +33,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
      *
      * @param GridField $gridField
-     * @param array - List reference of all column names.
+     * @param array $columns - List reference of all column names.
      */
     public function augmentColumns($gridField, &$columns)
     {
@@ -171,9 +170,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
         // Make any formatting tweaks
         $value = $this->formatValue($gridField, $record, $columnName, $value);
         // Do any final escaping
-        $value = $this->escapeValue($gridField, $value);
-
-        return $value;
+        return $this->escapeValue($gridField, $value);
     }
 
     /**
@@ -223,15 +220,15 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     protected function getValueFromRelation($record, $columnName)
     {
         $fieldNameParts = explode('.', $columnName);
-        $tmpItem = clone($record);
+        $tmpItem = clone$record;
         for ($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
             $methodName = $fieldNameParts[$idx];
             // Last mmethod call from $columnName return what that method is returning
-            if ($idx == sizeof($fieldNameParts) - 1) {
+            if ($idx === sizeof($fieldNameParts) - 1) {
                 return $tmpItem->XML_val($methodName);
             }
             // else get the object from this $methodName
-            $tmpItem = $tmpItem->$methodName();
+            $tmpItem = $tmpItem->{$methodName}();
         }
         return null;
     }
@@ -267,7 +264,6 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     }
 
     /**
-     *
      * @param GridField $gridField
      * @param DataObject $item
      * @param string $fieldName
@@ -283,13 +279,12 @@ class GridFieldDataColumns implements GridField_ColumnProvider
         $spec = $this->fieldFormatting[$fieldName];
         if (!is_string($spec) && is_callable($spec)) {
             return $spec($value, $item);
-        } else {
-            $format = str_replace('$value', "__VAL__", $spec);
-            $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
-            $format = str_replace('__VAL__', '$value', $format);
-            eval('$value = "' . $format . '";');
-            return $value;
         }
+        $format = str_replace('$value', '__VAL__', $spec);
+        $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
+        $format = str_replace('__VAL__', '$value', $format);
+        eval('$value = "' . $format . '";');
+        return $value;
     }
 
     /**

@@ -14,7 +14,6 @@ use SilverStripe\Core\Path;
  */
 class ThemeResourceLoader implements Flushable
 {
-
     /**
      * @var ThemeResourceLoader
      */
@@ -45,7 +44,7 @@ class ThemeResourceLoader implements Flushable
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return self::$instance ?: self::$instance = new self();
     }
 
     /**
@@ -60,7 +59,7 @@ class ThemeResourceLoader implements Flushable
 
     public function __construct($base = null)
     {
-        $this->base = $base ? $base : BASE_PATH;
+        $this->base = $base ?: BASE_PATH;
     }
 
     /**
@@ -221,7 +220,7 @@ class ThemeResourceLoader implements Flushable
             // If we have an .ss extension, this is a path, not a template name. We should
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
-            if (substr($template, -3) == '.ss' && file_exists($template)) {
+            if (substr($template, -3) === '.ss' && file_exists($template)) {
                 $this->getCache()->set($cacheKey, $template);
                 return $template;
             }
@@ -235,7 +234,7 @@ class ThemeResourceLoader implements Flushable
             $themePaths = $this->getThemePaths($themes);
             foreach ($themePaths as $themePath) {
                 // Join path
-                $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
+                $pathParts = [$this->base, $themePath, 'templates', $head, $type, $tail];
                 try {
                     $path = Path::join($pathParts) . '.ss';
                     if (file_exists($path)) {
@@ -270,7 +269,7 @@ class ThemeResourceLoader implements Flushable
             $name .= '.css';
         }
 
-        $filename = $this->findThemedResource("css/$name", $themes);
+        $filename = $this->findThemedResource("css/${name}", $themes);
         if ($filename === null) {
             $filename = $this->findThemedResource($name, $themes);
         }
@@ -299,7 +298,7 @@ class ThemeResourceLoader implements Flushable
             $name .= '.js';
         }
 
-        $filename = $this->findThemedResource("javascript/$name", $themes);
+        $filename = $this->findThemedResource("javascript/${name}", $themes);
         if ($filename === null) {
             $filename = $this->findThemedResource($name, $themes);
         }

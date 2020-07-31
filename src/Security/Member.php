@@ -74,7 +74,7 @@ class Member extends DataObject
         // not an actual encryption algorithm.
         // Warning: Never change this field after its the first password hashing without
         // providing a new cleartext password as well.
-        'PasswordEncryption' => "Varchar(50)",
+        'PasswordEncryption' => 'Varchar(50)',
         'Salt' => 'Varchar(50)',
         'PasswordExpiry' => 'Date',
         'LockedOutUntil' => 'Datetime',
@@ -92,7 +92,7 @@ class Member extends DataObject
         'RememberLoginHashes' => RememberLoginHash::class,
     ];
 
-    private static $table_name = "Member";
+    private static $table_name = 'Member';
 
     private static $default_sort = '"Surname", "FirstName"';
 
@@ -192,7 +192,7 @@ class Member extends DataObject
 
     /**
      * @config
-     * @var Int Number of incorrect logins after which
+     * @var int Number of incorrect logins after which
      * the user is blocked from further attempts for the timespan
      * defined in {@link $lock_out_delay_mins}.
      */
@@ -207,7 +207,7 @@ class Member extends DataObject
 
     /**
      * @config
-     * @var String If this is set, then a session cookie with the given name will be set on log-in,
+     * @var string If this is set, then a session cookie with the given name will be set on log-in,
      * and cleared on logout.
      */
     private static $login_marker_cookie = null;
@@ -223,7 +223,6 @@ class Member extends DataObject
      * @var boolean
      */
     private static $session_regenerate_id = true;
-
 
     /**
      * Default lifetime of temporary ids.
@@ -350,7 +349,7 @@ class Member extends DataObject
         if ($this->isLockedOut()) {
             $result->addError(
                 _t(
-                    __CLASS__ . '.ERRORLOCKEDOUT2',
+                    self::class . '.ERRORLOCKEDOUT2',
                     'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
                     null,
                     ['count' => static::config()->get('lock_out_delay_mins')]
@@ -450,7 +449,6 @@ class Member extends DataObject
 
     /**
      * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn()
-     *
      */
     public function logIn()
     {
@@ -605,7 +603,7 @@ class Member extends DataObject
                     use the Member.auto_login_token_lifetime config setting instead',
                 Deprecation::SCOPE_GLOBAL
             );
-            $lifetime = (86400 * $lifetime); // Method argument is days, convert to seconds
+            $lifetime = 86400 * $lifetime; // Method argument is days, convert to seconds
         } else {
             $lifetime = $this->config()->auto_login_token_lifetime;
         }
@@ -615,7 +613,7 @@ class Member extends DataObject
             $token = $generator->randomToken();
             $hash = $this->encryptWithUserSettings($token);
         } while (DataObject::get_one(Member::class, [
-            '"Member"."AutoLoginHash"' => $hash
+            '"Member"."AutoLoginHash"' => $hash,
         ]));
 
         $this->AutoLoginHash = $hash;
@@ -638,7 +636,7 @@ class Member extends DataObject
         $hash = $this->encryptWithUserSettings($autologinToken);
         $member = self::member_from_autologinhash($hash, false);
 
-        return (bool)$member;
+        return (bool) $member;
     }
 
     /**
@@ -709,7 +707,6 @@ class Member extends DataObject
         $fields->removeByName(static::config()->get('hidden_fields'));
         $fields->removeByName('FailedLoginCount');
 
-
         $this->extend('updateMemberFormFields', $fields);
 
         return $fields;
@@ -724,7 +721,7 @@ class Member extends DataObject
     {
         $editingPassword = $this->isInDB();
         $label = $editingPassword
-            ? _t(__CLASS__ . '.EDIT_PASSWORD', 'New Password')
+            ? _t(self::class . '.EDIT_PASSWORD', 'New Password')
             : $this->fieldLabel('Password');
         /** @var ConfirmedPasswordField $password */
         $password = ConfirmedPasswordField::create(
@@ -736,7 +733,7 @@ class Member extends DataObject
         );
 
         // If editing own password, require confirmation of existing
-        if ($editingPassword && $this->ID == Security::getCurrentUser()->ID) {
+        if ($editingPassword && $this->ID === Security::getCurrentUser()->ID) {
             $password->setRequireExistingPassword(true);
         }
 
@@ -745,7 +742,6 @@ class Member extends DataObject
 
         return $password;
     }
-
 
     /**
      * Returns the {@link RequiredFields} instance for the Member object. This
@@ -765,7 +761,6 @@ class Member extends DataObject
 
         return $validator;
     }
-
 
     /**
      * Returns the current logged in user
@@ -795,7 +790,7 @@ class Member extends DataObject
      * });
      * </code>
      *
-     * @param Member|null|int $member Member or member ID to log in as.
+     * @param Member|int|null $member Member or member ID to log in as.
      * Set to null or 0 to act as a logged out user.
      * @param callable $callback
      * @return mixed Result of $callback
@@ -852,19 +847,16 @@ class Member extends DataObject
             $words = file($words);
 
             list($usec, $sec) = explode(' ', microtime());
-            mt_srand($sec + ((float)$usec * 100000));
+            mt_srand($sec + ((float) $usec * 100000));
 
             $word = trim($words[random_int(0, count($words) - 1)]);
             $number = random_int(10, 999);
 
             return $word . $number;
-        } else {
-            $random = mt_rand();
-            $string = md5($random);
-            $output = substr($string, 0, 8);
-
-            return $output;
         }
+        $random = mt_rand();
+        $string = md5($random);
+        return substr($string, 0, 8);
     }
 
     /**
@@ -876,10 +868,10 @@ class Member extends DataObject
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
         $identifierField = Member::config()->get('unique_identifier_field');
-        if ($this->$identifierField) {
+        if ($this->{$identifierField}) {
             // Note: Same logic as Member_Validator class
             $filter = [
-                "\"Member\".\"$identifierField\"" => $this->$identifierField
+                "\"Member\".\"${identifierField}\"" => $this->{$identifierField},
             ];
             if ($this->ID) {
                 $filter[] = ['"Member"."ID" <> ?' => $this->ID];
@@ -888,13 +880,13 @@ class Member extends DataObject
 
             if ($existingRecord) {
                 throw new ValidationException(_t(
-                    __CLASS__ . '.ValidationIdentifierFailed',
+                    self::class . '.ValidationIdentifierFailed',
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
                     [
                         'id' => $existingRecord->ID,
                         'name' => $identifierField,
-                        'value' => $this->$identifierField
+                        'value' => $this->{$identifierField},
                     ]
                 ));
             }
@@ -914,8 +906,8 @@ class Member extends DataObject
                 ->setData($this)
                 ->setTo($this->Email)
                 ->setSubject(_t(
-                    __CLASS__ . '.SUBJECTPASSWORDCHANGED',
-                    "Your password has been changed",
+                    self::class . '.SUBJECTPASSWORDCHANGED',
+                    'Your password has been changed',
                     'Email subject'
                 ))
                 ->send();
@@ -981,7 +973,7 @@ class Member extends DataObject
     {
         // Ensure none of these match disallowed list
         $disallowedGroupIDs = $this->disallowedGroups();
-        return count(array_intersect($ids, $disallowedGroupIDs)) == 0;
+        return count(array_intersect($ids, $disallowedGroupIDs)) === 0;
     }
 
     /**
@@ -999,7 +991,6 @@ class Member extends DataObject
         // Non-admins may not belong to admin groups
         return Permission::get_groups_by_permission('ADMIN')->column('ID');
     }
-
 
     /**
      * Check if the member is in one of the given groups.
@@ -1021,7 +1012,6 @@ class Member extends DataObject
         return false;
     }
 
-
     /**
      * Check if the member is in the given group or any parent groups.
      *
@@ -1035,7 +1025,7 @@ class Member extends DataObject
             $groupCheckObj = DataObject::get_by_id(Group::class, $group);
         } elseif (is_string($group)) {
             $groupCheckObj = DataObject::get_one(Group::class, [
-                '"Group"."Code"' => $group
+                '"Group"."Code"' => $group,
             ]);
         } elseif ($group instanceof Group) {
             $groupCheckObj = $group;
@@ -1047,10 +1037,10 @@ class Member extends DataObject
             return false;
         }
 
-        $groupCandidateObjs = ($strict) ? $this->getManyManyComponents("Groups") : $this->Groups();
+        $groupCandidateObjs = $strict ? $this->getManyManyComponents('Groups') : $this->Groups();
         if ($groupCandidateObjs) {
             foreach ($groupCandidateObjs as $groupCandidateObj) {
-                if ($groupCandidateObj->ID == $groupCheckObj->ID) {
+                if ($groupCandidateObj->ID === $groupCheckObj->ID) {
                     return true;
                 }
             }
@@ -1066,10 +1056,10 @@ class Member extends DataObject
      * @param string $groupcode
      * @param string $title Title of the group
      */
-    public function addToGroupByCode($groupcode, $title = "")
+    public function addToGroupByCode($groupcode, $title = '')
     {
         $group = DataObject::get_one(Group::class, [
-            '"Group"."Code"' => $groupcode
+            '"Group"."Code"' => $groupcode,
         ]);
 
         if ($group) {
@@ -1104,7 +1094,7 @@ class Member extends DataObject
 
     /**
      * @param array $columns Column names on the Member record to show in {@link getTitle()}.
-     * @param String $sep Separator
+     * @param string $sep Separator
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
@@ -1116,7 +1106,7 @@ class Member extends DataObject
             'title_format',
             [
                 'columns' => $columns,
-                'sep' => $sep
+                'sep' => $sep,
             ]
         );
     }
@@ -1156,24 +1146,22 @@ class Member extends DataObject
         }
         if ($this->getField('ID') === 0) {
             return $this->getField('Surname');
-        } else {
-            if ($this->getField('Surname') && $this->getField('FirstName')) {
-                return $this->getField('Surname') . ', ' . $this->getField('FirstName');
-            } elseif ($this->getField('Surname')) {
-                return $this->getField('Surname');
-            } elseif ($this->getField('FirstName')) {
-                return $this->getField('FirstName');
-            } else {
-                return null;
-            }
         }
+        if ($this->getField('Surname') && $this->getField('FirstName')) {
+            return $this->getField('Surname') . ', ' . $this->getField('FirstName');
+        } elseif ($this->getField('Surname')) {
+            return $this->getField('Surname');
+        } elseif ($this->getField('FirstName')) {
+            return $this->getField('FirstName');
+        }
+        return null;
     }
 
     /**
      * Return a SQL CONCAT() fragment suitable for a SELECT statement.
      * Useful for custom queries which assume a certain member title format.
      *
-     * @return String SQL
+     * @return string SQL
      */
     public static function get_title_sql()
     {
@@ -1189,14 +1177,13 @@ class Member extends DataObject
 
         $columnsWithTablename = [];
         foreach ($format['columns'] as $column) {
-            $columnsWithTablename[] = static::getSchema()->sqlColumnForField(__CLASS__, $column);
+            $columnsWithTablename[] = static::getSchema()->sqlColumnForField(self::class, $column);
         }
 
         $sepSQL = Convert::raw2sql($format['sep'], true);
         $op = DB::get_conn()->concatOperator();
-        return "(" . join(" $op $sepSQL $op ", $columnsWithTablename) . ")";
+        return '(' . join(" ${op} ${sepSQL} ${op} ", $columnsWithTablename) . ')';
     }
-
 
     /**
      * Get the complete name of the member
@@ -1205,9 +1192,8 @@ class Member extends DataObject
      */
     public function getName()
     {
-        return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
+        return $this->Surname ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
     }
-
 
     /**
      * Set first- and surname
@@ -1223,7 +1209,6 @@ class Member extends DataObject
         $this->Surname = array_pop($nameParts);
         $this->FirstName = join(' ', $nameParts);
     }
-
 
     /**
      * Alias for {@link setName}
@@ -1291,7 +1276,6 @@ class Member extends DataObject
 
     //---------------------------------------------------------------------//
 
-
     /**
      * Get a "many-to-many" map that holds for all members their group memberships,
      * including any parent groups where membership is implied.
@@ -1357,7 +1341,6 @@ class Member extends DataObject
         return $membersList->map();
     }
 
-
     /**
      * Get a map of all members in the groups given that have CMS permissions
      *
@@ -1380,7 +1363,7 @@ class Member extends DataObject
             return ArrayList::create()->map();
         }
 
-        if (count($groups) == 0) {
+        if (count($groups) === 0) {
             $perms = ['ADMIN', 'CMS_ACCESS_AssetAdmin'];
 
             if (class_exists(CMSMain::class)) {
@@ -1396,9 +1379,9 @@ class Member extends DataObject
             $permsClause = DB::placeholders($perms);
             /** @skipUpgrade */
             $groups = Group::get()
-                ->innerJoin("Permission", '"Permission"."GroupID" = "Group"."ID"')
+                ->innerJoin('Permission', '"Permission"."GroupID" = "Group"."ID"')
                 ->where([
-                    "\"Permission\".\"Code\" IN ($permsClause)" => $perms
+                    "\"Permission\".\"Code\" IN (${permsClause})" => $perms,
                 ]);
         }
 
@@ -1414,18 +1397,17 @@ class Member extends DataObject
 
         /** @skipUpgrade */
         $members = static::get()
-            ->innerJoin("Group_Members", '"Group_Members"."MemberID" = "Member"."ID"')
-            ->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
+            ->innerJoin('Group_Members', '"Group_Members"."MemberID" = "Member"."ID"')
+            ->innerJoin('Group', '"Group"."ID" = "Group_Members"."GroupID"');
         if ($groupIDList) {
             $groupClause = DB::placeholders($groupIDList);
             $members = $members->where([
-                "\"Group\".\"ID\" IN ($groupClause)" => $groupIDList
+                "\"Group\".\"ID\" IN (${groupClause})" => $groupIDList,
             ]);
         }
 
         return $members->sort('"Member"."Surname", "Member"."FirstName"')->map();
     }
-
 
     /**
      * Get the groups in which the member is NOT in
@@ -1445,15 +1427,14 @@ class Member extends DataObject
         }
 
         foreach ($memberGroups as $group) {
-            if (in_array($group->Code, $groupList)) {
-                $index = array_search($group->Code, $groupList);
+            if (in_array($group->Code, $groupList, true)) {
+                $index = array_search($group->Code, $groupList, true);
                 unset($groupList[$index]);
             }
         }
 
         return $groupList;
     }
-
 
     /**
      * Return a {@link FieldList} of fields that would appropriate for editing
@@ -1467,9 +1448,9 @@ class Member extends DataObject
     {
         $this->beforeUpdateCMSFields(function (FieldList $fields) {
             /** @var TabSet $rootTabSet */
-            $rootTabSet = $fields->fieldByName("Root");
+            $rootTabSet = $fields->fieldByName('Root');
             /** @var Tab $mainTab */
-            $mainTab = $rootTabSet->fieldByName("Main");
+            $mainTab = $rootTabSet->fieldByName('Main');
             /** @var FieldList $mainFields */
             $mainFields = $mainTab->getChildren();
 
@@ -1477,8 +1458,8 @@ class Member extends DataObject
             $mainFields->replaceField('Password', $this->getMemberPasswordField());
 
             $mainFields->replaceField('Locale', new DropdownField(
-                "Locale",
-                _t(__CLASS__ . '.INTERFACELANG', "Interface Language", 'Language of the CMS'),
+                'Locale',
+                _t(self::class . '.INTERFACELANG', 'Interface Language', 'Language of the CMS'),
                 i18n::getSources()->getKnownLocales()
             ));
             $mainFields->removeByName(static::config()->get('hidden_fields'));
@@ -1515,10 +1496,9 @@ class Member extends DataObject
                         ->setSource($groupsMap)
                         ->setAttribute(
                             'data-placeholder',
-                            _t(__CLASS__ . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
+                            _t(self::class . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
                         )
                 );
-
 
                 // Add permission field (readonly to avoid complicated group assignment logic).
                 // This should only be available for existing records, as new records start
@@ -1554,21 +1534,21 @@ class Member extends DataObject
     {
         $labels = parent::fieldLabels($includerelations);
 
-        $labels['FirstName'] = _t(__CLASS__ . '.FIRSTNAME', 'First Name');
-        $labels['Surname'] = _t(__CLASS__ . '.SURNAME', 'Surname');
+        $labels['FirstName'] = _t(self::class . '.FIRSTNAME', 'First Name');
+        $labels['Surname'] = _t(self::class . '.SURNAME', 'Surname');
         /** @skipUpgrade */
-        $labels['Email'] = _t(__CLASS__ . '.EMAIL', 'Email');
-        $labels['Password'] = _t(__CLASS__ . '.db_Password', 'Password');
+        $labels['Email'] = _t(self::class . '.EMAIL', 'Email');
+        $labels['Password'] = _t(self::class . '.db_Password', 'Password');
         $labels['PasswordExpiry'] = _t(
-            __CLASS__ . '.db_PasswordExpiry',
+            self::class . '.db_PasswordExpiry',
             'Password Expiry Date',
             'Password expiry date'
         );
-        $labels['LockedOutUntil'] = _t(__CLASS__ . '.db_LockedOutUntil', 'Locked out until', 'Security related date');
-        $labels['Locale'] = _t(__CLASS__ . '.db_Locale', 'Interface Locale');
+        $labels['LockedOutUntil'] = _t(self::class . '.db_LockedOutUntil', 'Locked out until', 'Security related date');
+        $labels['Locale'] = _t(self::class . '.db_Locale', 'Interface Locale');
         if ($includerelations) {
             $labels['Groups'] = _t(
-                __CLASS__ . '.belongs_many_many_Groups',
+                self::class . '.belongs_many_many_Groups',
                 'Groups',
                 'Security Groups this member belongs to'
             );
@@ -1602,7 +1582,7 @@ class Member extends DataObject
             return false;
         }
         // members can usually view their own record
-        if ($this->ID == $member->ID) {
+        if ($this->ID === $member->ID) {
             return true;
         }
 
@@ -1639,7 +1619,7 @@ class Member extends DataObject
             return false;
         }
         // members can usually edit their own record
-        if ($this->ID == $member->ID) {
+        if ($this->ID === $member->ID) {
             return true;
         }
 
@@ -1671,7 +1651,7 @@ class Member extends DataObject
         }
         // Members are not allowed to remove themselves,
         // since it would create inconsistencies in the admin UIs.
-        if ($this->ID && $member->ID == $this->ID) {
+        if ($this->ID && $member->ID === $this->ID) {
             return false;
         }
 
@@ -1837,6 +1817,6 @@ class Member extends DataObject
         }
 
         // If can't find a suitable editor, just default to cms
-        return $currentName ? $currentName : 'cms';
+        return $currentName ?: 'cms';
     }
 }

@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Email;
 
 interface Mailer
 {
-
     /**
      * @param Email $email
      * @return bool

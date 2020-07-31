@@ -25,7 +25,7 @@ interface GridField_ActionProvider extends GridFieldComponent
      * There is no namespacing on these actions, so you need to ensure that
      * they don't conflict with other components.
      *
-     * @param GridField
+     * @param GridField $gridField
      * @return array with action identifier strings.
      */
     public function getActions($gridField);

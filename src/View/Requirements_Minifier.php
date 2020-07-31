@@ -9,7 +9,6 @@ namespace SilverStripe\View;
  */
 interface Requirements_Minifier
 {
-
     /**
      * Minify the given content
      *

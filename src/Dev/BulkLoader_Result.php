@@ -45,7 +45,7 @@ class BulkLoader_Result implements \Countable
     protected $updated = [];
 
     /**
-     * @var array (see {@link $created})
+     * @var array (see {@link})
      */
     protected $deleted = [];
 
@@ -133,36 +133,36 @@ class BulkLoader_Result implements \Countable
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addCreated($obj, $message = null)
     {
         $this->created[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
-            'Message' => $message
+            'Message' => $message,
         ];
         $this->lastChange['ChangeType'] = 'created';
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addUpdated($obj, $message = null)
     {
         $this->updated[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
-            'Message' => $message
+            'Message' => $message,
         ];
         $this->lastChange['ChangeType'] = 'updated';
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addDeleted($obj, $message = null)
     {

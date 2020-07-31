@@ -10,14 +10,14 @@ class CallbackFlushDiscoverer implements FlushDiscoverer
     /**
      * Callback incapsulating the discovery logic
      *
-     * @var Callable
+     * @var callable
      */
     protected $callback;
 
     /**
      * Construct the discoverer from a callback
      *
-     * @param Callable $callback returning FlushDiscoverer response or a timestamp
+     * @param callable $callback returning FlushDiscoverer response or a timestamp
      */
     public function __construct(callable $callback)
     {

@@ -20,7 +20,8 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuLink
 {
-    use Injectable, GridFieldStateAware;
+    use Injectable;
+    use GridFieldStateAware;
 
     /**
      * HTML classes to be added to GridField edit buttons
@@ -31,7 +32,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
         'grid-field__icon-action--hidden-on-hover' => true,
         'font-icon-edit' => true,
         'btn--icon-large' => true,
-        'action-menu--handled' => true
+        'action-menu--handled' => true,
     ];
 
     /**
@@ -39,7 +40,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getTitle($gridField, $record, $columnName)
     {
-        return _t(__CLASS__ . '.EDIT', "Edit");
+        return _t(self::class . '.EDIT', 'Edit');
     }
 
     /**
@@ -56,7 +57,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "classNames" => "font-icon-edit action-detail edit-link"
+            'classNames' => 'font-icon-edit action-detail edit-link',
         ];
     }
 
@@ -82,7 +83,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns, true)) {
             $columns[] = 'Actions';
         }
     }
@@ -109,7 +110,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      */
     public function getColumnMetadata($gridField, $columnName)
     {
-        if ($columnName == 'Actions') {
+        if ($columnName === 'Actions') {
             return ['title' => ''];
         }
         return [];
@@ -150,10 +151,10 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
 
         $data = new ArrayData([
             'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit'),
-            'ExtraClass' => $this->getExtraClass()
+            'ExtraClass' => $this->getExtraClass(),
         ]);
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '', self::class);
         return $data->renderWith($template);
     }
 
@@ -200,8 +201,6 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
      * @param string $actionName
      * @param mixed $arguments
      * @param array $data - form data
-     *
-     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {

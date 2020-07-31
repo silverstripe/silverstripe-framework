@@ -15,12 +15,16 @@ use SilverStripe\Assets\FileFinder;
  */
 class ManifestFileFinder extends FileFinder
 {
-
     const CONFIG_FILE = '_config.php';
+
     const CONFIG_DIR = '_config';
+
     const EXCLUDE_FILE = '_manifest_exclude';
+
     const LANG_DIR = 'lang';
+
     const TESTS_DIR = 'tests';
+
     const VENDOR_DIR = 'vendor';
 
     /**
@@ -32,7 +36,7 @@ class ManifestFileFinder extends FileFinder
         'include_themes' => false,
         'ignore_tests' => true,
         'min_depth' => 1,
-        'ignore_dirs' => ['node_modules']
+        'ignore_dirs' => ['node_modules'],
     ];
 
     public function acceptDir($basename, $pathname, $depth)
@@ -46,7 +50,7 @@ class ManifestFileFinder extends FileFinder
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
         if ($inVendor) {
             // Skip nested vendor folders (e.g. vendor/silverstripe/framework/vendor)
-            if ($depth == 4 && basename($pathname) === self::VENDOR_DIR) {
+            if ($depth === 4 && basename($pathname) === self::VENDOR_DIR) {
                 return false;
             }
 
@@ -240,12 +244,12 @@ class ManifestFileFinder extends FileFinder
 
         // Check if directory name is ignored
         $ignored = $this->getIgnoredDirs();
-        if (in_array($basename, $ignored)) {
+        if (in_array($basename, $ignored, true)) {
             return true;
         }
 
         // Ignore these dirs in the root only
-        if ($depth === 1 && in_array($basename, [ASSETS_DIR, RESOURCES_DIR])) {
+        if ($depth === 1 && in_array($basename, [ASSETS_DIR, RESOURCES_DIR], true)) {
             return true;
         }
 

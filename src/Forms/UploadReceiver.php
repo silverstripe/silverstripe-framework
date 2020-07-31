@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\Forms;
 
 use SilverStripe\Assets\File;
@@ -158,7 +157,7 @@ trait UploadReceiver
      */
     public function getFolderName()
     {
-        return ($this->folderName !== false)
+        return $this->folderName !== false
             ? $this->folderName
             : Upload::config()->uploads_folder;
     }

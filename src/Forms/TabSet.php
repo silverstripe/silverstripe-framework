@@ -2,10 +2,9 @@
 
 namespace SilverStripe\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\Requirements;
-use InvalidArgumentException;
 
 /**
  * Defines a set of tabs in a form.
@@ -35,7 +34,6 @@ use InvalidArgumentException;
  */
 class TabSet extends CompositeField
 {
-
     /**
      * Use custom react component
      *
@@ -89,7 +87,7 @@ class TabSet extends CompositeField
                 if ($tab instanceof Tab || $tab instanceof TabSet) {
                     $tab->setTabSet($this);
                 } else {
-                    throw new InvalidArgumentException("TabSet can only contain instances of other Tab or Tabsets");
+                    throw new InvalidArgumentException('TabSet can only contain instances of other Tab or Tabsets');
                 }
             }
         }
@@ -182,7 +180,7 @@ class TabSet extends CompositeField
             $this->attributes,
             [
                 'id' => $this->ID(),
-                'class' => $this->extraClass()
+                'class' => $this->extraClass(),
             ]
         );
     }

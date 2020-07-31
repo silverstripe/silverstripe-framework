@@ -27,7 +27,6 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
     }
 
     /**
-     *
      * @param GridField $gridField
      * @param DataObject $record
      * @param string $columnName
@@ -46,7 +45,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * @param GridField $gridField
      * @param DataObject $record
      * @param $columnName
-     * @return null|string
+     * @return string|null
      */
     public function getGroup($gridField, $record, $columnName)
     {
@@ -70,13 +69,13 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
     {
         $record = $gridField->getList()->find('ID', $arguments['RecordID']);
 
-        if (!$record || !$actionName == 'unlinkrelation' || $this->canUnlink($record)) {
+        if (!$record || !$actionName === 'unlinkrelation' || $this->canUnlink($record)) {
             parent::handleAction($gridField, $actionName, $arguments, $data);
             return;
         }
 
         throw new ValidationException(
-            _t(__CLASS__ . '.UnlinkSelfFailure', 'Cannot remove yourself from this group, you will lose admin rights')
+            _t(self::class . '.UnlinkSelfFailure', 'Cannot remove yourself from this group, you will lose admin rights')
         );
     }
 
@@ -89,7 +88,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
         $currentUser = Security::getCurrentUser();
         if ($currentUser
             && $record instanceof Member
-            && (int)$record->ID === (int)$currentUser->ID
+            && (int) $record->ID === (int) $currentUser->ID
             && Permission::checkMember($record, 'ADMIN')
         ) {
             $adminGroups = array_intersect(
@@ -97,7 +96,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
                 Permission::get_groups_by_permission('ADMIN')->column()
             );
 
-            if (count($adminGroups) === 1 && array_search($this->groupID, $adminGroups) !== false) {
+            if (count($adminGroups) === 1 && array_search($this->groupID, $adminGroups, true) !== false) {
                 return false;
             }
         }

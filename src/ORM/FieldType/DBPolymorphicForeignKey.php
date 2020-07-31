@@ -13,7 +13,7 @@ class DBPolymorphicForeignKey extends DBComposite
 
     private static $composite_db = [
         'ID' => 'Int',
-        'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
+        'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])",
     ];
 
     public function scaffoldFormField($title = null, $params = null)

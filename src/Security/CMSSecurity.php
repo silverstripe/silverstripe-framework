@@ -21,7 +21,7 @@ class CMSSecurity extends Security
 {
     private static $allowed_actions = [
         'login',
-        'success'
+        'success',
     ];
 
     /**
@@ -54,7 +54,7 @@ class CMSSecurity extends Security
     public function Link($action = null)
     {
         /** @skipUpgrade */
-        return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
+        return Controller::join_links(Director::baseURL(), 'CMSSecurity', $action);
     }
 
     protected function getAuthenticator($name = 'cms')
@@ -90,14 +90,14 @@ class CMSSecurity extends Security
 
     protected function getSessionMessage(&$messageType = null)
     {
-        $message =  parent::getSessionMessage($messageType);
+        $message = parent::getSessionMessage($messageType);
         if ($message) {
             return $message;
         }
 
         // Format
         return _t(
-            __CLASS__ . '.LOGIN_MESSAGE',
+            self::class . '.LOGIN_MESSAGE',
             '<p>Your session has timed out due to inactivity</p>'
         );
     }
@@ -123,7 +123,7 @@ class CMSSecurity extends Security
         $loginURLATT = Convert::raw2att($loginURL);
         $loginURLJS = Convert::raw2js($loginURL);
         $message = _t(
-            __CLASS__ . '.INVALIDUSER',
+            self::class . '.INVALIDUSER',
             '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>',
             'Message displayed to user if their session cannot be restored',
             ['link' => $loginURLATT]
@@ -133,9 +133,9 @@ class CMSSecurity extends Security
         $response->setBody(<<<PHP
 <!DOCTYPE html>
 <html><body>
-$message
+${message}
 <script type="application/javascript">
-setTimeout(function(){top.location.href = "$loginURLJS";}, 0);
+setTimeout(function(){top.location.href = "${loginURLJS}";}, 0);
 </script>
 </body></html>
 PHP
@@ -183,7 +183,7 @@ PHP
         }
 
         // Get redirect url
-        $controller = $this->getResponseController(_t(__CLASS__ . '.SUCCESS', 'Success'));
+        $controller = $this->getResponseController(_t(self::class . '.SUCCESS', 'Success'));
         $backURLs = [
             $this->getRequest()->requestVar('BackURL'),
             $this->getRequest()->getSession()->get('BackURL'),
@@ -199,11 +199,11 @@ PHP
         // Show login
         $controller = $controller->customise([
             'Content' => DBField::create_field(DBHTMLText::class, _t(
-                __CLASS__ . '.SUCCESSCONTENT',
+                self::class . '.SUCCESSCONTENT',
                 '<p>Login success. If you are not automatically redirected ' . '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',
                 ['link' => Convert::raw2att($backURL)]
-            ))
+            )),
         ]);
 
         return $controller->renderWith($this->getTemplatesFor('success'));

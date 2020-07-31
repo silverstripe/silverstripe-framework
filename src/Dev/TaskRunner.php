@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use ReflectionClass;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -10,14 +11,12 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use ReflectionClass;
 
 class TaskRunner extends Controller
 {
-
     private static $url_handlers = [
         '' => 'index',
-        '$TaskName' => 'runTask'
+        '$TaskName' => 'runTask',
     ];
 
     private static $allowed_actions = [
@@ -35,7 +34,7 @@ class TaskRunner extends Controller
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tasks" from CLI.
             || (Director::is_cli() && $allowAllCLI)
-            || Permission::check("ADMIN")
+            || Permission::check('ADMIN')
         );
         if (!$canAccess) {
             Security::permissionFailure($this);
@@ -50,25 +49,25 @@ class TaskRunner extends Controller
         if (!Director::is_cli()) {
             $renderer = new DebugView();
             echo $renderer->renderHeader();
-            echo $renderer->renderInfo("SilverStripe Development Tools: Tasks", Director::absoluteBaseURL());
+            echo $renderer->renderInfo('SilverStripe Development Tools: Tasks', Director::absoluteBaseURL());
             $base = Director::absoluteBaseURL();
 
-            echo "<div class=\"options\">";
-            echo "<ul>";
+            echo '<div class="options">';
+            echo '<ul>';
             foreach ($tasks as $task) {
-                echo "<li><p>";
-                echo "<a href=\"{$base}dev/tasks/" . $task['segment'] . "\">" . $task['title'] . "</a><br />";
-                echo "<span class=\"description\">" . $task['description'] . "</span>";
+                echo '<li><p>';
+                echo "<a href=\"{$base}dev/tasks/" . $task['segment'] . '">' . $task['title'] . '</a><br />';
+                echo '<span class="description">' . $task['description'] . '</span>';
                 echo "</p></li>\n";
             }
-            echo "</ul></div>";
+            echo '</ul></div>';
 
             echo $renderer->renderFooter();
         // CLI mode
         } else {
             echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
             foreach ($tasks as $task) {
-                echo " * $task[title]: sake dev/tasks/" . $task['segment'] . "\n";
+                echo " * {$task['title']}: sake dev/tasks/" . $task['segment'] . "\n";
             }
         }
     }
@@ -91,7 +90,7 @@ class TaskRunner extends Controller
         };
 
         foreach ($tasks as $task) {
-            if ($task['segment'] == $name) {
+            if ($task['segment'] === $name) {
                 /** @var BuildTask $inst */
                 $inst = Injector::inst()->create($task['class']);
                 $title(sprintf('Running Task %s', $inst->getTitle()));
@@ -127,7 +126,7 @@ class TaskRunner extends Controller
 
             $singleton = BuildTask::singleton($class);
 
-            $desc = (Director::is_cli())
+            $desc = Director::is_cli()
                 ? Convert::html2raw($singleton->getDescription())
                 : $singleton->getDescription();
 

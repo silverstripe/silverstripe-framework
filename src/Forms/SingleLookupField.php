@@ -4,8 +4,8 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\Map;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Map;
 
 /**
  * Read-only complement of {@link DropdownField}.
@@ -27,7 +27,7 @@ class SingleLookupField extends SingleSelectField
     {
         $value = $this->value;
         $source = $this->getSource();
-        $source = ($source instanceof Map) ? $source->toArray() : $source;
+        $source = $source instanceof Map ? $source->toArray() : $source;
 
         if (array_key_exists($value, $source)) {
             return $source[$value];
@@ -61,9 +61,7 @@ class SingleLookupField extends SingleSelectField
      */
     public function performReadonlyTransformation()
     {
-        $clone = clone $this;
-
-        return $clone;
+        return clone $this;
     }
 
     /**
@@ -90,7 +88,7 @@ class SingleLookupField extends SingleSelectField
     public function Value()
     {
         $label = $this->valueToLabel();
-        if (!is_null($label)) {
+        if ($label !== null) {
             return $label;
         }
 
@@ -116,7 +114,7 @@ class SingleLookupField extends SingleSelectField
     public function Field($properties = [])
     {
         $label = $this->valueToLabel();
-        if (!is_null($label)) {
+        if ($label !== null) {
             $attrValue = Convert::raw2xml($label);
             $inputValue = $this->value;
         } else {
@@ -126,7 +124,7 @@ class SingleLookupField extends SingleSelectField
 
         $properties = array_merge($properties, [
             'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
-            'InputValue' => $inputValue
+            'InputValue' => $inputValue,
         ]);
 
         return parent::Field($properties);

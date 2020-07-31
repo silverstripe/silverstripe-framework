@@ -37,7 +37,7 @@ class EmbedResource implements Embeddable
     protected $dispatcher;
 
     /**
-     * @param string @url
+     * @param string $url @url
      */
     public function __construct($url)
     {

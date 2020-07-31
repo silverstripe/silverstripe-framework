@@ -34,16 +34,12 @@ class SQLFormatter
 
     public function formatPlain($sql)
     {
-        $sql = $this->addNewlines($sql, false);
-
-        return $sql;
+        return $this->addNewlines($sql, false);
     }
 
     public function formatHTML($sql)
     {
-        $sql = $this->addNewlines($sql, true);
-
-        return $sql;
+        return $this->addNewlines($sql, true);
     }
 
     /**
@@ -59,7 +55,7 @@ class SQLFormatter
     {
         $eol = PHP_EOL;
         foreach (self::$newline_before_tokens as $token) {
-            $breakToken = ($useHtmlFormatting) ? "<br />$eol" : $eol;
+            $breakToken = $useHtmlFormatting ? "<br />${eol}" : $eol;
             $sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql);
         }
 

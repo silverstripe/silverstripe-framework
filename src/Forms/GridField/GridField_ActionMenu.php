@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -13,7 +12,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
 {
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns, true)) {
             $columns[] = 'Actions';
         }
     }
@@ -32,7 +31,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
         }
 
         $schema = [];
-        /* @var GridField_ActionMenuItem $item */
+        /** @var GridField_ActionMenuItem $item */
         foreach ($items as $item) {
             $group = $item->getGroup($gridField, $record, $columnName);
             if (!$group) {
@@ -87,7 +86,7 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
                 $actions = $item->getActions($gridField);
             }
 
-            if (in_array($actionName, $actions)) {
+            if (in_array($actionName, $actions, true)) {
                 $item->handleAction($gridField, $actionName, $arguments, $data);
             }
         }
@@ -100,8 +99,6 @@ class GridField_ActionMenu implements GridField_ColumnProvider, GridField_Action
      */
     public function getItems($gridfield)
     {
-        $items = $gridfield->config->getComponentsByType(GridField_ActionMenuItem::class)->items;
-
-        return $items;
+        return $gridfield->config->getComponentsByType(GridField_ActionMenuItem::class)->items;
     }
 }

@@ -63,7 +63,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function IsFirst()
     {
-        return $this->iteratorPos == 0;
+        return $this->iteratorPos === 0;
     }
 
     /**
@@ -83,7 +83,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function IsLast()
     {
-        return $this->iteratorPos == $this->iteratorTotalItems - 1;
+        return $this->iteratorPos === $this->iteratorTotalItems - 1;
     }
 
     /**
@@ -158,7 +158,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function Odd($startIndex = 1)
     {
-        return (bool)(($this->iteratorPos + $startIndex) % 2);
+        return (bool) (($this->iteratorPos + $startIndex) % 2);
     }
 
     /**
@@ -169,7 +169,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function EvenOdd($startIndex = 1)
     {
-        return ($this->Even($startIndex)) ? 'even' : 'odd';
+        return $this->Even($startIndex) ? 'even' : 'odd';
     }
 
     /**
@@ -230,6 +230,6 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      */
     public function MultipleOf($factor, $offset = 1)
     {
-        return (bool)($this->Modulus($factor, $offset) == 0);
+        return (bool) ($this->Modulus($factor, $offset) === 0);
     }
 }

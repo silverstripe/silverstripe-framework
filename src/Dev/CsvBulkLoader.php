@@ -20,7 +20,6 @@ use SilverStripe\ORM\DataObject;
  */
 class CsvBulkLoader extends BulkLoader
 {
-
     /**
      * Delimiter character (Default: comma).
      *
@@ -63,7 +62,7 @@ class CsvBulkLoader extends BulkLoader
      * @param string $filepath
      * @param boolean $preview
      *
-     * @return null|BulkLoader_Result
+     * @return BulkLoader_Result|null
      */
     protected function processAll($filepath, $preview = false)
     {
@@ -93,7 +92,7 @@ class CsvBulkLoader extends BulkLoader
                 $remapper = function ($row, $rowOffset, $iterator) use ($headerMap, $tabExtractor) {
                     $row = $tabExtractor($row, $rowOffset, $iterator);
                     foreach ($headerMap as $column => $renamedColumn) {
-                        if ($column == $renamedColumn) {
+                        if ($column === $renamedColumn) {
                             continue;
                         }
                         if (array_key_exists($column, $row)) {
@@ -119,9 +118,9 @@ class CsvBulkLoader extends BulkLoader
                 $this->processRecord($row, $this->columnMap, $result, $preview);
             }
         } catch (\Exception $e) {
-            $failedMessage = sprintf("Failed to parse %s", $filepath);
+            $failedMessage = sprintf('Failed to parse %s', $filepath);
             if (Director::isDev()) {
-                $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
+                $failedMessage = sprintf($failedMessage . ' because %s', $e->getMessage());
             }
             print $failedMessage . PHP_EOL;
         } finally {
@@ -134,9 +133,9 @@ class CsvBulkLoader extends BulkLoader
     {
         $map = [];
         foreach ($this->columnMap as $column => $newColumn) {
-            if (strpos($newColumn, "->") === 0) {
+            if (strpos($newColumn, '->') === 0) {
                 $map[$column] = $column;
-            } elseif (is_null($newColumn)) {
+            } elseif ($newColumn === null) {
                 // the column map must consist of unique scalar values
                 // `null` can be present multiple times and is not scalar
                 // so we name it in a standard way so we can remove it later
@@ -164,7 +163,7 @@ class CsvBulkLoader extends BulkLoader
         ini_set('auto_detect_line_endings', true);
 
         if (!is_int($lines)) {
-            $lines = $this->config()->get("lines");
+            $lines = $this->config()->get('lines');
         }
 
         $new = $this->getNewSplitFileName();
@@ -248,7 +247,7 @@ class CsvBulkLoader extends BulkLoader
             // same callback
             $map = [];
             foreach ($this->columnMap as $k => $v) {
-                if (strpos($v, "->") === 0) {
+                if (strpos($v, '->') === 0) {
                     $map[$k] = $k;
                 } else {
                     $map[$k] = $v;
@@ -287,7 +286,7 @@ class CsvBulkLoader extends BulkLoader
         // find existing object, or create new one
         $existingObj = $this->findExistingObject($record, $columnMap);
         /** @var DataObject $obj */
-        $obj = ($existingObj) ? $existingObj : new $class();
+        $obj = $existingObj ?: new $class();
         $schema = DataObject::getSchema();
 
         // first run: find/create any relations and store them on the object
@@ -356,7 +355,7 @@ class CsvBulkLoader extends BulkLoader
             if ($mapped && strpos($this->columnMap[$fieldName], '->') === 0) {
                 $funcName = substr($this->columnMap[$fieldName], 2);
 
-                $this->$funcName($obj, $val, $record);
+                $this->{$funcName}($obj, $val, $record);
             } elseif ($obj->hasMethod("import{$fieldName}")) {
                 $obj->{"import{$fieldName}"}($val, $record);
             } else {
@@ -427,7 +426,7 @@ class CsvBulkLoader extends BulkLoader
                 } elseif ($SNG_objectClass->hasMethod($duplicateCheck['callback'])) {
                     $existingRecord = $SNG_objectClass->{$duplicateCheck['callback']}($record[$fieldName], $record);
                 } else {
-                    user_error("CsvBulkLoader::processRecord():"
+                    user_error('CsvBulkLoader::processRecord():'
                         . " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
                 }
 
@@ -450,6 +449,6 @@ class CsvBulkLoader extends BulkLoader
      */
     public function hasHeaderRow()
     {
-        return ($this->hasHeaderRow || isset($this->columnMap));
+        return $this->hasHeaderRow || isset($this->columnMap);
     }
 }

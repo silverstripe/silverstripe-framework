@@ -10,7 +10,6 @@ namespace SilverStripe\View;
  */
 interface TemplateIteratorProvider
 {
-
     /**
      * Called by SSViewer to get a list of iterator variables to expose to the template, the instance method to call
      * on an instance of this class to get the value for those variables, and the class to use for casting the returned

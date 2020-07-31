@@ -2,18 +2,17 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\Deprecation;
+use InvalidArgumentException;
 use PDO;
 use PDOStatement;
-use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * PDO driver database connector
  */
 class PDOConnector extends DBConnector implements TransactionManager
 {
-
     /**
      * Should ATTR_EMULATE_PREPARES flag be used to emulate prepared statements?
      *
@@ -115,7 +114,7 @@ class PDOConnector extends DBConnector implements TransactionManager
         );
 
         // Wrap in a PDOStatementHandle, to cache column metadata
-        $statementHandle = ($statement === false) ? false : new PDOStatementHandle($statement);
+        $statementHandle = $statement === false ? false : new PDOStatementHandle($statement);
 
         // Only cache select statements
         if (preg_match('/^(\s*)select\b/i', $sql)) {
@@ -169,7 +168,7 @@ class PDOConnector extends DBConnector implements TransactionManager
             if (!empty($parameters['port'])) {
                 $server .= ",{$parameters['port']}";
             }
-            $dsn[] = "Server=$server";
+            $dsn[] = "Server=${server}";
         } elseif ($parameters['driver'] === 'dblib') {
             $server = $parameters['server'];
             if (!empty($parameters['port'])) {
@@ -192,12 +191,12 @@ class PDOConnector extends DBConnector implements TransactionManager
         $connCollation = Config::inst()->get(MySQLDatabase::class, 'connection_collation');
 
         // Set charset if given and not null. Can explicitly set to empty string to omit
-        if (!in_array($parameters['driver'], ['sqlsrv', 'pgsql'])) {
+        if (!in_array($parameters['driver'], ['sqlsrv', 'pgsql'], true)) {
             $charset = isset($parameters['charset'])
                     ? $parameters['charset']
                     : $connCharset;
             if (!empty($charset)) {
-                $dsn[] = "charset=$charset";
+                $dsn[] = "charset=${charset}";
             }
         }
 
@@ -234,7 +233,7 @@ class PDOConnector extends DBConnector implements TransactionManager
             // Set emulate prepares (unless null / default)
             $isEmulatePrepares = self::is_emulate_prepare();
             if (isset($isEmulatePrepares)) {
-                $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
+                $options[PDO::ATTR_EMULATE_PREPARES] = (bool) $isEmulatePrepares;
             }
 
             // Disable stringified fetches
@@ -254,7 +253,6 @@ class PDOConnector extends DBConnector implements TransactionManager
             $this->databaseName = $parameters['database'];
         }
     }
-
 
     /**
      * Return the driver for this connector
@@ -370,7 +368,7 @@ class PDOConnector extends DBConnector implements TransactionManager
             case 'array':
             case 'unknown type':
             default:
-                throw new InvalidArgumentException("Cannot bind parameter as it is an unsupported type ($phpType)");
+                throw new InvalidArgumentException("Cannot bind parameter as it is an unsupported type (${phpType})");
         }
     }
 
@@ -401,7 +399,7 @@ class PDOConnector extends DBConnector implements TransactionManager
             }
 
             // Bind this value
-            $statement->bindValue($index+1, $value, $type);
+            $statement->bindValue($index + 1, $value, $type);
         }
     }
 
@@ -487,7 +485,7 @@ class PDOConnector extends DBConnector implements TransactionManager
             $error = $this->pdoConnection->errorInfo();
         }
         if ($error) {
-            return sprintf("%s-%s: %s", $error[0], $error[1], $error[2]);
+            return sprintf('%s-%s: %s', $error[0], $error[1], $error[2]);
         }
         return null;
     }
@@ -529,12 +527,12 @@ class PDOConnector extends DBConnector implements TransactionManager
         $this->inTransaction = true;
 
         if ($transactionMode) {
-            $this->query("SET TRANSACTION $transactionMode");
+            $this->query("SET TRANSACTION ${transactionMode}");
         }
 
         if ($this->pdoConnection->beginTransaction()) {
             if ($sessionCharacteristics) {
-                $this->query("SET SESSION CHARACTERISTICS AS TRANSACTION $sessionCharacteristics");
+                $this->query("SET SESSION CHARACTERISTICS AS TRANSACTION ${sessionCharacteristics}");
             }
             return true;
         }
@@ -551,9 +549,9 @@ class PDOConnector extends DBConnector implements TransactionManager
     {
         if ($savepoint) {
             if ($this->supportsSavepoints()) {
-                $this->exec("ROLLBACK TO SAVEPOINT $savepoint");
+                $this->exec("ROLLBACK TO SAVEPOINT ${savepoint}");
             } else {
-                throw new DatabaseException("Savepoints not supported on this PDO connection");
+                throw new DatabaseException('Savepoints not supported on this PDO connection');
             }
         }
 
@@ -563,15 +561,15 @@ class PDOConnector extends DBConnector implements TransactionManager
 
     public function transactionDepth()
     {
-        return (int)$this->inTransaction;
+        return (int) $this->inTransaction;
     }
 
     public function transactionSavepoint($savepoint = null)
     {
         if ($this->supportsSavepoints()) {
-            $this->exec("SAVEPOINT $savepoint");
+            $this->exec("SAVEPOINT ${savepoint}");
         } else {
-            throw new DatabaseException("Savepoints not supported on this PDO connection");
+            throw new DatabaseException('Savepoints not supported on this PDO connection');
         }
     }
 

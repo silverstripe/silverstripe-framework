@@ -10,7 +10,6 @@ use SilverStripe\ORM\DataObject;
  */
 class GroupCsvBulkLoader extends CsvBulkLoader
 {
-
     public $duplicateChecks = [
         'Code' => 'Code',
     ];
@@ -36,7 +35,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         // which are imported later on in the CSV file.
         if (isset($record['ParentCode']) && $record['ParentCode']) {
             $parentGroup = DataObject::get_one('SilverStripe\\Security\\Group', [
-                '"Group"."Code"' => $record['ParentCode']
+                '"Group"."Code"' => $record['ParentCode'],
             ]);
             if ($parentGroup) {
                 $group->ParentID = $parentGroup->ID;
@@ -50,7 +49,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader
             foreach (explode(',', $record['PermissionCodes']) as $code) {
                 $p = DataObject::get_one('SilverStripe\\Security\\Permission', [
                     '"Permission"."Code"' => $code,
-                    '"Permission"."GroupID"' => $group->ID
+                    '"Permission"."GroupID"' => $group->ID,
                 ]);
                 if (!$p) {
                     $p = new Permission(['Code' => $code]);

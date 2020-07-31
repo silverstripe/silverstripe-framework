@@ -3,41 +3,40 @@
 namespace SilverStripe\ORM;
 
 use BadMethodCallException;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\ORM\FieldType\DBComposite;
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\ORM\Queries\SQLDelete;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.
  */
 class ManyManyList extends RelationList
 {
-
     /**
-     * @var string $joinTable
+     * @var string
      */
     protected $joinTable;
 
     /**
-     * @var string $localKey
+     * @var string
      */
     protected $localKey;
 
     /**
-     * @var string $foreignKey
+     * @var string
      */
     protected $foreignKey;
 
     /**
-     * @var array $extraFields
+     * @var array
      */
     protected $extraFields;
 
     /**
-     * @var array $_compositeExtraFields
+     * @var array
      */
     protected $_compositeExtraFields = [];
 
@@ -92,8 +91,6 @@ class ManyManyList extends RelationList
     /**
      * Adds the many_many_extraFields to the select of the underlying
      * {@link DataQuery}.
-     *
-     * @return void
      */
     protected function appendExtraFieldsToQuery()
     {
@@ -155,7 +152,7 @@ class ManyManyList extends RelationList
         $dataObject = parent::createDataObject($row);
 
         foreach ($add as $fieldName => $obj) {
-            $dataObject->$fieldName = $obj;
+            $dataObject->{$fieldName} = $obj;
         }
 
         return $dataObject;
@@ -165,7 +162,7 @@ class ManyManyList extends RelationList
      * Return a filter expression for when getting the contents of the
      * relationship for some foreign ID
      *
-     * @param int|null|string|array $id
+     * @param int|string|array|null $id
      *
      * @return array
      */
@@ -178,7 +175,7 @@ class ManyManyList extends RelationList
         // Apply relation filter
         $key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
         if (is_array($id)) {
-            return ["$key IN (" . DB::placeholders($id) . ")"  => $id];
+            return ["${key} IN (" . DB::placeholders($id) . ')' => $id];
         }
         if ($id !== null) {
             return [$key => $id];
@@ -237,7 +234,7 @@ class ManyManyList extends RelationList
             $itemID = $item->ID;
         } else {
             throw new InvalidArgumentException(
-                "ManyManyList::add() expecting a $this->dataClass object, or ID value"
+                "ManyManyList::add() expecting a {$this->dataClass} object, or ID value"
             );
         }
         if (empty($itemID)) {
@@ -260,10 +257,10 @@ class ManyManyList extends RelationList
                 // With the current query, simply add the foreign and local conditions
                 // The query can be a bit odd, especially if custom relation classes
                 // don't join expected tables (@see Member_GroupSet for example).
-                $query = SQLSelect::create("*", "\"{$this->joinTable}\"");
+                $query = SQLSelect::create('*', "\"{$this->joinTable}\"");
                 $query->addWhere($foreignFilter);
                 $query->addWhere([
-                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID,
                 ]);
                 $hasExisting = ($query->count() > 0);
             } else {
@@ -280,7 +277,7 @@ class ManyManyList extends RelationList
             if ($hasExisting) {
                 $manipulation[$this->joinTable]['where'] = [
                     "\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
-                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID,
                 ];
             }
 
@@ -335,7 +332,7 @@ class ManyManyList extends RelationList
     public function remove($item)
     {
         if (!($item instanceof $this->dataClass)) {
-            throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
+            throw new InvalidArgumentException("ManyManyList::remove() expecting a {$this->dataClass} object");
         }
 
         return $this->removeByID($item->ID);
@@ -352,7 +349,7 @@ class ManyManyList extends RelationList
     public function removeByID($itemID)
     {
         if (!is_numeric($itemID)) {
-            throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
+            throw new InvalidArgumentException('ManyManyList::removeById() expecting an ID');
         }
 
         $query = SQLDelete::create("\"{$this->joinTable}\"");
@@ -364,7 +361,7 @@ class ManyManyList extends RelationList
         }
 
         $query->addWhere([
-            "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+            "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID,
         ]);
         $query->execute();
     }
@@ -372,8 +369,6 @@ class ManyManyList extends RelationList
     /**
      * Remove all items from this many-many join.  To remove a subset of items,
      * filter it first.
-     *
-     * @return void
      */
     public function removeAll()
     {
@@ -401,7 +396,7 @@ class ManyManyList extends RelationList
         $delete->addWhere($this->foreignIDFilter());
         $subSelect = $selectQuery->sql($parameters);
         $delete->addWhere([
-            "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+            "\"{$this->joinTable}\".\"{$this->localKey}\" IN (${subSelect})" => $parameters,
         ]);
         $delete->execute();
     }
@@ -440,7 +435,7 @@ class ManyManyList extends RelationList
             throw new BadMethodCallException("Can't call ManyManyList::getExtraData() until a foreign ID is set");
         }
         $query->addWhere([
-            "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+            "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID,
         ]);
         $queryResult = $query->execute()->current();
         if ($queryResult) {

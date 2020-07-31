@@ -11,7 +11,6 @@ use SilverStripe\View\Parsers\SQLFormatter;
  */
 abstract class DBConnector
 {
-
     use Configurable;
 
     /**
@@ -62,9 +61,8 @@ abstract class DBConnector
             // Treating errors as exceptions better allows for responding to errors
             // in code, such as credential checking during installation
             throw new DatabaseException($msg, 0, null, $sql, $parameters);
-        } else {
-            user_error($msg, $errorLevel);
         }
+        user_error($msg, $errorLevel);
     }
 
     /**
@@ -121,10 +119,9 @@ abstract class DBConnector
         }
         $operation = $matches['operation'];
         if (is_array($type)) {
-            return in_array(strtolower($operation), $type);
-        } else {
-            return strcasecmp($sql, $type) === 0;
+            return in_array(strtolower($operation), $type, true);
         }
+        return strcasecmp($sql, $type) === 0;
     }
 
     /**

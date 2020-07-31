@@ -33,7 +33,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @param HTTPRequest $request
      * @param callable $delegate
-     * @return HTTPResponse
+     * @return HTTPResponse|null
      * @throws HTTPResponse_Exception
      */
     public function process(HTTPRequest $request, callable $delegate)
@@ -90,7 +90,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         self::STATE_ENABLED => [
             'no-cache' => true,
             'must-revalidate' => true,
-        ]
+        ],
     ];
 
     /**
@@ -136,7 +136,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @var array
      */
     private static $defaultVary = [
-        "X-Forwarded-Protocol" => true,
+        'X-Forwarded-Protocol' => true,
     ];
 
     /**
@@ -238,7 +238,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Combine vary strings/arrays into a single array, or normalise a single vary
      *
-     * @param string|array[] $varies Each vary as a separate arg
+     * @param string|array ... $varies Each vary as a separate arg
      * @return array
      */
     protected function combineVary(...$varies)
@@ -254,7 +254,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         }
         return array_unique($merged);
     }
-
 
     /**
      * Register a modification date. Used to calculate the "Last-Modified" HTTP header.
@@ -335,15 +334,15 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setStateDirective($states, $directive, $value = true)
     {
         if ($value === null) {
-            throw new InvalidArgumentException("Invalid directive value");
+            throw new InvalidArgumentException('Invalid directive value');
         }
         // make sure the directive is in the list of allowed directives
         $allowedDirectives = $this->config()->get('allowed_directives');
         $directive = strtolower($directive);
-        if (!in_array($directive, $allowedDirectives)) {
+        if (!in_array($directive, $allowedDirectives, true)) {
             throw new InvalidArgumentException('Directive ' . $directive . ' is not allowed');
         }
-        foreach ((array)$states as $state) {
+        foreach ((array) $states as $state) {
             if (!array_key_exists($state, $this->stateDirectives)) {
                 throw new InvalidArgumentException("Invalid state {$state}");
             }
@@ -579,7 +578,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $this->setState(self::STATE_ENABLED);
         }
 
-        if (!is_null($maxAge)) {
+        if ($maxAge !== null) {
             $this->setMaxAge($maxAge);
         }
 
@@ -651,7 +650,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
             $this->setState(self::STATE_PUBLIC);
         }
 
-        if (!is_null($maxAge)) {
+        if ($maxAge !== null) {
             $this->setMaxAge($maxAge);
         }
 
@@ -715,7 +714,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public static function reset()
     {
-        Injector::inst()->unregisterNamedObject(__CLASS__);
+        Injector::inst()->unregisterNamedObject(self::class);
     }
 
     /**
@@ -765,7 +764,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Generate Expires http header
      *
-     * @return null|string
+     * @return string|null
      */
     protected function generateExpiresHeader()
     {

@@ -131,7 +131,6 @@ use SilverStripe\ORM\DataObject;
  */
 class Injector implements ContainerInterface
 {
-
     /**
      * Local store of all services
      *
@@ -218,7 +217,7 @@ class Injector implements ContainerInterface
             'Injector' => $this,
         ];
         $this->specs = [
-            'Injector' => ['class' => static::class]
+            'Injector' => ['class' => static::class],
         ];
         $this->autoProperties = [];
         $creatorClass = isset($config['creator'])
@@ -228,8 +227,8 @@ class Injector implements ContainerInterface
             ? $config['locator']
             : SilverStripeServiceConfigurationLocator::class;
 
-        $this->objectCreator = new $creatorClass;
-        $this->configLocator = new $locatorClass;
+        $this->objectCreator = new $creatorClass();
+        $this->configLocator = new $locatorClass();
 
         if ($config) {
             $this->load($config);
@@ -480,7 +479,7 @@ class Injector implements ContainerInterface
             // and reload the object; existing bindings don't get
             // updated though! (for now...)
             if (isset($this->serviceCache[$id])) {
-                $this->instantiate(['class'=>$id], $id);
+                $this->instantiate(['class' => $id], $id);
             }
         }
     }
@@ -557,7 +556,6 @@ class Injector implements ContainerInterface
      *
      * To access this from the outside, you should call ->get('Name') to ensure
      * the appropriate checks are made on the specific type.
-     *
      *
      * @param array $spec
      *                The specification of the class to instantiate
@@ -638,7 +636,7 @@ class Injector implements ContainerInterface
      */
     public function inject($object, $asType = null)
     {
-        $objtype = $asType ? $asType : get_class($object);
+        $objtype = $asType ?: get_class($object);
         $mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
         $spec = empty($this->specs[$objtype]) ? [] : $this->specs[$objtype];
@@ -676,7 +674,7 @@ class Injector implements ContainerInterface
                 // Check that the method exists and is callable
                 $objectMethod = [$object, $method[0]];
                 if (!is_callable($objectMethod)) {
-                    throw new InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
+                    throw new InvalidArgumentException("'{$method[0]}' in 'calls' entry is not a public method");
                 }
 
                 // Call it
@@ -701,7 +699,7 @@ class Injector implements ContainerInterface
                 $properties = $robj->getProperties();
 
                 foreach ($properties as $propertyObject) {
-                    /* @var $propertyObject ReflectionProperty */
+                    /** @var ReflectionProperty $propertyObject */
                     if ($propertyObject->isPublic() && !$propertyObject->getValue($object)) {
                         $origName = $propertyObject->getName();
                         $name = ucfirst($origName);
@@ -718,7 +716,7 @@ class Injector implements ContainerInterface
                 $methods = $robj->getMethods(ReflectionMethod::IS_PUBLIC);
 
                 foreach ($methods as $methodObj) {
-                    /* @var $methodObj ReflectionMethod */
+                    /** @var ReflectionMethod $methodObj */
                     $methName = $methodObj->getName();
                     if (strpos($methName, 'set') === 0) {
                         $pname = substr($methName, 3);
@@ -739,7 +737,7 @@ class Injector implements ContainerInterface
                     // we're checking empty in case it already has a property at this name
                     // this doesn't catch privately set things, but they will only be set by a setter method,
                     // which should be responsible for preventing further setting if it doesn't want it.
-                    if (empty($object->$property)) {
+                    if (empty($object->{$property})) {
                         $convertedValue = $this->convertServiceProperty($value);
                         $this->setObjectProperty($object, $property, $convertedValue);
                         $mapping[$property] = ['service' => $value, 'type' => 'service'];
@@ -755,31 +753,30 @@ class Injector implements ContainerInterface
                 switch ($propSpec['type']) {
                     case 'property':
                         $value = $this->get($propSpec['name']);
-                        $object->$prop = $value;
+                        $object->{$prop} = $value;
                         break;
-
 
                     case 'method':
                         $method = $prop;
                         $value = $this->get($propSpec['name']);
-                        $object->$method($value);
+                        $object->{$method}($value);
                         break;
 
                     case 'service':
-                        if (empty($object->$prop)) {
+                        if (empty($object->{$prop})) {
                             $value = $this->convertServiceProperty($propSpec['service']);
                             $this->setObjectProperty($object, $prop, $value);
                         }
                         break;
 
                     default:
-                        throw new \LogicException("Bad mapping type: " . $propSpec['type']);
+                        throw new \LogicException('Bad mapping type: ' . $propSpec['type']);
                 }
             }
         }
 
         foreach ($this->autoProperties as $property => $value) {
-            if (!isset($object->$property)) {
+            if (!isset($object->{$property})) {
                 $value = $this->convertServiceProperty($value);
                 $this->setObjectProperty($object, $property, $value);
             }
@@ -806,7 +803,7 @@ class Injector implements ContainerInterface
         if (ClassInfo::hasMethod($object, 'set' . $name)) {
             $object->{'set' . $name}($value);
         } else {
-            $object->$name = $value;
+            $object->{$name} = $value;
         }
     }
 
@@ -836,7 +833,7 @@ class Injector implements ContainerInterface
      */
     public function has($name)
     {
-        return (bool)$this->getServiceName($name);
+        return (bool) $this->getServiceName($name);
     }
 
     /**
@@ -911,7 +908,7 @@ class Injector implements ContainerInterface
     public function unregisterObjects($types)
     {
         if (!is_array($types)) {
-            $types = [ $types ];
+            $types = [$types];
         }
 
         // Filter all objects
@@ -919,7 +916,7 @@ class Injector implements ContainerInterface
             foreach ($types as $filterClass) {
                 // Prevent destructive flushing
                 if (strcasecmp($filterClass, 'object') === 0) {
-                    throw new InvalidArgumentException("Global unregistration is not allowed");
+                    throw new InvalidArgumentException('Global unregistration is not allowed');
                 }
                 if ($object instanceof $filterClass) {
                     $this->unregisterNamedObject($key);
@@ -1014,7 +1011,7 @@ class Injector implements ContainerInterface
     protected function normaliseArguments($name, $args = [])
     {
         // Allow service names of the form "%$ServiceName"
-        if (substr($name, 0, 2) == '%$') {
+        if (substr($name, 0, 2) === '%$') {
             $name = substr($name, 2);
         }
 

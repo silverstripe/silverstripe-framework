@@ -33,19 +33,19 @@ abstract class BuildTask
     private static $segment = null;
 
     /**
-     * @var bool $enabled If set to FALSE, keep it from showing in the list
+     * @var bool If set to FALSE, keep it from showing in the list
      * and from being executable through URL or CLI.
      */
     protected $enabled = true;
 
     /**
-     * @var string $title Shown in the overview on the {@link TaskRunner}
+     * @var string Shown in the overview on the {@link TaskRunner}
      * HTML or CLI interface. Should be short and concise, no HTML allowed.
      */
     protected $title;
 
     /**
-     * @var string $description Describe the implications the task has,
+     * @var string Describe the implications the task has,
      * and the changes it makes. Accepts HTML formatting.
      */
     protected $description = 'No description available';

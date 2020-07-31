@@ -16,7 +16,6 @@ use SilverStripe\Core\Config\Config;
  */
 abstract class PasswordEncryptor
 {
-
     /**
      * @var array
      * @config
@@ -32,7 +31,7 @@ abstract class PasswordEncryptor
     }
 
     /**
-     * @param String $algorithm
+     * @param string $algorithm
      * @return PasswordEncryptor
      * @throws PasswordEncryptor_NotFoundException
      */
@@ -45,7 +44,7 @@ abstract class PasswordEncryptor
             );
         }
 
-        $class=key($encryptors[$algorithm]);
+        $class = key($encryptors[$algorithm]);
         if (!class_exists($class)) {
             throw new PasswordEncryptor_NotFoundException(
                 sprintf('No class found for "%s"', $class)
@@ -53,21 +52,21 @@ abstract class PasswordEncryptor
         }
         $refClass = new ReflectionClass($class);
         if (!$refClass->getConstructor()) {
-            return new $class;
+            return new $class();
         }
 
         $arguments = $encryptors[$algorithm];
-        return($refClass->newInstanceArgs($arguments));
+        return $refClass->newInstanceArgs($arguments);
     }
 
     /**
      * Return a string value stored in the {@link Member->Password} property.
      * The password should be hashed with {@link salt()} if applicable.
      *
-     * @param String $password Cleartext password to be hashed
-     * @param String $salt (Optional)
+     * @param string $password Cleartext password to be hashed
+     * @param string $salt (Optional)
      * @param Member $member (Optional)
-     * @return String Maximum of 512 characters.
+     * @return string Maximum of 512 characters.
      */
     abstract public function encrypt($password, $salt = null, $member = null);
 

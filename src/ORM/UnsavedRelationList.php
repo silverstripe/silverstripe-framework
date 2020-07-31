@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM;
 
-use InvalidArgumentException;
 use ArrayIterator;
+use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -19,7 +19,6 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 class UnsavedRelationList extends ArrayList implements Relation
 {
-
     /**
      * The DataObject class name that this relation is on
      *
@@ -97,7 +96,7 @@ class UnsavedRelationList extends ArrayList implements Relation
         if ((is_object($item) && !$item instanceof $this->dataClass)
             || (!is_object($item) && !is_numeric($item))) {
             throw new InvalidArgumentException(
-                "UnsavedRelationList::add() expecting a $this->dataClass object, or ID value",
+                "UnsavedRelationList::add() expecting a {$this->dataClass} object, or ID value",
                 E_USER_ERROR
             );
         }
@@ -281,7 +280,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param  string $colName
      * @return array
      */
-    public function columnUnique($colName = "ID")
+    public function columnUnique($colName = 'ID')
     {
         $list = new ArrayList($this->toArray());
         return $list->columnUnique($colName);
@@ -296,8 +295,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     {
         $singleton = DataObject::singleton($this->baseClass);
         /** @var Relation $relation */
-        $relation = $singleton->{$this->relationName}($id);
-        return $relation;
+        return $singleton->{$this->relationName}($id);
     }
 
     /**
@@ -309,8 +307,7 @@ class UnsavedRelationList extends ArrayList implements Relation
         $ids = $this->column('ID');
         $singleton = DataObject::singleton($this->dataClass);
         /** @var Relation $relation */
-        $relation = $singleton->$relationName($ids);
-        return $relation;
+        return $singleton->{$relationName}($ids);
     }
 
     /**

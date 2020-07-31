@@ -61,11 +61,11 @@ class TreeDropdownField extends FormField
     protected $schemaComponent = 'TreeDropdownField';
 
     private static $url_handlers = [
-        '$Action!/$ID' => '$Action'
+        '$Action!/$ID' => '$Action',
     ];
 
     private static $allowed_actions = [
-        'tree'
+        'tree',
     ];
 
     /**
@@ -229,10 +229,10 @@ class TreeDropdownField extends FormField
         $showSearch = true
     ) {
         if (!is_a($sourceObject, DataObject::class, true)) {
-            throw new InvalidArgumentException("SourceObject must be a DataObject subclass");
+            throw new InvalidArgumentException('SourceObject must be a DataObject subclass');
         }
         if (!DataObject::has_extension($sourceObject, Hierarchy::class)) {
-            throw new InvalidArgumentException("SourceObject must have Hierarchy extension");
+            throw new InvalidArgumentException('SourceObject must have Hierarchy extension');
         }
         $this->setSourceObject($sourceObject);
         $this->setKeyField($keyField);
@@ -425,7 +425,7 @@ class TreeDropdownField extends FormField
 
     public function extraClass()
     {
-        return implode(' ', [parent::extraClass(), ($this->getShowSearch() ? "searchable" : null)]);
+        return implode(' ', [parent::extraClass(), ($this->getShowSearch() ? 'searchable' : null)]);
     }
 
     /**
@@ -441,9 +441,9 @@ class TreeDropdownField extends FormField
         $isSubTree = false;
 
         $this->search = $request->requestVar('search');
-        $id = (is_numeric($request->latestParam('ID')))
-            ? (int)$request->latestParam('ID')
-            : (int)$request->requestVar('ID');
+        $id = is_numeric($request->latestParam('ID'))
+            ? (int) $request->latestParam('ID')
+            : (int) $request->requestVar('ID');
 
         // pre-process the tree - search needs to operate globally, not locally as marking filter does
         if ($this->search) {
@@ -455,7 +455,7 @@ class TreeDropdownField extends FormField
         $sourceObject = $this->getSourceObject();
 
         // Precache numChildren count if possible.
-        if ($this->getNumChildrenMethod() == 'numChildren') {
+        if ($this->getNumChildrenMethod() === 'numChildren') {
             // We're not calling `Hierarchy::prepopulateTreeDataCache()` because we're not customising results based
             // on version or Fluent locales. So there would be no performance gain from additional caching.
             Hierarchy::prepopulate_numchildren_cache($sourceObject);
@@ -466,7 +466,7 @@ class TreeDropdownField extends FormField
             $isSubTree = true;
             if (!$obj) {
                 throw new Exception(
-                    "TreeDropdownField->tree(): the object #$id of type $sourceObject could not be found"
+                    "TreeDropdownField->tree(): the object #${id} of type ${sourceObject} could not be found"
                 );
             }
         } else {
@@ -514,7 +514,7 @@ class TreeDropdownField extends FormField
         $value = $request->requestVar('forceValue') ?: $this->value;
         if ($value && ($values = preg_split('/,\s*/', $value))) {
             foreach ($values as $value) {
-                if (!$value || $value == 'unchanged') {
+                if (!$value || $value === 'unchanged') {
                     continue;
                 }
 
@@ -534,7 +534,7 @@ class TreeDropdownField extends FormField
                 'title' => $child->obj($this->getTitleField()),
                 'treetitle' => $child->obj($this->getLabelField()),
                 'disabled' => $this->nodeIsDisabled($child),
-                'isSubTree' => $isSubTree
+                'isSubTree' => $isSubTree,
             ];
         };
 
@@ -551,16 +551,15 @@ class TreeDropdownField extends FormField
             return HTTPResponse::create()
                 ->addHeader('Content-Type', 'application/json')
                 ->setBody(json_encode($json));
-        } else {
-            // Return basic html
-            $html = $markingSet->renderChildren(
-                [self::class . '_HTML', 'type' => 'Includes'],
-                $customised
-            );
-            return HTTPResponse::create()
-                ->addHeader('Content-Type', 'text/html')
-                ->setBody($html);
         }
+        // Return basic html
+        $html = $markingSet->renderChildren(
+            [self::class . '_HTML', 'type' => 'Includes'],
+            $customised
+        );
+        return HTTPResponse::create()
+            ->addHeader('Content-Type', 'text/html')
+            ->setBody($html);
     }
 
     /**
@@ -719,10 +718,10 @@ class TreeDropdownField extends FormField
             $grandChildren = $child['children'];
             $contextString = implode('/', $parentTitles);
 
-            $child['contextString'] = ($contextString !== '') ? $contextString . '/' : '';
+            $child['contextString'] = $contextString !== '' ? $contextString . '/' : '';
             unset($child['children']);
 
-            if (!$this->search || in_array($child['id'], $this->realSearchIds)) {
+            if (!$this->search || in_array($child['id'], $this->realSearchIds, true)) {
                 $output[] = $child;
             }
             $output = array_merge($output, $this->flattenChildrenArray($grandChildren, $childTitles));
@@ -758,7 +757,7 @@ class TreeDropdownField extends FormField
 
         while (!empty($parents)) {
             $items = DataObject::get($sourceObject)
-                ->filter("ID", array_keys($parents));
+                ->filter('ID', array_keys($parents));
             $parents = [];
 
             foreach ($items as $item) {
@@ -790,7 +789,7 @@ class TreeDropdownField extends FormField
             $this->getLabelField(),
             $this->getTitleField(),
             'Title',
-            'Name'
+            'Name',
         ]);
         foreach ($candidates as $candidate) {
             if ($sourceObjectInstance->hasDatabaseField($candidate)) {
@@ -952,12 +951,11 @@ class TreeDropdownField extends FormField
         }
 
         $item = DataObject::singleton($this->getSourceObject());
-        $emptyString = _t(
+        return _t(
             'SilverStripe\\Forms\\DropdownField.SEARCH_OR_CHOOSE_MODEL',
             '(Search or choose {name})',
             ['name' => $item->i18n_singular_name()]
         );
-        return $emptyString;
     }
 
     /**

@@ -15,7 +15,6 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 interface Relation extends SS_List, Filterable, Sortable, Limitable
 {
-
     /**
      * Sets the ComponentSet to be the given ID list.
      * Records will be added and deleted as appropriate.

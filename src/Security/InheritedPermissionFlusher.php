@@ -3,10 +3,10 @@
 namespace SilverStripe\Security;
 
 use Psr\Log\InvalidArgumentException;
+use SilverStripe\Core\Cache\MemberCacheFlusher;
 use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Cache\MemberCacheFlusher;
 
 class InheritedPermissionFlusher extends DataExtension implements Flushable
 {
@@ -20,7 +20,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
      */
     public static function flush()
     {
-        singleton(__CLASS__)->flushCache();
+        singleton(self::class)->flushCache();
     }
 
     /**
@@ -31,7 +31,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
         if (!$owner instanceof Member && !$owner instanceof Group) {
             throw new InvalidArgumentException(sprintf(
                 '%s can only be applied to %s or %s',
-                __CLASS__,
+                self::class,
                 Member::class,
                 Group::class
             ));
@@ -41,7 +41,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * @param MemberCacheFlusher[]
+     * @param MemberCacheFlusher[] $services
      * @throws InvalidArgumentException
      * @return $this
      */
@@ -51,7 +51,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
             if (!$service instanceof MemberCacheFlusher) {
                 throw new InvalidArgumentException(sprintf(
                     '%s.services must contain only %s instances. %s provided.',
-                    __CLASS__,
+                    self::class,
                     MemberCacheFlusher::class,
                     get_class($service)
                 ));

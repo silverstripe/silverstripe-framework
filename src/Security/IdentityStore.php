@@ -3,7 +3,6 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
 
 /**
  * Represents an authentication handler that can have identities logged into & out of it.
@@ -16,7 +15,7 @@ interface IdentityStore
      * Log the given member into this identity store.
      *
      * @param Member $member The member to log in.
-     * @param Boolean $persistent boolean If set to true, the login may persist beyond the current session.
+     * @param boolean $persistent boolean If set to true, the login may persist beyond the current session.
      * @param HTTPRequest $request The request of the visitor that is logging in, to get, for example, cookies.
      */
     public function logIn(Member $member, $persistent = false, HTTPRequest $request = null);

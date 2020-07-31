@@ -25,7 +25,7 @@ class InjectorLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ?: self::$instance = new static();
     }
 
     /**
@@ -38,11 +38,11 @@ class InjectorLoader
     {
         if ($this !== self::$instance) {
             throw new BadMethodCallException(
-                "Non-current injector manifest cannot be accessed. Please call ->activate() first"
+                'Non-current injector manifest cannot be accessed. Please call ->activate() first'
             );
         }
         if (empty($this->manifests)) {
-            throw new BadMethodCallException("No injector manifests available");
+            throw new BadMethodCallException('No injector manifests available');
         }
         return $this->manifests[count($this->manifests) - 1];
     }
@@ -54,7 +54,7 @@ class InjectorLoader
      */
     public function hasManifest()
     {
-        return (bool)$this->manifests;
+        return (bool) $this->manifests;
     }
 
     /**
@@ -96,7 +96,7 @@ class InjectorLoader
         $manifest = clone $this->getManifest();
 
         // Create new blank loader with new stack (top level nesting)
-        $newLoader = new static;
+        $newLoader = new static();
         $newLoader->pushManifest($manifest);
 
         // Activate new loader

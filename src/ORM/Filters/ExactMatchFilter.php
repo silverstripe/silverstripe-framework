@@ -4,7 +4,6 @@ namespace SilverStripe\ORM\Filters;
 
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
 
 /**
  * Selects textual content with an exact match between columnname and keyword.
@@ -14,7 +13,6 @@ use InvalidArgumentException;
  */
 class ExactMatchFilter extends SearchFilter
 {
-
     public function getSupportedModifiers()
     {
         return ['not', 'nocase', 'case'];
@@ -77,7 +75,7 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $clause = [$where => $value];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);
@@ -141,9 +139,9 @@ class ExactMatchFilter extends SearchFilter
             $column = $this->getDbName();
             $placeholders = DB::placeholders($values);
             if ($inclusive) {
-                $predicate = "$column IN ($placeholders)";
+                $predicate = "${column} IN (${placeholders})";
             } else {
-                $predicate = "$column NOT IN ($placeholders)";
+                $predicate = "${column} NOT IN (${placeholders})";
             }
         } else {
             // Generate reusable comparison clause

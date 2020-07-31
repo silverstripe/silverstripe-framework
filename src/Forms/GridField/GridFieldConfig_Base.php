@@ -8,7 +8,6 @@ namespace SilverStripe\Forms\GridField;
  */
 class GridFieldConfig_Base extends GridFieldConfig
 {
-
     /**
      * @param int $itemsPerPage - How many items per page should show up
      */

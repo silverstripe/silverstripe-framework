@@ -2,9 +2,6 @@
 
 namespace SilverStripe\Control\Middleware\ConfirmationMiddleware;
 
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\Confirmation;
-
 /**
  * A case insensitive rule to match beginning of URL
  */

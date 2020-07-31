@@ -11,7 +11,6 @@ use Exception;
  */
 class SSTemplateParseException extends Exception
 {
-
     /**
      * SSTemplateParseException constructor.
      * @param string $message
@@ -24,6 +23,6 @@ class SSTemplateParseException extends Exception
         preg_match_all('/\r\n|\r|\n/', $prior, $matches);
         $line = count($matches[0]) + 1;
 
-        parent::__construct("Parse error in template on line $line. Error was: $message");
+        parent::__construct("Parse error in template on line ${line}. Error was: ${message}");
     }
 }

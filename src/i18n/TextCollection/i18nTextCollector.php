@@ -3,14 +3,14 @@
 namespace SilverStripe\i18n\TextCollection;
 
 use LogicException;
+use ReflectionClass;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Control\Director;
-use ReflectionClass;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
@@ -101,8 +101,7 @@ class i18nTextCollector
     public function __construct($locale = null)
     {
         $this->defaultLocale = $locale
-            ? $locale
-            : i18n::getData()->langFromLocale(i18n::config()->uninherited('default_locale'));
+            ?: i18n::getData()->langFromLocale(i18n::config()->uninherited('default_locale'));
         $this->basePath = Director::baseFolder();
         $this->baseSavePath = Director::baseFolder();
         $this->setWarnOnEmptyDefault(i18n::config()->uninherited('missing_default_warning'));
@@ -262,7 +261,7 @@ class i18nTextCollector
         // bubble-compare each group of modules
         for ($i = 0; $i < count($modules) - 1; $i++) {
             $left = array_keys($entitiesByModule[$modules[$i]]);
-            for ($j = $i+1; $j < count($modules); $j++) {
+            for ($j = $i + 1; $j < count($modules); $j++) {
                 $right = array_keys($entitiesByModule[$modules[$j]]);
                 $conflicts = array_intersect($left, $right);
                 $allConflicts = array_merge($allConflicts, $conflicts);
@@ -607,13 +606,13 @@ class i18nTextCollector
                 }
 
                 // Suppress tokenisation within array
-                if ($inTransFn && !$inArrayClosedBy && $id == T_ARRAY) {
+                if ($inTransFn && !$inArrayClosedBy && $id === T_ARRAY) {
                     $inArrayClosedBy = ')'; // Array will close with this element
                     continue;
                 }
 
                 // Start definition
-                if ($id == T_STRING && $text == '_t') {
+                if ($id === T_STRING && $text === '_t') {
                     $inTransFn = true;
                     continue;
                 }
@@ -624,8 +623,8 @@ class i18nTextCollector
                 }
 
                 // If inside this translation, some elements might be unreachable
-                if (in_array($id, [T_VARIABLE, T_STATIC]) ||
-                    ($id === T_STRING && in_array($text, ['static', 'parent']))
+                if (in_array($id, [T_VARIABLE, T_STATIC], true) ||
+                    ($id === T_STRING && in_array($text, ['static', 'parent'], true))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
                     // Should be provided by i18nEntityProvider instead
@@ -643,7 +642,7 @@ class i18nTextCollector
                 }
 
                 // Check text
-                if ($id == T_CONSTANT_ENCAPSED_STRING) {
+                if ($id === T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
                     if (preg_match('/^\'(?<text>.*)\'$/s', $text, $matches)) {
                         $text = preg_replace_callback(
@@ -662,7 +661,7 @@ class i18nTextCollector
                             $matches['text']
                         );
                     } else {
-                        throw new LogicException("Invalid string escape: " . $text);
+                        throw new LogicException('Invalid string escape: ' . $text);
                     }
                 } elseif ($id === T_CLASS_C) {
                     // Evaluate __CLASS__ . '.KEY' and self::class concatenation
@@ -743,7 +742,7 @@ class i18nTextCollector
                             }
                             $entities[$key] = $entity;
                         } elseif ($this->getWarnOnEmptyDefault()) {
-                            trigger_error("Missing localisation default for key " . $currentEntity[0], E_USER_NOTICE);
+                            trigger_error('Missing localisation default for key ' . $currentEntity[0], E_USER_NOTICE);
                         }
                     }
                     $currentEntity = [];
@@ -769,7 +768,7 @@ class i18nTextCollector
      * @param string $fileName The name of a template file when method is used in self-referencing mode
      * @param Module $module Module being collected
      * @param array $parsedFiles
-     * @return array $entities An array of entities representing the extracted template function calls
+     * @return array An array of entities representing the extracted template function calls
      */
     public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = [])
     {
@@ -886,8 +885,6 @@ class i18nTextCollector
         return "{$namespace}.{$entity}";
     }
 
-
-
     /**
      * Helper function that searches for potential files (templates and code) to be parsed
      *
@@ -895,7 +892,7 @@ class i18nTextCollector
      * @param array $fileList Array to which potential files will be appended
      * @param string $type Optional, "php" or "ss" only
      * @param string $folderExclude Regular expression matching folder names to exclude
-     * @return array $fileList An array of files
+     * @return array An array of files
      */
     protected function getFilesRecursive($folder, $fileList = [], $type = null, $folderExclude = '/\/(tests)$/')
     {
@@ -919,7 +916,7 @@ class i18nTextCollector
 
             // Check if this extension is included
             $extension = pathinfo($path, PATHINFO_EXTENSION);
-            if (in_array($extension, $this->fileExtensions)
+            if (in_array($extension, $this->fileExtensions, true)
                 && (!$type || $type === $extension)
             ) {
                 $fileList[$path] = $path;

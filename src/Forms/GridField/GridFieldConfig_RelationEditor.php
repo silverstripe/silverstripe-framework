@@ -21,7 +21,6 @@ namespace SilverStripe\Forms\GridField;
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig
 {
-
     /**
      * @param int $itemsPerPage - How many items per page should show up
      */

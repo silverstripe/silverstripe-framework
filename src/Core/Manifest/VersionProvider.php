@@ -2,10 +2,9 @@
 
 namespace SilverStripe\Core\Manifest;
 
-use SilverStripe\Core\Config\Config;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -45,7 +44,7 @@ class VersionProvider
         foreach ($modules as $module => $title) {
             $version = isset($lockModules[$module])
                 ? $lockModules[$module]
-                : _t(__CLASS__ . '.VERSIONUNKNOWN', 'Unknown');
+                : _t(self::class . '.VERSIONUNKNOWN', 'Unknown');
             $output[] = $title . ': ' . $version;
         }
         return implode(', ', $output);
@@ -75,7 +74,7 @@ class VersionProvider
         $lockData = $this->getComposerLock();
         if ($lockData && !empty($lockData['packages'])) {
             foreach ($lockData['packages'] as $package) {
-                if (in_array($package['name'], $modules) && isset($package['version'])) {
+                if (in_array($package['name'], $modules, true) && isset($package['version'])) {
                     $versions[$package['name']] = $package['version'];
                 }
             }

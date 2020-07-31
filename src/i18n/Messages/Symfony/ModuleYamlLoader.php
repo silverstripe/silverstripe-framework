@@ -2,12 +2,9 @@
 
 namespace SilverStripe\i18n\Messages\Symfony;
 
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\Reader;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\PluralizationRules;
 
 /**
  * Loads yaml localisations across all modules simultaneously.
@@ -58,7 +55,6 @@ class ModuleYamlLoader extends ArrayLoader
         $this->reader = $reader;
         return $this;
     }
-
 
     /**
      * Load messages

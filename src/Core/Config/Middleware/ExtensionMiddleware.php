@@ -67,7 +67,7 @@ class ExtensionMiddleware implements Middleware
             // Strip service name specifier
             $extensionClass = strtok($extensionClass, '.');
             if (!class_exists($extensionClass)) {
-                throw new InvalidArgumentException("$class references nonexistent $extensionClass in 'extensions'");
+                throw new InvalidArgumentException("${class} references nonexistent ${extensionClass} in 'extensions'");
             }
 
             // Init extension
@@ -94,7 +94,7 @@ class ExtensionMiddleware implements Middleware
                 }
                 if (ClassInfo::has_method_from($extensionClassParent, 'get_extra_config', $extensionClassParent)) {
                     $extensionConfig = call_user_func(
-                        [ $extensionClassParent, 'get_extra_config' ],
+                        [$extensionClassParent, 'get_extra_config'],
                         $class,
                         $extensionClass,
                         $extensionArgs

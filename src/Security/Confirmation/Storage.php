@@ -7,7 +7,6 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Security\SecurityToken;
 
 /**
  * Confirmation Storage implemented on top of SilverStripe Session and Cookie
@@ -217,7 +216,7 @@ class Storage
      *
      * @param string $key Item token key
      *
-     * @return null|Item
+     * @return Item|null
      */
     public function getItem($key)
     {
@@ -439,7 +438,7 @@ class Storage
     {
         return sprintf(
             '%s.%s%s',
-            str_replace('\\', '.', __CLASS__),
+            str_replace('\\', '.', self::class),
             $this->id,
             $key ? '.' . $key : ''
         );

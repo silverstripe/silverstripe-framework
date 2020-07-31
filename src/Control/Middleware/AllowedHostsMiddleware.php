@@ -52,7 +52,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
         // check allowed hosts
         if ($allowedHosts
             && !Director::is_cli()
-            && !in_array($request->getHeader('Host'), $allowedHosts)
+            && !in_array($request->getHeader('Host'), $allowedHosts, true)
         ) {
             return new HTTPResponse('Invalid Host', 400);
         }

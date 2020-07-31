@@ -105,7 +105,7 @@ class MarkedSet
     ) {
         if (! $rootNode::has_extension(Hierarchy::class)) {
             throw new InvalidArgumentException(
-                get_class($rootNode) . " does not have the Hierarchy extension"
+                get_class($rootNode) . ' does not have the Hierarchy extension'
             );
         }
         $this->rootNode = $rootNode;
@@ -192,7 +192,7 @@ class MarkedSet
     protected function getChildren(DataObject $node)
     {
         $method = $this->getChildrenMethod();
-        return $node->$method() ?: ArrayList::create();
+        return $node->{$method}() ?: ArrayList::create();
     }
 
     /**
@@ -235,7 +235,7 @@ class MarkedSet
     protected function getNumChildren(DataObject $node)
     {
         $method = $this->getNumChildrenMethod();
-        return (int)$node->$method();
+        return (int) $node->{$method}();
     }
 
     /**
@@ -275,12 +275,12 @@ class MarkedSet
         if (!$template) {
             $template = [
                 'type' => 'Includes',
-                self::class . '_HTML'
+                self::class . '_HTML',
             ];
         }
         $tree = $this->getSubtree($this->rootNode, 0);
         $node = $this->renderSubtree($tree, $template, $context);
-        return (string)$node->getField('SubTree');
+        return (string) $node->getField('SubTree');
     }
 
     /**
@@ -299,7 +299,7 @@ class MarkedSet
                 $node = $data['node'];
                 return [
                     'id' => $node->ID,
-                    'title' => $node->getTitle()
+                    'title' => $node->getTitle(),
                 ];
             };
         }
@@ -408,7 +408,7 @@ class MarkedSet
         // Build root rode
         $expanded = $this->isExpanded($node);
         $opened = $this->isTreeOpened($node);
-        $count = ($limited && $numChildren > $this->getMaxChildNodes()) ? 0 : $numChildren;
+        $count = $limited && $numChildren > $this->getMaxChildNodes() ? 0 : $numChildren;
         $output = [
             'node' => $node,
             'marked' => $this->isMarked($node),
@@ -484,8 +484,8 @@ class MarkedSet
     public function setMarkingFilter($parameterName, $parameterValue)
     {
         $this->markingFilter = [
-            "parameter" => $parameterName,
-            "value" => $parameterValue
+            'parameter' => $parameterName,
+            'value' => $parameterValue,
         ];
         return $this;
     }
@@ -500,7 +500,7 @@ class MarkedSet
     public function setMarkingFilterFunction($callback)
     {
         $this->markingFilter = [
-            "func" => $callback,
+            'func' => $callback,
         ];
         return $this;
     }
@@ -529,13 +529,12 @@ class MarkedSet
             $value = $this->markingFilter['value'];
 
             if (is_array($value)) {
-                return in_array($node->$parameterName, $value);
-            } else {
-                return $node->$parameterName == $value;
+                return in_array($node->{$parameterName}, $value, true);
             }
+            return $value === $node->{$parameterName};
         }
 
-        throw new LogicException("Invalid marking filter");
+        throw new LogicException('Invalid marking filter');
     }
 
     /**
@@ -597,13 +596,13 @@ class MarkedSet
         // Set jstree open state, or mark it as a leaf (closed) if there are no children
         if (!$this->getNumChildren($node)) {
             // No children
-            $classes[] = "jstree-leaf closed";
+            $classes[] = 'jstree-leaf closed';
         } elseif ($this->isTreeOpened($node)) {
             // Open with children
-            $classes[] = "jstree-open";
+            $classes[] = 'jstree-open';
         } else {
             // Closed with children
-            $classes[] = "jstree-closed closed";
+            $classes[] = 'jstree-closed closed';
         }
         return implode(' ', $classes);
     }
@@ -623,9 +622,8 @@ class MarkedSet
                 $this->markOpened($this->markedNodes[$id]);
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

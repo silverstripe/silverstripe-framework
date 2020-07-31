@@ -16,7 +16,7 @@ class LabelField extends DatalessField
 
     /**
      * @param string $name
-     * @param null|string $title
+     * @param string|null $title
      */
     public function __construct($name, $title = null)
     {
@@ -25,7 +25,7 @@ class LabelField extends DatalessField
         $args = func_get_args();
 
         if (!isset($args[1])) {
-            $title = (isset($args[0])) ? $args[0] : null;
+            $title = isset($args[0]) ? $args[0] : null;
 
             if (isset($args[0])) {
                 $title = $args[0];

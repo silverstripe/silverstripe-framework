@@ -12,7 +12,7 @@ use InvalidArgumentException;
 class PopoverField extends FieldGroup
 {
     private static $cast = [
-        'PopoverTitle' => 'HTMLText'
+        'PopoverTitle' => 'HTMLText',
     ];
 
     /**
@@ -101,7 +101,7 @@ class PopoverField extends FieldGroup
     {
         $valid = ['top', 'right', 'bottom', 'left'];
 
-        if (!in_array($placement, $valid)) {
+        if (!in_array($placement, $valid, true)) {
             throw new InvalidArgumentException(
                 'Invalid placement value. Valid: top, left, bottom, right'
             );

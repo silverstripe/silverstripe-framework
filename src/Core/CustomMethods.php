@@ -11,7 +11,6 @@ use SilverStripe\Dev\Deprecation;
  */
 trait CustomMethods
 {
-
     /**
      * Custom method sources
      *
@@ -52,15 +51,15 @@ trait CustomMethods
         $config = $this->getExtraMethodConfig($method);
         if (empty($config)) {
             throw new BadMethodCallException(
-                "Object->__call(): the method '$method' does not exist on '$class'"
+                "Object->__call(): the method '${method}' does not exist on '${class}'"
             );
         }
 
         switch (true) {
-            case isset($config['callback']): {
+            case isset($config['callback']):
                 return $config['callback']($this, $arguments);
-            }
-            case isset($config['property']) : {
+
+            case isset($config['property']):
                 $property = $config['property'];
                 $index = $config['index'];
                 $obj = $index !== null ?
@@ -76,31 +75,30 @@ trait CustomMethods
 
                 // Call without setOwner
                 if (empty($config['callSetOwnerFirst'])) {
-                    return $obj->$method(...$arguments);
+                    return $obj->{$method}(...$arguments);
                 }
 
                 /** @var Extension $obj */
                 try {
                     $obj->setOwner($this);
-                    return $obj->$method(...$arguments);
+                    return $obj->{$method}(...$arguments);
                 } finally {
                     $obj->clearOwner();
                 }
-            }
-            case isset($config['wrap']): {
+
+            case isset($config['wrap']):
                 array_unshift($arguments, $config['method']);
                 $wrapped = $config['wrap'];
-                return $this->$wrapped(...$arguments);
-            }
-            case isset($config['function']): {
+                return $this->{$wrapped}(...$arguments);
+
+            case isset($config['function']):
                 return $config['function']($this, $arguments);
-            }
-            default: {
+
+            default:
                 throw new BadMethodCallException(
-                    "Object->__call(): extra method $method is invalid on $class:"
+                    "Object->__call(): extra method ${method} is invalid on ${class}:"
                     . var_export($config, true)
                 );
-            }
         }
     }
 
@@ -182,9 +180,8 @@ trait CustomMethods
 
         if ($custom && isset(self::$extra_methods[$class])) {
             return array_merge(self::$built_in_methods[$class], array_keys(self::$extra_methods[$class]));
-        } else {
-            return self::$built_in_methods[$class];
         }
+        return self::$built_in_methods[$class];
     }
 
     /**
@@ -225,11 +222,11 @@ trait CustomMethods
     protected function addMethodsFrom($property, $index = null)
     {
         $class = static::class;
-        $extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
+        $extension = $index !== null ? $this->{$property}[$index] : $this->{$property};
 
         if (!$extension) {
             throw new InvalidArgumentException(
-                "Object->addMethodsFrom(): could not add methods from {$class}->{$property}[$index]"
+                "Object->addMethodsFrom(): could not add methods from {$class}->{$property}[${index}]"
             );
         }
 
@@ -267,12 +264,12 @@ trait CustomMethods
      */
     protected function removeMethodsFrom($property, $index = null)
     {
-        $extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
+        $extension = $index !== null ? $this->{$property}[$index] : $this->{$property};
         $class = static::class;
 
         if (!$extension) {
             throw new InvalidArgumentException(
-                "Object->removeMethodsFrom(): could not remove methods from {$class}->{$property}[$index]"
+                "Object->removeMethodsFrom(): could not remove methods from {$class}->{$property}[${index}]"
             );
         }
 
@@ -312,7 +309,7 @@ trait CustomMethods
     {
         self::$extra_methods[static::class][strtolower($method)] = [
             'wrap' => $wrap,
-            'method' => $method
+            'method' => $method,
         ];
     }
 

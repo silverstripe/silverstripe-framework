@@ -147,8 +147,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_active_identifier()
     {
-        $identifier = self::$current ?: static::config()->get('default_config');
-        return $identifier;
+        return self::$current ?: static::config()->get('default_config');
     }
 
     /**

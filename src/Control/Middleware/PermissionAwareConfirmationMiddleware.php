@@ -144,10 +144,9 @@ class PermissionAwareConfirmationMiddleware extends ConfirmationMiddleware
         if (!Security::getCurrentUser()) {
             if ($this->getEnforceAuthentication()) {
                 return $this->getAuthenticationRedirect($request);
-            } else {
-                // assume the user does not have permissions anyway
-                return $delegate($request);
             }
+            // assume the user does not have permissions anyway
+            return $delegate($request);
         }
 
         if (!$this->hasAccess($request)) {

@@ -53,41 +53,40 @@ use SilverStripe\ORM\UnsavedRelationList;
  */
 class Group extends DataObject
 {
-
     private static $db = [
-        "Title" => "Varchar(255)",
-        "Description" => "Text",
-        "Code" => "Varchar(255)",
-        "Locked" => "Boolean",
-        "Sort" => "Int",
-        "HtmlEditorConfig" => "Text"
+        'Title' => 'Varchar(255)',
+        'Description' => 'Text',
+        'Code' => 'Varchar(255)',
+        'Locked' => 'Boolean',
+        'Sort' => 'Int',
+        'HtmlEditorConfig' => 'Text',
     ];
 
     private static $has_one = [
-        "Parent" => Group::class,
+        'Parent' => Group::class,
     ];
 
     private static $has_many = [
-        "Permissions" => Permission::class,
-        "Groups" => Group::class,
+        'Permissions' => Permission::class,
+        'Groups' => Group::class,
     ];
 
     private static $many_many = [
-        "Members" => Member::class,
-        "Roles" => PermissionRole::class,
+        'Members' => Member::class,
+        'Roles' => PermissionRole::class,
     ];
 
     private static $extensions = [
         Hierarchy::class,
     ];
 
-    private static $table_name = "Group";
+    private static $table_name = 'Group';
 
     public function getAllChildren()
     {
         $doSet = new ArrayList();
 
-        $children = Group::get()->filter("ParentID", $this->ID);
+        $children = Group::get()->filter('ParentID', $this->ID);
         /** @var Group $child */
         foreach ($children as $child) {
             $doSet->push($child);
@@ -118,11 +117,11 @@ class Group extends DataObject
     {
         $fields = new FieldList(
             new TabSet(
-                "Root",
+                'Root',
                 new Tab(
                     'Members',
-                    _t(__CLASS__ . '.MEMBERS', 'Members'),
-                    new TextField("Title", $this->fieldLabel('Title')),
+                    _t(self::class . '.MEMBERS', 'Members'),
+                    new TextField('Title', $this->fieldLabel('Title')),
                     $parentidfield = DropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
@@ -132,7 +131,7 @@ class Group extends DataObject
                 ),
                 $permissionsTab = new Tab(
                     'Permissions',
-                    _t(__CLASS__ . '.PERMISSIONS', 'Permissions'),
+                    _t(self::class . '.PERMISSIONS', 'Permissions'),
                     $permissionsField = new PermissionCheckboxSetField(
                         'Permissions',
                         false,
@@ -218,16 +217,16 @@ class Group extends DataObject
             PermissionRole::get()->count() &&
             class_exists(SecurityAdmin::class)
         ) {
-            $fields->findOrMakeTab('Root.Roles', _t(__CLASS__ . '.ROLES', 'Roles'));
+            $fields->findOrMakeTab('Root.Roles', _t(self::class . '.ROLES', 'Roles'));
             $fields->addFieldToTab(
                 'Root.Roles',
                 new LiteralField(
-                    "",
-                    "<p>" .
+                    '',
+                    '<p>' .
                     _t(
-                        __CLASS__ . '.ROLESDESCRIPTION',
-                        "Roles are predefined sets of permissions, and can be assigned to groups.<br />"
-                        . "They are inherited from parent groups if required."
+                        self::class . '.ROLESDESCRIPTION',
+                        'Roles are predefined sets of permissions, and can be assigned to groups.<br />'
+                        . 'They are inherited from parent groups if required.'
                     ) . '<br />' .
                     sprintf(
                         '<a href="%s" class="add-role">%s</a>',
@@ -236,14 +235,14 @@ class Group extends DataObject
                         // but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
                         _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
                     ) .
-                    "</p>"
+                    '</p>'
                 )
             );
 
             // Add roles (and disable all checkboxes for inherited roles)
             $allRoles = PermissionRole::get();
             if (!Permission::check('ADMIN')) {
-                $allRoles = $allRoles->filter("OnlyAdminCanApply", 0);
+                $allRoles = $allRoles->filter('OnlyAdminCanApply', 0);
             }
             if ($this->ID) {
                 $groupRoles = $this->Roles();
@@ -263,16 +262,16 @@ class Group extends DataObject
             }
 
             $rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
-                    ->setDefaultItems($groupRoleIDs)
-                    ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
-                    ->setDisabledItems($inheritedRoleIDs);
+                ->setDefaultItems($groupRoleIDs)
+                ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
+                ->setDisabledItems($inheritedRoleIDs);
             if (!$allRoles->count()) {
                 $rolesField->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.NoRoles', 'No roles found'));
             }
             $fields->addFieldToTab('Root.Roles', $rolesField);
         }
 
-        $fields->push($idField = new HiddenField("ID"));
+        $fields->push($idField = new HiddenField('ID'));
 
         $this->extend('updateCMSFields', $fields);
 
@@ -287,7 +286,7 @@ class Group extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Title'] = _t(__CLASS__ . '.GROUPNAME', 'Group name');
+        $labels['Title'] = _t(self::class . '.GROUPNAME', 'Group name');
         $labels['Description'] = _t('SilverStripe\\Security\\Group.Description', 'Description');
         $labels['Code'] = _t('SilverStripe\\Security\\Group.Code', 'Group Code', 'Programmatical code identifying a group');
         $labels['Locked'] = _t('SilverStripe\\Security\\Group.Locked', 'Locked?', 'Group is locked in the security administration area');
@@ -353,7 +352,7 @@ class Group extends DataObject
     public function collateFamilyIDs()
     {
         if (!$this->exists()) {
-            throw new \InvalidArgumentException("Cannot call collateFamilyIDs on unsaved Group.");
+            throw new \InvalidArgumentException('Cannot call collateFamilyIDs on unsaved Group.');
         }
 
         $familyIDs = [];
@@ -364,7 +363,7 @@ class Group extends DataObject
 
             // Get the children of *all* the groups identified in the previous chunk.
             // This minimises the number of SQL queries necessary
-            $chunkToAdd = Group::get()->filter("ParentID", $chunkToAdd)->column('ID');
+            $chunkToAdd = Group::get()->filter('ParentID', $chunkToAdd)->column('ID');
         }
 
         return $familyIDs;
@@ -394,7 +393,7 @@ class Group extends DataObject
      */
     public function inGroup($group)
     {
-        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs());
+        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs(), true);
     }
 
     /**
@@ -458,8 +457,8 @@ class Group extends DataObject
     public function stageChildren()
     {
         return Group::get()
-            ->filter("ParentID", $this->ID)
-            ->exclude("ID", $this->ID)
+            ->filter('ParentID', $this->ID)
+            ->exclude('ID', $this->ID)
             ->sort('"Sort"');
     }
 
@@ -476,11 +475,11 @@ class Group extends DataObject
     /**
      * Overloaded to ensure the code is always descent.
      *
-     * @param string
+     * @param string $val
      */
     public function setCode($val)
     {
-        $this->setField("Code", Convert::raw2url($val));
+        $this->setField('Code', Convert::raw2url($val));
     }
 
     public function validate()
@@ -516,7 +515,7 @@ class Group extends DataObject
         // Only set code property when the group has a custom title, and no code exists.
         // The "Code" attribute is usually treated as a more permanent identifier than database IDs
         // in custom application logic, so can't be changed after its first set.
-        if (!$this->Code && $this->Title != _t(__CLASS__ . '.NEWGROUP', "New Group")) {
+        if (!$this->Code && $this->Title !== _t(self::class . '.NEWGROUP', 'New Group')) {
             $this->setCode($this->Title);
         }
     }
@@ -558,12 +557,12 @@ class Group extends DataObject
         }
 
         if (// either we have an ADMIN
-            (bool)Permission::checkMember($member, "ADMIN")
+            (bool) Permission::checkMember($member, 'ADMIN')
             || (
                 // or a privileged CMS user and a group without ADMIN permissions.
                 // without this check, a user would be able to add himself to an administrators group
                 // with just access to the "Security" admin interface
-                Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") &&
+                Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin') &&
                 !Permission::get()->filter(['GroupID' => $this->ID, 'Code' => 'ADMIN'])->exists()
             )
         ) {
@@ -594,7 +593,7 @@ class Group extends DataObject
         }
 
         // user needs access to CMS_ACCESS_SecurityAdmin
-        if (Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin")) {
+        if (Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')) {
             return true;
         }
 
@@ -657,7 +656,7 @@ class Group extends DataObject
         if (!$allGroups->count()) {
             $authorGroup = new Group();
             $authorGroup->Code = 'content-authors';
-            $authorGroup->Title = _t(__CLASS__ . '.DefaultGroupTitleContentAuthors', 'Content Authors');
+            $authorGroup->Title = _t(self::class . '.DefaultGroupTitleContentAuthors', 'Content Authors');
             $authorGroup->Sort = 1;
             $authorGroup->write();
             Permission::grant($authorGroup->ID, 'CMS_ACCESS_CMSMain');
@@ -671,7 +670,7 @@ class Group extends DataObject
         if (!$adminGroups->count()) {
             $adminGroup = new Group();
             $adminGroup->Code = 'administrators';
-            $adminGroup->Title = _t(__CLASS__ . '.DefaultGroupTitleAdministrators', 'Administrators');
+            $adminGroup->Title = _t(self::class . '.DefaultGroupTitleAdministrators', 'Administrators');
             $adminGroup->Sort = 0;
             $adminGroup->write();
             Permission::grant($adminGroup->ID, 'ADMIN');

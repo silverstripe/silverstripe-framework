@@ -7,7 +7,6 @@ namespace SilverStripe\Core\Injector;
  */
 interface Factory
 {
-
     /**
      * Creates a new service instance.
      *

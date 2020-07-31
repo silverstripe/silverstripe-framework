@@ -6,7 +6,6 @@ use SilverStripe\View\ViewableData;
 
 class Form_FieldMap extends ViewableData
 {
-
     /**
      * @var Form
      */

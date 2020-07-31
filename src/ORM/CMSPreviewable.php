@@ -13,7 +13,6 @@ namespace SilverStripe\ORM;
  */
 interface CMSPreviewable
 {
-
     /**
      * Determine the preview link, if available, for this object.
      * If no preview is available for this record, it may return null.

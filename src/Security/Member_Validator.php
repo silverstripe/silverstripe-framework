@@ -32,7 +32,7 @@ class Member_Validator extends RequiredFields
      */
     protected $customRequired = [
         'FirstName',
-        'Email'
+        'Email',
     ];
 
     /**
@@ -97,11 +97,11 @@ class Member_Validator extends RequiredFields
     {
         $valid = parent::php($data);
 
-        $identifierField = (string)Member::config()->unique_identifier_field;
+        $identifierField = (string) Member::config()->unique_identifier_field;
 
         // Only validate identifier field if it's actually set. This could be the case if
         // somebody removes `Email` from the list of required fields.
-        $id = isset($data['ID']) ? (int)$data['ID'] : 0;
+        $id = isset($data['ID']) ? (int) $data['ID'] : 0;
         if (isset($data[$identifierField])) {
             if (!$id && ($ctrl = $this->form->getController())) {
                 // get the record when within GridField (Member editing page in CMS)
@@ -140,7 +140,7 @@ class Member_Validator extends RequiredFields
         $currentUser = Security::getCurrentUser();
         if ($currentUser
             && $id
-            && $id === (int)$currentUser->ID
+            && $id === (int) $currentUser->ID
             && Permission::checkMember($currentUser, 'ADMIN')
         ) {
             $stillAdmin = true;

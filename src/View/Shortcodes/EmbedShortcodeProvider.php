@@ -2,7 +2,11 @@
 
 namespace SilverStripe\View\Shortcodes;
 
+use Embed\Adapters\Adapter;
+use Embed\Embed;
+use Embed\Exceptions\InvalidUrlException;
 use Embed\Http\DispatcherInterface;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
@@ -12,11 +16,7 @@ use SilverStripe\View\Embed\Embeddable;
 use SilverStripe\View\Embed\EmbedResource;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
-use Embed\Adapters\Adapter;
-use Embed\Embed;
-use Embed\Exceptions\InvalidUrlException;
 use SilverStripe\View\Parsers\ShortcodeParser;
-use SilverStripe\Control\Director;
 
 /**
  * Provider for the [embed] shortcode tag used by the embedding service
@@ -25,7 +25,6 @@ use SilverStripe\Control\Director;
  */
 class EmbedShortcodeProvider implements ShortcodeHandler
 {
-
     /**
      * Gets the list of shortcodes provided by this handler
      *
@@ -94,20 +93,19 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         try {
             $embed = $embed->getEmbed();
         } catch (InvalidUrlException $e) {
-            $message = (Director::isDev())
+            $message = Director::isDev()
                 ? $e->getMessage()
-                : _t(__CLASS__ . '.INVALID_URL', 'There was a problem loading the media.');
+                : _t(self::class . '.INVALID_URL', 'There was a problem loading the media.');
 
             $attr = [
-                'class' => 'ss-media-exception embed'
+                'class' => 'ss-media-exception embed',
             ];
 
-            $result = HTML::createTag(
+            return HTML::createTag(
                 'div',
                 $attr,
                 HTML::createTag('p', [], $message)
             );
-            return $result;
         }
 
         // Convert embed object into HTML
@@ -166,7 +164,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
                 continue;
             }
             foreach (['"', "'"] as $quote) {
-                $rx = "/(<iframe .*?)$attr=$quote([0-9]+)$quote([^>]+>)/";
+                $rx = "/(<iframe .*?)${attr}=${quote}([0-9]+)${quote}([^>]+>)/";
                 $content = preg_replace($rx, "$1{$attr}={$quote}{$value}{$quote}$3", $content);
             }
         }
@@ -174,7 +172,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         $data = [
             'Arguments' => $arguments,
             'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
-            'Content' => DBField::create_field('HTMLFragment', $content)
+            'Content' => DBField::create_field('HTMLFragment', $content),
         ];
 
         return ArrayData::create($data)->renderWith(self::class . '_video')->forTemplate();
@@ -194,7 +192,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             'Arguments' => $arguments,
             'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
             'Href' => $href,
-            'Title' => !empty($arguments['caption']) ? ($arguments['caption']) : $title
+            'Title' => !empty($arguments['caption']) ?: $title,
         ];
 
         return ArrayData::create($data)->renderWith(self::class . '_link')->forTemplate();
@@ -212,7 +210,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         $data = [
             'Arguments' => $arguments,
             'Attributes' => static::buildAttributeListFromArguments($arguments, ['url']),
-            'Src' => $src
+            'Src' => $src,
         ];
 
         return ArrayData::create($data)->renderWith(self::class . '_photo')->forTemplate();
@@ -230,13 +228,13 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     {
         $attributes = ArrayList::create();
         foreach ($arguments as $key => $value) {
-            if (in_array($key, $exclude)) {
+            if (in_array($key, $exclude, true)) {
                 continue;
             }
 
             $attributes->push(ArrayData::create([
                 'Name' => $key,
-                'Value' => Convert::raw2att($value)
+                'Value' => Convert::raw2att($value),
             ]));
         }
 

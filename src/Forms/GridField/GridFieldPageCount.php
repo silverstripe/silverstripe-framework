@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\View\SSViewer;
-use LogicException;
 
 /**
  * GridFieldPage displays a simple current page count summary.
@@ -51,7 +51,7 @@ class GridFieldPageCount implements GridField_HTMLProvider
 
         if (!$paginator && GridFieldPageCount::config()->uninherited('require_paginator')) {
             throw new LogicException(
-                static::class . " relies on a GridFieldPaginator to be added " . "to the same GridField, but none are present."
+                static::class . ' relies on a GridFieldPaginator to be added ' . 'to the same GridField, but none are present.'
             );
         }
 
@@ -67,9 +67,9 @@ class GridFieldPageCount implements GridField_HTMLProvider
         // Retrieve paging parameters from the directing paginator component
         $paginator = $this->getPaginator($gridField);
         if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
-            $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+            $template = SSViewer::get_templates_by_class($this, '', self::class);
             return [
-                $this->targetFragment => $forTemplate->renderWith($template)
+                $this->targetFragment => $forTemplate->renderWith($template),
             ];
         }
 

@@ -80,7 +80,6 @@ class SymfonyMessageProvider implements MessageProvider
                 ->addResource('ss', $this->getSourceDirs(), $lang);
         }
 
-
         $this->loadedLocales[$locale] = true;
     }
 
@@ -117,7 +116,7 @@ class SymfonyMessageProvider implements MessageProvider
         // Prepare arguments
         $arguments = $this->templateInjection(array_merge(
             $injection,
-            [ 'count' => $count ]
+            ['count' => $count]
         ));
 
         // Pass to symfony translator
@@ -166,13 +165,12 @@ class SymfonyMessageProvider implements MessageProvider
     {
         $injection = $injection ?: [];
         // Rewrite injection to {} surrounded placeholders
-        $arguments = array_combine(
+        return array_combine(
             array_map(function ($val) {
                 return '{' . $val . '}';
             }, array_keys($injection)),
             $injection
         );
-        return $arguments;
     }
 
     /**

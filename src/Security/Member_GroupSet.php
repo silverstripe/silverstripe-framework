@@ -14,7 +14,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 class Member_GroupSet extends ManyManyList
 {
-
     protected function linkJoinTable()
     {
         // Do not join the table directly
@@ -48,14 +47,14 @@ class Member_GroupSet extends ManyManyList
         $allGroupIDs = [];
         while ($groupIDs) {
             $allGroupIDs = array_merge($allGroupIDs, $groupIDs);
-            $groupIDs = DataObject::get(Group::class)->byIDs($groupIDs)->column("ParentID");
+            $groupIDs = DataObject::get(Group::class)->byIDs($groupIDs)->column('ParentID');
             $groupIDs = array_filter($groupIDs);
         }
 
         // Add a filter to this DataList
         if (!empty($allGroupIDs)) {
             $allGroupIDsPlaceholders = DB::placeholders($allGroupIDs);
-            return ["\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs];
+            return ["\"Group\".\"ID\" IN (${allGroupIDsPlaceholders})" => $allGroupIDs];
         }
 
         return ['"Group"."ID"' => 0];
@@ -111,7 +110,7 @@ class Member_GroupSet extends ManyManyList
         $delete->addWhere(parent::foreignIDFilter());
         $subSelect = $selectQuery->sql($parameters);
         $delete->addWhere([
-            "\"{$this->joinTable}\".\"{$this->localKey}\" IN ($subSelect)" => $parameters
+            "\"{$this->joinTable}\".\"{$this->localKey}\" IN (${subSelect})" => $parameters,
         ]);
         $delete->execute();
     }

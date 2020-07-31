@@ -13,7 +13,6 @@ namespace SilverStripe\Core\Injector;
  */
 interface AfterCallAspect
 {
-
     /**
      * Call this aspect after a method is executed
      *

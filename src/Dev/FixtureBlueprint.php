@@ -18,19 +18,18 @@ use SilverStripe\ORM\DB;
  */
 class FixtureBlueprint
 {
-
     /**
      * @var array Map of field names to values. Supersedes {@link DataObject::$defaults}.
      */
     protected $defaults = [];
 
     /**
-     * @var String Arbitrary name by which this fixture type can be referenced.
+     * @var string Arbitrary name by which this fixture type can be referenced.
      */
     protected $name;
 
     /**
-     * @var String Subclass of {@link DataObject}
+     * @var string Subclass of {@link DataObject}
      */
     protected $class;
 
@@ -48,8 +47,8 @@ class FixtureBlueprint
     ];
 
     /**
-     * @param String $name
-     * @param String $class Defaults to $name
+     * @param string $name
+     * @param string $class Defaults to $name
      * @param array $defaults
      */
     public function __construct($name, $class = null, $defaults = [])
@@ -122,9 +121,9 @@ class FixtureBlueprint
                     }
 
                     if (!is_string($fieldVal) && is_callable($fieldVal)) {
-                        $obj->$fieldName = $fieldVal($obj, $data, $fixtures);
+                        $obj->{$fieldName} = $fieldVal($obj, $data, $fixtures);
                     } else {
-                        $obj->$fieldName = $fieldVal;
+                        $obj->{$fieldName} = $fieldVal;
                     }
                 }
             }
@@ -157,7 +156,7 @@ class FixtureBlueprint
                     $isManyMany = $schema->manyManyComponent($class, $fieldName);
                     $isHasMany = $schema->hasManyComponent($class, $fieldName);
                     if ($isManyMany && $isHasMany) {
-                        throw new InvalidArgumentException("$fieldName is both many_many and has_many");
+                        throw new InvalidArgumentException("${fieldName} is both many_many and has_many");
                     }
                     if ($isManyMany || $isHasMany) {
                         $obj->write();
@@ -297,7 +296,7 @@ class FixtureBlueprint
      */
     public function removeCallback($type, $callback)
     {
-        $pos = array_search($callback, $this->callbacks[$type]);
+        $pos = array_search($callback, $this->callbacks[$type], true);
         if ($pos !== false) {
             unset($this->callbacks[$type][$pos]);
         }
@@ -324,7 +323,7 @@ class FixtureBlueprint
      */
     protected function parseValue($value, $fixtures = null, &$class = null)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value, 0, 2) === '=>') {
             // Parse a dictionary reference - used to set foreign keys
             list($class, $identifier) = explode('.', substr($value, 2), 2);
 
@@ -336,15 +335,14 @@ class FixtureBlueprint
             }
 
             return $fixtures[$class][$identifier];
-        } else {
-            // Regular field value setting
-            return $value;
         }
+        // Regular field value setting
+        return $value;
     }
 
     protected function setValue($obj, $name, $value, $fixtures = null)
     {
-        $obj->$name = $this->parseValue($value, $fixtures);
+        $obj->{$name} = $this->parseValue($value, $fixtures);
     }
 
     protected function overrideField($obj, $fieldName, $value, $fixtures = null)
@@ -355,12 +353,12 @@ class FixtureBlueprint
 
         DB::manipulate([
             $table => [
-                "command" => "update",
-                "id" => $obj->ID,
-                "class" => $class,
-                "fields" => [$fieldName => $value],
-            ]
+                'command' => 'update',
+                'id' => $obj->ID,
+                'class' => $class,
+                'fields' => [$fieldName => $value],
+            ],
         ]);
-        $obj->$fieldName = $value;
+        $obj->{$fieldName} = $value;
     }
 }

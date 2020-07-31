@@ -7,7 +7,6 @@ namespace SilverStripe\Core\Injector;
  */
 trait Injectable
 {
-
     /**
      * An implementation of the factory method, allows you to create an instance of a class
      *
@@ -26,7 +25,7 @@ trait Injectable
     public static function create(...$args)
     {
         // Class to create should be the calling class
-        $class = get_called_class();
+        $class = static::class;
         return Injector::inst()->createWithArgs($class, $args);
     }
 
@@ -43,7 +42,7 @@ trait Injectable
     public static function singleton($class = null)
     {
         if (!$class) {
-            $class = get_called_class();
+            $class = static::class;
         }
         return Injector::inst()->get($class);
     }

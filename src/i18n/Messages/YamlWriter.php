@@ -2,11 +2,11 @@
 
 namespace SilverStripe\i18n\Messages;
 
+use LogicException;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\i18n\i18n;
-use Symfony\Component\Yaml\Dumper;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
-use LogicException;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * Write yml files compatible with ModuleYamlLoader
@@ -35,7 +35,6 @@ class YamlWriter implements Writer
         return $this->dumper;
     }
 
-
     public function write($messages, $locale, $path)
     {
         // Skip empty entities
@@ -55,11 +54,11 @@ class YamlWriter implements Writer
 
         // Open the English file and write the Master String Table
         $langFile = $langFolder . '/' . $locale . '.yml';
-        if ($fh = fopen($langFile, "w")) {
+        if ($fh = fopen($langFile, 'w')) {
             fwrite($fh, $content);
             fclose($fh);
         } else {
-            throw new LogicException("Cannot write language file! Please check permissions of $langFile");
+            throw new LogicException("Cannot write language file! Please check permissions of ${langFile}");
         }
     }
 
@@ -155,10 +154,9 @@ class YamlWriter implements Writer
     public function getYaml($messages, $locale)
     {
         $entities = $this->denormaliseMessages($messages);
-        $content = $this->getDumper()->dump([
-            $locale => $entities
+        return $this->getDumper()->dump([
+            $locale => $entities,
         ], 99);
-        return $content;
     }
 
     /**

@@ -2,20 +2,20 @@
 
 namespace SilverStripe\View;
 
+use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\ClassInfo;
-use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Control\Director;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
-use InvalidArgumentException;
 
 /**
  * Parses a template file with an *.ss file extension.
@@ -339,7 +339,7 @@ class SSViewer implements Flushable
                 $templates[] = $matches['name'] . $suffix;
             }
 
-            if ($baseClass && $class == $baseClass) {
+            if ($baseClass && $class === $baseClass) {
                 break;
             }
         }
@@ -355,7 +355,7 @@ class SSViewer implements Flushable
     public static function topLevel()
     {
         if (SSViewer::$topLevel) {
-            return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
+            return SSViewer::$topLevel[sizeof(SSViewer::$topLevel) - 1];
         }
         return null;
     }
@@ -462,7 +462,7 @@ class SSViewer implements Flushable
      */
     public static function hasTemplate($templates)
     {
-        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
+        return (bool) ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
 
     /**
@@ -506,7 +506,7 @@ class SSViewer implements Flushable
     {
         if (!self::$template_cache_flushed || $force) {
             $dir = dir(TEMP_PATH);
-            while (false !== ($file = $dir->read())) {
+            while (($file = $dir->read()) !== false) {
                 if (strstr($file, '.cache')) {
                     unlink(TEMP_PATH . DIRECTORY_SEPARATOR . $file);
                 }
@@ -528,7 +528,6 @@ class SSViewer implements Flushable
         if (!self::$cacheblock_cache_flushed || $force) {
             $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
             $cache->clear();
-
 
             self::$cacheblock_cache_flushed = true;
         }
@@ -561,7 +560,7 @@ class SSViewer implements Flushable
     /**
      * Flag whether to include the requirements in this response.
      *
-     * @param bool
+     * @param bool $incl
      */
     public function includeRequirements($incl = true)
     {
@@ -585,12 +584,12 @@ class SSViewer implements Flushable
     {
         if (isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
             $lines = file($cacheFile);
-            echo "<h2>Template: $cacheFile</h2>";
-            echo "<pre>";
+            echo "<h2>Template: ${cacheFile}</h2>";
+            echo '<pre>';
             foreach ($lines as $num => $line) {
-                echo str_pad($num+1, 5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
+                echo str_pad($num + 1, 5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
             }
-            echo "</pre>";
+            echo '</pre>';
         }
 
         $cache = $this->getPartialCacheStore();
@@ -632,7 +631,7 @@ class SSViewer implements Flushable
         $template = $this->chosen;
 
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache'
-            . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
+            . str_replace(['\\', '/', ':'], '.', Director::makeRelative(realpath($template)));
         $lastEdited = filemtime($template);
 
         if (!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
@@ -687,7 +686,7 @@ class SSViewer implements Flushable
 <?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace("/^(\\\\/)+/", "/", \$_SERVER['REQUEST_URI'])); ?>
 PHP;
                 } else {
-                    $thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI']));
+                    $thisURLRelativeToBase = Convert::raw2att(preg_replace('/^(\\/)+/', '/', $_SERVER['REQUEST_URI']));
                 }
 
                 $output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
@@ -723,7 +722,7 @@ PHP;
 
         // Filter out any other typed templates as we can only add, not change type
         $templates = array_filter(
-            (array)$this->templates,
+            (array) $this->templates,
             function ($template) {
                 return !isset($template['type']);
             }
@@ -744,7 +743,7 @@ PHP;
      * @param string $template Template name
      * @param mixed $data Data context
      * @param array $arguments Additional arguments
-     * @param Object $scope
+     * @param object $scope
      * @param bool $globalRequirements
      *
      * @return string Evaluated result
@@ -808,7 +807,7 @@ PHP;
      * @param string $template The template file name
      * @return string
      */
-    public function parseTemplateContent($content, $template = "")
+    public function parseTemplateContent($content, $template = '')
     {
         return $this->getParser()->compileString(
             $content,
@@ -834,7 +833,7 @@ PHP;
      */
     public function setTemplateFile($type, $file)
     {
-        if (!$type || $type == 'main') {
+        if (!$type || $type === 'main') {
             $this->chosen = $file;
         } else {
             $this->subTemplates[$type] = $file;
@@ -855,9 +854,8 @@ PHP;
 
         // Is the document XHTML?
         if (preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar)) {
-            return "<base href=\"$base\" />";
-        } else {
-            return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";
+            return "<base href=\"${base}\" />";
         }
+        return "<base href=\"${base}\"><!--[if lte IE 6]></base><![endif]-->";
     }
 }

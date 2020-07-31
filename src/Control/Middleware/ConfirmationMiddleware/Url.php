@@ -41,7 +41,7 @@ class Url implements Rule, Bypass
 
         if (is_array($httpMethods)) {
             $this->addHttpMethods(...$httpMethods);
-        } elseif (!is_null($httpMethods)) {
+        } elseif ($httpMethods !== null) {
             $this->addHttpMethods($httpMethods);
         }
     }
@@ -80,11 +80,11 @@ class Url implements Rule, Bypass
      * against parameter values accordingly. Null
      * as a value in the array matches any parameter values.
      *
-     * @param string|null $httpMethods
+     * @param array|null $params
      *
      * @return $this
      */
-    public function setParams($params = null)
+    public function setParams(?array $params = null)
     {
         $this->params = $params;
         return $this;
@@ -126,12 +126,12 @@ class Url implements Rule, Bypass
             return false;
         }
 
-        if (!is_null($this->params)) {
+        if ($this->params !== null) {
             $getVars = $request->getVars();
 
             // compare the request parameters with the declared ones
             foreach ($this->params as $key => $val) {
-                if (is_null($val)) {
+                if ($val === null) {
                     $cmp = array_key_exists($key, $getVars);
                 } else {
                     $cmp = isset($getVars[$key]) && $getVars[$key] === strval($val);
@@ -143,7 +143,7 @@ class Url implements Rule, Bypass
             }
 
             // check only declared parameters exist in the request
-            foreach ($getVars as $key => $val) {
+            foreach (array_keys($getVars) as $key) {
                 if (!array_key_exists($key, $this->params)) {
                     return false;
                 }
@@ -178,8 +178,8 @@ class Url implements Rule, Bypass
     {
         return new Confirmation\Item(
             $token,
-            _t(__CLASS__ . '.CONFIRMATION_NAME', 'URL is protected'),
-            _t(__CLASS__ . '.CONFIRMATION_DESCRIPTION', 'The URL is: "{url}"', ['url' => $url])
+            _t(self::class . '.CONFIRMATION_NAME', 'URL is protected'),
+            _t(self::class . '.CONFIRMATION_DESCRIPTION', 'The URL is: "{url}"', ['url' => $url])
         );
     }
 

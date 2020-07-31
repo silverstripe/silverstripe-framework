@@ -7,7 +7,6 @@ namespace SilverStripe\Dev\Install;
  */
 interface DatabaseConfigurationHelper
 {
-
     /**
      * Ensure that the database function for connectivity is available.
      * If it is, we assume the PHP module for this database has been setup correctly.
@@ -58,7 +57,6 @@ interface DatabaseConfigurationHelper
      * @return array Result - e.g. array('okay' => true, 'existsAlready' => 'true')
      */
     public function requireDatabaseOrCreatePermissions($databaseConfig);
-
 
     /**
      * Ensure we have permissions to alter tables.

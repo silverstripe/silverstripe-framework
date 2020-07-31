@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Dev\Debug;
 
 /**
  * Decorates a request handler with the HTTP Middleware pattern

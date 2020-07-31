@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM\Queries;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
 
 /**
  * Object representing a SQL SELECT query.
@@ -13,7 +13,6 @@ use InvalidArgumentException;
  */
 class SQLSelect extends SQLConditionalExpression
 {
-
     /**
      * An array of SELECT fields, keyed by an optional alias.
      *
@@ -77,7 +76,7 @@ class SQLSelect extends SQLConditionalExpression
      * @return static
      */
     public static function create(
-        $select = "*",
+        $select = '*',
         $from = [],
         $where = [],
         $orderby = [],
@@ -85,7 +84,7 @@ class SQLSelect extends SQLConditionalExpression
         $having = [],
         $limit = []
     ) {
-        return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
+        return Injector::inst()->createWithArgs(self::class, func_get_args());
     }
 
     /**
@@ -101,7 +100,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param array|string $limit A LIMIT clause or array with limit and offset keys
      */
     public function __construct(
-        $select = "*",
+        $select = '*',
         $from = [],
         $where = [],
         $orderby = [],
@@ -109,7 +108,6 @@ class SQLSelect extends SQLConditionalExpression
         $having = [],
         $limit = []
     ) {
-
         parent::__construct($from, $where);
 
         $this->setSelect($select);
@@ -247,21 +245,21 @@ class SQLSelect extends SQLConditionalExpression
     public function setLimit($limit, $offset = 0)
     {
         if ((is_numeric($limit) && $limit < 0) || (is_numeric($offset) && $offset < 0)) {
-            throw new InvalidArgumentException("SQLSelect::setLimit() only takes positive values");
+            throw new InvalidArgumentException('SQLSelect::setLimit() only takes positive values');
         }
 
         if ($limit === 0) {
             Deprecation::notice(
                 '4.3',
-                "setLimit(0) is deprecated in SS4. To clear limit, call setLimit(null). " .
-                    "In SS5 a limit of 0 will instead return no records."
+                'setLimit(0) is deprecated in SS4. To clear limit, call setLimit(null). ' .
+                    'In SS5 a limit of 0 will instead return no records.'
             );
         }
 
         if (is_numeric($limit) && ($limit || $offset)) {
             $this->limit = [
-                'start' => (int)$offset,
-                'limit' => (int)$limit,
+                'start' => (int) $offset,
+                'limit' => (int) $limit,
             ];
         } elseif ($limit && is_string($limit)) {
             if (strpos($limit, ',') !== false) {
@@ -271,13 +269,13 @@ class SQLSelect extends SQLConditionalExpression
             }
 
             $this->limit = [
-                'start' => (int)$start,
-                'limit' => (int)$innerLimit,
+                'start' => (int) $start,
+                'limit' => (int) $innerLimit,
             ];
         } elseif ($limit === null && $offset) {
             $this->limit = [
-                'start' => (int)$offset,
-                'limit' => $limit
+                'start' => (int) $offset,
+                'limit' => $limit,
             ];
         } else {
             $this->limit = $limit;
@@ -326,10 +324,10 @@ class SQLSelect extends SQLConditionalExpression
         }
 
         if (is_string($clauses)) {
-            if (strpos($clauses, "(") !== false) {
-                $sort = preg_split("/,(?![^()]*+\\))/", $clauses);
+            if (strpos($clauses, '(') !== false) {
+                $sort = preg_split('/,(?![^()]*+\\))/', $clauses);
             } else {
-                $sort = explode(",", $clauses);
+                $sort = explode(',', $clauses);
             }
 
             $clauses = [];
@@ -365,7 +363,7 @@ class SQLSelect extends SQLConditionalExpression
             $orderby = [];
             foreach ($this->orderby as $clause => $dir) {
                 // public function calls and multi-word columns like "CASE WHEN ..."
-                if (strpos($clause, '(') !== false || strpos($clause, " ") !== false) {
+                if (strpos($clause, '(') !== false || strpos($clause, ' ') !== false) {
                     // Move the clause to the select fragment, substituting a placeholder column in the sort fragment.
                     $clause = trim($clause);
                     do {
@@ -397,7 +395,7 @@ class SQLSelect extends SQLConditionalExpression
             $direction = strtoupper($matches[2]);
         } else {
             $column = $value;
-            $direction = $defaultDirection ? $defaultDirection : "ASC";
+            $direction = $defaultDirection ?: 'ASC';
         }
         return [$column, $direction];
     }
@@ -427,7 +425,7 @@ class SQLSelect extends SQLConditionalExpression
 
                 $rule = explode(' ', trim($v));
                 $clause = $rule[0];
-                $dir = (isset($rule[1])) ? $rule[1] : 'ASC';
+                $dir = isset($rule[1]) ? $rule[1] : 'ASC';
 
                 $orderby[$clause] = $dir;
             }
@@ -448,7 +446,7 @@ class SQLSelect extends SQLConditionalExpression
         $this->orderby = [];
 
         foreach ($order as $clause => $dir) {
-            $dir = (strtoupper($dir) == 'DESC') ? 'ASC' : 'DESC';
+            $dir = strtoupper($dir) === 'DESC' ? 'ASC' : 'DESC';
             $this->addOrderBy($clause, $dir);
         }
 
@@ -584,24 +582,23 @@ class SQLSelect extends SQLConditionalExpression
         $clone->orderby = null;
 
         // Choose a default column
-        if ($column == null) {
+        if ($column === null) {
             if ($this->groupby) {
                 // @todo Test case required here
                 $countQuery = new SQLSelect();
-                $countQuery->setSelect("count(*)");
+                $countQuery->setSelect('count(*)');
                 $countQuery->setFrom(['(' . $clone->sql($innerParameters) . ') all_distinct']);
                 $sql = $countQuery->sql($parameters); // $parameters should be empty
                 $result = DB::prepared_query($sql, $innerParameters);
-                return (int)$result->value();
-            } else {
-                $clone->setSelect(["count(*)"]);
+                return (int) $result->value();
             }
+            $clone->setSelect(['count(*)']);
         } else {
-            $clone->setSelect(["count($column)"]);
+            $clone->setSelect(["count(${column})"]);
         }
 
         $clone->setGroupBy([]);
-        return (int)$clone->execute()->value();
+        return (int) $clone->execute()->value();
     }
 
     /**
@@ -617,7 +614,6 @@ class SQLSelect extends SQLConditionalExpression
         return isset($this->select[$fieldName]);
     }
 
-
     /**
      * Return the number of rows in this query, respecting limit and offset.
      *
@@ -630,34 +626,32 @@ class SQLSelect extends SQLConditionalExpression
         if (!empty($this->having)) {
             $records = $this->execute();
             return $records->numRecords();
-        } elseif ($column == null) {
+        } elseif ($column === null) {
             // Choose a default column
             if ($this->groupby) {
-                $column = 'DISTINCT ' . implode(", ", $this->groupby);
+                $column = 'DISTINCT ' . implode(', ', $this->groupby);
             } else {
                 $column = '*';
             }
         }
 
         $clone = clone $this;
-        $clone->select = ['Count' => "count($column)"];
+        $clone->select = ['Count' => "count(${column})"];
         $clone->limit = null;
         $clone->orderby = null;
         $clone->groupby = null;
 
-        $count = (int)$clone->execute()->value();
+        $count = (int) $clone->execute()->value();
         // If there's a limit set, then that limit is going to heavily affect the count
         if ($this->limit) {
             if ($this->limit['limit'] !== null && $count >= ($this->limit['start'] + $this->limit['limit'])) {
                 return $this->limit['limit'];
-            } else {
-                return max(0, $count - $this->limit['start']);
             }
+            return max(0, $count - $this->limit['start']);
 
-        // Otherwise, the count is going to be the output of the SQL query
-        } else {
-            return $count;
+            // Otherwise, the count is going to be the output of the SQL query
         }
+        return $count;
     }
 
     /**
@@ -670,7 +664,6 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function aggregate($column, $alias = null)
     {
-
         $clone = clone $this;
 
         // don't set an ORDER BY clause if no limit has been set. It doesn't make

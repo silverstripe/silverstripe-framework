@@ -7,6 +7,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+
 namespace SilverStripe\Control\Util;
 
 /**
@@ -22,6 +23,7 @@ class IPUtils
     private function __construct()
     {
     }
+
     /**
      * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
      *
@@ -49,6 +51,7 @@ class IPUtils
 
         return false;
     }
+
     /**
      * Compares two IPv4 addresses.
      * In case a subnet is given, it checks if it contains the request IP.
@@ -64,7 +67,7 @@ class IPUtils
             return false;
         }
 
-        if (false !== strpos($ip, '/')) {
+        if (strpos($ip, '/') !== false) {
             list($address, $netmask) = explode('/', $ip, 2);
 
             if ($netmask === '0') {
@@ -79,8 +82,9 @@ class IPUtils
             $netmask = 32;
         }
 
-        return 0 === substr_compare(sprintf('%032b', ip2long($requestIP)), sprintf('%032b', ip2long($address)), 0, $netmask);
+        return substr_compare(sprintf('%032b', ip2long($requestIP)), sprintf('%032b', ip2long($address)), 0, $netmask) === 0;
     }
+
     /**
      * Compares two IPv6 addresses.
      * In case a subnet is given, it checks if it contains the request IP.
@@ -102,7 +106,7 @@ class IPUtils
             throw new \RuntimeException('Unable to check IPv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
 
-        if (false !== strpos($ip, '/')) {
+        if (strpos($ip, '/') !== false) {
             list($address, $netmask) = explode('/', $ip, 2);
 
             if ($netmask < 1 || $netmask > 128) {
@@ -122,9 +126,9 @@ class IPUtils
 
         for ($i = 1, $ceil = ceil($netmask / 16); $i <= $ceil; ++$i) {
             $left = $netmask - 16 * ($i - 1);
-            $left = ($left <= 16) ? $left : 16;
+            $left = $left <= 16 ? $left : 16;
             $mask = ~(0xffff >> $left) & 0xffff;
-            if (($bytesAddr[$i] & $mask) != ($bytesTest[$i] & $mask)) {
+            if (($bytesAddr[$i] & $mask) !== ($bytesTest[$i] & $mask)) {
                 return false;
             }
         }

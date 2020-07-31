@@ -11,7 +11,7 @@ class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor
 {
     public function encrypt($password, $salt = null, $member = null)
     {
-        return DB::prepared_query("SELECT OLD_PASSWORD(?)", [$password])->value();
+        return DB::prepared_query('SELECT OLD_PASSWORD(?)', [$password])->value();
     }
 
     public function salt($password, $member = null)

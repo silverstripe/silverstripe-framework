@@ -11,7 +11,6 @@ namespace SilverStripe\Control;
  */
 interface NestedController
 {
-
     /**
      * Get overriding controller
      *

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\View\Dev;
 
 use SilverStripe\Dev\SapphireTest;

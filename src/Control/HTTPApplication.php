@@ -6,12 +6,11 @@ use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
 use SilverStripe\Core\Application;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Core\Startup\FlushDiscoverer;
 use SilverStripe\Core\Startup\CompositeFlushDiscoverer;
-use SilverStripe\Core\Startup\CallbackFlushDiscoverer;
+use SilverStripe\Core\Startup\DeployFlushDiscoverer;
+use SilverStripe\Core\Startup\FlushDiscoverer;
 use SilverStripe\Core\Startup\RequestFlushDiscoverer;
 use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
-use SilverStripe\Core\Startup\DeployFlushDiscoverer;
 
 /**
  * Invokes the HTTP application within an ErrorControlChain
@@ -71,7 +70,7 @@ class HTTPApplication implements Application
         return new CompositeFlushDiscoverer([
             new ScheduledFlushDiscoverer($this->kernel),
             new DeployFlushDiscoverer($this->kernel),
-            new RequestFlushDiscoverer($request, $this->getEnvironmentType())
+            new RequestFlushDiscoverer($request, $this->getEnvironmentType()),
         ]);
     }
 
@@ -87,9 +86,7 @@ class HTTPApplication implements Application
         $kernel_env = $this->kernel->getEnvironment();
         $server_env = Environment::getEnv('SS_ENVIRONMENT_TYPE');
 
-        $env = !is_null($kernel_env) ? $kernel_env : $server_env;
-
-        return $env;
+        return $kernel_env !== null ? $kernel_env : $server_env;
     }
 
     /**

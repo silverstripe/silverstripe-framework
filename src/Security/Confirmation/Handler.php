@@ -2,16 +2,11 @@
 
 namespace SilverStripe\Security\Confirmation;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\Form as BaseForm;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Confirmation form handler implementation
@@ -26,7 +21,7 @@ class Handler extends RequestHandler
 
     private static $allowed_actions = [
         'index',
-        'Form'
+        'Form',
     ];
 
     public function Link($action = null)
@@ -47,8 +42,8 @@ class Handler extends RequestHandler
     public function index()
     {
         return [
-            'Title' => _t(__CLASS__ . '.FORM_TITLE', 'Confirm potentially dangerous action'),
-            'Form' => $this->Form()
+            'Title' => _t(self::class . '.FORM_TITLE', 'Confirm potentially dangerous action'),
+            'Form' => $this->Form(),
         ];
     }
 
@@ -78,7 +73,7 @@ class Handler extends RequestHandler
         $storageId = $this->request->param('StorageID');
 
         if (!strlen(trim($storageId))) {
-            $this->httpError(404, "Undefined StorageID");
+            $this->httpError(404, 'Undefined StorageID');
         }
 
         return Form::create($storageId, $this, __FUNCTION__);

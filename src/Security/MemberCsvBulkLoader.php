@@ -12,7 +12,6 @@ use SilverStripe\ORM\DataObject;
  */
 class MemberCsvBulkLoader extends CsvBulkLoader
 {
-
     /**
      * @var array Array of {@link Group} records. Import into a specific group.
      *  Is overruled by any "Groups" columns in the import.

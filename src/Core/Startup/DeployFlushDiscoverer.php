@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Core\Startup;
 
-use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Kernel;
 
 /**
  * Checks whether a filesystem resource has been changed since
@@ -47,9 +47,7 @@ class DeployFlushDiscoverer implements FlushDiscoverer
     {
         $classLoader = $this->kernel->getClassLoader();
         $classManifest = $classLoader->getManifest();
-        $cacheTimestamp = $classManifest->getManifestTimestamp();
-
-        return $cacheTimestamp;
+        return $classManifest->getManifestTimestamp();
     }
 
     /**
@@ -72,12 +70,11 @@ class DeployFlushDiscoverer implements FlushDiscoverer
         if ($resource === true) {
             $path = __FILE__;
         } else {
-            $path = sprintf("%s/%s", BASE_PATH, $resource);
+            $path = sprintf('%s/%s', BASE_PATH, $resource);
         }
 
         return $path;
     }
-
 
     /**
      * Returns the resource modification timestamp
@@ -104,7 +101,7 @@ class DeployFlushDiscoverer implements FlushDiscoverer
     {
         $resource = $this->getDeployResource();
 
-        if (is_null($resource)) {
+        if ($resource === null) {
             return null;
         }
 

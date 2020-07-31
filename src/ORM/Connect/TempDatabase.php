@@ -286,7 +286,7 @@ class TempDatabase
         foreach ($schema->databaseList() as $dbName) {
             if ($this->isDBTemp($dbName)) {
                 $schema->dropDatabase($dbName);
-                $schema->alterationMessage("Dropped database \"$dbName\"", 'deleted');
+                $schema->alterationMessage("Dropped database \"${dbName}\"", 'deleted');
                 flush();
             }
         }
@@ -308,7 +308,7 @@ class TempDatabase
             $this->rebuildTables($extraDataObjects);
         } catch (DatabaseException $ex) {
             // Avoid infinite loops
-            if ($this->skippedException && $this->skippedException->getMessage() == $ex->getMessage()) {
+            if ($this->skippedException && $this->skippedException->getMessage() === $ex->getMessage()) {
                 throw $ex;
             }
 

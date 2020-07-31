@@ -10,7 +10,6 @@ use SilverStripe\Security\Security;
 
 class RateLimitMiddleware implements HTTPMiddleware
 {
-
     /**
      * @var string Optional extra data to add to request key generation
      */

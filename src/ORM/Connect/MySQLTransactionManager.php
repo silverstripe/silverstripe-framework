@@ -56,7 +56,7 @@ class MySQLTransactionManager implements TransactionManager
 
         if ($chain) {
             user_error(
-                "transactionEnd() chain argument no longer implemented. Use NestedTransactionManager",
+                'transactionEnd() chain argument no longer implemented. Use NestedTransactionManager',
                 E_USER_WARNING
             );
         }
@@ -74,7 +74,7 @@ class MySQLTransactionManager implements TransactionManager
         }
 
         if ($savepoint) {
-            $this->dbConn->query("ROLLBACK TO SAVEPOINT $savepoint");
+            $this->dbConn->query("ROLLBACK TO SAVEPOINT ${savepoint}");
         } else {
             $this->dbConn->query('ROLLBACK');
             $this->inTransaction = false;
@@ -85,12 +85,12 @@ class MySQLTransactionManager implements TransactionManager
 
     public function transactionSavepoint($savepoint)
     {
-        $this->dbConn->query("SAVEPOINT $savepoint");
+        $this->dbConn->query("SAVEPOINT ${savepoint}");
     }
 
     public function transactionDepth()
     {
-        return (int)$this->inTransaction;
+        return (int) $this->inTransaction;
     }
 
     public function supportsSavepoints()

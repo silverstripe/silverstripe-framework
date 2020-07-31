@@ -56,7 +56,7 @@ class AopProxyService
                     }
                     foreach ($methods as $handler) {
                         $return = $handler->afterCall($this->proxied, $method, $args, $result);
-                        if (!is_null($return)) {
+                        if ($return !== null) {
                             $result = $return;
                         }
                     }

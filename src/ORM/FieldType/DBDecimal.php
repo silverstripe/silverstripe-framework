@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\ORM\DB;
 
 /**
  * Represents a Decimal field.
  */
 class DBDecimal extends DBField
 {
-
     /**
      * Whole number size
      *
@@ -70,14 +69,14 @@ class DBDecimal extends DBField
     {
         $parts = [
             'datatype' => 'decimal',
-            'precision' => "$this->wholeSize,$this->decimalSize",
+            'precision' => "{$this->wholeSize},{$this->decimalSize}",
             'default' => $this->defaultValue,
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = [
             'type' => 'decimal',
-            'parts' => $parts
+            'parts' => $parts,
         ];
 
         DB::require_field($this->tableName, $this->name, $values);
@@ -88,7 +87,7 @@ class DBDecimal extends DBField
         $fieldName = $this->name;
 
         if ($fieldName) {
-            $dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value);
+            $dataObject->{$fieldName} = (float) preg_replace('/[^0-9.\-\+]/', '', $this->value);
         } else {
             user_error("DBField::saveInto() Called on a nameless '" . static::class . "' object", E_USER_ERROR);
         }
@@ -125,9 +124,9 @@ class DBDecimal extends DBField
         }
 
         if (ctype_digit($value)) {
-            return (int)$value;
+            return (int) $value;
         }
 
-        return (float)$value;
+        return (float) $value;
     }
 }

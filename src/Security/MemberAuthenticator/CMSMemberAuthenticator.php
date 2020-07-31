@@ -11,7 +11,6 @@ use SilverStripe\Security\Member;
  */
 class CMSMemberAuthenticator extends MemberAuthenticator
 {
-
     public function supportedServices()
     {
         return BaseAuthenticator::CMS_LOGIN;

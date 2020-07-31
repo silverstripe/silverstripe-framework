@@ -4,7 +4,6 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use Serializable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Deprecation;
 
@@ -159,7 +158,7 @@ class ValidationResult implements Serializable
         $cast = self::CAST_TEXT
     ) {
         if ($code && is_numeric($code)) {
-            throw new InvalidArgumentException("Don't use a numeric code '$code'.  Use a string.");
+            throw new InvalidArgumentException("Don't use a numeric code '${code}'.  Use a string.");
         }
         if (is_bool($cast)) {
             $cast = $cast ? self::CAST_TEXT : self::CAST_HTML;

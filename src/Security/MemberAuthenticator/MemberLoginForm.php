@@ -31,7 +31,6 @@ use SilverStripe\View\Requirements;
  */
 class MemberLoginForm extends BaseLoginForm
 {
-
     /**
      * This field is used in the "You are logged in as %s" message
      * @var string
@@ -133,12 +132,12 @@ class MemberLoginForm extends BaseLoginForm
 
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
         $fields = FieldList::create(
-            HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
+            HiddenField::create('AuthenticationMethod', null, $this->getAuthenticatorClass(), $this),
             // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
-            $emailField = TextField::create("Email", $label, null, null, $this),
-            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
+            $emailField = TextField::create('Email', $label, null, null, $this),
+            PasswordField::create('Password', _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         );
         $emailField->setAttribute('autofocus', 'true');
 
@@ -152,14 +151,14 @@ class MemberLoginForm extends BaseLoginForm
         if (Security::config()->get('autologin_enabled')) {
             $fields->push(
                 CheckboxField::create(
-                    "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
+                    'Remember',
+                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', 'Keep me signed in')
                 )->setAttribute(
                     'title',
                     _t(
                         'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
-                        [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
+                        'Remember me next time? (for {count} days on this device)',
+                        ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
                     )
                 )
             );
@@ -179,19 +178,15 @@ class MemberLoginForm extends BaseLoginForm
      */
     protected function getFormActions()
     {
-        $actions = FieldList::create(
-            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
+        return FieldList::create(
+            FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', 'Log in')),
             LiteralField::create(
                 'forgotPassword',
                 '<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
                 . _t('SilverStripe\\Security\\Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
             )
         );
-
-        return $actions;
     }
-
-
 
     public function restoreFormState()
     {
@@ -224,6 +219,6 @@ class MemberLoginForm extends BaseLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(self::class . '.AUTHENTICATORNAME', "E-mail & Password");
+        return _t(self::class . '.AUTHENTICATORNAME', 'E-mail & Password');
     }
 }

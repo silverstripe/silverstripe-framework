@@ -6,7 +6,6 @@ use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use ReflectionClass;
-use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
@@ -47,7 +46,6 @@ use SilverStripe\View\ViewableData;
  */
 class RequestHandler extends ViewableData
 {
-
     /**
      * Optional url_segment for this request handler
      *
@@ -57,7 +55,7 @@ class RequestHandler extends ViewableData
     private static $url_segment = null;
 
     /**
-     * @var HTTPRequest $request The request object that the controller was called with.
+     * @var HTTPRequest The request object that the controller was called with.
      * Set in {@link handleRequest()}. Useful to generate the {}
      */
     protected $request = null;
@@ -90,7 +88,6 @@ class RequestHandler extends ViewableData
     private static $url_handlers = [
         '$Action' => '$Action',
     ];
-
 
     /**
      * Define a list of action handling methods that are allowed to be called directly by URLs.
@@ -170,34 +167,34 @@ class RequestHandler extends ViewableData
 
         // We used to put "handleAction" as the action on controllers, but (a) this could only be called when
         // you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
-        if ($action == 'handleAction') {
+        if ($action === 'handleAction') {
             // TODO Fix LeftAndMain usage
             // Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
             $action = '$Action';
         }
 
         // Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-        if ($action[0] == '$') {
-            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)));
+        if ($action[0] === '$') {
+            $action = str_replace('-', '_', $request->latestParam(substr($action, 1)));
         }
 
         if (!$action) {
             if (isset($_REQUEST['debug_request'])) {
                 Debug::message("Action not set; using default action method name 'index'");
             }
-            $action = "index";
+            $action = 'index';
         } elseif (!is_string($action)) {
-            user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+            user_error('Non-string method name: ' . var_export($action, true), E_USER_ERROR);
         }
 
         $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         try {
             if (!$this->hasAction($action)) {
-                return $this->httpError(404, "Action '$action' isn't available $classMessage.");
+                return $this->httpError(404, "Action '${action}' isn't available ${classMessage}.");
             }
-            if (!$this->checkAccessAction($action) || in_array(strtolower($action), ['run', 'doinit'])) {
-                return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action), ['run', 'doinit'], true)) {
+                return $this->httpError(403, "Action '${action}' isn't allowed ${classMessage}.");
             }
             $result = $this->handleAction($request, $action);
         } catch (HTTPResponse_Exception $e) {
@@ -208,7 +205,7 @@ class RequestHandler extends ViewableData
 
         if ($result instanceof HTTPResponse && $result->isError()) {
             if (isset($_REQUEST['debug_request'])) {
-                Debug::message("Rule resulted in HTTP error; breaking");
+                Debug::message('Rule resulted in HTTP error; breaking');
             }
             return $result;
         }
@@ -236,22 +233,21 @@ class RequestHandler extends ViewableData
         } elseif ($request->allParsed()) {
             return $result;
 
-        // But if we have more content on the URL and we don't know what to do with it, return an error.
-        } else {
-            return $this->httpError(404, "I can't handle sub-URLs $classMessage.");
+            // But if we have more content on the URL and we don't know what to do with it, return an error.
         }
+        return $this->httpError(404, "I can't handle sub-URLs ${classMessage}.");
     }
 
     /**
      * @param HTTPRequest $request
-     * @return array
+     * @return array|null
      */
     protected function findAction($request)
     {
         $handlerClass = static::class;
 
         // We stop after RequestHandler; in other words, at ViewableData
-        while ($handlerClass && $handlerClass != ViewableData::class) {
+        while ($handlerClass && $handlerClass !== ViewableData::class) {
             $urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
 
             if ($urlHandlers) {
@@ -303,16 +299,16 @@ class RequestHandler extends ViewableData
      *
      * Must not raise HTTPResponse_Exceptions - instead it should return
      *
-     * @param $request
-     * @param $action
-     * @return HTTPResponse
+     * @param HTTPRequest $request
+     * @param string $action
+     * @return HTTPResponse|array
      */
     protected function handleAction($request, $action)
     {
         $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         if (!$this->hasMethod($action)) {
-            return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
+            return new HTTPResponse("Action '${action}' isn't available ${classMessage}.", 404);
         }
 
         $res = $this->extend('beforeCallActionHandler', $request, $action);
@@ -320,7 +316,7 @@ class RequestHandler extends ViewableData
             return reset($res);
         }
 
-        $actionRes = $this->$action($request);
+        $actionRes = $this->{$action}($request);
 
         $res = $this->extend('afterCallActionHandler', $request, $action, $actionRes);
         if ($res) {
@@ -366,9 +362,8 @@ class RequestHandler extends ViewableData
             }
 
             return $actions;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -381,7 +376,7 @@ class RequestHandler extends ViewableData
      */
     public function hasAction($action)
     {
-        if ($action == 'index') {
+        if ($action === 'index') {
             return true;
         }
 
@@ -398,14 +393,14 @@ class RequestHandler extends ViewableData
             }
         }
 
-        $action  = strtolower($action);
+        $action = strtolower($action);
         $actions = $this->allowedActions();
 
         // Check if the action is defined in the allowed actions of any ancestry class
         // as either a key or value. Note that if the action is numeric, then keys are not
         // searched for actions to prevent actual array keys being recognised as actions.
         if (is_array($actions)) {
-            $isKey   = !is_numeric($action) && array_key_exists($action, $actions);
+            $isKey = !is_numeric($action) && array_key_exists($action, $actions);
             $isValue = in_array($action, $actions, true);
             if ($isKey || $isValue) {
                 return true;
@@ -414,7 +409,7 @@ class RequestHandler extends ViewableData
 
         $actionsWithoutExtra = $this->config()->get('allowed_actions', true);
         if (!is_array($actions) || !$actionsWithoutExtra) {
-            if (!in_array(strtolower($action), ['run', 'doinit']) && method_exists($this, $action)) {
+            if (!in_array(strtolower($action), ['run', 'doinit'], true) && method_exists($this, $action)) {
                 return true;
             }
         }
@@ -426,13 +421,12 @@ class RequestHandler extends ViewableData
      * Return the class that defines the given action, so that we know where to check allowed_actions.
      *
      * @param string $actionOrigCasing
-     * @return string
+     * @return string|null
      */
     protected function definingClassForAction($actionOrigCasing)
     {
         $action = strtolower($actionOrigCasing);
 
-        $definingClass = null;
         $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
             if (!method_exists($inst, $action)) {
@@ -472,7 +466,7 @@ class RequestHandler extends ViewableData
             if ($test === true || $test === 1 || $test === '1') {
                 // TRUE should always allow access
                 $isAllowed = true;
-            } elseif (substr($test, 0, 2) == '->') {
+            } elseif (substr($test, 0, 2) === '->') {
                 // Determined by custom method with "->" prefix
                 list($method, $arguments) = ClassInfo::parse_class_spec(substr($test, 2));
                 $isAllowed = call_user_func_array([$this, $method], $arguments);
@@ -497,7 +491,7 @@ class RequestHandler extends ViewableData
 
         // If we don't have a match in allowed_actions,
         // whitelist the 'index' action as well as undefined actions based on configuration.
-        if (!$isDefined && ($action == 'index' || empty($action))) {
+        if (!$isDefined && ($action === 'index' || empty($action))) {
             $isAllowed = true;
         }
 
@@ -557,7 +551,7 @@ class RequestHandler extends ViewableData
      * Returns a link to this controller. Overload with your own Link rules if they exist.
      *
      * @param string $action Optional action
-     * @return string
+     * @return string|null
      */
     public function Link($action = null)
     {
@@ -586,7 +580,7 @@ class RequestHandler extends ViewableData
      * @param int $code
      * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, ?int $code = 302)
     {
         $url = Director::absoluteURL($url);
         $response = new HTTPResponse();
@@ -596,7 +590,7 @@ class RequestHandler extends ViewableData
     /**
      * Safely get the value of the BackURL param, if provided via querystring / posted var
      *
-     * @return string
+     * @return string|null
      */
     public function getBackURL()
     {
@@ -637,7 +631,7 @@ class RequestHandler extends ViewableData
     /**
      * Get referer
      *
-     * @return string
+     * @return string|null
      */
     public function getReferer()
     {

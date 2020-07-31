@@ -4,11 +4,12 @@ namespace SilverStripe\View;
 
 class ViewableData_Customised extends ViewableData
 {
-
     /**
      * @var ViewableData
      */
-    protected $original, $customised;
+    protected $original;
+
+    protected $customised;
 
     /**
      * Instantiate a new customised ViewableData object
@@ -37,21 +38,21 @@ class ViewableData_Customised extends ViewableData
 
     public function __get($property)
     {
-        if (isset($this->customised->$property)) {
-            return $this->customised->$property;
+        if (isset($this->customised->{$property})) {
+            return $this->customised->{$property};
         }
 
-        return $this->original->$property;
+        return $this->original->{$property};
     }
 
     public function __set($property, $value)
     {
-        $this->customised->$property = $this->original->$property = $value;
+        $this->customised->{$property} = $this->original->{$property} = $value;
     }
 
     public function __isset($property)
     {
-        return isset($this->customised->$property) || isset($this->original->$property) || parent::__isset($property);
+        return isset($this->customised->{$property}) || isset($this->original->{$property}) || parent::__isset($property);
     }
 
     public function hasMethod($method)

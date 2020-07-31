@@ -2,25 +2,23 @@
 
 namespace SilverStripe\Dev\Tasks;
 
+use \Bramus\Monolog\Formatter\ColoredLineFormatter;
 use Monolog\Handler\FilterHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SilverStripe\AssetAdmin\Helper\ImageThumbnailHelper;
-use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
 use SilverStripe\Assets\Dev\Tasks\FileMigrationHelper;
 use SilverStripe\Assets\Dev\Tasks\FolderMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\LegacyThumbnailMigrationHelper;
 use SilverStripe\Assets\Dev\Tasks\NormaliseAccessMigrationHelper;
+use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Storage\FileHashingService;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Logging\PreformattedEchoHandler;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
 use SilverStripe\UserForms\Task\RecoverUploadLocationsHelper;
-use \Bramus\Monolog\Formatter\ColoredLineFormatter;
 
 /**
  * Migrates all 3.x file dataobjects to use the new DBFile field.
@@ -42,7 +40,7 @@ class MigrateFileTask extends BuildTask
 
     protected $optInSubtasks = [
         'normalise-access',
-        'relocate-userform-uploads-2020-9280'
+        'relocate-userform-uploads-2020-9280',
     ];
 
     private static $dependencies = [
@@ -76,15 +74,15 @@ class MigrateFileTask extends BuildTask
         $subtasks = !empty($args['only']) ? explode(',', $args['only']) : $this->defaultSubtasks;
 
         $subtask = 'move-files';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(FileMigrationHelper::class)) {
-                $this->logger->error("No file migration helper detected");
+                $this->logger->error('No file migration helper detected');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
                 $this->logger->notice("Migrating filesystem and database records ({$subtask})");
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
 
                 FileMigrationHelper::singleton()
                     ->setLogger($this->logger)
@@ -95,15 +93,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'migrate-folders';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(FolderMigrationHelper::class)) {
-                $this->logger->error("No folder migration helper detected");
+                $this->logger->error('No folder migration helper detected');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
                 $this->logger->notice("Migrating folder database records ({$subtask})");
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
 
                 FolderMigrationHelper::singleton()
                     ->setLogger($this->logger)
@@ -114,24 +112,24 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'move-thumbnails';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(LegacyThumbnailMigrationHelper::class)) {
-                $this->logger->error("LegacyThumbnailMigrationHelper not found");
+                $this->logger->error('LegacyThumbnailMigrationHelper not found');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("#############################################################");
+                $this->logger->notice('#############################################################');
                 $this->logger->notice("Migrating existing thumbnails to new file format ({$subtask})");
-                $this->logger->notice("#############################################################");
+                $this->logger->notice('#############################################################');
 
                 $paths = LegacyThumbnailMigrationHelper::singleton()
                     ->setLogger($this->logger)
                     ->run($this->getStore());
 
                 if ($paths) {
-                    $this->logger->info(sprintf("%d thumbnails moved", count($paths)));
+                    $this->logger->info(sprintf('%d thumbnails moved', count($paths)));
                 } else {
-                    $this->logger->info("No thumbnails needed to be moved");
+                    $this->logger->info('No thumbnails needed to be moved');
                 }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
@@ -139,15 +137,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'generate-cms-thumbnails';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(ImageThumbnailHelper::class)) {
-                $this->logger->error("ImageThumbnailHelper not found");
+                $this->logger->error('ImageThumbnailHelper not found');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("#############################################");
+                $this->logger->notice('#############################################');
                 $this->logger->notice("Generating new CMS UI thumbnails ({$subtask})");
-                $this->logger->notice("#############################################");
+                $this->logger->notice('#############################################');
 
                 $count = ImageThumbnailHelper::singleton()
                     ->setLogger($this->logger)
@@ -156,7 +154,7 @@ class MigrateFileTask extends BuildTask
                 if ($count > 0) {
                     $this->logger->info("Created {$count} CMS UI thumbnails");
                 } else {
-                    $this->logger->info("No CMS UI thumbnails needed to be created");
+                    $this->logger->info('No CMS UI thumbnails needed to be created');
                 }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
@@ -164,15 +162,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'fix-folder-permissions';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(FixFolderPermissionsHelper::class)) {
-                $this->logger->error("FixFolderPermissionsHelper not found");
+                $this->logger->error('FixFolderPermissionsHelper not found');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("####################################################");
+                $this->logger->notice('####################################################');
                 $this->logger->notice("Fixing secure-assets folder permissions ({$subtask})");
-                $this->logger->notice("####################################################");
+                $this->logger->notice('####################################################');
                 $this->logger->debug('Only required if the 3.x project included silverstripe/secure-assets');
 
                 $count = FixFolderPermissionsHelper::singleton()
@@ -182,7 +180,7 @@ class MigrateFileTask extends BuildTask
                 if ($count > 0) {
                     $this->logger->info("Repaired {$count} folders with broken CanViewType settings");
                 } else {
-                    $this->logger->info("No folders required fixes");
+                    $this->logger->info('No folders required fixes');
                 }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
@@ -190,15 +188,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'fix-secureassets';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(SecureAssetsMigrationHelper::class)) {
-                $this->logger->error("SecureAssetsMigrationHelper not found");
+                $this->logger->error('SecureAssetsMigrationHelper not found');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("#####################################################");
+                $this->logger->notice('#####################################################');
                 $this->logger->notice("Fixing secure-assets folder restrictions ({$subtask})");
-                $this->logger->notice("#####################################################");
+                $this->logger->notice('#####################################################');
                 $this->logger->debug('Only required if the 3.x project included silverstripe/secure-assets');
 
                 $paths = SecureAssetsMigrationHelper::singleton()
@@ -206,9 +204,9 @@ class MigrateFileTask extends BuildTask
                     ->run($this->getStore());
 
                 if (count($paths) > 0) {
-                    $this->logger->info(sprintf("Repaired %d folders broken folder restrictions", count($paths)));
+                    $this->logger->info(sprintf('Repaired %d folders broken folder restrictions', count($paths)));
                 } else {
-                    $this->logger->info("No folders required fixes");
+                    $this->logger->info('No folders required fixes');
                 }
 
                 $this->extend('postFileMigrationSubtask', $subtask);
@@ -216,15 +214,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'normalise-access';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(NormaliseAccessMigrationHelper::class)) {
-                $this->logger->error("No normalise access migration helper detected");
+                $this->logger->error('No normalise access migration helper detected');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
                 $this->logger->notice("Migrating filesystem and database records ({$subtask})");
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
 
                 NormaliseAccessMigrationHelper::singleton()
                     ->setLogger($this->logger)
@@ -235,15 +233,15 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'relocate-userform-uploads-2020-9280';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks, true)) {
             if (!class_exists(RecoverUploadLocationsHelper::class)) {
-                $this->logger->error("No UserForms helper detected");
+                $this->logger->error('No UserForms helper detected');
             } else {
                 $this->extend('preFileMigrationSubtask', $subtask);
 
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
                 $this->logger->notice("Recovering UserForm uploaded file locations ({$subtask})");
-                $this->logger->notice("######################################################");
+                $this->logger->notice('######################################################');
 
                 RecoverUploadLocationsHelper::singleton()
                     ->setLogger($this->logger)
@@ -255,7 +253,7 @@ class MigrateFileTask extends BuildTask
 
         $this->extend('postFileMigration');
 
-        $this->logger->info("Done!");
+        $this->logger->info('Done!');
     }
 
     public function getDescription()

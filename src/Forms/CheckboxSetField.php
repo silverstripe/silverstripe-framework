@@ -5,7 +5,6 @@ namespace SilverStripe\Forms;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -44,7 +43,6 @@ use SilverStripe\View\ArrayData;
  */
 class CheckboxSetField extends MultiSelectField
 {
-
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
 
     /**
@@ -57,7 +55,7 @@ class CheckboxSetField extends MultiSelectField
     public function Field($properties = [])
     {
         $properties = array_merge($properties, [
-            'Options' => $this->getOptions()
+            'Options' => $this->getOptions(),
         ]);
 
         return FormField::Field($properties);
@@ -84,8 +82,8 @@ class CheckboxSetField extends MultiSelectField
             $extraClass = $odd ? 'odd' : 'even';
             $extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
 
-            $itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
-            $itemDisabled = $this->isDisabled() || in_array($itemValue, $disabledItems);
+            $itemChecked = in_array($itemValue, $selectedValues, true) || in_array($itemValue, $defaultItems, true);
+            $itemDisabled = $this->isDisabled() || in_array($itemValue, $disabledItems, true);
 
             $options->push(new ArrayData([
                 'ID' => $itemID,

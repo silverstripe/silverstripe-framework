@@ -22,7 +22,7 @@ class URLSegmentFilter implements FilterInterface
 
     /**
      * @config
-     * @var Boolean
+     * @var boolean
      */
     private static $default_use_transliterator = true;
 
@@ -39,7 +39,7 @@ class URLSegmentFilter implements FilterInterface
         '/[\/\?=#:]+/u' => '-', // remove forward slashes, question marks, equal signs, hashes and colons in case multibyte is allowed (and non-ASCII chars aren't removed)
         '/[\-]{2,}/u' => '-', // remove duplicate dashes
         '/^[\-]+/u' => '', // Remove all leading dashes
-        '/[\-]+$/u' => '' // Remove all trailing dashes
+        '/[\-]+$/u' => '', // Remove all trailing dashes
     ];
 
     /**
@@ -62,7 +62,6 @@ class URLSegmentFilter implements FilterInterface
      * @var Transliterator
      */
     protected $transliterator;
-
 
     /**
      * @var boolean
@@ -121,7 +120,7 @@ class URLSegmentFilter implements FilterInterface
      */
     public function getReplacements()
     {
-        return $this->replacements ?: (array)$this->config()->get('default_replacements');
+        return $this->replacements ?: (array) $this->config()->get('default_replacements');
     }
 
     /**
@@ -146,7 +145,7 @@ class URLSegmentFilter implements FilterInterface
     }
 
     /**
-     * @param boolean
+     * @param $bool
      */
     public function setAllowMultibyte($bool)
     {
@@ -158,6 +157,6 @@ class URLSegmentFilter implements FilterInterface
      */
     public function getAllowMultibyte()
     {
-        return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
+        return $this->allowMultibyte !== null ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
     }
 }

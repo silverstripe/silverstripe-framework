@@ -8,7 +8,6 @@ use SilverStripe\Forms\CurrencyField;
  * Represents a decimal field containing a currency amount.
  * The currency class only supports single currencies.  For multi-currency support, use {@link Money}
  *
- *
  * Example definition via {@link DataObject::$db}:
  * <code>
  * static $db = array(
@@ -38,7 +37,7 @@ class DBCurrency extends DBDecimal
         // return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
         $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
         if ($this->value < 0) {
-            return "($val)";
+            return "(${val})";
         }
 
         return $val;
@@ -51,7 +50,7 @@ class DBCurrency extends DBDecimal
     {
         $val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
         if ($this->value < 0) {
-            return "($val)";
+            return "(${val})";
         }
         return $val;
     }

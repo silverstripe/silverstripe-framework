@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use LogicException;
 
 /**
  * Represents schema management object for MySQL
  */
 class MySQLSchemaManager extends DBSchemaManager
 {
-
     /**
      * Identifier for this schema, used for configuring schema-specific table
      * creation options
@@ -22,20 +21,20 @@ class MySQLSchemaManager extends DBSchemaManager
 
     public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null)
     {
-        $fieldSchemas = $indexSchemas = "";
+        $fieldSchemas = $indexSchemas = '';
 
         if (!empty($options[self::ID])) {
             $addOptions = $options[self::ID];
         } else {
-            $addOptions = "ENGINE=InnoDB";
+            $addOptions = 'ENGINE=InnoDB';
         }
 
         if (!isset($fields['ID'])) {
-            $fields['ID'] = "int(11) not null auto_increment";
+            $fields['ID'] = 'int(11) not null auto_increment';
         }
         if ($fields) {
             foreach ($fields as $k => $v) {
-                $fieldSchemas .= "\"$k\" $v,\n";
+                $fieldSchemas .= "\"${k}\" ${v},\n";
             }
         }
         if ($indexes) {
@@ -46,12 +45,12 @@ class MySQLSchemaManager extends DBSchemaManager
 
         // Switch to "CREATE TEMPORARY TABLE" for temporary tables
         $temporary = empty($options['temporary'])
-                ? ""
-                : "TEMPORARY";
+                ? ''
+                : 'TEMPORARY';
 
-        $this->query("CREATE $temporary TABLE \"$table\" (
-				$fieldSchemas
-				$indexSchemas
+        $this->query("CREATE ${temporary} TABLE \"${table}\" (
+				${fieldSchemas}
+				${indexSchemas}
 				primary key (ID)
 			) {$addOptions}");
 
@@ -69,8 +68,8 @@ class MySQLSchemaManager extends DBSchemaManager
     ) {
         if ($this->isView($tableName)) {
             $this->alterationMessage(
-                sprintf("Table %s not changed as it is a view", $tableName),
-                "changed"
+                sprintf('Table %s not changed as it is a view', $tableName),
+                'changed'
             );
             return;
         }
@@ -78,43 +77,43 @@ class MySQLSchemaManager extends DBSchemaManager
 
         if ($newFields) {
             foreach ($newFields as $k => $v) {
-                $alterList[] .= "ADD \"$k\" $v";
+                $alterList[] .= "ADD \"${k}\" ${v}";
             }
         }
         if ($newIndexes) {
             foreach ($newIndexes as $k => $v) {
-                $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
+                $alterList[] .= 'ADD ' . $this->getIndexSqlDefinition($k, $v);
             }
         }
         if ($alteredFields) {
             foreach ($alteredFields as $k => $v) {
-                $alterList[] .= "CHANGE \"$k\" \"$k\" $v";
+                $alterList[] .= "CHANGE \"${k}\" \"${k}\" ${v}";
             }
         }
         if ($alteredIndexes) {
             foreach ($alteredIndexes as $k => $v) {
-                $alterList[] .= "DROP INDEX \"$k\"";
-                $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
+                $alterList[] .= "DROP INDEX \"${k}\"";
+                $alterList[] .= 'ADD ' . $this->getIndexSqlDefinition($k, $v);
             }
         }
 
         $dbID = self::ID;
         if ($alteredOptions && isset($alteredOptions[$dbID])) {
-            $this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$dbID]));
+            $this->query(sprintf('ALTER TABLE "%s" %s', $tableName, $alteredOptions[$dbID]));
             $this->alterationMessage(
-                sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$dbID]),
-                "changed"
+                sprintf('Table %s options changed: %s', $tableName, $alteredOptions[$dbID]),
+                'changed'
             );
         }
 
         $alterations = implode(",\n", $alterList);
-        $this->query("ALTER TABLE \"$tableName\" $alterations");
+        $this->query("ALTER TABLE \"${tableName}\" ${alterations}");
     }
 
     public function isView($tableName)
     {
-        $info = $this->query("SHOW /*!50002 FULL*/ TABLES LIKE '$tableName'")->record();
-        return $info && strtoupper($info['Table_type']) == 'VIEW';
+        $info = $this->query("SHOW /*!50002 FULL*/ TABLES LIKE '${tableName}'")->record();
+        return $info && strtoupper($info['Table_type']) === 'VIEW';
     }
 
     /**
@@ -131,7 +130,7 @@ class MySQLSchemaManager extends DBSchemaManager
             throw new LogicException('Table ' . $oldTableName . ' does not exist.');
         }
 
-        return $this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
+        return $this->query("ALTER TABLE \"${oldTableName}\" RENAME \"${newTableName}\"");
     }
 
     public function checkAndRepairTable($tableName)
@@ -150,14 +149,14 @@ class MySQLSchemaManager extends DBSchemaManager
         }
 
         // Perform check
-        if ($this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
+        if ($this->runTableCheckCommand("CHECK TABLE \"${tableName}\"")) {
             return true;
         }
         $this->alterationMessage(
-            "Table $tableName: repaired",
-            "repaired"
+            "Table ${tableName}: repaired",
+            'repaired'
         );
-        return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\"");
+        return $this->runTableCheckCommand("REPAIR TABLE \"${tableName}\"");
     }
 
     /**
@@ -169,7 +168,7 @@ class MySQLSchemaManager extends DBSchemaManager
     {
         $testResults = $this->query($sql);
         foreach ($testResults as $testRecord) {
-            if (strtolower($testRecord['Msg_text']) != 'ok') {
+            if (strtolower($testRecord['Msg_text']) !== 'ok') {
                 return false;
             }
         }
@@ -181,36 +180,36 @@ class MySQLSchemaManager extends DBSchemaManager
         // MySQLi doesn't like parameterised queries for some queries
         // underscores need to be escaped in a SHOW TABLES LIKE query
         $sqlTable = str_replace('_', '\\_', $this->database->quoteString($table));
-        return (bool) ($this->query("SHOW TABLES LIKE $sqlTable")->value());
+        return (bool) ($this->query("SHOW TABLES LIKE ${sqlTable}")->value());
     }
 
     public function createField($tableName, $fieldName, $fieldSpec)
     {
-        $this->query("ALTER TABLE \"$tableName\" ADD \"$fieldName\" $fieldSpec");
+        $this->query("ALTER TABLE \"${tableName}\" ADD \"${fieldName}\" ${fieldSpec}");
     }
 
     public function databaseList()
     {
-        return $this->query("SHOW DATABASES")->column();
+        return $this->query('SHOW DATABASES')->column();
     }
 
     public function databaseExists($name)
     {
         // MySQLi doesn't like parameterised queries for some queries
         $sqlName = addcslashes($this->database->quoteString($name), '%_');
-        return !!($this->query("SHOW DATABASES LIKE $sqlName")->value());
+        return !!($this->query("SHOW DATABASES LIKE ${sqlName}")->value());
     }
 
     public function createDatabase($name)
     {
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
         $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
-        $this->query("CREATE DATABASE \"$name\" DEFAULT CHARACTER SET {$charset} DEFAULT COLLATE {$collation}");
+        $this->query("CREATE DATABASE \"${name}\" DEFAULT CHARACTER SET {$charset} DEFAULT COLLATE {$collation}");
     }
 
     public function dropDatabase($name)
     {
-        $this->query("DROP DATABASE \"$name\"");
+        $this->query("DROP DATABASE \"${name}\"");
     }
 
     /**
@@ -221,7 +220,7 @@ class MySQLSchemaManager extends DBSchemaManager
      */
     public function alterField($tableName, $fieldName, $fieldSpec)
     {
-        $this->query("ALTER TABLE \"$tableName\" CHANGE \"$fieldName\" \"$fieldName\" $fieldSpec");
+        $this->query("ALTER TABLE \"${tableName}\" CHANGE \"${fieldName}\" \"${fieldName}\" ${fieldSpec}");
     }
 
     /**
@@ -235,7 +234,7 @@ class MySQLSchemaManager extends DBSchemaManager
     {
         $fieldList = $this->fieldList($tableName);
         if (array_key_exists($oldName, $fieldList)) {
-            $this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]);
+            $this->query("ALTER TABLE \"${tableName}\" CHANGE \"${oldName}\" \"${newName}\" " . $fieldList[$oldName]);
         }
     }
 
@@ -243,29 +242,29 @@ class MySQLSchemaManager extends DBSchemaManager
 
     public function fieldList($table)
     {
-        $fields = $this->query("SHOW FULL FIELDS IN \"$table\"");
+        $fields = $this->query("SHOW FULL FIELDS IN \"${table}\"");
         $fieldList = [];
         foreach ($fields as $field) {
             $fieldSpec = $field['Type'];
-            if (!$field['Null'] || $field['Null'] == 'NO') {
+            if (!$field['Null'] || $field['Null'] === 'NO') {
                 $fieldSpec .= ' not null';
             }
 
-            if ($field['Collation'] && $field['Collation'] != 'NULL') {
+            if ($field['Collation'] && $field['Collation'] !== 'NULL') {
                 // Cache collation info to cut down on database traffic
                 if (!isset(self::$_cache_collation_info[$field['Collation']])) {
                     self::$_cache_collation_info[$field['Collation']]
                         = $this->query("SHOW COLLATION LIKE '{$field['Collation']}'")->record();
                 }
                 $collInfo = self::$_cache_collation_info[$field['Collation']];
-                $fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
+                $fieldSpec .= " character set {$collInfo['Charset']} collate {$field['Collation']}";
             }
 
-            if ($field['Default'] || $field['Default'] === "0" || $field['Default'] === '') {
-                $fieldSpec .= " default " . $this->database->quoteString($field['Default']);
+            if ($field['Default'] || $field['Default'] === '0' || $field['Default'] === '') {
+                $fieldSpec .= ' default ' . $this->database->quoteString($field['Default']);
             }
             if ($field['Extra']) {
-                $fieldSpec .= " " . $field['Extra'];
+                $fieldSpec .= ' ' . $field['Extra'];
             }
 
             $fieldList[$field['Field']] = $fieldSpec;
@@ -283,7 +282,7 @@ class MySQLSchemaManager extends DBSchemaManager
      */
     public function createIndex($tableName, $indexName, $indexSpec)
     {
-        $this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
+        $this->query("ALTER TABLE \"${tableName}\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
     }
 
     /**
@@ -295,11 +294,10 @@ class MySQLSchemaManager extends DBSchemaManager
      */
     protected function getIndexSqlDefinition($indexName, $indexSpec)
     {
-        if ($indexSpec['type'] == 'using') {
+        if ($indexSpec['type'] === 'using') {
             return sprintf('index "%s" using (%s)', $indexName, $this->implodeColumnList($indexSpec['columns']));
-        } else {
-            return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeColumnList($indexSpec['columns']));
         }
+        return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeColumnList($indexSpec['columns']));
     }
 
     public function alterIndex($tableName, $indexName, $indexSpec)
@@ -322,20 +320,20 @@ class MySQLSchemaManager extends DBSchemaManager
 
     public function indexList($table)
     {
-        $indexes = $this->query("SHOW INDEXES IN \"$table\"");
+        $indexes = $this->query("SHOW INDEXES IN \"${table}\"");
         $groupedIndexes = [];
         $indexList = [];
 
         foreach ($indexes as $index) {
             $groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
 
-            if ($index['Index_type'] == 'FULLTEXT') {
+            if ($index['Index_type'] === 'FULLTEXT') {
                 $groupedIndexes[$index['Key_name']]['type'] = 'fulltext';
             } elseif (!$index['Non_unique']) {
                 $groupedIndexes[$index['Key_name']]['type'] = 'unique';
-            } elseif ($index['Index_type'] == 'HASH') {
+            } elseif ($index['Index_type'] === 'HASH') {
                 $groupedIndexes[$index['Key_name']]['type'] = 'hash';
-            } elseif ($index['Index_type'] == 'RTREE') {
+            } elseif ($index['Index_type'] === 'RTREE') {
                 $groupedIndexes[$index['Key_name']]['type'] = 'rtree';
             } else {
                 $groupedIndexes[$index['Key_name']]['type'] = 'index';
@@ -369,8 +367,8 @@ class MySQLSchemaManager extends DBSchemaManager
     public function enumValuesForField($tableName, $fieldName)
     {
         // Get the enum of all page types from the SiteTree table
-        $classnameinfo = $this->query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
-        preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
+        $classnameinfo = $this->query("DESCRIBE \"${tableName}\" \"${fieldName}\"")->first();
+        preg_match_all("/'[^,]+'/", $classnameinfo['Type'], $matches);
 
         $classes = [];
         foreach ($matches[0] as $value) {
@@ -382,14 +380,13 @@ class MySQLSchemaManager extends DBSchemaManager
     public function dbDataType($type)
     {
         $values = [
-            'unsigned integer' => 'UNSIGNED'
+            'unsigned integer' => 'UNSIGNED',
         ];
 
         if (isset($values[$type])) {
             return $values[$type];
-        } else {
-            return '';
         }
+        return '';
     }
 
     /**
@@ -435,7 +432,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
         //DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
         // Avoid empty strings being put in the db
-        if ($values['precision'] == '') {
+        if ($values['precision'] === '') {
             $precision = 1;
         } else {
             $precision = $values['precision'];
@@ -451,7 +448,7 @@ class MySQLSchemaManager extends DBSchemaManager
             unset($values['default']);
         }
 
-        return "decimal($precision) not null" . $this->defaultClause($values);
+        return "decimal(${precision}) not null" . $this->defaultClause($values);
     }
 
     /**
@@ -467,10 +464,10 @@ class MySQLSchemaManager extends DBSchemaManager
         // 'utf8_general_ci', 'default'=>$this->default);
         //DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
         // utf8 collate utf8_general_ci default '{$this->default}'");
-        $valuesString = implode(",", Convert::raw2sql($values['enums'], true));
+        $valuesString = implode(',', Convert::raw2sql($values['enums'], true));
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
         $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
-        return "enum($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
+        return "enum(${valuesString}) character set {$charset} collate {$collation}" . $this->defaultClause($values);
     }
 
     /**
@@ -486,10 +483,10 @@ class MySQLSchemaManager extends DBSchemaManager
         // 'utf8_general_ci', 'default'=>$this->default);
         //DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
         //utf8 collate utf8_general_ci default '{$this->default}'");
-        $valuesString = implode(",", Convert::raw2sql($values['enums'], true));
+        $valuesString = implode(',', Convert::raw2sql($values['enums'], true));
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
         $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
-        return "set($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
+        return "set(${valuesString}) character set {$charset} collate {$collation}" . $this->defaultClause($values);
     }
 
     /**
@@ -504,7 +501,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'float');
         //DB::requireField($this->tableName, $this->name, "float");
-        return "float not null" . $this->defaultClause($values);
+        return 'float not null' . $this->defaultClause($values);
     }
 
     /**
@@ -518,7 +515,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)$this->default);
         //DB::requireField($this->tableName, $this->name, "int(11) not null default '{$this->defaultVal}'");
-        return "int(11) not null" . $this->defaultClause($values);
+        return 'int(11) not null' . $this->defaultClause($values);
     }
 
     /**

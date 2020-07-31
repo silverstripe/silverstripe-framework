@@ -8,7 +8,6 @@ use PhpParser\NodeVisitorAbstract;
 
 class ClassManifestVisitor extends NodeVisitorAbstract
 {
-
     private $classes = [];
 
     private $traits = [];
@@ -34,27 +33,27 @@ class ClassManifestVisitor extends NodeVisitorAbstract
             $interfaces = [];
 
             if ($node->extends) {
-                $extends = [(string)$node->extends];
+                $extends = [(string) $node->extends];
             }
 
             if ($node->implements) {
                 foreach ($node->implements as $interface) {
-                    $interfaces[] = (string)$interface;
+                    $interfaces[] = (string) $interface;
                 }
             }
 
-            $this->classes[(string)$node->namespacedName] = [
+            $this->classes[(string) $node->namespacedName] = [
                 'extends' => $extends,
                 'interfaces' => $interfaces,
             ];
         } elseif ($node instanceof Node\Stmt\Trait_) {
-            $this->traits[(string)$node->namespacedName] = [];
+            $this->traits[(string) $node->namespacedName] = [];
         } elseif ($node instanceof Node\Stmt\Interface_) {
             $extends = [];
             foreach ($node->extends as $ancestor) {
-                $extends[] = (string)$ancestor;
+                $extends[] = (string) $ancestor;
             }
-            $this->interfaces[(string)$node->namespacedName] = [
+            $this->interfaces[(string) $node->namespacedName] = [
                 'extends' => $extends,
             ];
         }

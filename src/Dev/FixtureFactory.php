@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\ORM\Queries\SQLInsert;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\Core\Injector\Injector;
 use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLDelete;
+use SilverStripe\ORM\Queries\SQLInsert;
 
 /**
  * Manages a set of database fixtures for {@link DataObject} records
@@ -33,7 +33,6 @@ use InvalidArgumentException;
  */
 class FixtureFactory
 {
-
     /**
      * @var array Array of fixture items, keyed by class and unique identifier,
      * with values being the generated database ID. Does not store object instances.
@@ -127,9 +126,8 @@ class FixtureFactory
     {
         if (isset($this->fixtures[$class][$identifier])) {
             return $this->fixtures[$class][$identifier];
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -142,9 +140,8 @@ class FixtureFactory
     {
         if (isset($this->fixtures[$class])) {
             return $this->fixtures[$class];
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -176,9 +173,9 @@ class FixtureFactory
         // If the class doesn't exist, look for a table instead
         if (!class_exists($class)) {
             $tableNames = DataObject::getSchema()->getTableNames();
-            $potential = array_search($class, $tableNames);
+            $potential = array_search($class, $tableNames, true);
             if (!$potential) {
-                throw new \LogicException("'$class' is neither a class nor a table name");
+                throw new \LogicException("'${class}' is neither a class nor a table name");
             }
             $class = $potential;
         }
@@ -206,7 +203,7 @@ class FixtureFactory
      */
     public function clear($limitToClass = null, $metadata = false)
     {
-        $classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures);
+        $classes = $limitToClass ? [$limitToClass] : array_keys($this->fixtures);
         foreach ($classes as $class) {
             $ids = $this->fixtures[$class];
             foreach ($ids as $id => $dbId) {
@@ -217,8 +214,8 @@ class FixtureFactory
                     }
                 } else {
                     $table = $class;
-                    $delete = new SQLDelete("\"$table\"", [
-                        "\"$table\".\"ID\"" => $dbId
+                    $delete = new SQLDelete("\"${table}\"", [
+                        "\"${table}\".\"ID\"" => $dbId,
                     ]);
                     $delete->execute();
                 }
@@ -239,12 +236,12 @@ class FixtureFactory
     }
 
     /**
-     * @param String $name
+     * @param string $name
      * @return FixtureBlueprint|false
      */
     public function getBlueprint($name)
     {
-        return (isset($this->blueprints[$name])) ? $this->blueprints[$name] : false;
+        return isset($this->blueprints[$name]) ? $this->blueprints[$name] : false;
     }
 
     /**
@@ -256,12 +253,12 @@ class FixtureFactory
      */
     protected function parseValue($value)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value, 0, 2) === '=>') {
             // Parse a dictionary reference - used to set foreign keys
             if (strpos($value, '.') !== false) {
                 list($class, $identifier) = explode('.', substr($value, 2), 2);
             } else {
-                throw new \LogicException("Bad fixture lookup identifier: " . $value);
+                throw new \LogicException('Bad fixture lookup identifier: ' . $value);
             }
 
             if ($this->fixtures && !isset($this->fixtures[$class][$identifier])) {
@@ -272,9 +269,8 @@ class FixtureFactory
             }
 
             return $this->fixtures[$class][$identifier];
-        } else {
-            // Regular field value setting
-            return $value;
         }
+        // Regular field value setting
+        return $value;
     }
 }

@@ -80,7 +80,7 @@ class FileField extends FormField implements FileHandleField
     public function Field($properties = [])
     {
         $properties = array_merge($properties, [
-            'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
+            'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize(),
         ]);
 
         return parent::Field($properties);
@@ -128,7 +128,7 @@ class FileField extends FormField implements FileHandleField
      */
     public function saveInto(DataObjectInterface $record)
     {
-        if (!isset($_FILES[$this->name]['error']) || $_FILES[$this->name]['error'] == UPLOAD_ERR_NO_FILE) {
+        if (!isset($_FILES[$this->name]['error']) || $_FILES[$this->name]['error'] === UPLOAD_ERR_NO_FILE) {
             return;
         }
 
@@ -188,7 +188,7 @@ class FileField extends FormField implements FileHandleField
             $errors = $this->upload->getErrors();
             if ($errors) {
                 foreach ($errors as $error) {
-                    $validator->validationError($this->name, $error, "validation");
+                    $validator->validationError($this->name, $error, 'validation');
                 }
             }
             return false;

@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Dev;
 
-use League\Csv\Reader;
-use SilverStripe\Core\Injector\Injectable;
 use Iterator;
-
+use League\Csv\Reader;
 use SilverStripe\Control\Director;
+
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Class to handle parsing of CSV files, where the column headers are in the
@@ -37,12 +37,12 @@ class CSVParser implements Iterator
     use Injectable;
 
     /**
-     * @var string $filename
+     * @var string
      */
     protected $filename;
 
     /**
-     * @var resource $fileHandle
+     * @var resource
      */
     protected $fileHandle;
 
@@ -95,7 +95,7 @@ class CSVParser implements Iterator
      *
      * @var string
      */
-    protected $delimiter = ",";
+    protected $delimiter = ',';
 
     /**
      * The character for quoting columns.
@@ -113,9 +113,9 @@ class CSVParser implements Iterator
      * @param string $delimiter The character for seperating columns
      * @param string $enclosure The character for quoting or enclosing columns
      */
-    public function __construct($filename, $delimiter = ",", $enclosure = '"')
+    public function __construct($filename, $delimiter = ',', $enclosure = '"')
     {
-        Deprecation::notice('5.0', __CLASS__ . ' is deprecated, use ' . Reader::class . ' instead');
+        Deprecation::notice('5.0', self::class . ' is deprecated, use ' . Reader::class . ' instead');
         $filename = Director::getAbsFile($filename);
         $this->filename = $filename;
         $this->delimiter = $delimiter;
@@ -134,7 +134,7 @@ class CSVParser implements Iterator
      * ));
      * </code>
      *
-     * @param array
+     * @param array $columnMap
      */
     public function mapColumns($columnMap)
     {
@@ -156,7 +156,7 @@ class CSVParser implements Iterator
      * If you call this function, then the first row of the CSV will be
      * included in the data returned.
      *
-     * @param array
+     * @param array $headerRow
      */
     public function provideHeaderRow($headerRow)
     {
@@ -191,7 +191,6 @@ class CSVParser implements Iterator
         $this->headerRow = null;
     }
 
-
     /**
      * Get a header row from the CSV file.
      */
@@ -210,7 +209,7 @@ class CSVParser implements Iterator
     /**
      * Map the contents of a header array using $this->mappedColumns.
      *
-     * @param array
+     * @param array $header
      *
      * @return array
      */
@@ -258,7 +257,7 @@ class CSVParser implements Iterator
             foreach ($srcRow as $i => $value) {
                 // Allow escaping of quotes and commas in the data
                 $value = str_replace(
-                    ['\\' . $this->enclosure,'\\' . $this->delimiter],
+                    ['\\' . $this->enclosure, '\\' . $this->delimiter],
                     [$this->enclosure, $this->delimiter],
                     $value
                 );
@@ -270,7 +269,7 @@ class CSVParser implements Iterator
                         $row[$this->headerRow[$i]] = $value;
                     }
                 } else {
-                    user_error("No heading for column $i on row $this->rowNum", E_USER_WARNING);
+                    user_error("No heading for column ${i} on row {$this->rowNum}", E_USER_WARNING);
                 }
             }
 

@@ -2,9 +2,9 @@
 
 namespace SilverStripe\ORM\Filters;
 
-use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\DataObject;
 use Exception;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
 
 /**
  * Filters by full-text matching on the given field.
@@ -29,18 +29,17 @@ use Exception;
  */
 class FulltextFilter extends SearchFilter
 {
-
     protected function applyOne(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
+        $predicate = sprintf('MATCH (%s) AGAINST (?)', $this->getDbName());
         return $query->where([$predicate => $this->getValue()]);
     }
 
     protected function excludeOne(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
+        $predicate = sprintf('NOT MATCH (%s) AGAINST (?)', $this->getDbName());
         return $query->where([$predicate => $this->getValue()]);
     }
 
@@ -48,7 +47,6 @@ class FulltextFilter extends SearchFilter
     {
         return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
     }
-
 
     /**
      * This implementation allows for a list of columns to be passed into MATCH() instead of just one.
@@ -60,7 +58,7 @@ class FulltextFilter extends SearchFilter
      *
      * @throws Exception
      * @return string
-    */
+     */
     public function getDbName()
     {
         $indexes = DataObject::getSchema()->databaseIndexes($this->model);
@@ -71,13 +69,12 @@ class FulltextFilter extends SearchFilter
         }
         if (is_array($index) && array_key_exists('columns', $index)) {
             return $this->prepareColumns($index['columns']);
-        } else {
-            throw new Exception(sprintf(
-                "Invalid fulltext index format for '%s' on '%s'",
-                var_export($this->getName(), true),
-                var_export($this->model, true)
-            ));
         }
+        throw new Exception(sprintf(
+            "Invalid fulltext index format for '%s' on '%s'",
+            var_export($this->getName(), true),
+            var_export($this->model, true)
+        ));
     }
 
     /**

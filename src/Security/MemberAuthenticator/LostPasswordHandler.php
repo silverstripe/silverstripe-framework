@@ -6,7 +6,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
@@ -81,15 +80,14 @@ class LostPasswordHandler extends RequestHandler
      */
     public function lostpassword()
     {
-
         $message = _t(
             'SilverStripe\\Security\\Security.NOTERESETPASSWORD',
             'Enter your e-mail address and we will send you a link with which you can reset your password'
         );
 
         return [
-            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
-            'Form'    => $this->lostPasswordForm(),
+            'Content' => DBField::create_field('HTMLFragment', "<p>${message}</p>"),
+            'Form' => $this->lostPasswordForm(),
         ];
     }
 
@@ -103,18 +101,17 @@ class LostPasswordHandler extends RequestHandler
     {
         $message = _t(
             'SilverStripe\\Security\\Security.PASSWORDRESETSENTTEXT',
-            "Thank you. A reset link has been sent, provided an account exists for this email address."
+            'Thank you. A reset link has been sent, provided an account exists for this email address.'
         );
 
         return [
             'Title' => _t(
                 'SilverStripe\\Security\\Security.PASSWORDRESETSENTHEADER',
-                "Password reset link sent"
+                'Password reset link sent'
             ),
-            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
+            'Content' => DBField::create_field('HTMLFragment', "<p>${message}</p>"),
         ];
     }
-
 
     /**
      * Factory method for the lost password form
@@ -237,7 +234,7 @@ class LostPasswordHandler extends RequestHandler
             ->setData($member)
             ->setSubject(_t(
                 'SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET',
-                "Your password reset link",
+                'Your password reset link',
                 'Email subject'
             ))
             ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))

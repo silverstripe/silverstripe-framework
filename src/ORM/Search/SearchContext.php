@@ -2,20 +2,20 @@
 
 namespace SilverStripe\ORM\Search;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\Filters\SearchFilter;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Forms\SelectField;
-use SilverStripe\Forms\CheckboxField;
-use InvalidArgumentException;
-use Exception;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\View\ArrayData;
 
 /**
  * Manages searching of properties on one or more {@link DataObject}
@@ -95,8 +95,8 @@ class SearchContext
     public function __construct($modelClass, $fields = null, $filters = null)
     {
         $this->modelClass = $modelClass;
-        $this->fields = ($fields) ? $fields : new FieldList();
-        $this->filters = ($filters) ? $filters : [];
+        $this->fields = $fields ?: new FieldList();
+        $this->filters = $filters ?: [];
     }
 
     /**
@@ -106,7 +106,7 @@ class SearchContext
      */
     public function getSearchFields()
     {
-        return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
+        return $this->fields ?: singleton($this->modelClass)->scaffoldSearchFields();
         // $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
         //return singleton($this->modelClass)->scaffoldSearchFields();
     }
@@ -120,7 +120,7 @@ class SearchContext
         $classes = ClassInfo::dataClassesFor($this->modelClass);
         $baseTable = DataObject::getSchema()->baseDataTable($this->modelClass);
         $fields = ["\"{$baseTable}\".*"];
-        if ($this->modelClass != $classes[0]) {
+        if ($this->modelClass !== $classes[0]) {
             $fields[] = '"' . $classes[0] . '".*';
         }
         //$fields = array_keys($model->db());
@@ -149,11 +149,11 @@ class SearchContext
         $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {
-                throw new InvalidArgumentException("existingQuery must be DataList");
+                throw new InvalidArgumentException('existingQuery must be DataList');
             }
-            if ($existingQuery->dataClass() != $this->modelClass) {
+            if ($existingQuery->dataClass() !== $this->modelClass) {
                 throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass()
-                    . ", $this->modelClass expected.");
+                    . ", {$this->modelClass} expected.");
             }
             $query = $existingQuery;
         } else {
@@ -184,8 +184,8 @@ class SearchContext
             }
         }
 
-        if ($this->connective != "AND") {
-            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+        if ($this->connective !== 'AND') {
+            throw new Exception("SearchContext connective '{$this->connective}' not supported after ORM-rewrite.");
         }
 
         return $query;
@@ -204,7 +204,7 @@ class SearchContext
      */
     public function getResults($searchParams, $sort = false, $limit = false)
     {
-        $searchParams = array_filter((array)$searchParams, [$this, 'clearEmptySearchFields']);
+        $searchParams = array_filter((array) $searchParams, [$this, 'clearEmptySearchFields']);
 
         // getQuery actually returns a DataList
         return $this->getQuery($searchParams, $sort, $limit);
@@ -219,7 +219,7 @@ class SearchContext
      */
     public function clearEmptySearchFields($value)
     {
-        return ($value != '');
+        return $value !== '';
     }
 
     /**
@@ -232,9 +232,8 @@ class SearchContext
     {
         if (isset($this->filters[$name])) {
             return $this->filters[$name];
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**

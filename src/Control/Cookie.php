@@ -62,7 +62,7 @@ class Cookie
      * @param string $name
      * @param bool $includeUnsent
      *
-     * @return null|string
+     * @return string|null
      */
     public static function get($name, $includeUnsent = true)
     {
@@ -83,8 +83,8 @@ class Cookie
 
     /**
      * @param string $name
-     * @param null|string $path
-     * @param null|string $domain
+     * @param string|null $path
+     * @param string|null $domain
      * @param bool $secure
      * @param bool $httpOnly
      */

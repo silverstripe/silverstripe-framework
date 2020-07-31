@@ -7,7 +7,6 @@ namespace SilverStripe\View\Parsers;
  */
 interface ShortcodeHandler
 {
-
     /**
      * Gets the list of shortcodes provided by this handler
      *

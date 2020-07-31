@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Dev;
 
+use Exception;
 use SilverStripe\Core\Injector\Injectable;
 use SimpleXMLElement;
 use tidy;
-use Exception;
 
 /**
  * CSSContentParser enables parsing & assertion running of HTML content via CSS selectors.
@@ -68,7 +68,7 @@ class CSSContentParser
      * Currently the selector engine only supports querying by tag, id, and class.
      * See {@link getByXpath()} for a more direct selector syntax.
      *
-     * @param String $selector
+     * @param string $selector
      * @return SimpleXMLElement[]
      */
     public function getBySelector($selector)
@@ -80,7 +80,7 @@ class CSSContentParser
     /**
      * Allows querying the content through XPATH selectors.
      *
-     * @param String $xpath SimpleXML compatible XPATH statement
+     * @param string $xpath SimpleXML compatible XPATH statement
      * @return SimpleXMLElement[]
      */
     public function getByXpath($xpath)
@@ -92,25 +92,25 @@ class CSSContentParser
      * Converts a CSS selector into an equivalent xpath expression.
      * Currently the selector engine only supports querying by tag, id, and class.
      *
-     * @param String $selector See {@link getBySelector()}
-     * @return String XPath expression
+     * @param string $selector See {@link getBySelector()}
+     * @return string XPath expression
      */
     public function selector2xpath($selector)
     {
         $parts = preg_split('/\\s+/', $selector);
-        $xpath = "";
+        $xpath = '';
         foreach ($parts as $part) {
             if (preg_match('/^([A-Za-z][A-Za-z0-9]*)/', $part, $matches)) {
-                $xpath .= "//$matches[1]";
+                $xpath .= "//{$matches[1]}";
             } else {
-                $xpath .= "//*";
+                $xpath .= '//*';
             }
             $xfilters = [];
             if (preg_match('/#([^#.\[]+)/', $part, $matches)) {
-                $xfilters[] = "@id='$matches[1]'";
+                $xfilters[] = "@id='{$matches[1]}'";
             }
             if (preg_match('/\.([^#.\[]+)/', $part, $matches)) {
-                $xfilters[] = "contains(@class,'$matches[1]')";
+                $xfilters[] = "contains(@class,'{$matches[1]}')";
             }
             if ($xfilters) {
                 $xpath .= '[' . implode(',', $xfilters) . ']';

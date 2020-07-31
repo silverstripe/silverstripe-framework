@@ -12,7 +12,6 @@ use SilverStripe\ORM\ArrayList;
  */
 class FieldList extends ArrayList
 {
-
     /**
      * Cached flat representation of all fields in this set,
      * including fields nested in {@link CompositeFields}.
@@ -200,9 +199,9 @@ class FieldList extends ArrayList
             }
 
             if ($saveableOnly) {
-                $isIncluded =  $field->canSubmitValue();
+                $isIncluded = $field->canSubmitValue();
             } else {
-                $isIncluded =  $field->hasData();
+                $isIncluded = $field->hasData();
             }
             if ($isIncluded) {
                 $name = $field->getName();
@@ -214,7 +213,7 @@ class FieldList extends ArrayList
                         $errSuffix = '';
                     }
                     user_error(
-                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.",
+                        "collateDataFields() I noticed that a field called '${name}' appears twice${errSuffix}.",
                         E_USER_ERROR
                     );
                 }
@@ -362,7 +361,7 @@ class FieldList extends ArrayList
                 $childName = $child->Title();
             }
 
-            if (($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
+            if (($childName === $fieldName) && (!$dataFieldOnly || $child->hasData())) {
                 array_splice($this->items, $i, 1);
                 break;
             } elseif ($child instanceof CompositeField) {
@@ -387,7 +386,7 @@ class FieldList extends ArrayList
     {
         $this->flushFieldsCache();
         foreach ($this as $i => $field) {
-            if ($field->getName() == $fieldName && (!$dataFieldOnly || $field->hasData())) {
+            if ($field->getName() === $fieldName && (!$dataFieldOnly || $field->hasData())) {
                 $this->items[$i] = $newField;
                 return true;
             } elseif ($field instanceof CompositeField) {
@@ -415,7 +414,7 @@ class FieldList extends ArrayList
 
         $field->setTitle($newFieldTitle);
 
-        return $field->Title() == $newFieldTitle;
+        return $field->Title() === $newFieldTitle;
     }
 
     /**
@@ -482,7 +481,7 @@ class FieldList extends ArrayList
             if (!$currentPointer) {
                 if ($parentPointer instanceof TabSet) {
                     // use $title on the innermost tab only
-                    if ($k == $last_idx) {
+                    if ($k === $last_idx) {
                         $currentPointer = isset($title) ? new Tab($part, $title) : new Tab($part);
                     } else {
                         $currentPointer = new TabSet($part);
@@ -494,7 +493,7 @@ class FieldList extends ArrayList
                         : null;
                     $parentPointerClass = get_class($parentPointer);
                     user_error(
-                        "FieldList::addFieldToTab() Tried to add a tab to object"
+                        'FieldList::addFieldToTab() Tried to add a tab to object'
                         . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist.",
                         E_USER_ERROR
                     );
@@ -523,21 +522,19 @@ class FieldList extends ArrayList
         }
 
         foreach ($this as $child) {
-            if (trim($name) == trim($child->getName()) || $name == $child->id) {
+            if (trim($name) === trim($child->getName()) || $name === $child->id) {
                 if ($remainder) {
                     if ($child instanceof CompositeField) {
                         return $child->fieldByName($remainder);
-                    } else {
-                        $childClass = get_class($child);
-                        user_error(
-                            "Trying to get field '{$remainder}' from non-composite field {$childClass}.{$name}",
-                            E_USER_WARNING
-                        );
-                        return null;
                     }
-                } else {
-                    return $child;
+                    $childClass = get_class($child);
+                    user_error(
+                        "Trying to get field '{$remainder}' from non-composite field {$childClass}.{$name}",
+                        E_USER_WARNING
+                    );
+                    return null;
                 }
+                return $child;
             }
         }
         return null;
@@ -554,7 +551,7 @@ class FieldList extends ArrayList
     {
         if ($dataFields = $this->dataFields()) {
             foreach ($dataFields as $child) {
-                if (trim($name) == trim($child->getName()) || $name == $child->id) {
+                if (trim($name) === trim($child->getName()) || $name === $child->id) {
                     return $child;
                 }
             }
@@ -583,7 +580,7 @@ class FieldList extends ArrayList
 
         $i = 0;
         foreach ($this as $child) {
-            if ($name == $child->getName() || $name == $child->id) {
+            if ($name === $child->getName() || $name === $child->id) {
                 array_splice($this->items, $i, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
@@ -625,8 +622,8 @@ class FieldList extends ArrayList
 
         $i = 0;
         foreach ($this as $child) {
-            if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i+1, 0, [$item]);
+            if ($name === $child->getName() || $name === $child->id) {
+                array_splice($this->items, $i + 1, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertAfter($name, $item, false);
@@ -685,7 +682,6 @@ class FieldList extends ArrayList
             $this->rootFieldList()->removeByName($item->getName(), true);
         }
     }
-
 
     /**
      * Set the Form instance for this FieldList.
@@ -830,12 +826,12 @@ class FieldList extends ArrayList
         }
 
         foreach ($field as $item) {
-            $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
+            $fieldName = $item instanceof FormField ? $item->getName() : $item;
             $srcField = $this->dataFieldByName($fieldName);
             if ($srcField) {
                 $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
             } else {
-                user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+                user_error("Trying to make field '${fieldName}' readonly, but it does not exist in the list", E_USER_WARNING);
             }
         }
     }
@@ -886,7 +882,7 @@ class FieldList extends ArrayList
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0).
      * Returns FALSE if the field can't be found.
      */
@@ -898,7 +894,7 @@ class FieldList extends ArrayList
 
         $i = 0;
         foreach ($this->dataFields() as $child) {
-            if ($child->getName() == $field) {
+            if ($child->getName() === $field) {
                 return $i;
             }
             $i++;
@@ -912,7 +908,7 @@ class FieldList extends ArrayList
      */
     public function forTemplate()
     {
-        $output = "";
+        $output = '';
         foreach ($this as $field) {
             $output .= $field->FieldHolder();
         }

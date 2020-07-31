@@ -22,7 +22,6 @@ use SilverStripe\i18n\TextCollection\i18nTextCollector;
  */
 interface i18nEntityProvider
 {
-
     /**
      * Returns the list of provided translations for this object.
      *

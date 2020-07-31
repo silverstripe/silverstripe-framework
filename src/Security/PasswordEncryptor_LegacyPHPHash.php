@@ -27,6 +27,6 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash
     {
         // Due to flawed base_convert() floating poing precision,
         // only the first 10 characters are consistently useful for comparisons.
-        return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
+        return substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10);
     }
 }

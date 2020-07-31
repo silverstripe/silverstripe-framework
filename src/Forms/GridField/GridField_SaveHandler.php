@@ -10,7 +10,6 @@ use SilverStripe\ORM\DataObjectInterface;
  */
 interface GridField_SaveHandler extends GridFieldComponent
 {
-
     /**
      * Called when a grid field is saved - i.e. the form is submitted.
      *

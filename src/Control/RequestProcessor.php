@@ -59,7 +59,7 @@ class RequestProcessor implements HTTPMiddleware
         foreach ($this->filters as $filter) {
             $res = $filter->preRequest($request);
             if ($res === false) {
-                return new HTTPResponse(_t(__CLASS__ . '.INVALID_REQUEST', 'Invalid request'), 400);
+                return new HTTPResponse(_t(self::class . '.INVALID_REQUEST', 'Invalid request'), 400);
             }
         }
 
@@ -68,7 +68,7 @@ class RequestProcessor implements HTTPMiddleware
         foreach ($this->filters as $filter) {
             $res = $filter->postRequest($request, $response);
             if ($res === false) {
-                return new HTTPResponse(_t(__CLASS__ . '.REQUEST_ABORTED', 'Request aborted'), 500);
+                return new HTTPResponse(_t(self::class . '.REQUEST_ABORTED', 'Request aborted'), 500);
             }
         }
 

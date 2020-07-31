@@ -21,7 +21,6 @@ use Traversable;
  */
 class PermissionCheckboxSetField extends FormField
 {
-
     /**
      * @var array Filter certain permission codes from the output.
      * Useful to simplify the interface
@@ -39,10 +38,10 @@ class PermissionCheckboxSetField extends FormField
     protected $source = null;
 
     /**
-     * @param String $name
-     * @param String $title
-     * @param String $managedClass
-     * @param String $filterField
+     * @param string $name
+     * @param string $title
+     * @param string $managedClass
+     * @param string $filterField
      * @param Group|SS_List $records One or more {@link Group} or {@link PermissionRole} records
      *  used to determine permission checkboxes.
      *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
@@ -93,7 +92,7 @@ class PermissionCheckboxSetField extends FormField
     {
         $uninheritedCodes = [];
         $inheritedCodes = [];
-        $records = ($this->records) ? $this->records : new ArrayList();
+        $records = $this->records ?: new ArrayList();
 
         // Get existing values from the form record (assuming the formfield name is a join field on the record)
         if (is_object($this->form)) {
@@ -110,7 +109,7 @@ class PermissionCheckboxSetField extends FormField
         foreach ($records as $record) {
             // Get all uninherited permissions
             $relationMethod = $this->name;
-            foreach ($record->$relationMethod() as $permission) {
+            foreach ($record->{$relationMethod}() as $permission) {
                 if (!isset($uninheritedCodes[$permission->Code])) {
                     $uninheritedCodes[$permission->Code] = [];
                 }
@@ -161,7 +160,7 @@ class PermissionCheckboxSetField extends FormField
                                         'A permission inherited from a role on a certain group',
                                         [
                                             'roletitle' => $role->dbObject('Title')->forTemplate(),
-                                            'grouptitle' => $parent->dbObject('Title')->forTemplate()
+                                            'grouptitle' => $parent->dbObject('Title')->forTemplate(),
                                         ]
                                     );
                                 }
@@ -188,18 +187,18 @@ class PermissionCheckboxSetField extends FormField
 
         $odd = 0;
         $options = '';
-        $globalHidden = (array)Config::inst()->get('SilverStripe\\Security\\Permission', 'hidden_permissions');
+        $globalHidden = (array) Config::inst()->get('SilverStripe\\Security\\Permission', 'hidden_permissions');
         if ($this->source) {
             $privilegedPermissions = Permission::config()->privileged_permissions;
 
             // loop through all available categorized permissions and see if they're assigned for the given groups
             foreach ($this->source as $categoryName => $permissions) {
-                $options .= "<li><h5>$categoryName</h5></li>";
+                $options .= "<li><h5>${categoryName}</h5></li>";
                 foreach ($permissions as $code => $permission) {
-                    if (in_array($code, $this->hiddenPermissions)) {
+                    if (in_array($code, $this->hiddenPermissions, true)) {
                         continue;
                     }
-                    if (in_array($code, $globalHidden)) {
+                    if (in_array($code, $globalHidden, true)) {
                         continue;
                     }
 
@@ -210,7 +209,7 @@ class PermissionCheckboxSetField extends FormField
                     $extraClass .= ' val' . str_replace(' ', '', $code);
                     $itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
                     $disabled = $inheritMessage = '';
-                    $checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code]))
+                    $checked = isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])
                         ? ' checked="checked"'
                         : '';
                     $title = $permission['help']
@@ -229,7 +228,7 @@ class PermissionCheckboxSetField extends FormField
                     }
 
                     // Disallow modification of "privileged" permissions unless currently logged-in user is an admin
-                    if (!Permission::check('ADMIN') && in_array($code, $privilegedPermissions)) {
+                    if (!Permission::check('ADMIN') && in_array($code, $privilegedPermissions, true)) {
                         $disabled = ' disabled="true"';
                     }
 
@@ -242,26 +241,26 @@ class PermissionCheckboxSetField extends FormField
 
                     // If the field is readonly, add a span that will replace the disabled checkbox input
                     if ($this->readonly) {
-                        $icon = ($checked) ? 'check-mark-circle' : 'cancel-circled';
+                        $icon = $checked ? 'check-mark-circle' : 'cancel-circled';
                         $record = is_object($this->form) ? $this->form->getRecord() : false;
                         // Inherited codes are shown as a gray x
                         if ($record && $record instanceof Member &&
-                            Permission::checkMember($record, 'ADMIN') && $code != 'ADMIN') {
+                            Permission::checkMember($record, 'ADMIN') && $code !== 'ADMIN') {
                             $icon = 'plus-circled';
                         }
 
-                        $options .= "<li class=\"$extraClass\">"
-                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
-                            . " value=\"$code\"$checked class=\"checkbox\" />"
-                            . "<label {$title}for=\"$itemID\">"
-                            . "<span class=\"font-icon-$icon\"></span>"
+                        $options .= "<li class=\"${extraClass}\">"
+                            . "<input id=\"${itemID}\"${disabled} name=\"{$this->name}[${code}]\" type=\"checkbox\""
+                            . " value=\"${code}\"${checked} class=\"checkbox\" />"
+                            . "<label {$title}for=\"${itemID}\">"
+                            . "<span class=\"font-icon-${icon}\"></span>"
                             . "{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     } else {
-                        $options .= "<li class=\"$extraClass\">"
-                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
-                            . " value=\"$code\"$checked class=\"checkbox\" />"
-                            . "<label {$title}for=\"$itemID\">{$value}{$inheritMessage}</label>"
+                        $options .= "<li class=\"${extraClass}\">"
+                            . "<input id=\"${itemID}\"${disabled} name=\"{$this->name}[${code}]\" type=\"checkbox\""
+                            . " value=\"${code}\"${checked} class=\"checkbox\" />"
+                            . "<label {$title}for=\"${itemID}\">{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     }
                 }
@@ -274,17 +273,14 @@ class PermissionCheckboxSetField extends FormField
                 . ' See the groups section for details of permissions on individual groups.'
             );
 
-            return
-                "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
-                "<li class=\"help\">" . $message . "</li>" .
-                $options .
-                "</ul>\n";
-        } else {
-            return
-                "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+            return "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+                '<li class="help">' . $message . '</li>' .
                 $options .
                 "</ul>\n";
         }
+        return "<ul id=\"{$this->ID()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+                $options .
+                "</ul>\n";
     }
 
     /**
@@ -303,14 +299,14 @@ class PermissionCheckboxSetField extends FormField
             && !Permission::check('ADMIN')
         ) {
             foreach ($this->value as $id => $bool) {
-                if (in_array($id, $privilegedPermissions)) {
+                if (in_array($id, $privilegedPermissions, true)) {
                     unset($this->value[$id]);
                 }
             }
         }
 
         // remove all permissions and re-add them afterwards
-        $permissions = $record->$fieldname();
+        $permissions = $record->{$fieldname}();
         foreach ($permissions as $permission) {
             $permission->delete();
         }
@@ -342,14 +338,12 @@ class PermissionCheckboxSetField extends FormField
      */
     public function performReadonlyTransformation()
     {
-        $readonly = new PermissionCheckboxSetField_Readonly(
+        return new PermissionCheckboxSetField_Readonly(
             $this->name,
             $this->title,
             $this->managedClass,
             $this->filterField,
             $this->records
         );
-
-        return $readonly;
     }
 }

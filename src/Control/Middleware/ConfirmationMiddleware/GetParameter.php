@@ -61,7 +61,7 @@ class GetParameter implements Rule, Bypass
     {
         return new Confirmation\Item(
             $token,
-            _t(__CLASS__ . '.CONFIRMATION_NAME', '"{key}" GET parameter', ['key' => $this->name]),
+            _t(self::class . '.CONFIRMATION_NAME', '"{key}" GET parameter', ['key' => $this->name]),
             sprintf('%s = "%s"', $this->name, $value)
         );
     }
@@ -70,7 +70,7 @@ class GetParameter implements Rule, Bypass
      * Generates the unique token depending on the path and the parameter
      *
      * @param string $path URL path
-     * @param string $param The parameter value
+     * @param string $value The parameter value
      *
      * @return string
      */

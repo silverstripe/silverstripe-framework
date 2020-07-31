@@ -26,22 +26,22 @@ class RememberLoginHash extends DataObject
 
     private static $plural_name = 'Login Hashes';
 
-    private static $db =  [
+    private static $db = [
         'DeviceID' => 'Varchar(40)',
         'Hash' => 'Varchar(160)',
-        'ExpiryDate' => 'Datetime'
+        'ExpiryDate' => 'Datetime',
     ];
 
-    private static $has_one =  [
+    private static $has_one = [
         'Member' => Member::class,
     ];
 
     private static $indexes = [
         'DeviceID' => true,
-        'Hash' => true
+        'Hash' => true,
     ];
 
-    private static $table_name = "RememberLoginHash";
+    private static $table_name = 'RememberLoginHash';
 
     /**
      * Determines if logging out on one device also clears existing login tokens
@@ -179,7 +179,7 @@ class RememberLoginHash extends DataObject
         if (!$member->exists()) {
             return;
         }
-        $filter = ['MemberID'=>$member->ID];
+        $filter = ['MemberID' => $member->ID];
         if (!static::config()->logout_across_devices && $alcDevice) {
             $filter['DeviceID'] = $alcDevice;
         }

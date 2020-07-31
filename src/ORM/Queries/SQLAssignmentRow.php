@@ -9,7 +9,6 @@ use InvalidArgumentException;
  */
 class SQLAssignmentRow
 {
-
     /**
      * List of field values to store for this query
      *
@@ -33,11 +32,10 @@ class SQLAssignmentRow
      *
      * @param array $values
      */
-    function __construct(array $values = [])
+    public function __construct(array $values = [])
     {
         $this->setAssignments($values);
     }
-
 
     /**
      * Given a key / value pair, extract the predicate and any potential paramaters
@@ -59,7 +57,7 @@ class SQLAssignmentRow
         // Note that there could be multiple parameters, e.g.
         // ['MAX(?,?)' => [1,2]] although the container should
         // have a single item
-        if (count($value) == 1) {
+        if (count($value) === 1) {
             foreach ($value as $sql => $parameters) {
                 if (!is_string($sql)) {
                     continue;
@@ -75,7 +73,7 @@ class SQLAssignmentRow
         }
 
         throw new InvalidArgumentException(
-            "Nested field assignments should be given as a single parameterised item array in "
+            'Nested field assignments should be given as a single parameterised item array in '
             . "['?' => ['value']] format)"
         );
     }

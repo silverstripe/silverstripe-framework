@@ -54,13 +54,13 @@ class FormTransformation
         ));
 
         $len = max(sizeof($transNames), sizeof($fieldClasses));
-        for ($i=0; $i<$len; $i++) {
+        for ($i = 0; $i < $len; $i++) {
             // This is lets fieldClasses be longer than transNames
             if (!empty($transNames[$i])) {
                 $funcName = 'perform' . $transNames[$i];
                 if ($field->hasMethod($funcName)) {
                     //echo "<li>$field->class used $funcName";
-                    return $field->$funcName($this);
+                    return $field->{$funcName}($this);
                 }
             }
 
@@ -69,7 +69,7 @@ class FormTransformation
                 $funcName = 'transform' . $fieldClasses[$i];
                 if ($this->hasMethod($funcName)) {
                     //echo "<li>$field->class used $funcName";
-                    return $this->$funcName($field);
+                    return $this->{$funcName}($field);
                 }
             }
         }

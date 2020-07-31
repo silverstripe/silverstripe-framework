@@ -2,17 +2,17 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
+use Exception;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Controller;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use Exception;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * Base class for development tools.
@@ -27,7 +27,6 @@ use Exception;
  */
 class DevelopmentAdmin extends Controller
 {
-
     private static $url_handlers = [
         '' => 'index',
         'build/defaults' => 'buildDefaults',
@@ -97,7 +96,7 @@ class DevelopmentAdmin extends Controller
             || Director::isDev()
             || (Director::is_cli() && $allowAllCLI)
             // Its important that we don't run this check if dev/build was requested
-            || Permission::check("ADMIN")
+            || Permission::check('ADMIN')
         );
         if (!$canAccess) {
             Security::permissionFailure($this);
@@ -118,15 +117,15 @@ class DevelopmentAdmin extends Controller
         if (!Director::is_cli()) {
             $renderer = DebugView::create();
             echo $renderer->renderHeader();
-            echo $renderer->renderInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
+            echo $renderer->renderInfo('SilverStripe Development Tools', Director::absoluteBaseURL());
             $base = Director::baseURL();
 
             echo '<div class="options"><ul>';
-            $evenOdd = "odd";
+            $evenOdd = 'odd';
             foreach (self::get_links() as $action => $description) {
-                echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
-                    . " $description</a></li>\n";
-                $evenOdd = ($evenOdd == "odd") ? "even" : "odd";
+                echo "<li class=\"${evenOdd}\"><a href=\"{$base}dev/${action}\"><b>/dev/${action}:</b>"
+                    . " ${description}</a></li>\n";
+                $evenOdd = $evenOdd === 'odd' ? 'even' : 'odd';
             }
 
             echo $renderer->renderFooter();
@@ -136,7 +135,7 @@ class DevelopmentAdmin extends Controller
             echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
             echo "You can execute any of the following commands:\n\n";
             foreach (self::get_links() as $action => $description) {
-                echo "  sake dev/$action: $description\n";
+                echo "  sake dev/${action}: ${description}\n";
             }
             echo "\n\n";
         }
@@ -147,7 +146,7 @@ class DevelopmentAdmin extends Controller
         $controllerClass = null;
 
         $baseUrlPart = $request->param('Action');
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(self::class, 'registered_controllers');
         if (isset($reg[$baseUrlPart])) {
             $controllerClass = $reg[$baseUrlPart]['controller'];
         }
@@ -156,17 +155,13 @@ class DevelopmentAdmin extends Controller
             return $controllerClass::create();
         }
 
-        $msg = 'Error: no controller registered in ' . __CLASS__ . ' for: ' . $request->param('Action');
+        $msg = 'Error: no controller registered in ' . self::class . ' for: ' . $request->param('Action');
         if (Director::is_cli()) {
             // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
             throw new Exception($msg);
-        } else {
-            $this->httpError(404, $msg);
         }
+        $this->httpError(404, $msg);
     }
-
-
-
 
     /*
      * Internal methods
@@ -179,7 +174,7 @@ class DevelopmentAdmin extends Controller
     {
         $links = [];
 
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(self::class, 'registered_controllers');
         foreach ($reg as $registeredController) {
             if (isset($registeredController['links'])) {
                 foreach ($registeredController['links'] as $url => $desc) {
@@ -192,18 +187,14 @@ class DevelopmentAdmin extends Controller
 
     protected function getRegisteredController($baseUrlPart)
     {
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(self::class, 'registered_controllers');
 
         if (isset($reg[$baseUrlPart])) {
-            $controllerClass = $reg[$baseUrlPart]['controller'];
-            return $controllerClass;
+            return $reg[$baseUrlPart]['controller'];
         }
 
         return null;
     }
-
-
-
 
     /*
      * Unregistered (hidden) actions
@@ -223,14 +214,14 @@ class DevelopmentAdmin extends Controller
         if (!Director::is_cli()) {
             $renderer = DebugView::create();
             echo $renderer->renderHeader();
-            echo $renderer->renderInfo("Defaults Builder", Director::absoluteBaseURL());
-            echo "<div class=\"build\">";
+            echo $renderer->renderInfo('Defaults Builder', Director::absoluteBaseURL());
+            echo '<div class="build">';
         }
 
         $da->buildDefaults();
 
         if (!Director::is_cli()) {
-            echo "</div>";
+            echo '</div>';
             echo $renderer->renderFooter();
         }
     }
@@ -247,7 +238,7 @@ class DevelopmentAdmin extends Controller
 Generated new token. Please add the following code to your YAML configuration:
 
 Security:
-  token: $token
+  token: ${token}
 
 TXT;
         $response = new HTTPResponse($body);
@@ -256,6 +247,6 @@ TXT;
 
     public function errors()
     {
-        $this->redirect("Debug_");
+        $this->redirect('Debug_');
     }
 }

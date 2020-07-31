@@ -95,7 +95,6 @@ interface Authenticator
      */
     public function getChangePasswordHandler($link);
 
-
     /**
      * @param string $link
      * @return mixed

@@ -37,7 +37,6 @@ class GridFieldLevelup implements GridField_HTMLProvider
     protected $attributes = [];
 
     /**
-     *
      * @param integer $currentID - The ID of the current item; this button will find that item's parent
      */
     public function __construct($currentID)
@@ -64,7 +63,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
         $modelObj = DataObject::get_by_id($modelClass, $this->currentID);
         if (!$modelObj) {
             throw new \LogicException(
-                "Can't find object of class $modelClass ID #{$this->currentID} for GridFieldLevelup"
+                "Can't find object of class ${modelClass} ID #{$this->currentID} for GridFieldLevelup"
             );
         }
 
@@ -82,15 +81,15 @@ class GridFieldLevelup implements GridField_HTMLProvider
         // Attributes
         $attrs = array_merge($this->attributes, [
             'href' => sprintf($this->linkSpec, $parentID),
-            'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
+            'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup',
         ]);
         $linkTag = HTML::createTag('a', $attrs);
 
         $forTemplate = new ArrayData([
-            'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
+            'UpLink' => DBField::create_field('HTMLFragment', $linkTag),
         ]);
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '', self::class);
         return [
             'before' => $forTemplate->renderWith($template),
         ];

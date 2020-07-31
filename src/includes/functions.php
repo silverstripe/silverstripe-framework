@@ -2,8 +2,8 @@
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\i18n\i18n;
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -24,11 +24,11 @@ function singleton($className)
         throw new InvalidArgumentException("Don't pass Config to singleton()");
     }
     if (!isset($className)) {
-        throw new InvalidArgumentException("singleton() Called without a class");
+        throw new InvalidArgumentException('singleton() Called without a class');
     }
     if (!is_string($className)) {
         throw new InvalidArgumentException(
-            "singleton() passed bad class_name: " . var_export($className, true)
+            'singleton() passed bad class_name: ' . var_export($className, true)
         );
     }
     return Injector::inst()->get($className);

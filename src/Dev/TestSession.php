@@ -108,7 +108,7 @@ class TestSession
         );
         $this->lastUrl = $url;
         if (!$this->lastResponse) {
-            user_error("Director::test($url) returned null", E_USER_WARNING);
+            user_error("Director::test(${url}) returned null", E_USER_WARNING);
         }
         return $this->lastResponse;
     }
@@ -144,7 +144,7 @@ class TestSession
         );
         $this->lastUrl = $url;
         if (!$this->lastResponse) {
-            user_error("Director::test($url) returned null", E_USER_WARNING);
+            user_error("Director::test(${url}) returned null", E_USER_WARNING);
         }
         return $this->lastResponse;
     }
@@ -184,7 +184,7 @@ class TestSession
 
         $this->lastUrl = $url;
         if (!$this->lastResponse) {
-            user_error("Director::test($url) returned null", E_USER_WARNING);
+            user_error("Director::test(${url}) returned null", E_USER_WARNING);
         }
 
         return $this->lastResponse;
@@ -226,7 +226,7 @@ class TestSession
             if ($button) {
                 $submission = $form->submitButton(new SimpleByName($button));
                 if (!$submission) {
-                    throw new Exception("Can't find button '$button' to submit as part of test.");
+                    throw new Exception("Can't find button '${button}' to submit as part of test.");
                 }
             } else {
                 $submission = $form->submit();
@@ -237,10 +237,9 @@ class TestSession
             $postVars = [];
             parse_str($submission->_encode(), $postVars);
             return $this->post($url, $postVars);
-        } else {
-            user_error("TestSession::submitForm called when there is no form loaded."
-                . " Visit the page with the form first", E_USER_WARNING);
         }
+        user_error('TestSession::submitForm called when there is no form loaded.'
+                . ' Visit the page with the form first', E_USER_WARNING);
     }
 
     /**
@@ -297,9 +296,8 @@ class TestSession
     {
         if (is_string($this->lastResponse)) {
             return $this->lastResponse;
-        } else {
-            return $this->lastResponse->getBody();
         }
+        return $this->lastResponse->getBody();
     }
 
     /**
@@ -319,9 +317,9 @@ class TestSession
      */
     public function lastPage()
     {
-        require_once("simpletest/http.php");
-        require_once("simpletest/page.php");
-        require_once("simpletest/form.php");
+        require_once('simpletest/http.php');
+        require_once('simpletest/page.php');
+        require_once('simpletest/form.php');
 
         $builder = new SimplePageBuilder();
         if ($this->lastResponse) {

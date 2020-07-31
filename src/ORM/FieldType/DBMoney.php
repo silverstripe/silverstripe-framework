@@ -14,7 +14,7 @@ use SilverStripe\i18n\i18n;
 class DBMoney extends DBComposite
 {
     /**
-     * @var string $locale
+     * @var string
      */
     protected $locale = null;
 
@@ -22,8 +22,8 @@ class DBMoney extends DBComposite
      * @param array
      */
     private static $composite_db = [
-        "Currency" => "Varchar(3)",
-        "Amount" => 'Decimal(19,4)'
+        'Currency' => 'Varchar(3)',
+        'Amount' => 'Decimal(19,4)',
     ];
 
     /**
@@ -118,7 +118,7 @@ class DBMoney extends DBComposite
     {
         // Retain nullability to mark this field as empty
         if (isset($amount)) {
-            $amount = (float)$amount;
+            $amount = (float) $amount;
         }
         $this->setField('Amount', $amount, $markChanged);
         return $this;
@@ -140,7 +140,7 @@ class DBMoney extends DBComposite
     public function hasAmount()
     {
         $a = $this->getAmount();
-        return (!empty($a) && is_numeric($a));
+        return !empty($a) && is_numeric($a);
     }
 
     /**

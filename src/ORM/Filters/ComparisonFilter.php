@@ -17,7 +17,6 @@ use SilverStripe\ORM\DataQuery;
  */
 abstract class ComparisonFilter extends SearchFilter
 {
-
     /**
      * Should return an operator to be used for comparisons
      *
@@ -43,7 +42,7 @@ abstract class ComparisonFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
 
-        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
+        $predicate = sprintf('%s %s ?', $this->getDbName(), $this->getOperator());
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?
@@ -62,7 +61,7 @@ abstract class ComparisonFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
 
-        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
+        $predicate = sprintf('%s %s ?', $this->getDbName(), $this->getInverseOperator());
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?

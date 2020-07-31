@@ -13,7 +13,6 @@ use SilverStripe\Dev\Debug;
  */
 class CompositeField extends FormField
 {
-
     /**
      * @var FieldList
      */
@@ -90,7 +89,7 @@ class CompositeField extends FormField
         // Scaffolded children will inherit this data
         $defaults['data']['inherited'] = [
             'data' => [
-                'fieldholder' => 'small'
+                'fieldholder' => 'small',
             ],
         ];
 
@@ -124,7 +123,7 @@ class CompositeField extends FormField
      *
      * @todo this is temporary, and should be removed when FormTemplateHelper is updated to handle ID for CompositeFields with no name
      *
-     * @return String $name
+     * @return string
      */
     public function getName()
     {
@@ -146,7 +145,7 @@ class CompositeField extends FormField
         if ($count === 1) {
             $compositeTitle .= 'Group';
         }
-        return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
+        return preg_replace('/[^a-zA-Z0-9]+/', '', $compositeTitle);
     }
 
     /**
@@ -216,7 +215,7 @@ class CompositeField extends FormField
                 'tabindex' => null,
                 'type' => null,
                 'value' => null,
-                'title' => ($this->tag === 'fieldset') ? null : $this->legend
+                'title' => $this->tag === 'fieldset' ? null : $this->legend,
             ]
         );
     }
@@ -240,19 +239,19 @@ class CompositeField extends FormField
                 $field->collateDataFields($list, $saveableOnly);
             }
             if ($saveableOnly) {
-                $isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+                $isIncluded = ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
             } else {
-                $isIncluded =  ($field->hasData());
+                $isIncluded = $field->hasData();
             }
             if ($isIncluded) {
                 $name = $field->getName();
                 if ($name) {
-                    $formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
+                    $formName = isset($this->form) ? $this->form->FormName() : '(unknown form)';
                     if (isset($list[$name])) {
                         $fieldClass = get_class($field);
                         $otherFieldClass = get_class($list[$name]);
                         user_error(
-                            "collateDataFields() I noticed that a field called '$name' appears twice in"
+                            "collateDataFields() I noticed that a field called '${name}' appears twice in"
                              . " your form: '{$formName}'.  One is a '{$fieldClass}' and the other is a"
                              . " '{$otherFieldClass}'",
                             E_USER_ERROR
@@ -275,8 +274,6 @@ class CompositeField extends FormField
         parent::setForm($form);
         return $this;
     }
-
-
 
     public function setDisabled($disabled)
     {
@@ -325,7 +322,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the end of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function push(FormField $field)
     {
@@ -335,7 +332,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the beginning of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function unshift(FormField $field)
     {
@@ -396,9 +393,8 @@ class CompositeField extends FormField
     {
         if (is_object($this->containerFieldList)) {
             return $this->containerFieldList->rootFieldList();
-        } else {
-            return $this->children;
         }
+        return $this->children;
     }
 
     public function __clone()
@@ -419,7 +415,7 @@ class CompositeField extends FormField
         $clone = clone $this;
         if ($clone->getChildren()) {
             foreach ($clone->getChildren() as $child) {
-                        /** @var FormField $child */
+                /** @var FormField $child */
                 $child = $child->transform(new ReadonlyTransformation());
                 $newChildren->push($child);
             }
@@ -445,7 +441,7 @@ class CompositeField extends FormField
         $clone = clone $this;
         if ($clone->getChildren()) {
             foreach ($clone->getChildren() as $child) {
-                        /** @var FormField $child */
+                /** @var FormField $child */
                 $child = $child->transform(new DisabledTransformation());
                 $newChildren->push($child);
             }
@@ -471,7 +467,7 @@ class CompositeField extends FormField
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
      *             be found.
      */
@@ -487,7 +483,7 @@ class CompositeField extends FormField
         $i = 0;
         foreach ($this->children as $child) {
             /** @var FormField $child */
-            if ($child->getName() == $field->getName()) {
+            if ($child->getName() === $field->getName()) {
                 return $i;
             }
             $i++;
@@ -499,20 +495,20 @@ class CompositeField extends FormField
     /**
      * Transform the named field into a readonly feld.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return bool
      */
     public function makeFieldReadonly($field)
     {
-        $fieldName = ($field instanceof FormField) ? $field->getName() : $field;
+        $fieldName = $field instanceof FormField ? $field->getName() : $field;
 
         // Iterate on items, looking for the applicable field
         foreach ($this->children as $i => $item) {
             if ($item instanceof CompositeField) {
                 if ($item->makeFieldReadonly($fieldName)) {
                     return true;
-                };
-            } elseif ($item instanceof FormField && $item->getName() == $fieldName) {
+                }
+            } elseif ($item instanceof FormField && $item->getName() === $fieldName) {
                 // Once it's found, use FormField::transform to turn the field into a readonly version of itself.
                 $this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
 
@@ -526,11 +522,11 @@ class CompositeField extends FormField
     public function debug()
     {
         $class = static::class;
-        $result = "$class ($this->name) <ul>";
+        $result = "${class} ({$this->name}) <ul>";
         foreach ($this->children as $child) {
-            $result .= "<li>" . Debug::text($child) . "&nbsp;</li>";
+            $result .= '<li>' . Debug::text($child) . '&nbsp;</li>';
         }
-        $result .= "</ul>";
+        $result .= '</ul>';
         return $result;
     }
 

@@ -8,7 +8,6 @@ namespace SilverStripe\Control;
  */
 interface HasRequestHandler
 {
-
     /**
      * @return RequestHandler
      */

@@ -2,26 +2,29 @@
 
 namespace SilverStripe\ORM;
 
+use ArrayAccess;
+use Exception;
+use IteratorIterator;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\View\ArrayData;
-use ArrayAccess;
-use Exception;
-use IteratorIterator;
 
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  */
 class PaginatedList extends ListDecorator
 {
-
     protected $request;
+
     protected $getVar = 'start';
 
     protected $pageLength = 10;
+
     protected $pageStart;
+
     protected $totalItems;
+
     protected $limitItems = true;
 
     /**
@@ -29,7 +32,7 @@ class PaginatedList extends ListDecorator
      *
      * @param SS_List $list The list to paginate. The getRange method will
      *        be used to get the subset of objects to show.
-     * @param array|ArrayAccess Either a map of request parameters or
+     * @param array|ArrayAccess $request Either a map of request parameters or
      *        request object that the pagination offset is read from.
      * @throws Exception
      */
@@ -87,7 +90,7 @@ class PaginatedList extends ListDecorator
      */
     public function setPageLength($length)
     {
-        $this->pageLength = (int)$length;
+        $this->pageLength = (int) $length;
         return $this;
     }
 
@@ -99,7 +102,7 @@ class PaginatedList extends ListDecorator
      */
     public function setCurrentPage($page)
     {
-        $this->pageStart = ((int)$page - 1) * $this->getPageLength();
+        $this->pageStart = ((int) $page - 1) * $this->getPageLength();
         return $this;
     }
 
@@ -116,7 +119,7 @@ class PaginatedList extends ListDecorator
                 && isset($request[$this->getPaginationGetVar()])
                 && $request[$this->getPaginationGetVar()] > 0
             ) {
-                $this->pageStart = (int)$request[$this->getPaginationGetVar()];
+                $this->pageStart = (int) $request[$this->getPaginationGetVar()];
             } else {
                 $this->pageStart = 0;
             }
@@ -134,7 +137,7 @@ class PaginatedList extends ListDecorator
      */
     public function setPageStart($start)
     {
-        $this->pageStart = (int)$start;
+        $this->pageStart = (int) $start;
         return $this;
     }
 
@@ -161,7 +164,7 @@ class PaginatedList extends ListDecorator
      */
     public function setTotalItems($items)
     {
-        $this->totalItems = (int)$items;
+        $this->totalItems = (int) $items;
         return $this;
     }
 
@@ -204,7 +207,7 @@ class PaginatedList extends ListDecorator
      */
     public function setLimitItems($limit)
     {
-        $this->limitItems = (bool)$limit;
+        $this->limitItems = (bool) $limit;
         return $this;
     }
 
@@ -219,9 +222,8 @@ class PaginatedList extends ListDecorator
             return new IteratorIterator(
                 $tmptList->limit($pageLength, $this->getPageStart())
             );
-        } else {
-            return new IteratorIterator($this->list);
         }
+        return new IteratorIterator($this->list);
     }
 
     /**
@@ -263,9 +265,9 @@ class PaginatedList extends ListDecorator
                 'Link' => HTTP::setGetVar(
                     $this->getPaginationGetVar(),
                     $i * $this->getPageLength(),
-                    ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+                    $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
                 ),
-                'CurrentBool' => $this->CurrentPage() == ($i + 1)
+                'CurrentBool' => $this->CurrentPage() === ($i + 1),
             ]));
         }
 
@@ -320,7 +322,7 @@ class PaginatedList extends ListDecorator
 
         // If the first or last page is current, then show all context on one
         // side of it - otherwise show half on both sides.
-        if ($current == 1 || $current == $total) {
+        if ($current === 1 || $current === $total) {
             $offset = $context;
         } else {
             $offset = floor($context / 2);
@@ -338,25 +340,25 @@ class PaginatedList extends ListDecorator
             $link = HTTP::setGetVar(
                 $this->getPaginationGetVar(),
                 $i * $this->getPageLength(),
-                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+                $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
             );
             $num = $i + 1;
 
-            $emptyRange = $num != 1 && $num != $total && (
-                $num == $left - 1 || $num == $right + 1
+            $emptyRange = $num !== 1 && $num !== $total && (
+                $num === $left - 1 || $num === $right + 1
             );
 
             if ($emptyRange) {
                 $result->push(new ArrayData([
                     'PageNum' => null,
                     'Link' => null,
-                    'CurrentBool' => false
+                    'CurrentBool' => false,
                 ]));
-            } elseif ($num == 1 || $num == $total || in_array($num, $range)) {
+            } elseif ($num === 1 || $num === $total || in_array($num, $range, true)) {
                 $result->push(new ArrayData([
                     'PageNum' => $num,
                     'Link' => $link,
-                    'CurrentBool' => $current == $num
+                    'CurrentBool' => $current === $num,
                 ]));
             }
         }
@@ -399,7 +401,7 @@ class PaginatedList extends ListDecorator
      */
     public function NotFirstPage()
     {
-        return $this->CurrentPage() != 1;
+        return $this->CurrentPage() !== 1;
     }
 
     /**
@@ -418,7 +420,7 @@ class PaginatedList extends ListDecorator
      */
     public function FirstItem()
     {
-        return ($start = $this->getPageStart()) ? $start + 1 : 1;
+        return $start = $this->getPageStart() ? $start + 1 : 1;
     }
 
     /**
@@ -433,9 +435,8 @@ class PaginatedList extends ListDecorator
             return $this->getTotalItems();
         } elseif ($start = $this->getPageStart()) {
             return min($start + $pageLength, $this->getTotalItems());
-        } else {
-            return min($pageLength, $this->getTotalItems());
         }
+        return min($pageLength, $this->getTotalItems());
     }
 
     /**
@@ -448,7 +449,7 @@ class PaginatedList extends ListDecorator
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
             0,
-            ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+            $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
         );
     }
 
@@ -462,7 +463,7 @@ class PaginatedList extends ListDecorator
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
             ($this->TotalPages() - 1) * $this->getPageLength(),
-            ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+            $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
         );
     }
 
@@ -478,7 +479,7 @@ class PaginatedList extends ListDecorator
             return HTTP::setGetVar(
                 $this->getPaginationGetVar(),
                 $this->getPageStart() + $this->getPageLength(),
-                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+                $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
             );
         }
     }
@@ -495,7 +496,7 @@ class PaginatedList extends ListDecorator
             return HTTP::setGetVar(
                 $this->getPaginationGetVar(),
                 $this->getPageStart() - $this->getPageLength(),
-                ($this->request instanceof HTTPRequest) ? $this->request->getURL(true) : null
+                $this->request instanceof HTTPRequest ? $this->request->getURL(true) : null
             );
         }
     }
@@ -511,7 +512,7 @@ class PaginatedList extends ListDecorator
     /**
      * Set the request object for this list
      *
-     * @param HTTPRequest|ArrayAccess
+     * @param HTTPRequest|ArrayAccess $request
      */
     public function setRequest($request)
     {

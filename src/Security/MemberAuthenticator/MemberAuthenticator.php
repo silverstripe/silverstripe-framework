@@ -69,12 +69,11 @@ class MemberAuthenticator implements Authenticator
                 // Check if default admin credentials are correct
                 if (DefaultAdminService::isDefaultAdminCredentials($email, $data['Password'])) {
                     return $member;
-                } else {
-                    $result->addError(_t(
-                        'SilverStripe\\Security\\Member.ERRORWRONGCRED',
-                        "The provided details don't seem to be correct. Please try again."
-                    ));
                 }
+                $result->addError(_t(
+                    'SilverStripe\\Security\\Member.ERRORWRONGCRED',
+                    "The provided details don't seem to be correct. Please try again."
+                ));
             }
         }
 
@@ -143,20 +142,19 @@ class MemberAuthenticator implements Authenticator
 
         // Check a password is set on this member
         if (empty($member->Password) && $member->exists()) {
-            $result->addError(_t(__CLASS__ . '.NoPassword', 'There is no password on this member.'));
+            $result->addError(_t(self::class . '.NoPassword', 'There is no password on this member.'));
         }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
         if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {
             $result->addError(_t(
-                __CLASS__ . '.ERRORWRONGCRED',
+                self::class . '.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
             ));
         }
 
         return $result;
     }
-
 
     /**
      * Log login attempt
@@ -180,7 +178,7 @@ class MemberAuthenticator implements Authenticator
         /** @skipUpgrade */
         $email = isset($data['Email']) ? $data['Email'] : null;
         if (is_array($email)) {
-            throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): $email");
+            throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): ${email}");
         }
 
         $attempt = LoginAttempt::create();
@@ -201,7 +199,7 @@ class MemberAuthenticator implements Authenticator
             } else {
                 // Audit logging hook
                 Member::singleton()
-                   ->extend('authenticationFailedUnknownUser', $data, $request);
+                    ->extend('authenticationFailedUnknownUser', $data, $request);
             }
         }
 

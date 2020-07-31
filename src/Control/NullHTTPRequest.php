@@ -9,7 +9,6 @@ namespace SilverStripe\Control;
  */
 class NullHTTPRequest extends HTTPRequest
 {
-
     public function __construct()
     {
         parent::__construct(null, null);

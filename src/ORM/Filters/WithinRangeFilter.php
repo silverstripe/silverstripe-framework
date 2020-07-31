@@ -11,8 +11,8 @@ use SilverStripe\ORM\DataQuery;
  */
 class WithinRangeFilter extends SearchFilter
 {
-
     private $min;
+
     private $max;
 
     public function setMin($min)
@@ -32,8 +32,8 @@ class WithinRangeFilter extends SearchFilter
         return $query->where([
             $predicate => [
                 $this->min,
-                $this->max
-            ]
+                $this->max,
+            ],
         ]);
     }
 
@@ -44,8 +44,8 @@ class WithinRangeFilter extends SearchFilter
         return $query->where([
             $predicate => [
                 $this->min,
-                $this->max
-            ]
+                $this->max,
+            ],
         ]);
     }
 }

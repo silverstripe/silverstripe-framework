@@ -17,7 +17,6 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldAddNewButton implements GridField_HTMLProvider
 {
-
     protected $targetFragment;
 
     protected $buttonName;
@@ -60,7 +59,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
             'ButtonName' => $this->buttonName,
         ]);
 
-        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $templates = SSViewer::get_templates_by_class($this, '', self::class);
         return [
             $this->targetFragment => $data->renderWith($templates),
         ];

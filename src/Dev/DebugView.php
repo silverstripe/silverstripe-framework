@@ -2,14 +2,12 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 /**
@@ -32,89 +30,89 @@ class DebugView
     protected static $error_types = [
         0 => [
             'title' => 'Emergency',
-            'class' => 'error'
+            'class' => 'error',
         ],
         1 => [
             'title' => 'Alert',
-            'class' => 'error'
+            'class' => 'error',
         ],
         2 => [
             'title' => 'Critical',
-            'class' => 'error'
+            'class' => 'error',
         ],
         3 => [
             'title' => 'Error',
-            'class' => 'error'
+            'class' => 'error',
         ],
-        4 =>  [
+        4 => [
             'title' => 'Warning',
-            'class' => 'warning'
+            'class' => 'warning',
         ],
         5 => [
             'title' => 'Notice',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         6 => [
             'title' => 'Information',
-            'class' => 'info'
+            'class' => 'info',
         ],
-        7=> [
+        7 => [
             'title' => 'SilverStripe\\Dev\\Debug',
-            'class' => 'debug'
+            'class' => 'debug',
         ],
         E_USER_ERROR => [
             'title' => 'User Error',
-            'class' => 'error'
+            'class' => 'error',
         ],
         E_CORE_ERROR => [
             'title' => 'Core Error',
-            'class' => 'error'
+            'class' => 'error',
         ],
         E_NOTICE => [
             'title' => 'Notice',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         E_USER_NOTICE => [
             'title' => 'User Notice',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         E_DEPRECATED => [
             'title' => 'Deprecated',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         E_USER_DEPRECATED => [
             'title' => 'User Deprecated',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         E_CORE_ERROR => [
             'title' => 'Core Error',
-            'class' => 'error'
+            'class' => 'error',
         ],
         E_WARNING => [
             'title' => 'Warning',
-            'class' => 'warning'
+            'class' => 'warning',
         ],
         E_CORE_WARNING => [
             'title' => 'Core Warning',
-            'class' => 'warning'
+            'class' => 'warning',
         ],
         E_USER_WARNING => [
             'title' => 'User Warning',
-            'class' => 'warning'
+            'class' => 'warning',
         ],
         E_STRICT => [
             'title' => 'Strict Notice',
-            'class' => 'notice'
+            'class' => 'notice',
         ],
         E_RECOVERABLE_ERROR => [
             'title' => 'Recoverable Error',
-            'class' => 'warning'
-        ]
+            'class' => 'warning',
+        ],
     ];
 
     protected static $unknown_error = [
         'title' => 'Unknown Error',
-        'class' => 'error'
+        'class' => 'error',
     ];
 
     /**
@@ -131,12 +129,12 @@ class DebugView
         );
         $parts = explode('/', $relPath);
         $base = Director::absoluteBaseURL();
-        $pathPart = "";
+        $pathPart = '';
         $pathLinks = [];
         foreach ($parts as $part) {
-            if ($part != '') {
-                $pathPart .= "$part/";
-                $pathLinks[] = "<a href=\"$base$pathPart\">$part</a>";
+            if ($part !== '') {
+                $pathPart .= "${part}/";
+                $pathLinks[] = "<a href=\"${base}${pathPart}\">${part}</a>";
             }
         }
         return implode('&nbsp;&rarr;&nbsp;', $pathLinks);
@@ -241,12 +239,12 @@ class DebugView
     public function renderInfo($title, $subtitle, $description = false)
     {
         $output = '<div class="info header">';
-        $output .= "<h1>" . Convert::raw2xml($title) . "</h1>";
+        $output .= '<h1>' . Convert::raw2xml($title) . '</h1>';
         if ($subtitle) {
-            $output .= "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
+            $output .= '<h3>' . Convert::raw2xml($subtitle) . '</h3>';
         }
         if ($description) {
-            $output .= "<p>$description</p>";
+            $output .= "<p>${description}</p>";
         } else {
             $output .= $this->Breadcrumbs();
         }
@@ -261,7 +259,7 @@ class DebugView
      */
     public function renderFooter()
     {
-        return "</body></html>";
+        return '</body></html>';
     }
 
     /**
@@ -284,9 +282,9 @@ class DebugView
             $errstr = Convert::raw2xml($errstr);
         }
         $output = '<div class="header info ' . $errorType['class'] . '">';
-        $output .= "<h1>[" . $errorType['title'] . '] ' . $errstr . "</h1>";
-        $output .= "<h3>$httpRequestEnt</h3>";
-        $output .= "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
+        $output .= '<h1>[' . $errorType['title'] . '] ' . $errstr . '</h1>';
+        $output .= "<h3>${httpRequestEnt}</h3>";
+        $output .= "<p>Line <strong>${errline}</strong> in <strong>${errfile}</strong></p>";
         $output .= '</div>';
 
         return $output;
@@ -305,10 +303,10 @@ class DebugView
         $output .= '<pre>';
         foreach ($lines as $offset => $line) {
             $line = htmlentities($line, ENT_COMPAT, 'UTF-8');
-            if ($offset == $errline) {
-                $output .= "<span>$offset</span> <span class=\"error\">$line</span>";
+            if ($offset === $errline) {
+                $output .= "<span>${offset}</span> <span class=\"error\">${line}</span>";
             } else {
-                $output .= "<span>$offset</span> $line";
+                $output .= "<span>${offset}</span> ${line}";
             }
         }
         $output .= '</pre></div>';
@@ -351,7 +349,7 @@ class DebugView
      */
     protected function formatCaller($caller)
     {
-        $return = basename($caller['file']) . ":" . $caller['line'];
+        $return = basename($caller['file']) . ':' . $caller['line'];
         if (!empty($caller['class']) && !empty($caller['function'])) {
             $return .= " - {$caller['class']}::{$caller['function']}()";
         }
@@ -368,7 +366,7 @@ class DebugView
     public function renderVariable($val, $caller)
     {
         $output = '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
-        $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller) . " - </span>\n";
+        $output .= '<span style="font-size: 12px;color:#666;">' . $this->formatCaller($caller) . " - </span>\n";
         if (is_string($val)) {
             $output .= wordwrap($val, self::config()->columns);
         } else {
@@ -405,12 +403,11 @@ class DebugView
         if ($showHeader) {
             $callerFormatted = $this->formatCaller($caller);
             return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
-                . "<h3>Debug <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
+                . "<h3>Debug <span style=\"font-size: 65%\">(${callerFormatted})</span>\n</h3>\n"
                 . $text
-                . "</div>";
-        } else {
-            return $text;
+                . '</div>';
         }
+        return $text;
     }
 
     /**

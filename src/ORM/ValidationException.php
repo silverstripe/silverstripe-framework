@@ -33,11 +33,11 @@ class ValidationException extends Exception
     {
         // Catch legacy behaviour where second argument was not code
         if ($code && !is_numeric($code)) {
-            throw new InvalidArgumentException("Code must be numeric");
+            throw new InvalidArgumentException('Code must be numeric');
         }
 
         // Set default message and result
-        $exceptionMessage = _t("SilverStripe\\ORM\\ValidationException.DEFAULT_ERROR", "Validation error");
+        $exceptionMessage = _t('SilverStripe\\ORM\\ValidationException.DEFAULT_ERROR', 'Validation error');
         if (!$result) {
             $result = $exceptionMessage;
         }
@@ -55,7 +55,7 @@ class ValidationException extends Exception
             $exceptionMessage = $result;
         } else {
             throw new InvalidArgumentException(
-                "ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all"
+                'ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all'
             );
         }
 

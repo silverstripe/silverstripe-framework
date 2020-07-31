@@ -51,12 +51,12 @@ class DefaultAdminService
         // don't overwrite if already set
         if (static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
-                "Default admin already exists. Use clearDefaultAdmin() first."
+                'Default admin already exists. Use clearDefaultAdmin() first.'
             );
         }
 
         if (empty($username) || empty($password)) {
-            throw new InvalidArgumentException("Default admin username / password cannot be empty");
+            throw new InvalidArgumentException('Default admin username / password cannot be empty');
         }
 
         static::$default_username = $username;
@@ -72,7 +72,7 @@ class DefaultAdminService
     {
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
-                "No default admin configured. Please call hasDefaultAdmin() before getting default admin username"
+                'No default admin configured. Please call hasDefaultAdmin() before getting default admin username'
             );
         }
         return static::$default_username ?: Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
@@ -86,7 +86,7 @@ class DefaultAdminService
     {
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
-                "No default admin configured. Please call hasDefaultAdmin() before getting default admin password"
+                'No default admin configured. Please call hasDefaultAdmin() before getting default admin password'
             );
         }
         return static::$default_password ?: Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD');
@@ -132,7 +132,7 @@ class DefaultAdminService
         // Create admin with default admin username
         $admin = $this->findOrCreateAdmin(
             static::getDefaultAdminUsername(),
-            _t(__CLASS__ . '.DefaultAdminFirstname', 'Default Admin')
+            _t(self::class . '.DefaultAdminFirstname', 'Default Admin')
         );
 
         $this->extend('afterFindOrCreateDefaultAdmin', $admin);

@@ -36,7 +36,7 @@ class HTML
         'param',
         'source',
         'track',
-        'wbr'
+        'wbr',
     ];
 
     /**
@@ -65,7 +65,7 @@ class HTML
         $legalEmptyAttributes = static::config()->get('legal_empty_attributes');
         $preparedAttributes = '';
         foreach ($attributes as $attributeKey => $attributeValue) {
-            $whitelisted = in_array($attributeKey, $legalEmptyAttributes);
+            $whitelisted = in_array($attributeKey, $legalEmptyAttributes, true);
 
             // Only set non-empty strings (ensures strlen(0) > 0)
             if (strlen($attributeValue) > 0 || $whitelisted) {
@@ -78,7 +78,7 @@ class HTML
         }
 
         // Check void element type
-        if (in_array($tag, static::config()->get('void_elements'))) {
+        if (in_array($tag, static::config()->get('void_elements'), true)) {
             if ($content) {
                 throw new InvalidArgumentException("Void element \"{$tag}\" cannot have content");
             }

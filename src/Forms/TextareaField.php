@@ -18,7 +18,6 @@ namespace SilverStripe\Forms;
  */
 class TextareaField extends FormField
 {
-
     /**
      * Value should be XML
      *
@@ -58,7 +57,7 @@ class TextareaField extends FormField
         $data = parent::getSchemaDataDefaults();
         $data['data']['rows'] = $this->getRows();
         $data['data']['columns'] = $this->getColumns();
-        $data['data']['maxlength'] =  $this->getMaxLength();
+        $data['data']['maxlength'] = $this->getMaxLength();
         return $data;
     }
 
@@ -122,7 +121,7 @@ class TextareaField extends FormField
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getMaxLength()
     {
@@ -151,7 +150,6 @@ class TextareaField extends FormField
 
         return $attributes;
     }
-
 
     /**
      * {@inheritdoc}

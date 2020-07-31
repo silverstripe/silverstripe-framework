@@ -253,7 +253,7 @@ class ClassInfo
 
         $lowerClass = strtolower($class);
 
-        $cacheKey = $lowerClass . '_' . (string)$tablesOnly;
+        $cacheKey = $lowerClass . '_' . (string) $tablesOnly;
         $parent = $class;
         if (!isset(self::$_cache_ancestry[$cacheKey])) {
             $ancestry = [];
@@ -423,7 +423,7 @@ class ClassInfo
             return static::$_cache_parse[$classSpec];
         }
 
-        $tokens = token_get_all("<?php $classSpec");
+        $tokens = token_get_all("<?php ${classSpec}");
         $class = null;
         $args = [];
 
@@ -462,23 +462,23 @@ class ClassInfo
                                 break;
                             case "'":
                                 $result = str_replace(
-                                    ["\\\\", "\\'"],
-                                    ["\\", "'"],
+                                    ['\\\\', "\\'"],
+                                    ['\\', "'"],
                                     substr($argString, 1, -1)
                                 );
                                 break;
                             default:
-                                throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
+                                throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg ${argString}");
                         }
 
                         break;
 
                     case T_DNUMBER:
-                        $result = (double)$token[1];
+                        $result = (double) $token[1];
                         break;
 
                     case T_LNUMBER:
-                        $result = (int)$token[1];
+                        $result = (int) $token[1];
                         break;
 
                     case T_DOUBLE_ARROW:
@@ -590,10 +590,8 @@ class ClassInfo
         }
 
         // only keep classes with the Extension applied
-        $classes = array_filter($classes, function ($class) use ($extensionClass) {
+        return array_filter($classes, function ($class) use ($extensionClass) {
             return Extensible::has_extension($class, $extensionClass);
         });
-
-        return $classes;
     }
 }

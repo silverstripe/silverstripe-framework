@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\ORM\Queries\SQLSelect;
 use InvalidArgumentException;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * Builds a SQL query string from a SQLExpression object
  */
 class MySQLQueryBuilder extends DBQueryBuilder
 {
-
     /**
      * Max number of rows allowed in MySQL
      * @var string
@@ -36,7 +35,7 @@ class MySQLQueryBuilder extends DBQueryBuilder
 
         // For literal values return this as the limit SQL
         if (!is_array($limit)) {
-            return "{$nl}LIMIT $limit";
+            return "{$nl}LIMIT ${limit}";
         }
 
         // Assert that the array version provides the 'limit' key

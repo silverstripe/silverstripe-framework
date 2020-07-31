@@ -7,7 +7,6 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class FilesystemCacheFactory implements CacheFactory
 {
-
     /**
      * @var string Absolute directory path
      */
@@ -27,9 +26,9 @@ class FilesystemCacheFactory implements CacheFactory
     public function create($service, array $params = [])
     {
         return Injector::inst()->create(FilesystemCache::class, false, [
-            (isset($params['namespace'])) ? $params['namespace'] : '',
-            (isset($params['defaultLifetime'])) ? $params['defaultLifetime'] : 0,
-            $this->directory
+            isset($params['namespace']) ? $params['namespace'] : '',
+            isset($params['defaultLifetime']) ? $params['defaultLifetime'] : 0,
+            $this->directory,
         ]);
     }
 }

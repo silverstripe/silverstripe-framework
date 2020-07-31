@@ -70,7 +70,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected $fixtureFactory;
 
     /**
-     * @var Boolean If set to TRUE, this will force a test database to be generated
+     * @var boolean If set to TRUE, this will force a test database to be generated
      * in {@link setUp()}. Note that this flag is overruled by the presence of a
      * {@link $fixture_file}, which always forces a database build.
      *
@@ -221,7 +221,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     }
 
     /**
-     * @return String
+     * @return string
      */
     public static function get_fixture_file()
     {
@@ -274,7 +274,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         static::$state->setUp($this);
 
         // We cannot run the tests on this abstract class.
-        if (static::class == __CLASS__) {
+        if (static::class === self::class) {
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
             return;
         }
@@ -317,8 +317,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         Email::config()->remove('cc_all_emails_to');
         Email::config()->remove('bcc_all_emails_to');
     }
-
-
 
     /**
      * Helper method to determine if the current test should enable a test database
@@ -556,7 +554,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $base = Director::baseFolder();
         $path = $this->getCurrentAbsolutePath();
-        if (substr($path, 0, strlen($base)) == $base) {
+        if (substr($path, 0, strlen($base)) === $base) {
             $path = preg_replace('/^\/*/', '', substr($path, strlen($base)));
         }
         return $path;
@@ -598,7 +596,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $checkForNonObjectIdentity = false
     ) {
         if ($haystack instanceof DBField) {
-            $haystack = (string)$haystack;
+            $haystack = (string) $haystack;
         }
         parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
     }
@@ -612,7 +610,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $checkForNonObjectIdentity = false
     ) {
         if ($haystack instanceof DBField) {
-            $haystack = (string)$haystack;
+            $haystack = (string) $haystack;
         }
         parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity, $checkForNonObjectIdentity);
     }
@@ -664,21 +662,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public static function assertEmailSent($to, $from = null, $subject = null, $content = null)
     {
-        $found = (bool)static::findEmail($to, $from, $subject, $content);
+        $found = (bool) static::findEmail($to, $from, $subject, $content);
 
         $infoParts = '';
         $withParts = [];
         if ($to) {
-            $infoParts .= " to '$to'";
+            $infoParts .= " to '${to}'";
         }
         if ($from) {
-            $infoParts .= " from '$from'";
+            $infoParts .= " from '${from}'";
         }
         if ($subject) {
-            $withParts[] = "subject '$subject'";
+            $withParts[] = "subject '${subject}'";
         }
         if ($content) {
-            $withParts[] = "content '$content'";
+            $withParts[] = "content '${content}'";
         }
         if ($withParts) {
             $infoParts .= ' with ' . implode(' and ', $withParts);
@@ -686,10 +684,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         static::assertTrue(
             $found,
-            "Failed asserting that an email was sent$infoParts."
+            "Failed asserting that an email was sent${infoParts}."
         );
     }
-
 
     /**
      * Assert that the given {@link SS_List} includes DataObjects matching the given key-value
@@ -771,7 +768,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             );
         }
 
-        $constraint =  new PHPUnit_Framework_Constraint_Not(
+        $constraint = new PHPUnit_Framework_Constraint_Not(
             new SSListContains(
                 $matches
             )
@@ -843,7 +840,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         Deprecation::notice('5.0', 'Use assertListEquals() instead');
         return static::assertListEquals($matches, $dataObjectSet);
     }
-
 
     /**
      * Assert that the every record in the given {@link SS_List} matches the given key-value
@@ -1032,7 +1028,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             static::$tempDB->build();
         }
         $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : [];
-        static::$tempDB->resetDBSchema((array)$extraDataObjects);
+        static::$tempDB->resetDBSchema((array) $extraDataObjects);
     }
 
     /**
@@ -1068,7 +1064,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         } else {
             // Generate group with these permissions
             $group = Group::create();
-            $group->Title = "$permCode group";
+            $group->Title = "${permCode} group";
             $group->write();
 
             // Create each individual permission
@@ -1080,7 +1076,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             }
 
             $member = Member::get()->filter([
-                'Email' => "$permCode@example.org",
+                'Email' => "${permCode}@example.org",
             ])->first();
             if (!$member) {
                 $member = Member::create();
@@ -1088,7 +1084,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
             $member->FirstName = $permCode;
             $member->Surname = 'User';
-            $member->Email = "$permCode@example.org";
+            $member->Email = "${permCode}@example.org";
             $member->write();
             $group->Members()->add($member);
 

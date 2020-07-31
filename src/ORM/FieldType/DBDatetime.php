@@ -117,11 +117,11 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     {
         $parts = [
             'datatype' => 'datetime',
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
         $values = [
             'type' => 'datetime',
-            'parts' => $parts
+            'parts' => $parts,
         ];
         DB::require_field($this->tableName, $this->name, $values);
     }
@@ -150,16 +150,13 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
                 'SilverStripe\\Forms\\FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
-                [ 'format' => $date ]
+                ['format' => $date]
             ))
             ->setAttribute('placeholder', $dateTimeFormat);
 
         return $field;
     }
 
-    /**
-     *
-     */
     protected static $mock_now = null;
 
     /**
@@ -227,7 +224,6 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     {
         return parent::getFormatter($dateLength, $timeLength);
     }
-
 
     /**
      * Return formatter in a given locale. Useful if localising in a format other than the current locale.

@@ -9,7 +9,6 @@ use InvalidArgumentException;
  */
 class HasManyList extends RelationList
 {
-
     /**
      * @var string
      */
@@ -42,7 +41,7 @@ class HasManyList extends RelationList
     }
 
     /**
-     * @param null|int|array|string $id
+     * @param int|array|string|null $id
      * @return array
      */
     protected function foreignIDFilter($id = null)
@@ -54,7 +53,7 @@ class HasManyList extends RelationList
         // Apply relation filter
         $key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
         if (is_array($id)) {
-            return ["$key IN (" . DB::placeholders($id) . ")"  => $id];
+            return ["${key} IN (" . DB::placeholders($id) . ')' => $id];
         }
         if ($id !== null) {
             return [$key => $id];
@@ -74,7 +73,7 @@ class HasManyList extends RelationList
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
         } elseif (!($item instanceof $this->dataClass)) {
-            user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+            user_error("HasManyList::add() expecting a {$this->dataClass} object, or ID value", E_USER_ERROR);
         }
 
         $foreignID = $this->getForeignID();
@@ -90,7 +89,7 @@ class HasManyList extends RelationList
         }
 
         $foreignKey = $this->foreignKey;
-        $item->$foreignKey = $foreignID;
+        $item->{$foreignKey} = $foreignID;
 
         $item->write();
     }
@@ -120,7 +119,7 @@ class HasManyList extends RelationList
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(
-                "HasManyList::remove() expecting a $this->dataClass object, or ID",
+                "HasManyList::remove() expecting a {$this->dataClass} object, or ID",
                 E_USER_ERROR
             );
         }
@@ -130,10 +129,10 @@ class HasManyList extends RelationList
         $foreignKey = $this->getForeignKey();
 
         if (empty($foreignID)
-            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
-            || $foreignID == $item->$foreignKey
+            || (is_array($foreignID) && in_array($item->{$foreignKey}, $foreignID, true))
+            || $foreignID === $item->{$foreignKey}
         ) {
-            $item->$foreignKey = null;
+            $item->{$foreignKey} = null;
             $item->write();
         }
     }

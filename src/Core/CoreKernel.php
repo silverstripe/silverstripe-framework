@@ -21,6 +21,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\DebugView;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\ORM\DB;
@@ -28,7 +29,6 @@ use SilverStripe\View\PublicThemes;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -172,7 +172,7 @@ class CoreKernel implements Kernel
     /**
      * Check or update any temporary environment specified in the session.
      *
-     * @return null|string
+     * @return string|null
      *
      * @deprecated 5.0 Use Director::get_session_environment_type() instead
      */
@@ -229,7 +229,7 @@ class CoreKernel implements Kernel
         // Case 1: $databaseConfig global exists. Merge $database in as needed
         if (!empty($databaseConfig)) {
             if (!empty($database)) {
-                $databaseConfig['database'] =  $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
+                $databaseConfig['database'] = $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
             }
 
             // Only set it if its valid, otherwise ignore $databaseConfig entirely
@@ -294,7 +294,7 @@ class CoreKernel implements Kernel
         $body = implode([
             $dv->renderHeader(),
             $dv->renderInfo(
-                "Configuration Error",
+                'Configuration Error',
                 Director::absoluteBaseURL()
             ),
             $dv->renderParagraph(
@@ -302,7 +302,7 @@ class CoreKernel implements Kernel
                 . 'See the <a href="https://docs.silverstripe.org/en/4/getting_started/environment_management/">'
                 . 'Environment Management</a> docs for more information.'
             ),
-            $dv->renderFooter()
+            $dv->renderFooter(),
         ]);
 
         // Raise error
@@ -338,10 +338,10 @@ class CoreKernel implements Kernel
     {
         /** @skipUpgrade */
         $databaseConfig = [
-            "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
-            "server" => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
-            "username" => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
-            "password" => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
+            'type' => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
+            'server' => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
+            'username' => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
+            'password' => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
         ];
 
         // Set the port if called for
@@ -359,13 +359,13 @@ class CoreKernel implements Kernel
         // For schema enabled drivers:
         $dbSchema = Environment::getEnv('SS_DATABASE_SCHEMA');
         if ($dbSchema) {
-            $databaseConfig["schema"] = $dbSchema;
+            $databaseConfig['schema'] = $dbSchema;
         }
 
         // For SQlite3 memory databases (mainly for testing purposes)
         $dbMemory = Environment::getEnv('SS_DATABASE_MEMORY');
         if ($dbMemory) {
-            $databaseConfig["memory"] = $dbMemory;
+            $databaseConfig['memory'] = $dbMemory;
         }
 
         // Allow database adapters to handle their own configuration
@@ -421,9 +421,9 @@ class CoreKernel implements Kernel
 
         if ($chooseName) {
             // Find directory to build name from
-            $loopCount = (int)$chooseName;
+            $loopCount = (int) $chooseName;
             $databaseDir = $this->basePath;
-            for ($i = 0; $i < $loopCount-1; $i++) {
+            for ($i = 0; $i < $loopCount - 1; $i++) {
                 $databaseDir = dirname($databaseDir);
             }
 
@@ -467,7 +467,7 @@ class CoreKernel implements Kernel
         // Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
         if (function_exists('xdebug_enable')) {
             $current = ini_get('xdebug.max_nesting_level');
-            if ((int)$current < 200) {
+            if ((int) $current < 200) {
                 ini_set('xdebug.max_nesting_level', 200);
             }
         }
@@ -553,7 +553,7 @@ class CoreKernel implements Kernel
             if ($logger instanceof Logger) {
                 $logger->pushHandler(new StreamHandler($this->basePath . '/' . $errorLog, Logger::WARNING));
             } else {
-                user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
+                user_error('SS_ERROR_LOG setting only works with Monolog, you are using another logger', E_USER_WARNING);
             }
         }
     }
@@ -632,9 +632,9 @@ class CoreKernel implements Kernel
 
     public function setEnvironment($environment)
     {
-        if (!in_array($environment, [self::DEV, self::TEST, self::LIVE, null])) {
+        if (!in_array($environment, [self::DEV, self::TEST, self::LIVE, null], true)) {
             throw new InvalidArgumentException(
-                "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
+                "Director::set_environment_type passed '${environment}'.  It should be passed dev, test, or live"
             );
         }
         $this->enviroment = $environment;

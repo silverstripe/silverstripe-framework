@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Middleware\ConfirmationMiddleware;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Kernel;
 
 /**
  * Allows a bypass when the request has been run in CLI mode

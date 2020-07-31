@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev\State;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 

@@ -15,7 +15,6 @@ use SilverStripe\ORM\SS_List;
  */
 interface GridField_DataManipulator extends GridFieldComponent
 {
-
     /**
      * Manipulate the {@link SS_List} as needed by this grid modifier.
      *

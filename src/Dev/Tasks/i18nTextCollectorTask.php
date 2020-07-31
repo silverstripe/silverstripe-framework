@@ -5,8 +5,8 @@ namespace SilverStripe\Dev\Tasks;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 /**
@@ -14,10 +14,9 @@ use SilverStripe\i18n\TextCollection\i18nTextCollector;
  */
 class i18nTextCollectorTask extends BuildTask
 {
-
     private static $segment = 'i18nTextCollectorTask';
 
-    protected $title = "i18n Textcollector Task";
+    protected $title = 'i18n Textcollector Task';
 
     protected $description = "
 		Traverses through files in order to collect the 'entity master tables'
@@ -54,13 +53,13 @@ class i18nTextCollectorTask extends BuildTask
         }
 
         // Get restrictions
-        $restrictModules = ($request->getVar('module'))
+        $restrictModules = $request->getVar('module')
             ? explode(',', $request->getVar('module'))
             : null;
 
         $collector->run($restrictModules, $merge);
 
-        Debug::message(__CLASS__ . " completed!", false);
+        Debug::message(self::class . ' completed!', false);
     }
 
     /**
@@ -79,6 +78,6 @@ class i18nTextCollectorTask extends BuildTask
         }
 
         // merge=0 or merge=false will disable merge
-        return !in_array($merge, ['0', 'false']);
+        return !in_array($merge, ['0', 'false'], true);
     }
 }

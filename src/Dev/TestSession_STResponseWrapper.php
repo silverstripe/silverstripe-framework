@@ -9,7 +9,6 @@ use SilverStripe\Control\HTTPResponse;
  */
 class TestSession_STResponseWrapper
 {
-
     /**
      * @var HTTPResponse
      */
@@ -33,12 +32,9 @@ class TestSession_STResponseWrapper
      */
     public function getError()
     {
-        return "";
+        return '';
     }
 
-    /**
-     * @return null
-     */
     public function getSent()
     {
         return null;
@@ -49,7 +45,7 @@ class TestSession_STResponseWrapper
      */
     public function getHeaders()
     {
-        return "";
+        return '';
     }
 
     /**
@@ -57,7 +53,7 @@ class TestSession_STResponseWrapper
      */
     public function getMethod()
     {
-        return "GET";
+        return 'GET';
     }
 
     /**
@@ -65,12 +61,9 @@ class TestSession_STResponseWrapper
      */
     public function getUrl()
     {
-        return "";
+        return '';
     }
 
-    /**
-     * @return null
-     */
     public function getRequestData()
     {
         return null;

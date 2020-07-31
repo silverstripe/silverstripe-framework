@@ -3,7 +3,6 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\PermissionRole;
 
 /**
  * A PermissionRoleCode represents a single permission code assigned to a {@link PermissionRole}.
@@ -15,14 +14,14 @@ use SilverStripe\Security\PermissionRole;
 class PermissionRoleCode extends DataObject
 {
     private static $db = [
-        "Code" => "Varchar",
+        'Code' => 'Varchar',
     ];
 
     private static $has_one = [
-        "Role" => PermissionRole::class,
+        'Role' => PermissionRole::class,
     ];
 
-    private static $table_name = "PermissionRoleCode";
+    private static $table_name = 'PermissionRoleCode';
 
     public function validate()
     {
@@ -31,12 +30,12 @@ class PermissionRoleCode extends DataObject
         // Check that new code doesn't increase privileges, unless an admin is editing.
         $privilegedCodes = Permission::config()->privileged_permissions;
         if ($this->Code
-            && in_array($this->Code, $privilegedCodes)
+            && in_array($this->Code, $privilegedCodes, true)
             && !Permission::check('ADMIN')
         ) {
             $result->addError(
                 _t(
-                    __CLASS__ . '.PermsError',
+                    self::class . '.PermsError',
                     'Can\'t assign code "{code}" with privileged permissions (requires ADMIN access)',
                     ['code' => $this->Code]
                 )

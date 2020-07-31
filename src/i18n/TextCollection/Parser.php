@@ -80,7 +80,7 @@ class Parser extends SSTemplateParser
         $entity = $this->currentEntity;
         if (empty($entity['default'])) {
             if ($this->warnIfEmpty) {
-                trigger_error("Missing localisation default for key " . $this->currentEntityKey, E_USER_NOTICE);
+                trigger_error('Missing localisation default for key ' . $this->currentEntityKey, E_USER_NOTICE);
             }
             return;
         }
@@ -111,7 +111,7 @@ class Parser extends SSTemplateParser
     {
         // Run the parser and throw away the result
         $parser = new Parser($template, $warnIfEmpty);
-        if (substr($template, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+        if (substr($template, 0, 3) === pack('CCC', 0xef, 0xbb, 0xbf)) {
             $parser->pos = 3;
         }
         $parser->match_TopTemplate();

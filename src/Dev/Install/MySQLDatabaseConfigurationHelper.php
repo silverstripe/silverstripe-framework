@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Dev\Install;
 
-use mysqli;
-use PDO;
 use Exception;
+use mysqli;
 use mysqli_result;
+use PDO;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\Connect\PDOConnector;
@@ -18,7 +18,6 @@ use SilverStripe\ORM\Connect\PDOConnector;
  */
 class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
 {
-
     /**
      * Create a connection of the appropriate type
      *
@@ -59,12 +58,12 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                     if ($conn && empty($conn->connect_errno)) {
                         $conn->query("SET sql_mode = 'ANSI'");
                         return $conn;
-                    } else {
-                        $error = ($conn->connect_errno)
+                    }
+                        $error = $conn->connect_errno
                             ? $conn->connect_error
                             : 'Unknown connection error';
-                        return null;
-                    }
+                    return null;
+
                 case 'MySQLPDODatabase':
                     // May throw a PDOException if fails
 
@@ -96,10 +95,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                     if ($conn) {
                         $conn->query("SET sql_mode = 'ANSI'");
                         return $conn;
-                    } else {
-                        $error = 'Unknown connection error';
-                        return null;
                     }
+                        $error = 'Unknown connection error';
+                    return null;
+
                 default:
                     $error = 'Invalid connection type: ' . $databaseConfig['type'];
                     return null;
@@ -144,7 +143,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
 
         return [
             'success' => $success,
-            'error' => $error
+            'error' => $error,
         ];
     }
 
@@ -175,14 +174,14 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         if ($version) {
             $success = version_compare($version, '5.0', '>=');
             if (!$success) {
-                $error = "Your MySQL server version is $version. It's recommended you use at least MySQL 5.0.";
+                $error = "Your MySQL server version is ${version}. It's recommended you use at least MySQL 5.0.";
             }
         } else {
-            $error = "Could not determine your MySQL version.";
+            $error = 'Could not determine your MySQL version.';
         }
         return [
             'success' => $success,
-            'error' => $error
+            'error' => $error,
         ];
     }
 
@@ -199,7 +198,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
 
         return [
             'success' => $success,
-            'error' => $error
+            'error' => $error,
         ];
     }
 
@@ -242,8 +241,8 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $sqlDatabase = addcslashes($database, '_%'); // See http://dev.mysql.com/doc/refman/5.7/en/string-literals.html
         $dbPattern = sprintf(
             '((%s)|(%s)|(%s)|(%s))',
-            preg_quote("\"$sqlDatabase\".*"), // Regexp escape sql-escaped db identifier
-            preg_quote("\"$database\".*"),
+            preg_quote("\"${sqlDatabase}\".*"), // Regexp escape sql-escaped db identifier
+            preg_quote("\"${database}\".*"),
             preg_quote('"%".*'),
             preg_quote('*.*')
         );
@@ -261,7 +260,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
      */
     public function checkDatabasePermission($conn, $database, $permission)
     {
-        $grants = $this->column($conn->query("SHOW GRANTS FOR CURRENT_USER"));
+        $grants = $this->column($conn->query('SHOW GRANTS FOR CURRENT_USER'));
         foreach ($grants as $grant) {
             if ($this->checkDatabasePermissionGrant($database, $permission, $grant)) {
                 return true;
@@ -276,8 +275,8 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $alreadyExists = false;
         $conn = $this->createConnection($databaseConfig, $error);
         if ($conn) {
-            $list = $this->column($conn->query("SHOW DATABASES"));
-            if (in_array($databaseConfig['database'], $list)) {
+            $list = $this->column($conn->query('SHOW DATABASES'));
+            if (in_array($databaseConfig['database'], $list, true)) {
                 $success = true;
                 $alreadyExists = true;
             } else {
@@ -289,7 +288,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
 
         return [
             'success' => $success,
-            'alreadyExists' => $alreadyExists
+            'alreadyExists' => $alreadyExists,
         ];
     }
 
@@ -299,7 +298,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $success = $this->checkDatabasePermission($conn, $databaseConfig['database'], 'ALTER');
         return [
             'success' => $success,
-            'applies' => true
+            'applies' => true,
         ];
     }
 }

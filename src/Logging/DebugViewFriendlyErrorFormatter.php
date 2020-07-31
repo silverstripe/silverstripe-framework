@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Logging;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Dev\Debug;
+use Monolog\Formatter\FormatterInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use Monolog\Formatter\FormatterInterface;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Debug;
 
 /**
  * Produce a friendly error message
  */
 class DebugViewFriendlyErrorFormatter implements FormatterInterface
 {
-
     /**
      * Default status code
      *
@@ -132,9 +131,9 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
 
         $renderer = Debug::create_debug_view();
         $output = $renderer->renderHeader();
-        $output .= $renderer->renderInfo("Website Error", $this->getTitle(), $this->getBody());
+        $output .= $renderer->renderInfo('Website Error', $this->getTitle(), $this->getBody());
 
-        if (!is_null($contactInfo = $this->addContactAdministratorInfo())) {
+        if (($contactInfo = $this->addContactAdministratorInfo()) !== null) {
             $output .= $renderer->renderParagraph($contactInfo);
         }
 

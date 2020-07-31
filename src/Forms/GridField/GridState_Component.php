@@ -7,11 +7,10 @@ namespace SilverStripe\Forms\GridField;
  */
 class GridState_Component implements GridField_HTMLProvider
 {
-
     public function getHTMLFragments($gridField)
     {
         return [
-            'before' => $gridField->getState(false)->Field()
+            'before' => $gridField->getState(false)->Field(),
         ];
     }
 }

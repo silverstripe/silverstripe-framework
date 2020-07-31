@@ -10,7 +10,6 @@ use SilverStripe\ORM\DB;
  */
 class DBFloat extends DBField
 {
-
     public function __construct($name = null, $defaultVal = 0)
     {
         $this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
@@ -21,12 +20,12 @@ class DBFloat extends DBField
     public function requireField()
     {
         $parts = [
-            'datatype'=>'float',
-            'null'=>'not null',
-            'default'=>$this->defaultVal,
-            'arrayValue'=>$this->arrayValue
+            'datatype' => 'float',
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue,
         ];
-        $values = ['type'=>'float', 'parts'=>$parts];
+        $values = ['type' => 'float', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 

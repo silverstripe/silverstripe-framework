@@ -25,7 +25,7 @@ abstract class Extension
     /**
      * The object this extension is applied to.
      *
-     * @var Object
+     * @var object
      */
     protected $owner;
 
@@ -87,7 +87,7 @@ abstract class Extension
     public function clearOwner()
     {
         if (empty($this->ownerStack)) {
-            throw new BadMethodCallException("clearOwner() called more than setOwner()");
+            throw new BadMethodCallException('clearOwner() called more than setOwner()');
         }
         $this->owner = array_pop($this->ownerStack);
     }
@@ -95,7 +95,7 @@ abstract class Extension
     /**
      * Returns the owner of this extension.
      *
-     * @return Object
+     * @return object
      */
     public function getOwner()
     {

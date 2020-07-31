@@ -14,7 +14,6 @@ use SilverStripe\ORM\DB;
  */
 class DBEnum extends DBString
 {
-
     /**
      * List of enum values
      *
@@ -74,11 +73,11 @@ class DBEnum extends DBString
 
             // If there's a default, then use this
             if ($default && !is_int($default)) {
-                if (in_array($default, $enum)) {
+                if (in_array($default, $enum, true)) {
                     $this->setDefault($default);
                 } else {
                     user_error(
-                        "Enum::__construct() The default value '$default' does not match any item in the enumeration",
+                        "Enum::__construct() The default value '${default}' does not match any item in the enumeration",
                         E_USER_ERROR
                     );
                 }
@@ -94,9 +93,6 @@ class DBEnum extends DBString
         parent::__construct($name, $options);
     }
 
-    /**
-     * @return void
-     */
     public function requireField()
     {
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
@@ -109,12 +105,12 @@ class DBEnum extends DBString
             'collate' => $collation,
             'default' => $this->getDefault(),
             'table' => $this->getTable(),
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = [
             'type' => 'enum',
-            'parts' => $parts
+            'parts' => $parts,
         ];
 
         DB::require_field($this->getTable(), $this->getName(), $values);
@@ -130,9 +126,8 @@ class DBEnum extends DBString
      * @param string $emptyString
      * @return DropdownField
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null)
+    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
     {
-
         if (!$title) {
             $title = $this->getName();
         }
@@ -154,27 +149,27 @@ class DBEnum extends DBString
     }
 
     /**
-     * @param string
+     * @param string $title
      *
      * @return DropdownField
      */
     public function scaffoldSearchField($title = null)
     {
         $anyText = _t('SilverStripe\\ORM\\FieldType\\DBEnum.ANY', 'Any');
-        return $this->formField($title, null, true, '', "($anyText)");
+        return $this->formField($title, null, true, '', "(${anyText})");
     }
 
     /**
      * Returns the values of this enum as an array, suitable for insertion into
      * a {@link DropdownField}
      *
-     * @param boolean
+     * @param boolean $hasEmpty
      *
      * @return array
      */
     public function enumValues($hasEmpty = false)
     {
-        return ($hasEmpty)
+        return $hasEmpty
             ? array_merge(['' => ''], ArrayLib::valuekey($this->getEnum()))
             : ArrayLib::valuekey($this->getEnum());
     }
@@ -188,7 +183,6 @@ class DBEnum extends DBString
     {
         return $this->enum;
     }
-
 
     /**
      * Get the list of enum values, including obsolete values still present in the database
