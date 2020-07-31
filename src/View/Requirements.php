@@ -13,7 +13,6 @@ use SilverStripe\Dev\Deprecation;
  */
 class Requirements implements Flushable
 {
-
     /**
      * Flag whether combined files should be deleted on flush.
      *
@@ -72,7 +71,7 @@ class Requirements implements Flushable
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_suffix_requirements($var)
     {
@@ -392,7 +391,7 @@ class Requirements implements Flushable
     public static function combine_files($combinedFileName, $files, $options = [])
     {
         if (is_string($options)) {
-            throw new InvalidArgumentException("Invalid $options");
+            throw new InvalidArgumentException("Invalid ${options}");
         }
         self::backend()->combineFiles($combinedFileName, $files, $options);
     }
@@ -449,7 +448,7 @@ class Requirements implements Flushable
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_write_js_to_body($var)
     {
@@ -517,7 +516,6 @@ class Requirements implements Flushable
     {
         self::backend()->setWriteHeaderComment($write);
     }
-
 
     /**
      * Output debugging information

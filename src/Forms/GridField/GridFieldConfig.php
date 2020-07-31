@@ -49,7 +49,7 @@ class GridFieldConfig
     {
         if ($insertBefore) {
             $existingItems = $this->getComponents();
-            $this->components = new ArrayList;
+            $this->components = new ArrayList();
             $inserted = false;
             foreach ($existingItems as $existingItem) {
                 if (!$inserted && $existingItem instanceof $insertBefore) {

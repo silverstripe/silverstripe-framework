@@ -47,10 +47,10 @@ class LoginAttempt extends DataObject
     ];
 
     private static $indexes = [
-        "EmailHashed" => true
+        'EmailHashed' => true,
     ];
 
-    private static $table_name = "LoginAttempt";
+    private static $table_name = 'LoginAttempt';
 
     /**
      * @skipUpgrade
@@ -60,10 +60,10 @@ class LoginAttempt extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Email'] = _t(__CLASS__ . '.Email', 'Email Address');
-        $labels['EmailHashed'] = _t(__CLASS__ . '.EmailHashed', 'Email Address (hashed)');
-        $labels['Status'] = _t(__CLASS__ . '.Status', 'Status');
-        $labels['IP'] = _t(__CLASS__ . '.IP', 'IP Address');
+        $labels['Email'] = _t(self::class . '.Email', 'Email Address');
+        $labels['EmailHashed'] = _t(self::class . '.EmailHashed', 'Email Address (hashed)');
+        $labels['Status'] = _t(self::class . '.Status', 'Status');
+        $labels['IP'] = _t(self::class . '.IP', 'IP Address');
 
         return $labels;
     }

@@ -17,24 +17,24 @@ class FormScaffolder
     use Injectable;
 
     /**
-     * @var DataObject $obj The object defining the fields to be scaffolded
+     * @var DataObject The object defining the fields to be scaffolded
      * through its metadata like $db, $searchable_fields, etc.
      */
     protected $obj;
 
     /**
-     * @var boolean $tabbed Return fields in a tabset, with all main fields in the path "Root.Main",
+     * @var boolean Return fields in a tabset, with all main fields in the path "Root.Main",
      * relation fields in "Root.<relationname>" (if {@link $includeRelations} is enabled).
      */
     public $tabbed = false;
 
     /**
-     * @var boolean $ajaxSafe
+     * @var boolean
      */
     public $ajaxSafe = false;
 
     /**
-     * @var array $restrictFields Numeric array of a field name whitelist.
+     * @var array Numeric array of a field name whitelist.
      * If left blank, all fields from {@link DataObject->db()} will be included.
      *
      * @todo Implement restrictions for has_many and many_many relations.
@@ -42,7 +42,7 @@ class FormScaffolder
     public $restrictFields;
 
     /**
-     * @var array $fieldClasses Optional mapping of fieldnames to subclasses of {@link FormField}.
+     * @var array Optional mapping of fieldnames to subclasses of {@link FormField}.
      * By default the scaffolder will determine the field instance by {@link DBField::scaffoldFormField()}.
      *
      * @todo Implement fieldClasses for has_many and many_many relations
@@ -50,7 +50,7 @@ class FormScaffolder
     public $fieldClasses;
 
     /**
-     * @var boolean $includeRelations Include has_one, has_many and many_many relations
+     * @var boolean Include has_one, has_many and many_many relations
      */
     public $includeRelations = false;
 
@@ -76,14 +76,14 @@ class FormScaffolder
 
         // tabbed or untabbed
         if ($this->tabbed) {
-            $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
-            $mainTab->setTitle(_t(__CLASS__ . '.TABMAIN', 'Main'));
+            $fields->push(new TabSet('Root', $mainTab = new Tab('Main')));
+            $mainTab->setTitle(_t(self::class . '.TABMAIN', 'Main'));
         }
 
         // Add logical fields directly specified in db config
         foreach ($this->obj->config()->get('db') as $fieldName => $fieldType) {
             // Skip restricted fields
-            if ($this->restrictFields && !in_array($fieldName, $this->restrictFields)) {
+            if ($this->restrictFields && !in_array($fieldName, $this->restrictFields, true)) {
                 continue;
             }
 
@@ -103,7 +103,7 @@ class FormScaffolder
             }
             $fieldObject->setTitle($this->obj->fieldLabel($fieldName));
             if ($this->tabbed) {
-                $fields->addFieldToTab("Root.Main", $fieldObject);
+                $fields->addFieldToTab('Root.Main', $fieldObject);
             } else {
                 $fields->push($fieldObject);
             }
@@ -112,7 +112,7 @@ class FormScaffolder
         // add has_one relation fields
         if ($this->obj->hasOne()) {
             foreach ($this->obj->hasOne() as $relationship => $component) {
-                if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
+                if ($this->restrictFields && !in_array($relationship, $this->restrictFields, true)) {
                     continue;
                 }
                 $fieldName = $component === 'SilverStripe\\ORM\\DataObject'
@@ -129,7 +129,7 @@ class FormScaffolder
                 }
                 $hasOneField->setTitle($this->obj->fieldLabel($relationship));
                 if ($this->tabbed) {
-                    $fields->addFieldToTab("Root.Main", $hasOneField);
+                    $fields->addFieldToTab('Root.Main', $hasOneField);
                 } else {
                     $fields->push($hasOneField);
                 }
@@ -145,11 +145,11 @@ class FormScaffolder
                 foreach ($this->obj->hasMany() as $relationship => $component) {
                     if ($this->tabbed) {
                         $fields->findOrMakeTab(
-                            "Root.$relationship",
+                            "Root.${relationship}",
                             $this->obj->fieldLabel($relationship)
                         );
                     }
-                    $fieldClass = (isset($this->fieldClasses[$relationship]))
+                    $fieldClass = isset($this->fieldClasses[$relationship])
                         ? $this->fieldClasses[$relationship]
                         : 'SilverStripe\\Forms\\GridField\\GridField';
                     /** @var GridField $grid */
@@ -157,11 +157,11 @@ class FormScaffolder
                         $fieldClass,
                         $relationship,
                         $this->obj->fieldLabel($relationship),
-                        $this->obj->$relationship(),
+                        $this->obj->{$relationship}(),
                         GridFieldConfig_RelationEditor::create()
                     );
                     if ($this->tabbed) {
-                        $fields->addFieldToTab("Root.$relationship", $grid);
+                        $fields->addFieldToTab("Root.${relationship}", $grid);
                     } else {
                         $fields->push($grid);
                     }
@@ -175,7 +175,7 @@ class FormScaffolder
                     static::addManyManyRelationshipFields(
                         $fields,
                         $relationship,
-                        (isset($this->fieldClasses[$relationship]))
+                        isset($this->fieldClasses[$relationship])
                             ? $this->fieldClasses[$relationship] : null,
                         $this->tabbed,
                         $this->obj
@@ -205,7 +205,7 @@ class FormScaffolder
     ) {
         if ($tabbed) {
             $fields->findOrMakeTab(
-                "Root.$relationship",
+                "Root.${relationship}",
                 $dataObject->fieldLabel($relationship)
             );
         }
@@ -217,12 +217,12 @@ class FormScaffolder
             $fieldClass,
             $relationship,
             $dataObject->fieldLabel($relationship),
-            $dataObject->$relationship(),
+            $dataObject->{$relationship}(),
             GridFieldConfig_RelationEditor::create()
         );
 
         if ($tabbed) {
-            $fields->addFieldToTab("Root.$relationship", $grid);
+            $fields->addFieldToTab("Root.${relationship}", $grid);
         } else {
             $fields->push($grid);
         }
@@ -241,7 +241,7 @@ class FormScaffolder
             'includeRelations' => $this->includeRelations,
             'restrictFields' => $this->restrictFields,
             'fieldClasses' => $this->fieldClasses,
-            'ajaxSafe' => $this->ajaxSafe
+            'ajaxSafe' => $this->ajaxSafe,
         ];
     }
 }

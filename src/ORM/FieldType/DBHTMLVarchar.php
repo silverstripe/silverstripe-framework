@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
@@ -14,14 +14,13 @@ use SilverStripe\View\Parsers\ShortcodeParser;
  */
 class DBHTMLVarchar extends DBVarchar
 {
-
     private static $escape_type = 'xml';
 
     private static $casting = [
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
-        "LowerCase" => "HTMLFragment",
-        "UpperCase" => "HTMLFragment",
+        'LowerCase' => 'HTMLFragment',
+        'UpperCase' => 'HTMLFragment',
     ];
 
     /**
@@ -49,9 +48,10 @@ class DBHTMLVarchar extends DBVarchar
      */
     public function setProcessShortcodes($process)
     {
-        $this->processShortcodes = (bool)$process;
+        $this->processShortcodes = (bool) $process;
         return $this;
     }
+
     /**
      * @param array $options
      *
@@ -71,8 +71,8 @@ class DBHTMLVarchar extends DBVarchar
      */
     public function setOptions(array $options = [])
     {
-        if (array_key_exists("shortcodes", $options)) {
-            $this->setProcessShortcodes(!!$options["shortcodes"]);
+        if (array_key_exists('shortcodes', $options)) {
+            $this->setProcessShortcodes(!!$options['shortcodes']);
         }
 
         return parent::setOptions($options);
@@ -88,9 +88,8 @@ class DBHTMLVarchar extends DBVarchar
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**
@@ -137,7 +136,7 @@ class DBHTMLVarchar extends DBVarchar
         // Form schema format as HTML
         $value = $this->RAW();
         if ($value) {
-            return [ 'html' => $this->RAW() ];
+            return ['html' => $this->RAW()];
         }
         return null;
     }

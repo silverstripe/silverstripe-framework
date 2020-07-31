@@ -18,7 +18,6 @@ use SilverStripe\Security\SecurityToken;
  * Class LogoutHandler handles logging out Members from their session and/or cookie.
  * The logout process destroys all traces of the member on the server (not the actual computer user
  * at the other end of the line, don't worry)
- *
  */
 class LogoutHandler extends RequestHandler
 {
@@ -26,7 +25,7 @@ class LogoutHandler extends RequestHandler
      * @var array
      */
     private static $url_handlers = [
-        '' => 'logout'
+        '' => 'logout',
     ];
 
     /**
@@ -34,9 +33,8 @@ class LogoutHandler extends RequestHandler
      */
     private static $allowed_actions = [
         'logout',
-        'LogoutForm'
+        'LogoutForm',
     ];
-
 
     /**
      * Log out form handler method
@@ -58,13 +56,13 @@ class LogoutHandler extends RequestHandler
             Security::singleton()->setSessionMessage(
                 _t(
                     'SilverStripe\\Security\\Security.CONFIRMLOGOUT',
-                    "Please click the button below to confirm that you wish to log out."
+                    'Please click the button below to confirm that you wish to log out.'
                 ),
                 ValidationResult::TYPE_WARNING
             );
 
             return [
-                'Form' => $this->logoutForm()
+                'Form' => $this->logoutForm(),
             ];
         }
 
@@ -114,7 +112,7 @@ class LogoutHandler extends RequestHandler
         $referer = $this->getReturnReferer();
         if ($referer) {
             $link = Controller::join_links($link, '?' . http_build_query([
-                'BackURL' => Director::makeRelative($referer)
+                'BackURL' => Director::makeRelative($referer),
             ]));
         }
 

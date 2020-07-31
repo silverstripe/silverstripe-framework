@@ -11,7 +11,6 @@ use SilverStripe\i18n\i18n;
  */
 class DBLocale extends DBVarchar
 {
-
     public function __construct($name = null, $size = 16)
     {
         parent::__construct($name, $size);
@@ -20,9 +19,9 @@ class DBLocale extends DBVarchar
     /**
      * See {@link getShortName()} and {@link getNativeName()}.
      *
-     * @param Boolean $showNative Show a localized version of the name instead, based on the
+     * @param boolean $showNative Show a localized version of the name instead, based on the
      *  field's locale value.
-     * @return String
+     * @return string
      */
     public function Nice($showNative = false)
     {
@@ -65,7 +64,7 @@ class DBLocale extends DBVarchar
     public function getNativeName()
     {
         $locale = $this->value;
-        return i18n::with_locale($locale, function () use ($locale) {
+        return i18n::with_locale($locale, function () {
             return $this->getShortName();
         });
     }

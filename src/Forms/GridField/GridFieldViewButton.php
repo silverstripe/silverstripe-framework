@@ -18,7 +18,7 @@ class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionM
      */
     public function getTitle($gridField, $record, $columnName)
     {
-        return _t(__CLASS__ . '.VIEW', "View");
+        return _t(self::class . '.VIEW', 'View');
     }
 
     /**
@@ -35,7 +35,7 @@ class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionM
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "classNames" => "font-icon-eye action-detail view-link"
+            'classNames' => 'font-icon-eye action-detail view-link',
         ];
     }
 
@@ -49,7 +49,7 @@ class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionM
 
     public function augmentColumns($field, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns, true)) {
             $columns[] = 'Actions';
         }
     }
@@ -65,9 +65,9 @@ class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionM
             return null;
         }
         $data = new ArrayData([
-            'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
+            'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view'),
         ]);
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '', self::class);
         return $data->renderWith($template);
     }
 

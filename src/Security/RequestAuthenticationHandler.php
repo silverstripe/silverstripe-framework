@@ -48,6 +48,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
             }
         }
     }
+
     /**
      * Log into the identity-store handlers attached to this request filter
      *

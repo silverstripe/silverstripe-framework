@@ -223,7 +223,7 @@ class PasswordValidator
     }
 
     /**
-     * @param String $password
+     * @param string $password
      * @param Member $member
      * @return ValidationResult
      */
@@ -234,7 +234,7 @@ class PasswordValidator
         $minLength = $this->getMinLength();
         if ($minLength && strlen($password) < $minLength) {
             $error = _t(
-                __CLASS__ . '.TOOSHORT',
+                self::class . '.TOOSHORT',
                 'Password is too short, it must be {minimum} or more characters long',
                 ['minimum' => $minLength]
             );
@@ -253,7 +253,7 @@ class PasswordValidator
                     continue;
                 }
                 $missedTests[] = _t(
-                    __CLASS__ . '.STRENGTHTEST' . strtoupper($name),
+                    self::class . '.STRENGTHTEST' . strtoupper($name),
                     $name,
                     'The user needs to add this to their password for more complexity'
                 );
@@ -262,7 +262,7 @@ class PasswordValidator
             $score = count($testNames) - count($missedTests);
             if ($missedTests && $score < $minTestScore) {
                 $error = _t(
-                    __CLASS__ . '.LOWCHARSTRENGTH',
+                    self::class . '.LOWCHARSTRENGTH',
                     'Please increase password strength by adding some of the following characters: {chars}',
                     ['chars' => implode(', ', $missedTests)]
                 );
@@ -280,7 +280,7 @@ class PasswordValidator
             foreach ($previousPasswords as $previousPassword) {
                 if ($previousPassword->checkPassword($password)) {
                     $error = _t(
-                        __CLASS__ . '.PREVPASSWORD',
+                        self::class . '.PREVPASSWORD',
                         'You\'ve already used that password in the past, please choose a new password'
                     );
                     $valid->addError($error, 'bad', 'PREVIOUS_PASSWORD');

@@ -103,7 +103,7 @@ class FormField extends RequestHandler
     protected $name;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     protected $title;
 
@@ -135,7 +135,7 @@ class FormField extends RequestHandler
 
     /**
      * @config
-     * @var array $default_classes The default classes to apply to the FormField
+     * @var array The default classes to apply to the FormField
      */
     private static $default_classes = [];
 
@@ -332,7 +332,7 @@ class FormField extends RequestHandler
      * Creates a new field.
      *
      * @param string $name The internal field name, passed to forms.
-     * @param null|string|SilverStripe\View\ViewableData $title The human-readable field label.
+     * @param string|SilverStripe\View\ViewableData|null $title The human-readable field label.
      * @param mixed $value The value of the field.
      */
     public function __construct($name, $title = null, $value = null)
@@ -521,7 +521,7 @@ class FormField extends RequestHandler
     /**
      * Sets the right title for this formfield
      *
-     * @param string|DBField Plain text string, or a DBField with appropriately escaped HTML
+     * @param string|DBField $rightTitle Plain text string, or a DBField with appropriately escaped HTML
      * @return $this
      */
     public function setRightTitle($rightTitle)
@@ -687,7 +687,7 @@ class FormField extends RequestHandler
             'id' => $this->ID(),
             'disabled' => $this->isDisabled(),
             'readonly' => $this->isReadonly(),
-            'autofocus' => $this->isAutofocus()
+            'autofocus' => $this->isAutofocus(),
         ];
 
         if ($this->Required()) {
@@ -726,7 +726,7 @@ class FormField extends RequestHandler
         $attributes = (array) $attributes;
 
         $attributes = array_filter($attributes, function ($v) {
-            return ($v || $v === 0 || $v === '0');
+            return $v || $v === 0 || $v === '0';
         });
 
         if ($exclude) {
@@ -1102,7 +1102,6 @@ class FormField extends RequestHandler
         );
     }
 
-
     /**
      * Generate an array of class name strings to use for rendering this form field into HTML.
      *
@@ -1113,7 +1112,7 @@ class FormField extends RequestHandler
      */
     protected function _templates($customTemplate = null, $customTemplateSuffix = null)
     {
-        $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix, __CLASS__);
+        $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix, self::class);
         // Prefer any custom template
         if ($customTemplate) {
             // Prioritise direct template
@@ -1284,7 +1283,7 @@ class FormField extends RequestHandler
     public function hasClass($class)
     {
         $classes = explode(' ', strtolower($this->extraClass()));
-        return in_array(strtolower(trim($class)), $classes);
+        return in_array(strtolower(trim($class)), $classes, true);
     }
 
     /**
@@ -1354,7 +1353,7 @@ class FormField extends RequestHandler
             Convert::raw2att(static::class),
             Convert::raw2att($this->name),
             Convert::raw2att($this->title),
-            $this->getMessageCast() == ValidationResult::CAST_HTML ? Convert::raw2xml($this->message) : $this->message,
+            $this->getMessageCast() === ValidationResult::CAST_HTML ? Convert::raw2xml($this->message) : $this->message,
             Convert::raw2att($strValue)
         );
     }
@@ -1405,7 +1404,7 @@ class FormField extends RequestHandler
     }
 
     /**
-     * @return null|FieldList
+     * @return FieldList|null
      */
     public function rootFieldList()
     {
@@ -1607,15 +1606,13 @@ class FormField extends RequestHandler
      */
     public function getSchemaStateDefaults()
     {
-        $state = [
+        return [
             'name' => $this->getName(),
             'id' => $this->ID(),
             'value' => $this->Value(),
             'message' => $this->getSchemaMessage(),
             'data' => [],
         ];
-
-        return $state;
     }
 
     /**

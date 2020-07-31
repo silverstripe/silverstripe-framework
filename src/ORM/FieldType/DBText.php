@@ -2,14 +2,13 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
 
 /**
  * Represents a variable-length string of up to 16 megabytes, designed to store raw text
@@ -27,14 +26,13 @@ use InvalidArgumentException;
  */
 class DBText extends DBString
 {
-
     private static $casting = [
-        "BigSummary" => "Text",
-        "ContextSummary" => "HTMLFragment", // Always returns HTML as it contains formatting and highlighting
-        "FirstParagraph" => "Text",
-        "FirstSentence" => "Text",
-        "LimitSentences" => "Text",
-        "Summary" => "Text",
+        'BigSummary' => 'Text',
+        'ContextSummary' => 'HTMLFragment', // Always returns HTML as it contains formatting and highlighting
+        'FirstParagraph' => 'Text',
+        'FirstSentence' => 'Text',
+        'LimitSentences' => 'Text',
+        'Summary' => 'Text',
     ];
 
     /**
@@ -51,12 +49,12 @@ class DBText extends DBString
             'character set' => $charset,
             'collate' => $collation,
             'default' => $this->defaultVal,
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = [
             'type' => 'text',
-            'parts' => $parts
+            'parts' => $parts,
         ];
 
         DB::require_field($this->tableName, $this->name, $values);
@@ -71,12 +69,12 @@ class DBText extends DBString
     public function LimitSentences($maxSentences = 2)
     {
         if (!is_numeric($maxSentences)) {
-            throw new InvalidArgumentException("Text::LimitSentence() expects one numeric argument");
+            throw new InvalidArgumentException('Text::LimitSentence() expects one numeric argument');
         }
 
         $value = $this->Plain();
         if (!$value) {
-            return "";
+            return '';
         }
 
         // Do a word-search
@@ -94,12 +92,10 @@ class DBText extends DBString
         // Failing to find the number of sentences requested, fallback to a logical default
         if ($maxSentences > 1) {
             return $value;
-        } else {
-            // If searching for a single sentence (and there are none) just do a text summary
-            return $this->Summary(20);
         }
+        // If searching for a single sentence (and there are none) just do a text summary
+        return $this->Summary(20);
     }
-
 
     /**
      * Return the first string that finishes with a period (.) in this text.
@@ -184,10 +180,9 @@ class DBText extends DBString
         $characters = 500,
         $keywords = null,
         $highlight = true,
-        $prefix = "... ",
-        $suffix = "..."
+        $prefix = '... ',
+        $suffix = '...'
     ) {
-
         if (!$keywords) {
             // Use the default "Search" request variable (from SearchForm)
             $keywords = isset($_REQUEST['Search']) ? $_REQUEST['Search'] : '';
@@ -236,7 +231,7 @@ class DBText extends DBString
             $summary = $prefix . $summary;
         }
         if (strlen($text) > ($characters + $position)) {
-            $summary = $summary . $suffix;
+            $summary .= $suffix;
         }
 
         return nl2br($summary);
@@ -247,10 +242,9 @@ class DBText extends DBString
         if (!$this->nullifyEmpty) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
             return NullableField::create(TextareaField::create($this->name, $title));
-        } else {
-            // Automatically determine null (empty string)
-            return TextareaField::create($this->name, $title);
         }
+        // Automatically determine null (empty string)
+        return TextareaField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)

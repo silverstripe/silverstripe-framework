@@ -1,9 +1,7 @@
 <?php
 
-
 namespace SilverStripe\ORM;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -14,7 +12,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 class ManyManyThroughQueryManipulator implements DataQueryManipulator
 {
-
     use Injectable;
 
     /**
@@ -27,14 +24,14 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * Key that joins to the data class
      *
-     * @var string $localKey
+     * @var string
      */
     protected $localKey;
 
     /**
      * Key that joins to the parent class
      *
-     * @var string $foreignKey
+     * @var string
      */
     protected $foreignKey;
 

@@ -248,7 +248,7 @@ class Requirements_Backend
      */
     public function setCombinedFilesEnabled($enable)
     {
-        $this->combinedFilesEnabled = (bool)$enable;
+        $this->combinedFilesEnabled = (bool) $enable;
     }
 
     /**
@@ -297,7 +297,7 @@ class Requirements_Backend
         if ($this->combinedFilesFolder) {
             return $this->combinedFilesFolder;
         }
-        return Config::inst()->get(__CLASS__, 'default_combined_files_folder');
+        return Config::inst()->get(self::class, 'default_combined_files_folder');
     }
 
     /**
@@ -306,7 +306,7 @@ class Requirements_Backend
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public function setSuffixRequirements($var)
     {
@@ -327,7 +327,7 @@ class Requirements_Backend
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setWriteJavascriptToBody($var)
@@ -350,7 +350,7 @@ class Requirements_Backend
     /**
      * Forces the JavaScript requirements to the end of the body, right before the closing tag
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setForceJSToBottom($var)
@@ -650,9 +650,9 @@ class Requirements_Backend
         $crossorigin = $options['crossorigin'] ?? null;
 
         $this->css[$file] = [
-            "media" => $media,
-            "integrity" => $integrity,
-            "crossorigin" => $crossorigin,
+            'media' => $media,
+            'integrity' => $integrity,
+            'crossorigin' => $crossorigin,
         ];
     }
 
@@ -820,7 +820,7 @@ class Requirements_Backend
         foreach ($this->getJavascript() as $file => $attributes) {
             // Build html attributes
             $htmlAttributes = [
-                'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
+                'type' => isset($attributes['type']) ? $attributes['type'] : 'application/javascript',
                 'src' => $this->pathForFile($file),
             ];
             if (!empty($attributes['async'])) {
@@ -843,7 +843,7 @@ class Requirements_Backend
         foreach ($this->getCustomScripts() as $script) {
             $jsRequirements .= HTML::createTag(
                 'script',
-                [ 'type' => 'application/javascript' ],
+                ['type' => 'application/javascript'],
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";
@@ -905,12 +905,11 @@ class Requirements_Backend
     {
         // Forcefully put the scripts at the bottom of the body instead of before the first
         // script tag.
-        $content = preg_replace(
+        return preg_replace(
             '/(<\/body[^>]*>)/i',
             $this->escapeReplacement($jsRequirements) . '\\1',
             $content
         );
-        return $content;
     }
 
     /**
@@ -934,7 +933,7 @@ class Requirements_Backend
             !(
                 preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $scriptTagPosition)
                 &&
-                $commentTags[1] == '-->'
+                $commentTags[1] === '-->'
             );
 
         if ($canWriteToBody) {
@@ -959,12 +958,11 @@ class Requirements_Backend
      */
     protected function insertTagsIntoHead($jsRequirements, $content)
     {
-        $content = preg_replace(
+        return preg_replace(
             '/(<\/head>)/i',
             $this->escapeReplacement($jsRequirements) . '\\1',
             $content
         );
-        return $content;
     }
 
     /**
@@ -1005,7 +1003,7 @@ class Requirements_Backend
             $path = $this->pathForFile($file);
             if ($path) {
                 $path = str_replace(',', '%2C', $path);
-                $cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
+                $cssRequirements[] = isset($params['media']) ? "${path}:##:{$params['media']}" : $path;
             }
         }
 
@@ -1039,7 +1037,7 @@ class Requirements_Backend
             i18n::getData()->langFromLocale(i18n::get_locale()),
             i18n::get_locale(),
             strtolower(DBField::create_field('Locale', i18n::get_locale())->RFC1766()),
-            strtolower(DBField::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766())
+            strtolower(DBField::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766()),
         ];
 
         $candidates = array_map(
@@ -1078,9 +1076,8 @@ class Requirements_Backend
         // Since combined urls could be root relative, treat them as urls here.
         if (preg_match('{^(//)|(http[s]?:)}', $fileOrUrl) || Director::is_root_relative_url($fileOrUrl)) {
             return $fileOrUrl;
-        } else {
-            return Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($fileOrUrl);
         }
+        return Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($fileOrUrl);
     }
 
     /**
@@ -1304,10 +1301,10 @@ class Requirements_Backend
             // that the file is included in the correct location (regardless of which files are blocked).
             $included = false;
             switch ($type) {
-                case 'css': {
+                case 'css':
                     $newCSS = []; // Assoc array of css file => spec
                     foreach ($this->getAllCSS() as $css => $spec) {
-                        if (!in_array($css, $fileList)) {
+                        if (!in_array($css, $fileList, true)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
                             $newCSS[$combinedURL] = [
@@ -1321,12 +1318,12 @@ class Requirements_Backend
                     }
                     $this->css = $newCSS;
                     break;
-                }
-                case 'js': {
+
+                case 'js':
                     // Assoc array of file => attributes
                     $newJS = [];
                     foreach ($this->getAllJavascript() as $script => $attributes) {
-                        if (!in_array($script, $fileList)) {
+                        if (!in_array($script, $fileList, true)) {
                             $newJS[$script] = $attributes;
                         } elseif (!$included && $combinedURL) {
                             $newJS[$combinedURL] = $options;
@@ -1336,7 +1333,6 @@ class Requirements_Backend
                     }
                     $this->javascript = $newJS;
                     break;
-                }
             }
         }
     }
@@ -1375,9 +1371,9 @@ Set %s::minifyCombinedFiles to false, or inject a %s service on
 %s.properties.minifier
 MESSAGE
                     ,
-                    __CLASS__,
+                    self::class,
                     Requirements_Minifier::class,
-                    __CLASS__
+                    self::class
                 )
             );
         }
@@ -1402,7 +1398,7 @@ MESSAGE
 
                         if ($this->writeHeaderComment) {
                             // Write a header comment for each file for easier identification and debugging.
-                            $combinedData .= "/****** FILE: $file *****/\n";
+                            $combinedData .= "/****** FILE: ${file} *****/\n";
                         }
                         $combinedData .= $fileContent . "\n";
                     }
@@ -1453,7 +1449,7 @@ MESSAGE
         }
 
         // Fallback to default
-        return Config::inst()->get(__CLASS__, 'combine_in_dev');
+        return Config::inst()->get(self::class, 'combine_in_dev');
     }
 
     /**
@@ -1496,8 +1492,8 @@ MESSAGE
             $this->css($path, $media);
         } else {
             throw new InvalidArgumentException(
-                "The css file doesn't exist. Please check if the file $name.css exists in any context or search for "
-                . "themedCSS references calling this file in your templates."
+                "The css file doesn't exist. Please check if the file ${name}.css exists in any context or search for "
+                . 'themedCSS references calling this file in your templates.'
             );
         }
     }
@@ -1524,8 +1520,8 @@ MESSAGE
             $this->javascript($path, $opts);
         } else {
             throw new InvalidArgumentException(
-                "The javascript file doesn't exist. Please check if the file $name.js exists in any "
-                . "context or search for themedJavascript references calling this file in your templates."
+                "The javascript file doesn't exist. Please check if the file ${name}.js exists in any "
+                . 'context or search for themedJavascript references calling this file in your templates.'
             );
         }
     }

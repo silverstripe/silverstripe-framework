@@ -24,12 +24,12 @@ abstract class Validator
     }
 
     /**
-     * @var Form $form
+     * @var Form
      */
     protected $form;
 
     /**
-     * @var ValidationResult $result
+     * @var ValidationResult
      */
     protected $result;
 
@@ -100,7 +100,7 @@ abstract class Validator
      *     )
      * </code>
      *
-     * @return null|array
+     * @return array|null
      */
     public function getErrors()
     {
@@ -146,7 +146,7 @@ abstract class Validator
      */
     public function setEnabled($enabled)
     {
-        $this->enabled = (bool)$enabled;
+        $this->enabled = (bool) $enabled;
         return $this;
     }
 

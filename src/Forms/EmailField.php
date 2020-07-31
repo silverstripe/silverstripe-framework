@@ -7,8 +7,8 @@ namespace SilverStripe\Forms;
  */
 class EmailField extends TextField
 {
-
     protected $inputType = 'email';
+
     /**
      * {@inheritdoc}
      */

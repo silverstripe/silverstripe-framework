@@ -31,7 +31,6 @@ use SilverStripe\Security\Security;
  */
 class Debug
 {
-
     /**
      * Show the contents of val in a debug-friendly way.
      * Debug::show() is intended to be equivalent to dprintr()
@@ -179,17 +178,17 @@ class Debug
         $accepted = $request->getAcceptMimetypes(false);
 
         // Explicit opt in
-        if (in_array('text/html', $accepted)) {
+        if (in_array('text/html', $accepted, true)) {
             return true;
-        };
+        }
 
         // Implicit opt-out
-        if (in_array('application/json', $accepted)) {
+        if (in_array('application/json', $accepted, true)) {
             return false;
         }
 
         // Fallback to wildcard comparison
-        if (in_array('*/*', $accepted)) {
+        if (in_array('*/*', $accepted, true)) {
             return true;
         }
         return false;
@@ -224,7 +223,7 @@ class Debug
                 [
                     'ADMIN', // Code
                     Permission::GRANT_PERMISSION, // Type
-                    $memberID // MemberID
+                    $memberID, // MemberID
                 ]
             )->value();
 
@@ -237,11 +236,11 @@ class Debug
         // Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.")
         // We have to do this because of how early this method is called in execution.
         $_SESSION['SilverStripe\\Security\\Security']['Message']['message']
-            = "You need to login with developer access to make use of debugging tools.";
-        $_SESSION['SilverStripe\\Security\\Security']['Message']['type'] =  'warning';
+            = 'You need to login with developer access to make use of debugging tools.';
+        $_SESSION['SilverStripe\\Security\\Security']['Message']['type'] = 'warning';
         $_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
-        header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");
-        header("Location: " . Director::baseURL() . Security::login_url());
+        header($_SERVER['SERVER_PROTOCOL'] . ' 302 Found');
+        header('Location: ' . Director::baseURL() . Security::login_url());
         die();
     }
 }

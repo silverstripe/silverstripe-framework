@@ -8,7 +8,6 @@ namespace SilverStripe\ORM\Queries;
  */
 interface SQLWriteExpression
 {
-
     /**
      * Adds assignments for a list of several fields.
      *

@@ -91,7 +91,7 @@ class ExtensionTestState implements TestState
         // which is used in DatabaseAdmin->doBuild()
         Injector::inst()->unregisterObjects([
             DataObject::class,
-            Extension::class
+            Extension::class,
         ]);
 
         // If we have altered the schema, but SapphireTest::setUpBeforeClass() would not otherwise

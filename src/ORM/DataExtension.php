@@ -2,12 +2,12 @@
 
 namespace SilverStripe\ORM;
 
+use Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\Queries\SQLSelect;
-use Exception;
 
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
@@ -16,7 +16,6 @@ use Exception;
  */
 abstract class DataExtension extends Extension
 {
-
     /**
      * @deprecated 4.7.0 No longer used by internal code
      */

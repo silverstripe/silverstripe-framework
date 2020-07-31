@@ -19,7 +19,6 @@ use SilverStripe\Security\Security;
  */
 class CMSMemberLoginForm extends MemberLoginForm
 {
-
     /**
      * CMSMemberLoginForm constructor.
      * @param RequestHandler $controller
@@ -48,23 +47,23 @@ class CMSMemberLoginForm extends MemberLoginForm
     {
         // Set default fields
         $fields = FieldList::create([
-            HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
+            HiddenField::create('AuthenticationMethod', null, $this->getAuthenticatorClass(), $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
-            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
+            PasswordField::create('Password', _t('SilverStripe\\Security\\Member.PASSWORD', 'Password')),
         ]);
 
         if (Security::config()->get('autologin_enabled')) {
             $fields->insertAfter(
                 'Password',
                 CheckboxField::create(
-                    "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
+                    'Remember',
+                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', 'Keep me signed in')
                 )->setAttribute(
                     'title',
                     _t(
                         'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
-                        [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
+                        'Remember me next time? (for {count} days on this device)',
+                        ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
                     )
                 )
             );
@@ -85,15 +84,15 @@ class CMSMemberLoginForm extends MemberLoginForm
         }
 
         // Make actions
-        $actions = FieldList::create([
-            FormAction::create('doLogin', _t(__CLASS__ . '.BUTTONLOGIN', "Let me back in"))
+        return FieldList::create([
+            FormAction::create('doLogin', _t(self::class . '.BUTTONLOGIN', 'Let me back in'))
                 ->addExtraClass('btn-primary'),
             LiteralField::create(
                 'doLogout',
                 sprintf(
                     '<a class="btn btn-secondary" href="%s" target="_top">%s</a>',
                     Convert::raw2att($logoutLink),
-                    _t(__CLASS__ . '.BUTTONLOGOUT', "Log out")
+                    _t(self::class . '.BUTTONLOGOUT', 'Log out')
                 )
             ),
             LiteralField::create(
@@ -101,12 +100,10 @@ class CMSMemberLoginForm extends MemberLoginForm
                 sprintf(
                     '<a href="%s" class="cms-security__container__form__forgotPassword btn btn-secondary" target="_top">%s</a>',
                     $this->getExternalLink('lostpassword'),
-                    _t(__CLASS__ . '.BUTTONFORGOTPASSWORD', "Forgot password")
+                    _t(self::class . '.BUTTONFORGOTPASSWORD', 'Forgot password')
                 )
-            )
+            ),
         ]);
-
-        return $actions;
     }
 
     /**
@@ -125,6 +122,6 @@ class CMSMemberLoginForm extends MemberLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(__CLASS__ . '.AUTHENTICATORNAME', 'CMS Member Login Form');
+        return _t(self::class . '.AUTHENTICATORNAME', 'CMS Member Login Form');
     }
 }

@@ -9,19 +9,21 @@ use Iterator;
  */
 class Map_Iterator implements Iterator
 {
-
     /**
      * @var Iterator
      **/
     protected $items;
 
-    protected $keyField, $titleField;
+    protected $keyField;
+
+    protected $titleField;
 
     protected $firstItemIdx = 0;
 
     protected $endItemIdx;
 
     protected $firstItems = [];
+
     protected $lastItems = [];
 
     protected $excludedItems = [];
@@ -69,16 +71,14 @@ class Map_Iterator implements Iterator
 
         if (isset($this->firstItems[$this->firstItemIdx])) {
             return $this->firstItems[$this->firstItemIdx][1];
-        } else {
-            if ($rewoundItem) {
-                return $this->extractValue($rewoundItem, $this->titleField);
-            } else {
-                if (!$this->items->valid() && $this->lastItems) {
-                    $this->endItemIdx = 0;
+        }
+        if ($rewoundItem) {
+            return $this->extractValue($rewoundItem, $this->titleField);
+        }
+        if (!$this->items->valid() && $this->lastItems) {
+            $this->endItemIdx = 0;
 
-                    return $this->lastItems[0][1];
-                }
-            }
+            return $this->lastItems[0][1];
         }
     }
 
@@ -91,11 +91,11 @@ class Map_Iterator implements Iterator
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
             return $this->lastItems[$this->endItemIdx][1];
-        } else {
-            if (isset($this->firstItems[$this->firstItemIdx])) {
-                return $this->firstItems[$this->firstItemIdx][1];
-            }
         }
+        if (isset($this->firstItems[$this->firstItemIdx])) {
+            return $this->firstItems[$this->firstItemIdx][1];
+        }
+
         return $this->extractValue($this->items->current(), $this->titleField);
     }
 
@@ -114,10 +114,9 @@ class Map_Iterator implements Iterator
                 return $item->{$key}();
             }
             return $item->{$key};
-        } else {
-            if (array_key_exists($key, $item)) {
-                return $item[$key];
-            }
+        }
+        if (array_key_exists($key, $item)) {
+            return $item[$key];
         }
     }
 
@@ -130,13 +129,11 @@ class Map_Iterator implements Iterator
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
             return $this->lastItems[$this->endItemIdx][0];
-        } else {
-            if (isset($this->firstItems[$this->firstItemIdx])) {
-                return $this->firstItems[$this->firstItemIdx][0];
-            } else {
-                return $this->extractValue($this->items->current(), $this->keyField);
-            }
         }
+        if (isset($this->firstItems[$this->firstItemIdx])) {
+            return $this->firstItems[$this->firstItemIdx][0];
+        }
+        return $this->extractValue($this->items->current(), $this->keyField);
     }
 
     /**
@@ -150,15 +147,14 @@ class Map_Iterator implements Iterator
 
         if (isset($this->firstItems[$this->firstItemIdx])) {
             return $this->firstItems[$this->firstItemIdx][1];
-        } else {
-            if (!isset($this->firstItems[$this->firstItemIdx - 1])) {
-                $this->items->next();
-            }
+        }
+        if (!isset($this->firstItems[$this->firstItemIdx - 1])) {
+            $this->items->next();
+        }
 
-            if ($this->excludedItems) {
-                while (($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
-                    $this->items->next();
-                }
+        if ($this->excludedItems) {
+            while (($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
+                $this->items->next();
             }
         }
 
@@ -186,10 +182,8 @@ class Map_Iterator implements Iterator
      */
     public function valid()
     {
-        return (
-            (isset($this->firstItems[$this->firstItemIdx])) ||
+        return isset($this->firstItems[$this->firstItemIdx]) ||
             (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) ||
-            $this->items->valid()
-        );
+            $this->items->valid();
     }
 }

@@ -4,8 +4,8 @@ namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
 use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBMoney;
 
 /**
  * A form field that can save into a {@link Money} database field.
@@ -16,8 +16,8 @@ use SilverStripe\ORM\DataObjectInterface;
  */
 class MoneyField extends FormField
 {
-
     // TODO replace with `FormField::SCHEMA_DATA_TYPE_TEXT` when MoneyField is implemented
+
     /** @skipUpgrade */
     protected $schemaDataType = 'MoneyField';
 
@@ -58,7 +58,7 @@ class MoneyField extends FormField
         return $this->fieldAmount;
     }
 
-    public function __construct($name, $title = null, $value = "")
+    public function __construct($name, $title = null, $value = '')
     {
         $this->setName($name);
         $this->fieldAmount = NumericField::create(
@@ -129,7 +129,7 @@ class MoneyField extends FormField
 
         // Handle submitted array value
         if (!is_array($value)) {
-            throw new InvalidArgumentException("Value is not submitted array");
+            throw new InvalidArgumentException('Value is not submitted array');
         }
 
         // Update each field
@@ -158,7 +158,7 @@ class MoneyField extends FormField
             $currency = isset($matches['currency']) ? strtoupper($matches['currency']) : null;
             $value = [
                 'Currency' => $currency,
-                'Amount' => (float)$matches['amount'],
+                'Amount' => (float) $matches['amount'],
             ];
         } elseif ($value instanceof DBMoney) {
             $value = [
@@ -166,7 +166,7 @@ class MoneyField extends FormField
                 'Amount' => $value->getAmount(),
             ];
         } elseif (!is_array($value)) {
-            throw new InvalidArgumentException("Invalid currency format");
+            throw new InvalidArgumentException('Invalid currency format');
         }
 
         // Save value
@@ -185,7 +185,7 @@ class MoneyField extends FormField
     {
         return DBMoney::create_field('Money', [
             'Currency' => $this->fieldCurrency->dataValue(),
-            'Amount' => $this->fieldAmount->dataValue()
+            'Amount' => $this->fieldAmount->dataValue(),
         ])
             ->setLocale($this->getLocale());
     }
@@ -211,19 +211,19 @@ class MoneyField extends FormField
      *
      * (see @link MoneyFieldTest_CustomSetter_Object for more information)
      *
-     * @param DataObjectInterface|Object $dataObject
+     * @param DataObjectInterface|object $dataObject
      */
     public function saveInto(DataObjectInterface $dataObject)
     {
         $fieldName = $this->getName();
-        if ($dataObject->hasMethod("set$fieldName")) {
-            $dataObject->$fieldName = $this->getDBMoney();
+        if ($dataObject->hasMethod("set${fieldName}")) {
+            $dataObject->{$fieldName} = $this->getDBMoney();
         } else {
             $currencyField = "{$fieldName}Currency";
             $amountField = "{$fieldName}Amount";
 
-            $dataObject->$currencyField = $this->fieldCurrency->dataValue();
-            $dataObject->$amountField = $this->fieldAmount->dataValue();
+            $dataObject->{$currencyField} = $this->fieldCurrency->dataValue();
+            $dataObject->{$amountField} = $this->fieldAmount->dataValue();
         }
     }
 
@@ -269,10 +269,10 @@ class MoneyField extends FormField
             $currencies = [];
         } elseif (is_string($currencies)) {
             $currencies = [
-                $currencies => $currencies
+                $currencies => $currencies,
             ];
         } elseif (!is_array($currencies)) {
-            throw new InvalidArgumentException("Invalid currency list");
+            throw new InvalidArgumentException('Invalid currency list');
         } elseif (!ArrayLib::is_associative($currencies)) {
             $currencies = array_combine($currencies, $currencies);
         }
@@ -326,11 +326,11 @@ class MoneyField extends FormField
         // Validate currency
         $currencies = $this->getAllowedCurrencies();
         $currency = $this->fieldCurrency->dataValue();
-        if ($currency && $currencies && !in_array($currency, $currencies)) {
+        if ($currency && $currencies && !in_array($currency, $currencies, true)) {
             $validator->validationError(
                 $this->getName(),
                 _t(
-                    __CLASS__ . '.INVALID_CURRENCY',
+                    self::class . '.INVALID_CURRENCY',
                     'Currency {currency} is not in the list of allowed currencies',
                     ['currency' => $currency]
                 )

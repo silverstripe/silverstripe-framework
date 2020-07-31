@@ -7,7 +7,6 @@ namespace SilverStripe\Security;
  */
 interface PermissionChecker
 {
-
     /**
      * Get the 'can edit' information for a number of SiteTree pages.
      *

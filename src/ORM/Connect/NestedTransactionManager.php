@@ -13,7 +13,6 @@ namespace SilverStripe\ORM\Connect;
 
 class NestedTransactionManager implements TransactionManager
 {
-
     /**
      * @var int
      */
@@ -51,7 +50,7 @@ class NestedTransactionManager implements TransactionManager
             $this->child->transactionStart($transactionMode, $sessionCharacteristics);
         } else {
             if ($this->child->supportsSavepoints()) {
-                $this->child->transactionSavepoint("nesting" . $this->transactionNesting);
+                $this->child->transactionSavepoint('nesting' . $this->transactionNesting);
             }
             $this->transactionNesting++;
         }
@@ -95,7 +94,7 @@ class NestedTransactionManager implements TransactionManager
             $this->mustRollback = false;
         } else {
             if ($this->child->supportsSavepoints()) {
-                $this->child->transactionRollback("nesting" . $this->transactionNesting);
+                $this->child->transactionRollback('nesting' . $this->transactionNesting);
                 $this->mustRollback = false;
 
             // Without savepoints, parent transactions must roll back if a child one has

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Convert;
 use ReflectionClass;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 
 /**
@@ -63,7 +63,7 @@ class FormTemplateHelper
     {
         if ($form = $field->getForm()) {
             return sprintf(
-                "%s_%s",
+                '%s_%s',
                 $this->generateFormID($form),
                 Convert::raw2htmlid($field->getName())
             );

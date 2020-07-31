@@ -25,13 +25,12 @@ use SilverStripe\Versioned\Versioned;
  */
 class DatabaseAdmin extends Controller
 {
-
     /// SECURITY ///
     private static $allowed_actions = [
         'index',
         'build',
         'cleanup',
-        'import'
+        'import',
     ];
 
     /**
@@ -71,13 +70,13 @@ class DatabaseAdmin extends Controller
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tests" from CLI.
             || (Director::is_cli() && $allowAllCLI)
-            || Permission::check("ADMIN")
+            || Permission::check('ADMIN')
         );
         if (!$canAccess) {
             Security::permissionFailure(
                 $this,
-                "This page is secured and you need administrator rights to access it. " .
-                "Enter your credentials below and we will send you right along."
+                'This page is secured and you need administrator rights to access it. ' .
+                'Enter your credentials below and we will send you right along.'
             );
         }
     }
@@ -93,7 +92,7 @@ class DatabaseAdmin extends Controller
         $allClasses = get_declared_classes();
         $rootClasses = [];
         foreach ($allClasses as $class) {
-            if (get_parent_class($class) == DataObject::class) {
+            if (get_parent_class($class) === DataObject::class) {
                 $rootClasses[$class] = [];
             }
         }
@@ -111,7 +110,6 @@ class DatabaseAdmin extends Controller
         }
         return $rootClasses;
     }
-
 
     /**
      * When we're called as /dev/build, that's actually the index. Do the same
@@ -139,9 +137,9 @@ class DatabaseAdmin extends Controller
 
         $url = $this->getReturnURL();
         if ($url) {
-            echo "<p>Setting up the database; you will be returned to your site shortly....</p>";
+            echo '<p>Setting up the database; you will be returned to your site shortly....</p>';
             $this->doBuild(true);
-            echo "<p>Done!</p>";
+            echo '<p>Done!</p>';
             $this->redirect($url);
         } else {
             $quiet = $this->request->requestVar('quiet') !== null;
@@ -179,20 +177,20 @@ class DatabaseAdmin extends Controller
         array_shift($dataClasses);
 
         if (!Director::is_cli()) {
-            echo "<ul>";
+            echo '<ul>';
         }
 
         foreach ($dataClasses as $dataClass) {
             singleton($dataClass)->requireDefaultRecords();
             if (Director::is_cli()) {
-                echo "Defaults loaded for $dataClass\n";
+                echo "Defaults loaded for ${dataClass}\n";
             } else {
-                echo "<li>Defaults loaded for $dataClass</li>\n";
+                echo "<li>Defaults loaded for ${dataClass}</li>\n";
             }
         }
 
         if (!Director::is_cli()) {
-            echo "</ul>";
+            echo '</ul>';
         }
     }
 
@@ -207,14 +205,13 @@ class DatabaseAdmin extends Controller
         $file = TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(['\\','/',':'], '.', Director::baseFolder());
+            . str_replace(['\\', '/', ':'], '.', Director::baseFolder());
 
         if (file_exists($file)) {
             return filemtime($file);
         }
         return null;
     }
-
 
     /**
      * Updates the database schema, creating tables & fields as necessary.
@@ -237,7 +234,7 @@ class DatabaseAdmin extends Controller
             if (Director::is_cli()) {
                 echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
             } else {
-                echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
+                echo sprintf('<h2>Building database %s using %s %s</h2>', $databaseName, $dbType, $dbVersion);
             }
         }
 
@@ -250,14 +247,14 @@ class DatabaseAdmin extends Controller
             // Load parameters from existing configuration
             $databaseConfig = DB::getConfig();
             if (empty($databaseConfig) && empty($_REQUEST['db'])) {
-                throw new BadMethodCallException("No database configuration available");
+                throw new BadMethodCallException('No database configuration available');
             }
-            $parameters = (!empty($databaseConfig)) ? $databaseConfig : $_REQUEST['db'];
+            $parameters = !empty($databaseConfig) ? $databaseConfig : $_REQUEST['db'];
 
             // Check database name is given
             if (empty($parameters['database'])) {
                 throw new BadMethodCallException(
-                    "No database name given; please give a value for SS_DATABASE_NAME or set SS_DATABASE_CHOOSE_NAME"
+                    'No database name given; please give a value for SS_DATABASE_NAME or set SS_DATABASE_CHOOSE_NAME'
                 );
             }
             $database = $parameters['database'];
@@ -273,9 +270,9 @@ class DatabaseAdmin extends Controller
 
                 if (!isset($_GET['force_suffix_rename']) && DB::get_conn()->databaseExists($previousName)) {
                     throw new DatabaseException(
-                        "SS_DATABASE_SUFFIX was previously broken, but has now been fixed. This will result in your "
+                        'SS_DATABASE_SUFFIX was previously broken, but has now been fixed. This will result in your '
                         . "database being named \"{$database}\" instead of \"{$previousName}\" from now on. If this "
-                        . "change is intentional, please visit dev/build?force_suffix_rename=1 to continue"
+                        . 'change is intentional, please visit dev/build?force_suffix_rename=1 to continue'
                     );
                 }
             }
@@ -296,7 +293,7 @@ class DatabaseAdmin extends Controller
             }
         }
 
-        $showRecordCounts = (boolean)$this->config()->show_record_counts;
+        $showRecordCounts = (boolean) $this->config()->show_record_counts;
 
         // Initiate schema update
         $dbSchema = DB::get_schema();
@@ -320,19 +317,19 @@ class DatabaseAdmin extends Controller
                 if (!$quiet) {
                     if ($showRecordCounts && DB::get_schema()->hasTable($tableName)) {
                         try {
-                            $count = DB::query("SELECT COUNT(*) FROM \"$tableName\"")->value();
-                            $countSuffix = " ($count records)";
+                            $count = DB::query("SELECT COUNT(*) FROM \"${tableName}\"")->value();
+                            $countSuffix = " (${count} records)";
                         } catch (Exception $e) {
-                            $countSuffix = " (error getting record count)";
+                            $countSuffix = ' (error getting record count)';
                         }
                     } else {
-                        $countSuffix = "";
+                        $countSuffix = '';
                     }
 
                     if (Director::is_cli()) {
-                        echo " * $tableName$countSuffix\n";
+                        echo " * ${tableName}${countSuffix}\n";
                     } else {
-                        echo "<li>$tableName$countSuffix</li>\n";
+                        echo "<li>${tableName}${countSuffix}</li>\n";
                     }
                 }
 
@@ -343,7 +340,7 @@ class DatabaseAdmin extends Controller
         ClassInfo::reset_db_cache();
 
         if (!$quiet && !Director::is_cli()) {
-            echo "</ul>";
+            echo '</ul>';
         }
 
         if ($populate) {
@@ -373,9 +370,9 @@ class DatabaseAdmin extends Controller
                 if (strpos($dataClass, 'Test_') === false && class_exists($dataClass)) {
                     if (!$quiet) {
                         if (Director::is_cli()) {
-                            echo " * $dataClass\n";
+                            echo " * ${dataClass}\n";
                         } else {
-                            echo "<li>$dataClass</li>\n";
+                            echo "<li>${dataClass}</li>\n";
                         }
                     }
 
@@ -384,7 +381,7 @@ class DatabaseAdmin extends Controller
             }
 
             if (!$quiet && !Director::is_cli()) {
-                echo "</ul>";
+                echo '</ul>';
             }
         }
 
@@ -394,11 +391,11 @@ class DatabaseAdmin extends Controller
             . str_replace(['\\', '/', ':'], '.', Director::baseFolder()));
 
         if (isset($_REQUEST['from_installer'])) {
-            echo "OK";
+            echo 'OK';
         }
 
         if (!$quiet) {
-            echo (Director::is_cli()) ? "\n Database build completed!\n\n" :"<p>Database build completed!</p>";
+            echo Director::is_cli() ? "\n Database build completed!\n\n" : '<p>Database build completed!</p>';
         }
 
         foreach ($dataClasses as $dataClass) {
@@ -491,7 +488,7 @@ class DatabaseAdmin extends Controller
     {
         $baseClasses = [];
         foreach (ClassInfo::subclassesFor(DataObject::class) as $class) {
-            if (get_parent_class($class) == DataObject::class) {
+            if (get_parent_class($class) === DataObject::class) {
                 $baseClasses[] = $class;
             }
         }
@@ -509,25 +506,24 @@ class DatabaseAdmin extends Controller
             }
 
             if ($subclasses) {
-                $records = DB::query("SELECT * FROM \"$baseTable\"");
-
+                $records = DB::query("SELECT * FROM \"${baseTable}\"");
 
                 foreach ($subclasses as $subclass) {
                     $subclassTable = $schema->tableName($subclass);
                     $recordExists[$subclass] =
-                        DB::query("SELECT \"ID\" FROM \"$subclassTable\"")->keyedColumn();
+                        DB::query("SELECT \"ID\" FROM \"${subclassTable}\"")->keyedColumn();
                 }
 
                 foreach ($records as $record) {
                     foreach ($subclasses as $subclass) {
                         $subclassTable = $schema->tableName($subclass);
                         $id = $record['ID'];
-                        if (($record['ClassName'] != $subclass)
+                        if (($record['ClassName'] !== $subclass)
                             && (!is_subclass_of($record['ClassName'], $subclass))
                             && isset($recordExists[$subclass][$id])
                         ) {
-                            $sql = "DELETE FROM \"$subclassTable\" WHERE \"ID\" = ?";
-                            echo "<li>$sql [{$id}]</li>";
+                            $sql = "DELETE FROM \"${subclassTable}\" WHERE \"ID\" = ?";
+                            echo "<li>${sql} [{$id}]</li>";
                             DB::prepared_query($sql, [$id]);
                         }
                     }

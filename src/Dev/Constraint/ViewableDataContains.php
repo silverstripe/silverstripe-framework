@@ -55,7 +55,7 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
-     * @return null|bool
+     * @return bool|null
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
@@ -64,7 +64,7 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
         $success = true;
 
         foreach ($this->match as $fieldName => $value) {
-            if ($other->$fieldName != $value) {
+            if ($value !== $other->{$fieldName}) {
                 $success = false;
                 break;
             }
@@ -80,7 +80,6 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
 
         return null;
     }
-
 
     /**
      * Returns a string representation of the object.

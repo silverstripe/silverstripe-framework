@@ -2,11 +2,11 @@
 
 namespace SilverStripe\View\Parsers;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\View\ViewableData;
+use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
-use DOMDocument;
+use SilverStripe\Core\Convert;
+use SilverStripe\View\ViewableData;
 
 /**
  * This class handles the converting of HTML fragments between a string and a DOMDocument based
@@ -19,7 +19,6 @@ use DOMDocument;
  */
 abstract class HTMLValue extends ViewableData
 {
-
     public function __construct($fragment = null)
     {
         if ($fragment) {
@@ -53,7 +52,7 @@ abstract class HTMLValue extends ViewableData
         $i = 0;
 
         foreach ($xp->query('//body//@*') as $attr) {
-            $key = "__HTMLVALUE_" . ($i++);
+            $key = '__HTMLVALUE_' . ($i++);
             $attrs[$key] = $attr->value;
             $attr->value = $key;
         }
@@ -76,9 +75,7 @@ abstract class HTMLValue extends ViewableData
         // Prevent &nbsp; being encoded as literal utf-8 characters
         // Possible alternative solution: http://stackoverflow.com/questions/2142120/php-encoding-with-domdocument
         $from = mb_convert_encoding('&nbsp;', 'utf-8', 'html-entities');
-        $res = str_replace($from, '&nbsp;', $res);
-
-        return $res;
+        return str_replace($from, '&nbsp;', $res);
     }
 
     /** @see HTMLValue::getContent() */
@@ -89,6 +86,7 @@ abstract class HTMLValue extends ViewableData
 
     /** @var DOMDocument */
     private $document = null;
+
     /** @var bool */
     private $valid = true;
 
@@ -102,13 +100,12 @@ abstract class HTMLValue extends ViewableData
             return false;
         } elseif ($this->document) {
             return $this->document;
-        } else {
-            $this->document = new DOMDocument('1.0', 'UTF-8');
-            $this->document->strictErrorChecking = false;
-            $this->document->formatOutput = false;
-
-            return $this->document;
         }
+        $this->document = new DOMDocument('1.0', 'UTF-8');
+        $this->document->strictErrorChecking = false;
+        $this->document->formatOutput = false;
+
+        return $this->document;
     }
 
     /**
@@ -148,9 +145,8 @@ abstract class HTMLValue extends ViewableData
 
         if (method_exists($doc, $method)) {
             return call_user_func_array([$doc, $method], $arguments);
-        } else {
-            return parent::__call($method, $arguments);
         }
+        return parent::__call($method, $arguments);
     }
 
     /**

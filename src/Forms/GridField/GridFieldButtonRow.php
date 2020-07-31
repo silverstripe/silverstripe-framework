@@ -16,7 +16,6 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldButtonRow implements GridField_HTMLProvider
 {
-
     protected $targetFragment;
 
     public function __construct($targetFragment = 'before')
@@ -27,14 +26,14 @@ class GridFieldButtonRow implements GridField_HTMLProvider
     public function getHTMLFragments($gridField)
     {
         $data = new ArrayData([
-            "TargetFragmentName" => $this->targetFragment,
-            "LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
-            "RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
+            'TargetFragmentName' => $this->targetFragment,
+            'LeftFragment' => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
+            'RightFragment' => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
         ]);
 
-        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $templates = SSViewer::get_templates_by_class($this, '', self::class);
         return [
-            $this->targetFragment => $data->renderWith($templates)
+            $this->targetFragment => $data->renderWith($templates),
         ];
     }
 }

@@ -32,7 +32,7 @@ class DBTime extends DBField
         $value = $this->parseTime($value);
         if ($value === false) {
             throw new InvalidArgumentException(
-                "Invalid date passed. Use " . $this->getISOFormat() . " to prevent this error."
+                'Invalid date passed. Use ' . $this->getISOFormat() . ' to prevent this error.'
             );
         }
         $this->value = $value;
@@ -43,7 +43,7 @@ class DBTime extends DBField
      * Parse timestamp or iso8601-ish date into standard iso8601 format
      *
      * @param mixed $value
-     * @return string|null|false Formatted time, null if empty but valid, or false if invalid
+     * @return string|false|null Formatted time, null if empty but valid, or false if invalid
      */
     protected function parseTime($value)
     {
@@ -131,11 +131,11 @@ class DBTime extends DBField
     {
         $parts = [
             'datatype' => 'time',
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
         $values = [
             'type' => 'time',
-            'parts' => $parts
+            'parts' => $parts,
         ];
         DB::require_field($this->tableName, $this->name, $values);
     }

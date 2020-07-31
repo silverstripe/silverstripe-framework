@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\View\ViewableData;
 use LogicException;
+use SilverStripe\View\ViewableData;
 
 /**
  * A base class for decorators that wrap around a list to provide additional
@@ -12,7 +12,6 @@ use LogicException;
  */
 abstract class ListDecorator extends ViewableData implements SS_List, Sortable, Filterable, Limitable
 {
-
     /**
      * @var SS_List
      */
@@ -142,7 +141,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->column($value);
     }
 
-    public function columnUnique($value = "ID")
+    public function columnUnique($value = 'ID')
     {
         return $this->list->columnUnique($value);
     }

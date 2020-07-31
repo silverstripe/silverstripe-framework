@@ -9,7 +9,6 @@ use ReflectionObject;
  */
 class ViewableData_Debugger extends ViewableData
 {
-
     /**
      * @var ViewableData
      */
@@ -29,7 +28,7 @@ class ViewableData_Debugger extends ViewableData
      */
     public function __toString()
     {
-        return (string)$this->forTemplate();
+        return (string) $this->forTemplate();
     }
 
     /**
@@ -44,7 +43,7 @@ class ViewableData_Debugger extends ViewableData
         // debugging info for a specific field
         $class = get_class($this->object);
         if ($field) {
-            return "<b>Debugging Information for {$class}->{$field}</b><br/>" . ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) . ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
+            return "<b>Debugging Information for {$class}->{$field}</b><br/>" . ($this->object->hasMethod($field) ? "Has method '${field}'<br/>" : null) . ($this->object->hasField($field) ? "Has field '${field}'<br/>" : null);
         }
 
         // debugging information for the entire class
@@ -53,7 +52,7 @@ class ViewableData_Debugger extends ViewableData
 
         foreach ($this->object->allMethodNames() as $method) {
             // check that the method is public
-            if ($method[0] === strtoupper($method[0]) && $method[0] != '_') {
+            if ($method[0] === strtoupper($method[0]) && $method[0] !== '_') {
                 if ($reflector->hasMethod($method) && $method = $reflector->getMethod($method)) {
                     if ($method->isPublic()) {
                         $debug .= "<li>\${$method->getName()}";
@@ -65,7 +64,7 @@ class ViewableData_Debugger extends ViewableData
                         $debug .= '</li>';
                     }
                 } else {
-                    $debug .= "<li>\$$method</li>";
+                    $debug .= "<li>\$${method}</li>";
                 }
             }
         }
@@ -76,14 +75,14 @@ class ViewableData_Debugger extends ViewableData
             $debug .= "<b>Debugging Information: all fields available in '{$class}'</b><br/><ul>";
 
             foreach ($this->object->toMap() as $field => $value) {
-                $debug .= "<li>\$$field</li>";
+                $debug .= "<li>\$${field}</li>";
             }
 
-            $debug .= "</ul>";
+            $debug .= '</ul>';
         }
 
         // check for an extra attached data
-        if ($this->object->hasMethod('data') && $this->object->data() != $this->object) {
+        if ($this->object->hasMethod('data') && $this->object->data() !== $this->object) {
             $debug .= ViewableData_Debugger::create($this->object->data())->forTemplate();
         }
 

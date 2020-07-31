@@ -124,7 +124,7 @@ class ManyManyThroughList extends RelationList
     public function removeByID($itemID)
     {
         if (!is_numeric($itemID)) {
-            throw new InvalidArgumentException("ManyManyThroughList::removeById() expecting an ID");
+            throw new InvalidArgumentException('ManyManyThroughList::removeById() expecting an ID');
         }
 
         // Find has_many row with a local key matching the given id
@@ -169,11 +169,11 @@ class ManyManyThroughList extends RelationList
             $itemID = $item->ID;
         } else {
             throw new InvalidArgumentException(
-                "ManyManyThroughList::add() expecting a $this->dataClass object, or ID value"
+                "ManyManyThroughList::add() expecting a {$this->dataClass} object, or ID value"
             );
         }
         if (empty($itemID)) {
-            throw new InvalidArgumentException("ManyManyThroughList::add() could not add record without ID");
+            throw new InvalidArgumentException('ManyManyThroughList::add() could not add record without ID');
         }
 
         // Validate foreignID
@@ -198,12 +198,11 @@ class ManyManyThroughList extends RelationList
         foreach ($records as $record) {
             if ($extraFields) {
                 foreach ($extraFields as $field => $value) {
-                    $record->$field = $value;
+                    $record->{$field} = $value;
                 }
                 $record->write();
             }
-            //
-            $foreignID = $record->$foreignKey;
+            $foreignID = $record->{$foreignKey};
             unset($foreignIDsToAdd[$foreignID]);
         }
 
@@ -215,7 +214,7 @@ class ManyManyThroughList extends RelationList
         // Add item to relation
         $hasManyList = $hasManyList->forForeignID($foreignIDsToAdd);
         $record = $hasManyList->createDataObject($extraFields ?: []);
-        $record->$localKey = $itemID;
+        $record->{$localKey} = $itemID;
         $hasManyList->add($record);
 
         // Link the join object to the $item, as if it were queried from within this list

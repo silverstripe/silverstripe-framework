@@ -120,7 +120,7 @@ class FieldGroup extends CompositeField
             return parent::getName();
         }
 
-        return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);
+        return preg_replace('/[^a-zA-Z0-9]+/', '', $this->title);
     }
 
     /**
@@ -131,10 +131,10 @@ class FieldGroup extends CompositeField
      */
     public function setZebra($zebra)
     {
-        if ($zebra == 'odd' || $zebra == 'even') {
+        if ($zebra === 'odd' || $zebra === 'even') {
             $this->zebra = $zebra;
         } else {
-            user_error("setZebra passed '$zebra'.  It should be passed 'odd' or 'even'", E_USER_WARNING);
+            user_error("setZebra passed '${zebra}'.  It should be passed 'odd' or 'even'", E_USER_WARNING);
         }
         return $this;
     }
@@ -160,7 +160,7 @@ class FieldGroup extends CompositeField
         foreach ($dataFields as $subfield) {
             $message = $subfield->obj('Message')->forTemplate();
             if ($message) {
-                $messages[] = rtrim($message, ".");
+                $messages[] = rtrim($message, '.');
             }
         }
 
@@ -168,7 +168,7 @@ class FieldGroup extends CompositeField
             return null;
         }
 
-        return implode(", ", $messages) . ".";
+        return implode(', ', $messages) . '.';
     }
 
     /**

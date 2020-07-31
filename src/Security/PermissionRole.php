@@ -26,19 +26,19 @@ use SilverStripe\ORM\ManyManyList;
 class PermissionRole extends DataObject
 {
     private static $db = [
-        "Title" => "Varchar",
-        "OnlyAdminCanApply" => "Boolean"
+        'Title' => 'Varchar',
+        'OnlyAdminCanApply' => 'Boolean',
     ];
 
     private static $has_many = [
-        "Codes" => PermissionRoleCode::class,
+        'Codes' => PermissionRoleCode::class,
     ];
 
     private static $belongs_many_many = [
-        "Groups" => Group::class,
+        'Groups' => Group::class,
     ];
 
-    private static $table_name = "PermissionRole";
+    private static $table_name = 'PermissionRole';
 
     private static $default_sort = '"Title"';
 

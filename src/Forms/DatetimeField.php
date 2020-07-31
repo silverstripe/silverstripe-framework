@@ -18,7 +18,6 @@ use SilverStripe\ORM\ValidationResult;
  */
 class DatetimeField extends TextField
 {
-
     /**
      * @var bool
      */
@@ -117,8 +116,8 @@ class DatetimeField extends TextField
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
                 'min' => $this->internalToFrontend($this->getMinDatetime()),
-                'max' => $this->internalToFrontend($this->getMaxDatetime())
-            ])
+                'max' => $this->internalToFrontend($this->getMaxDatetime()),
+            ]),
         ]);
     }
 
@@ -288,7 +287,7 @@ class DatetimeField extends TextField
     /**
      * Get a date formatter for the ISO 8601 format
      *
-     * @param String $timezone Optional timezone identifier (defaults to server timezone)
+     * @param string $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
     protected function getInternalFormatter($timezone = null)
@@ -573,8 +572,8 @@ class DatetimeField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    __CLASS__ . '.VALIDDATETIMEFORMAT',
-                    "Please enter a valid date and time format ({format})",
+                    self::class . '.VALIDDATETIMEFORMAT',
+                    'Please enter a valid date and time format ({format})',
                     ['format' => $this->getDatetimeFormat()]
                 )
             );
@@ -589,14 +588,14 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        __CLASS__ . '.VALIDDATETIMEMINDATE',
-                        "Your date has to be newer or matching the minimum allowed date and time ({datetime})",
+                        self::class . '.VALIDDATETIMEMINDATE',
+                        'Your date has to be newer or matching the minimum allowed date and time ({datetime})',
                         [
                             'datetime' => sprintf(
                                 '<time datetime="%s">%s</time>',
                                 $min,
                                 $this->internalToFrontend($min)
-                            )
+                            ),
                         ]
                     ),
                     ValidationResult::TYPE_ERROR,
@@ -614,14 +613,14 @@ class DatetimeField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        __CLASS__ . '.VALIDDATEMAXDATETIME',
-                        "Your date has to be older or matching the maximum allowed date and time ({datetime})",
+                        self::class . '.VALIDDATEMAXDATETIME',
+                        'Your date has to be older or matching the maximum allowed date and time ({datetime})',
                         [
                             'datetime' => sprintf(
                                 '<time datetime="%s">%s</time>',
                                 $max,
                                 $this->internalToFrontend($max)
-                            )
+                            ),
                         ]
                     ),
                     ValidationResult::TYPE_ERROR,

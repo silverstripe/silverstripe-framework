@@ -2,15 +2,15 @@
 
 namespace SilverStripe\ORM;
 
+use ArrayIterator;
+use Exception;
+use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\View\ViewableData;
-use ArrayIterator;
-use Exception;
-use InvalidArgumentException;
-use LogicException;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -34,7 +34,6 @@ use LogicException;
  */
 class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
-
     /**
      * The DataObject class name that this data list is querying
      *
@@ -228,8 +227,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         });
     }
 
-
-
     /**
      * Returns true if this DataList can be sorted by the given field.
      *
@@ -250,7 +247,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function canFilterBy($fieldName)
     {
         $model = singleton($this->dataClass);
-        $relations = explode(".", $fieldName);
+        $relations = explode('.', $fieldName);
         // First validate the relationships
         $fieldName = array_pop($relations);
         foreach ($relations as $r) {
@@ -309,14 +306,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
      *
-     * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+     * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
      * @return static
      */
     public function sort()
     {
         $count = func_num_args();
 
-        if ($count == 0) {
+        if ($count === 0) {
             return $this;
         }
 
@@ -324,13 +321,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             throw new InvalidArgumentException('This method takes zero, one or two arguments');
         }
 
-        if ($count == 2) {
+        if ($count === 2) {
             $col = null;
             $dir = null;
             list($col, $dir) = func_get_args();
 
             // Validate direction
-            if (!in_array(strtolower($dir), ['desc', 'asc'])) {
+            if (!in_array(strtolower($dir), ['desc', 'asc'], true)) {
                 user_error('Second argument to sort must be either ASC or DESC');
             }
 
@@ -340,9 +337,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
-
             if (is_string($sort) && $sort) {
-                if (false !== stripos($sort, ' asc') || false !== stripos($sort, ' desc')) {
+                if (stripos($sort, ' asc') !== false || stripos($sort, ' desc') !== false) {
                     $query->sort($sort);
                 } else {
                     $list->applyRelation($sort, $column, true);
@@ -450,9 +446,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+        if ($numberFuncArgs === 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
-        } elseif ($numberFuncArgs == 2) {
+        } elseif ($numberFuncArgs === 2) {
             $whereArguments[func_get_arg(0)] = func_get_arg(1);
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to filterAny()');
@@ -509,7 +505,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *    ->applyRelation('TaxonomyTerms.ID', $columnName)
      *    ->where([$columnName => 'my value']);
      * </code>
-     *
      *
      * @param string $field Name of field or relation to apply
      * @param string &$columnName Quoted column name
@@ -582,7 +577,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             // Whether this is a valid modifier on the default filter, or a filter itself.
             /** @var SearchFilter $defaultFilterInstance */
             $defaultFilterInstance = Injector::inst()->get('DataListFilter.default');
-            if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers())) {
+            if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers(), true)) {
                 // Treat second (and any subsequent) argument as modifiers, using default filter
                 $filterServiceName = 'DataListFilter.default';
                 array_unshift($modifiers, $secondArg);
@@ -618,9 +613,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+        if ($numberFuncArgs === 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
-        } elseif ($numberFuncArgs == 2) {
+        } elseif ($numberFuncArgs === 2) {
             $whereArguments[func_get_arg(0)] = func_get_arg(1);
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
@@ -656,9 +651,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+        if ($numberFuncArgs === 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
-        } elseif ($numberFuncArgs == 2) {
+        } elseif ($numberFuncArgs === 2) {
             $whereArguments[func_get_arg(0)] = func_get_arg(1);
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
@@ -684,7 +679,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function subtract(DataList $list)
     {
-        if ($this->dataClass() != $list->dataClass()) {
+        if ($this->dataClass() !== $list->dataClass()) {
             throw new InvalidArgumentException('The list passed must have the same dataclass as this class');
         }
 
@@ -797,11 +792,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     public function debug()
     {
-        $val = "<h2>" . static::class . "</h2><ul>";
+        $val = '<h2>' . static::class . '</h2><ul>';
         foreach ($this->toNestedArray() as $item) {
-            $val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
+            $val .= '<li style="list-style-type: disc; margin-left: 20px">' . Debug::text($item) . '</li>';
         }
-        $val .= "</ul>";
+        $val .= '</ul>';
         return $val;
     }
 
@@ -841,9 +836,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $class = $row['RecordClassName'];
         }
 
-        $item = Injector::inst()->create($class, $row, false, $this->getQueryParams());
-
-        return $item;
+        return Injector::inst()->create($class, $row, false, $this->getQueryParams());
     }
 
     /**
@@ -921,7 +914,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         return $this->dataQuery->sum($fieldName);
     }
-
 
     /**
      * Returns the first item in this DataList (instanceof DataObject)
@@ -1020,7 +1012,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $colName
      * @return array
      */
-    public function column($colName = "ID")
+    public function column($colName = 'ID')
     {
         return $this->dataQuery->distinct(false)->column($colName);
     }
@@ -1031,7 +1023,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $colName
      * @return array
      */
-    public function columnUnique($colName = "ID")
+    public function columnUnique($colName = 'ID')
     {
         return $this->dataQuery->distinct(true)->column($colName);
     }
@@ -1079,7 +1071,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function getIDList()
     {
-        $ids = $this->column("ID");
+        $ids = $this->column('ID');
         return $ids ? array_combine($ids, $ids) : [];
     }
 
@@ -1100,8 +1092,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $ids = $this->column('ID');
         $singleton = DataObject::singleton($this->dataClass);
         /** @var HasManyList|ManyManyList $relation */
-        $relation = $singleton->$relationName($ids);
-        return $relation;
+        return $singleton->{$relationName}($ids);
     }
 
     public function dbObject($fieldName)
@@ -1246,7 +1237,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function offsetExists($key)
     {
-        return ($this->limit(1, $key)->first() != null);
+        return $this->limit(1, $key)->first() !== null;
     }
 
     /**

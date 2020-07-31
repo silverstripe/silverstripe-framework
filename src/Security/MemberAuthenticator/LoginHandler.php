@@ -9,7 +9,6 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -63,7 +62,7 @@ class LoginHandler extends RequestHandler
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
      *
-     * @param null|string $action
+     * @param string|null $action
      * @return string
      */
     public function Link($action = null)
@@ -127,7 +126,7 @@ class LoginHandler extends RequestHandler
 
         $this->extend('failedLogin');
 
-        $message = implode("; ", array_map(
+        $message = implode('; ', array_map(
             function ($message) {
                 return $message['message'];
             },

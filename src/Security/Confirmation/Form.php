@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Security\Confirmation;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\Form as BaseForm;
-use SilverStripe\Forms\FormAction;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form as BaseForm;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LabelField;
@@ -99,8 +99,8 @@ class Form extends BaseForm
 
     protected function buildActionList(Storage $storage)
     {
-        $cancel = FormAction::create('doRefuse', _t(__CLASS__ . '.REFUSE', 'Cancel'));
-        $confirm = FormAction::create('doConfirm', _t(__CLASS__ . '.CONFIRM', 'Run the action'))->setAutofocus(true);
+        $cancel = FormAction::create('doRefuse', _t(self::class . '.REFUSE', 'Cancel'));
+        $confirm = FormAction::create('doConfirm', _t(self::class . '.CONFIRM', 'Run the action'))->setAutofocus(true);
 
         if ($storage->getHttpMethod() === 'POST') {
             $confirm->setAttribute('formaction', htmlspecialchars($storage->getSuccessUrl()));
@@ -144,7 +144,7 @@ class Form extends BaseForm
             // so that the new confirmed POST request has those
             $data = $storage->getSuccessPostVars();
 
-            if (is_null($data)) {
+            if ($data === null) {
                 throw new ValidationException('Sorry, your cookies seem to have expired. Try to repeat the initial action.');
             }
 
@@ -165,7 +165,7 @@ class Form extends BaseForm
     protected function buildEmptyFieldList()
     {
         return FieldList::create(
-            HeaderField::create(null, _t(__CLASS__ . '.EMPTY_TITLE', 'Nothing to confirm'))
+            HeaderField::create(null, _t(self::class . '.EMPTY_TITLE', 'Nothing to confirm'))
         );
     }
 }

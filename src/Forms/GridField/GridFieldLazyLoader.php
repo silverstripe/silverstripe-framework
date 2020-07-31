@@ -16,7 +16,6 @@ use SilverStripe\ORM\SS_List;
  */
 class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLProvider
 {
-
     /**
      * Empty $datalist if the current request should be lazy loadable.
      *
@@ -60,8 +59,7 @@ class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLPr
      */
     private function isLazy(GridField $gridField)
     {
-        return
-            $gridField->getRequest()->getHeader('X-Pjax') !== 'CurrentField' &&
+        return $gridField->getRequest()->getHeader('X-Pjax') !== 'CurrentField' &&
             $this->isInTabSet($gridField);
     }
 

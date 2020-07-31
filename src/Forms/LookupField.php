@@ -19,7 +19,7 @@ class LookupField extends MultiSelectField
     protected $schemaComponent = 'LookupField';
 
     /**
-     * @var boolean $readonly
+     * @var boolean
      */
     protected $readonly = true;
 
@@ -60,7 +60,7 @@ class LookupField extends MultiSelectField
 
         $properties = array_merge($properties, [
             'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
-            'InputValue' => $inputValue
+            'InputValue' => $inputValue,
         ]);
 
         return parent::Field($properties);
@@ -91,8 +91,7 @@ class LookupField extends MultiSelectField
      */
     public function performReadonlyTransformation()
     {
-        $clone = clone $this;
-        return $clone;
+        return clone $this;
     }
 
     public function getHasEmptyDefault()
@@ -105,6 +104,6 @@ class LookupField extends MultiSelectField
      */
     public function Type()
     {
-        return "lookup readonly";
+        return 'lookup readonly';
     }
 }

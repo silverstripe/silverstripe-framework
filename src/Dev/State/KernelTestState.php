@@ -4,8 +4,8 @@ namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Dev\TestKernel;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestKernel;
 
 /**
  * Handles nesting of kernel before / after tests

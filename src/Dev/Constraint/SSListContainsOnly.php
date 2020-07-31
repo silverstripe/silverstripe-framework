@@ -38,7 +38,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
-     * @return null|bool
+     * @return bool|null
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */

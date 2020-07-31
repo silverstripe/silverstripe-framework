@@ -94,8 +94,8 @@ if (Environment::getEnv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', Environm
     call_user_func(function () {
         $base = Environment::getEnv('SS_BASE_URL');
         user_error(
-            "SS_BASE_URL should be an absolute url with protocol "
-            . "(http://$base) or without protocol (//$base)",
+            'SS_BASE_URL should be an absolute url with protocol '
+            . "(http://${base}) or without protocol (//${base})",
             E_USER_WARNING
         );
         // Treat as protocol-less absolute url
@@ -114,7 +114,7 @@ if (!defined('BASE_URL')) {
         }
 
         // Unless specified, use empty string for base in CLI
-        if (in_array(php_sapi_name(), ['cli', 'phpdbg'])) {
+        if (in_array(PHP_SAPI, ['cli', 'phpdbg'], true)) {
             return '';
         }
 
@@ -169,7 +169,7 @@ define('THEMES_PATH', BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR);
 
 define('FRAMEWORK_PATH', realpath(__DIR__ . '/../../'));
 if (strpos(FRAMEWORK_PATH, BASE_PATH) !== 0) {
-    throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
+    throw new Exception('Path error: FRAMEWORK_PATH ' . FRAMEWORK_PATH . ' not within BASE_PATH ' . BASE_PATH);
 }
 define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
 define('THIRDPARTY_DIR', FRAMEWORK_DIR ? (FRAMEWORK_DIR . '/thirdparty') : 'thirdparty');
@@ -182,8 +182,8 @@ if (!defined('ASSETS_PATH')) {
     call_user_func(function () {
         $paths = [
             BASE_PATH,
-            (PUBLIC_DIR ? PUBLIC_DIR : null),
-            ASSETS_DIR
+            (PUBLIC_DIR ?: null),
+            ASSETS_DIR,
         ];
         define('ASSETS_PATH', implode(DIRECTORY_SEPARATOR, array_filter($paths)));
     });

@@ -20,7 +20,6 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
 
 /**
@@ -51,7 +50,7 @@ class ViewableData implements IteratorAggregate
      * @config
      */
     private static $casting = [
-        'CSSClasses' => 'Varchar'
+        'CSSClasses' => 'Varchar',
     ];
 
     /**
@@ -106,14 +105,14 @@ class ViewableData implements IteratorAggregate
     public function __isset($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
+        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get${property}")) {
             return true;
         }
         if ($this->hasField($property)) {
             return true;
         }
         if ($this->failover) {
-            return isset($this->failover->$property);
+            return isset($this->failover->{$property});
         }
 
         return false;
@@ -129,14 +128,14 @@ class ViewableData implements IteratorAggregate
     public function __get($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
-            return $this->$method();
+        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get${property}")) {
+            return $this->{$method}();
         }
         if ($this->hasField($property)) {
             return $this->getField($property);
         }
         if ($this->failover) {
-            return $this->failover->$property;
+            return $this->failover->{$property};
         }
 
         return null;
@@ -152,8 +151,8 @@ class ViewableData implements IteratorAggregate
     public function __set($property, $value)
     {
         $this->objCacheClear();
-        if ($this->hasMethod($method = "set$property")) {
-            $this->$method($value);
+        if ($this->hasMethod($method = "set${property}")) {
+            $this->{$method}($value);
         } else {
             $this->setField($property, $value);
         }
@@ -204,7 +203,7 @@ class ViewableData implements IteratorAggregate
      */
     public function getField($field)
     {
-        return $this->$field;
+        return $this->{$field};
     }
 
     /**
@@ -217,7 +216,7 @@ class ViewableData implements IteratorAggregate
     public function setField($field, $value)
     {
         $this->objCacheClear();
-        $this->$field = $value;
+        $this->{$field} = $value;
         return $this;
     }
 
@@ -232,7 +231,7 @@ class ViewableData implements IteratorAggregate
     public function defineMethods()
     {
         if ($this->failover && !is_object($this->failover)) {
-            throw new LogicException("ViewableData::\$failover set to a non-object");
+            throw new LogicException('ViewableData::$failover set to a non-object');
         }
         if ($this->failover) {
             $this->addMethodsFrom('failover');
@@ -240,7 +239,7 @@ class ViewableData implements IteratorAggregate
             if (isset($_REQUEST['debugfailover'])) {
                 $class = static::class;
                 $failoverClass = get_class($this->failover);
-                Debug::message("$class created with a failover class of {$failoverClass}");
+                Debug::message("${class} created with a failover class of {$failoverClass}");
             }
         }
         $this->extensibleDefineMethods();
@@ -338,7 +337,7 @@ class ViewableData implements IteratorAggregate
         // Fall back to default_cast
         $default = $this->config()->get('default_cast');
         if (empty($default)) {
-            throw new Exception("No default_cast");
+            throw new Exception('No default_cast');
         }
         return $default;
     }
@@ -402,7 +401,7 @@ class ViewableData implements IteratorAggregate
         }
 
         throw new UnexpectedValueException(
-            "ViewableData::renderWith(): unexpected " . get_class($template) . " object, expected an SSViewer instance"
+            'ViewableData::renderWith(): unexpected ' . get_class($template) . ' object, expected an SSViewer instance'
         );
     }
 
@@ -416,7 +415,7 @@ class ViewableData implements IteratorAggregate
     protected function objCacheName($fieldName, $arguments)
     {
         return $arguments
-            ? $fieldName . ":" . implode(',', $arguments)
+            ? $fieldName . ':' . implode(',', $arguments)
             : $fieldName;
     }
 
@@ -466,7 +465,7 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments
      * @param bool $cache Cache this object
      * @param string $cacheName a custom cache name
-     * @return Object|DBField
+     * @return object|DBField
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
@@ -484,7 +483,7 @@ class ViewableData implements IteratorAggregate
         if ($this->hasMethod($fieldName)) {
             $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
         } else {
-            $value = $this->$fieldName;
+            $value = $this->{$fieldName};
         }
 
         // Cast object
@@ -511,7 +510,7 @@ class ViewableData implements IteratorAggregate
      * @param string $field
      * @param array $arguments
      * @param string $identifier an optional custom cache identifier
-     * @return Object|DBField
+     * @return object|DBField
      */
     public function cachedCall($field, $arguments = [], $identifier = null)
     {
@@ -646,19 +645,19 @@ class ViewableData implements IteratorAggregate
      */
     public function CSSClasses($stopAtClass = self::class)
     {
-        $classes       = [];
+        $classes = [];
         $classAncestry = array_reverse(ClassInfo::ancestry(static::class));
-        $stopClasses   = ClassInfo::ancestry($stopAtClass);
+        $stopClasses = ClassInfo::ancestry($stopAtClass);
 
         foreach ($classAncestry as $class) {
-            if (in_array($class, $stopClasses)) {
+            if (in_array($class, $stopClasses, true)) {
                 break;
             }
             $classes[] = $class;
         }
 
         // optionally add template identifier
-        if (isset($this->template) && !in_array($this->template, $classes)) {
+        if (isset($this->template) && !in_array($this->template, $classes, true)) {
             $classes[] = $this->template;
         }
 

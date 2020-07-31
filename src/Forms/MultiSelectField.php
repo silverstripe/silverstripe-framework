@@ -13,7 +13,6 @@ use SilverStripe\ORM\Relation;
  */
 abstract class MultiSelectField extends SelectField
 {
-
     /**
      * List of items to mark as checked, and may not be unchecked
      *
@@ -62,7 +61,7 @@ abstract class MultiSelectField extends SelectField
      * Load a value into this MultiSelectField
      *
      * @param mixed $value
-     * @param null|array|DataObject $obj {@see Form::loadDataFrom}
+     * @param array|DataObject|null $obj {@see Form::loadDataFrom}
      * @return $this
      */
     public function setValue($value, $obj = null)
@@ -90,7 +89,7 @@ abstract class MultiSelectField extends SelectField
         }
 
         $relation = $record->hasMethod($fieldName)
-            ? $record->$fieldName()
+            ? $record->{$fieldName}()
             : null;
 
         // Detect DB relation or field
@@ -101,17 +100,16 @@ abstract class MultiSelectField extends SelectField
         } elseif ($record->hasField($fieldName)) {
             // Load dataValue from field... a CSV for DBMultiEnum
             if ($record->obj($fieldName) instanceof DBMultiEnum) {
-                $value = $this->csvDecode($record->$fieldName);
+                $value = $this->csvDecode($record->{$fieldName});
 
             // ... JSON-encoded string for other fields
             } else {
-                $value = $this->stringDecode($record->$fieldName);
+                $value = $this->stringDecode($record->{$fieldName});
             }
 
             parent::setValue($value);
         }
     }
-
 
     /**
      * Save the current value of this MultiSelectField into a DataObject.
@@ -129,7 +127,7 @@ abstract class MultiSelectField extends SelectField
         }
 
         $relation = $record->hasMethod($fieldName)
-            ? $record->$fieldName()
+            ? $record->{$fieldName}()
             : null;
 
         // Detect DB relation or field
@@ -140,11 +138,11 @@ abstract class MultiSelectField extends SelectField
         } elseif ($record->hasField($fieldName)) {
             // Save dataValue into field... a CSV for DBMultiEnum
             if ($record->obj($fieldName) instanceof DBMultiEnum) {
-                $record->$fieldName = $this->csvEncode($items);
+                $record->{$fieldName} = $this->csvEncode($items);
 
             // ... JSON-encoded string for other fields
             } else {
-                $record->$fieldName = $this->stringEncode($items);
+                $record->{$fieldName} = $this->stringEncode($items);
             }
         }
     }
@@ -181,7 +179,7 @@ abstract class MultiSelectField extends SelectField
             return $result;
         }
 
-        throw new \InvalidArgumentException("Invalid string encoded value for multi select field");
+        throw new \InvalidArgumentException('Invalid string encoded value for multi select field');
     }
 
     /**
@@ -256,10 +254,10 @@ abstract class MultiSelectField extends SelectField
             $this->getName(),
             _t(
                 'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
-                "Please select values within the list provided. Invalid option(s) {value} given",
+                'Please select values within the list provided. Invalid option(s) {value} given',
                 ['value' => implode(',', $invalidValues)]
             ),
-            "validation"
+            'validation'
         );
         return false;
     }

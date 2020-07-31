@@ -4,16 +4,14 @@ namespace SilverStripe\Forms;
 
 use BadMethodCallException;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 
 class FormRequestHandler extends RequestHandler
 {
@@ -67,7 +65,6 @@ class FormRequestHandler extends RequestHandler
         }
     }
 
-
     /**
      * Get link for this form
      *
@@ -84,7 +81,7 @@ class FormRequestHandler extends RequestHandler
         }
 
         // Respect FormObjectLink() method
-        if ($controller->hasMethod("FormObjectLink")) {
+        if ($controller->hasMethod('FormObjectLink')) {
             $base = $controller->FormObjectLink($this->form->getName());
         } else {
             $base = Controller::join_links($controller->Link(), $this->form->getName());
@@ -116,8 +113,8 @@ class FormRequestHandler extends RequestHandler
                 $response = Controller::curr()->getResponse();
                 $response->addHeader('Allow', $allowedMethod);
                 $this->httpError(405, _t(
-                    "SilverStripe\\Forms\\Form.BAD_METHOD",
-                    "This form requires a {method} submission",
+                    'SilverStripe\\Forms\\Form.BAD_METHOD',
+                    'This form requires a {method} submission',
                     ['method' => $allowedMethod]
                 ));
             }
@@ -143,8 +140,8 @@ class FormRequestHandler extends RequestHandler
             $securityID = $token->getName();
             if (empty($vars[$securityID])) {
                 $this->httpError(400, _t(
-                    "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                    "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
+                    'SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE',
+                    'There seems to have been a technical problem. Please click the back button, ' . 'refresh your browser, and try again.'
                 ));
             } else {
                 // Clear invalid token on refresh
@@ -154,8 +151,8 @@ class FormRequestHandler extends RequestHandler
                 $this->form
                     ->setSessionData($data)
                     ->sessionError(_t(
-                        "SilverStripe\\Forms\\Form.CSRF_EXPIRED_MESSAGE",
-                        "Your session has expired. Please re-submit the form."
+                        'SilverStripe\\Forms\\Form.CSRF_EXPIRED_MESSAGE',
+                        'Your session has expired. Please re-submit the form.'
                     ));
                 // Return the user
                 return $this->redirectBack();
@@ -165,17 +162,17 @@ class FormRequestHandler extends RequestHandler
         // Determine the action button clicked
         $funcName = null;
         foreach ($vars as $paramName => $paramVal) {
-            if (substr($paramName, 0, 7) == 'action_') {
+            if (substr($paramName, 0, 7) === 'action_') {
                 // Break off querystring arguments included in the action
                 if (strpos($paramName, '?') !== false) {
                     list($paramName, $paramVars) = explode('?', $paramName, 2);
                     $newRequestParams = [];
                     parse_str($paramVars, $newRequestParams);
-                    $vars = array_merge((array)$vars, (array)$newRequestParams);
+                    $vars = array_merge((array) $vars, (array) $newRequestParams);
                 }
 
                 // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName);
+                $funcName = preg_replace(['/^action_/', '/_x$|_y$/'], '', $paramName);
                 break;
             }
         }
@@ -257,11 +254,11 @@ class FormRequestHandler extends RequestHandler
         $legacyActions = $this->form->config()->get('allowed_actions');
         if ($legacyActions) {
             throw new BadMethodCallException(
-                "allowed_actions are not valid on Form class " . get_class($this->form) . ". Implement these in subclasses of " . static::class . " instead"
+                'allowed_actions are not valid on Form class ' . get_class($this->form) . '. Implement these in subclasses of ' . static::class . ' instead'
             );
         }
 
-        return $this->httpError(404, "Could not find a suitable form-action callback function");
+        return $this->httpError(404, 'Could not find a suitable form-action callback function');
     }
 
     /**
@@ -281,7 +278,7 @@ class FormRequestHandler extends RequestHandler
             }
         }
 
-            // Always allow actions on fields
+        // Always allow actions on fields
         $field = $this->checkFieldsForAction($this->form->Fields(), $action);
         if ($field && $field->checkAccessAction($action)) {
             return true;
@@ -289,8 +286,6 @@ class FormRequestHandler extends RequestHandler
 
         return false;
     }
-
-
 
     /**
      * Returns the appropriate response up the controller chain
@@ -428,10 +423,9 @@ class FormRequestHandler extends RequestHandler
 
         if ($field) {
             return $field;
-        } else {
-            // falling back to fieldByName, e.g. for getting tabs
-            return $this->form->Fields()->fieldByName($request->param('FieldName'));
         }
+        // falling back to fieldByName, e.g. for getting tabs
+        return $this->form->Fields()->fieldByName($request->param('FieldName'));
     }
 
     /**
@@ -473,11 +467,9 @@ class FormRequestHandler extends RequestHandler
         $actions = $this->form->Actions()->dataFields();
 
         $fieldsAndActions = array_merge($fields, $actions);
-        $actions = array_filter($fieldsAndActions, function ($fieldOrAction) {
+        return array_filter($fieldsAndActions, function ($fieldOrAction) {
             return $fieldOrAction instanceof FormAction;
         });
-
-        return $actions;
     }
 
     /**
@@ -527,7 +519,7 @@ class FormRequestHandler extends RequestHandler
     private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars)
     {
         $this->extend('beforeCallFormHandler', $request, $funcName, $vars, $this->form, $subject);
-        $result = $subject->$funcName($vars, $this->form, $request, $this);
+        $result = $subject->{$funcName}($vars, $this->form, $request, $this);
         $this->extend('afterCallFormHandler', $request, $funcName, $vars, $this->form, $subject, $result);
 
         return $result;

@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
 
 /**
  * Matches textual content with a LIKE '%keyword%' construct.
  */
 class PartialMatchFilter extends SearchFilter
 {
-
     public function getSupportedModifiers()
     {
         return ['not', 'nocase', 'case'];
@@ -25,7 +24,7 @@ class PartialMatchFilter extends SearchFilter
      */
     protected function getMatchPattern($value)
     {
-        return "%$value%";
+        return "%${value}%";
     }
 
     /**
@@ -59,7 +58,7 @@ class PartialMatchFilter extends SearchFilter
         );
 
         $clause = [$comparisonClause => $this->getMatchPattern($this->getValue())];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);
@@ -95,7 +94,7 @@ class PartialMatchFilter extends SearchFilter
             true
         );
         return $query->where([
-            $comparisonClause => $this->getMatchPattern($this->getValue())
+            $comparisonClause => $this->getMatchPattern($this->getValue()),
         ]);
     }
 

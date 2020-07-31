@@ -12,16 +12,15 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldToolbarHeader implements GridField_HTMLProvider
 {
-
     /**
      * @param GridField $gridField
      * @return array
      */
     public function getHTMLFragments($gridField)
     {
-        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $templates = SSViewer::get_templates_by_class($this, '', self::class);
         return [
-            'header' => $gridField->renderWith($templates)
+            'header' => $gridField->renderWith($templates),
         ];
     }
 }

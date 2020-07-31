@@ -3,13 +3,13 @@
 namespace SilverStripe\Security;
 
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Cache\MemberCacheFlusher;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
-use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Cache\MemberCacheFlusher;
 
 /**
  * Calculates batch permissions for nested objects for:
@@ -219,7 +219,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 $this->canDeleteMultiple($ids, Security::getCurrentUser(), false);
                 break;
             default:
-                throw new InvalidArgumentException("Invalid permission type $permission");
+                throw new InvalidArgumentException("Invalid permission type ${permission}");
         }
     }
 
@@ -258,7 +258,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 
         // Validate member permission
         // Only VIEW allows anonymous (Anyone) permissions
-        $memberID = $member ? (int)$member->ID : 0;
+        $memberID = $member ? (int) $member->ID : 0;
         if (!$memberID && $type !== self::VIEW) {
             return $result;
         }
@@ -286,8 +286,8 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         // Get the groups that the given member belongs to
         $groupIDsSQLList = '0';
         if ($memberID) {
-            $groupIDs = $member->Groups()->column("ID");
-            $groupIDsSQLList = implode(", ", $groupIDs) ?: '0';
+            $groupIDs = $member->Groups()->column('ID');
+            $groupIDsSQLList = implode(', ', $groupIDs) ?: '0';
         }
 
         // Check if record is versioned
@@ -309,7 +309,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                     $member
                 );
                 // Note: Draft stage takes precedence over live, but only if draft exists
-                $combinedStageResult = $combinedStageResult + $stageResult;
+                $combinedStageResult += $stageResult;
             }
         } else {
             // Unstaged result
@@ -362,16 +362,16 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 $groupJoinTable = $this->getJoinTable($type);
                 $uninheritedPermissions = $stageRecords
                     ->where([
-                        "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
+                        "(\"${typeField}\" IN (?, ?) OR " . "(\"${typeField}\" = ? AND \"${groupJoinTable}\".\"{$baseTable}ID\" IS NOT NULL))"
                         => [
                             self::ANYONE,
                             self::LOGGED_IN_USERS,
-                            self::ONLY_THESE_USERS
-                        ]
+                            self::ONLY_THESE_USERS,
+                        ],
                     ])
                     ->leftJoin(
                         $groupJoinTable,
-                        "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
+                        "\"${groupJoinTable}\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"${groupJoinTable}\".\"GroupID\" IN (${groupIDsSQLList})"
                     )->column('ID');
             } else {
                 $uninheritedPermissions = $stageRecords->column('ID');
@@ -398,7 +398,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             ->query()
             ->setSelect([
                 "\"{$baseTable}\".\"ID\"",
-                "\"{$baseTable}\".\"ParentID\""
+                "\"{$baseTable}\".\"ParentID\"",
             ])
             ->execute();
 
@@ -506,7 +506,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 ->filter('ParentID', $editableIDs);
 
             // Find out the children that can be deleted
-            $children = $childRecords->map("ID", "ParentID");
+            $children = $childRecords->map('ID', 'ParentID');
             $childIDs = $children->keys();
             if ($childIDs) {
                 $deletableChildren = $this->canDeleteMultiple($childIDs, $member);
@@ -620,7 +620,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             case self::VIEW:
                 return 'CanViewType';
             default:
-                throw new InvalidArgumentException("Invalid argument type $type");
+                throw new InvalidArgumentException("Invalid argument type ${type}");
         }
     }
 
@@ -641,7 +641,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             case self::VIEW:
                 return $this->getViewerGroupsTable();
             default:
-                throw new InvalidArgumentException("Invalid argument type $type");
+                throw new InvalidArgumentException("Invalid argument type ${type}");
         }
     }
 

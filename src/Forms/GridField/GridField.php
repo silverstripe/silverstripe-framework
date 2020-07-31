@@ -12,7 +12,6 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\GridField\FormAction\SessionStore;
 use SilverStripe\Forms\GridField\FormAction\StateStore;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
@@ -253,14 +252,14 @@ class GridField extends FormField
         $allowedComponents = $this->getReadonlyComponents();
         foreach ($this->getConfig()->getComponents() as $component) {
             // if a component doesn't exist, remove it from the readonly version.
-            if (!in_array(get_class($component), $allowedComponents)) {
+            if (!in_array(get_class($component), $allowedComponents, true)) {
                 $copyConfig->removeComponent($component);
             }
         }
 
         // If the edit button has been removed, replace it with a view button
         if ($hadEditButton && !$copyConfig->getComponentByType(GridFieldViewButton::class)) {
-            $copyConfig->addComponent(new GridFieldViewButton);
+            $copyConfig->addComponent(new GridFieldViewButton());
         }
 
         return $copy;
@@ -510,13 +509,12 @@ class GridField extends FormField
                         $fragmentDeferred[$contentKey]++;
 
                         break;
-                    } else {
-                        $content[$contentKey] = preg_replace(
-                            sprintf('/\$DefineFragment\(%s\)/i', $fragmentName),
-                            $fragment,
-                            $content[$contentKey]
-                        );
                     }
+                    $content[$contentKey] = preg_replace(
+                        sprintf('/\$DefineFragment\(%s\)/i', $fragmentName),
+                        $fragment,
+                        $content[$contentKey]
+                    );
                 }
             }
         }
@@ -620,7 +618,7 @@ class GridField extends FormField
             'id' => $tableId,
             'class' => 'table grid-field__table',
             'cellpadding' => '0',
-            'cellspacing' => '0'
+            'cellspacing' => '0',
         ];
 
         if ($this->getDescription()) {
@@ -709,11 +707,11 @@ class GridField extends FormField
     {
         $classes = ['ss-gridfield-item'];
 
-        if ($index == 0) {
+        if ($index === 0) {
             $classes[] = 'first';
         }
 
-        if ($index == $total - 1) {
+        if ($index === $total - 1) {
             $classes[] = 'last';
         }
 
@@ -789,19 +787,16 @@ class GridField extends FormField
             $content = '';
 
             foreach ($this->columnDispatch[$column] as $handler) {
-                /**
-                 * @var GridField_ColumnProvider $handler
-                 */
+                /** @var GridField_ColumnProvider $handler */
                 $content .= $handler->getColumnContent($this, $record, $column);
             }
 
             return $content;
-        } else {
-            throw new InvalidArgumentException(sprintf(
-                'Bad column "%s"',
-                $column
-            ));
         }
+        throw new InvalidArgumentException(sprintf(
+            'Bad column "%s"',
+            $column
+        ));
     }
 
     /**
@@ -843,10 +838,10 @@ class GridField extends FormField
         }
 
         if ($record->hasMethod($fieldName)) {
-            return $record->$fieldName();
+            return $record->{$fieldName}();
         }
 
-        return $record->$fieldName;
+        return $record->{$fieldName};
     }
 
     /**
@@ -870,9 +865,7 @@ class GridField extends FormField
             $attributes = [];
 
             foreach ($this->columnDispatch[$column] as $handler) {
-                /**
-                 * @var GridField_ColumnProvider $handler
-                 */
+                /** @var GridField_ColumnProvider $handler */
                 $columnAttributes = $handler->getColumnAttributes($this, $record, $column);
 
                 if (is_array($columnAttributes)) {
@@ -917,9 +910,7 @@ class GridField extends FormField
             $metaData = [];
 
             foreach ($this->columnDispatch[$column] as $handler) {
-                /**
-                 * @var GridField_ColumnProvider $handler
-                 */
+                /** @var GridField_ColumnProvider $handler */
                 $columnMetaData = $handler->getColumnMetadata($this, $column);
 
                 if (is_array($columnMetaData)) {
@@ -993,8 +984,8 @@ class GridField extends FormField
             ->getSecurityToken();
         if (!$token->checkRequest($request)) {
             $this->httpError(400, _t(
-                "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
+                'SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE',
+                'There seems to have been a technical problem. Please click the back button, ' . 'refresh your browser, and try again.'
             ));
         }
 
@@ -1027,7 +1018,7 @@ class GridField extends FormField
 
                 if (isset($stateChange['args'])) {
                     $arguments = $stateChange['args'];
-                };
+                }
 
                 $html = $this->handleAlterAction($actionName, $arguments, $data);
 
@@ -1066,7 +1057,7 @@ class GridField extends FormField
             if ($component instanceof GridField_ActionProvider) {
                 $actions = array_map('strtolower', (array) $component->getActions($this));
 
-                if (in_array($actionName, $actions)) {
+                if (in_array($actionName, $actions, true)) {
                     return $component->handleAction($this, $actionName, $arguments, $data);
                 }
             }
@@ -1093,8 +1084,8 @@ class GridField extends FormField
         if ($this->brokenOnConstruct) {
             user_error(
                 sprintf(
-                    "parent::__construct() needs to be called on %s::__construct()",
-                    __CLASS__
+                    'parent::__construct() needs to be called on %s::__construct()',
+                    self::class
                 ),
                 E_USER_WARNING
             );
@@ -1116,13 +1107,13 @@ class GridField extends FormField
                         // Actions can reference URL parameters.
                         // e.g. '$Action/$ID/$OtherID' → '$Action'
 
-                        if ($action[0] == '$') {
+                        if ($action[0] === '$') {
                             $action = $params[substr($action, 1)];
                         }
 
                         if (!method_exists($component, 'checkAccessAction') || $component->checkAccessAction($action)) {
                             if (!$action) {
-                                $action = "index";
+                                $action = 'index';
                             }
 
                             if (!is_string($action)) {
@@ -1135,7 +1126,7 @@ class GridField extends FormField
                             try {
                                 $this->extend('beforeCallActionURLHandler', $request, $action);
 
-                                $result = $component->$action($this, $request);
+                                $result = $component->{$action}($this, $request);
 
                                 $this->extend('afterCallActionURLHandler', $request, $action, $result);
                             } catch (HTTPResponse_Exception $responseException) {

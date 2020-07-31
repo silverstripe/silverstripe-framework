@@ -75,13 +75,12 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
         }
 
         // Check if system a is actually x, and if available, use that.
-        if ($this->checkAEncryptionLevel() == 'x') {
+        if ($this->checkAEncryptionLevel() === 'x') {
             $methodAndSalt = '$2a$' . $salt;
             $encryptedPassword = crypt($password, $methodAndSalt);
 
             if (strpos($encryptedPassword, '$2a$') === 0) {
-                $encryptedPassword = '$2x$' . substr($encryptedPassword, strlen('$2a$'));
-                return $encryptedPassword;
+                return '$2x$' . substr($encryptedPassword, strlen('$2a$'));
             }
         }
 
@@ -98,13 +97,12 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
         }
 
         // Check if system a is actually y, and if available, use that.
-        if ($this->checkAEncryptionLevel() == 'y') {
+        if ($this->checkAEncryptionLevel() === 'y') {
             $methodAndSalt = '$2a$' . $salt;
             $encryptedPassword = crypt($password, $methodAndSalt);
 
             if (strpos($encryptedPassword, '$2a$') === 0) {
-                $encryptedPassword = '$2y$' . substr($encryptedPassword, strlen('$2a$'));
-                return $encryptedPassword;
+                return '$2y$' . substr($encryptedPassword, strlen('$2a$'));
             }
         }
 
@@ -113,7 +111,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
 
     public function encryptA($password, $salt)
     {
-        if ($this->checkAEncryptionLevel() == 'a') {
+        if ($this->checkAEncryptionLevel() === 'a') {
             $methodAndSalt = '$2a$' . $salt;
             $encryptedPassword = crypt($password, $methodAndSalt);
 
@@ -137,9 +135,9 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
         // http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc
         //    /crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
         $xOrY = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi')
-            == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
+            === '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
         $yOrA = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq')
-            == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
+            === '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
 
         if ($xOrY && $yOrA) {
             return 'y';

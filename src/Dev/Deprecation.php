@@ -4,7 +4,6 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 
@@ -37,13 +36,13 @@ use SilverStripe\Core\Manifest\ModuleLoader;
  */
 class Deprecation
 {
-
     const SCOPE_METHOD = 1;
+
     const SCOPE_CLASS = 2;
+
     const SCOPE_GLOBAL = 4;
 
     /**
-     *
      * @var string
      */
     protected static $version;
@@ -62,7 +61,6 @@ class Deprecation
     protected static $enabled = null;
 
     /**
-     *
      * @var array
      */
     protected static $module_version_overrides = [];
@@ -78,12 +76,11 @@ class Deprecation
      * greater than or equal to this version, a message will be raised
      *
      * @static
-     * @param $ver string -
+     * @param string $ver -
      *     A php standard version string, see http://php.net/manual/en/function.version-compare.php for details.
      * @param null $forModule string -
      *    The name of a module. The passed version will be used as the check value for
      *    calls directly from this module rather than the global value
-     * @return void
      */
     public static function notification_version($ver, $forModule = null)
     {
@@ -116,13 +113,13 @@ class Deprecation
      * Given a backtrace, get the method name from the immediate parent caller (the caller of #notice)
      *
      * @static
-     * @param $backtrace array - a backtrace as returned from debug_backtrace
+     * @param array $backtrace - a backtrace as returned from debug_backtrace
      * @param $level - 1 (default) will return immediate caller, 2 will return caller's caller, etc.
      * @return string - the name of the method
      */
     protected static function get_called_method_from_trace($backtrace, $level = 1)
     {
-        $level = (int)$level;
+        $level = (int) $level;
         if (!$level) {
             $level = 1;
         }
@@ -205,12 +202,12 @@ class Deprecation
         // Check the version against the notice version
         if ($checkVersion && version_compare($checkVersion, $atVersion, '>=')) {
             // Get the calling scope
-            if ($scope == Deprecation::SCOPE_METHOD) {
+            if ($scope === Deprecation::SCOPE_METHOD) {
                 if (!$backtrace) {
                     $backtrace = debug_backtrace(0);
                 }
                 $caller = self::get_called_method_from_trace($backtrace);
-            } elseif ($scope == Deprecation::SCOPE_CLASS) {
+            } elseif ($scope === Deprecation::SCOPE_CLASS) {
                 if (!$backtrace) {
                     $backtrace = debug_backtrace(0);
                 }
@@ -226,11 +223,11 @@ class Deprecation
             }
 
             // Then raise the notice
-            if (substr($string, -1) != '.') {
-                $string .= ".";
+            if (substr($string, -1) !== '.') {
+                $string .= '.';
             }
 
-            $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
+            $string .= ' Called from ' . self::get_called_method_from_trace($backtrace, 2) . '.';
 
             if ($caller) {
                 user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level);
@@ -258,7 +255,7 @@ class Deprecation
     /**
      * Method for when testing. Restore all the current version settings from a variable
      *
-     * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
+     * @param array $settings An array as returned by {@see Deprecation::dump_settings()}
      */
     public static function restore_settings($settings)
     {

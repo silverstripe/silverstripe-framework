@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -60,8 +60,8 @@ class TreeMultiselectField extends TreeDropdownField
         $name,
         $title = null,
         $sourceObject = Group::class,
-        $keyField = "ID",
-        $labelField = "Title"
+        $keyField = 'ID',
+        $labelField = 'Title'
     ) {
         parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
         $this->removeExtraClass('single');
@@ -115,20 +115,20 @@ class TreeMultiselectField extends TreeDropdownField
 
     /**
      * Return this field's linked items
-     * @return ArrayList|DataList $items
+     * @return ArrayList|DataList
      */
     public function getItems()
     {
         $items = new ArrayList();
 
         // If the value has been set, use that
-        if ($this->value != 'unchanged') {
+        if ($this->value !== 'unchanged') {
             $sourceObject = $this->getSourceObject();
             if (is_array($sourceObject)) {
                 $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
 
                 foreach ($values as $value) {
-                    $item = new stdClass;
+                    $item = new stdClass();
                     $item->ID = $value;
                     $item->Title = $sourceObject[$value];
                     $items->push($item);
@@ -156,7 +156,7 @@ class TreeMultiselectField extends TreeDropdownField
             $fieldName = $this->name;
             $record = $this->form->getRecord();
             if (is_object($record) && $record->hasMethod($fieldName)) {
-                return $record->$fieldName();
+                return $record->{$fieldName}();
             }
         }
 
@@ -181,14 +181,14 @@ class TreeMultiselectField extends TreeDropdownField
         if ($items && count($items)) {
             foreach ($items as $item) {
                 $idArray[] = $item->ID;
-                $titleArray[] = ($item instanceof ViewableData)
+                $titleArray[] = $item instanceof ViewableData
                     ? $item->obj($this->getLabelField())->forTemplate()
                     : Convert::raw2xml($item->{$this->getLabelField()});
             }
 
-            $title = implode(", ", $titleArray);
+            $title = implode(', ', $titleArray);
             sort($idArray);
-            $value = implode(",", $idArray);
+            $value = implode(',', $idArray);
         } else {
             $title = $emptyTitle;
         }
@@ -206,7 +206,7 @@ class TreeMultiselectField extends TreeDropdownField
                 'Title' => $title,
                 'EmptyTitle' => $emptyTitle,
                 'Link' => $dataUrlTree,
-                'Value' => $value
+                'Value' => $value,
             ]
         );
         return FormField::Field($properties);
@@ -223,12 +223,12 @@ class TreeMultiselectField extends TreeDropdownField
     {
         $items = [];
         $fieldName = $this->name;
-        $saveDest = $record->$fieldName();
+        $saveDest = $record->{$fieldName}();
 
         if (!$saveDest) {
             $recordClass = get_class($record);
             user_error(
-                "TreeMultiselectField::saveInto() Field '$fieldName' not found on"
+                "TreeMultiselectField::saveInto() Field '${fieldName}' not found on"
                 . " {$recordClass}.{$record->ID}",
                 E_USER_ERROR
             );
@@ -239,14 +239,14 @@ class TreeMultiselectField extends TreeDropdownField
             if (is_array($this->value)) {
                 $items = $this->value;
             } elseif ($this->value) {
-                $items = preg_split("/ *, */", trim($this->value));
+                $items = preg_split('/ *, */', trim($this->value));
             }
         }
 
         // Allows you to modify the items on your object before save
-        $funcName = "onChange$fieldName";
+        $funcName = "onChange${fieldName}";
         if ($record->hasMethod($funcName)) {
-            $result = $record->$funcName($items);
+            $result = $record->{$funcName}($items);
             if (!$result) {
                 return;
             }

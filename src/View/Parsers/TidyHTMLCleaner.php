@@ -10,7 +10,6 @@ use tidy;
  */
 class TidyHTMLCleaner extends HTMLCleaner
 {
-
     protected $defaultConfig = [
         'clean' => true,
         'output-xhtml' => true,
@@ -18,7 +17,7 @@ class TidyHTMLCleaner extends HTMLCleaner
         'wrap' => 0,
         'doctype' => 'omit',
         'input-encoding' => 'utf8',
-        'output-encoding' => 'utf8'
+        'output-encoding' => 'utf8',
     ];
 
     public function cleanHTML($content)

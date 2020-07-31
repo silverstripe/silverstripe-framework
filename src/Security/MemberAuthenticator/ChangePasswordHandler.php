@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\Security\MemberAuthenticator;
 
 use Psr\Container\NotFoundExceptionInterface;
@@ -70,7 +69,7 @@ class ChangePasswordHandler extends RequestHandler
         /** @var Member $member */
         $member = null;
         if ($request->getVar('m') !== null) {
-            $member = Member::get()->filter(['ID' => (int)$request->getVar('m')])->first();
+            $member = Member::get()->filter(['ID' => (int) $request->getVar('m')])->first();
         }
         $token = $request->getVar('t');
 
@@ -95,7 +94,7 @@ class ChangePasswordHandler extends RequestHandler
             // Subsequent request after the "first load with hash" (see previous if clause).
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
+                'Form' => $this->changePasswordForm(),
             ];
         }
 
@@ -111,7 +110,7 @@ class ChangePasswordHandler extends RequestHandler
 
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
+                'Form' => $this->changePasswordForm(),
             ];
         }
         // Show a friendly message saying the login token has expired
@@ -144,7 +143,6 @@ class ChangePasswordHandler extends RequestHandler
             )
         );
     }
-
 
     /**
      * @param Member $member

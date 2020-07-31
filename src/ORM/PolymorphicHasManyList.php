@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM;
 
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
-use InvalidArgumentException;
 
 /**
  * Represents a has_many list linked against a polymorphic relationship
  */
 class PolymorphicHasManyList extends HasManyList
 {
-
     /**
      * Name of foreign key field that references the class name of the relation
      *
@@ -68,7 +67,7 @@ class PolymorphicHasManyList extends HasManyList
             $item = DataObject::get_by_id($this->dataClass, $item);
         } elseif (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(
-                "PolymorphicHasManyList::add() expecting a $this->dataClass object, or ID value"
+                "PolymorphicHasManyList::add() expecting a {$this->dataClass} object, or ID value"
             );
         }
 
@@ -92,8 +91,8 @@ class PolymorphicHasManyList extends HasManyList
 
         $foreignKey = $this->foreignKey;
         $classForeignKey = $this->classForeignKey;
-        $item->$foreignKey = $foreignID;
-        $item->$classForeignKey = $this->getForeignClass();
+        $item->{$foreignKey} = $foreignID;
+        $item->{$classForeignKey} = $this->getForeignClass();
 
         $item->write();
     }
@@ -109,7 +108,7 @@ class PolymorphicHasManyList extends HasManyList
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(
-                "HasManyList::remove() expecting a $this->dataClass object, or ID",
+                "HasManyList::remove() expecting a {$this->dataClass} object, or ID",
                 E_USER_ERROR
             );
         }
@@ -118,7 +117,7 @@ class PolymorphicHasManyList extends HasManyList
         $foreignClass = $this->getForeignClass();
         $classNames = ClassInfo::subclassesFor($foreignClass);
         $classForeignKey = $this->classForeignKey;
-        $classValueLower = strtolower($item->$classForeignKey);
+        $classValueLower = strtolower($item->{$classForeignKey});
         if (!array_key_exists($classValueLower, $classNames)) {
             return;
         }
@@ -128,11 +127,11 @@ class PolymorphicHasManyList extends HasManyList
         $foreignKey = $this->foreignKey;
 
         if (empty($foreignID)
-            || $foreignID == $item->$foreignKey
-            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
+            || $foreignID === $item->{$foreignKey}
+            || (is_array($foreignID) && in_array($item->{$foreignKey}, $foreignID, true))
         ) {
-            $item->$foreignKey = null;
-            $item->$classForeignKey = null;
+            $item->{$foreignKey} = null;
+            $item->{$classForeignKey} = null;
             $item->write();
         }
     }

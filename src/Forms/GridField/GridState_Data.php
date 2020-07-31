@@ -10,7 +10,6 @@ namespace SilverStripe\Forms\GridField;
  */
 class GridState_Data
 {
-
     /**
      * @var array
      */
@@ -71,7 +70,7 @@ class GridState_Data
     public function __toString()
     {
         if (!$this->data) {
-            return "";
+            return '';
         }
 
         return json_encode($this->toArray());
@@ -82,7 +81,7 @@ class GridState_Data
         $output = [];
 
         foreach ($this->data as $k => $v) {
-            $output[$k] = (is_object($v) && method_exists($v, 'toArray')) ? $v->toArray() : $v;
+            $output[$k] = is_object($v) && method_exists($v, 'toArray') ? $v->toArray() : $v;
         }
 
         return $output;

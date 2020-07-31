@@ -2,19 +2,18 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\CMSSecurity;
+use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\Security;
 
 class CMSLoginHandler extends LoginHandler
 {
     private static $allowed_actions = [
-        'LoginForm'
+        'LoginForm',
     ];
 
     /**
@@ -87,18 +86,17 @@ class CMSLoginHandler extends LoginHandler
         );
 
         // Redirect to change password page
-        $response = HTTPResponse::create()
+        return HTTPResponse::create()
             ->setBody(<<<PHP
 <!DOCTYPE html>
 <html><body>
-$message
+${message}
 <script type="application/javascript">
-setTimeout(function(){top.location.href = "$changePasswordURLJS";}, 0);
+setTimeout(function(){top.location.href = "${changePasswordURLJS}";}, 0);
 </script>
 </body></html>
 PHP
         );
-        return $response;
     }
 
     /**

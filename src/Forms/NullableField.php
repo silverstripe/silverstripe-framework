@@ -46,7 +46,7 @@ class NullableField extends FormField
      * Create a new nullable field
      *
      * @param FormField $valueField
-     * @param null|string $isNullLabel
+     * @param string|null $isNullLabel
      */
     public function __construct(FormField $valueField, $isNullLabel = null)
     {
@@ -82,7 +82,7 @@ class NullableField extends FormField
     /**
      * Set the label used for the Is Null checkbox.
      *
-     * @param $isNulLabel string
+     * @param string $isNulLabel
      *
      * @return $this
      */
@@ -100,7 +100,7 @@ class NullableField extends FormField
      */
     public function getIsNullId()
     {
-        return $this->getName() . "_IsNull";
+        return $this->getName() . '_IsNull';
     }
 
     /**
@@ -116,7 +116,7 @@ class NullableField extends FormField
             $nullableCheckbox = new CheckboxField($this->getIsNullId());
         }
 
-        $nullableCheckbox->setValue(is_null($this->dataValue()));
+        $nullableCheckbox->setValue($this->dataValue() === null);
 
         return sprintf(
             '%s %s&nbsp;<span>%s</span>',
@@ -130,7 +130,7 @@ class NullableField extends FormField
      * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
      *
      * @param mixed $value
-     * @param null|array $data
+     * @param array|null $data
      *
      * @return $this
      */
@@ -177,7 +177,7 @@ class NullableField extends FormField
         );
 
         if ($this->value === null) {
-            $result .= "<<null>>";
+            $result .= '<<null>>';
         } else {
             $result .= (string) $this->value;
         }

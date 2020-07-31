@@ -14,7 +14,6 @@ use PDOStatement;
  */
 class PDOStatementHandle
 {
-
     /**
      * The statement to provide a handle to
      *
@@ -67,7 +66,7 @@ class PDOStatementHandle
         if ($this->columnMeta === null) {
             $columnCount = $this->statement->columnCount();
             $this->columnMeta = [];
-            for ($i = 0; $i<$columnCount; $i++) {
+            for ($i = 0; $i < $columnCount; $i++) {
                 $this->columnMeta[$i] = $this->statement->getColumnMeta($i);
             }
         }
@@ -134,7 +133,7 @@ class PDOStatementHandle
     /**
      * Executes a prepared statement (PDOStatement::execute)
      *
-     * @param $parameters An array of values with as many elements as there are bound parameters in the SQL statement
+     * @param An $parameters array of values with as many elements as there are bound parameters in the SQL statement
      *                    being executed
      * @return bool Returns true on success
      */

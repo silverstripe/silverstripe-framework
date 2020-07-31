@@ -4,9 +4,9 @@ namespace SilverStripe\Dev\Install;
 
 use InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Core\Flushable;
 
 /**
  * This class keeps track of the available database adapters
@@ -17,7 +17,6 @@ use SilverStripe\Core\Flushable;
  */
 class DatabaseAdapterRegistry implements Flushable
 {
-
     /**
      * Default database connector registration fields
      *
@@ -27,24 +26,24 @@ class DatabaseAdapterRegistry implements Flushable
         'server' => [
             'title' => 'Database server',
             'envVar' => 'SS_DATABASE_SERVER',
-            'default' => 'localhost'
+            'default' => 'localhost',
         ],
         'username' => [
             'title' => 'Database username',
             'envVar' => 'SS_DATABASE_USERNAME',
-            'default' => 'root'
+            'default' => 'root',
         ],
         'password' => [
             'title' => 'Database password',
             'envVar' => 'SS_DATABASE_PASSWORD',
-            'default' => 'password'
+            'default' => 'password',
         ],
         'database' => [
             'title' => 'Database name',
             'default' => 'SS_mysite',
             'attributes' => [
-                "onchange" => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"
-            ]
+                'onchange' => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');",
+            ],
         ],
     ];
 
@@ -168,15 +167,14 @@ class DatabaseAdapterRegistry implements Flushable
         $key = __FUNCTION__;
         if ($cache->has($key)) {
             return (array) $cache->get($key);
-        } else {
-            try {
-                $paths = glob(BASE_PATH . '/vendor/*/*/_configure_database.php');
-            } catch (Exception $e) {
-                $paths = [];
-            }
-            $cache->set($key, $paths);
-            return $paths;
         }
+        try {
+            $paths = glob(BASE_PATH . '/vendor/*/*/_configure_database.php');
+        } catch (Exception $e) {
+            $paths = [];
+        }
+        $cache->set($key, $paths);
+        return $paths;
     }
 
     public static function getCache(): CacheInterface
@@ -243,6 +241,6 @@ class DatabaseAdapterRegistry implements Flushable
 
         // Construct
         $class = $adapters[$databaseClass]['helperClass'];
-        return (class_exists($class)) ? new $class() : null;
+        return class_exists($class) ? new $class() : null;
     }
 }

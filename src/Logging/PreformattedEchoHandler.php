@@ -16,7 +16,6 @@ use Monolog\Handler\AbstractProcessingHandler;
  */
 class PreformattedEchoHandler extends AbstractProcessingHandler
 {
-
     /**
      * @param array $record
      */

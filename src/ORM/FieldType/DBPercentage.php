@@ -15,7 +15,6 @@ namespace SilverStripe\ORM\FieldType;
  */
 class DBPercentage extends DBDecimal
 {
-
     /**
      * Create a new Decimal field.
      *
@@ -44,8 +43,8 @@ class DBPercentage extends DBDecimal
         parent::saveInto($dataObject);
 
         $fieldName = $this->name;
-        if ($fieldName && $dataObject->$fieldName > 1.0) {
-            $dataObject->$fieldName = 1.0;
+        if ($fieldName && $dataObject->{$fieldName} > 1.0) {
+            $dataObject->{$fieldName} = 1.0;
         }
     }
 }

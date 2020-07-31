@@ -9,7 +9,6 @@ use Generator;
  */
 class ArrayLib
 {
-
     /**
      * Inverses the first and second level keys of an associative
      * array, keying the result by the second level, and combines
@@ -66,7 +65,7 @@ class ArrayLib
     /**
      * Return an array where the keys are all equal to the values.
      *
-     * @param $arr array
+     * @param array $arr
      * @return array
      */
     public static function valuekey($arr)
@@ -89,15 +88,15 @@ class ArrayLib
      * Filter an array by keys (useful for only allowing certain form-input to
      * be saved).
      *
-     * @param $arr array
-     * @param $keys array
+     * @param array $arr
+     * @param array $keys
      *
      * @return array
      */
     public static function filter_keys($arr, $keys)
     {
         foreach ($arr as $key => $v) {
-            if (!in_array($key, $keys)) {
+            if (!in_array($key, $keys, true)) {
                 unset($arr[$key]);
             }
         }
@@ -117,11 +116,9 @@ class ArrayLib
      */
     public static function is_associative($array)
     {
-        $isAssociative = !empty($array)
+        return !empty($array)
             && is_array($array)
             && ($array !== array_values($array));
-
-        return $isAssociative;
     }
 
     /**
@@ -144,11 +141,10 @@ class ArrayLib
 
         if (in_array($needle, $haystack, $strict)) {
             return true;
-        } else {
-            foreach ($haystack as $obj) {
-                if (self::in_array_recursive($needle, $obj, $strict)) {
-                    return true;
-                }
+        }
+        foreach ($haystack as $obj) {
+            if (self::in_array_recursive($needle, $obj, $strict)) {
+                return true;
             }
         }
 
@@ -160,8 +156,8 @@ class ArrayLib
      *
      * Actually only one array argument is supported.
      *
-     * @param $f callback to apply
-     * @param $array array
+     * @param callback $f to apply
+     * @param array $array
      * @return array
      */
     public static function array_map_recursive($f, $array)
@@ -190,7 +186,7 @@ class ArrayLib
         $arrays = func_get_args();
         $merged = [];
 
-        if (count($arrays) == 1) {
+        if (count($arrays) === 1) {
             return $array;
         }
 

@@ -9,7 +9,6 @@ use ArrayAccess;
  */
 abstract class SingleSelectField extends SelectField
 {
-
     /**
      * Show the first <option> element as empty (not having a value),
      * with an optional label defined through {@link $emptyString}.
@@ -109,9 +108,8 @@ abstract class SingleSelectField extends SelectField
         // Inject default option
         if ($this->getHasEmptyDefault()) {
             return ['' => $this->getEmptyString()] + $this->getSource();
-        } else {
-            return $this->getSource();
         }
+        return $this->getSource();
     }
 
     /**
@@ -134,7 +132,7 @@ abstract class SingleSelectField extends SelectField
                 }
             }
         } else {
-            if ($this->getHasEmptyDefault() || !$validValues || in_array('', $validValues)) {
+            if ($this->getHasEmptyDefault() || !$validValues || in_array('', $validValues, true)) {
                 // Check empty value
                 return true;
             }
@@ -146,10 +144,10 @@ abstract class SingleSelectField extends SelectField
             $this->name,
             _t(
                 'SilverStripe\\Forms\\DropdownField.SOURCE_VALIDATION',
-                "Please select a value within the list provided. {value} is not a valid option",
+                'Please select a value within the list provided. {value} is not a valid option',
                 ['value' => $selected]
             ),
-            "validation"
+            'validation'
         );
         return false;
     }

@@ -181,7 +181,7 @@ class TimeField extends TextField
             );
         }
 
-        $formatter =  IntlDateFormatter::create(
+        $formatter = IntlDateFormatter::create(
             $this->getLocale(),
             IntlDateFormatter::NONE,
             $this->getTimeLength(),
@@ -191,7 +191,7 @@ class TimeField extends TextField
         if ($this->getHTML5()) {
             // Browsers expect ISO 8601 times, localisation is handled on the client
             $formatter->setPattern(DBTime::ISO_TIME);
-            // Don't invoke getTimeFormat() directly to avoid infinite loop
+        // Don't invoke getTimeFormat() directly to avoid infinite loop
         } elseif ($this->timeFormat) {
             $ok = $formatter->setPattern($this->timeFormat);
             if (!$ok) {
@@ -240,7 +240,7 @@ class TimeField extends TextField
             'lang' => i18n::convert_rfc1766($this->getLocale()),
             'data' => array_merge($defaults['data'], [
                 'html5' => $this->getHTML5(),
-            ])
+            ]),
         ]);
     }
 
@@ -333,7 +333,7 @@ class TimeField extends TextField
                 $this->name,
                 _t(
                     'SilverStripe\\Forms\\TimeField.VALIDATEFORMAT',
-                    "Please enter a valid time format ({format})",
+                    'Please enter a valid time format ({format})',
                     ['format' => $this->getTimeFormat()]
                 )
             );
@@ -438,8 +438,6 @@ class TimeField extends TextField
         return $toFormatter->format($timestamp);
     }
 
-
-
     /**
      * Tidy up the internal time representation (ISO 8601),
      * and fall back to strtotime() if there's parsing errors.
@@ -485,7 +483,6 @@ class TimeField extends TextField
         $this->timezone = $timezone;
         return $this;
     }
-
 
     /**
      * Run a callback within a specific timezone

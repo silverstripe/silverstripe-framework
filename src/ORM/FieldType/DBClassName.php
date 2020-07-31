@@ -4,16 +4,15 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Represents a classname selector, which respects obsolete clasess.
  */
 class DBClassName extends DBEnum
 {
-
     /**
      * Base classname of class to enumerate.
      * If 'DataObject' then all classes are included.
@@ -55,9 +54,6 @@ class DBClassName extends DBEnum
         parent::__construct($name, null, null, $options);
     }
 
-    /**
-     * @return void
-     */
     public function requireField()
     {
         $parts = [
@@ -67,12 +63,12 @@ class DBClassName extends DBEnum
             'collate' => 'utf8_general_ci',
             'default' => $this->getDefault(),
             'table' => $this->getTable(),
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = [
             'type' => 'enum',
-            'parts' => $parts
+            'parts' => $parts,
         ];
 
         DB::require_field($this->getTable(), $this->getName(), $values);
@@ -163,7 +159,7 @@ class DBClassName extends DBEnum
         // Allow classes to set default class
         $baseClass = $this->getBaseClass();
         $defaultClass = Config::inst()->get($baseClass, 'default_classname');
-        if ($defaultClass &&  class_exists($defaultClass)) {
+        if ($defaultClass && class_exists($defaultClass)) {
             return $defaultClass;
         }
 

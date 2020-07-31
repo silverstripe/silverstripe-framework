@@ -2,16 +2,15 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\Map;
 use ArrayAccess;
+use SilverStripe\ORM\Map;
+use SilverStripe\ORM\SS_List;
 
 /**
  * Represents a field that allows users to select one or more items from a list
  */
 abstract class SelectField extends FormField
 {
-
     /**
      * Associative or numeric array of all dropdown items,
      * with array key as the submitted field value, and the array value as a
@@ -51,12 +50,12 @@ abstract class SelectField extends FormField
 
         // Add options to 'data'
         $source = $this->getSource();
-        $data['source'] = (is_array($source))
+        $data['source'] = is_array($source)
             ? array_map(function ($value, $title) use ($disabled) {
                 return [
                     'value' => $value,
                     'title' => $title,
-                    'disabled' => in_array($value, $disabled),
+                    'disabled' => in_array($value, $disabled, true),
                 ];
             }, array_keys($source), $source)
             : [];
@@ -100,7 +99,7 @@ abstract class SelectField extends FormField
         if ($this->isDisabled()) {
             return true;
         }
-        return in_array($value, $this->getDisabledItems());
+        return in_array($value, $this->getDisabledItems(), true);
     }
 
     public function getAttributes()
@@ -231,7 +230,7 @@ abstract class SelectField extends FormField
 
         // For non-falsey values do loose comparison
         if ($dataValue) {
-            return $dataValue == $userValue;
+            return $dataValue === $userValue;
         }
 
         // For empty values, use string comparison to perform visible value match
@@ -260,7 +259,7 @@ abstract class SelectField extends FormField
      *
      * @see FormField::castedCopy()
      *
-     * @param String $classOrCopy
+     * @param string $classOrCopy
      * @return FormField
      */
     public function castedCopy($classOrCopy)

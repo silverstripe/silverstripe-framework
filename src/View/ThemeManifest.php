@@ -12,7 +12,6 @@ use SilverStripe\Core\Manifest\ModuleLoader;
  */
 class ThemeManifest implements ThemeList
 {
-
     const TEMPLATES_DIR = 'templates';
 
     /**
@@ -53,7 +52,7 @@ class ThemeManifest implements ThemeList
     /**
      * @var CacheFactory
      */
-    protected $cacheFactory= null;
+    protected $cacheFactory = null;
 
     /**
      * Constructs a new template manifest. The manifest is not actually built
@@ -80,7 +79,7 @@ class ThemeManifest implements ThemeList
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
                 CacheInterface::class . '.thememanifest',
-                [ 'namespace' => 'thememanifest' . ($includeTests ? '_tests' : '') ]
+                ['namespace' => 'thememanifest' . ($includeTests ? '_tests' : '')]
             );
         }
         $this->cacheKey = $this->getCacheKey($includeTests);
@@ -110,7 +109,7 @@ class ThemeManifest implements ThemeList
     public function getCacheKey($includeTests = false)
     {
         return sha1(sprintf(
-            "manifest-%s-%s-%u",
+            'manifest-%s-%s-%u',
             $this->base,
             $this->project,
             $includeTests
@@ -136,8 +135,8 @@ class ThemeManifest implements ThemeList
         $finder->setOptions([
             'include_themes' => false,
             'ignore_dirs' => ['node_modules', THEMES_DIR],
-            'ignore_tests'  => !$includeTests,
-            'dir_callback'  => [$this, 'handleDirectory']
+            'ignore_tests' => !$includeTests,
+            'dir_callback' => [$this, 'handleDirectory'],
         ]);
 
         $this->themes = [];
@@ -165,7 +164,7 @@ class ThemeManifest implements ThemeList
             return;
         }
         $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
-        $this->themes[] = "/" . $dir;
+        $this->themes[] = '/' . $dir;
     }
 
     /**

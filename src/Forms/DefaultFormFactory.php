@@ -38,7 +38,7 @@ class DefaultFormFactory implements FormFactory
         // Validate context
         foreach ($this->getRequiredContext() as $required) {
             if (!isset($context[$required])) {
-                throw new InvalidArgumentException("Missing required context $required");
+                throw new InvalidArgumentException("Missing required context ${required}");
             }
         }
 
@@ -93,7 +93,7 @@ class DefaultFormFactory implements FormFactory
      * @param RequestHandler $controller
      * @param string $name
      * @param array $context
-     * @return null|Validator
+     * @return Validator|null
      */
     protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
     {

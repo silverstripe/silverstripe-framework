@@ -2,11 +2,11 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
-use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -136,7 +136,7 @@ abstract class SearchFilter
 
         $this->aggregate = [
             'function' => strtoupper($matches[1]),
-            'column' => isset($matches[2]) ? $matches[2] : null
+            'column' => isset($matches[2]) ? $matches[2] : null,
         ];
     }
 
@@ -224,7 +224,7 @@ abstract class SearchFilter
     }
 
     /**
-     * @param String
+     * @param string $name
      */
     public function setName($name)
     {
@@ -243,7 +243,7 @@ abstract class SearchFilter
     }
 
     /**
-     * @param String
+     * @param string $name
      */
     public function setFullName($name)
     {
@@ -258,14 +258,14 @@ abstract class SearchFilter
     public function getDbName()
     {
         // Special handler for "NULL" relations
-        if ($this->name === "NULL") {
+        if ($this->name === 'NULL') {
             return $this->name;
         }
 
         // Ensure that we're dealing with a DataObject.
         if (!is_subclass_of($this->model, DataObject::class)) {
             throw new InvalidArgumentException(
-                "Model supplied to " . static::class . " should be an instance of DataObject."
+                'Model supplied to ' . static::class . ' should be an instance of DataObject.'
             );
         }
         $tablePrefix = DataQuery::applyRelationPrefix($this->relation);
@@ -292,10 +292,9 @@ abstract class SearchFilter
                 $function,
                 $tablePrefix,
                 $table,
-                $column ? "\"$column\"" : '"ID"'
+                $column ? "\"${column}\"" : '"ID"'
             );
         }
-
 
         // Check if this column is a table on the current model
         $table = $schema->tableForField($this->model, $this->name);
@@ -353,15 +352,14 @@ abstract class SearchFilter
      */
     public function apply(DataQuery $query)
     {
-        if (($key = array_search('not', $this->modifiers)) !== false) {
+        if (($key = array_search('not', $this->modifiers, true)) !== false) {
             unset($this->modifiers[$key]);
             return $this->exclude($query);
         }
         if (is_array($this->value)) {
             return $this->applyMany($query);
-        } else {
-            return $this->applyOne($query);
         }
+        return $this->applyOne($query);
     }
 
     /**
@@ -391,15 +389,14 @@ abstract class SearchFilter
      */
     public function exclude(DataQuery $query)
     {
-        if (($key = array_search('not', $this->modifiers)) !== false) {
+        if (($key = array_search('not', $this->modifiers, true)) !== false) {
             unset($this->modifiers[$key]);
             return $this->apply($query);
         }
         if (is_array($this->value)) {
             return $this->excludeMany($query);
-        } else {
-            return $this->excludeOne($query);
         }
+        return $this->excludeOne($query);
     }
 
     /**
@@ -437,17 +434,16 @@ abstract class SearchFilter
     /**
      * Determines case sensitivity based on {@link getModifiers()}.
      *
-     * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
+     * @return mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
      */
     protected function getCaseSensitive()
     {
         $modifiers = $this->getModifiers();
-        if (in_array('case', $modifiers)) {
+        if (in_array('case', $modifiers, true)) {
             return true;
-        } elseif (in_array('nocase', $modifiers)) {
+        } elseif (in_array('nocase', $modifiers, true)) {
             return false;
-        } else {
-            return null;
         }
+        return null;
     }
 }

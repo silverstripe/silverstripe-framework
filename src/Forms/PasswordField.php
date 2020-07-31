@@ -29,7 +29,7 @@ class PasswordField extends TextField
      * Returns an input field.
      *
      * @param string $name
-     * @param null|string $title
+     * @param string|null $title
      * @param string $value
      */
     public function __construct($name, $title = null, $value = '')

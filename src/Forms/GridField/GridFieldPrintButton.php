@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
@@ -44,7 +43,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $printColumns The columns to include in the print view
      */
-    public function __construct($targetFragment = "after", $printColumns = null)
+    public function __construct($targetFragment = 'after', $printColumns = null)
     {
         $this->targetFragment = $targetFragment;
         $this->printColumns = $printColumns;
@@ -53,7 +52,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Place the print button in a <p> tag below the field
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -71,14 +70,14 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $button->addExtraClass('font-icon-print grid-print-button btn btn-secondary');
 
         return [
-            $this->targetFragment =>  $button->Field(),
+            $this->targetFragment => $button->Field(),
         ];
     }
 
     /**
      * Print is an action button.
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -98,7 +97,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'print') {
+        if ($actionName === 'print') {
             return $this->handlePrint($gridField);
         }
     }
@@ -106,7 +105,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Print is accessible via the url
      *
-     * @param GridField
+     * @param GridField $gridField
      * @return array
      */
     public function getURLHandlers($gridField)
@@ -145,7 +144,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the columns to print
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -167,7 +166,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the title of the printed page
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -189,7 +188,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
         if ($fieldTitle = $gridField->Title()) {
             if ($title) {
-                $title .= " - ";
+                $title .= ' - ';
             }
 
             $title .= $fieldTitle;
@@ -215,7 +214,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
             foreach ($printColumns as $field => $label) {
                 $header->push(new ArrayData([
-                    "CellString" => $label,
+                    'CellString' => $label,
                 ]));
             }
         }
@@ -236,27 +235,25 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
                     : $gridField->getDataFieldValue($item, $field);
 
                 $itemRow->push(new ArrayData([
-                    "CellString" => $value,
+                    'CellString' => $value,
                 ]));
             }
 
             $itemRows->push(new ArrayData([
-                "ItemRow" => $itemRow
+                'ItemRow' => $itemRow,
             ]));
             if ($item->hasMethod('destroy')) {
                 $item->destroy();
             }
         }
 
-        $ret = new ArrayData([
-            "Title" => $this->getTitle($gridField),
-            "Header" => $header,
-            "ItemRows" => $itemRows,
-            "Datetime" => DBDatetime::now(),
-            "Member" => Security::getCurrentUser(),
+        return new ArrayData([
+            'Title' => $this->getTitle($gridField),
+            'Header' => $header,
+            'ItemRows' => $itemRows,
+            'Datetime' => DBDatetime::now(),
+            'Member' => Security::getCurrentUser(),
         ]);
-
-        return $ret;
     }
 
     /**

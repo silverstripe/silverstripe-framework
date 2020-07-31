@@ -21,7 +21,6 @@ use SilverStripe\View\ViewableData;
  */
 abstract class BulkLoader extends ViewableData
 {
-
     /**
      * Each row in the imported dataset should map to one instance
      * of this class (with optional property translation
@@ -125,7 +124,7 @@ abstract class BulkLoader extends ViewableData
     public $duplicateChecks = [];
 
     /**
-     * @var Boolean $clearBeforeImport Delete ALL records before importing.
+     * @var boolean Delete ALL records before importing.
      */
     public $deleteExistingRecords = false;
 
@@ -174,13 +173,12 @@ abstract class BulkLoader extends ViewableData
      */
     abstract protected function processAll($filepath, $preview = false);
 
-
     /**
      * Process a single record from the file.
      *
      * @param array $record An map of the data, keyed by the header field defined in {@link self::$columnMap}
      * @param array $columnMap
-     * @param $result BulkLoader_Result (passed as reference)
+     * @param BulkLoader_Result $result (passed as reference)
      * @param boolean $preview
      */
     abstract protected function processRecord($record, $columnMap, &$result, $preview = false);
@@ -227,7 +225,7 @@ abstract class BulkLoader extends ViewableData
 
         // get database columns (fieldlabels include fieldname as a key)
         // using $$includerelations flag as false, so that it only contain $db fields
-        $fields = (array)$singleton->fieldLabels(false);
+        $fields = (array) $singleton->fieldLabels(false);
 
         // Merge relations
         $relations = array_merge(
@@ -262,6 +260,6 @@ abstract class BulkLoader extends ViewableData
      */
     protected function isNullValue($val, $fieldName = null)
     {
-        return (empty($val) && $val !== '0');
+        return empty($val) && $val !== '0';
     }
 }

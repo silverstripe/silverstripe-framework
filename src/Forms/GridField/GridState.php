@@ -16,7 +16,6 @@ use SilverStripe\ORM\DataList;
  */
 class GridState extends HiddenField
 {
-
     /**
      * @var GridField
      */
@@ -112,7 +111,6 @@ class GridState extends HiddenField
     }
 
     /**
-     *
      * @return string
      */
     public function attrValue()
@@ -121,7 +119,6 @@ class GridState extends HiddenField
     }
 
     /**
-     *
      * @return string
      */
     public function __toString()

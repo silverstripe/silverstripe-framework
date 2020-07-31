@@ -38,14 +38,14 @@ use SilverStripe\ORM\ValidationResult;
 class CompositeValidator extends Validator
 {
     /**
-     * @var array|Validator[]
+     * @var Validator[]
      */
     private $validators;
 
     /**
      * CompositeValidator constructor.
      *
-     * @param array|Validator[] $validators
+     * @param Validator[] $validators
      */
     public function __construct(array $validators = [])
     {
@@ -161,7 +161,7 @@ class CompositeValidator extends Validator
     }
 
     /**
-     * @return array|Validator[]
+     * @return Validator[]
      */
     public function getValidators(): array
     {
@@ -172,7 +172,7 @@ class CompositeValidator extends Validator
      * Return all Validators that match a certain class name. EG: RequiredFields::class
      *
      * @param string $className
-     * @return array|Validator[]
+     * @return Validator[]
      */
     public function getValidatorsByType(string $className): array
     {

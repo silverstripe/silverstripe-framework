@@ -10,7 +10,6 @@ use SilverStripe\Core\Injector\Injector;
  */
 class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
 {
-
     /**
      * The assignment to create for this update
      *
@@ -28,7 +27,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      */
     public static function create($table = null, $assignment = [], $where = [])
     {
-        return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
+        return Injector::inst()->createWithArgs(self::class, func_get_args());
     }
 
     /**
@@ -38,7 +37,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $assignment List of column assignments
      * @param array $where List of where clauses
      */
-    function __construct($table = null, $assignment = [], $where = [])
+    public function __construct($table = null, $assignment = [], $where = [])
     {
         parent::__construct(null, $where);
         $this->assignment = new SQLAssignmentRow();

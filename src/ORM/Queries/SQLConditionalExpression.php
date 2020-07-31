@@ -10,7 +10,6 @@ use SilverStripe\Dev\Deprecation;
  */
 abstract class SQLConditionalExpression extends SQLExpression
 {
-
     /**
      * An array of WHERE clauses.
      *
@@ -48,7 +47,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
      * @param array $where An array of WHERE clauses.
      */
-    function __construct($from = [], $where = [])
+    public function __construct($from = [], $where = [])
     {
         $this->setFrom($from);
         $this->setWhere($where);
@@ -81,7 +80,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         if (is_array($from)) {
             $this->from = array_merge($this->from, $from);
         } elseif (!empty($from)) {
-            $this->from[str_replace(['"','`'], '', $from)] = $from;
+            $this->from[str_replace(['"', '`'], '', $from)] = $from;
         }
 
         return $this;
@@ -146,7 +145,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             'table' => $table,
             'filter' => [$onPredicate],
             'order' => $order,
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
         return $this;
     }
@@ -174,7 +173,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             'table' => $table,
             'filter' => [$onPredicate],
             'order' => $order,
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
         return $this;
     }
@@ -265,7 +264,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function getJoins(&$parameters = [])
     {
-        if (func_num_args() == 0) {
+        if (func_num_args() === 0) {
             Deprecation::notice(
                 '4.0',
                 'SQLConditionalExpression::getJoins() now may produce parameters which are necessary to
@@ -305,20 +304,20 @@ abstract class SQLConditionalExpression extends SQLExpression
 
             if (is_string($join['filter'])) {
                 $filter = $join['filter'];
-            } elseif (sizeof($join['filter']) == 1) {
+            } elseif (sizeof($join['filter']) === 1) {
                 $filter = $join['filter'][0];
             } else {
-                $filter = "(" . implode(") AND (", $join['filter']) . ")";
+                $filter = '(' . implode(') AND (', $join['filter']) . ')';
             }
 
             // Ensure tables are quoted, unless the table is actually a sub-select
             $table = preg_match('/\bSELECT\b/i', $join['table'])
                 ? $join['table']
                 : "\"{$join['table']}\"";
-            $aliasClause = ($alias != $join['table'])
+            $aliasClause = $alias !== $join['table']
                 ? " AS \"{$alias}\""
-                : "";
-            $joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
+                : '';
+            $joins[$alias] = strtoupper($join['type']) . ' JOIN ' . $table . "${aliasClause} ON ${filter}";
             if (!empty($join['parameters'])) {
                 $parameters = array_merge($parameters, $join['parameters']);
             }
@@ -333,7 +332,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * yet been scaffolded by the framework. Demonstrated by PostGres in errors like:
      *"...ERROR: missing FROM-clause..."
      *
-     * @param $from array - in the format of $this->from
+     * @param array $from - in the format of $this->from
      * @return array - and reorderded list of selects
      */
     protected function getOrderedJoins($from)
@@ -350,12 +349,11 @@ abstract class SQLConditionalExpression extends SQLExpression
         $this->mergesort($from, function ($firstJoin, $secondJoin) {
             if (!is_array($firstJoin)
                 || !is_array($secondJoin)
-                || $firstJoin['order'] == $secondJoin['order']
+                || $firstJoin['order'] === $secondJoin['order']
             ) {
                 return 0;
-            } else {
-                return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
             }
+            return $firstJoin['order'] < $secondJoin['order'] ? -1 : 1;
         });
 
         // Put the first FROM table back into the results
@@ -555,7 +553,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         $filters = $this->normalisePredicates(func_get_args());
         $this->splitQueryParameters($filters, $predicates, $parameters);
 
-        $clause = "(" . implode(") OR (", $predicates) . ")";
+        $clause = '(' . implode(') OR (', $predicates) . ')';
         return $this->addWhere([$clause => $parameters]);
     }
 
@@ -610,10 +608,10 @@ abstract class SQLConditionalExpression extends SQLExpression
             if (strpos($key, '?') === false) {
                 $parameterCount = count($parameters);
                 if ($parameterCount === 1) {
-                    $key .= " = ?";
+                    $key .= ' = ?';
                 } elseif ($parameterCount > 1) {
                     user_error(
-                        "Incorrect number of '?' in predicate $key. Expected $parameterCount but none given.",
+                        "Incorrect number of '?' in predicate ${key}. Expected ${parameterCount} but none given.",
                         E_USER_ERROR
                     );
                 }
@@ -622,7 +620,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         } elseif (is_array($value)) {
             // If predicates are nested one per array (as per the internal format)
             // then run a quick check over the contents and recursively parse
-            if (count($value) != 1) {
+            if (count($value) !== 1) {
                 user_error('Nested predicates should be given as a single item array in '
                         . 'array($predicate => array($prameters)) format)', E_USER_ERROR);
             }
@@ -657,7 +655,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     protected function normalisePredicates(array $predicates)
     {
         // Since this function is called with func_get_args we should un-nest the single first parameter
-        if (count($predicates) == 1) {
+        if (count($predicates) === 1) {
             $predicates = array_shift($predicates);
         }
 

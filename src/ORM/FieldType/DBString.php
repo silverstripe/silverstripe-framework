@@ -11,12 +11,12 @@ abstract class DBString extends DBField
      * @var array
      */
     private static $casting = [
-        "LimitCharacters" => "Text",
-        "LimitCharactersToClosestWord" => "Text",
-        "LimitWordCount" => "Text",
-        "LowerCase" => "Text",
-        "UpperCase" => "Text",
-        "Plain" => "Text",
+        'LimitCharacters' => 'Text',
+        'LimitCharactersToClosestWord' => 'Text',
+        'LimitWordCount' => 'Text',
+        'LowerCase' => 'Text',
+        'UpperCase' => 'Text',
+        'Plain' => 'Text',
     ];
 
     /**
@@ -60,7 +60,7 @@ abstract class DBString extends DBField
      * Set whether this field stores empty strings rather than converting
      * them to null.
      *
-     * @param $value boolean True if empty strings are to be converted to null
+     * @param boolean $value True if empty strings are to be converted to null
      * @return $this
      */
     public function setNullifyEmpty($value)
@@ -95,7 +95,7 @@ abstract class DBString extends DBField
     {
         // Cast non-empty value
         if (is_scalar($value) && strlen($value)) {
-            return (string)$value;
+            return (string) $value;
         }
 
         // Return "empty" value
@@ -154,12 +154,11 @@ abstract class DBString extends DBField
         $value = mb_substr($value, 0, $limit);
 
         // If value exceeds limit, strip punctuation off the end to the last space and apply ellipsis
-        $value = preg_replace(
+        return preg_replace(
             '/[^\w_]+$/',
             '',
-            mb_substr($value, 0, mb_strrpos($value, " "))
+            mb_substr($value, 0, mb_strrpos($value, ' '))
         ) . $add;
-        return $value;
     }
 
     /**

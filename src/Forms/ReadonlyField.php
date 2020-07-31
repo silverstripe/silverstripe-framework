@@ -9,7 +9,6 @@ namespace SilverStripe\Forms;
  */
 class ReadonlyField extends FormField
 {
-
     protected $readonly = true;
 
     /**
@@ -74,7 +73,6 @@ class ReadonlyField extends FormField
 
         return $state;
     }
-
 
     /**
      * @return mixed|string

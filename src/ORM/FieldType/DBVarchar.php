@@ -17,10 +17,9 @@ use SilverStripe\ORM\DB;
  */
 class DBVarchar extends DBString
 {
-
     private static $casting = [
-        "Initial" => "Text",
-        "URL" => "Text",
+        'Initial' => 'Text',
+        'URL' => 'Text',
     ];
 
     /**
@@ -40,7 +39,7 @@ class DBVarchar extends DBString
      */
     public function __construct($name = null, $size = 255, $options = [])
     {
-        $this->size = $size ? $size : 255;
+        $this->size = $size ?: 255;
         parent::__construct($name, $options);
     }
 
@@ -68,16 +67,16 @@ class DBVarchar extends DBString
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
         $parts = [
-            'datatype'=>'varchar',
-            'precision'=>$this->size,
-            'character set'=> $charset,
-            'collate'=> $collation,
-            'arrayValue'=>$this->arrayValue
+            'datatype' => 'varchar',
+            'precision' => $this->size,
+            'character set' => $charset,
+            'collate' => $collation,
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = [
             'type' => 'varchar',
-            'parts' => $parts
+            'parts' => $parts,
         ];
 
         DB::require_field($this->tableName, $this->name, $values);
@@ -107,9 +106,8 @@ class DBVarchar extends DBString
         $value = $this->RAW();
         if (preg_match('#^[a-zA-Z]+://#', $value)) {
             return $value;
-        } else {
-            return "http://" . $value;
         }
+        return 'http://' . $value;
     }
 
     /**

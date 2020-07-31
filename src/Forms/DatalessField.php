@@ -10,9 +10,8 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
  */
 class DatalessField extends FormField
 {
-
     /**
-     * @var bool $allowHTML
+     * @var bool
      */
     protected $allowHTML;
 

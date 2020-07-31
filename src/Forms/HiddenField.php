@@ -7,7 +7,6 @@ namespace SilverStripe\Forms;
  */
 class HiddenField extends FormField
 {
-
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
 
     protected $inputType = 'hidden';
@@ -41,7 +40,7 @@ class HiddenField extends FormField
         return true;
     }
 
-    function SmallFieldHolder($properties = [])
+    public function SmallFieldHolder($properties = [])
     {
         return $this->FieldHolder($properties);
     }

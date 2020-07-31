@@ -12,7 +12,6 @@ namespace SilverStripe\ORM;
  */
 interface Filterable extends SS_List
 {
-
     /**
      * Returns TRUE if the list can be filtered by a given field expression.
      *

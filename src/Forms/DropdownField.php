@@ -86,7 +86,6 @@ use SilverStripe\View\ArrayData;
  */
 class DropdownField extends SingleSelectField
 {
-
     /**
      * Build a field option for template rendering
      *
@@ -101,12 +100,12 @@ class DropdownField extends SingleSelectField
 
         // Check disabled
         $disabled = false;
-        if ($this->isDisabledValue($value) && $title != $this->getEmptyString()) {
+        if ($this->isDisabledValue($value) && $title !== $this->getEmptyString()) {
             $disabled = 'disabled';
         }
 
         return new ArrayData([
-            'Title' => (string)$title,
+            'Title' => (string) $title,
             'Value' => $value,
             'Selected' => $selected,
             'Disabled' => $disabled,
@@ -138,7 +137,7 @@ class DropdownField extends SingleSelectField
         }
 
         $properties = array_merge($properties, [
-            'Options' => new ArrayList($options)
+            'Options' => new ArrayList($options),
         ]);
 
         return parent::Field($properties);

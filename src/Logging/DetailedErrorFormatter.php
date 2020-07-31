@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Logging;
 
-use SilverStripe\Dev\Debug;
-use Monolog\Formatter\FormatterInterface;
 use Exception;
+use Monolog\Formatter\FormatterInterface;
+use SilverStripe\Dev\Debug;
 
 /**
  * Monolog-compatible error handler that will output a detailed error message to the screen.
@@ -70,7 +70,7 @@ class DetailedErrorFormatter implements FormatterInterface
     protected function findInTrace(array $trace, $file, $line)
     {
         foreach ($trace as $i => $call) {
-            if (isset($call['file']) && isset($call['line']) && $call['file'] == $file && $call['line'] == $line) {
+            if (isset($call['file']) && isset($call['line']) && $call['file'] === $file && $call['line'] === $line) {
                 return $i;
             }
         }
@@ -109,10 +109,10 @@ class DetailedErrorFormatter implements FormatterInterface
             $lines = file($errfile);
 
             // Make the array 1-based
-            array_unshift($lines, "");
+            array_unshift($lines, '');
             unset($lines[0]);
 
-            $offset = $errline-10;
+            $offset = $errline - 10;
             $lines = array_slice($lines, $offset, 16, true);
             $output .= $reporter->renderSourceFragment($lines, $errline);
         }

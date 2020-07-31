@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Core\Convert;
 use Iterator;
+use SilverStripe\Core\Convert;
 
 /**
  * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
@@ -29,7 +29,6 @@ use Iterator;
  */
 abstract class Query implements Iterator
 {
-
     /**
      * The current record in the interator.
      *
@@ -141,16 +140,16 @@ abstract class Query implements Iterator
 
         foreach ($this as $record) {
             if ($first) {
-                $result .= "<tr>";
+                $result .= '<tr>';
                 foreach ($record as $k => $v) {
-                    $result .= "<th>" . Convert::raw2xml($k) . "</th> ";
+                    $result .= '<th>' . Convert::raw2xml($k) . '</th> ';
                 }
                 $result .= "</tr> \n";
             }
 
-            $result .= "<tr>";
+            $result .= '<tr>';
             foreach ($record as $k => $v) {
-                $result .= "<td>" . Convert::raw2xml($v) . "</td> ";
+                $result .= '<td>' . Convert::raw2xml($v) . '</td> ';
             }
             $result .= "</tr> \n";
 
@@ -159,7 +158,7 @@ abstract class Query implements Iterator
         $result .= "</table>\n";
 
         if ($first) {
-            return "No records found";
+            return 'No records found';
         }
         return $result;
     }
@@ -167,8 +166,6 @@ abstract class Query implements Iterator
     /**
      * Iterator function implementation. Rewind the iterator to the first item and return it.
      * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
-     *
-     * @return void
      */
     public function rewind()
     {
@@ -188,9 +185,8 @@ abstract class Query implements Iterator
     {
         if (!$this->currentRecord) {
             return $this->next();
-        } else {
-            return $this->currentRecord;
         }
+        return $this->currentRecord;
     }
 
     /**

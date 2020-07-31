@@ -10,7 +10,6 @@ namespace SilverStripe\View;
  */
 interface TemplateGlobalProvider
 {
-
     /**
      * Called by SSViewer to get a list of global variables to expose to the template, the static method to call on
      * this class to get the value for those variables, and the class to use for casting the returned value for use

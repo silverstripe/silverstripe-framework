@@ -3,19 +3,18 @@
 namespace SilverStripe\ORM\Connect;
 
 use InvalidArgumentException;
-use SilverStripe\ORM\Queries\SQLExpression;
-use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\ORM\Queries\SQLInsert;
-use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLConditionalExpression;
+use SilverStripe\ORM\Queries\SQLDelete;
+use SilverStripe\ORM\Queries\SQLExpression;
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\Queries\SQLUpdate;
 
 /**
  * Builds a SQL query string from a SQLExpression object
  */
 class DBQueryBuilder
 {
-
     /**
      * Determines the line separator to use.
      *
@@ -53,7 +52,7 @@ class DBQueryBuilder
             $sql = $this->buildUpdateQuery($query, $parameters);
         } else {
             throw new InvalidArgumentException(
-                "Not implemented: query generation for type " . get_class($query)
+                'Not implemented: query generation for type ' . get_class($query)
             );
         }
         return $sql;
@@ -68,7 +67,7 @@ class DBQueryBuilder
      */
     protected function buildSelectQuery(SQLSelect $query, array &$parameters)
     {
-        $sql  = $this->buildSelectFragment($query, $parameters);
+        $sql = $this->buildSelectFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         $sql .= $this->buildGroupByFragment($query, $parameters);
@@ -87,7 +86,7 @@ class DBQueryBuilder
      */
     protected function buildDeleteQuery(SQLDelete $query, array &$parameters)
     {
-        $sql  = $this->buildDeleteFragment($query, $parameters);
+        $sql = $this->buildDeleteFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         return $sql;
@@ -107,7 +106,7 @@ class DBQueryBuilder
 
         // Column identifiers
         $columns = $query->getColumns();
-        $sql = "INSERT INTO {$into}{$nl}(" . implode(', ', $columns) . ")";
+        $sql = "INSERT INTO {$into}{$nl}(" . implode(', ', $columns) . ')';
 
         // Values
         $sql .= "{$nl}VALUES";
@@ -136,7 +135,7 @@ class DBQueryBuilder
             }
             $rowParts[] = '(' . implode(', ', $parts) . ')';
         }
-        $sql .= $nl . implode(",$nl", $rowParts);
+        $sql .= $nl . implode(",${nl}", $rowParts);
 
         return $sql;
     }
@@ -150,7 +149,7 @@ class DBQueryBuilder
      */
     protected function buildUpdateQuery(SQLUpdate $query, array &$parameters)
     {
-        $sql  = $this->buildUpdateFragment($query, $parameters);
+        $sql = $this->buildUpdateFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         return $sql;
     }
@@ -174,7 +173,7 @@ class DBQueryBuilder
             if ($alias === $field || substr($field, -strlen($fieldAlias)) === $fieldAlias) {
                 $clauses[] = $field;
             } else {
-                $clauses[] = "$field AS $fieldAlias";
+                $clauses[] = "${field} AS ${fieldAlias}";
             }
         }
 
@@ -215,21 +214,20 @@ class DBQueryBuilder
     public function buildUpdateFragment(SQLUpdate $query, array &$parameters)
     {
         $table = $query->getTable();
-        $text = "UPDATE $table";
+        $text = "UPDATE ${table}";
 
         // Join SET components together, considering parameters
         $parts = [];
         foreach ($query->getAssignments() as $column => $assignment) {
             // Assignment is a single item array, expand with a loop here
             foreach ($assignment as $assignmentSQL => $assignmentParameters) {
-                $parts[] = "$column = $assignmentSQL";
+                $parts[] = "${column} = ${assignmentSQL}";
                 $parameters = array_merge($parameters, $assignmentParameters);
                 break;
             }
         }
         $nl = $this->getSeparator();
-        $text .= "{$nl}SET " . implode(', ', $parts);
-        return $text;
+        return $text . "{$nl}SET " . implode(', ', $parts);
     }
 
     /**
@@ -244,7 +242,7 @@ class DBQueryBuilder
         $from = $query->getJoins($joinParameters);
         $parameters = array_merge($parameters, $joinParameters);
         $nl = $this->getSeparator();
-        return  "{$nl}FROM " . implode(' ', $from);
+        return "{$nl}FROM " . implode(' ', $from);
     }
 
     /**
@@ -266,7 +264,7 @@ class DBQueryBuilder
         $connective = $query->getConnective();
         $parameters = array_merge($parameters, $whereParameters);
         $nl = $this->getSeparator();
-        return "{$nl}WHERE (" . implode("){$nl}{$connective} (", $where) . ")";
+        return "{$nl}WHERE (" . implode("){$nl}{$connective} (", $where) . ')';
     }
 
     /**
@@ -286,7 +284,7 @@ class DBQueryBuilder
         // Build orders, each with direction considered
         $statements = [];
         foreach ($orderBy as $clause => $dir) {
-            $statements[] = trim("$clause $dir");
+            $statements[] = trim("${clause} ${dir}");
         }
 
         $nl = $this->getSeparator();
@@ -329,7 +327,7 @@ class DBQueryBuilder
         $connective = $query->getConnective();
         $parameters = array_merge($parameters, $havingParameters);
         $nl = $this->getSeparator();
-        return "{$nl}HAVING (" . implode("){$nl}{$connective} (", $having) . ")";
+        return "{$nl}HAVING (" . implode("){$nl}{$connective} (", $having) . ')';
     }
 
     /**
@@ -351,7 +349,7 @@ class DBQueryBuilder
 
         // For literal values return this as the limit SQL
         if (!is_array($limit)) {
-            return "{$nl}LIMIT $limit";
+            return "{$nl}LIMIT ${limit}";
         }
 
         // Assert that the array version provides the 'limit' key

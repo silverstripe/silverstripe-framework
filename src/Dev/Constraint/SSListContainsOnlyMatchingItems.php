@@ -51,7 +51,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
-     * @return null|bool
+     * @return bool|null
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */

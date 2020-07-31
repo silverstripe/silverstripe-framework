@@ -48,7 +48,7 @@ class TestMailer implements Mailer
             'From' => implode(';', array_keys($email->getFrom() ?: [])),
             'Subject' => $email->getSubject(),
             'Content' => $email->getBody(),
-            'AttachedFiles' => $attachedFiles
+            'AttachedFiles' => $attachedFiles,
         ];
         if ($plainContent) {
             $serialised['PlainContent'] = $plainContent;
@@ -105,10 +105,10 @@ class TestMailer implements Mailer
 
             foreach (['To', 'From', 'Subject', 'Content'] as $field) {
                 if ($value = $compare[$field]) {
-                    if ($value[0] == '/') {
+                    if ($value[0] === '/') {
                         $matched = preg_match($value, $email[$field]);
                     } else {
-                        $matched = ($value == $email[$field]);
+                        $matched = ($value === $email[$field]);
                     }
                     if (!$matched) {
                         break;

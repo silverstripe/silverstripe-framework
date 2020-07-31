@@ -9,12 +9,11 @@ namespace SilverStripe\ORM\Queries;
  */
 interface SQLConditionGroup
 {
-
     /**
      * Determines the resulting SQL along with parameters for the group
      *
      * @param array $parameters Out list of parameters
      * @return string The complete SQL string for this item
      */
-    function conditionSQL(&$parameters);
+    public function conditionSQL(&$parameters);
 }

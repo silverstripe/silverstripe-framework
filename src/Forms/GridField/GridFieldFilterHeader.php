@@ -7,7 +7,6 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
@@ -82,7 +81,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     public function getURLHandlers($gridField)
     {
         return [
-            'GET schema/SearchForm' => 'getSearchFormSchema'
+            'GET schema/SearchForm' => 'getSearchFormSchema',
         ];
     }
 
@@ -136,14 +135,13 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     {
         if ($dataList instanceof Filterable) {
             return true;
-        } else {
-            if ($this->throwExceptionOnBadDataType) {
-                throw new LogicException(
-                    static::class . " expects an SS_Filterable list to be passed to the GridField."
-                );
-            }
-            return false;
         }
+        if ($this->throwExceptionOnBadDataType) {
+            throw new LogicException(
+                static::class . ' expects an SS_Filterable list to be passed to the GridField.'
+            );
+        }
+        return false;
     }
 
     /**
@@ -165,7 +163,6 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
-     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
@@ -178,12 +175,11 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
                 foreach ($data['filter'][$gridField->getName()] as $key => $filter) {
-                    $state->Columns->$key = $filter;
+                    $state->Columns->{$key} = $filter;
                 }
             }
         }
     }
-
 
     /**
      * @inheritDoc
@@ -202,11 +198,9 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         $filterArguments = $columns->toArray();
-        $dataListClone = clone($dataList);
-        $results = $this->getSearchContext($gridField)
+        $dataListClone = clone$dataList;
+        return $this->getSearchContext($gridField)
             ->getQuery($filterArguments, false, false, $dataListClone);
-
-        return $results;
     }
 
     /**
@@ -236,11 +230,10 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         return false;
     }
 
-
     /**
      * Generate a search context based on the model class of the of the GridField
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return \SilverStripe\ORM\Search\SearchContext
      */
     public function getSearchContext(GridField $gridField)
@@ -259,7 +252,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Returns the search field schema for the component
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return string
      */
     public function getSearchFieldSchema(GridField $gridField)
@@ -294,8 +287,8 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
-            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
-            'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
+            'placeholder' => _t(self::class . '.Search', 'Search "{name}"', ['name' => $name]),
+            'filters' => $filters ?: new \stdClass(), // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => $searchAction->getAttribute('name'),
             'searchActionState' => $searchAction->getAttribute('data-action-state'),
@@ -353,7 +346,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         $this->searchForm = $form = new Form(
             $gridField,
-            $name . "SearchForm",
+            $name . 'SearchForm',
             $searchFields,
             new FieldList()
         );
@@ -374,7 +367,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Returns the search form schema for the component
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return HTTPResponse
      */
     public function getSearchFormSchema(GridField $gridField)
@@ -383,7 +376,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         // If there are no filterable fields, return a 400 response
         if (!$form) {
-            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
+            return new HTTPResponse(_t(self::class . '.SearchFormFaliure', 'No search form could be generated'), 400);
         }
 
         $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
@@ -400,7 +393,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * Generate fields for the legacy filter header row
      *
      * @deprecated 5.0
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return ArrayList|null
      */
     public function getLegacyFilterHeader(GridField $gridField)
@@ -437,19 +430,19 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
                 $field->setAttribute(
                     'placeholder',
-                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', "Filter by ") . _t('SilverStripe\\Forms\\GridField\\GridField.' . $metadata['title'], $metadata['title'])
+                    _t('SilverStripe\\Forms\\GridField\\GridField.FilterBy', 'Filter by ') . _t('SilverStripe\\Forms\\GridField\\GridField.' . $metadata['title'], $metadata['title'])
                 );
 
                 $fields->push($field);
                 $fields->push(
                     GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
                         ->addExtraClass('btn font-icon-cancel btn-secondary btn--no-text ss-gridfield-button-reset')
-                        ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', "Reset"))
+                        ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', 'Reset'))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );
             }
 
-            if ($currentColumn == count($columns)) {
+            if ($currentColumn === count($columns)) {
                 $fields->push(
                     GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
                         ->addExtraClass('btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit ss-gridfield-button-filter')
@@ -459,7 +452,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
                 $fields->push(
                     GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
                         ->addExtraClass('btn font-icon-cancel btn--no-text grid-field__filter-clear btn--icon-md ss-gridfield-button-close')
-                        ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', "Reset"))
+                        ->setAttribute('title', _t('SilverStripe\\Forms\\GridField\\GridField.ResetFilter', 'Reset'))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );
                 $fields->addExtraClass('grid-field__filter-buttons');
@@ -489,21 +482,20 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         if ($this->useLegacyFilterHeader) {
             $fieldsList = $this->getLegacyFilterHeader($gridField);
             $forTemplate->Fields = $fieldsList;
-            $filterTemplates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+            $filterTemplates = SSViewer::get_templates_by_class($this, '_Row', self::class);
             return ['header' => $forTemplate->renderWith($filterTemplates)];
-        } else {
-            $fieldSchema = $this->getSearchFieldSchema($gridField);
-            $forTemplate->SearchFieldSchema = $fieldSchema;
-            $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', __CLASS__);
-            return [
-                'before' => $forTemplate->renderWith($searchTemplates),
-                'buttons-before-right' => sprintf(
-                    '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
-                    ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
-                    _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter"),
-                    _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
-                )
-            ];
         }
+        $fieldSchema = $this->getSearchFieldSchema($gridField);
+        $forTemplate->SearchFieldSchema = $fieldSchema;
+        $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', self::class);
+        return [
+            'before' => $forTemplate->renderWith($searchTemplates),
+            'buttons-before-right' => sprintf(
+                '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
+                ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
+                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', 'Open search and filter'),
+                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', 'Open search and filter')
+            ),
+        ];
     }
 }

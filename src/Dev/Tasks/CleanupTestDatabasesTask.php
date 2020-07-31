@@ -14,7 +14,6 @@ use SilverStripe\Security\Security;
  */
 class CleanupTestDatabasesTask extends BuildTask
 {
-
     private static $segment = 'CleanupTestDatabasesTask';
 
     protected $title = 'Deletes all temporary test databases';

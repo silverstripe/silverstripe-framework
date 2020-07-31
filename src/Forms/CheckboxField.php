@@ -7,23 +7,22 @@ namespace SilverStripe\Forms;
  */
 class CheckboxField extends FormField
 {
-
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_BOOLEAN;
 
     public function setValue($value, $data = null)
     {
-        $this->value = ($value) ? 1 : 0;
+        $this->value = $value ? 1 : 0;
         return $this;
     }
 
     public function dataValue()
     {
-        return ($this->value) ? 1 : null;
+        return $this->value ? 1 : null;
     }
 
     public function Value()
     {
-        return ($this->value) ? 1 : 0;
+        return $this->value ? 1 : 0;
     }
 
     public function getAttributes()
@@ -39,7 +38,7 @@ class CheckboxField extends FormField
         return array_merge(
             $attributes,
             [
-                'checked' => ($this->Value()) ? 'checked' : null,
+                'checked' => $this->Value() ? 'checked' : null,
                 'type' => 'checkbox',
             ]
         );

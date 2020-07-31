@@ -14,7 +14,6 @@ use SilverStripe\ORM\ArrayLib;
  */
 class RequiredFields extends Validator
 {
-
     /**
      * List of required fields
      *
@@ -64,12 +63,12 @@ class RequiredFields extends Validator
             return false;
         }
 
-        $result = "<ul>";
+        $result = '<ul>';
         foreach ($this->required as $name) {
-            $result .= "<li>$name</li>";
+            $result .= "<li>${name}</li>";
         }
 
-        $result .= "</ul>";
+        $result .= '</ul>';
         return $result;
     }
 
@@ -113,11 +112,11 @@ class RequiredFields extends Validator
                 if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
                     $error = true;
                 } else {
-                    $error = (count($value)) ? false : true;
+                    $error = count($value) ? false : true;
                 }
             } else {
                 // assume a string or integer
-                $error = (strlen($value)) ? false : true;
+                $error = strlen($value) ? false : true;
             }
 
             if ($formField && $error) {
@@ -126,8 +125,8 @@ class RequiredFields extends Validator
                     '{name} is required',
                     [
                         'name' => strip_tags(
-                            '"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'
-                        )
+                            '"' . ($formField->Title() ?: $fieldName) . '"'
+                        ),
                     ]
                 );
 
@@ -138,7 +137,7 @@ class RequiredFields extends Validator
                 $this->validationError(
                     $fieldName,
                     $errorMessage,
-                    "required"
+                    'required'
                 );
 
                 $valid = false;
@@ -184,7 +183,7 @@ class RequiredFields extends Validator
      */
     public function appendRequiredFields($requiredFields)
     {
-        $this->required = $this->required + ArrayLib::valuekey(
+        $this->required += ArrayLib::valuekey(
             $requiredFields->getRequired()
         );
 

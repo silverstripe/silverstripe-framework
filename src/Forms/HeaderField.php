@@ -9,7 +9,6 @@ namespace SilverStripe\Forms;
  */
 class HeaderField extends DatalessField
 {
-
     /**
      * The level of the <h1> to <h6> HTML tag.
      *
@@ -67,14 +66,11 @@ class HeaderField extends DatalessField
                 'id' => $this->ID(),
                 'class' => $this->extraClass(),
                 'type' => null,
-                'name' => null
+                'name' => null,
             ]
         );
     }
 
-    /**
-     * @return null
-     */
     public function Type()
     {
         return null;

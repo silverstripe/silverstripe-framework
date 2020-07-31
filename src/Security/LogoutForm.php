@@ -4,7 +4,6 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\Session;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -72,10 +71,8 @@ class LogoutForm extends Form
      */
     protected function getFormActions()
     {
-        $actions = FieldList::create(
-            FormAction::create('doLogout', _t('SilverStripe\\Security\\Member.BUTTONLOGOUT', "Log out"))
+        return FieldList::create(
+            FormAction::create('doLogout', _t('SilverStripe\\Security\\Member.BUTTONLOGOUT', 'Log out'))
         );
-
-        return $actions;
     }
 }

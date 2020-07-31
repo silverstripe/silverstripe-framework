@@ -6,7 +6,6 @@ use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\Deprecation;
-use TinyMCE_Compressor;
 
 /**
  * Uses the default tiny_mc_gzip.php handler

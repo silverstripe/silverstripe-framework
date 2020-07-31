@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\NumericField;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -12,7 +12,6 @@ use SilverStripe\View\ArrayData;
  */
 class DBInt extends DBField
 {
-
     public function __construct($name = null, $defaultVal = 0)
     {
         $this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
@@ -35,7 +34,7 @@ class DBInt extends DBField
             'precision' => 11,
             'null' => 'not null',
             'default' => $this->defaultVal,
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
         $values = ['type' => 'int', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
@@ -45,7 +44,7 @@ class DBInt extends DBField
     {
         $output = new ArrayList();
         for ($i = 0; $i < $this->value; $i++) {
-            $output->push(new ArrayData([ 'Number' => $i + 1 ]));
+            $output->push(new ArrayData(['Number' => $i + 1]));
         }
 
         return $output;
@@ -76,6 +75,6 @@ class DBInt extends DBField
             return 0;
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 }

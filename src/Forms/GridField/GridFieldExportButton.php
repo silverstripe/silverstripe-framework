@@ -22,7 +22,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
     /**
      * @var string
      */
-    protected $csvSeparator = ",";
+    protected $csvSeparator = ',';
 
     /**
      * @var string
@@ -52,7 +52,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
-    public function __construct($targetFragment = "after", $exportColumns = null)
+    public function __construct($targetFragment = 'after', $exportColumns = null)
     {
         $this->targetFragment = $targetFragment;
         $this->exportColumns = $exportColumns;
@@ -95,7 +95,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'export') {
+        if ($actionName === 'export') {
             return $this->handleExport($gridField);
         }
         return null;
@@ -125,8 +125,8 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      */
     public function handleExport($gridField, $request = null)
     {
-        $now = date("d-m-Y-H-i");
-        $fileName = "export-$now.csv";
+        $now = date('d-m-Y-H-i');
+        $fileName = "export-${now}.csv";
 
         if ($fileData = $this->generateExportFileData($gridField)) {
             return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
@@ -173,7 +173,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $csvWriter->setOutputBOM(Writer::BOM_UTF8);
 
-        if (!Config::inst()->get(get_class($this), 'xls_export_disabled')) {
+        if (!Config::inst()->get(static::class, 'xls_export_disabled')) {
             $csvWriter->addFormatter(function (array $row) {
                 foreach ($row as &$item) {
                     // [SS-2017-007] Sanitise XLS executable column values with a leading tab
@@ -194,7 +194,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                 if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
                     $headers[] = $columnHeader['title'];
                 } else {
-                    $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
+                    $headers[] = !is_string($columnHeader) && is_callable($columnHeader) ? $columnSource : $columnHeader;
                 }
             }
 
@@ -216,7 +216,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
         /** @var GridFieldDataColumns|null $gridFieldColumnsComponent */
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
-        $columnsHandled = ($gridFieldColumnsComponent)
+        $columnsHandled = $gridFieldColumnsComponent
             ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
             : [];
 
@@ -257,7 +257,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
-        return (string)$csvWriter;
+        return (string) $csvWriter;
     }
 
     /**

@@ -14,7 +14,6 @@ use SilverStripe\ORM\DB;
  */
 class DBBigInt extends DBInt
 {
-
     public function requireField()
     {
         $parts = [
@@ -22,7 +21,7 @@ class DBBigInt extends DBInt
             'precision' => 8,
             'null' => 'not null',
             'default' => $this->defaultVal,
-            'arrayValue' => $this->arrayValue
+            'arrayValue' => $this->arrayValue,
         ];
 
         $values = ['type' => 'bigint', 'parts' => $parts];

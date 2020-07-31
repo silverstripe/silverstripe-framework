@@ -39,12 +39,11 @@ class SapphireInfo extends Controller
     public function EnvironmentType()
     {
         if (Director::isLive()) {
-            return "live";
+            return 'live';
         } elseif (Director::isTest()) {
-            return "test";
-        } else {
-            return "dev";
+            return 'test';
         }
+        return 'dev';
     }
 
     public function BaseURL()

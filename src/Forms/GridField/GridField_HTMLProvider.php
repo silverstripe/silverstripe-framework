@@ -8,7 +8,6 @@ namespace SilverStripe\Forms\GridField;
  */
 interface GridField_HTMLProvider extends GridFieldComponent
 {
-
     /**
      * Returns a map where the keys are fragment names and the values are
      * pieces of HTML to add to these fragments.

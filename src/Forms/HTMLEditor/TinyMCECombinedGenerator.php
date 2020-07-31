@@ -135,8 +135,8 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
         $buffer[] = <<<SCRIPT
 (function() {
   var baseTag = window.document.getElementsByTagName('base');
-  var baseURL = baseTag.length ? baseTag[0].baseURI : '$baseDirJS';
-  var editorIdentifier = '$name';
+  var baseURL = baseTag.length ? baseTag[0].baseURI : '${baseDirJS}';
+  var editorIdentifier = '${name}';
 SCRIPT;
         $buffer[] = <<<SCRIPT
 (function() {
@@ -149,7 +149,7 @@ SCRIPT;
     base: baseURL,
     suffix: '.min',
   };
-  $libContent
+  ${libContent}
 })();
 SCRIPT;
 
@@ -170,7 +170,7 @@ SCRIPT;
         // Join list of paths
         $filesList = Convert::raw2js(implode(',', $fileURLS));
         // Mark all themes, plugins and languages as done
-        $buffer[] = "window.tinymce.each('$filesList'.split(',')," . "function(f){tinymce.ScriptLoader.markDone(baseURL+f);});";
+        $buffer[] = "window.tinymce.each('${filesList}'.split(',')," . 'function(f){tinymce.ScriptLoader.markDone(baseURL+f);});';
 
         $buffer[] = '})();';
         return implode("\n", $buffer) . "\n";
@@ -195,7 +195,7 @@ SCRIPT;
         $content = file_get_contents($path);
 
         // Remove UTF-8 BOM
-        if (substr($content, 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf)) {
+        if (substr($content, 0, 3) === pack('CCC', 0xef, 0xbb, 0xbf)) {
             $content = substr($content, 3);
         }
 
@@ -229,12 +229,11 @@ SCRIPT;
     {
         $hash = substr(sha1(json_encode($config->getAttributes())), 0, 10);
         $name = $this->checkName($config);
-        $url = str_replace(
+        return str_replace(
             ['{name}', '{hash}'],
             [$name, $hash],
             $this->config()->get('filename_base')
         );
-        return $url;
     }
 
     /**

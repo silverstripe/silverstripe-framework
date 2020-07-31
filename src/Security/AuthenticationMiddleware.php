@@ -6,8 +6,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\ValidationException;
 
 class AuthenticationMiddleware implements HTTPMiddleware
 {
@@ -51,7 +51,7 @@ class AuthenticationMiddleware implements HTTPMiddleware
                 ->authenticateRequest($request);
         } catch (ValidationException $e) {
             return new HTTPResponse(
-                "Bad log-in details: " . $e->getMessage(),
+                'Bad log-in details: ' . $e->getMessage(),
                 400
             );
         } catch (DatabaseException $e) {

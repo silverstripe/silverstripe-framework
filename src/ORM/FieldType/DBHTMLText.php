@@ -2,11 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTP;
-use SilverStripe\Forms\TextField;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\HTMLValue;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
@@ -29,11 +28,11 @@ class DBHTMLText extends DBText
     private static $escape_type = 'xml';
 
     private static $casting = [
-        "AbsoluteLinks" => "HTMLFragment",
+        'AbsoluteLinks' => 'HTMLFragment',
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
-        "LowerCase" => "HTMLFragment",
-        "UpperCase" => "HTMLFragment",
+        'LowerCase' => 'HTMLFragment',
+        'UpperCase' => 'HTMLFragment',
     ];
 
     /**
@@ -61,7 +60,7 @@ class DBHTMLText extends DBText
      */
     public function setProcessShortcodes($process)
     {
-        $this->processShortcodes = (bool)$process;
+        $this->processShortcodes = (bool) $process;
         return $this;
     }
 
@@ -116,11 +115,11 @@ class DBHTMLText extends DBText
      */
     public function setOptions(array $options = [])
     {
-        if (array_key_exists("shortcodes", $options)) {
-            $this->setProcessShortcodes(!!$options["shortcodes"]);
+        if (array_key_exists('shortcodes', $options)) {
+            $this->setProcessShortcodes(!!$options['shortcodes']);
         }
 
-        if (array_key_exists("whitelist", $options)) {
+        if (array_key_exists('whitelist', $options)) {
             $this->setWhitelist($options['whitelist']);
         }
 
@@ -131,9 +130,8 @@ class DBHTMLText extends DBText
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**
@@ -239,7 +237,7 @@ class DBHTMLText extends DBText
         // Form schema format as HTML
         $value = $this->RAW();
         if ($value) {
-            return [ 'html' => $this->RAW() ];
+            return ['html' => $this->RAW()];
         }
         return null;
     }

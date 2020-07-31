@@ -22,7 +22,7 @@ class PrintableTransformation_TabSet extends TabSet
         $tag = $this->getTabSet() ? 'h2>' : 'h1>';
         $retVal = '';
         foreach ($this->getChildren() as $tab) {
-            $retVal .= "<$tag" . $tab->Title() . "</$tag\n";
+            $retVal .= "<${tag}" . $tab->Title() . "</${tag}\n";
             $retVal .= $tab->FieldHolder();
         }
         return $retVal;

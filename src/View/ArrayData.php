@@ -2,8 +2,8 @@
 
 namespace SilverStripe\View;
 
-use SilverStripe\ORM\ArrayLib;
 use InvalidArgumentException;
+use SilverStripe\ORM\ArrayLib;
 use stdClass;
 
 /**
@@ -18,7 +18,6 @@ use stdClass;
  */
 class ArrayData extends ViewableData
 {
-
     /**
      * @var array
      * @see ArrayData::_construct()
@@ -57,7 +56,6 @@ class ArrayData extends ViewableData
     /**
      * Gets a field from this object.
      *
-     *
      * If the value is an object but not an instance of
      * ViewableData, it will be converted recursively to an
      * ArrayData.
@@ -75,17 +73,17 @@ class ArrayData extends ViewableData
             return new ArrayData($value);
         } elseif (ArrayLib::is_associative($value)) {
             return new ArrayData($value);
-        } else {
-            return $value;
         }
+        return $value;
     }
+
     /**
-    * Add or set a field on this object.
-    *
-    * @param string $field
-    * @param mixed $value
-    * @return $this
-    */
+     * Add or set a field on this object.
+     *
+     * @param string $field
+     * @param mixed $value
+     * @return $this
+     */
     public function setField($field, $value)
     {
         $this->array[$field] = $value;
@@ -106,15 +104,15 @@ class ArrayData extends ViewableData
     /**
      * Converts an associative array to a simple object
      *
-     * @param array
-     * @return stdClass $obj
+     * @param $arr
+     * @return stdClass
      */
     public static function array_to_object($arr = null)
     {
         $obj = new stdClass();
         if ($arr) {
             foreach ($arr as $name => $value) {
-                $obj->$name = $value;
+                $obj->{$name} = $value;
             }
         }
         return $obj;

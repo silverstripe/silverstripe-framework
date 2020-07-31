@@ -10,14 +10,13 @@ namespace SilverStripe\ORM\Filters;
  */
 class LessThanOrEqualFilter extends ComparisonFilter
 {
-
     protected function getOperator()
     {
-        return "<=";
+        return '<=';
     }
 
     protected function getInverseOperator()
     {
-        return ">";
+        return '>';
     }
 }

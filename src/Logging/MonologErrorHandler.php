@@ -3,8 +3,8 @@
 namespace SilverStripe\Logging;
 
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Monolog\ErrorHandler as MonologHandler;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Dev\Deprecation;
 
 class MonologErrorHandler implements ErrorHandler
@@ -87,7 +87,7 @@ class MonologErrorHandler implements ErrorHandler
         $loggers = $this->getLoggers();
         if (empty($loggers)) {
             throw new InvalidArgumentException(
-                "No Logger properties passed to MonologErrorHandler. Is your Injector config correct?"
+                'No Logger properties passed to MonologErrorHandler. Is your Injector config correct?'
             );
         }
 

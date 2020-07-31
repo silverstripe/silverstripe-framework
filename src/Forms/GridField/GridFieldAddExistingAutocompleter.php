@@ -2,19 +2,19 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
-use LogicException;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -34,7 +34,6 @@ use LogicException;
  */
 class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
 {
-
     /**
      * The HTML fragment to write this component into
      */
@@ -86,18 +85,16 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
     protected $resultsLimit = 20;
 
     /**
-     *
      * @param string $targetFragment
      * @param array $searchFields Which fields on the object in the list should be searched
      */
     public function __construct($targetFragment = 'before', $searchFields = null)
     {
         $this->targetFragment = $targetFragment;
-        $this->searchFields = (array)$searchFields;
+        $this->searchFields = (array) $searchFields;
     }
 
     /**
-     *
      * @param GridField $gridField
      * @return string[] - HTML
      */
@@ -108,7 +105,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $forTemplate = new ArrayData([]);
         $forTemplate->Fields = new FieldList();
 
-        $searchField = new TextField('gridfield_relationsearch', _t('SilverStripe\\Forms\\GridField\\GridField.RelationSearch', "Relation search"));
+        $searchField = new TextField('gridfield_relationsearch', _t('SilverStripe\\Forms\\GridField\\GridField.RelationSearch', 'Relation search'));
 
         $searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
         $searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
@@ -117,7 +114,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $findAction = new GridField_FormAction(
             $gridField,
             'gridfield_relationfind',
-            _t('SilverStripe\\Forms\\GridField\\GridField.Find', "Find"),
+            _t('SilverStripe\\Forms\\GridField\\GridField.Find', 'Find'),
             'find',
             'find'
         );
@@ -127,7 +124,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $addAction = new GridField_FormAction(
             $gridField,
             'gridfield_relationadd',
-            _t('SilverStripe\\Forms\\GridField\\GridField.LinkExisting', "Link Existing"),
+            _t('SilverStripe\\Forms\\GridField\\GridField.LinkExisting', 'Link Existing'),
             'addto',
             'addto'
         );
@@ -146,14 +143,13 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             $forTemplate->Fields->setForm($form);
         }
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '', self::class);
         return [
-            $this->targetFragment => $forTemplate->renderWith($template)
+            $this->targetFragment => $forTemplate->renderWith($template),
         ];
     }
 
     /**
-     *
      * @param GridField $gridField
      * @return array
      */
@@ -203,7 +199,6 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
     }
 
     /**
-     *
      * @param GridField $gridField
      * @return array
      */
@@ -224,11 +219,10 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
     public function doSearch($gridField, $request)
     {
         $dataClass = $gridField->getModelClass();
-        $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
+        $allList = $this->searchList ?: DataList::create($dataClass);
 
-        $searchFields = ($this->getSearchFields())
-            ? $this->getSearchFields()
-            : $this->scaffoldSearchFields($dataClass);
+        $searchFields = $this->getSearchFields()
+            ?: $this->scaffoldSearchFields($dataClass);
         if (!$searchFields) {
             throw new LogicException(
                 sprintf(
@@ -240,7 +234,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 
         $params = [];
         foreach ($searchFields as $searchField) {
-            $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:StartsWith";
+            $name = strpos($searchField, ':') !== false ? $searchField : "${searchField}:StartsWith";
             $params[$name] = $request->getVar('gridfield_relationsearch');
         }
         $results = $allList
@@ -336,7 +330,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
                     // so we need to check the original setting.
                     // If the field is defined $searchable_fields = array('MyField'),
                     // then default to StartsWith filter, which makes more sense in this context.
-                    if (!$customSearchableFields || array_search($name, $customSearchableFields)) {
+                    if (!$customSearchableFields || array_search($name, $customSearchableFields, true)) {
                         $filter = 'StartsWith';
                     } else {
                         $filter = preg_replace('/Filter$/', '', $spec['filter']);
@@ -347,7 +341,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
                 }
             }
         }
-        if (is_null($fields)) {
+        if ($fields === null) {
             if ($obj->hasDatabaseField('Title')) {
                 $fields = ['Title'];
             } elseif ($obj->hasDatabaseField('Name')) {
@@ -365,37 +359,34 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
      */
     public function getPlaceholderText($dataClass)
     {
-        $searchFields = ($this->getSearchFields())
-            ? $this->getSearchFields()
-            : $this->scaffoldSearchFields($dataClass);
+        $searchFields = $this->getSearchFields()
+            ?: $this->scaffoldSearchFields($dataClass);
 
         if ($this->placeholderText) {
             return $this->placeholderText;
-        } else {
-            $labels = [];
-            if ($searchFields) {
-                foreach ($searchFields as $searchField) {
-                    $searchField = explode(':', $searchField);
-                    $label = singleton($dataClass)->fieldLabel($searchField[0]);
-                    if ($label) {
-                        $labels[] = $label;
-                    }
+        }
+        $labels = [];
+        if ($searchFields) {
+            foreach ($searchFields as $searchField) {
+                $searchField = explode(':', $searchField);
+                $label = singleton($dataClass)->fieldLabel($searchField[0]);
+                if ($label) {
+                    $labels[] = $label;
                 }
             }
-            if ($labels) {
-                return _t(
-                    'SilverStripe\\Forms\\GridField\\GridField.PlaceHolderWithLabels',
-                    'Find {type} by {name}',
-                    ['type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels)]
-                );
-            } else {
-                return _t(
-                    'SilverStripe\\Forms\\GridField\\GridField.PlaceHolder',
-                    'Find {type}',
-                    ['type' => singleton($dataClass)->i18n_plural_name()]
-                );
-            }
         }
+        if ($labels) {
+            return _t(
+                'SilverStripe\\Forms\\GridField\\GridField.PlaceHolderWithLabels',
+                'Find {type} by {name}',
+                ['type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels)]
+            );
+        }
+        return _t(
+            'SilverStripe\\Forms\\GridField\\GridField.PlaceHolder',
+            'Find {type}',
+            ['type' => singleton($dataClass)->i18n_plural_name()]
+        );
     }
 
     /**

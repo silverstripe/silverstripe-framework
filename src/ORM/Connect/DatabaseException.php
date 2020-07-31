@@ -9,7 +9,6 @@ use Exception;
  */
 class DatabaseException extends Exception
 {
-
     /**
      * The SQL that generated this error
      *
@@ -53,7 +52,7 @@ class DatabaseException extends Exception
      * @param string $sql The SQL executed for this query
      * @param array $parameters The parameters given for this query, if any
      */
-    function __construct($message = '', $code = 0, $previous = null, $sql = null, $parameters = [])
+    public function __construct($message = '', $code = 0, $previous = null, $sql = null, $parameters = [])
     {
         parent::__construct($message, $code, $previous);
         $this->sql = $sql;

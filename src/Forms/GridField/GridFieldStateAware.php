@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Injector\Injector;

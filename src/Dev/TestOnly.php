@@ -7,5 +7,4 @@ namespace SilverStripe\Dev;
  */
 interface TestOnly
 {
-
 }

@@ -25,7 +25,7 @@ class MemberPassword extends DataObject
         'Member' => Member::class,
     ];
 
-    private static $table_name = "MemberPassword";
+    private static $table_name = 'MemberPassword';
 
     /**
      * Log a password change from the given member.

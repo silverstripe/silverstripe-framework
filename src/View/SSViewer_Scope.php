@@ -27,11 +27,17 @@ use Iterator;
 class SSViewer_Scope
 {
     const ITEM = 0;
+
     const ITEM_ITERATOR = 1;
+
     const ITEM_ITERATOR_TOTAL = 2;
+
     const POP_INDEX = 3;
+
     const UP_INDEX = 4;
+
     const CURRENT_INDEX = 5;
+
     const ITEM_OVERLAY = 6;
 
     /**
@@ -101,15 +107,15 @@ class SSViewer_Scope
     private $localIndex = 0;
 
     /**
-     * @var object $item
-     * @var SSViewer_Scope $inheritedScope
+     * @var object
+     * @var SSViewer_Scope
      */
     public function __construct($item, SSViewer_Scope $inheritedScope = null)
     {
         $this->item = $item;
 
-        $this->itemIterator = ($inheritedScope) ? $inheritedScope->itemIterator : null;
-        $this->itemIteratorTotal = ($inheritedScope) ? $inheritedScope->itemIteratorTotal : 0;
+        $this->itemIterator = $inheritedScope ? $inheritedScope->itemIterator : null;
+        $this->itemIteratorTotal = $inheritedScope ? $inheritedScope->itemIteratorTotal : 0;
         $this->itemStack[] = [$this->item, $this->itemIterator, $this->itemIteratorTotal, null, null, 0];
     }
 
@@ -216,7 +222,7 @@ class SSViewer_Scope
             default:
                 $this->item = $this->getObj($name, $arguments, $cache, $cacheName);
                 $this->itemIterator = null;
-                $this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack) - 1;
+                $this->upIndex = $this->currentIndex ?: count($this->itemStack) - 1;
                 $this->currentIndex = count($this->itemStack);
                 break;
         }
@@ -227,7 +233,7 @@ class SSViewer_Scope
             $this->itemIteratorTotal,
             null,
             $this->upIndex,
-            $this->currentIndex
+            $this->currentIndex,
         ];
         return $this;
     }
@@ -320,7 +326,7 @@ class SSViewer_Scope
     public function __call($name, $arguments)
     {
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-        $retval = $on ? $on->$name(...$arguments) : null;
+        $retval = $on ? $on->{$name}(...$arguments) : null;
 
         $this->resetLocalScope();
         return $retval;
@@ -335,7 +341,7 @@ class SSViewer_Scope
     }
 
     /**
-     * @param array
+     * @param array $stack
      */
     protected function setItemStack(array $stack)
     {

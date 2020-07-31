@@ -11,9 +11,8 @@ use SilverStripe\Forms\FieldList;
  */
 class NullSecurityToken extends SecurityToken
 {
-
     /**
-     * @param String
+     * @param string $compare
      * @return boolean
      */
     public function check($compare)
@@ -23,7 +22,7 @@ class NullSecurityToken extends SecurityToken
 
     /**
      * @param HTTPRequest $request
-     * @return Boolean
+     * @return boolean
      */
     public function checkRequest($request)
     {
@@ -43,8 +42,8 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @param String $url
-     * @return String
+     * @param string $url
+     * @return string
      */
     public function addToUrl($url)
     {
@@ -52,7 +51,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getValue()
     {
@@ -60,7 +59,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @param String $val
+     * @param string $val
      */
     public function setValue($val)
     {
@@ -68,7 +67,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function generate()
     {

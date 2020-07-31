@@ -10,7 +10,6 @@ namespace SilverStripe\Security;
  */
 class Permission_Group
 {
-
     /**
      * Name of the permission group (can be used as label in an interface)
      * @var string
@@ -25,7 +24,6 @@ class Permission_Group
      * @var string
      */
     protected $permissions = [];
-
 
     /**
      * Constructor
@@ -53,7 +51,6 @@ class Permission_Group
     {
         return $this->name;
     }
-
 
     /**
      * Get permissions

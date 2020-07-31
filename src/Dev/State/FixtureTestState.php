@@ -13,7 +13,6 @@ use SilverStripe\ORM\DataObject;
 
 class FixtureTestState implements TestState
 {
-
     /**
      * @var FixtureFactory[]
      */

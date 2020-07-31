@@ -1,7 +1,6 @@
 <?php
-namespace SilverStripe\Forms\GridField\FormAction;
 
-use SilverStripe\Control\HTTPRequest;
+namespace SilverStripe\Forms\GridField\FormAction;
 
 /**
  * Stores GridField action state in the session in exactly the same way it has in the past

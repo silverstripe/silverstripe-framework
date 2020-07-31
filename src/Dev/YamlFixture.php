@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Dev;
 
+use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use Symfony\Component\Yaml\Parser;
-use InvalidArgumentException;
 
 /**
  * Uses Symfony's YAML component to parse a YAML document (see http://yaml.org).
@@ -82,7 +82,7 @@ class YamlFixture
     /**
      * String containing fixture
      *
-     * @var String
+     * @var string
      */
     protected $fixtureString;
 
@@ -91,7 +91,7 @@ class YamlFixture
      */
     public function __construct($fixture)
     {
-        if (false !== strpos($fixture, "\n")) {
+        if (strpos($fixture, "\n") !== false) {
             $this->fixtureString = $fixture;
         } else {
             if (!Director::is_absolute($fixture)) {
@@ -108,7 +108,7 @@ class YamlFixture
     }
 
     /**
-     * @return String Absolute file path
+     * @return string Absolute file path
      */
     public function getFixtureFile()
     {
@@ -116,7 +116,7 @@ class YamlFixture
     }
 
     /**
-     * @return String Fixture string
+     * @return string Fixture string
      */
     public function getFixtureString()
     {

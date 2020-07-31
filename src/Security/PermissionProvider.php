@@ -9,7 +9,6 @@ namespace SilverStripe\Security;
  */
 interface PermissionProvider
 {
-
     /**
      * Return a map of permission codes to add to the dropdown shown in the Security section of the CMS.
      * array(

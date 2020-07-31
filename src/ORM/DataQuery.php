@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
@@ -9,7 +10,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
-use InvalidArgumentException;
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
@@ -21,7 +21,6 @@ use InvalidArgumentException;
  */
 class DataQuery
 {
-
     use Extensible;
 
     /**
@@ -65,6 +64,7 @@ class DataQuery
 
     // TODO: replace subclass_access with this
     protected $querySubclasses = true;
+
     // TODO: replace restrictclasses with this
     protected $filterByClassName = true;
 
@@ -107,7 +107,6 @@ class DataQuery
     {
         return $this->getFinalisedQuery();
     }
-
 
     /**
      * Remove a filter from the query
@@ -153,7 +152,7 @@ class DataQuery
         if ($matched) {
             $this->query->setWhere($where);
         } else {
-            throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
+            throw new InvalidArgumentException("Couldn't find ${fieldExpression} in the query filter.");
         }
 
         return $this;
@@ -239,7 +238,7 @@ class DataQuery
                 )) {
                     foreach ($matches as $match) {
                         $column = $match['column'];
-                        if (!in_array($column, $queriedColumns)) {
+                        if (!in_array($column, $queriedColumns, true)) {
                             $queriedColumns[] = $column;
                         }
                     }
@@ -262,7 +261,7 @@ class DataQuery
             }
 
             // If this is a subclass without any explicitly requested columns, omit this from the query
-            if (!in_array($tableClass, $ancestorClasses) && empty($selectColumns)) {
+            if (!in_array($tableClass, $ancestorClasses, true) && empty($selectColumns)) {
                 continue;
             }
 
@@ -295,40 +294,39 @@ class DataQuery
                             $collisionClassColumn = $schema->sqlColumnForField($collisionClass, 'ClassName');
                             $collisionClasses = ClassInfo::subclassesFor($collisionClass);
                             $collisionClassesSQL = implode(', ', Convert::raw2sql($collisionClasses, true));
-                            $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
+                            $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN ${collision}";
                         }
                     } else {
-                        user_error("Bad collision item '$collision'", E_USER_WARNING);
+                        user_error("Bad collision item '${collision}'", E_USER_WARNING);
                     }
                 }
-                $query->selectField("CASE " . implode(" ", $caseClauses) . " ELSE NULL END", $collisionField);
+                $query->selectField('CASE ' . implode(' ', $caseClauses) . ' ELSE NULL END', $collisionField);
             }
         }
 
-
         if ($this->filterByClassName) {
             // If querying the base class, don't bother filtering on class name
-            if ($this->dataClass != $baseDataClass) {
+            if ($this->dataClass !== $baseDataClass) {
                 // Get the ClassName values to filter to
                 $classNames = ClassInfo::subclassesFor($this->dataClass);
                 $classNamesPlaceholders = DB::placeholders($classNames);
                 $baseClassColumn = $schema->sqlColumnForField($baseDataClass, 'ClassName');
                 $query->addWhere([
-                    "{$baseClassColumn} IN ($classNamesPlaceholders)" => $classNames
+                    "{$baseClassColumn} IN (${classNamesPlaceholders})" => $classNames,
                 ]);
             }
         }
 
         // Select ID
-        $query->selectField($baseIDColumn, "ID");
+        $query->selectField($baseIDColumn, 'ID');
 
         // Select RecordClassName
         $baseClassColumn = $schema->sqlColumnForField($baseDataClass, 'ClassName');
         $query->selectField(
             "
 			CASE WHEN {$baseClassColumn} IS NOT NULL THEN {$baseClassColumn}
-			ELSE " . Convert::raw2sql($baseDataClass, true) . " END",
-            "RecordClassName"
+			ELSE " . Convert::raw2sql($baseDataClass, true) . ' END',
+            'RecordClassName'
         );
 
         // TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses
@@ -377,7 +375,7 @@ class DataQuery
                     continue;
                 }
 
-                if (count($parts) == 1) {
+                if (count($parts) === 1) {
                     // Get expression for sort value
                     $qualCol = "\"{$parts[0]}\"";
                     $table = DataObject::getSchema()->tableForField($this->dataClass(), $parts[0]);
@@ -394,24 +392,24 @@ class DataQuery
                     // To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
                     // format internally; then this check can be part of selectField()
                     $selects = $query->getSelect();
-                    if (!isset($selects[$col]) && !in_array($qualCol, $selects)) {
+                    if (!isset($selects[$col]) && !in_array($qualCol, $selects, true)) {
                         $query->selectField($qualCol);
                     }
                 } else {
                     $qualCol = '"' . implode('"."', $parts) . '"';
 
-                    if (!in_array($qualCol, $query->getSelect())) {
+                    if (!in_array($qualCol, $query->getSelect(), true)) {
                         unset($newOrderby[$k]);
 
                         // Find the first free "_SortColumnX" slot
                         // and assign it to $key
                         $i = 0;
-                        while (isset($newOrderby[$key = "\"_SortColumn$i\""]) || isset($orderby[$key = "\"_SortColumn$i\""])) {
+                        while (isset($newOrderby[$key = "\"_SortColumn${i}\""]) || isset($orderby[$key = "\"_SortColumn${i}\""])) {
                             ++$i;
                         }
 
                         $newOrderby[$key] = $dir;
-                        $query->selectField($qualCol, "_SortColumn$i");
+                        $query->selectField($qualCol, "_SortColumn${i}");
                     }
                 }
             }
@@ -464,9 +462,9 @@ class DataQuery
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
-            return $this->aggregate("MAX(\"$field\")");
+            return $this->aggregate("MAX(\"${field}\")");
         }
-        return $this->aggregate("MAX(\"$table\".\"$field\")");
+        return $this->aggregate("MAX(\"${table}\".\"${field}\")");
     }
 
     /**
@@ -480,9 +478,9 @@ class DataQuery
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
-            return $this->aggregate("MIN(\"$field\")");
+            return $this->aggregate("MIN(\"${field}\")");
         }
-        return $this->aggregate("MIN(\"$table\".\"$field\")");
+        return $this->aggregate("MIN(\"${table}\".\"${field}\")");
     }
 
     /**
@@ -496,9 +494,9 @@ class DataQuery
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
-            return $this->aggregate("AVG(\"$field\")");
+            return $this->aggregate("AVG(\"${field}\")");
         }
-        return $this->aggregate("AVG(\"$table\".\"$field\")");
+        return $this->aggregate("AVG(\"${table}\".\"${field}\")");
     }
 
     /**
@@ -512,9 +510,9 @@ class DataQuery
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
-            return $this->aggregate("SUM(\"$field\")");
+            return $this->aggregate("SUM(\"${field}\")");
         }
-        return $this->aggregate("SUM(\"$table\".\"$field\")");
+        return $this->aggregate("SUM(\"${table}\".\"${field}\")");
     }
 
     /**
@@ -566,7 +564,7 @@ class DataQuery
         $compositeFields = $schema->compositeFields($tableClass, false);
         unset($databaseFields['ID']);
         foreach ($databaseFields as $k => $v) {
-            if ((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
+            if (($columns === null || in_array($k, $columns, true)) && !isset($compositeFields[$k])) {
                 // Update $collidingFields if necessary
                 $expressionForField = $query->expressionForField($k);
                 $quotedField = $schema->sqlColumnForField($tableClass, $k);
@@ -581,7 +579,7 @@ class DataQuery
             }
         }
         foreach ($compositeFields as $k => $v) {
-            if ((is_null($columns) || in_array($k, $columns)) && $v) {
+            if (($columns === null || in_array($k, $columns, true)) && $v) {
                 $tableName = $schema->tableName($tableClass);
                 $dbO = Injector::inst()->create($v, $k);
                 $dbO->setTable($tableName);
@@ -790,7 +788,7 @@ class DataQuery
             return null;
         }
         if (is_string($relation)) {
-            $relation = explode(".", $relation);
+            $relation = explode('.', $relation);
         }
         return strtolower(implode('_', $relation)) . '_';
     }
@@ -816,7 +814,7 @@ class DataQuery
         }
 
         if (is_string($relation)) {
-            $relation = explode(".", $relation);
+            $relation = explode('.', $relation);
         }
 
         $modelClass = $this->dataClass;
@@ -841,7 +839,7 @@ class DataQuery
             if ($component = $schema->hasManyComponent($modelClass, $rel)) {
                 // Fail on non-linear relations
                 if ($linearOnly) {
-                    throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
+                    throw new InvalidArgumentException("${rel} is not a linear relation on model ${modelClass}");
                 }
                 // Join via has_many
                 $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'has_many');
@@ -861,7 +859,7 @@ class DataQuery
             if ($component = $schema->manyManyComponent($modelClass, $rel)) {
                 // Fail on non-linear relations
                 if ($linearOnly) {
-                    throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
+                    throw new InvalidArgumentException("${rel} is not a linear relation on model ${modelClass}");
                 }
                 $this->joinManyManyRelationship(
                     $component['relationClass'],
@@ -878,7 +876,7 @@ class DataQuery
             }
 
             // no relation
-            throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
+            throw new InvalidArgumentException("${rel} is not a relation on model ${modelClass}");
         }
 
         return $modelClass;
@@ -1070,11 +1068,11 @@ class DataQuery
 
         // Join on base table of component class
         $componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID', $componentPrefix);
-            $this->query->addLeftJoin(
-                $this->getJoinTableName($componentBaseClass, $componentBaseTable),
-                "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
-                $componentAliasedTable
-            );
+        $this->query->addLeftJoin(
+            $this->getJoinTableName($componentBaseClass, $componentBaseTable),
+            "\"{$relationAliasedTable}\".\"{$componentField}\" = {$componentIDColumn}",
+            $componentAliasedTable
+        );
 
         // Add join clause to the component's ancestry classes so that the search filter could search on
         // its ancestor fields.
@@ -1108,7 +1106,7 @@ class DataQuery
         $subSelect->selectField($fieldExpression, $field);
         $subSelect->setOrderBy(null);
         $subSelectSQL = $subSelect->sql($subSelectParameters);
-        $this->where([$this->expressionForField($field) . " NOT IN ($subSelectSQL)" => $subSelectParameters]);
+        $this->where([$this->expressionForField($field) . " NOT IN (${subSelectSQL})" => $subSelectParameters]);
 
         return $this;
     }

@@ -86,7 +86,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         parent::setUp();
 
         // Skip calling FunctionalTest directly.
-        if (static::class == __CLASS__) {
+        if (static::class === self::class) {
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
         }
 
@@ -237,7 +237,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     {
         $found = false;
         foreach ($object->attributes() as $a => $b) {
-            if ($a == $attribute) {
+            if ($a === $attribute) {
                 $found = $b;
             }
         }
@@ -280,12 +280,12 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $actuals = [];
         if ($items) {
             foreach ($items as $item) {
-                $actuals[trim(preg_replace('/\s+/', ' ', (string)$item))] = true;
+                $actuals[trim(preg_replace('/\s+/', ' ', (string) $item))] = true;
             }
         }
 
         $message = $message ?:
-        "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+        "Failed asserting the CSS selector '${selector}' has a partial match to the expected elements:\n'"
             . implode("'\n'", $expectedMatches) . "'\n\n"
             . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
 
@@ -317,16 +317,16 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $actuals = [];
         if ($items) {
             foreach ($items as $item) {
-                $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item));
+                $actuals[] = trim(preg_replace('/\s+/', ' ', (string) $item));
             }
         }
 
         $message = $message ?:
-                "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+                "Failed asserting the CSS selector '${selector}' has an exact match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
             . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'";
 
-        $this->assertTrue($expectedMatches == $actuals, $message);
+        $this->assertTrue($expectedMatches === $actuals, $message);
     }
 
     /**
@@ -358,7 +358,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         }
 
         $message = $message ?:
-                "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+                "Failed asserting the CSS selector '${selector}' has a partial match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
             . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
 
@@ -392,11 +392,11 @@ class FunctionalTest extends SapphireTest implements TestOnly
         }
 
         $message = $message ?:
-            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+            "Failed asserting the CSS selector '${selector}' has an exact match to the expected elements:\n'"
             . implode("'\n'", $expectedMatches) . "'\n\n"
             . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'";
 
-        $this->assertTrue($expectedMatches == $actuals, $message);
+        $this->assertTrue($expectedMatches === $actuals, $message);
     }
 
     /**

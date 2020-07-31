@@ -7,10 +7,10 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Core\Resettable;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Data sources for localisation strings. I.e. yml files stored
@@ -41,14 +41,14 @@ class Sources implements Resettable
         if ($i18nOrder) {
             Deprecation::notice('5.0', sprintf(
                 '%s.module_priority is deprecated. Use %s.module_priority instead.',
-                __CLASS__,
+                self::class,
                 ModuleManifest::class
             ));
         }
 
         foreach (ModuleLoader::inst()->getManifest()->getModules() as $module) {
             $sortedModules[$module->getName()] = $module->getPath();
-        };
+        }
 
         return $sortedModules;
     }

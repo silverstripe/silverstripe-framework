@@ -5,8 +5,8 @@ namespace SilverStripe\Security;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
+use SilverStripe\Control\Middleware\HTTPMiddleware;
 
 class BasicAuthMiddleware implements HTTPMiddleware
 {

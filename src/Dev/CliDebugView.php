@@ -4,7 +4,6 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
 
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
@@ -14,7 +13,6 @@ use SilverStripe\Core\Convert;
  */
 class CliDebugView extends DebugView
 {
-
     /**
      * Render HTML header for development views
      *
@@ -46,12 +44,12 @@ class CliDebugView extends DebugView
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
         if (!isset(self::$error_types[$errno])) {
-            $errorTypeTitle = "UNKNOWN TYPE, ERRNO $errno";
+            $errorTypeTitle = "UNKNOWN TYPE, ERRNO ${errno}";
         } else {
             $errorTypeTitle = self::$error_types[$errno]['title'];
         }
-        $output = CLI::text("ERROR [" . $errorTypeTitle . "]: $errstr\nIN $httpRequest\n", "red", null, true);
-        $output .= CLI::text("Line $errline in $errfile\n\n", "red");
+        $output = CLI::text('ERROR [' . $errorTypeTitle . "]: ${errstr}\nIN ${httpRequest}\n", 'red', null, true);
+        $output .= CLI::text("Line ${errline} in ${errfile}\n\n", 'red');
 
         return $output;
     }
@@ -67,8 +65,8 @@ class CliDebugView extends DebugView
     {
         $output = "Source\n======\n";
         foreach ($lines as $offset => $line) {
-            $output .= ($offset == $errline) ? "* " : "  ";
-            $output .= str_pad("$offset:", 5);
+            $output .= $offset === $errline ? '* ' : '  ';
+            $output .= str_pad("${offset}:", 5);
             $output .= wordwrap($line, self::config()->columns, "\n       ");
         }
         $output .= "\n";
@@ -85,7 +83,7 @@ class CliDebugView extends DebugView
     public function renderTrace($trace = null)
     {
         $output = "Trace\n=====\n";
-        $output .= Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
+        $output .= Backtrace::get_rendered_backtrace($trace ?: debug_backtrace(), true);
 
         return $output;
     }
@@ -145,10 +143,9 @@ class CliDebugView extends DebugView
         $text = $this->debugVariableText($val);
         if ($showHeader) {
             $callerFormatted = $this->formatCaller($caller);
-            return "Debug ($callerFormatted)\n{$text}\n\n";
-        } else {
-            return $text;
+            return "Debug (${callerFormatted})\n{$text}\n\n";
         }
+        return $text;
     }
 
     /**
@@ -169,7 +166,7 @@ class CliDebugView extends DebugView
             $result = '';
             foreach ($val as $key => $valItem) {
                 $valText = $this->debugVariableText($valItem);
-                $result .= "$key = $valText\n";
+                $result .= "${key} = ${valText}\n";
             }
             return $result;
         }

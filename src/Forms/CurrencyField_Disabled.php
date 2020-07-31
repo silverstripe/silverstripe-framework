@@ -10,7 +10,6 @@ use SilverStripe\ORM\FieldType\DBCurrency;
  */
 class CurrencyField_Disabled extends CurrencyField
 {
-
     protected $disabled = true;
 
     /**
@@ -29,7 +28,7 @@ class CurrencyField_Disabled extends CurrencyField
         } else {
             $valforInput = '';
         }
-        return "<input class=\"text\" type=\"text\" disabled=\"disabled\""
-        . " name=\"" . $this->name . "\" value=\"" . $valforInput . "\" />";
+        return '<input class="text" type="text" disabled="disabled"'
+        . ' name="' . $this->name . '" value="' . $valforInput . '" />';
     }
 }

@@ -11,7 +11,6 @@ use IteratorAggregate;
  */
 interface SS_List extends ArrayAccess, Countable, IteratorAggregate
 {
-
     /**
      * Returns all the items in the list in an array.
      *
@@ -81,7 +80,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate
      * @param  string $colName
      * @return array
      */
-    public function column($colName = "ID");
+    public function column($colName = 'ID');
 
     /**
      * Walks the list using the specified callback

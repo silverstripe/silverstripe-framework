@@ -46,7 +46,6 @@ use SilverStripe\View\ViewableData;
  */
 abstract class DBField extends ViewableData implements DBIndexable
 {
-
     /**
      * Raw value of this field
      *
@@ -121,7 +120,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     ];
 
     /**
-     * @var $default mixed Default-value in the database.
+     * @var mixed Default-value in the database.
      * Might be overridden on DataObject-level, but still useful for setting defaults on
      * already existing records after a db-build.
      */
@@ -140,7 +139,7 @@ abstract class DBField extends ViewableData implements DBIndexable
 
         if ($options) {
             if (!is_array($options)) {
-                throw new InvalidArgumentException("Invalid options $options");
+                throw new InvalidArgumentException("Invalid options ${options}");
             }
             $this->setOptions($options);
         }
@@ -290,7 +289,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     public function setIndexType($type)
     {
         if (!is_bool($type)
-            && !in_array($type, [DBIndexable::TYPE_INDEX, DBIndexable::TYPE_UNIQUE, DBIndexable::TYPE_FULLTEXT])
+            && !in_array($type, [DBIndexable::TYPE_INDEX, DBIndexable::TYPE_UNIQUE, DBIndexable::TYPE_FULLTEXT], true)
         ) {
             throw new \InvalidArgumentException(
                 "{$type} is not a valid index type or boolean. Please see DBIndexable."
@@ -327,7 +326,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function exists()
     {
-        return (bool)$this->value;
+        return (bool) $this->value;
     }
 
     /**
@@ -335,20 +334,19 @@ abstract class DBField extends ViewableData implements DBIndexable
      * will be escaped automatically by the prepared query processor, so it
      * should not be escaped or quoted at all.
      *
-     * @param $value mixed The value to check
+     * @param mixed $value The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
     public function prepValueForDB($value)
     {
         if ($value === null ||
-            $value === "" ||
+            $value === '' ||
             $value === false ||
             ($this->scalarValueOnly() && !is_scalar($value))
         ) {
             return null;
-        } else {
-            return $value;
         }
+        return $value;
     }
 
     /**
@@ -542,7 +540,7 @@ abstract class DBField extends ViewableData implements DBIndexable
                 "DBField::saveInto() Called on a nameless '" . static::class . "' object"
             );
         }
-        $dataObject->$fieldName = $this->value;
+        $dataObject->{$fieldName} = $this->value;
     }
 
     /**
@@ -586,7 +584,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function defaultSearchFilter($name = null)
     {
-        $name = ($name) ? $name : $this->name;
+        $name = $name ?: $this->name;
         $filterClass = $this->config()->get('default_search_filter_class');
         return Injector::inst()->create($filterClass, $name);
     }
@@ -609,7 +607,7 @@ DBG;
 
     public function __toString()
     {
-        return (string)$this->forTemplate();
+        return (string) $this->forTemplate();
     }
 
     /**

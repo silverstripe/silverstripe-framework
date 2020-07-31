@@ -45,7 +45,7 @@ class DBDate extends DBField
         $value = $this->parseDate($value);
         if ($value === false) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '${value}'. Use " . self::ISO_DATE . ' to prevent this error.'
             );
         }
         $this->value = $value;
@@ -56,7 +56,7 @@ class DBDate extends DBField
      * Parse timestamp or iso8601-ish date into standard iso8601 format
      *
      * @param mixed $value
-     * @return string|null|false Formatted date, null if empty but valid, or false if invalid
+     * @return string|false|null Formatted date, null if empty but valid, or false if invalid
      */
     protected function parseDate($value)
     {
@@ -73,7 +73,7 @@ class DBDate extends DBField
         } else {
             // Convert US date -> iso, fix y2k, etc
             $value = $this->fixInputDate($value);
-            if (is_null($value)) {
+            if ($value === null) {
                 return null;
             }
             $source = strtotime($value); // convert string to timestamp
@@ -152,7 +152,7 @@ class DBDate extends DBField
         $number = $this->Format('d');
         if ($includeOrdinal && $number) {
             $formatter = NumberFormatter::create(i18n::get_locale(), NumberFormatter::ORDINAL);
-            return $formatter->format((int)$number);
+            return $formatter->format((int) $number);
         }
         return $number;
     }
@@ -333,13 +333,12 @@ class DBDate extends DBField
         $y1 = $this->Year();
         $y2 = $otherDateObj->Year();
 
-        if ($y1 != $y2) {
-            return "$d1 $m1 $y1 - $d2 $m2 $y2";
-        } elseif ($m1 != $m2) {
-            return "$d1 $m1 - $d2 $m2 $y1";
-        } else {
-            return "$d1 - $d2 $m1 $y1";
+        if ($y1 !== $y2) {
+            return "${d1} ${m1} ${y1} - ${d2} ${m2} ${y2}";
+        } elseif ($m1 !== $m2) {
+            return "${d1} ${m1} - ${d2} ${m2} ${y1}";
         }
+        return "${d1} - ${d2} ${m1} ${y1}";
     }
 
     /**
@@ -394,18 +393,17 @@ class DBDate extends DBField
         if ($timestamp <= $now) {
             return _t(
                 'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFAGO',
-                "{difference} ago",
+                '{difference} ago',
                 'Natural language time difference, e.g. 2 hours ago',
                 ['difference' => $this->TimeDiff($includeSeconds, $significance)]
             );
-        } else {
-            return _t(
-                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
-                "in {difference}",
-                'Natural language time difference, e.g. in 2 hours',
-                ['difference' => $this->TimeDiff($includeSeconds, $significance)]
-            );
         }
+        return _t(
+            'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
+            'in {difference}',
+            'Natural language time difference, e.g. in 2 hours',
+            ['difference' => $this->TimeDiff($includeSeconds, $significance)]
+        );
     }
 
     /**
@@ -434,9 +432,8 @@ class DBDate extends DBField
             return $this->TimeDiffIn('days');
         } elseif ($ago < $significance * 86400 * 365) {
             return $this->TimeDiffIn('months');
-        } else {
-            return $this->TimeDiffIn('years');
         }
+        return $this->TimeDiffIn('years');
     }
 
     /**
@@ -456,56 +453,56 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         switch ($format) {
-            case "seconds":
+            case 'seconds':
                 $span = $ago;
                 return _t(
-                    __CLASS__ . '.SECONDS_SHORT_PLURALS',
+                    self::class . '.SECONDS_SHORT_PLURALS',
                     '{count} sec|{count} secs',
                     ['count' => $span]
                 );
 
-            case "minutes":
+            case 'minutes':
                 $span = round($ago / 60);
                 return _t(
-                    __CLASS__ . '.MINUTES_SHORT_PLURALS',
+                    self::class . '.MINUTES_SHORT_PLURALS',
                     '{count} min|{count} mins',
                     ['count' => $span]
                 );
 
-            case "hours":
+            case 'hours':
                 $span = round($ago / 3600);
                 return _t(
-                    __CLASS__ . '.HOURS_SHORT_PLURALS',
+                    self::class . '.HOURS_SHORT_PLURALS',
                     '{count} hour|{count} hours',
                     ['count' => $span]
                 );
 
-            case "days":
+            case 'days':
                 $span = round($ago / 86400);
                 return _t(
-                    __CLASS__ . '.DAYS_SHORT_PLURALS',
+                    self::class . '.DAYS_SHORT_PLURALS',
                     '{count} day|{count} days',
                     ['count' => $span]
                 );
 
-            case "months":
+            case 'months':
                 $span = round($ago / 86400 / 30);
                 return _t(
-                    __CLASS__ . '.MONTHS_SHORT_PLURALS',
+                    self::class . '.MONTHS_SHORT_PLURALS',
                     '{count} month|{count} months',
                     ['count' => $span]
                 );
 
-            case "years":
+            case 'years':
                 $span = round($ago / 86400 / 365);
                 return _t(
-                    __CLASS__ . '.YEARS_SHORT_PLURALS',
+                    self::class . '.YEARS_SHORT_PLURALS',
                     '{count} year|{count} years',
                     ['count' => $span]
                 );
 
             default:
-                throw new \InvalidArgumentException("Invalid format $format");
+                throw new \InvalidArgumentException("Invalid format ${format}");
         }
     }
 
@@ -590,13 +587,13 @@ class DBDate extends DBField
         // split
         list($year, $month, $day, $time) = $this->explodeDateString($value);
 
-        if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
+        if ((int) $year === 0 && (int) $month === 0 && (int) $day === 0) {
             return null;
         }
         // Validate date
         if (!checkdate($month, $day, $year)) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '${value}'. Use " . self::ISO_DATE . ' to prevent this error.'
             );
         }
 
@@ -619,22 +616,22 @@ class DBDate extends DBField
             $matches
         )) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '${value}'. Use " . self::ISO_DATE . ' to prevent this error.'
             );
         }
 
         $parts = [
             $matches['first'],
             $matches['second'],
-            $matches['third']
+            $matches['third'],
         ];
         // Flip d-m-y to y-m-d
         if ($parts[0] < 1000 && $parts[2] > 1000) {
             $parts = array_reverse($parts);
         }
-        if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
+        if ($parts[0] < 1000 && (int) $parts[0] !== 0) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '${value}'. Use " . self::ISO_DATE . ' to prevent this error.'
             );
         }
         $parts[] = $matches['time'];

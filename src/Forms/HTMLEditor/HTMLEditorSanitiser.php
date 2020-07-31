@@ -33,8 +33,9 @@ class HTMLEditorSanitiser
      */
     private static $link_rel_value = 'noopener noreferrer';
 
-    /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
+    /** @var [stdClass] - => hash for whitelist element rules where the element name isn't a pattern */
     protected $elements = [];
+
     /** @var [stdClass] - Sequential list of whitelist element rules where the element name is a pattern */
     protected $elementPatterns = [];
 
@@ -104,7 +105,7 @@ class HTMLEditorSanitiser
                 $element->attributesForced = [];
 
                 foreach (['#' => 'paddEmpty', '-' => 'removeEmpty'] as $match => $means) {
-                    $element->$means = ($prefix === $match);
+                    $element->{$means} = ($prefix === $match);
                 }
 
                 // Copy attributes from global rule into current rule
@@ -160,7 +161,7 @@ class HTMLEditorSanitiser
                 }
 
                 // Global rule, store away these for later usage
-                if (!$this->globalAttributes && $elementName == '@') {
+                if (!$this->globalAttributes && $elementName === '@') {
                     $this->globalAttributes = $element->attributes;
                 }
 
@@ -271,7 +272,7 @@ class HTMLEditorSanitiser
         }
 
         // If the rule has a set of valid values, check them to see if this attribute is one
-        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues)) {
+        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues, true)) {
             return false;
         }
 

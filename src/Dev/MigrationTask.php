@@ -50,16 +50,15 @@ namespace SilverStripe\Dev;
  */
 class MigrationTask extends BuildTask
 {
-
     private static $segment = 'MigrationTask';
 
-    protected $title = "Database Migrations";
+    protected $title = 'Database Migrations';
 
-    protected $description = "Provide atomic database changes (subclass this and implement yourself)";
+    protected $description = 'Provide atomic database changes (subclass this and implement yourself)';
 
     public function run($request)
     {
-        if ($request->param('Direction') == 'down') {
+        if ($request->param('Direction') === 'down') {
             $this->down();
         } else {
             $this->up();

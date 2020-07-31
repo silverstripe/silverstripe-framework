@@ -12,7 +12,6 @@ use SilverStripe\i18n\i18n;
  */
 class NumericField extends TextField
 {
-
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DECIMAL;
 
     protected $inputType = 'number';
@@ -158,9 +157,9 @@ class NumericField extends TextField
             return null;
         }
         if ($this->getScale() === 0) {
-            return (int)$value;
+            return (int) $value;
         }
-        return (float)$value;
+        return (float) $value;
     }
 
     /**

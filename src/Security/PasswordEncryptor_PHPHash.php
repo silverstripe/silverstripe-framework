@@ -11,7 +11,6 @@ use Exception;
  */
 class PasswordEncryptor_PHPHash extends PasswordEncryptor
 {
-
     protected $algorithm = 'sha1';
 
     /**
@@ -20,7 +19,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor
      */
     public function __construct($algorithm)
     {
-        if (!in_array($algorithm, hash_algos())) {
+        if (!in_array($algorithm, hash_algos(), true)) {
             throw new Exception(
                 sprintf('Hash algorithm "%s" not found in hash_algos()', $algorithm)
             );

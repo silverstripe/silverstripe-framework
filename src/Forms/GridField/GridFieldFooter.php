@@ -20,7 +20,6 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldFooter implements GridField_HTMLProvider
 {
-
     /**
      * A message to display in the footer
      *
@@ -36,7 +35,6 @@ class GridFieldFooter implements GridField_HTMLProvider
     protected $showrecordcount = false;
 
     /**
-     *
      * @param string $message A message to display in the footer
      * @param bool $showrecordcount
      */
@@ -48,7 +46,6 @@ class GridFieldFooter implements GridField_HTMLProvider
         $this->showrecordcount = $showrecordcount;
     }
 
-
     public function getHTMLFragments($gridField)
     {
         $count = $gridField->getList()->count();
@@ -58,17 +55,17 @@ class GridFieldFooter implements GridField_HTMLProvider
             'Message' => $this->message,
             'FirstShownRecord' => 1,
             'LastShownRecord' => $count,
-            'NumRecords' => $count
+            'NumRecords' => $count,
         ]);
 
-        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        $template = SSViewer::get_templates_by_class($this, '', self::class);
         return [
             'footer' => $forTemplate->renderWith(
                 $template,
                 [
-                    'Colspan' => count($gridField->getColumns())
+                    'Colspan' => count($gridField->getColumns()),
                 ]
-            )
+            ),
         ];
     }
 }

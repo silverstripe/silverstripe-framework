@@ -148,11 +148,11 @@ class DataObjectSchema
         while ($next = get_parent_class($current)) {
             if ($next === DataObject::class) {
                 // Only use ClassInfo::class_name() to format the class if we've not used get_parent_class()
-                return ($current === $class) ? ClassInfo::class_name($current) : $current;
+                return $current === $class ? ClassInfo::class_name($current) : $current;
             }
             $current = $next;
         }
-        throw new InvalidArgumentException("$class is not a subclass of DataObject");
+        throw new InvalidArgumentException("${class} is not a subclass of DataObject");
     }
 
     /**
@@ -199,7 +199,7 @@ class DataObjectSchema
 
         // Validate options
         if (!is_int($options)) {
-            throw new InvalidArgumentException("Invalid options " . var_export($options, true));
+            throw new InvalidArgumentException('Invalid options ' . var_export($options, true));
         }
         $uninherited = ($options & self::UNINHERITED) === self::UNINHERITED;
         $dbOnly = ($options & self::DB_ONLY) === self::DB_ONLY;
@@ -224,13 +224,12 @@ class DataObjectSchema
 
             // Record specification
             foreach ($fields as $name => $specification) {
-                $prefix = $includeClass ? "{$tableClass}." : "";
+                $prefix = $includeClass ? "{$tableClass}." : '';
                 $db[$name] = $prefix . $specification;
             }
         }
         return $db;
     }
-
 
     /**
      * Get specifications for a single class field
@@ -630,7 +629,7 @@ class DataObjectSchema
             $sort = preg_split('/,(?![^()]*+\\))/', $sort);
             foreach ($sort as $value) {
                 try {
-                    list ($table, $column) = $this->parseSortColumn(trim($value));
+                    list($table, $column) = $this->parseSortColumn(trim($value));
                     $table = trim($table, '"');
                     $column = trim($column, '"');
                     if ($table && strtolower($table) !== strtolower(self::tableName($class))) {
@@ -664,7 +663,7 @@ class DataObjectSchema
             $table = $match['table'];
             $column = $match['column'];
         } else {
-            throw new InvalidArgumentException("Invalid sort() column");
+            throw new InvalidArgumentException('Invalid sort() column');
         }
         return [$table, $column];
     }
@@ -782,7 +781,6 @@ class DataObjectSchema
         return null;
     }
 
-
     /**
      * Parse a belongs_many_many component to extract class and relationship name
      *
@@ -873,7 +871,7 @@ class DataObjectSchema
      */
     public function hasManyComponent($class, $component, $classOnly = true)
     {
-        $hasMany = (array)Config::inst()->get($class, 'has_many');
+        $hasMany = (array) Config::inst()->get($class, 'has_many');
         if (!isset($hasMany[$component])) {
             return null;
         }
@@ -920,7 +918,7 @@ class DataObjectSchema
      */
     public function belongsToComponent($class, $component, $classOnly = true)
     {
-        $belongsTo = (array)Config::forClass($class)->get('belongs_to');
+        $belongsTo = (array) Config::forClass($class)->get('belongs_to');
         if (!isset($belongsTo[$component])) {
             return null;
         }
@@ -950,7 +948,6 @@ class DataObjectSchema
     }
 
     /**
-     *
      * @param string $parentClass Parent class name
      * @param string $component ManyMany name
      * @param string|array $specification Declaration of many_many relation type
@@ -983,7 +980,7 @@ class DataObjectSchema
         $classTable = $this->tableName($parentClass);
         $parentField = "{$classTable}ID";
         if ($parentClass === $specification) {
-            $childField = "ChildID";
+            $childField = 'ChildID';
         } else {
             $candidateTable = $this->tableName($specification);
             $childField = "{$candidateTable}ID";
@@ -1055,11 +1052,11 @@ class DataObjectSchema
         }
 
         if (empty($remoteClass)) {
-            throw new Exception("Unknown $type component '$component' on class '$class'");
+            throw new Exception("Unknown ${type} component '${component}' on class '${class}'");
         }
         if (!ClassInfo::exists(strtok($remoteClass, '.'))) {
             throw new Exception(
-                "Class '$remoteClass' not found, but used in $type component '$component' on class '$class'"
+                "Class '${remoteClass}' not found, but used in ${type} component '${component}' on class '${class}'"
             );
         }
 
@@ -1088,19 +1085,19 @@ class DataObjectSchema
         // In case of an indeterminate remote field show an error
         if (empty($remoteField)) {
             $polymorphic = false;
-            $message = "No has_one found on class '$remoteClass'";
-            if ($type == 'has_many') {
+            $message = "No has_one found on class '${remoteClass}'";
+            if ($type === 'has_many') {
                 // include a hint for has_many that is missing a has_one
-                $message .= ", the has_many relation from '$class' to '$remoteClass'";
-                $message .= " requires a has_one on '$remoteClass'";
+                $message .= ", the has_many relation from '${class}' to '${remoteClass}'";
+                $message .= " requires a has_one on '${remoteClass}'";
             }
             throw new Exception($message);
         }
 
         // If given an explicit field name ensure the related class specifies this
         if (empty($remoteRelations[$remoteField])) {
-            throw new Exception("Missing expected has_one named '$remoteField'
-				on class '$remoteClass' referenced by $type named '$component'
+            throw new Exception("Missing expected has_one named '${remoteField}'
+				on class '${remoteClass}' referenced by ${type} named '${component}'
 				on class {$class}");
         }
 
@@ -1108,10 +1105,9 @@ class DataObjectSchema
         if ($remoteRelations[$remoteField] === DataObject::class) {
             $polymorphic = true;
             return $remoteField; // Composite polymorphic field does not include 'ID' suffix
-        } else {
-            $polymorphic = false;
-            return $remoteField . 'ID';
         }
+        $polymorphic = false;
+        return $remoteField . 'ID';
     }
 
     /**
@@ -1192,7 +1188,7 @@ class DataObjectSchema
         if (empty($specification['through'])) {
             throw new InvalidArgumentException(
                 "many_many relation {$parentClass}.{$component} has missing through which should be "
-                . "a DataObject class name to be used as a join table"
+                . 'a DataObject class name to be used as a join table'
             );
         }
         $joinClass = $specification['through'];
@@ -1238,7 +1234,7 @@ class DataObjectSchema
         if (!$valid) {
             throw new InvalidArgumentException(
                 "{$type} relation {$class}.{$component} references class {$relationClass} "
-                . " which is not a subclass of " . DataObject::class
+                . ' which is not a subclass of ' . DataObject::class
             );
         }
     }

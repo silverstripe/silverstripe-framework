@@ -14,7 +14,6 @@ use SilverStripe\Control\HTTPResponse;
  */
 class HTTPOutputHandler extends AbstractProcessingHandler
 {
-
     /**
      * @var string
      */
@@ -165,6 +164,6 @@ class HTTPOutputHandler extends AbstractProcessingHandler
         $response->setBody($record['formatted']);
         $response->output();
 
-        return false === $this->getBubble();
+        return $this->getBubble() === false;
     }
 }

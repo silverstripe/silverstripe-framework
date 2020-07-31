@@ -2,7 +2,6 @@
 
 namespace SilverStripe\i18n\Messages;
 
-use SilverStripe\Dev\Debug;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;

@@ -46,10 +46,10 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     protected $underlay;
 
     /**
-     * @var object $item
-     * @var array $overlay
-     * @var array $underlay
-     * @var SSViewer_Scope $inheritedScope
+     * @var object
+     * @var array
+     * @var array
+     * @var SSViewer_Scope
      */
     public function __construct(
         $item,
@@ -98,9 +98,9 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     }
 
     /**
-     * @var string $interfaceToQuery
-     * @var string $variableMethod
-     * @var boolean $createObject
+     * @var string
+     * @var string
+     * @var boolean
      * @return array
      */
     protected function getPropertiesFromProvider($interfaceToQuery, $variableMethod, $createObject = false)
@@ -113,7 +113,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                 // Create a new instance of the object for method calls
                 if ($createObject) {
                     $implementor = new $implementor();
-                    $exposedVariables = $implementor->$variableMethod();
+                    $exposedVariables = $implementor->{$variableMethod}();
                 } else {
                     $exposedVariables = $implementor::$variableMethod();
                 }
@@ -122,7 +122,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                     if (!is_array($details)) {
                         $details = [
                             'method' => $details,
-                            'casting' => ViewableData::config()->uninherited('default_cast')
+                            'casting' => ViewableData::config()->uninherited('default_cast'),
                         ];
                     }
 
@@ -175,7 +175,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             $res['value'] = $source['value'];
         } else {
             throw new InvalidArgumentException(
-                "Injected property $property does't have a value or callable value source provided"
+                "Injected property ${property} does't have a value or callable value source provided"
             );
         }
 
@@ -275,7 +275,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
     {
-        $result = $this->getInjectedValue($name, (array)$arguments);
+        $result = $this->getInjectedValue($name, (array) $arguments);
         if ($result) {
             return $result['obj'];
         }
@@ -291,13 +291,13 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         $property = $arguments[0];  // The name of the public function being called
 
         // The public function parameters in an array
-        $params = (isset($arguments[1])) ? (array)$arguments[1] : [];
+        $params = isset($arguments[1]) ? (array) $arguments[1] : [];
 
         $val = $this->getInjectedValue($property, $params);
         if ($val) {
             $obj = $val['obj'];
             if ($name === 'hasValue') {
-                $result = ($obj instanceof ViewableData) ? $obj->exists() : (bool)$obj;
+                $result = $obj instanceof ViewableData ? $obj->exists() : (bool) $obj;
             } else {
                 $result = $obj->forTemplate(); // XML_val
             }
@@ -314,7 +314,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      *
      * @param string $property Name of override requested
      * @param array $overrides List of overrides available
-     * @return null|array Null if not provided, or array with 'value' or 'callable' key
+     * @return array|null Null if not provided, or array with 'value' or 'callable' key
      */
     protected function processTemplateOverride($property, $overrides)
     {
@@ -335,7 +335,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             }
         }
 
-        return [ 'value' => $override ];
+        return ['value' => $override];
     }
 
     /**
@@ -355,7 +355,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         // Check if the method to-be-called exists on the target object - if so, don't check any further
         // injection locations
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-        if (isset($on->$property) || method_exists($on, $property)) {
+        if (isset($on->{$property}) || method_exists($on, $property)) {
             return null;
         }
 

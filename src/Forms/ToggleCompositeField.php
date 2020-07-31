@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\View\Requirements;
-
 /**
  * Allows visibility of a group of fields to be toggled.
  *

@@ -14,9 +14,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
 {
-
     /**
-     *
      * @var SQLSelect
      */
     protected $whereQuery;

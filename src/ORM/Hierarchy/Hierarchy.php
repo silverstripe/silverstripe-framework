@@ -2,19 +2,19 @@
 
 namespace SilverStripe\ORM\Hierarchy;
 
+use Exception;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\DB;
-use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use Exception;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
@@ -105,7 +105,7 @@ class Hierarchy extends DataExtension
     public static function get_extra_config($class, $extension, $args)
     {
         return [
-            'has_one' => ['Parent' => $class]
+            'has_one' => ['Parent' => $class],
         ];
     }
 
@@ -134,11 +134,11 @@ class Hierarchy extends DataExtension
         // Walk the hierarchy upwards until we reach the top, or until we reach the originating node again.
         $node = $owner;
         while ($node && $node->ParentID) {
-            if ((int)$node->ParentID === (int)$owner->ID) {
+            if ((int) $node->ParentID === (int) $owner->ID) {
                 // Hierarchy is looping.
                 $validationResult->addError(
                     _t(
-                        __CLASS__ . '.InfiniteLoopNotAllowed',
+                        self::class . '.InfiniteLoopNotAllowed',
                         'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
                         'First argument is the class that makes up the hierarchy.',
                         ['type' => get_class($owner)]
@@ -151,7 +151,6 @@ class Hierarchy extends DataExtension
             $node = $node->Parent();
         }
     }
-
 
     /**
      * Get a list of this DataObject's and all it's descendants IDs.
@@ -178,7 +177,7 @@ class Hierarchy extends DataExtension
         }
         $children = $node->AllChildren();
         foreach ($children as $child) {
-            if (!in_array($child->ID, $idList)) {
+            if (!in_array($child->ID, $idList, true)) {
                 $idList[] = $child->ID;
                 $this->loadDescendantIDListInto($idList, $child);
             }
@@ -243,7 +242,7 @@ class Hierarchy extends DataExtension
                 $stageChildren = $merged;
             }
         }
-        $owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren);
+        $owner->extend('augmentAllChildrenIncludingDeleted', $stageChildren);
         return $stageChildren;
     }
 
@@ -267,7 +266,7 @@ class Hierarchy extends DataExtension
         $parentIDColumn = $owner->getSchema()->sqlColumnForField($owner, 'ParentID');
         return Versioned::get_including_deleted(
             $owner->baseClass(),
-            [ $parentIDColumn => $owner->ID ],
+            [$parentIDColumn => $owner->ID],
             "\"{$baseTable}\".\"ID\" ASC"
         );
     }
@@ -291,7 +290,6 @@ class Hierarchy extends DataExtension
      */
     public function numChildren($cache = true)
     {
-
         $baseClass = $this->owner->baseClass();
         $cacheType = 'numChildren';
         $id = $this->owner->ID;
@@ -307,7 +305,7 @@ class Hierarchy extends DataExtension
         }
 
         // We call stageChildren(), because Children() has canView() filtering
-        $numChildren = (int)$this->owner->stageChildren(true)->Count();
+        $numChildren = (int) $this->owner->stageChildren(true)->Count();
 
         // Save if caching
         if ($cache) {
@@ -344,7 +342,7 @@ class Hierarchy extends DataExtension
      * a list of record IDs, for more efficient database querying.  If $idList
      * is null, then every record will be pre-cached.
      *
-     * @param string $class
+     * @param string $baseClass
      * @param string $stage
      * @param array $idList
      */
@@ -369,7 +367,7 @@ class Hierarchy extends DataExtension
             foreach ($idList as $id) {
                 if (!is_numeric($id)) {
                     user_error(
-                        "Bad ID passed to Versioned::prepopulate_numchildren_cache() in \$idList: " . $id,
+                        'Bad ID passed to Versioned::prepopulate_numchildren_cache() in $idList: ' . $id,
                         E_USER_ERROR
                     );
                 }
@@ -381,9 +379,9 @@ class Hierarchy extends DataExtension
 
         $query->setSelect([
             '"ParentID"',
-            "COUNT(DISTINCT $idColumn) AS \"NumChildren\"",
+            "COUNT(DISTINCT ${idColumn}) AS \"NumChildren\"",
         ]);
-        $query->setGroupBy([Convert::symbol2sql("ParentID")]);
+        $query->setGroupBy([Convert::symbol2sql('ParentID')]);
 
         $numChildren = $query->execute()->map();
         self::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
@@ -406,7 +404,7 @@ class Hierarchy extends DataExtension
         }
         $controller = Controller::curr();
         return $controller instanceof LeftAndMain
-            && in_array($controller->getAction(), ["treeview", "listview", "getsubtree"]);
+            && in_array($controller->getAction(), ['treeview', 'listview', 'getsubtree'], true);
     }
 
     /**
@@ -426,14 +424,14 @@ class Hierarchy extends DataExtension
         $staged = DataObject::get($baseClass)->where(sprintf(
             '%s.%s <> %s.%s',
             Convert::symbol2sql($baseTable),
-            Convert::symbol2sql("ParentID"),
+            Convert::symbol2sql('ParentID'),
             Convert::symbol2sql($baseTable),
-            Convert::symbol2sql("ID")
+            Convert::symbol2sql('ID')
         ));
 
         if (!$skipParentIDFilter) {
             // There's no filtering by ID if we don't have an ID.
-            $staged = $staged->filter('ParentID', (int)$this->owner->ID);
+            $staged = $staged->filter('ParentID', (int) $this->owner->ID);
         }
 
         if ($hideFromHierarchy) {
@@ -445,7 +443,7 @@ class Hierarchy extends DataExtension
         if (!$showAll && DataObject::getSchema()->fieldSpec($this->owner, 'ShowInMenus')) {
             $staged = $staged->filter('ShowInMenus', 1);
         }
-        $this->owner->extend("augmentStageChildren", $staged, $showAll);
+        $this->owner->extend('augmentStageChildren', $staged, $showAll);
         return $staged;
     }
 
@@ -469,11 +467,11 @@ class Hierarchy extends DataExtension
         $hideFromHierarchy = $owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $owner->config()->hide_from_cms_tree;
         $children = DataObject::get($owner->baseClass())
-            ->filter('ParentID', (int)$owner->ID)
-            ->exclude('ID', (int)$owner->ID)
+            ->filter('ParentID', (int) $owner->ID)
+            ->exclude('ID', (int) $owner->ID)
             ->setDataQueryParam([
                 'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
-                'Versioned.stage' => 'Live'
+                'Versioned.stage' => 'Live',
             ]);
         if ($hideFromHierarchy) {
             $children = $children->exclude('ClassName', $hideFromHierarchy);
@@ -505,7 +503,7 @@ class Hierarchy extends DataExtension
         $idSQL = $this->owner->getSchema()->sqlColumnForField($baseClass, 'ID');
         return DataObject::get_one($baseClass, [
             [$idSQL => $parentID],
-            $filter
+            $filter,
         ]);
     }
 

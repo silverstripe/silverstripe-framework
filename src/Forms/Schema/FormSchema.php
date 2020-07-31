@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\Schema;
 
 use InvalidArgumentException;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
@@ -54,14 +53,14 @@ class FormSchema
         if (!is_array($schemaParts)) {
             $schemaParts = preg_split('#\s*,\s*#', $schemaParts) ?: [];
         }
-        $wantSchema = in_array('schema', $schemaParts);
-        $wantState = in_array('state', $schemaParts);
-        $wantErrors = in_array('errors', $schemaParts);
-        $auto = in_array('auto', $schemaParts);
+        $wantSchema = in_array('schema', $schemaParts, true);
+        $wantState = in_array('state', $schemaParts, true);
+        $wantErrors = in_array('errors', $schemaParts, true);
+        $auto = in_array('auto', $schemaParts, true);
 
         // Require ID
         if (empty($schemaID)) {
-            throw new InvalidArgumentException("schemaID is required");
+            throw new InvalidArgumentException('schemaID is required');
         }
         $return = ['id' => $schemaID];
 
@@ -99,7 +98,7 @@ class FormSchema
             'attributes' => $form->getAttributes(),
             'data' => [],
             'fields' => [],
-            'actions' => []
+            'actions' => [],
         ];
 
         /** @var FormField $action */

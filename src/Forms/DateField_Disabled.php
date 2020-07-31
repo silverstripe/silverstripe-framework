@@ -11,7 +11,6 @@ use SilverStripe\ORM\FieldType\DBDate;
  */
 class DateField_Disabled extends DateField
 {
-
     protected $disabled = true;
 
     public function Field($properties = [])
@@ -45,7 +44,7 @@ class DateField_Disabled extends DateField
         }
 
         return sprintf(
-            "<span class=\"readonly\" id=\"%s\">%s</span>",
+            '<span class="readonly" id="%s">%s</span>',
             $this->ID(),
             $displayValue
         );
@@ -53,7 +52,7 @@ class DateField_Disabled extends DateField
 
     public function Type()
     {
-        return "date_disabled readonly " . parent::Type();
+        return 'date_disabled readonly ' . parent::Type();
     }
 
     public function getHTML5()

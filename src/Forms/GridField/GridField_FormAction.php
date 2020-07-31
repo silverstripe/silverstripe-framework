@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -69,7 +68,7 @@ class GridField_FormAction extends FormAction
      */
     public function nameEncode($value)
     {
-        return (string)preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value);
+        return (string) preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value);
     }
 
     /**
@@ -103,7 +102,7 @@ class GridField_FormAction extends FormAction
         $attributes = [
             'name' => $name,
             'data-url' => $this->gridField->Link(),
-            'type' => "button",
+            'type' => 'button',
         ];
 
         // Create a "store" for the "state" of this action

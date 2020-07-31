@@ -59,8 +59,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
             return null;
         }
         /** @var Member $member */
-        $member = Member::get()->byID($id);
-        return $member;
+        return Member::get()->byID($id);
     }
 
     /**

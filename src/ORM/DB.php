@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM;
 
-use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -23,7 +22,6 @@ use SilverStripe\ORM\Queries\SQLExpression;
  */
 class DB
 {
-
     /**
      * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
      * should now use ANSI-compatible syntax.  The most notable affect of this
@@ -56,11 +54,9 @@ class DB
     /**
      * List of configurations for each connection
      *
-     * @var array List of configs each in the $databaseConfig format
+     * @var array List of configs each in the format
      */
     protected static $configs = [];
-
-
 
     /**
      * The last SQL query run.
@@ -151,10 +147,9 @@ class DB
         $connection = self::get_conn($name);
         if ($connection) {
             return $connection->getQueryBuilder()->buildSQL($expression, $parameters);
-        } else {
-            $parameters = [];
-            return null;
         }
+        $parameters = [];
+        return null;
     }
 
     /**
@@ -268,7 +263,7 @@ class DB
 
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
-        return (bool)preg_match($pattern, $name);
+        return (bool) preg_match($pattern, $name);
     }
 
     /**
@@ -290,7 +285,7 @@ class DB
         }
 
         if (!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
-            throw new InvalidArgumentException("DB::connect: Not passed a valid database config");
+            throw new InvalidArgumentException('DB::connect: Not passed a valid database config');
         }
 
         self::$connection_attempted = true;
@@ -423,7 +418,7 @@ class DB
             } elseif (is_int($next)) {
                 $value = $next;
             } else {
-                $value = (DB::get_conn() !== null) ? Convert::raw2sql($next, true) : $next;
+                $value = DB::get_conn() !== null ? Convert::raw2sql($next, true) : $next;
             }
             $joined .= $value;
         }
@@ -692,7 +687,7 @@ class DB
      * @param string $message to display
      * @param string $type one of [created|changed|repaired|obsolete|deleted|error]
      */
-    public static function alteration_message($message, $type = "")
+    public static function alteration_message($message, $type = '')
     {
         self::get_schema()->alterationMessage($message, $type);
     }

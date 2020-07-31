@@ -15,12 +15,12 @@ use SilverStripe\ORM\Queries\SQLSelect;
  *
  * Example with a combined street name and number:
  * <code>
-* class Street extends DBComposite {
-*   private static $composite_db = return array(
-*       "Number" => "Int",
-*       "Name" => "Text"
-*   );
-* }
+ * class Street extends DBComposite {
+ *   private static $composite_db = return array(
+ *       "Number" => "Int",
+ *       "Name" => "Text"
+ *   );
+ * }
  * </code>
  */
 abstract class DBComposite extends DBField
@@ -53,7 +53,7 @@ abstract class DBComposite extends DBField
     {
         // Prevent failover / extensions from hijacking composite field setters
         // by intentionally avoiding hasMethod()
-        if ($this->hasField($property) && !method_exists($this, "set$property")) {
+        if ($this->hasField($property) && !method_exists($this, "set${property}")) {
             $this->setField($property, $value);
             return;
         }
@@ -64,7 +64,7 @@ abstract class DBComposite extends DBField
     {
         // Prevent failover / extensions from hijacking composite field getters
         // by intentionally avoiding hasMethod()
-        if ($this->hasField($property) && !method_exists($this, "get$property")) {
+        if ($this->hasField($property) && !method_exists($this, "get${property}")) {
             return $this->getField($property);
         }
         return parent::__get($property);
@@ -117,7 +117,6 @@ abstract class DBComposite extends DBField
     {
         return $this->config()->composite_db;
     }
-
 
     /**
      * Returns true if this composite field has changed.

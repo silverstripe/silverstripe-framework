@@ -28,7 +28,7 @@ class IntlLocales implements Locales, Resettable
     public function __construct()
     {
         if (!class_exists(Locale::class)) {
-            throw new Exception("This backend requires the php-intl extension");
+            throw new Exception('This backend requires the php-intl extension');
         }
     }
 
@@ -38,7 +38,7 @@ class IntlLocales implements Locales, Resettable
      * @config
      * @var array
      */
-    private static $locales =  [
+    private static $locales = [
         'aa_DJ' => 'Afar (Djibouti)',
         'ab_GE' => 'Abkhazian (Georgia)',
         'abr_GH' => 'Abron (Ghana)',
@@ -516,7 +516,7 @@ class IntlLocales implements Locales, Resettable
         'zh_US' => 'Chinese (United States)',
         'zh_cmn' => 'Chinese (Mandarin)',
         'zh_yue' => 'Chinese (Cantonese)',
-        'zu_ZA' => 'Zulu (South Africa)'
+        'zu_ZA' => 'Zulu (South Africa)',
     ];
 
     /**
@@ -637,7 +637,7 @@ class IntlLocales implements Locales, Resettable
 
     /**
      * @config
-     * @var array $likely_subtags Provides you "likely locales"
+     * @var array Provides you "likely locales"
      * for a given "short" language code. This is a guess,
      * as we can't disambiguate from e.g. "en" to "en_US" - it
      * could also mean "en_UK".
@@ -1104,8 +1104,6 @@ class IntlLocales implements Locales, Resettable
         'zh_TW' => 'zh_TW',
         'zu' => 'zu_ZA',
     ];
-
-
 
     /**
      * Standard list of countries

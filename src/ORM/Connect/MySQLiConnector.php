@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Core\Config\Config;
 use mysqli;
 use mysqli_stmt;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Connector for MySQL using the MySQLi method
  */
 class MySQLiConnector extends DBConnector
 {
-
     /**
      * Default strong SSL cipher to be used
      *
@@ -70,7 +69,7 @@ class MySQLiConnector extends DBConnector
     public function connect($parameters, $selectDB = false)
     {
         // Normally $selectDB is set to false by the MySQLDatabase controller, as per convention
-        $selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
+        $selectedDB = $selectDB && !empty($parameters['database']) ? $parameters['database'] : null;
 
         // Connection charset and collation
         $connCharset = Config::inst()->get(MySQLDatabase::class, 'connection_charset');
@@ -110,7 +109,7 @@ class MySQLiConnector extends DBConnector
             $parameters['username'],
             $parameters['password'],
             $selectedDB,
-            !empty($parameters['port']) ? $parameters['port'] : ini_get("mysqli.default_port")
+            !empty($parameters['port']) ? $parameters['port'] : ini_get('mysqli.default_port')
         );
 
         if ($this->dbConn->connect_error) {
@@ -151,7 +150,7 @@ class MySQLiConnector extends DBConnector
     public function quoteString($value)
     {
         $value = $this->escapeString($value);
-        return "'$value'";
+        return "'${value}'";
     }
 
     public function getVersion()
@@ -231,7 +230,7 @@ class MySQLiConnector extends DBConnector
                     // Blobs must be sent via send_long_data and set to null here
                     $blobs[] = [
                         'index' => $index,
-                        'value' => $value
+                        'value' => $value,
                     ];
                     $value = null;
                     break;
@@ -239,7 +238,7 @@ class MySQLiConnector extends DBConnector
                 case 'unknown type':
                 default:
                     user_error(
-                        "Cannot bind parameter \"$value\" as it is an unsupported type ($phpType)",
+                        "Cannot bind parameter \"${value}\" as it is an unsupported type (${phpType})",
                         E_USER_ERROR
                     );
                     break;
@@ -262,9 +261,9 @@ class MySQLiConnector extends DBConnector
         $boundNames = [];
         $parametersCount = count($parameters);
         for ($i = 0; $i < $parametersCount; $i++) {
-            $boundName = "param$i";
-            $$boundName = $parameters[$i];
-            $boundNames[] = &$$boundName;
+            $boundName = "param${i}";
+            ${$boundName} = $parameters[$i];
+            $boundNames[] = &${$boundName};
         }
         $statement->bind_param(...$boundNames);
     }

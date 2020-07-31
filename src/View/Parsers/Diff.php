@@ -47,9 +47,7 @@ class Diff extends \Diff
         }
 
         // Remove empty <ins /> and <del /> tags because browsers hate them
-        $content = preg_replace('/<(ins|del)[^>]*\/>/', '', $content);
-
-        return $content;
+        return preg_replace('/<(ins|del)[^>]*\/>/', '', $content);
     }
 
     /**
@@ -106,7 +104,7 @@ class Diff extends \Diff
                     foreach ($chunks as $item) {
                         // $tagStack > 0 indicates that we should be tag-building
                         if ($tagStack[$listName]) {
-                            $rechunked[$listName][sizeof($rechunked[$listName])-1] .= ' ' . $item;
+                            $rechunked[$listName][sizeof($rechunked[$listName]) - 1] .= ' ' . $item;
                         } else {
                             $rechunked[$listName][] = $item;
                         }
@@ -114,14 +112,14 @@ class Diff extends \Diff
                         if ($lookForTag
                             && !$tagStack[$listName]
                             && isset($item[0])
-                            && $item[0] == "<"
-                            && substr($item, 0, 2) != "</"
+                            && $item[0] === '<'
+                            && substr($item, 0, 2) !== '</'
                         ) {
                             $tagStack[$listName] = 1;
                         } elseif ($tagStack[$listName]) {
-                            if (substr($item, 0, 2) == "</") {
+                            if (substr($item, 0, 2) === '</') {
                                 $tagStack[$listName]--;
-                            } elseif (isset($item[0]) && $item[0] == "<") {
+                            } elseif (isset($item[0]) && $item[0] === '<') {
                                 $tagStack[$listName]++;
                             }
                         }
@@ -134,25 +132,25 @@ class Diff extends \Diff
         $diff = new Diff($rechunked[1], $rechunked[2]);
         $content = '';
         foreach ($diff->edits as $edit) {
-            $orig = ($escape) ? Convert::raw2xml($edit->orig) : $edit->orig;
-            $final = ($escape) ? Convert::raw2xml($edit->final) : $edit->final;
+            $orig = $escape ? Convert::raw2xml($edit->orig) : $edit->orig;
+            $final = $escape ? Convert::raw2xml($edit->final) : $edit->final;
 
             switch ($edit->type) {
                 case 'copy':
-                    $content .= " " . implode(" ", $orig) . " ";
+                    $content .= ' ' . implode(' ', $orig) . ' ';
                     break;
 
                 case 'change':
-                    $content .= " <ins>" . implode(" ", $final) . "</ins> ";
-                    $content .= " <del>" . implode(" ", $orig) . "</del> ";
+                    $content .= ' <ins>' . implode(' ', $final) . '</ins> ';
+                    $content .= ' <del>' . implode(' ', $orig) . '</del> ';
                     break;
 
                 case 'add':
-                    $content .= " <ins>" . implode(" ", $final) . "</ins> ";
+                    $content .= ' <ins>' . implode(' ', $final) . '</ins> ';
                     break;
 
                 case 'delete':
-                    $content .= " <del>" . implode(" ", $orig) . "</del> ";
+                    $content .= ' <del>' . implode(' ', $orig) . '</del> ';
                     break;
             }
         }
@@ -171,7 +169,7 @@ class Diff extends \Diff
         }
         if (is_bool($content)) {
             // Convert boolean to strings
-            $content = $content ? "true" : "false";
+            $content = $content ? 'true' : 'false';
         }
         if (is_array($content)) {
             $content = array_filter($content, 'is_scalar');
@@ -179,14 +177,14 @@ class Diff extends \Diff
             $content = implode(',', $content);
         }
 
-        $content = str_replace(["&nbsp;", "<", ">"], [" "," <", "> "], $content);
+        $content = str_replace(['&nbsp;', '<', '>'], [' ', ' <', '> '], $content);
         $candidateChunks = preg_split("/[\t\r\n ]+/", $content);
         $chunks = [];
         for ($i = 0; $i < count($candidateChunks); $i++) {
             $item = $candidateChunks[$i];
-            if (isset($item[0]) && $item[0] == "<") {
+            if (isset($item[0]) && $item[0] === '<') {
                 $newChunk = $item;
-                while ($item[strlen($item)-1] != ">") {
+                while ($item[strlen($item) - 1] !== '>') {
                     if (++$i >= count($candidateChunks)) {
                         break;
                     }

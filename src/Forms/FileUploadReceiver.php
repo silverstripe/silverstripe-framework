@@ -62,7 +62,6 @@ trait FileUploadReceiver
         $this->constructUploadReceiver();
     }
 
-
     /**
      * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
      *
@@ -74,6 +73,7 @@ trait FileUploadReceiver
         $this->record = $record;
         return $this;
     }
+
     /**
      * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will
      * use Form->getRecord() or Form->Controller()->data()
@@ -109,7 +109,6 @@ trait FileUploadReceiver
 
         return null;
     }
-
 
     /**
      * Loads the related record values into this field. This can be uploaded
@@ -227,7 +226,7 @@ trait FileUploadReceiver
      */
     public function getItems()
     {
-        return $this->items ? $this->items : new ArrayList();
+        return $this->items ?: new ArrayList();
     }
 
     /**
@@ -263,7 +262,7 @@ trait FileUploadReceiver
         $idList = $this->getItemIDs();
 
         // Check type of relation
-        $relation = $record->hasMethod($fieldname) ? $record->$fieldname() : null;
+        $relation = $record->hasMethod($fieldname) ? $record->{$fieldname}() : null;
         if ($relation && ($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
             // has_many or many_many
             $relation->setByIDList($idList);
@@ -318,7 +317,7 @@ trait FileUploadReceiver
             // Create new object explicitly. Otherwise rely on Upload::load to choose the class.
             $fileObject = Injector::inst()->create($relationClass);
             if (! ($fileObject instanceof DataObject) || !($fileObject instanceof AssetContainer)) {
-                throw new InvalidArgumentException("Invalid asset container $relationClass");
+                throw new InvalidArgumentException("Invalid asset container ${relationClass}");
             }
         }
 
@@ -360,10 +359,9 @@ trait FileUploadReceiver
         $record = $this->getRecord();
         if (empty($name) || empty($record)) {
             return $default;
-        } else {
-            $class = $record->getRelationClass($name);
-            return empty($class) ? $default : $class;
         }
+        $class = $record->getRelationClass($name);
+        return empty($class) ? $default : $class;
     }
 
     /**
