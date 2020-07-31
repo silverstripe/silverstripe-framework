@@ -304,8 +304,8 @@ class RequestHandler extends ViewableData
      * Must not raise HTTPResponse_Exceptions - instead it should return
      *
      * @param $request
-     * @param $action
-     * @return HTTPResponse
+     * @param string $action
+     * @return HTTPResponse|array
      */
     protected function handleAction($request, $action)
     {
