@@ -339,13 +339,11 @@ class Session
                 session_cache_limiter(null);
             }
 
-            if (isset($_SESSION)) {
-                // Initialise data from session store if present
-                $data = $_SESSION;
+            // Initialise data from session store if present
+            $data = empty($_SESSION)? [] : $_SESSION;
 
-                // Merge in existing in-memory data, taking priority over session store data
-                $this->recursivelyApply((array)$this->data, $data);
-            }
+            // Merge in existing in-memory data, taking priority over session store data
+            $this->recursivelyApply((array)$this->data, $data);
         }
 
         // Save any modified session data back to the session store if present, otherwise initialise it to an array.

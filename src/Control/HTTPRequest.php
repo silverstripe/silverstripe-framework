@@ -469,12 +469,12 @@ class HTTPRequest implements ArrayAccess
      * <code>$this->setResponse(HTTPRequest::send_file('the content', 'filename.txt'));</code>
      *
      * @static
-     * @param $fileData
-     * @param $fileName
+     * @param string $fileData
+     * @param string $fileName
      * @param null $mimeType
      * @return HTTPResponse
      */
-    public static function send_file($fileData, $fileName, $mimeType = null)
+    public static function send_file($fileData, string $fileName, ?string $mimeType = null) : HTTPResponse
     {
         if (!$mimeType) {
             $mimeType = HTTP::get_mime_type($fileName);
@@ -503,11 +503,11 @@ class HTTPRequest implements ArrayAccess
      * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
      * This is used to define a rule that only matches on a specific HTTP method.
      *
-     * @param $pattern
+     * @param string $pattern
      * @param bool $shiftOnSuccess
      * @return array|bool
      */
-    public function match($pattern, $shiftOnSuccess = false)
+    public function match(string $pattern, ?bool $shiftOnSuccess = false)
     {
         // Check if a specific method is required
         if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
@@ -686,10 +686,10 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * @param $params
+     * @param mixed $params
      * @return HTTPRequest $this
      */
-    public function setRouteParams($params)
+    public function setRouteParams($params): self
     {
         $this->routeParams = $params;
         return $this;
@@ -812,10 +812,10 @@ class HTTPRequest implements ArrayAccess
      * Sets the client IP address which originated this request.
      * Use setIPFromHeaderValue if assigning from header value.
      *
-     * @param $ip string
+     * @param string $ip
      * @return $this
      */
-    public function setIP($ip)
+    public function setIP(string $ip) : self
     {
         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
             throw new InvalidArgumentException("Invalid ip $ip");

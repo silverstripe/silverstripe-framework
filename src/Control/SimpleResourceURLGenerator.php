@@ -98,7 +98,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         foreach ($rules as $from => $to) {
             $relativeURL = preg_replace($from, $to, $relativeURL);
         }
-
+        $method = '';
         // Apply nonce
         // Don't add nonce to directories
         if ($this->nonceStyle && $exists && is_file($absolutePath)) {
@@ -116,6 +116,9 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
 
             if ($query) {
                 $query .= '&';
+            }
+            if(! $method) {
+                user_error('No nonceStyle defined.", E_USER_ERROR);
             }
             $query .= "m=" . call_user_func($method, $absolutePath);
         }

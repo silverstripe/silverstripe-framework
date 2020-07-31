@@ -90,6 +90,7 @@ class HTTPStreamResponse extends HTTPResponse
 
     public function getBody()
     {
+        /** @var string|null */
         $body = $this->getSavedBody();
         if (isset($body)) {
             return $body;

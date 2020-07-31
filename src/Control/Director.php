@@ -64,9 +64,11 @@ class Director implements TemplateGlobalProvider
 
     /**
      * Set current page
+     * Is as a SiteTree Object, but can't be defined here
+     * as SiteTree is not part of framework
      *
      * @internal
-     * @var SiteTree
+     * @var object
      */
     private static $current_page;
 
@@ -208,17 +210,15 @@ class Director implements TemplateGlobalProvider
             // This is important for classes such as FunctionalTest which emulate cross-request persistence
             $newVars['_SESSION'] = $sessionArray = $session->getAll() ?: [];
             $finally[] = function () use ($session, $sessionArray) {
-                if (isset($_SESSION)) {
-                    // Set new / updated keys
-                    foreach ($_SESSION as $key => $value) {
-                        $session->set($key, $value);
-                    }
-                    // Unset removed keys
-                    foreach (array_diff_key($sessionArray, $_SESSION) as $key => $value) {
-                        $session->clear($key);
-                    }
-                }
-            };
+            $sessionVars = empty($_SESSION) ?[] : $_SESSION;
+            // Set new / updated keys
+            foreach ($sessionVars as $key => $value) {
+                $session->set($key, $value);
+            }
+            // Unset removed keys
+            foreach (array_diff_key($sessionArray, $sessionVars) as $key => $value) {
+                $session->clear($key);
+            }
         } else {
             $newVars['_SESSION'] = $session ?: [];
         }
@@ -405,8 +405,10 @@ class Director implements TemplateGlobalProvider
     /**
      * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree
      * object to return, then this will return the current controller.
+     * return SiteTree SilverStripe\CMS\Model\SiteTree or Controller
+     * SiteTree can't be added to docblock here as Framework does not require silverstripe/cms)
      *
-     * @return SiteTree|Controller
+     * @return mixed
      */
     public static function get_current_page()
     {
@@ -415,8 +417,8 @@ class Director implements TemplateGlobalProvider
 
     /**
      * Set the currently active {@link SiteTree} object that is being used to respond to the request.
-     *
-     * @param SiteTree $page
+     * set as SiteTree (can't be added to docblock here as Framework does not require silverstripe/cms)
+     * @param object $page
      */
     public static function set_current_page($page)
     {
@@ -904,11 +906,11 @@ class Director implements TemplateGlobalProvider
     /**
      * Returns true if the given file exists. Filename should be relative to the site root.
      *
-     * @param $file
+     * @param string $file
      *
      * @return bool
      */
-    public static function fileExists($file)
+    public static function fileExists(string $file) : bool
     {
         // replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
         $file = preg_replace('/([^\?]*)?.*/', '$1', $file);
