@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Core;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
-use InvalidArgumentException;
 use SimpleXMLElement;
-use Exception;
 
 /**
  * Library of conversion functions, implemented as static methods.
@@ -29,7 +29,6 @@ use Exception;
  */
 class Convert
 {
-
     /**
      * Convert a value to be suitable for an XML attribute.
      *
@@ -153,8 +152,8 @@ class Convert
 
         return str_replace(
             // Intercepts some characters such as <, >, and & which can interfere
-            ["\\", '"', "\n", "\r", "'", '<', '>', '&'],
-            ["\\\\", '\"', '\n', '\r', "\\'", "\\x3c", "\\x3e", "\\x26"],
+            ['\\', '"', "\n", "\r", "'", '<', '>', '&'],
+            ['\\\\', '\"', '\n', '\r', "\\'", '\\x3c', '\\x3e', '\\x26'],
             $val
         );
     }
@@ -331,7 +330,7 @@ class Convert
      * Convert a XML string to a PHP array recursively. Do not
      * call this function directly, Please use {@link Convert::xml2array()}
      *
-     * @param SimpleXMLElement
+     * @param SimpleXMLElement $xml
      *
      * @return mixed
      */
@@ -350,7 +349,7 @@ class Convert
         }
         if (is_array($xml)) {
             if (count($xml) === 0) {
-                return (string)$x;
+                return (string) $x;
             } // for CDATA
             $r = [];
             foreach ($xml as $key => $value) {
@@ -375,7 +374,7 @@ class Convert
     public static function linkIfMatch($string)
     {
         if (preg_match('/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string)) {
-            return "<a style=\"white-space: nowrap\" href=\"$string\">$string</a>";
+            return "<a style=\"white-space: nowrap\" href=\"${string}\">${string}</a>";
         }
 
         return $string;
@@ -414,10 +413,10 @@ class Convert
         // Expand hyperlinks
         if (!$preserveLinks && !$config['PreserveLinks']) {
             $data = preg_replace_callback('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ui', function ($matches) {
-                return Convert::html2raw($matches[2]) . "[$matches[1]]";
+                return Convert::html2raw($matches[2]) . "[{$matches[1]}]";
             }, $data);
             $data = preg_replace_callback('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ui', function ($matches) {
-                return Convert::html2raw($matches[2]) . "[$matches[1]]";
+                return Convert::html2raw($matches[2]) . "[{$matches[1]}]";
             }, $data);
         }
 
@@ -469,15 +468,15 @@ class Convert
      * Please only encode the values, not the whole url, e.g.
      * "mailto:test@test.com?subject=" . Convert::raw2mailto($subject)
      *
-     * @param $data string
+     * @param string $data
      * @return string
      * @see http://www.ietf.org/rfc/rfc1738.txt
      */
     public static function raw2mailto($data)
     {
         return str_ireplace(
-            ["\n",'?','=',' ','(',')','&','@','"','\'',';'],
-            ['%0A','%3F','%3D','%20','%28','%29','%26','%40','%22','%27','%3B'],
+            ["\n", '?', '=', ' ', '(', ')', '&', '@', '"', '\'', ';'],
+            ['%0A', '%3F', '%3D', '%20', '%28', '%29', '%26', '%40', '%22', '%27', '%3B'],
             $data
         );
     }
@@ -486,7 +485,7 @@ class Convert
      * Convert a string (normally a title) to a string suitable for using in
      * urls and other html attributes. Uses {@link URLSegmentFilter}.
      *
-     * @param string
+     * @param string $title
      * @return string
      */
     public static function raw2url($title)
@@ -530,7 +529,7 @@ class Convert
     public static function base64url_decode($val)
     {
         return json_decode(
-            base64_decode(str_pad(strtr($val, '~_', '+/'), strlen($val) % 4, '=', STR_PAD_RIGHT)),
+            base64_decode(str_pad(strtr($val, '~_', '+/'), strlen($val) % 4, '=', STR_PAD_RIGHT), true),
             true
         );
     }
@@ -558,14 +557,14 @@ class Convert
             $return = implode('', [
                 strtolower($matches[1]),
                 $matches[2],
-                $matches[3]
+                $matches[3],
             ]);
         } elseif (preg_match('/(^[A-Z]{1})([a-z]+.*)/', $str, $matches)) {
             // If string has trailing lowercase after exactly one leading uppercase characters,
             // match everything but the last leading uppercase character.
             $return = implode('', [
                 strtolower($matches[1]),
-                $matches[2]
+                $matches[2],
             ]);
         } elseif (preg_match('/^[A-Z]+$/', $str)) {
             // If string has leading uppercase without trailing lowercase,
@@ -596,10 +595,10 @@ class Convert
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power
             // of magnitude to multiply a kilobyte by
-            return (int)round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            return (int) round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
 
-        return (int)round($size);
+        return (int) round($size);
     }
 
     /**
@@ -609,9 +608,9 @@ class Convert
      */
     public static function bytes2memstring($bytes, $decimal = 0)
     {
-        $scales = ['B','K','M','G','T','P','E','Z','Y'];
+        $scales = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
         // Get scale
-        $scale = (int)floor(log($bytes, 1024));
+        $scale = (int) floor(log($bytes, 1024));
         if (!isset($scales[$scale])) {
             $scale = 2;
         }

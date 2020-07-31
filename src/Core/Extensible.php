@@ -33,7 +33,7 @@ trait Extensible
      *
      * Extensions are instantiated together with the object and stored in {@link $extension_instances}.
      *
-     * @var array $extensions
+     * @var array
      * @config
      */
     private static $extensions = [];
@@ -174,7 +174,7 @@ trait Extensible
         if ($extension) {
             $class = $classOrExtension;
         } else {
-            $class = get_called_class();
+            $class = static::class;
             $extension = $classOrExtension;
         }
 
@@ -208,7 +208,7 @@ trait Extensible
 
         Config::modify()
             ->merge($class, 'extensions', [
-                $extension
+                $extension,
             ]);
 
         Injector::inst()->unregisterNamedObject($class);
@@ -235,7 +235,7 @@ trait Extensible
      */
     public static function remove_extension($extension)
     {
-        $class = get_called_class();
+        $class = static::class;
 
         // Build filtered extension list
         $found = false;
@@ -278,7 +278,7 @@ trait Extensible
     public static function get_extensions($class = null, $includeArgumentString = false)
     {
         if (!$class) {
-            $class = get_called_class();
+            $class = static::class;
         }
 
         $extensions = Config::forClass($class)->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
@@ -291,17 +291,15 @@ trait Extensible
 
         if ($includeArgumentString) {
             return $extensions;
-        } else {
-            $extensionClassnames = [];
-            if ($extensions) {
-                foreach ($extensions as $extension) {
-                    $extensionClassnames[] = Extension::get_classname_without_arguments($extension);
-                }
-            }
-            return $extensionClassnames;
         }
+        $extensionClassnames = [];
+        if ($extensions) {
+            foreach ($extensions as $extension) {
+                $extensionClassnames[] = Extension::get_classname_without_arguments($extension);
+            }
+        }
+        return $extensionClassnames;
     }
-
 
     /**
      * Get extra config sources for this class
@@ -312,11 +310,11 @@ trait Extensible
     public static function get_extra_config_sources($class = null)
     {
         if (!$class) {
-            $class = get_called_class();
+            $class = static::class;
         }
 
         // If this class is unextendable, NOP
-        if (in_array($class, self::$unextendable_classes)) {
+        if (in_array($class, self::$unextendable_classes, true)) {
             return null;
         }
 
@@ -340,7 +338,7 @@ trait Extensible
             $sources[] = $extensionClass;
 
             if (!class_exists($extensionClass)) {
-                throw new InvalidArgumentException("$class references nonexistent $extensionClass in \$extensions");
+                throw new InvalidArgumentException("${class} references nonexistent ${extensionClass} in \$extensions");
             }
 
             call_user_func([$extensionClass, 'add_to_class'], $class, $extensionClass, $extensionArgs);
@@ -358,7 +356,6 @@ trait Extensible
         return $sources;
     }
 
-
     /**
      * Return TRUE if a class has a specified extension.
      * This supports backwards-compatible format (static Object::has_extension($requiredExtension))
@@ -375,7 +372,7 @@ trait Extensible
         if ($requiredExtension) {
             $class = $classOrExtension;
         } else {
-            $class = get_called_class();
+            $class = static::class;
             $requiredExtension = $classOrExtension;
         }
 
@@ -397,7 +394,6 @@ trait Extensible
         return false;
     }
 
-
     /**
      * Calls a method if available on both this object and all applied {@link Extensions}, and then attempts to merge
      * all results into an array
@@ -416,7 +412,7 @@ trait Extensible
     {
         $result = [];
         if (method_exists($this, $method)) {
-            $thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+            $thisResult = $this->{$method}($a1, $a2, $a3, $a4, $a5, $a6, $a7);
             if ($thisResult !== null) {
                 $result[] = $thisResult;
             }
@@ -465,7 +461,7 @@ trait Extensible
             if (method_exists($instance, $method)) {
                 try {
                     $instance->setOwner($this);
-                    $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
+                    $value = $instance->{$method}($a1, $a2, $a3, $a4, $a5, $a6, $a7);
                 } finally {
                     $instance->clearOwner();
                 }
@@ -546,7 +542,7 @@ trait Extensible
         // Setup all extension instances for this instance
         $this->extension_instances = [];
         foreach (ClassInfo::ancestry(static::class) as $class) {
-            if (in_array($class, self::$unextendable_classes)) {
+            if (in_array($class, self::$unextendable_classes, true)) {
                 continue;
             }
             $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
@@ -555,7 +551,7 @@ trait Extensible
                 foreach ($extensions as $extension) {
                     $name = $extension;
                     // Allow service names of the form "%$ServiceName"
-                    if (substr($name, 0, 2) == '%$') {
+                    if (substr($name, 0, 2) === '%$') {
                         $name = substr($name, 2);
                     }
                     $name = trim(strtok($name, '('));

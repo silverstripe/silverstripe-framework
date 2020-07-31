@@ -123,7 +123,7 @@ class ConfirmationTokenChain
         // so we need to ensure they're inspected last and therefore take priority
         $tokens = iterator_to_array($this->filteredTokens(), false);
         usort($tokens, function ($a, $b) {
-            return ($a instanceof URLConfirmationToken) ? 1 : 0;
+            return $a instanceof URLConfirmationToken ? 1 : 0;
         });
 
         $urlBase = Director::baseURL();
@@ -168,9 +168,9 @@ class ConfirmationTokenChain
         $locationJS = Convert::raw2js($location);
         $locationATT = Convert::raw2att($location);
         $body = <<<HTML
-<script>location.href='$locationJS';</script>
-<noscript><meta http-equiv="refresh" content="0; url=$locationATT"></noscript>
-You are being redirected. If you are not redirected soon, <a href="$locationATT">click here to continue</a>
+<script>location.href='${locationJS}';</script>
+<noscript><meta http-equiv="refresh" content="0; url=${locationATT}"></noscript>
+You are being redirected. If you are not redirected soon, <a href="${locationATT}">click here to continue</a>
 HTML;
 
         // Build response

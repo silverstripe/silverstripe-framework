@@ -210,7 +210,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * Accepts single IP or comma separated string of IPs
      *
      * @param string $headerValue The value from a trusted header
-     * @return string The IP address
+     * @return string|null The IP address
      */
     protected function getIPFromHeaderValue($headerValue)
     {

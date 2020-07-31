@@ -175,7 +175,7 @@ class ModuleManifest
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);
                 }
-            }
+            },
         ]);
         $finder->find($this->base);
 
@@ -226,20 +226,18 @@ class ModuleManifest
 
     /**
      * Sort modules sorted by priority
-     *
-     * @return void
      */
     public function sort()
     {
         $order = static::config()->uninherited('module_priority');
         $project = static::config()->get('project');
 
-        /* @var PrioritySorter $sorter */
+        /** @var PrioritySorter $sorter */
         $sorter = Injector::inst()->createWithArgs(
             PrioritySorter::class . '.modulesorter',
             [
                 $this->modules,
-                $order ?: []
+                $order ?: [],
             ]
         );
 

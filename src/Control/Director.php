@@ -438,7 +438,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param string $url The url or path to resolve to absolute url.
      * @param string $relativeParent Disambiguation method to use for evaluating relative paths
-     * @return string The absolute url
+     * @return string|bool The absolute url
      */
     public static function absoluteURL($url, $relativeParent = self::BASE)
     {
@@ -821,8 +821,7 @@ class Director implements TemplateGlobalProvider
         }
         $colonPosition = strpos($url, ':');
         $slashPosition = strpos($url, '/');
-        return
-            // Base check for existence of a host on a compliant URL
+        return // Base check for existence of a host on a compliant URL
             parse_url($url, PHP_URL_HOST)
             // Check for more than one leading slash without a protocol.
             // While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
@@ -1037,8 +1036,7 @@ class Director implements TemplateGlobalProvider
             return $request->isAjax();
         }
 
-        return
-            isset($_REQUEST['ajax']) ||
+        return isset($_REQUEST['ajax']) ||
             (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
         ;
     }

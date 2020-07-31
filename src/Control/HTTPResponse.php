@@ -276,7 +276,7 @@ class HTTPResponse
      *
      * @param string $header
      *
-     * @return string
+     * @return string|null
      */
     public function getHeader($header)
     {

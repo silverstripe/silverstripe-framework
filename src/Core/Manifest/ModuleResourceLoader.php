@@ -82,7 +82,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
     {
         return [
             'resourcePath',
-            'resourceURL'
+            'resourceURL',
         ];
     }
 
@@ -103,10 +103,8 @@ class ModuleResourceLoader implements TemplateGlobalProvider
         $resource = $matches['resource'];
         $moduleObj = ModuleLoader::getModule($module);
         if (!$moduleObj) {
-            throw new InvalidArgumentException("Can't find module '$module', the composer.json file may be missing from the modules installation directory");
+            throw new InvalidArgumentException("Can't find module '${module}', the composer.json file may be missing from the modules installation directory");
         }
-        $resourceObj = $moduleObj->getResource($resource);
-
-        return $resourceObj;
+        return $moduleObj->getResource($resource);
     }
 }

@@ -144,7 +144,7 @@ class RateLimiter
         if ($expiry = $this->getCache()->get($this->getIdentifier() . '-timer')) {
             return $expiry - DBDatetime::now()->getTimestamp();
         }
-        return  0;
+        return 0;
     }
 
     /**

@@ -10,7 +10,6 @@ use ReflectionException;
  */
 class InjectionCreator implements Factory
 {
-
     public function create($class, array $params = [])
     {
         try {

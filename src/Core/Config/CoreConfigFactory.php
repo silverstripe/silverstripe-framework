@@ -57,7 +57,7 @@ class CoreConfigFactory
         // Create config cache
         if ($this->cacheFactory) {
             $cache = $this->cacheFactory->create(CacheInterface::class . '.configcache', [
-                'namespace' => 'configcache'
+                'namespace' => 'configcache',
             ]);
             $instance->setCache($cache);
         }
@@ -88,7 +88,7 @@ class CoreConfigFactory
         // Transform
         $config->transform([
             $this->buildStaticTransformer(),
-            $this->buildYamlTransformer()
+            $this->buildYamlTransformer(),
         ]);
 
         return $config;

@@ -4,11 +4,9 @@ namespace SilverStripe\Core\Cache;
 
 use SilverStripe\Core\Injector\Injector;
 use Symfony\Component\Cache\Simple\ApcuCache;
-use Memcached;
 
 class ApcuCacheFactory implements CacheFactory
 {
-
     /**
      * @var string
      */
@@ -34,7 +32,7 @@ class ApcuCacheFactory implements CacheFactory
         return Injector::inst()->createWithArgs(ApcuCache::class, [
             $namespace,
             $defaultLifetime,
-            $this->version
+            $this->version,
         ]);
     }
 }

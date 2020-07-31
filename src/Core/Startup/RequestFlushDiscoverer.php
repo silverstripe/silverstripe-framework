@@ -3,8 +3,8 @@
 namespace SilverStripe\Core\Startup;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Kernel;
 
 /**
  * The default flush discovery implementation
@@ -46,7 +46,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
      *
      * @param HTTPRequest $request active request
      *
-     * @return null|bool flush or don't care
+     * @return bool|null flush or don't care
      */
     protected function lookupRequest()
     {
@@ -58,7 +58,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
         // WARNING!
         // We specifically return `null` and not `false` here so that
         // it does not override other FlushDiscoverers
-        return ($getVar || $devBuild) ? true : null;
+        return $getVar || $devBuild ? true : null;
     }
 
     /**
@@ -74,7 +74,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
         // WARNING!
         // We specifically return `null` and not `false` here so that
         // it does not override other FlushDiscoverers
-        return (Environment::isCli() || $this->env === Kernel::DEV) ? true : null;
+        return Environment::isCli() || $this->env === Kernel::DEV ? true : null;
     }
 
     public function shouldFlush()

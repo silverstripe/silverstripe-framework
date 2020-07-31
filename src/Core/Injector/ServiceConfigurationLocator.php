@@ -9,7 +9,6 @@ namespace SilverStripe\Core\Injector;
  */
 interface ServiceConfigurationLocator
 {
-
     /**
      * Finds the Injector config for a named service.
      *

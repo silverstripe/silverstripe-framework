@@ -63,7 +63,7 @@ class URLConfirmationToken extends AbstractConfirmationToken
     protected function getURLExistsInBackURL(HTTPRequest $request)
     {
         $backURL = ltrim($request->getVar('BackURL'), '/');
-        return (strpos($backURL, $this->urlToCheck) === 0);
+        return strpos($backURL, $this->urlToCheck) === 0;
     }
 
     /**
@@ -71,7 +71,7 @@ class URLConfirmationToken extends AbstractConfirmationToken
      */
     protected function urlMatches()
     {
-        return ($this->currentURL === $this->urlToCheck);
+        return $this->currentURL === $this->urlToCheck;
     }
 
     /**
@@ -123,12 +123,12 @@ class URLConfirmationToken extends AbstractConfirmationToken
 
     public function getRedirectUrlBase()
     {
-        return ($this->urlExistsInBackURL && !$this->urlMatches()) ? Director::baseURL() : $this->currentURL();
+        return $this->urlExistsInBackURL && !$this->urlMatches() ? Director::baseURL() : $this->currentURL();
     }
 
     public function getRedirectUrlParams()
     {
-        return ($this->urlExistsInBackURL && !$this->urlMatches())
+        return $this->urlExistsInBackURL && !$this->urlMatches()
             ? $this->params()
             : array_merge($this->request->getVars(), $this->params());
     }

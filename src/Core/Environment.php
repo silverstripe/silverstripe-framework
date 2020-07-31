@@ -43,7 +43,7 @@ class Environment
     public static function getVariables()
     {
         // Suppress return by-ref
-        $vars = [ 'env' => static::$env ];
+        $vars = ['env' => static::$env];
         // needs to use a for loop, using `array_merge([], $GLOBALS);` left reference traces somehow
         foreach ($GLOBALS as $varName => $varValue) {
             $vars[$varName] = $varValue;
@@ -111,7 +111,7 @@ class Environment
      *
      * @param string|float $memoryLimit Memory limit string or float value
      */
-    static function setMemoryLimitMax($memoryLimit)
+    public static function setMemoryLimitMax($memoryLimit)
     {
         if (isset($memoryLimit) && !is_numeric($memoryLimit)) {
             $memoryLimit = Convert::memstring2bytes($memoryLimit);
@@ -136,7 +136,7 @@ class Environment
      * Only values up to {@link getTimeLimitMax()} are allowed.
      *
      * @param int $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
-     * @return Boolean TRUE indicates a successful change, FALSE a denied change.
+     * @return boolean TRUE indicates a successful change, FALSE a denied change.
      */
     public static function increaseTimeLimitTo($timeLimit = null)
     {
@@ -169,7 +169,7 @@ class Environment
     }
 
     /**
-     * @return Int Limit in seconds
+     * @return int Limit in seconds
      */
     public static function getTimeLimitMax()
     {
@@ -185,11 +185,11 @@ class Environment
     public static function getEnv($name)
     {
         switch (true) {
-            case  is_array(static::$env) && array_key_exists($name, static::$env):
+            case is_array(static::$env) && array_key_exists($name, static::$env):
                 return static::$env[$name];
-            case  is_array($_ENV) && array_key_exists($name, $_ENV):
+            case is_array($_ENV) && array_key_exists($name, $_ENV):
                 return $_ENV[$name];
-            case  is_array($_SERVER) && array_key_exists($name, $_SERVER):
+            case is_array($_SERVER) && array_key_exists($name, $_SERVER):
                 return $_SERVER[$name];
             default:
                 return getenv($name);
@@ -230,6 +230,6 @@ class Environment
      */
     public static function isCli()
     {
-        return in_array(strtolower(php_sapi_name()), ['cli', 'phpdbg']);
+        return in_array(strtolower(PHP_SAPI), ['cli', 'phpdbg'], true);
     }
 }

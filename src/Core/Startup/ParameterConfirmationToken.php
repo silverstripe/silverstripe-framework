@@ -5,9 +5,6 @@ namespace SilverStripe\Core\Startup;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Convert;
-use SilverStripe\Security\RandomGenerator;
 
 /**
  * This is used to protect dangerous GET parameters that need to be detected early in the request
@@ -76,7 +73,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
         }
 
         // Filter backURL if it contains the given request parameter
-        list(,$query) = explode('?', $backURL);
+        list(, $query) = explode('?', $backURL);
         parse_str($query, $queryArgs);
         $name = $this->getName();
         if (isset($queryArgs[$name])) {
@@ -146,12 +143,12 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
 
     public function getRedirectUrlBase()
     {
-        return ($this->existsInReferer() && !$this->parameterProvided()) ? Director::baseURL() : $this->currentURL();
+        return $this->existsInReferer() && !$this->parameterProvided() ? Director::baseURL() : $this->currentURL();
     }
 
     public function getRedirectUrlParams()
     {
-        return ($this->existsInReferer() && !$this->parameterProvided())
+        return $this->existsInReferer() && !$this->parameterProvided()
             ? $this->params()
             : array_merge($this->request->getVars(), $this->params());
     }

@@ -50,8 +50,7 @@ class TempFolder
         if (!$user) {
             $user = 'unknown';
         }
-        $user = preg_replace('/[^A-Za-z0-9_\-]/', '', $user);
-        return $user;
+        return preg_replace('/[^A-Za-z0-9_\-]/', '', $user);
     }
 
     /**
@@ -68,7 +67,7 @@ class TempFolder
         // first, try finding a silverstripe-cache dir built off the base path
         $localPath = Path::join($base, 'silverstripe-cache');
         if (@file_exists($localPath)) {
-            if ((fileperms($localPath) & 0777) != 0777) {
+            if ((fileperms($localPath) & 0777) !== 0777) {
                 @chmod($localPath, 0777);
             }
             return $localPath;
@@ -87,7 +86,7 @@ class TempFolder
 
         // if the folder already exists, correct perms
         } else {
-            if ((fileperms($tempPath) & 0777) != 0777) {
+            if ((fileperms($tempPath) & 0777) !== 0777) {
                 @chmod($tempPath, 0777);
             }
         }

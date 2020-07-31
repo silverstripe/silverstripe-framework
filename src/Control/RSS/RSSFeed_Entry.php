@@ -79,11 +79,13 @@ class RSSFeed_Entry extends ViewableData
      */
     public function Description()
     {
+        /** @var DBField */
         $description = $this->rssField($this->descriptionField);
 
         // HTML fields need links re-written
         if ($description instanceof DBHTMLText) {
-            return $description->obj('AbsoluteLinks');
+            /** @var DBField */
+            $description = $description->obj('AbsoluteLinks');
         }
 
         return $description;
@@ -103,7 +105,7 @@ class RSSFeed_Entry extends ViewableData
      * Return the safely casted field
      *
      * @param string $fieldName Name of field
-     * @return DBField
+     * @return DBField|null
      */
     public function rssField($fieldName)
     {
@@ -127,7 +129,6 @@ class RSSFeed_Entry extends ViewableData
         if ($this->failover->hasMethod('Link')) {
             return Director::absoluteURL($this->failover->Link());
         }
-
 
         throw new BadMethodCallException(
             get_class($this->failover) . ' object has neither an AbsoluteLink nor a Link method.' . " Can't put a link in the RSS feed",

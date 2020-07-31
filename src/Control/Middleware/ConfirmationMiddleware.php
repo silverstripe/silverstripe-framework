@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Middleware\ConfirmationMiddleware\Rule;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Confirmation;
@@ -64,7 +65,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
     /**
      * Init the middleware with the rules
      *
-     * @param ConfirmationMiddleware\Rule[] $rules Rules to check requests against
+     * @param ConfirmationMiddleware\Rule[] ... $rules Rules to check requests against
      */
     public function __construct(...$rules)
     {

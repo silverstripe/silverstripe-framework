@@ -421,8 +421,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isAjax()
     {
-        return
-            $this->requestVar('ajax') ||
+        return $this->requestVar('ajax') ||
             $this->getHeader('x-requested-with') === 'XMLHttpRequest'
         ;
     }
@@ -706,7 +705,7 @@ class HTTPRequest implements ArrayAccess
      * from the full URL, or a parameter specified in the route table
      *
      * @param string $name
-     * @return string Value of the URL parameter (if found)
+     * @return string|null Value of the URL parameter (if found)
      */
     public function param($name)
     {

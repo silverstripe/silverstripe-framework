@@ -33,7 +33,6 @@ use SilverStripe\Core\Injector\Injectable;
  *   'product-one' => [object] Product,
  *   'product-four' => [object] Product
  * ]
- *
  */
 class PrioritySorter
 {
@@ -172,7 +171,7 @@ class PrioritySorter
         // Remove variables from the list
         $varValues = array_values($this->variables);
         $this->names = array_filter($this->names, function ($name) use ($varValues) {
-            return !in_array($name, $varValues);
+            return !in_array($name, $varValues, true);
         });
 
         // Replace variables with their values
@@ -189,7 +188,7 @@ class PrioritySorter
     {
         $otherItemsIndex = false;
         if ($this->restKey) {
-            $otherItemsIndex = array_search($this->restKey, $this->priorities);
+            $otherItemsIndex = array_search($this->restKey, $this->priorities, true);
         }
         if ($otherItemsIndex !== false) {
             array_splice($this->priorities, $otherItemsIndex, 1, $list);

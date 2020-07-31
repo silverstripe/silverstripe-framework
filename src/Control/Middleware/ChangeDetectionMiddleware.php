@@ -20,7 +20,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
      *
      * @param HTTPRequest $request
      * @param callable $delegate
-     * @return HTTPResponse
+     * @return HTTPResponse|null
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
@@ -59,7 +59,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
     }
 
     /**
-     * @param HTTPResponse|string $response
+     * @param HTTPResponse $response
      * @return string|false
      */
     protected function generateETag(HTTPResponse $response)

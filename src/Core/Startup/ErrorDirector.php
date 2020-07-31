@@ -25,7 +25,7 @@ class ErrorDirector extends Director
      * @param HTTPRequest $request
      * @param ConfirmationTokenChain $confirmationTokenChain
      * @param Kernel $kernel
-     * @return null|HTTPResponse Redirection response, or null if not able to redirect
+     * @return HTTPResponse|null Redirection response, or null if not able to redirect
      */
     public function handleRequestWithTokenChain(
         HTTPRequest $request,

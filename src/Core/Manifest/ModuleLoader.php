@@ -22,7 +22,7 @@ class ModuleLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ?: self::$instance = new static();
     }
 
     /**
@@ -55,7 +55,7 @@ class ModuleLoader
      */
     public function hasManifest()
     {
-        return (bool)$this->manifests;
+        return (bool) $this->manifests;
     }
 
     /**

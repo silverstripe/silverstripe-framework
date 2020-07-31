@@ -11,7 +11,6 @@ use SilverStripe\Dev\Deprecation;
  */
 class ClassLoader
 {
-
     /**
      * @internal
      * @var ClassLoader
@@ -30,7 +29,7 @@ class ClassLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ?: self::$instance = new static();
     }
 
     /**
@@ -49,7 +48,7 @@ class ClassLoader
      */
     public function hasManifest()
     {
-        return (bool)$this->manifests;
+        return (bool) $this->manifests;
     }
 
     /**
@@ -83,7 +82,7 @@ class ClassLoader
      * manifest.
      *
      * @param string $class
-     * @return String
+     * @return string
      */
     public function loadClass($class)
     {

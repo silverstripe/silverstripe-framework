@@ -10,7 +10,6 @@ namespace SilverStripe\Core\Injector;
  */
 interface BeforeCallAspect
 {
-
     /**
      * Call this aspect before a method is executed
      *

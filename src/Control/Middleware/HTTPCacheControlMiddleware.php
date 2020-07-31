@@ -33,7 +33,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @param HTTPRequest $request
      * @param callable $delegate
-     * @return HTTPResponse
+     * @return HTTPResponse|null
      * @throws HTTPResponse_Exception
      */
     public function process(HTTPRequest $request, callable $delegate)
@@ -238,7 +238,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Combine vary strings/arrays into a single array, or normalise a single vary
      *
-     * @param string|array[] $varies Each vary as a separate arg
+     * @param string|array ... $varies Each vary as a separate arg
      * @return array
      */
     protected function combineVary(...$varies)
@@ -714,7 +714,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public static function reset()
     {
-        Injector::inst()->unregisterNamedObject(__CLASS__);
+        Injector::inst()->unregisterNamedObject(self::class);
     }
 
     /**

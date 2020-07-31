@@ -22,7 +22,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
     {
         // Build default manifest logger
         if (!$logger) {
-            $logger = new Logger("manifestcache-log");
+            $logger = new Logger('manifestcache-log');
             if (Director::isDev()) {
                 $logger->pushHandler(new StreamHandler('php://output'));
             } else {
@@ -52,7 +52,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
         // Check if SS_MANIFESTCACHE is a factory
         if (is_a($cacheClass, CacheFactory::class, true)) {
             /** @var CacheFactory $factory */
-            $factory = new $cacheClass;
+            $factory = new $cacheClass();
             return $factory->create($service, $params);
         }
 

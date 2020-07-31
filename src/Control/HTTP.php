@@ -91,7 +91,7 @@ class HTTP
      * Turns a local system filename into a URL by comparing it to the script filename.
      *
      * @param string $filename
-     * @return string
+     * @return string|null
      */
     public static function filename2url($filename)
     {

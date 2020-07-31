@@ -7,7 +7,7 @@ use SilverStripe\Dev\Deprecation;
 class Config_ForClass
 {
     /**
-     * @var string $class
+     * @var string
      */
     protected $class;
 
@@ -76,7 +76,7 @@ class Config_ForClass
         return $this;
     }
 
-        /**
+    /**
      * @param string $name
      * @return bool
      */
@@ -109,7 +109,7 @@ class Config_ForClass
     }
 
     /**
-     * @param string
+     * @param string $class
      *
      * @return Config_ForClass
      */

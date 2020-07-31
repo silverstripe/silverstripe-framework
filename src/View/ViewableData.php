@@ -671,7 +671,7 @@ class ViewableData implements IteratorAggregate
     /**
      * Return debug information about this object that can be rendered into a template
      *
-     * @return ViewableData_Debugger
+     * @return ViewableData_Debugger|string
      */
     public function Debug()
     {

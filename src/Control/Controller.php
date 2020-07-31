@@ -456,7 +456,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @param string $action
      *
-     * @return string
+     * @return string|null
      */
     protected function definingClassForAction($action)
     {
@@ -495,7 +495,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $parentClass = static::class;
         $templates = [];
 
-        while ($parentClass !== __CLASS__) {
+        while ($parentClass !== self::class) {
             $templates[] = strtok($parentClass, '_') . '_' . $action;
             $parentClass = get_parent_class($parentClass);
         }
@@ -544,7 +544,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * Returns the current controller.
      *
-     * @return Controller
+     * @return Controller|null
      */
     public static function curr()
     {
@@ -626,9 +626,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @param string $url
      * @param int $code
-     * @return HTTPResponse
+     * @return HTTPResponse|null
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, ?int $code = 302)
     {
         if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') !== $url) {
             user_error('Already directed to ' . $this->getResponse()->getHeader('Location')
@@ -644,9 +644,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Tests whether a redirection has been requested. If redirect() has been called, it will return
      * the URL redirected to. Otherwise, it will return null.
      *
-     * @return string|null
+     * @return bool
      */
-    public function redirectedTo()
+    public function redirectedTo(): bool
     {
         return $this->getResponse() && $this->getResponse()->getHeader('Location');
     }

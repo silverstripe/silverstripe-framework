@@ -42,7 +42,7 @@ class ModuleResource
         $this->module = $module;
         $this->relativePath = Path::normalise($relativePath, true);
         if (empty($this->relativePath)) {
-            throw new InvalidArgumentException("Resource cannot have empty path");
+            throw new InvalidArgumentException('Resource cannot have empty path');
         }
     }
 

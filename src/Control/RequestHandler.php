@@ -240,7 +240,7 @@ class RequestHandler extends ViewableData
 
     /**
      * @param HTTPRequest $request
-     * @return array
+     * @return array|null
      */
     protected function findAction($request)
     {
@@ -299,7 +299,7 @@ class RequestHandler extends ViewableData
      *
      * Must not raise HTTPResponse_Exceptions - instead it should return
      *
-     * @param $request
+     * @param HTTPRequest $request
      * @param string $action
      * @return HTTPResponse|array
      */
@@ -421,13 +421,12 @@ class RequestHandler extends ViewableData
      * Return the class that defines the given action, so that we know where to check allowed_actions.
      *
      * @param string $actionOrigCasing
-     * @return string
+     * @return string|null
      */
     protected function definingClassForAction($actionOrigCasing)
     {
         $action = strtolower($actionOrigCasing);
 
-        $definingClass = null;
         $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
             if (!method_exists($inst, $action)) {
@@ -552,7 +551,7 @@ class RequestHandler extends ViewableData
      * Returns a link to this controller. Overload with your own Link rules if they exist.
      *
      * @param string $action Optional action
-     * @return string
+     * @return string|null
      */
     public function Link($action = null)
     {
@@ -581,7 +580,7 @@ class RequestHandler extends ViewableData
      * @param int $code
      * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, ?int $code = 302)
     {
         $url = Director::absoluteURL($url);
         $response = new HTTPResponse();
@@ -591,7 +590,7 @@ class RequestHandler extends ViewableData
     /**
      * Safely get the value of the BackURL param, if provided via querystring / posted var
      *
-     * @return string
+     * @return string|null
      */
     public function getBackURL()
     {
@@ -632,7 +631,7 @@ class RequestHandler extends ViewableData
     /**
      * Get referer
      *
-     * @return string
+     * @return string|null
      */
     public function getReferer()
     {

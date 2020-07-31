@@ -10,7 +10,6 @@ use SilverStripe\Control\Middleware\FlushMiddleware;
  */
 interface Flushable
 {
-
     /**
      * This function is triggered early in the request if the "flush" query
      * parameter has been set. Each class that implements Flushable implements

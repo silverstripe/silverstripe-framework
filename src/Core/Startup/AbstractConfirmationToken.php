@@ -136,9 +136,9 @@ abstract class AbstractConfirmationToken
         $locationJS = Convert::raw2js($location);
         $locationATT = Convert::raw2att($location);
         $body = <<<HTML
-<script>location.href='$locationJS';</script>
-<noscript><meta http-equiv="refresh" content="0; url=$locationATT"></noscript>
-You are being redirected. If you are not redirected soon, <a href="$locationATT">click here to continue</a>
+<script>location.href='${locationJS}';</script>
+<noscript><meta http-equiv="refresh" content="0; url=${locationATT}"></noscript>
+You are being redirected. If you are not redirected soon, <a href="${locationATT}">click here to continue</a>
 HTML;
 
         // Build response

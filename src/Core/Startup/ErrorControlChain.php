@@ -69,7 +69,7 @@ class ErrorControlChain
 
     public function setErrored($error)
     {
-        $this->error = (bool)$error;
+        $this->error = (bool) $error;
     }
 
     /**
@@ -82,7 +82,7 @@ class ErrorControlChain
      */
     public function setSuppression($suppression)
     {
-        $this->suppression = (bool)$suppression;
+        $this->suppression = (bool) $suppression;
         // If handling fatal errors, conditionally disable, or restore error display
         // Note: original value of display_errors could also evaluate to "off"
         if ($this->handleFatalErrors) {
@@ -126,7 +126,7 @@ class ErrorControlChain
     {
         $this->steps[] = [
             'callback' => $callback,
-            'onErrorState' => $onErrorState
+            'onErrorState' => $onErrorState,
         ];
         return $this;
     }
@@ -175,7 +175,7 @@ class ErrorControlChain
             return true;
         }
         $error = error_get_last();
-        return $error && ($error['type'] & self::$fatal_errors) != 0;
+        return $error && ($error['type'] & self::$fatal_errors) !== 0;
     }
 
     protected function lastErrorWasMemoryExhaustion()
@@ -185,17 +185,17 @@ class ErrorControlChain
         return stripos($message, 'memory') !== false && stripos($message, 'exhausted') !== false;
     }
 
-    static $transtable = [
+    public static $transtable = [
         'k' => 1024,
         'm' => 1048576,
-        'g' => 1073741824
+        'g' => 1073741824,
     ];
 
     protected function translateMemstring($memString)
     {
         $char = strtolower(substr($memString, -1));
         $fact = isset(self::$transtable[$char]) ? self::$transtable[$char] : 1;
-        return ((int)$memString) * $fact;
+        return ((int) $memString) * $fact;
     }
 
     public function handleFatalError()
@@ -205,8 +205,8 @@ class ErrorControlChain
                 if ($this->lastErrorWasMemoryExhaustion()) {
                     // Bump up memory limit by an arbitrary 10% / 10MB (whichever is bigger) since we've run out
                     $cur = $this->translateMemstring(ini_get('memory_limit'));
-                    if ($cur != -1) {
-                        ini_set('memory_limit', $cur + max(round($cur*0.1), 10000000));
+                    if ($cur !== -1) {
+                        ini_set('memory_limit', $cur + max(round($cur * 0.1), 10000000));
                     }
                 }
 
