@@ -2,14 +2,14 @@
 
 namespace SilverStripe\Control\RSS;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Core\Convert;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTP;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
@@ -22,15 +22,14 @@ use SilverStripe\View\ViewableData;
  */
 class RSSFeed extends ViewableData
 {
-
     /**
      * Casting information for this object's methods.
      * Let's us use $Title.XML in templates
      */
     private static $casting = [
-        "Title" => "Varchar",
-        "Description" => "Varchar",
-        "Link" => "Varchar",
+        'Title' => 'Varchar',
+        'Description' => 'Varchar',
+        'Link' => 'Varchar',
     ];
 
     /**
@@ -127,8 +126,8 @@ class RSSFeed extends ViewableData
         $link,
         $title,
         $description = null,
-        $titleField = "Title",
-        $descriptionField = "Content",
+        $titleField = 'Title',
+        $descriptionField = 'Content',
         $authorField = null,
         $lastModified = null,
         $etag = null
@@ -228,13 +227,13 @@ class RSSFeed extends ViewableData
 
         if (is_int($this->lastModified)) {
             HTTPCacheControlMiddleware::singleton()->registerModificationDate($this->lastModified);
-            $response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
+            $response->addHeader('Last-Modified', gmdate('D, d M Y H:i:s', $this->lastModified) . ' GMT');
         }
         if (!empty($this->etag)) {
             $response->addHeader('ETag', "\"{$this->etag}\"");
         }
 
-        $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
+        $response->addHeader('Content-Type', 'application/rss+xml; charset=utf-8');
 
         SSViewer::config()->update('source_file_comments', $prevState);
         return $this->renderWith($this->getTemplates());
@@ -244,7 +243,7 @@ class RSSFeed extends ViewableData
      * Set the name of the template to use. Actual template will be resolved
      * via the standard template inclusion process.
      *
-     * @param string
+     * @param string $template
      */
     public function setTemplate($template)
     {

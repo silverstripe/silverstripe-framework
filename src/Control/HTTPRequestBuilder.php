@@ -54,7 +54,7 @@ class HTTPRequestBuilder
         );
 
         // Set the scheme to HTTPS if needed
-        if ((!empty($variables['_SERVER']['HTTPS']) && $variables['_SERVER']['HTTPS'] != 'off')
+        if ((!empty($variables['_SERVER']['HTTPS']) && $variables['_SERVER']['HTTPS'] !== 'off')
             || isset($variables['_SERVER']['SSL'])) {
             $request->setScheme('https');
         }
@@ -88,7 +88,7 @@ class HTTPRequestBuilder
     {
         $headers = [];
         foreach ($server as $key => $value) {
-            if (substr($key, 0, 5) == 'HTTP_') {
+            if (substr($key, 0, 5) === 'HTTP_') {
                 $key = substr($key, 5);
                 $key = strtolower(str_replace('_', ' ', $key));
                 $key = str_replace(' ', '-', ucwords($key));
@@ -119,7 +119,7 @@ class HTTPRequestBuilder
             $headers['PHP_AUTH_USER'] = $server['PHP_AUTH_USER'];
             $headers['PHP_AUTH_PW'] = $server['PHP_AUTH_PW'];
         } elseif ($authHeader && preg_match('/Basic\s+(?<token>.*)$/i', $authHeader, $matches)) {
-            list($name, $password) = explode(':', base64_decode($matches['token']));
+            list($name, $password) = explode(':', base64_decode($matches['token'], true));
             $headers['PHP_AUTH_USER'] = $name;
             $headers['PHP_AUTH_PW'] = $password;
         }
@@ -136,13 +136,13 @@ class HTTPRequestBuilder
     public static function cleanEnvironment(array $variables)
     {
         // Merge $_FILES into $_POST
-        $variables['_POST'] = array_merge((array)$variables['_POST'], (array)$variables['_FILES']);
+        $variables['_POST'] = array_merge((array) $variables['_POST'], (array) $variables['_FILES']);
 
         // Merge $_POST, $_GET, and $_COOKIE into $_REQUEST
         $variables['_REQUEST'] = array_merge(
-            (array)$variables['_GET'],
-            (array)$variables['_POST'],
-            (array)$variables['_COOKIE']
+            (array) $variables['_GET'],
+            (array) $variables['_POST'],
+            (array) $variables['_COOKIE']
         );
 
         return $variables;

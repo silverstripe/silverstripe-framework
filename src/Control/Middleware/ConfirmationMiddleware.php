@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Control\Middleware;
 
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Confirmation;
 use SilverStripe\Security\Security;
 
@@ -238,7 +238,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @param HTTPRequest $request
      *
-     * @return null|HTTPResponse
+     * @return HTTPResponse|null
      */
     protected function confirmedEffect(HTTPRequest $request)
     {
@@ -250,9 +250,8 @@ class ConfirmationMiddleware implements HTTPMiddleware
         if ($this->canBypass($request)) {
             if ($response = $this->confirmedEffect($request)) {
                 return $response;
-            } else {
-                return $delegate($request);
             }
+            return $delegate($request);
         }
 
         if (!$items = $this->getConfirmationItems($request)) {

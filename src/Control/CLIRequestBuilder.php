@@ -15,7 +15,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
         foreach (['_REQUEST', '_GET', '_POST', '_SESSION', '_SERVER', '_COOKIE', '_ENV', '_FILES'] as $key) {
             if (!isset($variables[$key])) {
                 $variables[$key] = [];
-            };
+            }
         }
 
         // We update the $_SERVER variable to contain data consistent with the rest of the application.
@@ -25,8 +25,8 @@ class CLIRequestBuilder extends HTTPRequestBuilder
             'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
             'HTTP_ACCEPT_ENCODING' => '',
             'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1;q=0.5',
-            'SERVER_SIGNATURE' => 'Command-line PHP/' . phpversion(),
-            'SERVER_SOFTWARE' => 'PHP/' . phpversion(),
+            'SERVER_SIGNATURE' => 'Command-line PHP/' . PHP_VERSION,
+            'SERVER_SOFTWARE' => 'PHP/' . PHP_VERSION,
             'SERVER_ADDR' => '127.0.0.1',
             'REMOTE_ADDR' => '127.0.0.1',
             'REQUEST_METHOD' => 'GET',
@@ -48,11 +48,11 @@ class CLIRequestBuilder extends HTTPRequestBuilder
         if (isset($variables['_SERVER']['argv'][2])) {
             $args = array_slice($variables['_SERVER']['argv'], 2);
             foreach ($args as $arg) {
-                if (strpos($arg, '=') == false) {
+                if (strpos($arg, '=') === false) {
                     $variables['_GET']['args'][] = $arg;
                 } else {
                     $newItems = [];
-                    parse_str((substr($arg, 0, 2) == '--') ? substr($arg, 2) : $arg, $newItems);
+                    parse_str(substr($arg, 0, 2) === '--' ? substr($arg, 2) : $arg, $newItems);
                     $variables['_GET'] = array_merge($variables['_GET'], $newItems);
                 }
             }

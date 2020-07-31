@@ -6,7 +6,6 @@ use SilverStripe\Control\HTTPRequest;
 
 class SessionMiddleware implements HTTPMiddleware
 {
-
     /**
      * @inheritdoc
      */
@@ -19,7 +18,7 @@ class SessionMiddleware implements HTTPMiddleware
             // Generate output
             $response = $delegate($request);
 
-        // Save session data, even if there was an exception.
+            // Save session data, even if there was an exception.
         // Note that save() will start/resume the session if required.
         } finally {
             $request->getSession()->save($request);

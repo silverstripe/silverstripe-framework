@@ -4,11 +4,10 @@ namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Middleware\URLSpecialsMiddleware\FlushScheduler;
-use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Control\Middleware\URLSpecialsMiddleware\FlushScheduler;
+use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
 
 /**
  * Check the request for the URL special variables.
@@ -37,10 +36,10 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
     public function __construct()
     {
         parent::__construct(
-            new ConfirmationMiddleware\GetParameter("flush"),
-            new ConfirmationMiddleware\GetParameter("isDev"),
-            new ConfirmationMiddleware\GetParameter("isTest"),
-            new ConfirmationMiddleware\UrlPathStartswith("dev/build")
+            new ConfirmationMiddleware\GetParameter('flush'),
+            new ConfirmationMiddleware\GetParameter('isDev'),
+            new ConfirmationMiddleware\GetParameter('isTest'),
+            new ConfirmationMiddleware\UrlPathStartswith('dev/build')
         );
     }
 
@@ -53,7 +52,7 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
      *
      * @param HTTPRequest $request
      *
-     * @return null|HTTPResponse redirect to the same url
+     * @return HTTPResponse|null redirect to the same url
      */
     public function buildImpactRedirect(HTTPRequest $request)
     {

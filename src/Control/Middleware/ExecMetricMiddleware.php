@@ -5,7 +5,6 @@ namespace SilverStripe\Control\Middleware;
 use SilverStripe\Assets\File;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\Debug;
 
 /**
@@ -13,7 +12,6 @@ use SilverStripe\Dev\Debug;
  */
 class ExecMetricMiddleware implements HTTPMiddleware
 {
-
     public function process(HTTPRequest $request, callable $delegate)
     {
         if (!$this->showMetric($request)) {

@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Middleware\ConfirmationMiddleware;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Kernel;
 
 /**
  * Allows a bypass for a list of environment types (e.g. DEV, TEST, LIVE)
@@ -17,7 +16,6 @@ class EnvironmentBypass implements Bypass
      * @var string[]
      */
     private $environments;
-
 
     /**
      * Initialize the bypass with the list of environment types
@@ -33,7 +31,6 @@ class EnvironmentBypass implements Bypass
      * Returns the list of environments
      *
      * @return string[]
-     *
      */
     public function getEnvironments()
     {

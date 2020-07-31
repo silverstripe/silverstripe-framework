@@ -22,7 +22,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider
 {
-
     /**
      * An array of arguments extracted from the URL.
      *
@@ -129,7 +128,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $class = static::class;
             user_error(
                 "init() method on class '{$class}' doesn't call Controller::init()."
-                . "Make sure that you have parent::init() included.",
+                . 'Make sure that you have parent::init() included.',
                 E_USER_WARNING
             );
         }
@@ -199,7 +198,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function handleRequest(HTTPRequest $request)
     {
         if (!$request) {
-            user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
+            user_error('Controller::handleRequest() not passed a request!', E_USER_ERROR);
         }
 
         //set up the controller for the incoming request
@@ -226,7 +225,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
      * changes the controller response object appropriately
      *
-     * @param HTTPResponse|Object $response
+     * @param HTTPResponse|object $response
      */
     protected function prepareResponse($response)
     {
@@ -235,7 +234,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
                 $class = static::class;
                 Debug::message(
                     "Request handler returned HTTPResponse object to {$class} controller;"
-                    . "returning it without modification."
+                    . 'returning it without modification.'
                 );
             }
             $this->setResponse($response);
@@ -286,9 +285,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             // If the action returns an array, customise with it before rendering the template.
             if (is_array($result)) {
                 return $this->getViewer($action)->process($this->customise($result));
-            } else {
-                return $result;
             }
+            return $result;
         }
 
         // Fall back to index action with before/after handlers
@@ -404,7 +402,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $parentClass = static::class;
             while ($parentClass !== parent::class) {
                 // _action templates have higher priority
-                if ($action && $action != 'index') {
+                if ($action && $action !== 'index') {
                     $actionTemplates[] = strtok($parentClass, '_') . '_' . $action;
                 }
                 // class templates have lower priority
@@ -434,7 +432,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * is present, returns the full URL.
      *
      * @param string $fullURL
-     * @param null|string $action
+     * @param string|null $action
      *
      * @return string
      */
@@ -468,7 +466,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $class = static::class;
-        while ($class != 'SilverStripe\\Control\\RequestHandler') {
+        while ($class !== 'SilverStripe\\Control\\RequestHandler') {
             $templateName = strtok($class, '_') . '_' . $action;
             if (SSViewer::hasTemplate($templateName)) {
                 return $class;
@@ -495,9 +493,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $parentClass = static::class;
-        $templates   = [];
+        $templates = [];
 
-        while ($parentClass != __CLASS__) {
+        while ($parentClass !== __CLASS__) {
             $templates[] = strtok($parentClass, '_') . '_' . $action;
             $parentClass = get_parent_class($parentClass);
         }
@@ -553,7 +551,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         if (Controller::$controller_stack) {
             return Controller::$controller_stack[0];
         }
-        user_error("No current controller available", E_USER_WARNING);
+        user_error('No current controller available', E_USER_WARNING);
         return null;
     }
 
@@ -573,7 +571,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * in user.
      *
      * @param string $perm
-     * @param null|member $member
+     * @param member|null $member
      *
      * @return bool
      */
@@ -587,10 +585,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             return min($perm);
         }
         if ($this->hasMethod($methodName = 'can' . $perm)) {
-            return $this->$methodName($member);
-        } else {
-            return true;
+            return $this->{$methodName}($member);
         }
+        return true;
     }
 
     /**
@@ -633,9 +630,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public function redirect($url, $code = 302)
     {
-        if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
-            user_error("Already directed to " . $this->getResponse()->getHeader('Location')
-                . "; now trying to direct to $url", E_USER_WARNING);
+        if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') !== $url) {
+            user_error('Already directed to ' . $this->getResponse()->getHeader('Location')
+                . "; now trying to direct to ${url}", E_USER_WARNING);
             return null;
         }
         $response = parent::redirect($url, $code);
@@ -647,7 +644,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Tests whether a redirection has been requested. If redirect() has been called, it will return
      * the URL redirected to. Otherwise, it will return null.
      *
-     * @return null|string
+     * @return string|null
      */
     public function redirectedTo()
     {
@@ -671,7 +668,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         } else {
             $args = func_get_args();
         }
-        $result = "";
+        $result = '';
         $queryargs = [];
         $fragmentIdentifier = null;
 
@@ -688,10 +685,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             }
             if ((is_string($arg) && $arg) || is_numeric($arg)) {
                 $arg = (string) $arg;
-                if ($result && substr($result, -1) != '/' && $arg[0] != '/') {
-                    $result .= "/$arg";
+                if ($result && substr($result, -1) !== '/' && $arg[0] !== '/') {
+                    $result .= "/${arg}";
                 } else {
-                    $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
+                    $result .= substr($result, -1) === '/' && $arg[0] === '/' ? ltrim($arg, '/') : $arg;
                 }
             }
         }
@@ -701,7 +698,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         if ($fragmentIdentifier) {
-            $result .= "#$fragmentIdentifier";
+            $result .= "#${fragmentIdentifier}";
         }
 
         return $result;

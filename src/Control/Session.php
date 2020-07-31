@@ -202,7 +202,7 @@ class Session
     /**
      * Start PHP session, then create a new Session object with the given start data.
      *
-     * @param array|null|Session $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+     * @param array|Session|null $data Can be an array of data (such as $_SESSION) or another Session object to clone.
      * If null, this session is treated as unstarted.
      */
     public function __construct($data)
@@ -267,7 +267,7 @@ class Session
     {
         $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
-        return (bool)Cookie::get($name);
+        return (bool) Cookie::get($name);
     }
 
     /**
@@ -280,7 +280,7 @@ class Session
     public function start(HTTPRequest $request)
     {
         if ($this->isStarted()) {
-            throw new BadMethodCallException("Session has already started");
+            throw new BadMethodCallException('Session has already started');
         }
 
         $path = $this->config()->get('cookie_path');
@@ -340,10 +340,10 @@ class Session
             }
 
             // Initialise data from session store if present
-            $data = empty($_SESSION)? [] : $_SESSION;
+            $data = empty($_SESSION) ? [] : $_SESSION;
 
             // Merge in existing in-memory data, taking priority over session store data
-            $this->recursivelyApply((array)$this->data, $data);
+            $this->recursivelyApply((array) $this->data, $data);
         }
 
         // Save any modified session data back to the session store if present, otherwise initialise it to an array.

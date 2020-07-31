@@ -41,7 +41,7 @@ class Url implements Rule, Bypass
 
         if (is_array($httpMethods)) {
             $this->addHttpMethods(...$httpMethods);
-        } elseif (!is_null($httpMethods)) {
+        } elseif ($httpMethods !== null) {
             $this->addHttpMethods($httpMethods);
         }
     }
@@ -80,7 +80,7 @@ class Url implements Rule, Bypass
      * against parameter values accordingly. Null
      * as a value in the array matches any parameter values.
      *
-     * @param string|null $httpMethods
+     * @param string|null $params
      *
      * @return $this
      */
@@ -126,12 +126,12 @@ class Url implements Rule, Bypass
             return false;
         }
 
-        if (!is_null($this->params)) {
+        if ($this->params !== null) {
             $getVars = $request->getVars();
 
             // compare the request parameters with the declared ones
             foreach ($this->params as $key => $val) {
-                if (is_null($val)) {
+                if ($val === null) {
                     $cmp = array_key_exists($key, $getVars);
                 } else {
                     $cmp = isset($getVars[$key]) && $getVars[$key] === strval($val);

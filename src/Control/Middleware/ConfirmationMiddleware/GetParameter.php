@@ -70,7 +70,7 @@ class GetParameter implements Rule, Bypass
      * Generates the unique token depending on the path and the parameter
      *
      * @param string $path URL path
-     * @param string $param The parameter value
+     * @param string $value The parameter value
      *
      * @return string
      */

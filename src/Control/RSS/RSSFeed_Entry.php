@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Control\RSS;
 
+use BadMethodCallException;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\ViewableData;
-use BadMethodCallException;
 
 /**
  * RSSFeed_Entry class
@@ -123,14 +123,14 @@ class RSSFeed_Entry extends ViewableData
     {
         if ($this->failover->hasMethod('AbsoluteLink')) {
             return $this->failover->AbsoluteLink();
-        } else {
-            if ($this->failover->hasMethod('Link')) {
-                return Director::absoluteURL($this->failover->Link());
-            }
+        }
+        if ($this->failover->hasMethod('Link')) {
+            return Director::absoluteURL($this->failover->Link());
         }
 
+
         throw new BadMethodCallException(
-            get_class($this->failover) . " object has neither an AbsoluteLink nor a Link method." . " Can't put a link in the RSS feed",
+            get_class($this->failover) . ' object has neither an AbsoluteLink nor a Link method.' . " Can't put a link in the RSS feed",
             E_USER_WARNING
         );
     }

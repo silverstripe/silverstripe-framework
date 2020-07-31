@@ -12,7 +12,6 @@ use BadMethodCallException;
  */
 class HTTPStreamResponse extends HTTPResponse
 {
-
     /**
      * Stream source for this response
      *
@@ -97,7 +96,7 @@ class HTTPStreamResponse extends HTTPResponse
         }
 
         // Consume stream into string
-        $body = $this->consumeStream(function ($stream) {
+        return $this->consumeStream(function ($stream) {
             $body = stream_get_contents($stream);
 
             // If this stream isn't seekable, we'll need to save the body
@@ -107,7 +106,6 @@ class HTTPStreamResponse extends HTTPResponse
             }
             return $body;
         });
-        return $body;
     }
 
     /**
@@ -129,7 +127,7 @@ class HTTPStreamResponse extends HTTPResponse
         if ($this->consumed) {
             if (!$this->isSeekable()) {
                 throw new BadMethodCallException(
-                    "Unseekable stream has already been consumed"
+                    'Unseekable stream has already been consumed'
                 );
             }
             rewind($stream);

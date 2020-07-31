@@ -201,8 +201,8 @@ class Director implements TemplateGlobalProvider
         }
 
         // Default httpMethod
-        $newVars['_SERVER']['REQUEST_METHOD'] = $httpMethod ?: ($postVars ? "POST" : "GET");
-        $newVars['_POST'] = (array)$postVars;
+        $newVars['_SERVER']['REQUEST_METHOD'] = $httpMethod ?: ($postVars ? 'POST' : 'GET');
+        $newVars['_POST'] = (array) $postVars;
 
         // Setup session
         if ($session instanceof Session) {
@@ -210,15 +210,16 @@ class Director implements TemplateGlobalProvider
             // This is important for classes such as FunctionalTest which emulate cross-request persistence
             $newVars['_SESSION'] = $sessionArray = $session->getAll() ?: [];
             $finally[] = function () use ($session, $sessionArray) {
-            $sessionVars = empty($_SESSION) ?[] : $_SESSION;
-            // Set new / updated keys
-            foreach ($sessionVars as $key => $value) {
-                $session->set($key, $value);
-            }
-            // Unset removed keys
-            foreach (array_diff_key($sessionArray, $sessionVars) as $key => $value) {
-                $session->clear($key);
-            }
+                $sessionVars = empty($_SESSION) ? [] : $_SESSION;
+                // Set new / updated keys
+                foreach ($sessionVars as $key => $value) {
+                    $session->set($key, $value);
+                }
+                // Unset removed keys
+                foreach (array_keys(array_diff_key($sessionArray, $sessionVars)) as $key) {
+                    $session->clear($key);
+                }
+            };
         } else {
             $newVars['_SESSION'] = $session ?: [];
         }
@@ -319,13 +320,13 @@ class Director implements TemplateGlobalProvider
         foreach ($rules as $pattern => $controllerOptions) {
             // Match pattern
             $arguments = $request->match($pattern, true);
-            if ($arguments == false) {
+            if ($arguments === false) {
                 continue;
             }
 
             // Normalise route rule
             if (is_string($controllerOptions)) {
-                if (substr($controllerOptions, 0, 2) == '->') {
+                if (substr($controllerOptions, 0, 2) === '->') {
                     $controllerOptions = ['Redirect' => substr($controllerOptions, 2)];
                 } else {
                     $controllerOptions = ['Controller' => $controllerOptions];
@@ -412,7 +413,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function get_current_page()
     {
-        return self::$current_page ? self::$current_page : Controller::curr();
+        return self::$current_page ?: Controller::curr();
     }
 
     /**
@@ -582,7 +583,7 @@ class Director implements TemplateGlobalProvider
     public static function port(HTTPRequest $request = null)
     {
         $host = static::host($request);
-        return (int)parse_url($host, PHP_URL_PORT) ?: null;
+        return (int) parse_url($host, PHP_URL_PORT) ?: null;
     }
 
     /**
@@ -617,7 +618,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function protocol(HTTPRequest $request = null)
     {
-        return (self::is_https($request)) ? 'https://' : 'http://';
+        return self::is_https($request) ? 'https://' : 'http://';
     }
 
     /**
@@ -776,10 +777,10 @@ class Director implements TemplateGlobalProvider
         if (empty($path)) {
             return false;
         }
-        if ($path[0] == '/' || $path[0] == '\\') {
+        if ($path[0] === '/' || $path[0] === '\\') {
             return true;
         }
-        return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) == 1;
+        return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) === 1;
     }
 
     /**
@@ -820,7 +821,7 @@ class Director implements TemplateGlobalProvider
         }
         $colonPosition = strpos($url, ':');
         $slashPosition = strpos($url, '/');
-        return (
+        return
             // Base check for existence of a host on a compliant URL
             parse_url($url, PHP_URL_HOST)
             // Check for more than one leading slash without a protocol.
@@ -833,7 +834,7 @@ class Director implements TemplateGlobalProvider
                 $colonPosition !== false
                 && ($slashPosition === false || $colonPosition < $slashPosition)
             )
-        );
+        ;
     }
 
     /**
@@ -910,7 +911,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function fileExists(string $file) : bool
+    public static function fileExists(string $file): bool
     {
         // replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
         $file = preg_replace('/([^\?]*)?.*/', '$1', $file);
@@ -943,7 +944,7 @@ class Director implements TemplateGlobalProvider
         $user = $request->getHeader('PHP_AUTH_USER');
         if ($user) {
             $password = $request->getHeader('PHP_AUTH_PW');
-            $login = sprintf("%s:%s@", $user, $password) ;
+            $login = sprintf('%s:%s@', $user, $password);
         } else {
             $login = '';
         }
@@ -1036,10 +1037,10 @@ class Director implements TemplateGlobalProvider
             return $request->isAjax();
         }
 
-        return (
+        return
             isset($_REQUEST['ajax']) ||
-            (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
-        );
+            (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+        ;
     }
 
     /**
@@ -1064,7 +1065,6 @@ class Director implements TemplateGlobalProvider
         $kernel = Injector::inst()->get(Kernel::class);
         return $kernel->getEnvironment();
     }
-
 
     /**
      * Returns the session environment override

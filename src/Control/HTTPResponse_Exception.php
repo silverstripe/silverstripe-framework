@@ -16,7 +16,6 @@ use Exception;
  */
 class HTTPResponse_Exception extends Exception
 {
-
     protected $response;
 
     /**
