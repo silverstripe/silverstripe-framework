@@ -210,14 +210,15 @@ class Director implements TemplateGlobalProvider
             // This is important for classes such as FunctionalTest which emulate cross-request persistence
             $newVars['_SESSION'] = $sessionArray = $session->getAll() ?: [];
             $finally[] = function () use ($session, $sessionArray) {
-            $sessionVars = empty($_SESSION) ?[] : $_SESSION;
-            // Set new / updated keys
-            foreach ($sessionVars as $key => $value) {
-                $session->set($key, $value);
-            }
-            // Unset removed keys
-            foreach (array_diff_key($sessionArray, $sessionVars) as $key => $value) {
-                $session->clear($key);
+                $sessionVars = empty($_SESSION) ? [] : $_SESSION;
+                // Set new / updated keys
+                foreach ($sessionVars as $key => $value) {
+                    $session->set($key, $value);
+                }
+                // Unset removed keys
+                foreach (array_diff_key($sessionArray, $sessionVars) as $key => $value) {
+                    $session->clear($key);
+                }
             }
         } else {
             $newVars['_SESSION'] = $session ?: [];
@@ -412,7 +413,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function get_current_page()
     {
-        return self::$current_page ? self::$current_page : Controller::curr();
+        return self::$current_page ?: Controller::curr();
     }
 
     /**
@@ -617,7 +618,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function protocol(HTTPRequest $request = null)
     {
-        return (self::is_https($request)) ? 'https://' : 'http://';
+        return self::is_https($request) ? 'https://' : 'http://';
     }
 
     /**
@@ -943,7 +944,7 @@ class Director implements TemplateGlobalProvider
         $user = $request->getHeader('PHP_AUTH_USER');
         if ($user) {
             $password = $request->getHeader('PHP_AUTH_PW');
-            $login = sprintf("%s:%s@", $user, $password) ;
+            $login = sprintf("%s:%s@", $user, $password);
         } else {
             $login = '';
         }

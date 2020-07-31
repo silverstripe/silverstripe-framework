@@ -22,7 +22,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider
 {
-
     /**
      * An array of arguments extracted from the URL.
      *
@@ -79,6 +78,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $response;
 
     /**
+     * @var bool
+     */
+    protected $baseInitCalled = false;
+
+    /**
      * Default URL handlers.
      *
      * @var array
@@ -96,22 +100,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     ];
 
     /**
-     * Initialisation function that is run before any action on the controller is called.
-     *
-     * @uses BasicAuth::requireLogin()
-     */
-    protected function init()
-    {
-        // @todo This will be removed in 5.0 and will be controlled by middleware instead
-        if ($this->basicAuthEnabled) {
-            BasicAuth::protect_site_if_necessary();
-        }
-
-        // This is used to test that subordinate controllers are actually calling parent::init() - a common bug
-        $this->baseInitCalled = true;
-    }
-
-    /**
      * A stand in function to protect the init function from failing to be called as well as providing before and
      * after hooks for the init function itself
      *
@@ -125,11 +113,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         // Safety call
         $this->baseInitCalled = false;
         $this->init();
-        if (!$this->baseInitCalled) {
+        if (! $this->baseInitCalled) {
             $class = static::class;
             user_error(
                 "init() method on class '{$class}' doesn't call Controller::init()."
-                . "Make sure that you have parent::init() included.",
+                . 'Make sure that you have parent::init() included.',
                 E_USER_WARNING
             );
         }
@@ -148,33 +136,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $this->setURLParams($this->getRequest()->allParams());
 
         return $return;
-    }
-
-    /**
-     * A bootstrap for the handleRequest method
-     *
-     * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
-     *
-     * @param HTTPRequest $request
-     */
-    protected function beforeHandleRequest(HTTPRequest $request)
-    {
-        //Set up the internal dependencies (request, response)
-        $this->setRequest($request);
-        //Push the current controller to protect against weird session issues
-        $this->pushCurrent();
-        $this->setResponse(new HTTPResponse());
-        //kick off the init functionality
-        $this->doInit();
-    }
-
-    /**
-     * Cleanup for the handleRequest method
-     */
-    protected function afterHandleRequest()
-    {
-        //Pop the current controller from the stack
-        $this->popCurrent();
     }
 
     /**
@@ -198,8 +159,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public function handleRequest(HTTPRequest $request)
     {
-        if (!$request) {
-            user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
+        if (! $request) {
+            user_error('Controller::handleRequest() not passed a request!', E_USER_ERROR);
         }
 
         //set up the controller for the incoming request
@@ -207,7 +168,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         //if the before handler manipulated the response in a way that we shouldn't proceed, then skip our request
         // handling
-        if (!$this->getResponse()->isFinished()) {
+        if (! $this->getResponse()->isFinished()) {
             //retrieve the response for the request
             $response = parent::handleRequest($request);
 
@@ -220,91 +181,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         //return the response
         return $this->getResponse();
-    }
-
-    /**
-     * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
-     * changes the controller response object appropriately
-     *
-     * @param HTTPResponse|Object $response
-     */
-    protected function prepareResponse($response)
-    {
-        if ($response instanceof HTTPResponse) {
-            if (isset($_REQUEST['debug_request'])) {
-                $class = static::class;
-                Debug::message(
-                    "Request handler returned HTTPResponse object to {$class} controller;"
-                    . "returning it without modification."
-                );
-            }
-            $this->setResponse($response);
-        } else {
-            // Could be Controller, or ViewableData_Customised controller wrapper
-            if (ClassInfo::hasMethod($response, 'getViewer')) {
-                if (isset($_REQUEST['debug_request'])) {
-                    $class = static::class;
-                    $responseClass = get_class($response);
-                    Debug::message(
-                        "Request handler {$responseClass} object to {$class} controller;"
-                        . "rendering with template returned by {$responseClass}::getViewer()"
-                    );
-                }
-                $response = $response->getViewer($this->getAction())->process($response);
-            }
-
-            $this->getResponse()->setBody($response);
-        }
-
-        //deal with content if appropriate
-        ContentNegotiator::process($this->getResponse());
-    }
-
-    /**
-     * Controller's default action handler.  It will call the method named in "$Action", if that method
-     * exists. If "$Action" isn't given, it will use "index" as a default.
-     *
-     * @param HTTPRequest $request
-     * @param string $action
-     *
-     * @return DBHTMLText|HTTPResponse
-     */
-    protected function handleAction($request, $action)
-    {
-        foreach ($request->latestParams() as $k => $v) {
-            if ($v || !isset($this->urlParams[$k])) {
-                $this->urlParams[$k] = $v;
-            }
-        }
-
-        $this->action = $action;
-        $this->requestParams = $request->requestVars();
-
-        if ($this->hasMethod($action)) {
-            $result = parent::handleAction($request, $action);
-
-            // If the action returns an array, customise with it before rendering the template.
-            if (is_array($result)) {
-                return $this->getViewer($action)->process($this->customise($result));
-            } else {
-                return $result;
-            }
-        }
-
-        // Fall back to index action with before/after handlers
-        $beforeResult = $this->extend('beforeCallActionHandler', $request, $action);
-        if ($beforeResult) {
-            return reset($beforeResult);
-        }
-
-        $result = $this->getViewer($action)->process($this);
-
-        $afterResult = $this->extend('afterCallActionHandler', $request, $action, $result);
-        if ($afterResult) {
-            return reset($afterResult);
-        }
-
-        return $result;
     }
 
     /**
@@ -335,7 +211,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public function getResponse()
     {
-        if (!$this->response) {
+        if (! $this->response) {
             $this->setResponse(new HTTPResponse());
         }
         return $this->response;
@@ -353,11 +229,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $this->response = $response;
         return $this;
     }
-
-    /**
-     * @var bool
-     */
-    protected $baseInitCalled = false;
 
     /**
      * This is the default action handler used if a method doesn't exist. It will process the
@@ -404,7 +275,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $parentClass = static::class;
             while ($parentClass !== parent::class) {
                 // _action templates have higher priority
-                if ($action && $action != 'index') {
+                if ($action && $action !== 'index') {
                     $actionTemplates[] = strtok($parentClass, '_') . '_' . $action;
                 }
                 // class templates have lower priority
@@ -434,13 +305,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * is present, returns the full URL.
      *
      * @param string $fullURL
-     * @param null|string $action
+     * @param string|null $action
      *
      * @return string
      */
     public function removeAction($fullURL, $action = null)
     {
-        if (!$action) {
+        if (! $action) {
             $action = $this->getAction();    //default to current action
         }
         $returnURL = $fullURL;
@@ -450,34 +321,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         return $returnURL;
-    }
-
-    /**
-     * Return the class that defines the given action, so that we know where to check allowed_actions.
-     * Overrides RequestHandler to also look at defined templates.
-     *
-     * @param string $action
-     *
-     * @return string
-     */
-    protected function definingClassForAction($action)
-    {
-        $definingClass = parent::definingClassForAction($action);
-        if ($definingClass) {
-            return $definingClass;
-        }
-
-        $class = static::class;
-        while ($class != 'SilverStripe\\Control\\RequestHandler') {
-            $templateName = strtok($class, '_') . '_' . $action;
-            if (SSViewer::hasTemplate($templateName)) {
-                return $class;
-            }
-
-            $class = get_parent_class($class);
-        }
-
-        return null;
     }
 
     /**
@@ -495,9 +338,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $parentClass = static::class;
-        $templates   = [];
+        $templates = [];
 
-        while ($parentClass != __CLASS__) {
+        while ($parentClass !== __CLASS__) {
             $templates[] = strtok($parentClass, '_') . '_' . $action;
             $parentClass = get_parent_class($parentClass);
         }
@@ -553,7 +396,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         if (Controller::$controller_stack) {
             return Controller::$controller_stack[0];
         }
-        user_error("No current controller available", E_USER_WARNING);
+        user_error('No current controller available', E_USER_WARNING);
         return null;
     }
 
@@ -573,13 +416,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * in user.
      *
      * @param string $perm
-     * @param null|member $member
+     * @param member|null $member
      *
      * @return bool
      */
     public function can($perm, $member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         if (is_array($perm)) {
@@ -587,10 +430,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             return min($perm);
         }
         if ($this->hasMethod($methodName = 'can' . $perm)) {
-            return $this->$methodName($member);
-        } else {
-            return true;
+            return $this->{$methodName}($member);
         }
+        return true;
     }
 
     /**
@@ -633,9 +475,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public function redirect($url, $code = 302)
     {
-        if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
-            user_error("Already directed to " . $this->getResponse()->getHeader('Location')
-                . "; now trying to direct to $url", E_USER_WARNING);
+        if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') !== $url) {
+            user_error('Already directed to ' . $this->getResponse()->getHeader('Location')
+                . "; now trying to direct to ${url}", E_USER_WARNING);
             return null;
         }
         $response = parent::redirect($url, $code);
@@ -647,7 +489,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Tests whether a redirection has been requested. If redirect() has been called, it will return
      * the URL redirected to. Otherwise, it will return null.
      *
-     * @return null|string
+     * @return string|null
      */
     public function redirectedTo()
     {
@@ -671,7 +513,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         } else {
             $args = func_get_args();
         }
-        $result = "";
+        $result = '';
         $queryargs = [];
         $fragmentIdentifier = null;
 
@@ -688,10 +530,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             }
             if ((is_string($arg) && $arg) || is_numeric($arg)) {
                 $arg = (string) $arg;
-                if ($result && substr($result, -1) != '/' && $arg[0] != '/') {
-                    $result .= "/$arg";
+                if ($result && substr($result, -1) !== '/' && $arg[0] !== '/') {
+                    $result .= "/${arg}";
                 } else {
-                    $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
+                    $result .= substr($result, -1) === '/' && $arg[0] === '/' ? ltrim($arg, '/') : $arg;
                 }
             }
         }
@@ -701,7 +543,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         if ($fragmentIdentifier) {
-            $result .= "#$fragmentIdentifier";
+            $result .= "#${fragmentIdentifier}";
         }
 
         return $result;
@@ -715,5 +557,160 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         return [
             'CurrentPage' => 'curr',
         ];
+    }
+
+    /**
+     * Initialisation function that is run before any action on the controller is called.
+     *
+     * @uses BasicAuth::requireLogin()
+     */
+    protected function init()
+    {
+        // @todo This will be removed in 5.0 and will be controlled by middleware instead
+        if ($this->basicAuthEnabled) {
+            BasicAuth::protect_site_if_necessary();
+        }
+
+        // This is used to test that subordinate controllers are actually calling parent::init() - a common bug
+        $this->baseInitCalled = true;
+    }
+
+    /**
+     * A bootstrap for the handleRequest method
+     *
+     * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
+     *
+     * @param HTTPRequest $request
+     */
+    protected function beforeHandleRequest(HTTPRequest $request)
+    {
+        //Set up the internal dependencies (request, response)
+        $this->setRequest($request);
+        //Push the current controller to protect against weird session issues
+        $this->pushCurrent();
+        $this->setResponse(new HTTPResponse());
+        //kick off the init functionality
+        $this->doInit();
+    }
+
+    /**
+     * Cleanup for the handleRequest method
+     */
+    protected function afterHandleRequest()
+    {
+        //Pop the current controller from the stack
+        $this->popCurrent();
+    }
+
+    /**
+     * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
+     * changes the controller response object appropriately
+     *
+     * @param HTTPResponse|object $response
+     */
+    protected function prepareResponse($response)
+    {
+        if ($response instanceof HTTPResponse) {
+            if (isset($_REQUEST['debug_request'])) {
+                $class = static::class;
+                Debug::message(
+                    "Request handler returned HTTPResponse object to {$class} controller;"
+                    . 'returning it without modification.'
+                );
+            }
+            $this->setResponse($response);
+        } else {
+            // Could be Controller, or ViewableData_Customised controller wrapper
+            if (ClassInfo::hasMethod($response, 'getViewer')) {
+                if (isset($_REQUEST['debug_request'])) {
+                    $class = static::class;
+                    $responseClass = get_class($response);
+                    Debug::message(
+                        "Request handler {$responseClass} object to {$class} controller;"
+                        . "rendering with template returned by {$responseClass}::getViewer()"
+                    );
+                }
+                $response = $response->getViewer($this->getAction())->process($response);
+            }
+
+            $this->getResponse()->setBody($response);
+        }
+
+        //deal with content if appropriate
+        ContentNegotiator::process($this->getResponse());
+    }
+
+    /**
+     * Controller's default action handler.  It will call the method named in "$Action", if that method
+     * exists. If "$Action" isn't given, it will use "index" as a default.
+     *
+     * @param HTTPRequest $request
+     * @param string $action
+     *
+     * @return DBHTMLText|HTTPResponse
+     */
+    protected function handleAction($request, $action)
+    {
+        foreach ($request->latestParams() as $k => $v) {
+            if ($v || ! isset($this->urlParams[$k])) {
+                $this->urlParams[$k] = $v;
+            }
+        }
+
+        $this->action = $action;
+        $this->requestParams = $request->requestVars();
+
+        if ($this->hasMethod($action)) {
+            $result = parent::handleAction($request, $action);
+
+            // If the action returns an array, customise with it before rendering the template.
+            if (is_array($result)) {
+                return $this->getViewer($action)->process($this->customise($result));
+            }
+            return $result;
+        }
+
+        // Fall back to index action with before/after handlers
+        $beforeResult = $this->extend('beforeCallActionHandler', $request, $action);
+        if ($beforeResult) {
+            return reset($beforeResult);
+        }
+
+        $result = $this->getViewer($action)->process($this);
+
+        $afterResult = $this->extend('afterCallActionHandler', $request, $action, $result);
+        if ($afterResult) {
+            return reset($afterResult);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the class that defines the given action, so that we know where to check allowed_actions.
+     * Overrides RequestHandler to also look at defined templates.
+     *
+     * @param string $action
+     *
+     * @return string
+     */
+    protected function definingClassForAction($action)
+    {
+        $definingClass = parent::definingClassForAction($action);
+        if ($definingClass) {
+            return $definingClass;
+        }
+
+        $class = static::class;
+        while ($class !== 'SilverStripe\\Control\\RequestHandler') {
+            $templateName = strtok($class, '_') . '_' . $action;
+            if (SSViewer::hasTemplate($templateName)) {
+                return $class;
+            }
+
+            $class = get_parent_class($class);
+        }
+
+        return null;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
  * A default backend for the setting and getting of cookies
@@ -18,7 +18,6 @@ use LogicException;
  */
 class CookieJar implements Cookie_Backend
 {
-
     /**
      * Hold the cookies that were existing at time of instantiation (ie: The ones
      * sent to PHP by the browser)
@@ -84,7 +83,7 @@ class CookieJar implements Cookie_Backend
             $expiry = $clear ? -1 : DBDatetime::now()->getTimestamp() + (86400 * $expiry);
         }
         //set the path up
-        $path = $path ? $path : Director::baseURL();
+        $path = $path ?: Director::baseURL();
         //send the cookie
         $this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
         //keep our variables in check
@@ -169,13 +168,13 @@ class CookieJar implements Cookie_Backend
         $httpOnly = true
     ) {
         // if headers aren't sent, we can set the cookie
-        if (!headers_sent($file, $line)) {
+        if (! headers_sent($file, $line)) {
             return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
         }
 
         if (Cookie::config()->uninherited('report_errors')) {
             throw new LogicException(
-                "Cookie '$name' can't be set. The site started outputting content at line $line in $file"
+                "Cookie '${name}' can't be set. The site started outputting content at line ${line} in ${file}"
             );
         }
         return false;
