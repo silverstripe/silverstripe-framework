@@ -7,6 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
@@ -19,6 +20,8 @@ use SilverStripe\View\ViewableData;
 class TaskRunner extends Controller
 {
 
+    use Configurable;
+
     private static $url_handlers = [
         '' => 'index',
         '$TaskName' => 'runTask'
@@ -27,6 +30,13 @@ class TaskRunner extends Controller
     private static $allowed_actions = [
         'index',
         'runTask',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $css = [
+        'silverstripe/framework:client/styles/task-runner.css',
     ];
 
     protected function init()
@@ -74,13 +84,7 @@ class TaskRunner extends Controller
 
         $renderer = DebugView::create();
         $header = $renderer->renderHeader();
-        $cssPath = ModuleResourceLoader::singleton()->resolveURL(
-            'silverstripe/framework:client/styles/task-runner.css'
-        );
-
-        // inject task runner CSS into the heaader
-        $cssInclude = sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $cssPath);
-        $header = str_replace('</head>', $cssInclude . '</head>', $header);
+        $header = $this->addCssToHeader($header);
 
         $data = [
             'Tasks' => $list,
@@ -177,5 +181,30 @@ class TaskRunner extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Inject task runner CSS into the heaader
+
+     * @param string $header
+     * @return string
+     */
+    protected function addCssToHeader($header)
+    {
+        $css = (array) $this->config()->get('css');
+
+        if (!$css) {
+            return $header;
+        }
+
+        foreach ($css as $include) {
+            $path = ModuleResourceLoader::singleton()->resolveURL($include);
+
+            // inject CSS into the heaader
+            $element = sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $path);
+            $header = str_replace('</head>', $element . '</head>', $header);
+        }
+
+        return $header;
     }
 }
