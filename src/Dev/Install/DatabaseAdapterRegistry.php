@@ -164,9 +164,17 @@ class DatabaseAdapterRegistry implements Flushable
         if (isset($_GET['flush'])) {
             static::flush();
         }
-        $cache = static::getCache();
+        try {
+            $cache = static::getCache();
+        } catch (\LogicException $e) {
+            // This try/catch statement is here rather than in getCache() for semver
+            // A LogicException may be thrown from `Symfony\Component\Finder\Finder::getIterator()`
+            // if the config manifest is empty.  There are some edge cases where this can happen, for instance
+            // running `sspak save` on a fresh install without ?flush
+            $cache = null;
+        }
         $key = __FUNCTION__;
-        if ($cache->has($key)) {
+        if ($cache && $cache->has($key)) {
             return (array) $cache->get($key);
         } else {
             try {
@@ -174,11 +182,16 @@ class DatabaseAdapterRegistry implements Flushable
             } catch (Exception $e) {
                 $paths = [];
             }
-            $cache->set($key, $paths);
+            if ($cache) {
+                $cache->set($key, $paths);
+            }
             return $paths;
         }
     }
 
+    /**
+     * @return CacheInterface
+     */
     public static function getCache(): CacheInterface
     {
         return Injector::inst()->get(CacheInterface::class . '.DatabaseAdapterRegistry');
