@@ -2,10 +2,14 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
@@ -126,5 +130,45 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             ],
             new ArrayList([$team1, $team2])
         );
+    }
+
+    public function testRetainsCustomSort()
+    {
+        $component = new GridFieldAddExistingAutocompleter($targetFragment = 'before', ['Test']);
+        $component->setSearchFields(['Name']);
+
+        $grid = $this->getGridFieldForComponent($component);
+        $grid->setList(Team::get()->filter('Name', 'force-empty-list'));
+
+        $component->setSearchList(Team::get());
+        $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
+        $response = $component->doSearch($grid, $request);
+        $this->assertFalse($response->isError());
+        $result = json_decode($response->getBody(), true);
+        $this->assertEquals(
+            ['Team 1', 'Team 2', 'Team 3', 'Team 4'],
+            array_map(function ($item) { return $item['label']; }, $result)
+        );
+
+        $component->setSearchList(Team::get()->sort('Name', 'DESC'));
+        $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
+        $response = $component->doSearch($grid, $request);
+        $this->assertFalse($response->isError());
+        $result = json_decode($response->getBody(), true);
+        $this->assertEquals(
+            ['Team 4', 'Team 3', 'Team 2', 'Team 1'],
+            array_map(function ($item) { return $item['label']; }, $result)
+        );
+    }
+
+    protected function getGridFieldForComponent($component)
+    {
+        $config = GridFieldConfig::create()->addComponents(
+            $component,
+            new GridFieldDataColumns()
+        );
+
+        return (new GridField('testfield', 'testfield'))
+            ->setConfig($config);
     }
 }
