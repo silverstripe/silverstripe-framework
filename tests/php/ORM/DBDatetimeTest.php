@@ -42,6 +42,22 @@ class DBDatetimeTest extends SapphireTest
         $this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
     }
 
+    public function testFixedNow()
+    {
+        $mockDate1 = '2010-01-01 10:00:00';
+        $mockDate2 = '2011-01-01 10:00:00';
+
+        DBDatetime::withFixedNow($mockDate1, function () use ($mockDate1, $mockDate2) {
+            $this->assertEquals($mockDate1, DBDatetime::now()->Rfc2822());
+
+            DBDatetime::withFixedNow($mockDate2, function () use ($mockDate2) {
+                $this->assertEquals($mockDate2, DBDatetime::now()->Rfc2822());
+            });
+
+            $this->assertEquals($mockDate1, DBDatetime::now()->Rfc2822());
+        });
+    }
+
     public function testSetNullAndZeroValues()
     {
         $date = DBDatetime::create_field('Datetime', '');
