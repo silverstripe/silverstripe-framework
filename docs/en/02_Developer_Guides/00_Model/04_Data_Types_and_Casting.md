@@ -216,26 +216,37 @@ See the [Template casting](/developer_guides/templates/casting) section for cont
 
 ## Overloading
 
-"Getters" and "Setters" are functions that help us save fields to our [DataObject](api:SilverStripe\ORM\DataObject) instances. By default, the 
+"Getters" and "Setters" are functions that help save fields to our [DataObject](api:SilverStripe\ORM\DataObject) instances. By default, the 
 methods `getField()` and `setField()` are used to set column data.  They save to the protected array, `$obj->record`. 
 We can overload the default behavior by making a function called "get`<fieldname>`" or "set`<fieldname>`".
 
 The following example will use the result of `getStatus` instead of the 'Status' database column. We can refer to the
-database column using `dbObject`.
+database column using `getField()`.
 
 ```php
 use SilverStripe\ORM\DataObject;
 
-class Player extends DataObject 
+/**
+ * @property Float $Cost
+ */
+class Product extends DataObject
 {
+
     private static $db = [
-        "Status" => "Enum(['Active', 'Injured', 'Retired'])"
+        'Title' => 'Varchar(255)',
+        'Cost' => 'Int', //cost in pennies/cents
     ];
-    
-    public function getStatus() 
+
+    public function getCost()
     {
-        return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
+        return $this->getField('Cost') / 100;
     }
+
+    public function setCost($value)
+    {
+        return $this->setField('Cost', $value * 100);
+    }
+
 }
 ```
 
