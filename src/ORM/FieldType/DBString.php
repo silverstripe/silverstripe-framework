@@ -217,7 +217,7 @@ abstract class DBString extends DBField
     }
 
     /**
-     * Swap add for DefaultEllipsis if need be
+     * Swap add for defaultEllipsis if need be
      * @param string $string
      * @param false|string $add
      * @return string
@@ -225,7 +225,7 @@ abstract class DBString extends DBField
     private function addEllipsis(string $string, $add): string
     {
         if ($add === false) {
-            $add = $this->DefaultEllipsis();
+            $add = $this->defaultEllipsis();
         }
 
         return $string . $add;
@@ -235,7 +235,7 @@ abstract class DBString extends DBField
      * Get the default string to indicate that a string was cut off.
      * @return string
      */
-    public function DefaultEllipsis(): string
+    public function defaultEllipsis(): string
     {
         return _t(self::class . '.ELLIPSIS', '…');
     }

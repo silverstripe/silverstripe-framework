@@ -350,6 +350,6 @@ class DBTextTest extends SapphireTest
     public function testDefaultEllipsis()
     {
         $textObj = new DBText('Test');
-        $this->assertEquals('…', $textObj->DefaultEllipsis());
+        $this->assertEquals('…', $textObj->defaultEllipsis());
     }
 }

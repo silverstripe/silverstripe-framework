@@ -128,7 +128,7 @@ class DBText extends DBString
 
         // If no $elipsis string is provided, use the default one.
         if ($add === false) {
-           $add = $this->DefaultEllipsis();
+           $add = $this->defaultEllipsis();
         }
 
         // Split on sentences (don't remove period)
