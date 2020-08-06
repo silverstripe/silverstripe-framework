@@ -31,14 +31,14 @@
 
 				<ul>
 					<li>
-						<p><a href="http://silverstripe.org/slack">silverstripe.org/slack</a> Join other SilverStripe developers in the community Slack channel.</p>
+						<p><a href="https://silverstripe.org/slack">silverstripe.org/slack</a> Join other SilverStripe developers in the community Slack channel.</p>
 					</li>
                     <li>
                         <p><a href="https://stackoverflow.com/questions/tagged/silverstripe">stackoverflow.com/questions/tagged/silverstripe</a> Ask SilverStripe questions on Stack Overflow.</p>
                     </li>
-					<li><p><a href="http://docs.silverstripe.org">docs.silverstripe.org</a> Searchable developer documentation, how-tos, tutorials, and reference.</p></li>
+					<li><p><a href="https://docs.silverstripe.org">docs.silverstripe.org</a> Searchable developer documentation, how-tos, tutorials, and reference.</p></li>
 
-					<li><p><a href="http://api.silverstripe.org">api.silverstripe.org</a> API documentation for PHP classes, methods and properties.</p></li>
+					<li><p><a href="https://api.silverstripe.org">api.silverstripe.org</a> API documentation for PHP classes, methods and properties.</p></li>
 				</ul>
 			<% end_if %>
 		</div>
