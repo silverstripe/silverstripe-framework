@@ -153,14 +153,14 @@ class GroupedDropdownFieldTest extends SapphireTest
         // value on first level
         $field->setValue("1");
         $this->assertRegExp(
-            '/<span class="readonly" id="Test">One<\/span><input type="hidden" name="Test" value="1" \/>/',
+            '#<span class="readonly" id="Test">One</span>\n?<input type="hidden" name="Test" value="1" />#',
             (string)$field->performReadonlyTransformation()->Field()
         );
 
         // value on first level
         $field->setValue("2");
         $this->assertRegExp(
-            '/<span class="readonly" id="Test">Two<\/span><input type="hidden" name="Test" value="2" \/>/',
+            '#<span class="readonly" id="Test">Two</span>\n?<input type="hidden" name="Test" value="2" />#',
             (string)$field->performReadonlyTransformation()->Field()
         );
     }
