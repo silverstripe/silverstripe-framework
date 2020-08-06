@@ -209,6 +209,27 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         self::$mock_now = null;
     }
 
+    /**
+     * Run a callback with specific time, original mock value is retained after callback
+     *
+     * @param DBDatetime|string $time
+     * @param callable $callback
+     * @return mixed
+     * @throws Exception
+     */
+    public static function withFixedNow($time, $callback)
+    {
+        $original = self::$mock_now;
+
+        try {
+            self::set_mock_now($time);
+
+            return $callback();
+        } finally {
+            self::$mock_now = $original;
+        }
+    }
+
     public static function get_template_global_variables()
     {
         return [
