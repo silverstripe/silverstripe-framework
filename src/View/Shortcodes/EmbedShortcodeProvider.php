@@ -3,7 +3,11 @@
 namespace SilverStripe\View\Shortcodes;
 
 use Embed\Http\DispatcherInterface;
+use League\Flysystem\Exception;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
@@ -13,7 +17,6 @@ use SilverStripe\View\Embed\EmbedResource;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use Embed\Adapters\Adapter;
-use Embed\Embed;
 use Embed\Exceptions\InvalidUrlException;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\Control\Director;
@@ -57,6 +60,16 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $serviceURL = $arguments['url'];
         } else {
             return '';
+        }
+
+        // Try to use cached result
+        $cache = static::getCache();
+        $key = static::deriveCacheKey($serviceURL);
+        try {
+            if ($cache->has($key)) {
+                return $cache->get($key);
+            }
+        } catch (InvalidArgumentException $e) {
         }
 
         // See https://github.com/oscarotero/Embed#example-with-all-options for service arguments
@@ -113,13 +126,19 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         // Convert embed object into HTML
         if ($embed && $embed instanceof Adapter) {
             $result = static::embedForTemplate($embed, $arguments);
-            if ($result) {
-                return $result;
+        }
+        // Fallback to link to service
+        if (!$result) {
+            $result = static::linkEmbed($arguments, $serviceURL, $serviceURL);
+        }
+        // Cache result
+        if ($result) {
+            try {
+                $cache->set($key, $result);
+            } catch (InvalidArgumentException $e) {
             }
         }
-
-        // Fallback to link to service
-        return static::linkEmbed($arguments, $serviceURL, $serviceURL);
+        return $result;
     }
 
     /**
@@ -241,5 +260,51 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         }
 
         return $attributes;
+    }
+
+    /**
+     * @param ShortcodeParser $parser
+     * @param string $content
+     */
+    public static function flushCachedShortcodes(ShortcodeParser $parser, string $content): void
+    {
+        $cache = static::getCache();
+        $tags = $parser->extractTags($content);
+        foreach ($tags as $tag) {
+            if (!isset($tag['open']) || $tag['open'] != 'embed') {
+                continue;
+            }
+            $url = $tag['content'] ?? $tag['attrs']['url'] ?? null;
+            if (!$url) {
+                continue;
+            }
+            $key = static::deriveCacheKey($url);
+            try {
+                if (!$cache->has($key)) {
+                    continue;
+                }
+                $cache->delete($key);
+            } catch (InvalidArgumentException $e) {
+                continue;
+            }
+        }
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    private static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.EmbedShortcodeProvider');
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private static function deriveCacheKey(string $url): string
+    {
+        $key = 'embed-shortcode-' . preg_replace('/[^a-zA-Z0-9\-]/', '', $url);
+        return $key;
     }
 }
