@@ -1306,6 +1306,7 @@ class DataObjectTest extends SapphireTest
             'HasOneRelationshipID',
             'ExtendedHasOneRelationshipID',
             'SubclassDatabaseField',
+            'SubclassFieldWithOverride',
             'ParentTeamID',
         ];
         $actual = array_keys($subteamSpecifications);
@@ -1321,6 +1322,7 @@ class DataObjectTest extends SapphireTest
         $expected = [
             'ID',
             'SubclassDatabaseField',
+            'SubclassFieldWithOverride',
             'ParentTeamID',
         ];
         $actual = array_keys($subteamFields);
@@ -2255,9 +2257,15 @@ class DataObjectTest extends SapphireTest
 
         $map = $obj->toMap();
 
-        $this->assertArrayHasKey('ID', $map, 'Contains base fields');
-        $this->assertArrayHasKey('Title', $map, 'Contains fields from parent class');
-        $this->assertArrayHasKey('SubclassDatabaseField', $map, 'Contains fields from concrete class');
+        $this->assertArrayHasKey('ID', $map, 'Should contain ID');
+        $this->assertArrayHasKey('ClassName', $map, 'Should contain ClassName');
+        $this->assertArrayHasKey('Created', $map, 'Should contain base Created');
+        $this->assertArrayHasKey('LastEdited', $map, 'Should contain base LastEdited');
+        $this->assertArrayHasKey('Title', $map, 'Should contain fields from parent class');
+        $this->assertArrayHasKey('SubclassDatabaseField', $map, 'Should contain fields from concrete class');
+
+        $this->assertEquals('DB value of SubclassFieldWithOverride (override)', $obj->SubclassFieldWithOverride, 'Object uses custom field getter');
+        $this->assertEquals('DB value of SubclassFieldWithOverride', $map['SubclassFieldWithOverride'], 'toMap does not use custom field getter');
 
         $this->assertEquals(
             $obj->ID,
@@ -2275,8 +2283,17 @@ class DataObjectTest extends SapphireTest
             'Contains values from concrete class fields'
         );
 
-        $newObj = new DataObjectTest\SubTeam();
-        $this->assertArrayHasKey('Title', $map, 'Contains null fields');
+        $newObj = new DataObjectTest\SubTeam(['Title' => null]);
+        $this->assertArrayNotHasKey('Title', $newObj->toMap(), 'Should not contain new null fields');
+
+        $newObj->Title = '';
+        $this->assertArrayHasKey('Title', $newObj->toMap(), 'Should contain fields once they are set, even if falsey');
+
+        $newObj->Title = null;
+        $this->assertArrayNotHasKey('Title', $newObj->toMap(), 'Should not contain reset-to-null fields');
+
+        $this->objFromFixture(DataObjectTest\SubTeam::class, 'subteam3_with_empty_fields');
+        $this->assertArrayNotHasKey('SubclassDatabaseField', $newObj->toMap(), 'Should not contain null re-hydrated fields');
     }
 
     public function testIsEmpty()

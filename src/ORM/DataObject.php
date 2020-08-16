@@ -966,13 +966,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Convert this object to a map.
+     * Note that it has the following quirks:
+     *  - custom getters, including those that adjust the result of database fields, won't be executed
+     *  - NULL values won't be returned.
      *
      * @return array The data as a map.
      */
     public function toMap()
     {
         $this->loadLazyFields();
-        return $this->record;
+        return array_filter($this->record, function ($val) {
+            return $val !== null;
+        });
     }
 
     /**

@@ -9,7 +9,8 @@ class SubTeam extends Team implements TestOnly
     private static $table_name = 'DataObjectTest_SubTeam';
 
     private static $db = [
-        'SubclassDatabaseField' => 'Varchar'
+        'SubclassDatabaseField' => 'Varchar',
+        'SubclassFieldWithOverride' => 'Varchar',
     ];
 
     private static $has_one = [
@@ -25,4 +26,13 @@ class SubTeam extends Team implements TestOnly
             'Position' => 'Varchar(100)'
         ]
     ];
+
+    /**
+     * Override the value of SubclassFieldWithOverride
+     * @return string Suffixes " (override)" to SubclassFieldWithOverride value
+     */
+    public function getSubclassFieldWithOverride()
+    {
+        return $this->getField('SubclassFieldWithOverride') . ' (override)';
+    }
 }

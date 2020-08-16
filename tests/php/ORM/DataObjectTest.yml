@@ -70,6 +70,7 @@ SilverStripe\ORM\Tests\DataObjectTest\SubTeam:
   subteam1:
     Title: Subteam 1
     SubclassDatabaseField: Subclassed 1
+    SubclassFieldWithOverride: DB value of SubclassFieldWithOverride
     ExtendedDatabaseField: Extended 1
     ParentTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     Sponsors:
