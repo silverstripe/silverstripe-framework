@@ -106,11 +106,8 @@ class GridState extends HiddenField
      */
     public function Value()
     {
-        if (!$this->data) {
-            return json_encode([]);
-        }
-
-        return json_encode($this->data->getChangesArray());
+        $data = $this->data ? $this->data->getChangesArray() : [];
+        return json_encode($data, JSON_FORCE_OBJECT);
     }
 
     /**
