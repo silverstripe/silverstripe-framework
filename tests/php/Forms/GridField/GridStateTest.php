@@ -29,5 +29,4 @@ class GridStateTest extends SapphireTest
             'GridState with changes returns has a JSON object string for Value.'
         );
     }
-
 }

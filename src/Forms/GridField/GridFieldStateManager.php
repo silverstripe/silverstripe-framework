@@ -42,7 +42,7 @@ class GridFieldStateManager implements GridFieldStateManagerInterface
         $value = $gridField->getState(false)->Value();
 
         // Using a JSON-encoded empty array as the blank value, to avoid changing Value() semantics in a minor release
-        if ($value === '[]') {
+        if ($value === '{}') {
             return $url;
         }
 

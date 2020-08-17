@@ -87,7 +87,7 @@ class GridFieldStateManagerTest extends SapphireTest
         $grid->getState()->initDefaults(['testValue' => 'foo']);
         $link = '/link-to/something';
 
-        $this->assertEquals('[]', $grid->getState(false)->Value());
+        $this->assertEquals('{}', $grid->getState(false)->Value());
 
         $this->assertEquals(
             '/link-to/something',
