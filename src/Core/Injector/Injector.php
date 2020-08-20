@@ -587,7 +587,7 @@ class Injector implements ContainerInterface
         if ((!$type || $type !== self::PROTOTYPE)
             && empty($constructorParams)
             && is_subclass_of($class, DataObject::class)) {
-            $constructorParams = [null, true];
+            $constructorParams = [null, DataObject::CREATE_SINGLETON];
         }
 
         $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();

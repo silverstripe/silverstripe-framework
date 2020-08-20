@@ -819,6 +819,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Create a DataObject from the given SQL row
+     * If called without $row['ID'] set, then a new object will be created rather than rehydrated.
      *
      * @param array $row
      * @return DataObject
@@ -841,7 +842,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $class = $row['RecordClassName'];
         }
 
-        $item = Injector::inst()->create($class, $row, false, $this->getQueryParams());
+        $creationType = empty($row['ID']) ? DataObject::CREATE_OBJECT : DataObject::CREATE_HYDRATED;
+
+        $item = Injector::inst()->create($class, $row, $creationType, $this->getQueryParams());
 
         return $item;
     }

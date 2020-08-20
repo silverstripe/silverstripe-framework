@@ -293,7 +293,7 @@ class MySQLDatabase extends Database implements TransactionManager
         $objects = [];
 
         foreach ($records as $record) {
-            $objects[] = new $record['ClassName']($record);
+            $objects[] = new $record['ClassName']($record, DataObject::CREATE_HYDRATED);
         }
 
         $list = new PaginatedList(new ArrayList($objects));

@@ -57,12 +57,13 @@ class SSListExporterTest extends SapphireTest
     public function testToMapReturnsDataOfDataObjects()
     {
         $data = [
+            'ID' => 5,
             'Foo' => 'Bar',
             'Baz' => 'Boom',
             'One' => 'Two'
         ];
 
-        $map = $this->exporter->toMap(DataObject::create($data));
+        $map = $this->exporter->toMap(DataObject::create($data, DataObject::CREATE_HYDRATED));
 
         $this->assertEquals($data, $map, 'Map should match data passed to DataObject');
     }

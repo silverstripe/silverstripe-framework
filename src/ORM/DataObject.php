@@ -184,6 +184,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     const CHANGE_VALUE = 2;
 
     /**
+     * Value for 2nd argument to constructor, indicating that a new record is being created
+     * Setters will be called on fields passed, and defaults will be populated
+     */
+    const CREATE_OBJECT = 0;
+
+    /**
+     * Value for 2nd argument to constructor, indicating that a record is a singleton representing the whole type,
+     * e.g. to call requireTable() in dev/build
+     * Defaults will not be populated and data passed will be ignored
+     */
+    const CREATE_SINGLETON = 1;
+
+    /**
+     * Value for 2nd argument to constructor, indicating that a record is being hydrated from the database
+     * Neither setters and nor default population will be called
+     */
+    const CREATE_HYDRATED = 2;
+
+    /**
      * An array indexed by fieldname, true if the field has been changed.
      * Use {@link getChangedFields()} and {@link isChanged()} to inspect
      * the changed state.
@@ -318,88 +337,115 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Construct a new DataObject.
      *
-     * @param array|null $record Used internally for rehydrating an object from database content.
-     *                           Bypasses setters on this class, and hence should not be used
-     *                           for populating data on new records.
-     * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
-     *                             Singletons don't have their defaults set.
+     * @param array $record Initial record content, or rehydrated record content, depending on $creationType
+     * @param int|boolean $creationType Set to DataObject::CREATE_OBJECT, DataObject::CREATE_HYDRATED, or DataObject::CREATE_SINGLETON. Used by SilverStripe internals as best left as the default by regular users.
      * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
      */
-    public function __construct($record = null, $isSingleton = false, $queryParams = [])
+    public function __construct($record = [], $creationType = self::CREATE_OBJECT, $queryParams = [])
     {
         parent::__construct();
+
+        // Legacy $record default
+        if ($record === null) {
+            $record = [];
+        }
+
+        // Legacy $isSingleton boolean
+        if (!is_int($creationType)) {
+            if (!is_bool($creationType)) {
+                user_error('Creation type is neither boolean (old isSingleton arg) nor integer (new arg), please review your code', E_USER_WARNING);
+            }
+            $creationType = $creationType ? self::CREATE_SINGLETON : self::CREATE_OBJECT;
+        }
 
         // Set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
         $this->setSourceQueryParams($queryParams);
 
-        // Set the fields data.
-        if (!$record) {
-            $record = [
-                'ID' => 0,
-                'ClassName' => static::class,
-                'RecordClassName' => static::class
-            ];
-        }
-
-        if ($record instanceof stdClass) {
-            $record = (array)$record;
-        }
-
-        if (!is_array($record)) {
-            if (is_object($record)) {
-                $passed = "an object of type '" . get_class($record) . "'";
-            } else {
-                $passed = "The value '$record'";
-            }
-
-            user_error(
-                "DataObject::__construct passed $passed.  It's supposed to be passed an array,"
-                . " taken straight from the database.  Perhaps you should use DataList::create()->First(); instead?",
-                E_USER_WARNING
-            );
-            $record = null;
-        }
-
         // Set $this->record to $record, but ignore NULLs
         $this->record = [];
-        foreach ($record as $k => $v) {
-            // Ensure that ID is stored as a number and not a string
-            // To do: this kind of clean-up should be done on all numeric fields, in some relatively
-            // performant manner
-            if ($v !== null) {
-                if ($k == 'ID' && is_numeric($v)) {
-                    $this->record[$k] = (int)$v;
-                } else {
-                    $this->record[$k] = $v;
+
+        switch ($creationType) {
+            // Hydrate a record from the database
+            case self::CREATE_HYDRATED:
+                if (!is_array($record) || empty($record['ID'])) {
+                    throw new \InvalidArgumentException("Hydrated records must be passed a record array including an ID");
                 }
-            }
-        }
 
-        // Identify fields that should be lazy loaded, but only on existing records
-        if (!empty($record['ID'])) {
-            // Get all field specs scoped to class for later lazy loading
-            $fields = static::getSchema()->fieldSpecs(
-                static::class,
-                DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
-            );
-            foreach ($fields as $field => $fieldSpec) {
-                $fieldClass = strtok($fieldSpec, ".");
-                if (!array_key_exists($field, $record)) {
-                    $this->record[$field . '_Lazy'] = $fieldClass;
+                $this->record = $record;
+
+                // Identify fields that should be lazy loaded, but only on existing records
+                // Get all field specs scoped to class for later lazy loading
+                $fields = static::getSchema()->fieldSpecs(
+                    static::class,
+                    DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
+                );
+                foreach ($fields as $field => $fieldSpec) {
+                    $fieldClass = strtok($fieldSpec, ".");
+                    if (!array_key_exists($field, $record)) {
+                        $this->record[$field . '_Lazy'] = $fieldClass;
+                    }
                 }
-            }
+
+                $this->original = $this->record;
+                $this->changed = [];
+                $this->changeForced = false;
+
+                break;
+
+            // Create a new object, using the constructor argument as the initial content
+            case self::CREATE_OBJECT:
+                if ($record instanceof stdClass) {
+                    $record = (array)$record;
+                }
+
+                if (!is_array($record)) {
+                    if (is_object($record)) {
+                        $passed = "an object of type '" . get_class($record) . "'";
+                    } else {
+                        $passed = "The value '$record'";
+                    }
+
+                    user_error(
+                        "DataObject::__construct passed $passed.  It's supposed to be passed an array,"
+                        . " taken straight from the database.  Perhaps you should use DataList::create()->First(); instead?",
+                        E_USER_WARNING
+                    );
+                    $record = [];
+                }
+
+                // Default columns
+                $this->record['ID'] = empty($record['ID']) ? 0 : $record['ID'];
+                $this->record['ClassName'] = static::class;
+                $this->record['RecordClassName'] = static::class;
+                unset($record['ID']);
+                $this->original = $this->record;
+
+                $this->populateDefaults();
+
+                // prevent populateDefaults() and setField() from marking overwritten defaults as changed
+                $this->changed = [];
+                $this->changeForced = false;
+
+                // Set the data passed in the constructor, allowing for defaults and calling setters
+                // This will mark fields as changed
+                if ($record) {
+                    $this->update($record);
+                }
+                break;
+
+            case self::CREATE_SINGLETON:
+                // No setting happens for a singleton
+                $this->record['ID'] = 0;
+                $this->record['ClassName'] = static::class;
+                $this->record['RecordClassName'] = static::class;
+                $this->original = $this->record;
+                $this->changed = [];
+                $this->changeForced = false;
+                break;
+
+            default:
+                throw new \LogicException('Bad creationType ' . $this->creationType);
         }
-
-        $this->original = $this->record;
-
-        // Must be called after parent constructor
-        if (!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
-            $this->populateDefaults();
-        }
-
-        // prevent populateDefaults() and setField() from marking overwritten defaults as changed
-        $this->changed = [];
-        $this->changeForced = false;
     }
 
     /**
@@ -703,7 +749,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $originalClass = $this->ClassName;
 
         /** @var DataObject $newInstance */
-        $newInstance = Injector::inst()->create($newClassName, $this->record, false);
+        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_HYDRATED);
 
         // Modify ClassName
         if ($newClassName != $originalClass) {
@@ -920,13 +966,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Convert this object to a map.
+     * Note that it has the following quirks:
+     *  - custom getters, including those that adjust the result of database fields, won't be executed
+     *  - NULL values won't be returned.
      *
      * @return array The data as a map.
      */
     public function toMap()
     {
         $this->loadLazyFields();
-        return $this->record;
+        return array_filter($this->record, function ($val) {
+            return $val !== null;
+        });
     }
 
     /**
