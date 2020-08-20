@@ -9,6 +9,18 @@ icon: users-cog
 By default, SilverStripe provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
 authentication system.
 
+Silverstripe projects created with CMS Recipe 4.7.0 onwards include Multi Factor Authentication (MFA)
+through the [silverstripe/mfa](https://github.com/silverstripe/silverstripe-mfa) module.
+This increases login security by asking for a code generated on another device,
+through TOTP with the [silverstripe/totp-authenticator](https://github.com/silverstripe/silverstripe-totp-authenticator)
+module. This step is optional for users, and can be disabled or required by CMS
+administrators ([instructions](https://userhelp.silverstripe.org/en/4/optional_features/multi-factor_authentication/)).
+
+To further increase login security, you can install support
+for hardware tokens through the [silverstripe/webauthn-authenticator](https://github.com/silverstripe/silverstripe-webauthn-authenticator)
+module. These tokens virtually eliminiate the risk of [credential phishing](https://en.wikipedia.org/wiki/Phishing),
+but also require a bit of care during setup.
+
 ## User Interface
 
 SilverStripe comes with a default login form interface,
