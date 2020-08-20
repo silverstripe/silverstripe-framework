@@ -16,7 +16,7 @@ through TOTP with the [silverstripe/totp-authenticator](https://github.com/silve
 module. This step is optional for users, and can be disabled or required by CMS
 administrators ([instructions](https://userhelp.silverstripe.org/en/4/optional_features/multi-factor_authentication/)).
 
-To further increase login security, you can opt to install support
+To further increase login security, you can install support
 for hardware tokens through the [silverstripe/webauthn-authenticator](https://github.com/silverstripe/silverstripe-webauthn-authenticator)
 module. These tokens virtually eliminiate the risk of [credential phishing](https://en.wikipedia.org/wiki/Phishing),
 but also require a bit of care during setup.
