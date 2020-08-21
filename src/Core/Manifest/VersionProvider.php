@@ -25,6 +25,7 @@ use SilverStripe\Core\Injector\Injector;
  */
 class VersionProvider
 {
+
     use Configurable;
 
     /**
@@ -41,32 +42,74 @@ class VersionProvider
     {
         $modules = $this->getModules();
         $lockModules = $this->getModuleVersionFromComposer(array_keys($modules));
-        $output = [];
+        $moduleVersions = [];
         foreach ($modules as $module => $title) {
-            $version = isset($lockModules[$module])
-                ? $lockModules[$module]
-                : _t(__CLASS__ . '.VERSIONUNKNOWN', 'Unknown');
-            $output[] = $title . ': ' . $version;
+            if (!array_key_exists($module, $lockModules)) {
+                continue;
+            }
+            $version = $lockModules[$module];
+            $moduleVersions[$module] = [$title, $version];
         }
-        return implode(', ', $output);
+        $moduleVersions = $this->filterModules($moduleVersions);
+        $ret = [];
+        foreach ($moduleVersions as $module => $value) {
+            list($title, $version) = $value;
+            $ret[] = "$title: $version";
+        }
+        return implode(', ', $ret);
     }
 
     /**
-     * Gets the configured core modules to use for the SilverStripe application version. Filtering
-     * is used to ensure that modules can turn the result off for other modules, e.g. CMS can disable Framework.
+     * Filter modules to only use the last module from a git repo, for example
+     *
+     * [
+     *   silverstripe/framework => ['Framework', 1.1.1'],
+     *   silverstripe/cms => ['CMS', 2.2.2'],
+     *   silverstripe/recipe-cms => ['CMS Recipe', '3.3.3'],
+     *   cwp/cwp-core => ['CWP', '4.4.4']
+     * ]
+     * =>
+     * [
+     *   silverstripe/recipe-cms => ['CMS Recipe', '3.3.3'],
+     *   cwp/cwp-core => ['CWP', '4.4.4']
+     * ]
+     *
+     * @param array $modules
+     * @return array
+     */
+    private function filterModules(array $modules)
+    {
+        $accountModule = [];
+        foreach ($modules as $module => $value) {
+            if (!preg_match('#^([a-z0-9\-]+)/([a-z0-9\-]+)$#', $module, $m)) {
+                continue;
+            }
+            $account = $m[1];
+            $accountModule[$account] = [$module, $value];
+        }
+        $ret = [];
+        foreach ($accountModule as $account => $arr) {
+            list($module, $value) = $arr;
+            $ret[$module] = $value;
+        }
+        return $ret;
+    }
+
+    /**
+     * Gets the configured core modules to use for the SilverStripe application version
      *
      * @return array
      */
     public function getModules()
     {
         $modules = Config::inst()->get(self::class, 'modules');
-        return $modules ? array_filter($modules) : [];
+        return !empty($modules) ? $modules : ['silverstripe/framework' => 'Framework'];
     }
 
     /**
      * Tries to obtain version number from composer.lock if it exists
      *
-     * @param  array $modules
+     * @param array $modules
      * @return array
      */
     public function getModuleVersionFromComposer($modules = [])
@@ -86,12 +129,12 @@ class VersionProvider
     /**
      * Load composer.lock's contents and return it
      *
-     * @param  bool $cache
+     * @param bool $cache
      * @return array
      */
     protected function getComposerLock($cache = true)
     {
-        $composerLockPath = BASE_PATH . '/composer.lock';
+        $composerLockPath = $this->getComposerLockPath();
         if (!file_exists($composerLockPath)) {
             return [];
         }
@@ -116,5 +159,13 @@ class VersionProvider
         }
 
         return $lockData;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getComposerLockPath(): string
+    {
+        return BASE_PATH . '/composer.lock';
     }
 }
