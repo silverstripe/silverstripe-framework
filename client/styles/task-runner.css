@@ -1,0 +1,58 @@
+/* This file is manually maintained, it is not generated from SCSS sources */
+
+.task {
+  padding-top: 20px;
+}
+
+.task__panel {
+  padding: 0 15px 15px 15px;
+}
+
+@media (min-width:992px) {
+  .task__list {
+    columns: 2;
+    column-gap: 100px;
+  }
+}
+
+.task__item {
+  padding-bottom: 30px;
+}
+
+@media (min-width:992px) {
+  .task__item {
+    display: inline-block;
+    width: 100%;
+  }
+}
+
+.task__title {
+  color: #303b4d;
+  margin: 0 0 8px;
+}
+
+.task__description {
+  color: #43536d;
+  margin-bottom: 12px;
+}
+
+.task__button {
+  border: 1px solid #ced5e1;
+  border-radius: 5px;
+  background-color: #f6f7f8;
+  color: #43536d;
+  display: inline-block;
+  margin-right: 10px;
+  padding: 6px 10px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.task__button:last-child {
+  margin-right: 0;
+}
+
+.task__button:focus,
+.task__button:hover {
+  background-color: #ced5e1;
+}
