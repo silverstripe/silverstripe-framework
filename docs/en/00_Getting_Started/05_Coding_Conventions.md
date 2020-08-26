@@ -48,7 +48,7 @@ Class and filenames are in `UpperCamelCase` format:
 	class MyClass {}
 
 ```
-new word must be capitalized. Successive capitalized letters are used in 
+new words must be capitalized. Successive capitalized letters are used in 
 acronyms, e.g. a class `XMLImporter` is used while `XmlImporter` is not.
 
 ### Methods
