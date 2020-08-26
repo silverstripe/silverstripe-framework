@@ -3,7 +3,11 @@ title: Configuring your schema
 summary: Add a basic type to the schema configuration
 ---
 
-# Configuring your schema
+# Getting started
+
+[CHILDREN asList]
+
+## Configuring your schema
 
 GraphQL is a strongly-typed API layer, so having a schema behind it is essential. Simply put:
 
@@ -19,7 +23,7 @@ There's a bit more to it than that, and if you want to learn more about GraphQL,
 the [full documentation](https://graphql.org/learn/), but for now, these three concepts will
 serve almost all of your needs to get started.
 
-## Initial setup
+### Initial setup
 
 To start your first schema, open a new configuration file. Let's call it `graphql.yml`.
 
@@ -47,7 +51,7 @@ SilverStripe\GraphQL\Schema\Schema:
         # your mutations here
 ```
 
-## Defining a basic type
+### Defining a basic type
 
 Let's define a generic type for our GraphQL schema.
 
@@ -87,3 +91,6 @@ That's all there is to it! To learn how we can take this further, check out the
 let's get started on [**adding some dataobjects**](working_with_dataobjects).
 
 
+### Further reading
+
+[CHILDREN]

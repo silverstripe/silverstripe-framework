@@ -3,7 +3,11 @@ title: Building a schema with procedural code
 summary: Use PHP code to build your schema
 ---
 
-# Building a schema with procedural code
+# Getting started
+
+[CHILDREN asList]
+
+## Building a schema with procedural code
 
 Sometimes you need access to dynamic information to populate your schema. For instance, you
 may have an enum containing a list of all the languages that are configured for the website. It
@@ -20,7 +24,7 @@ One thing you cannot do with the procedural API, though it may be tempting, is d
 on the fly as closures. Resolvers must be static methods on a class.
 [/notice]
 
-## Adding a schema builder
+### Adding a schema builder
 
 We can use the `builders` section of the config to add an implementation of `SchemaUpdater`.
 
@@ -48,7 +52,7 @@ class MySchema implements SchemaUpdater
 }
 ```
 
-## Example code
+### Example code
 
 Most the API should be self-documenting, and a good IDE should autocomplete everything you
 need, but the key methods map directly to their configuration counterparts:
@@ -81,7 +85,7 @@ need, but the key methods map directly to their configuration counterparts:
     }
 ```
 
-### Fluent setters
+#### Fluent setters
 
 To make your code chainable, when adding fields and arguments, you can invoke a callback
 to update it on the fly.
@@ -102,3 +106,7 @@ $myQuery = Query::create('readCountries', '[Country]')
         $arg->setDefaultValue(20);
      });
 ```
+
+### Further reading
+
+[CHILDREN]

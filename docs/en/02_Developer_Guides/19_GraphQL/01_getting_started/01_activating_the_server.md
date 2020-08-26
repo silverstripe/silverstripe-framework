@@ -4,7 +4,11 @@ summary: Open up a the default server that comes pre-configured with the module
 icon: rocket
 ---
 
-# Activating the default GraphQL server
+# Getting started
+
+[CHILDREN asList]
+
+## Activating the default GraphQL server
 
 GraphQL is used through a single route, typically `/graphql`. You need
 to define *types* and *queries* to expose your data via this endpoint. While this recommended
@@ -25,7 +29,7 @@ SilverStripe\Control\Director:
     'graphql': '%$SilverStripe\GraphQL\Controller.default'
 ```
 
-# Setting up a custom GraphQL server
+## Setting up a custom GraphQL server
 
 In addition to the default `/graphql` endpoint provided by this module by default,
 along with the `admin/graphql` endpoint provided by the CMS modules (if they're installed),
@@ -60,3 +64,7 @@ SilverStripe\GraphQL\Schema\Schema:
     myNewSchema:
       # ...
 ```
+
+### Further reading
+
+[CHILDREN]
