@@ -3,7 +3,11 @@ title: Adding arguments
 summary: Add arguments to your fields, queries, and mutations
 ---
 
-# Adding arguments
+# Working with generic types
+
+[CHILDREN asList]
+
+## Adding arguments
 
 Fields can have arguments, and queries are just fields, so let's add a simple
 way of influencing our query response:
@@ -65,3 +69,7 @@ SilverStripe\GraphQL\Schema\Schema:
 Rebuild the schema, and notice that the IDE is no longer yelling at you for a `limit` argument.
 
 Let's take this a step further by turning this in to a proper [paginated result](adding_pagination).
+
+### Further reading
+
+[CHILDREN]

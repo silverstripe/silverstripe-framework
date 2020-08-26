@@ -3,7 +3,11 @@ title: DataObject inheritance
 summary: Learn how inheritance is handled in DataObject types
 ---
 
-# DataObject inheritance
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## DataObject inheritance
 
 The inheritance pattern used in the ORM is a tricky thing to navigate in a GraphQL API, mostly owing
 to the fact that there is no concept of inheritance in GraphQL types. The main tools we have at our
@@ -15,7 +19,7 @@ While more conventional, unions and interfaces introduce more complexity, and gi
 on inheritance in Silverstripe CMS, particularly with `SiteTree`, inheritance in GraphQL is handled in a less
 conventional but more ergonomic way using a plugin called `inheritance`.
 
-## Introducing pseudo-unions
+### Introducing pseudo-unions
 
 Let's take a simple example. Imagine we have this design:
 
@@ -66,7 +70,7 @@ on that type, both inherited and native.
 But what if one of those pages is a `NewsPage`, and we want to access its `PublishDate` field
  if available? This raises an interesting point.
 
-## Implicit exposure
+### Implicit exposure
 
 By exposing `Page`, we implicitly expose *all of its ancestors* and *all of its descendants*. Adding `Page`
 to our schema implies that we also want its parent SiteTree in the schema (after all, that's where most of its fields
@@ -140,7 +144,7 @@ Operations are not implicitly exposed. If you add a `read` operation to `SiteTre
 `NewsPage` and `ContactPage`, etc. You have to opt into those.
 [/info]
 
-## A note about duplication
+### A note about duplication
 
 One drawback of this approach is that it results in a lot of duplication. Take for instance this query:
 
@@ -168,3 +172,7 @@ query readSiteTrees {
 The `title` on `Page` and `content` on `NewsPage` are identical to the fields that are queried in the parent type.
 This may be of some benefit when destructuring your frontend code, but for the most part, it's just important to
 remember that there's nothing distinct about these fields.
+
+### Further reading
+
+[CHILDREN]

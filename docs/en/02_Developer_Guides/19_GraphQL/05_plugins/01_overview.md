@@ -3,7 +3,11 @@ title: What are plugins?
 summary: An overview of how plugins work with the GraphQL schema
 ---
 
-# What are plugins?
+# Plugins
+
+[CHILDREN asList]
+
+## What are plugins?
 
 Plugins are used to distribute reusable functionality across your schema. Some examples of commonly used plugins include:
 
@@ -13,7 +17,7 @@ Plugins are used to distribute reusable functionality across your schema. Some e
 * Ensuring `Member` is in the schema
 * And many more...
 
-## What plugins must do
+### What plugins must do
 
 There isn't a huge API surface to a plugin. They just have to:
 
@@ -23,7 +27,7 @@ There isn't a huge API surface to a plugin. They just have to:
 * Be registered with the `PluginRegistry`
 
 
-## Available plugin interfaces
+### Available plugin interfaces
 
 Plugin interfaces are all found in the namespace `SilverStripe\GraphQL\Schema\Interfaces`
 
@@ -41,7 +45,7 @@ Wow, that's a lot of interfaces, right? This is owing mostly to issues around st
 and allows for a more expressive developer experience. Almost all of these interfaces have the same requirements,
 just for different types. It's pretty easy to navigate if you know what you want to accomplish.
 
-## Registering plugins
+### Registering plugins
 
 Plugins have to be registered with Injector.
 
@@ -56,7 +60,7 @@ SilverStripe\Core\Injector\Injector:
 The key `myPlugin` is arbitrary. The identifier of the plugin is obtained procedurally.
 [/info]
 
-## Resolver middleware and afterware
+### Resolver middleware and afterware
 
 The real power of plugins is the ability to distribute not just configuration across the schema, but
 more importantly, _functionality_.
@@ -71,9 +75,6 @@ their functionality without a massive hack. This is where the idea of **resolver
 Middlewares and afterwares are pretty straightforward. They get the same `$args`, `$context`, and `$info`
 parameters as the assigned resolver, but the first argument, `$result` is mutated with each resolver.
 
-## Going futher
+### Further reading
 
-Ready to try them out? Check out the tutorials:
-
-* [Writing a simple plugin](writing_a_simple_plugin)
-* [Writing a complex plugin](writing_a_complex_plugin)
+[CHILDREN]

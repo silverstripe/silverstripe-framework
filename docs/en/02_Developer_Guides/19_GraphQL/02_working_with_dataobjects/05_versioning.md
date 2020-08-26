@@ -3,12 +3,16 @@ title: Versioned content
 summary: A guide on how DataObjects with the Versioned extension behave in GraphQL schemas
 ---
 
-# Versioned content
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## Versioned content
 
 For the most part, if your DataObject has the `Versioned` extension applied, there is nothing you need to do
 explicitly, but be aware that it will affect the operations and fields of your type.
 
-## Versioned plugins
+### Versioned plugins
 
 There are several plugins provided by the `silverstripe-versioned` module that affect how versioned DataObjects
 appear in the schema. These include:
@@ -19,12 +23,12 @@ appear in the schema. These include:
 
 Let's walk through each one.
 
-### The "versioning" plugin
+#### The "versioning" plugin
 
 Defined in the `SilverStripe\Versioned\GraphQL\Plugins\VersionedDataObject` class, this plugin adds
 several fields to the DataObject type, including:
 
-#### The "version" field
+##### The "version" field
 
 The `version` field on your DataObject will include the following fields:
 
@@ -50,7 +54,7 @@ query readSiteTrees {
 }
 ```
 
-#### The "versions" field
+##### The "versions" field
 
 The `versions` field on your DataObject will return a list of the `version` objects described above.
 The list is sortable by version number, using the `sort` parameter.
@@ -69,7 +73,7 @@ query readSiteTrees {
 }
 ```
 
-### The "readVersion" plugin
+#### The "readVersion" plugin
 
 This plugin updates the `read` operation to include a `versioning` argument that contains the following
 fields:
@@ -83,11 +87,11 @@ The query will automatically apply the settings from the `versioning` input type
 the resulting `DataList`.
 
 
-### The "unpublishOnDelete" plugin
+#### The "unpublishOnDelete" plugin
 
 This is mostly for internal use. It's an escape hatch for tidying up after a delete.
 
-## Versioned operations
+### Versioned operations
 
 DataObjects with the `Versioned` extension applied will also receive four extra operations
 by default. They include:
@@ -114,7 +118,7 @@ SilverStripe\GraphQL\Schema\Schema:
 
 ```
 
-### Using the operations
+#### Using the operations
 
 Let's look at a few examples:
 
@@ -149,3 +153,7 @@ mutation copySiteTreeToStage(id: 123, fromStage: DRAFT, toStage: LIVE) {
   title
 }
 ```
+
+### Further reading
+
+[CHILDREN]

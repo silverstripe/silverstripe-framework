@@ -2,8 +2,11 @@
 title: Nested type definitions
 summary: Define dependent types inline with a parent type
 ---
+# Working with DataObjects
 
-# Nested type definitions
+[CHILDREN asList]
+
+## Nested type definitions
 
 For readability and ergonomics, you can take advantage of nested type definitions. Let's imagine
 we have a `Blog` and we want to expose `Author` and `Categories`, but while we're at it, we want
@@ -49,3 +52,6 @@ SilverStripe\GraphQL\Schema\Schema:
           fields: '*'
 ```
 
+### Further reading
+
+[CHILDREN]

@@ -3,12 +3,16 @@ title: DataObject operation permissions
 summary: A look at how permissions work for DataObject queries and mutations
 ---
 
-# DataObject operation permissions
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## DataObject operation permissions
 
 Any of the operations that come pre-configured for DataObjects are secured by the appropriate `canXXX` permissions
 by default.
 
-## Mutation permssions
+### Mutation permssions
 
 [info]
 When mutations fail due to permission checks, they throw a `PermissionsException`.
@@ -22,7 +26,7 @@ throw.
 
 For `delete`, if any of the given IDs don't pass a `canDelete($member)` check, the mutation will throw.
 
-## Query permissions
+### Query permissions
 
 Query permissions are a bit more complicated, because they can either be in list form, (paginated or not),
 or a single item. Rather than throw, these permission checks work as filters.
@@ -44,7 +48,7 @@ showing a smaller number of items than what the page should contain, but keeps t
 for `limit` and `offset` parameters.
 [/notice]
 
-##@ Disabling query permissions
+### Disabling query permissions
 
 Though not recommended, you can disable query permissions by setting their plugins to `false`.
 
@@ -61,3 +65,7 @@ SilverStripe\GraphQL\Schema\Schema:
             plugins:
               canViewItem: false
 ```
+
+### Further reading
+
+[CHILDREN]

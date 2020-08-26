@@ -3,7 +3,11 @@ title: The global schema
 summary: How to push modifications to every schema in the project
 ---
 
-# The global schema
+# Extending the schema
+
+[CHILDREN asList]
+
+## The global schema
 
 Developers of thirdparty modules that influence graphql schemas may want to take advantage
 of the _global schema_. This is a pseudo-schema that will merge itself with all other schemas
@@ -21,3 +25,7 @@ SilverStripe\GraphQL\Schema\Schema:
           DRAFT: DRAFT
           LIVE: LIVE
 ```
+
+### Further reading
+
+[CHILDREN]

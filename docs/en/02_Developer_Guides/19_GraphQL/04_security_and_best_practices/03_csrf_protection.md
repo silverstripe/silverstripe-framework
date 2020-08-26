@@ -2,8 +2,11 @@
 title: CSRF protection
 summary: Protect destructive actions from cross-site request forgery
 ---
+# Security & best practices
 
-# CSRF tokens (required for mutations)
+[CHILDREN asList]
+
+## CSRF tokens (required for mutations)
 
 Even if your graphql endpoints are behind authentication, it is still possible for unauthorised
 users to access that endpoint through a [CSRF exploitation](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)). This involves
@@ -21,7 +24,7 @@ the `SecurityToken` API, using `SecurityToken::inst()->getValue()`.
 
 Queries do not require CSRF tokens.
 
-## Disabling CSRF protection (for token-based authentication only)
+### Disabling CSRF protection (for token-based authentication only)
 
 If you are using HTTP basic authentication or a token-based system like OAuth or [JWT](https://github.com/Firesphere/silverstripe-graphql-jwt),
 you will want to remove the CSRF protection, as it just adds unnecessary overhead. You can do this by setting
@@ -35,3 +38,7 @@ the middleware to `false`.
       Middlewares:
         csrf: false
 ```
+
+### Further reading
+
+[CHILDREN]

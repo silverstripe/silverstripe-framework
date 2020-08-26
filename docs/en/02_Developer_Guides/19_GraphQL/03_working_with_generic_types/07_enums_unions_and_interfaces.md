@@ -2,14 +2,17 @@
 title: Enums, unions, and interfaces
 summary: Add some non-object types to your schema
 ---
+# Working with generic types
 
-# Enums, unions, and interfaces
+[CHILDREN asList]
+
+## Enums, unions, and interfaces
 
 In more complex schemas, you may want to define types that aren't simply a list of fields, or
 "object types." These include enums, unions and interfaces.
 
 
-## Enum types
+### Enum types
 
 Enum types are simply a list of string values that are possible for a given field. They are
 often used in arguments to queries, such as `{sort: DESC }`.
@@ -27,7 +30,7 @@ SilverStripe\GraphQL\Schema\Schema:
 ```
 
 
-## Interfaces
+### Interfaces
 
 An interface is a specification of fields that must be included on a type that implements it.
 For example, an interface `Person` could include `firstName: String`, `surname: String`, and
@@ -65,7 +68,7 @@ must be applied explicitly.
     }
 ```
 
-## Union types
+### Union types
 
 A union type is used when a field can resolve to multiple types. For example, a query
 for "Articles" could return a list containing both "Blog" and "NewsStory" types.
@@ -97,4 +100,7 @@ non-discoverable and must be applied explicitly.
     }
 ```
 
+### Further reading
+
+[CHILDREN]
 

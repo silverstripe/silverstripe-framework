@@ -2,7 +2,13 @@
 title: Property mapping and dot syntax
 summary: Learn how to customise field names, use dot syntax, and use aggregate functions
 ---
-# Property mapping and dot syntax
+
+
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## Property mapping and dot syntax
 
 For the most part, field names are inferred through the DataObject model, but its API affords developers full
 control over naming:
@@ -19,12 +25,13 @@ SilverStripe\GraphQL\Schema\Schema:
               property: Content
 ```
 
-**NB**: When using explicit property mapping, you must also define an explicit type, as it can
+[notice]
+When using explicit property mapping, you must also define an explicit type, as it can
 no longer be inferred.
+[/notice]
 
 
-
-## Dot-separated accessors
+### Dot-separated accessors
 
 Property mapping is particularly useful when using **dot syntax** to access fields.
 
@@ -76,3 +83,7 @@ SilverStripe\GraphQL\Schema\Schema:
               type: Float
               property: 'Products.Avg(Price)'
 ```
+
+### Further reading
+
+[CHILDREN]

@@ -3,12 +3,16 @@ title: The DataObject model type
 summary: An overview of how the DataObject model can influence the creation of types, queries, and mutations
 ---
 
-# The DataObject model type
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## The DataObject model type
 
 In Silverstripe CMS projects, our data tends to be contained in dataobjects almost exclusively,
 and the silverstripe-graphql schema API is designed to make adding dataobject content fast and simple.
 
-## Using model types
+### Using model types
 
 While it is possible to add dataobjects to your schema as generic types under the `types`
 section of the configuration, and their associated queries and mutations under `queries` and
@@ -86,7 +90,7 @@ mutation {
 Did you get a permissions error? Make sure you're authenticated as someone with appropriate access.
 [/info]
 
-## Adding more fields
+### Adding more fields
 
 Let's add some more dataobjects, but this time, we'll only add a subset of fields and operations.
 
@@ -123,7 +127,7 @@ onSale:
 * The mapping of our field names to the DataObject property is case-insensitive. It is a
 convention in GraphQL APIs to use lowerCamelCase fields, so this is given by default.
 
-## Customising model fields
+### Customising model fields
 
 You don't have to rely on the model to tell you how fields should resolve. Just like
 generic types, you can customise them with arguments and resolvers.
@@ -143,7 +147,7 @@ SilverStripe\GraphQL\Schema\Schema:
 
 For more information on custom arguments and resolvers, see the [adding arguments](../working_with_generic_types/adding_arguments) and [resolver discovery](../working_with_generic_types/resolver_discovery) documentation.
 
-## Customising the type name
+### Customising the type name
 
 Most DataObject classes are namespaced, so converting them to a type name ends up
 being very verbose. As a default, the `DataObjectModel` class will use the "short name"
@@ -154,7 +158,7 @@ Given the brevity of these type names, it's not inconceivable that you could run
 collisions, particularly if you use feature-based namespacing. Fortunately, there are
 hooks you have available to help influence the typename.
 
-### The type formatter
+#### The type formatter
 
 The `type_formatter` is a callable that can be set on the `DataObjectModel` config. It takes
 the `$className` as a parameter.
@@ -182,7 +186,7 @@ public static function formatType(string $className): string
 }
 ```
 
-### The type prefix
+#### The type prefix
 
 You can also add prefixes to all your DataObject types. This can be a scalar value or a callable,
 using the same signature as `type_formatter`.
@@ -191,3 +195,7 @@ using the same signature as `type_formatter`.
 SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
   type_prefix: 'MyProject'
 ```
+
+### Further reading
+
+[CHILDREN]

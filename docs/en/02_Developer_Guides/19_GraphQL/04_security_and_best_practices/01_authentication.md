@@ -4,7 +4,11 @@ summary: Ensure your GraphQL api is only accessible to provisioned users
 icon: user-lock
 ---
 
-# Authentication
+# Security & best practices
+
+[CHILDREN asList]
+
+## Authentication
 
 Some SilverStripe resources have permission requirements to perform CRUD operations
 on, for example the `Member` object in the previous examples.
@@ -18,7 +22,7 @@ Please note that when implementing GraphQL resources it is the developer's
 responsibility to ensure that permission checks are implemented wherever
 resources are accessed.
 
-## Default authentication
+### Default authentication
 
 The `MemberAuthenticator` class is configured as the default option for authentication,
 and will attempt to use the current CMS `Member` session for authentication context.
@@ -26,7 +30,7 @@ and will attempt to use the current CMS `Member` session for authentication cont
 **If you are using the default session-based authentication, please be sure that you have
 the [CSRF Middleware](csrf_protection) enabled. (It is by default).**
 
-## HTTP basic authentication
+### HTTP basic authentication
 
 Silverstripe CMS has built-in support for [HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
 There is a `BasicAuthAuthenticator` which is configured for GraphQL by default, but
@@ -38,7 +42,7 @@ member in or use it for model security.
 When using HTTP basic authentication, you can feel free to remove the [CSRF Middleware](csrf_protection),
 as it just adds unnecessary overhead to the request.
 
-### In GraphiQL
+#### In GraphiQL
 
 If you want to add basic authentication support to your GraphQL requests you can
 do so by adding a custom `Authorization` HTTP header to your GraphiQL requests.
@@ -67,7 +71,7 @@ php -r 'echo base64_encode("hello:world");'
 # aGVsbG86d29ybGQ=
 ```
 
-## Defining your own authenticators
+### Defining your own authenticators
 
 You will need to define the class under `SilverStripe\GraphQL\Auth\Handlers.authenticators`.
 You can optionally provide a `priority` number if you want to control which
@@ -86,3 +90,7 @@ SilverStripe\GraphQL\Auth\Handler:
     - class: SilverStripe\GraphQL\Auth\BasicAuthAuthenticator
       priority: 10
 ```
+
+### Further reading
+
+[CHILDREN]

@@ -3,7 +3,11 @@ title: Writing a simple plugin
 summary: In this tutorial, we add a simple plugin for string fields
 ---
 
-# Writing a simple plugin
+# Plugins
+
+[CHILDREN asList]
+
+## Writing a simple plugin
 
 For this example, we want all `String` fields to have a `truncate` argument that will limit the length of the string
 in the response.
@@ -77,3 +81,7 @@ SilverStripe\GraphQL\Schema\Schema:
             plugins:
               truncate: true
 ```
+
+### Further reading
+
+[CHILDREN]

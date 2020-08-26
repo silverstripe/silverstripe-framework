@@ -2,8 +2,11 @@
 title: Adding pagination
 summary: Add the pagination plugin to a generic query
 ---
+# Working with generic types
 
-# Adding pagination
+[CHILDREN asList]
+
+## Adding pagination
 
 We've created a simple generic query for our `Country` type called `readCounties` that takes a `limit` argument.
 
@@ -18,7 +21,7 @@ query {
 
 Let's take this a step further and paginate it using a plugin.
 
-## The "paginate" plugin
+### The "paginate" plugin
 
 Since pagination is a fairly common task, we can take advantage of some reusable code here and just add a generic
 plugin for paginating.
@@ -98,3 +101,7 @@ query {
     }
   }
 ```
+
+### Further reading
+
+[CHILDREN]

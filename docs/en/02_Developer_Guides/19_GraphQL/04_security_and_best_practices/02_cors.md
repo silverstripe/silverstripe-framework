@@ -3,7 +3,11 @@ title: Cross-Origin Resource Sharing (CORS)
 summary: Ensure that requests to your API come from a whitelist of origins
 ---
 
-# Cross-Origin Resource Sharing (CORS)
+# Security & best practices
+
+[CHILDREN asList]
+
+## Cross-Origin Resource Sharing (CORS)
 
 By default [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) is disabled in the GraphQL Server. This can be easily enabled via YAML:
 
@@ -110,7 +114,7 @@ Once you have enabled CORS you can then control four new headers in the HTTP Res
  Allow-Credentials: 'true'
  ```
 
-## Apply a CORS config to all GraphQL endpoints
+### Apply a CORS config to all GraphQL endpoints
 
 ```yaml
 ## CORS Config
@@ -124,7 +128,7 @@ SilverStripe\GraphQL\Controller:
     Max-Age:  600  # 600 seconds = 10 minutes.
 ```
 
-## Apply a CORS config to a single GraphQL endpoint
+### Apply a CORS config to a single GraphQL endpoint
 
 ```yaml
 ## CORS Config
@@ -135,3 +139,6 @@ SilverStripe\Core\Injector\Injector:
         Enabled: false
 ```
 
+### Further reading
+
+[CHILDREN]

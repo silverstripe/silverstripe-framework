@@ -2,8 +2,11 @@
 title: Building a custom query
 summary: Add a custom query for any type of data
 ---
+# Working with generic types
 
-# Building a custom query
+[CHILDREN asList]
+
+## Building a custom query
 
 We've now defined the shape of our data, now we need to build a way to access it. For this,
 we'll need a query. Let's add one to the `queries` section of our config.
@@ -108,3 +111,6 @@ adding a bit of convention over configuration, and save ourselves a lot of time 
 that using the [resolver discovery pattern](resolver_discovery).
 
 
+### Further reading
+
+[CHILDREN]

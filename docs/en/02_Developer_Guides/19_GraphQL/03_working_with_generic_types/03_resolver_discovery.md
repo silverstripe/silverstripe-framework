@@ -3,7 +3,11 @@ title: The resolver discovery pattern
 summary: How you can opt out of mapping fields to resolvers by adhering to naming conventions
 ---
 
-# The resolver discovery pattern
+# Working with generic types
+
+[CHILDREN asList]
+
+## The resolver discovery pattern
 
 When you define a query mutation, or any other field on a type, you can opt out of providing
 an explicit resolver and allow the system to discover one for you based on naming convention.
@@ -103,7 +107,7 @@ Re-run the schema build, with a flush, and let's go!
 `$ vendor/bin/sake dev/tasks/build-schema schema=default flush=1`
 
 
-## Field resolvers
+### Field resolvers
 
 A less magical approach to resolver discovery is defining a `fieldResolver` property on your
 types. This is a generic handler for all fields on a given type and can be a nice middle
@@ -133,3 +137,7 @@ public static function resolveCountryField($obj, $args, $context, ResolveInfo $i
     // .. etc
 }
 ```
+
+### Further reading
+
+[CHILDREN]

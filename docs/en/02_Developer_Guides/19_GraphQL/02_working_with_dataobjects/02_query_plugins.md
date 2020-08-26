@@ -3,7 +3,11 @@ title: DataObject query plugins
 summary: Learn about some of the useful goodies that come pre-packaged with DataObject queries
 ---
 
-# DataObject query plugins
+# Working with DataObjects
+
+[CHILDREN asList]
+
+## DataObject query plugins
 
 This module has a [plugin system](plugins.md) that affords extensibility to queries, mutations,
 types, fields, and just about every other thread of the schema. Model types can define default
@@ -18,7 +22,7 @@ plugins to include, and for DataObject queries, these include:
 
 Other modules, such as `silverstripe-versioned` may augment that list with even more.
 
-## The pagination plugin
+### The pagination plugin
 
 The pagination plugin augments your queries in two main ways:
 
@@ -54,7 +58,7 @@ for now. It's just a pretty well-established convention for pagination in GraphQ
 to its frequent use with [cursor-based pagination](https://graphql.org/learn/pagination/), which
 isn't something we do in Silverstripe CMS.
 
-### Disabling pagination
+#### Disabling pagination
 
 Just set it to `false` in the configuration.
 
@@ -71,7 +75,7 @@ SilverStripe\GraphQL\Schema\Schema:
 ```
 
 
-## The filter plugin
+### The filter plugin
 
 The filter plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QueryFilter`) adds a
 special `filter` argument to the `read` and `readOne` operations.
@@ -143,7 +147,7 @@ query {
 ```
 
 
-### Customising the filter fields
+#### Customising the filter fields
 
 By default, all fields on the dataobject, including relationships, are included. To customise
 this, just add a `fields` config to the plugin definition:
@@ -165,7 +169,7 @@ SilverStripe\GraphQL\Schema\Schema:
                     title: true
 ```
 
-### Disabling the filter plugin
+#### Disabling the filter plugin
 
 Just set it to `false` in the configuration.
 
@@ -181,7 +185,7 @@ SilverStripe\GraphQL\Schema\Schema:
                 filter: false
 ```
 
-## The sort plugin
+### The sort plugin
 
 The sort plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QuerySort`) adds a
 special `sort` argument to the `read` and `readOne` operations.
@@ -216,7 +220,7 @@ query {
 ```
 
 
-### Customising the sort fields
+#### Customising the sort fields
 
 By default, all fields on the dataobject, including `has_one` relationships, are included.
 To customise this, just add a `fields` config to the plugin definition:
@@ -238,7 +242,7 @@ SilverStripe\GraphQL\Schema\Schema:
                     title: true
 ```
 
-### Disabling the sort plugin
+#### Disabling the sort plugin
 
 Just set it to `false` in the configuration.
 
@@ -253,3 +257,7 @@ SilverStripe\GraphQL\Schema\Schema:
               plugins:
                 sort: false
 ```
+
+### Further reading
+
+[CHILDREN]

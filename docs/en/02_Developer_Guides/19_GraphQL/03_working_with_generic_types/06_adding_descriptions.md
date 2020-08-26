@@ -2,8 +2,11 @@
 title: Adding descriptions
 summary: Add descriptions to just about anything in your schema to improve your developer experience
 ---
+# Working with generic types
 
-# Adding descriptions
+[CHILDREN asList]
+
+## Adding descriptions
 
 One of the great features of a schema-backed API is that it is self-documenting. Many
 API developers choose to maximise the benefit of this by adding descriptions to some or
@@ -45,3 +48,7 @@ SilverStripe\GraphQL\Schema\Schema:
               type: Int = 20
               description: The limit that is applied to the result set
 ```
+
+### Further reading
+
+[CHILDREN]
