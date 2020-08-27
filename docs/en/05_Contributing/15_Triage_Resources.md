@@ -17,7 +17,7 @@ This list helps to ensure that PRs are in a good state before merging. Ideally i
 * [ ] The commit messages follow [the contribution guidelines](https://docs.silverstripe.org/en/4/contributing/code/#commit-messages)
 * [ ] The patch follows [the contribution guidelines](https://docs.silverstripe.org/en/4/contributing/code/)
 * [ ] New features are covered with tests (back-end with unit tests, front-end with Behat)
-* [ ] Any relevant User Help / Developer documentation is updated; for impactful changes, information is added to the changelog for the intended release
+* [ ] Any relevant User Help/Developer documentation is updated; for impactful changes, information is added to the changelog for the intended release
 * [ ] CI is green
 * [ ] At least one peer reviewer approved; no outstanding changes requested
 
@@ -51,9 +51,9 @@ These are optional templates that can be [saved for re-use in GitHub](https://do
 >
 > See the [Silverstripe CMS Roadmap](https://www.silverstripe.org/software/roadmap/) for more information on our support commitments.
 
-### Complex enhancement / new feature that doesn't fit core
+### Complex enhancement/new feature that doesn't fit core
 
-**Explainer:** We generally try to avoid major additions to the core codebase, as they increase the maintenance burden on the core team. Instead, we recommend pursuing major new features / enhancements as independent modules, which is possible in most cases due to the broad extensibility of the core APIs.
+**Explainer:** We generally try to avoid major additions to the core codebase, as they increase the maintenance burden on the core team. Instead, we recommend pursuing major new features/enhancements as independent modules, which is possible in most cases due to the broad extensibility of the core APIs.
 
 Examples of high-value features that are developed as independent modules include [dnadesign/silverstripe-elemental](https://github.com/dnadesign/silverstripe-elemental), [symbiote/silverstripe-gridfieldextensions](https://github.com/symbiote/silverstripe-gridfieldextensions) and [jonom/silverstripe-focuspoint](https://github.com/jonom/silverstripe-focuspoint).
 
