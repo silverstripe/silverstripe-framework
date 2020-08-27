@@ -13,7 +13,7 @@ class NullSecurityToken extends SecurityToken
 {
 
     /**
-     * @param String
+     * @param string $compare
      * @return boolean
      */
     public function check($compare)

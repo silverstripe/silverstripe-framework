@@ -139,7 +139,7 @@ class DatetimeField extends TextField
     }
 
     /**
-     * @param $bool
+     * @param bool $bool
      * @return $this
      */
     public function setHTML5($bool)

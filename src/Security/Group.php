@@ -41,7 +41,7 @@ use SilverStripe\ORM\UnsavedRelationList;
  * @property string $Code Group code
  * @property string $Locked Boolean indicating whether group is locked in security panel
  * @property int $Sort
- * @property string HtmlEditorConfig
+ * @property string $HtmlEditorConfig
  *
  * @property int $ParentID ID of parent group
  *
@@ -476,7 +476,7 @@ class Group extends DataObject
     /**
      * Overloaded to ensure the code is always descent.
      *
-     * @param string
+     * @param string $val
      */
     public function setCode($val)
     {
@@ -626,7 +626,9 @@ class Group extends DataObject
      */
     public function AllChildrenIncludingDeleted()
     {
-        $children = parent::AllChildrenIncludingDeleted();
+        /** @var Hierarchy */
+        $hierarchy = $this->getExtensionInstance(Hierarchy::class);
+        $children = $hierarchy->AllChildrenIncludingDeleted();
 
         $filteredChildren = new ArrayList();
 

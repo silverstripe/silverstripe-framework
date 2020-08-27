@@ -52,12 +52,13 @@ abstract class DBSchemaManager
     protected $supressOutput = false;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     protected static $table_name_warnings = [];
 
     /**
-     * @param string
+     * @param string $table
+     * @param string $class
      * @deprecated 4.0.0:5.0.0
      */
     public static function showTableNameWarning($table, $class)

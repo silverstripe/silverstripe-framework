@@ -66,7 +66,7 @@ class SSViewer implements Flushable
     /**
      * Overridden value of $themes config
      *
-     * @var array
+     * @var array|null
      */
     protected static $current_themes = null;
 

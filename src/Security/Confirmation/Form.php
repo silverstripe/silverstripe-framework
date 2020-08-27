@@ -12,6 +12,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LabelField;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\Control\HTTPResponse;
 
 /**
  * Basic confirmation form implementation.

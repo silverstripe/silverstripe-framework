@@ -217,6 +217,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      */
     public function canFilterAnyColumns($gridField)
     {
+        /** @var Filterable&SS_List */
         $list = $gridField->getList();
 
         if (!$this->checkDataType($list)) {
@@ -240,7 +241,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Generate a search context based on the model class of the of the GridField
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return \SilverStripe\ORM\Search\SearchContext
      */
     public function getSearchContext(GridField $gridField)
@@ -259,7 +260,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Returns the search field schema for the component
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return string
      */
     public function getSearchFieldSchema(GridField $gridField)
@@ -374,7 +375,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
     /**
      * Returns the search form schema for the component
      *
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return HTTPResponse
      */
     public function getSearchFormSchema(GridField $gridField)
@@ -400,13 +401,14 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * Generate fields for the legacy filter header row
      *
      * @deprecated 5.0
-     * @param GridField $gridfield
+     * @param GridField $gridField
      * @return ArrayList|null
      */
     public function getLegacyFilterHeader(GridField $gridField)
     {
         Deprecation::notice('5.0', 'Table row based filter header will be removed in favor of search field in 5.0');
 
+        /** @var SS_List&Filterable */
         $list = $gridField->getList();
         if (!$this->checkDataType($list)) {
             return null;

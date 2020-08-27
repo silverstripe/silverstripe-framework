@@ -64,7 +64,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
     /**
      * Init the middleware with the rules
      *
-     * @param ConfirmationMiddleware\Rule[] $rules Rules to check requests against
+     * @param array<int,ConfirmationMiddleware\Rule> $rules Rules to check requests against
      */
     public function __construct(...$rules)
     {

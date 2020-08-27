@@ -41,7 +41,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
     protected $targetFragment;
 
     /**
-     * @var SS_List
+     * @var DataList
      */
     protected $searchList;
 
@@ -243,6 +243,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:StartsWith";
             $params[$name] = $request->getVar('gridfield_relationsearch');
         }
+
         $results = $allList
             ->subtract($gridField->getList())
             ->filterAny($params)
@@ -290,7 +291,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
      * Sets the base list instance which will be used for the autocomplete
      * search.
      *
-     * @param SS_List $list
+     * @param DataList $list
      */
     public function setSearchList(SS_List $list)
     {

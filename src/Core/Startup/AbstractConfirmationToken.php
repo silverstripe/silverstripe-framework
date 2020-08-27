@@ -56,7 +56,7 @@ abstract class AbstractConfirmationToken
     /**
      * Generate a local filesystem path to store a token
      *
-     * @param $token
+     * @param string $token
      * @return string
      */
     protected function pathForToken($token)

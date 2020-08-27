@@ -118,8 +118,8 @@ class ErrorControlChain
      * Add this callback to the chain of callbacks to call along with the state
      * that $error must be in this point in the chain for the callback to be called
      *
-     * @param $callback - The callback to call
-     * @param $onErrorState - false if only call if no errors yet, true if only call if already errors, null for either
+     * @param callable $callback The callback to call
+     * @param bool $onErrorState false if only call if no errors yet, true if only call if already errors, null for either
      * @return $this
      */
     public function then($callback, $onErrorState = false)

@@ -325,7 +325,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the end of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function push(FormField $field)
     {
@@ -335,7 +335,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the beginning of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function unshift(FormField $field)
     {
@@ -380,8 +380,8 @@ class CompositeField extends FormField
     }
 
     /**
-     * @param $fieldName
-     * @param $newField
+     * @param string $fieldName
+     * @param FormField $newField
      * @param boolean $dataFieldOnly If this is true, then a field will only
      * be replaced if it's a data field.  Dataless fields, such as tabs, will
      * not be considered for replacement.
@@ -471,7 +471,7 @@ class CompositeField extends FormField
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
      *             be found.
      */
@@ -499,7 +499,7 @@ class CompositeField extends FormField
     /**
      * Transform the named field into a readonly feld.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return bool
      */
     public function makeFieldReadonly($field)

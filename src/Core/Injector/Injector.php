@@ -812,7 +812,7 @@ class Injector implements ContainerInterface
 
     /**
      * @deprecated 4.0.0:5.0.0 Use Injector::has() instead
-     * @param $name
+     * @param string $name
      * @return string
      */
     public function hasService($name)
@@ -941,8 +941,7 @@ class Injector implements ContainerInterface
      *
      * Failing all of that, will just return a new instance of the specified object.
      *
-     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-     *
+     * @throws InjectorNotFoundException  No entry was found for **this** identifier.
      * @param string $name The name of the service to retrieve. If not a registered
      * service, then a class of the given name is instantiated
      * @param bool $asSingleton If set to false a new instance will be returned.

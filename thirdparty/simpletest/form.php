@@ -294,7 +294,7 @@ class SimpleForm {
     /**
      *    Gets the submit values for a selected button.
      *    @param SimpleSelector $selector   Criteria to apply.
-     *    @param hash $additional           Additional data for the form.
+     *    @param array|false $additional           Additional data for the form.
      *    @return SimpleEncoding            Submitted values or false
      *                                      if there is no such button
      *                                      in the form.
@@ -345,7 +345,7 @@ class SimpleForm {
      *    Simply submits the form without the submit button
      *    value. Used when there is only one button or it
      *    is unimportant.
-     *    @return hash           Submitted values.
+     *    @return SimpleEncoding           Submitted values.
      *    @access public
      */
     function submit() {

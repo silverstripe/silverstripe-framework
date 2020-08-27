@@ -60,7 +60,7 @@ abstract class DBString extends DBField
      * Set whether this field stores empty strings rather than converting
      * them to null.
      *
-     * @param $value boolean True if empty strings are to be converted to null
+     * @param boolean $value True if empty strings are to be converted to null
      * @return $this
      */
     public function setNullifyEmpty($value)

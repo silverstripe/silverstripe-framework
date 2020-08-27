@@ -22,7 +22,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      *
      * @param GridField $gridField
      * @param DataObject $record
-     *
+     * @param string $columnName
      * @return string $title
      */
     public function getTitle($gridField, $record, $columnName);
@@ -34,7 +34,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      *
      * @param GridField $gridField
      * @param DataObject $record
-     *
+     * @param string $columnName
      * @return array $data
      */
     public function getExtraData($gridField, $record, $columnName);
@@ -47,7 +47,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      *
      * @param GridField $gridField
      * @param DataObject $record
-     *
+     * @param string $columnName
      * @return string|null $group
      */
     public function getGroup($gridField, $record, $columnName);

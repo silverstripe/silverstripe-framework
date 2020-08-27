@@ -123,7 +123,7 @@ class ConfirmedPasswordField extends FormField
      * @param string $name
      * @param string $title
      * @param mixed $value
-     * @param Form $form
+     * @param Form $form Ignored for ConfirmedPasswordField.
      * @param boolean $showOnClick
      * @param string $titleConfirmField Alternate title (not localizeable)
      */
@@ -135,6 +135,9 @@ class ConfirmedPasswordField extends FormField
         $showOnClick = false,
         $titleConfirmField = null
     ) {
+
+        // This param is requested only for backward compat
+        $form;
 
         // Set field title
         $title = isset($title) ? $title : _t('SilverStripe\\Security\\Member.PASSWORD', 'Password');

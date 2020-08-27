@@ -59,7 +59,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
     }
 
     /**
-     * @param HTTPResponse|string $response
+     * @param HTTPResponse $response
      * @return string|false
      */
     protected function generateETag(HTTPResponse $response)

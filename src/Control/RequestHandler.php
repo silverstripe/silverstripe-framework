@@ -303,8 +303,8 @@ class RequestHandler extends ViewableData
      *
      * Must not raise HTTPResponse_Exceptions - instead it should return
      *
-     * @param $request
-     * @param $action
+     * @param string $request
+     * @param string $action
      * @return HTTPResponse
      */
     protected function handleAction($request, $action)

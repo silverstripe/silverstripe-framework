@@ -335,7 +335,6 @@ class SSViewer_Scope
     }
 
     /**
-     * @param array
      */
     protected function setItemStack(array $stack)
     {

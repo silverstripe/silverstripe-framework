@@ -20,7 +20,7 @@ interface Relation extends SS_List, Filterable, Sortable, Limitable
      * Sets the ComponentSet to be the given ID list.
      * Records will be added and deleted as appropriate.
      *
-     * @param array $idList List of IDs.
+     * @param array $idList List of IDs
      */
     public function setByIDList($idList);
 

@@ -326,7 +326,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * @param bool
+     * @param bool $flag
      */
     public function setNotifyUnsavedChanges($flag)
     {
@@ -559,7 +559,7 @@ class Form extends ViewableData implements HasRequestHandler
      * The callback can opt out of handling specific responses by returning NULL,
      * in which case the default form behaviour will kick in.
      *
-     * @param $callback
+     * @param callable $callback
      * @return self
      */
     public function setValidationResponseCallback($callback)
@@ -664,7 +664,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Set actions that are exempt from validation
      *
-     * @param array
+     * @param array $actions
      * @return $this
      */
     public function setValidationExemptActions($actions)
@@ -916,7 +916,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
      * another frame
     *
-     * @param string|FormTemplateHelper
+     * @param string|FormTemplateHelper $helper
     */
     public function setTemplateHelper($helper)
     {
@@ -1103,7 +1103,7 @@ class Form extends ViewableData implements HasRequestHandler
      * If set to false then the form method is only used to construct the default
      * form.
      *
-     * @param $bool boolean
+     * @param bool $bool
      * @return $this
      */
     public function setStrictFormMethodCheck($bool)

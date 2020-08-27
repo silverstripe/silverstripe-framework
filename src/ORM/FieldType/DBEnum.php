@@ -154,8 +154,7 @@ class DBEnum extends DBString
     }
 
     /**
-     * @param string
-     *
+     * @param string $title
      * @return DropdownField
      */
     public function scaffoldSearchField($title = null)
@@ -168,8 +167,7 @@ class DBEnum extends DBString
      * Returns the values of this enum as an array, suitable for insertion into
      * a {@link DropdownField}
      *
-     * @param boolean
-     *
+     * @param boolean $hasEmpty
      * @return array
      */
     public function enumValues($hasEmpty = false)

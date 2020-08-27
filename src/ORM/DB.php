@@ -49,7 +49,7 @@ class DB
     /**
      * The global database connection.
      *
-     * @var Database
+     * @var Database[]
      */
     protected static $connections = [];
 

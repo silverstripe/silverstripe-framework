@@ -17,8 +17,8 @@ use SilverStripe\ORM\ManyManyList;
  * with access to {@link SecurityAdmin} (but no ADMIN privileges) to get themselves ADMIN access
  * (which might be implied by certain roles).
  *
- * @property string Title
- * @property string OnlyAdminCanApply
+ * @property string $Title
+ * @property string $OnlyAdminCanApply
  *
  * @method HasManyList Codes() List of PermissionRoleCode objects
  * @method ManyManyList Groups() List of Group objects

@@ -151,7 +151,7 @@ class FieldList extends ArrayList
      * Trigger an error for duplicate field names
      *
      * @param FormField $field
-     * @param $functionName
+     * @param string $functionName
      */
     protected function fieldNameError(FormField $field, $functionName)
     {
@@ -184,7 +184,7 @@ class FieldList extends ArrayList
 
     /**
      * @deprecated 4.1.0:5.0.0 Please use dataFields or saveableFields
-     * @param $list
+     * @param array $list
      * @param bool $saveableOnly
      */
     protected function collateDataFields(&$list, $saveableOnly = false)
@@ -886,7 +886,7 @@ class FieldList extends ArrayList
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0).
      * Returns FALSE if the field can't be found.
      */

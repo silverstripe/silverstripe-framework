@@ -684,9 +684,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Take the "standard" arguments that the filter/exclude functions take and return a single array with
      * 'colum' => 'value'
      *
-     * @param $column array|string The column name to filter OR an assosicative array of column => value
-     * @param $value array|string|null The values to filter the $column against
-     *
+     * @param array|string $column The column name to filter OR an assosicative array of column => value
+     * @param array|string|null $value The values to filter the $column against
      * @return array The normalised keyed array
      */
     protected function normaliseFilterArgs($column, $value = null)

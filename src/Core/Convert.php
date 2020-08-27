@@ -331,8 +331,7 @@ class Convert
      * Convert a XML string to a PHP array recursively. Do not
      * call this function directly, Please use {@link Convert::xml2array()}
      *
-     * @param SimpleXMLElement
-     *
+     * @param SimpleXMLElement $xml
      * @return mixed
      */
     protected static function recursiveXMLToArray($xml)
@@ -469,7 +468,7 @@ class Convert
      * Please only encode the values, not the whole url, e.g.
      * "mailto:test@test.com?subject=" . Convert::raw2mailto($subject)
      *
-     * @param $data string
+     * @param string $data
      * @return string
      * @see http://www.ietf.org/rfc/rfc1738.txt
      */
@@ -486,7 +485,7 @@ class Convert
      * Convert a string (normally a title) to a string suitable for using in
      * urls and other html attributes. Uses {@link URLSegmentFilter}.
      *
-     * @param string
+     * @param string $title
      * @return string
      */
     public static function raw2url($title)
@@ -545,7 +544,7 @@ class Convert
      * - IDField => idField
      * - iDField => iDField
      *
-     * @param $str
+     * @param string $str
      * @return string
      */
     public static function upperCamelToLowerCamel($str)

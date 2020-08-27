@@ -238,7 +238,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Combine vary strings/arrays into a single array, or normalise a single vary
      *
-     * @param string|array[] $varies Each vary as a separate arg
+     * @param array<int, string> $varies Each vary as a separate arg
      * @return array
      */
     protected function combineVary(...$varies)

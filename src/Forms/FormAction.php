@@ -75,7 +75,7 @@ class FormAction extends FormField
      *
      * @param string $action The method to call when the button is clicked
      * @param string $title The label on the button. This should be plain text, not escaped as HTML.
-     * @param Form form The parent form, auto-set when the field is placed inside a form
+     * @param Form $form The parent form, auto-set when the field is placed inside a form
      */
     public function __construct($action, $title = "", $form = null)
     {
@@ -225,7 +225,7 @@ class FormAction extends FormField
     /**
      * Enable or disable the rendering of this action as a <button />
      *
-     * @param boolean
+     * @param bool $bool
      * @return $this
      */
     public function setUseButtonTag($bool)

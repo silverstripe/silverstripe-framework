@@ -39,7 +39,7 @@ abstract class HTMLCleaner
     }
 
     /**
-     * @param array
+     * @param array $config
      */
     public function setConfig($config)
     {

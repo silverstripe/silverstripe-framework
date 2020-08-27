@@ -586,8 +586,8 @@ class TreeDropdownField extends FormField
     }
 
     /**
-     * Marking a specific node in the tree as disabled
-     * @param $node
+     * Has a specific node in the tree been marked as disabled
+     * @param DataObject $node
      * @return boolean
      */
     public function nodeIsDisabled($node)

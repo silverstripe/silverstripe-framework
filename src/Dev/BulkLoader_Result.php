@@ -133,8 +133,8 @@ class BulkLoader_Result implements \Countable
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addCreated($obj, $message = null)
     {
@@ -147,8 +147,8 @@ class BulkLoader_Result implements \Countable
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addUpdated($obj, $message = null)
     {
@@ -161,8 +161,8 @@ class BulkLoader_Result implements \Countable
     }
 
     /**
-     * @param $obj DataObject
-     * @param $message string
+     * @param DataObject $obj
+     * @param string $message
      */
     public function addDeleted($obj, $message = null)
     {

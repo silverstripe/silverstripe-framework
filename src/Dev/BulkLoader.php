@@ -180,7 +180,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @param array $record An map of the data, keyed by the header field defined in {@link self::$columnMap}
      * @param array $columnMap
-     * @param $result BulkLoader_Result (passed as reference)
+     * @param BulkLoader_Result $result (passed as reference)
      * @param boolean $preview
      */
     abstract protected function processRecord($record, $columnMap, &$result, $preview = false);

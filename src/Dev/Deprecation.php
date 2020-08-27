@@ -78,11 +78,10 @@ class Deprecation
      * greater than or equal to this version, a message will be raised
      *
      * @static
-     * @param $ver string -
-     *     A php standard version string, see http://php.net/manual/en/function.version-compare.php for details.
-     * @param null $forModule string -
-     *    The name of a module. The passed version will be used as the check value for
-     *    calls directly from this module rather than the global value
+     * @param string $ver php standard version string, see http://php.net/manual/en/function.version-compare.php for
+     *                    details.
+     * @param string|null $forModule The name of a module. The passed version will be used as the check value for
+     *                    calls directly from this module rather than the global value
      * @return void
      */
     public static function notification_version($ver, $forModule = null)
@@ -116,9 +115,9 @@ class Deprecation
      * Given a backtrace, get the method name from the immediate parent caller (the caller of #notice)
      *
      * @static
-     * @param $backtrace array - a backtrace as returned from debug_backtrace
-     * @param $level - 1 (default) will return immediate caller, 2 will return caller's caller, etc.
-     * @return string - the name of the method
+     * @param array $backtrace a backtrace as returned from debug_backtrace
+     * @param int $level 1 (default) will return immediate caller, 2 will return caller's caller, etc.
+     * @return string the name of the method
      */
     protected static function get_called_method_from_trace($backtrace, $level = 1)
     {
@@ -258,7 +257,7 @@ class Deprecation
     /**
      * Method for when testing. Restore all the current version settings from a variable
      *
-     * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
+     * @param array $settings An array as returned by {@see Deprecation::dump_settings()}
      */
     public static function restore_settings($settings)
     {
