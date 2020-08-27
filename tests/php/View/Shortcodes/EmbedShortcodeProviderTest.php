@@ -2,6 +2,8 @@
 
 namespace SilverStripe\View\Tests\Shortcodes;
 
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\View\Shortcodes\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
 
@@ -118,5 +120,32 @@ EOS
                 ],
             ]
         );
+    }
+
+    public function testFlushCachedShortcodes()
+    {
+        /** @var CacheInterface $cache */
+        $url = 'http://www.test-service.com/abc123';
+        $content = '<p>Some content with an [embed url="' . $url . '" thumbnail="https://example.com/mythumb.jpg" ' .
+            'class="leftAlone ss-htmleditorfield-file embed" width="480" height="270"]' . $url . '[/embed]</p>';
+        $embedHtml = '<iframe myattr="something" />';
+        $parser = ShortcodeParser::get('default');
+
+        // use reflection to access private methods
+        $provider = new EmbedShortcodeProvider();
+        $reflector = new \ReflectionClass(EmbedShortcodeProvider::class);
+        $method = $reflector->getMethod('getCache');
+        $method->setAccessible(true);
+        $cache = $method->invokeArgs($provider, []);
+        $method = $reflector->getMethod('deriveCacheKey');
+        $method->setAccessible(true);
+        $key = $method->invokeArgs($provider, [$url]);
+
+        // assertions
+        $this->assertEquals('embed-shortcode-httpwwwtest-servicecomabc123', $key);
+        $cache->set($key, $embedHtml);
+        $this->assertTrue($cache->has($key));
+        EmbedShortcodeProvider::flushCachedShortcodes($parser, $content);
+        $this->assertFalse($cache->has($key));
     }
 }
