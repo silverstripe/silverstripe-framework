@@ -31,7 +31,10 @@ class VersionProvider
     /**
      * @var array
      */
-    private static $modules = [];
+    private static $modules = [
+        'silverstripe/framework' => 'Framework',
+        'silverstripe/recipe-core' => 'Core Recipe',
+    ];
 
     /**
      * Gets a comma delimited string of package titles and versions
