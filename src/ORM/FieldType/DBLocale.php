@@ -65,7 +65,7 @@ class DBLocale extends DBVarchar
     public function getNativeName()
     {
         $locale = $this->value;
-        return i18n::with_locale($locale, function () use ($locale) {
+        return i18n::with_locale($locale, function () {
             return $this->getShortName();
         });
     }

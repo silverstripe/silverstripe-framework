@@ -590,7 +590,7 @@ class Convert
         // Remove  non-unit characters from the size
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString);
         // Remove non-numeric characters from the size
-        $size = preg_replace('/[^0-9\.\-]/', '', $memString);
+        $size = (float)preg_replace('/[^0-9\.\-]/', '', $memString);
 
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power

@@ -113,7 +113,7 @@ class Environment
      */
     static function setMemoryLimitMax($memoryLimit)
     {
-        if (isset($memoryLimit) && !is_numeric($memoryLimit)) {
+        if (!is_numeric($memoryLimit)) {
             $memoryLimit = Convert::memstring2bytes($memoryLimit);
         }
         static::$memoryLimitMax = $memoryLimit;

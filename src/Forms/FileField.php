@@ -166,8 +166,10 @@ class FileField extends FormField implements FileHandleField
 
             $file = $this->upload->getFile();
 
-            $record->{$this->name . 'ID'} = $file->ID;
-        }
+            if (isset($file->ID)) {
+                $record->{$this->name . 'ID'} = $file->ID;
+
+}        }
     }
 
     public function Value()

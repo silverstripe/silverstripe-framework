@@ -106,6 +106,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     protected function getPropertiesFromProvider($interfaceToQuery, $variableMethod, $createObject = false)
     {
         $methods = [];
+        $result = [];
 
         $implementors = ClassInfo::implementorsOf($interfaceToQuery);
         if ($implementors) {
