@@ -13,3 +13,7 @@ SilverStripe\Dev\DevelopmentAdmin:
         tasks: 'See a list of build tasks to run'
     confirm:
       controller: SilverStripe\Dev\DevConfirmationController
+    config:
+      controller: Silverstripe\Dev\DevConfigController
+      links:
+        config: 'View the current config, useful for debugging'

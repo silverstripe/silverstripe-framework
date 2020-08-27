@@ -58,7 +58,7 @@ Redirections](/developer_guides/controllers/redirection) for more information an
  | ------------ | ------ | ----------- | 
  | BackURL      | URL    | Set to a relative URL string to use once Security Action is complete | 
 
-## Building and Publishing URLS
+## Building and Publishing URLs
 
  | Site URL                                      | Action | 
  | --------------------------------------------- | ------ | 
@@ -72,3 +72,9 @@ Redirections](/developer_guides/controllers/redirection) for more information an
  | quiet         | 1      | Don't show messages during build | 
  | dont_populate | 1      | Don't run **requireDefaultRecords()** on the models when building. This will build the table but not insert any records | 
 
+## Config diagnostic URLs
+
+ | Site URL                                      | Action | 
+ | --------------------------------------------- | ------ | 
+ | http://localhost**/dev/config**                | Output a simplified representation properties in the `Config` manifest | 
+ | http://localhost**/dev/config/audit**  | Audit `Config` properties and display any with missing PHP definitions |
