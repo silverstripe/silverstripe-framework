@@ -82,8 +82,7 @@ class NullableField extends FormField
     /**
      * Set the label used for the Is Null checkbox.
      *
-     * @param $isNulLabel string
-     *
+     * @param string $isNulLabel
      * @return $this
      */
     public function setIsNullLabel($isNulLabel)

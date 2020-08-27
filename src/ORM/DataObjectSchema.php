@@ -43,7 +43,7 @@ class DataObjectSchema
     /**
      * Cache of database indexes
      *
-     * @var array
+     * @var array<string,array>
      */
     protected $databaseIndexes = [];
 
@@ -532,7 +532,7 @@ class DataObjectSchema
     /**
      * Cache all indexes for the given class. Will do nothing if already cached.
      *
-     * @param $class
+     * @param string $class
      */
     protected function cacheDatabaseIndexes($class)
     {

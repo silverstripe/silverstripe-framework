@@ -134,7 +134,7 @@ class CSVParser implements Iterator
      * ));
      * </code>
      *
-     * @param array
+     * @param array $columnMap
      */
     public function mapColumns($columnMap)
     {
@@ -156,7 +156,7 @@ class CSVParser implements Iterator
      * If you call this function, then the first row of the CSV will be
      * included in the data returned.
      *
-     * @param array
+     * @param array $headerRow
      */
     public function provideHeaderRow($headerRow)
     {
@@ -210,8 +210,7 @@ class CSVParser implements Iterator
     /**
      * Map the contents of a header array using $this->mappedColumns.
      *
-     * @param array
-     *
+     * @param array $header
      * @return array
      */
     protected function remapHeader($header)

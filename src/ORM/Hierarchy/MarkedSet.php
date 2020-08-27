@@ -631,10 +631,10 @@ class MarkedSet
     /**
      * Expose the given object in the tree, by marking this page and all it ancestors.
      *
-     * @param DataObject|Hierarchy $childObj
+     * @param DataObject|Hierarchy $childObj (has Hierarchy extension)
      * @return $this
      */
-    public function markToExpose(DataObject $childObj)
+    public function markToExpose($childObj)
     {
         if (!$childObj) {
             return $this;
@@ -776,7 +776,7 @@ class MarkedSet
     /**
      * Check if this node has too many children
      *
-     * @param DataObject|Hierarchy $node
+     * @param DataObject $node (has Hierarchy extension)
      * @param int $count Children count (if already calculated)
      * @return bool
      */

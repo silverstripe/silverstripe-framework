@@ -333,8 +333,8 @@ abstract class SQLConditionalExpression extends SQLExpression
      * yet been scaffolded by the framework. Demonstrated by PostGres in errors like:
      *"...ERROR: missing FROM-clause..."
      *
-     * @param $from array - in the format of $this->from
-     * @return array - and reorderded list of selects
+     * @param array<string,string> $from In the format of $this->from
+     * @return array<string,string> A reorderded list of selects
      */
     protected function getOrderedJoins($from)
     {
@@ -374,7 +374,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @see http://stackoverflow.com/q/4353739/139301
      *
-     * @param array &$array The array to sort
+     * @param array $array The array to sort
      * @param callable|string $cmpFunction The function to use for comparison
      */
     protected function mergesort(&$array, $cmpFunction = 'strcmp')

@@ -19,7 +19,7 @@ class Path
      * @link https://www.owasp.org/index.php/Testing_Directory_traversal/file_include_(OTG-AUTHZ-001)
      * @see File::join_paths() for joining file identifiers
      *
-     * @param array $parts
+     * @param array<int, string> $parts
      * @return string Combined path, not including trailing slash (unless it's a single slash)
      */
     public static function join(...$parts)

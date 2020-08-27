@@ -141,7 +141,7 @@ class PrioritySorter
      * Add a variable for replacination, e.g. addVariable->('$project', 'myproject')
      *
      * @param string $name
-     * @param $value
+     * @param mixed $value
      * @return $this
      */
     public function setVariable($name, $value)
@@ -154,7 +154,7 @@ class PrioritySorter
     /**
      * The key used for "all other items"
      *
-     * @param $key
+     * @param string $key
      * @return $this
      */
     public function setRestKey($key)
@@ -202,7 +202,7 @@ class PrioritySorter
     /**
      * Ensure variables get converted to their values
      *
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     protected function resolveValue($name)

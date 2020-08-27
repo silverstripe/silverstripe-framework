@@ -81,7 +81,7 @@ class HTTPStreamResponse extends HTTPResponse
     /**
      * Get body prior to stream traversal
      *
-     * @return string
+     * @return string|null
      */
     public function getSavedBody()
     {

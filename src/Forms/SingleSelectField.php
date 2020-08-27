@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use ArrayAccess;
+use Iterator;
 
 /**
  * Represents the base class for a single-select field
@@ -102,7 +103,7 @@ abstract class SingleSelectField extends SelectField
     /**
      * Gets the source array, including the empty string, if present
      *
-     * @return array|ArrayAccess
+     * @return array|(ArrayAccess&Iterator)
      */
     public function getSourceEmpty()
     {

@@ -272,6 +272,7 @@ abstract class MultiSelectField extends SelectField
      */
     public function performReadonlyTransformation()
     {
+        /** @var \SilverStripe\Forms\LookupField */
         $field = $this->castedCopy('SilverStripe\\Forms\\LookupField');
         $field->setSource($this->getSource());
         $field->setReadonly(true);

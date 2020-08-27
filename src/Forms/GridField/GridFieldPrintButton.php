@@ -9,6 +9,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\Limitable;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -53,8 +54,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Place the print button in a <p> tag below the field
      *
-     * @param GridField
-     *
+     * @param GridField $gridField
      * @return array
      */
     public function getHTMLFragments($gridField)
@@ -78,8 +78,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Print is an action button.
      *
-     * @param GridField
-     *
+     * @param GridField $gridField
      * @return array
      */
     public function getActions($gridField)
@@ -106,7 +105,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Print is accessible via the url
      *
-     * @param GridField
+     * @param GridField $gridField
      * @return array
      */
     public function getURLHandlers($gridField)
@@ -145,8 +144,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the columns to print
      *
-     * @param GridField
-     *
+     * @param GridField $gridField
      * @return array
      */
     protected function getPrintColumnsForGridField(GridField $gridField)
@@ -167,8 +165,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the title of the printed page
      *
-     * @param GridField
-     *
+     * @param GridField $gridField
      * @return array
      */
     public function getTitle(GridField $gridField)
@@ -220,6 +217,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
             }
         }
 
+        /** @var Limitable */
         $items = $gridField->getManipulatedList();
         $itemRows = new ArrayList();
 

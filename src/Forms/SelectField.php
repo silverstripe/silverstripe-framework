@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Map;
 use ArrayAccess;
+use Iterator;
 
 /**
  * Represents a field that allows users to select one or more items from a list
@@ -17,7 +18,7 @@ abstract class SelectField extends FormField
      * with array key as the submitted field value, and the array value as a
      * natural language description shown in the interface element.
      *
-     * @var array|ArrayAccess
+     * @var array|(ArrayAccess&Iterator)
      */
     protected $source;
 
@@ -32,7 +33,7 @@ abstract class SelectField extends FormField
     /**
      * @param string $name The field name
      * @param string $title The field title
-     * @param array|ArrayAccess $source A map of the dropdown items
+     * @param array|(ArrayAccess&Iterator) $source A map of the dropdown items
      * @param mixed $value The current value
      */
     public function __construct($name, $title = null, $source = [], $value = null)
@@ -138,7 +139,7 @@ abstract class SelectField extends FormField
     /**
      * Gets the source array not including any empty default values.
      *
-     * @return array|ArrayAccess
+     * @return array|(ArrayAccess&Iterator)
      */
     public function getSource()
     {

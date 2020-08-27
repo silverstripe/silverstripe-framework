@@ -80,8 +80,7 @@ class Url implements Rule, Bypass
      * against parameter values accordingly. Null
      * as a value in the array matches any parameter values.
      *
-     * @param string|null $httpMethods
-     *
+     * @param array|null $params
      * @return $this
      */
     public function setParams($params = null)

@@ -3,7 +3,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use Psr\Container\NotFoundExceptionInterface;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
@@ -198,7 +198,7 @@ class ChangePasswordHandler extends RequestHandler
      * @param ChangePasswordForm $form
      * @return HTTPResponse
      * @throws ValidationException
-     * @throws NotFoundExceptionInterface
+     * @throws InjectorNotFoundException
      */
     public function doChangePassword(array $data, $form)
     {

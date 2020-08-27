@@ -904,8 +904,7 @@ class Director implements TemplateGlobalProvider
     /**
      * Returns true if the given file exists. Filename should be relative to the site root.
      *
-     * @param $file
-     *
+     * @param string $file
      * @return bool
      */
     public static function fileExists($file)

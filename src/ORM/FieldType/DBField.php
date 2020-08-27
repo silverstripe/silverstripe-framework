@@ -121,7 +121,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     ];
 
     /**
-     * @var $default mixed Default-value in the database.
+     * @var mixed $default Default-value in the database.
      * Might be overridden on DataObject-level, but still useful for setting defaults on
      * already existing records after a db-build.
      */
@@ -157,7 +157,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * constructor arguments in the same format as DataObject.db config.
      * @param mixed $value value of field
      * @param string $name Name of field
-     * @param mixed $args Additional arguments to pass to constructor if not using args in service $spec
+     * @param array<int,mixed> $args Additional arguments to pass to constructor if not using args in service $spec
      * Note: Will raise a warning if using both
      * @return static
      */
@@ -335,7 +335,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * will be escaped automatically by the prepared query processor, so it
      * should not be escaped or quoted at all.
      *
-     * @param $value mixed The value to check
+     * @param mixed $value The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
     public function prepValueForDB($value)

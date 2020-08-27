@@ -32,7 +32,7 @@ class PDOStatementHandle
     /**
      * Create a new handle.
      *
-     * @param $statement The statement to provide a handle to
+     * @param PDOStatement $statement The statement to provide a handle to
      */
     public function __construct(PDOStatement $statement)
     {
@@ -134,8 +134,8 @@ class PDOStatementHandle
     /**
      * Executes a prepared statement (PDOStatement::execute)
      *
-     * @param $parameters An array of values with as many elements as there are bound parameters in the SQL statement
-     *                    being executed
+     * @param array $parameters An array of values with as many elements as there are bound parameters in the SQL
+                                statement being executed
      * @return bool Returns true on success
      */
     public function execute(array $parameters)

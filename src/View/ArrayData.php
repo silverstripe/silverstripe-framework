@@ -112,8 +112,8 @@ class ArrayData extends ViewableData
     /**
      * Converts an associative array to a simple object
      *
-     * @param array
-     * @return stdClass $obj
+     * @param array $arr
+     * @return stdClass
      */
     public static function array_to_object($arr = null)
     {

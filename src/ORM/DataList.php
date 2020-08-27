@@ -784,7 +784,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns a generator for this DataList
      *
-     * @return \Generator&DataObject[]
+     * @return \Generator<DataObject>
      */
     public function getGenerator()
     {

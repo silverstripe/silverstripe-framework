@@ -66,7 +66,7 @@ class ArrayLib
     /**
      * Return an array where the keys are all equal to the values.
      *
-     * @param $arr array
+     * @param array $arr
      * @return array
      */
     public static function valuekey($arr)
@@ -89,9 +89,8 @@ class ArrayLib
      * Filter an array by keys (useful for only allowing certain form-input to
      * be saved).
      *
-     * @param $arr array
-     * @param $keys array
-     *
+     * @param array $arr
+     * @param array $keys
      * @return array
      */
     public static function filter_keys($arr, $keys)
@@ -110,9 +109,7 @@ class ArrayLib
      * array_key_exists().
      *
      * @see http://nz.php.net/manual/en/function.is-array.php#121692
-     *
      * @param array $array
-     *
      * @return boolean
      */
     public static function is_associative($array)
@@ -160,8 +157,8 @@ class ArrayLib
      *
      * Actually only one array argument is supported.
      *
-     * @param $f callback to apply
-     * @param $array array
+     * @param callable $f callback to apply
+     * @param array $array
      * @return array
      */
     public static function array_map_recursive($f, $array)
@@ -182,7 +179,6 @@ class ArrayLib
      * with numeric keys, to match that of what PHP does to generate $_REQUEST.
      *
      * @param array $array
-     *
      * @return array
      */
     public static function array_merge_recursive($array)

@@ -33,12 +33,12 @@ class HTMLEditorSanitiser
      */
     private static $link_rel_value = 'noopener noreferrer';
 
-    /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
+    /** @var stdClass $element => $rule hash for whitelist element rules where the element name isn't a pattern */
     protected $elements = [];
-    /** @var [stdClass] - Sequential list of whitelist element rules where the element name is a pattern */
+    /** @var stdClass Sequential list of whitelist element rules where the element name is a pattern */
     protected $elementPatterns = [];
 
-    /** @var [stdClass] - The list of attributes that apply to all further whitelisted elements added */
+    /** @var stdClass The list of attributes that apply to all further whitelisted elements added */
     protected $globalAttributes = [];
 
     /**
@@ -65,8 +65,8 @@ class HTMLEditorSanitiser
     /**
      * Given a TinyMCE pattern (close to unix glob style), create a regex that does the match
      *
-     * @param $str - The TinyMCE pattern
-     * @return string - The equivalent regex
+     * @param string $str The TinyMCE pattern
+     * @return string The equivalent regex
      */
     protected function patternToRegex($str)
     {
@@ -325,6 +325,7 @@ class HTMLEditorSanitiser
                 $children = $el->attributes;
                 $i = $children->length;
                 while ($i--) {
+                    /** @var DOMAttr */
                     $attr = $children->item($i);
                     $attributeRule = $this->getRuleForAttribute($elementRule, $attr->name);
 

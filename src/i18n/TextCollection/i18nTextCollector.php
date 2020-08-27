@@ -96,7 +96,7 @@ class i18nTextCollector
     protected $fileExtensions = ['php', 'ss'];
 
     /**
-     * @param $locale
+     * @param string $locale
      */
     public function __construct($locale = null)
     {

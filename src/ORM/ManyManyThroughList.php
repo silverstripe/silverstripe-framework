@@ -42,6 +42,9 @@ class ManyManyThroughList extends RelationList
     ) {
         parent::__construct($dataClass);
 
+        // Supresses phpstan error about unused parameter. We take this param for method-signature consistency.
+        $extraFields;
+
         // Inject manipulator
         $this->manipulator = ManyManyThroughQueryManipulator::create(
             $joinClass,

@@ -58,7 +58,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Assign templates for this controller.
      * Map of action => template name
      *
-     * @var array
+     * @var array<string>
      */
     protected $templates = [];
 

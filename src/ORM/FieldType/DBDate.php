@@ -262,7 +262,6 @@ class DBDate extends DBField
      * for the day of the month ("1st", "2nd", "3rd" etc)
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
-     * @param string $locale Custom locale to use (add to signature in 5.0)
      * @return string The date in the requested format
      */
     public function Format($format)

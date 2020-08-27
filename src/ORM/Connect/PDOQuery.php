@@ -14,7 +14,7 @@ class PDOQuery extends Query
 
     /**
      * Hook the result-set given into a Query class, suitable for use by SilverStripe.
-     * @param PDOStatement $statement The internal PDOStatement containing the results
+     * @param PDOStatementHandle $statement The internal PDOStatement containing the results
      */
     public function __construct(PDOStatementHandle $statement)
     {

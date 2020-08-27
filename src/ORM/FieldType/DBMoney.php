@@ -19,7 +19,7 @@ class DBMoney extends DBComposite
     protected $locale = null;
 
     /**
-     * @param array
+     * @var array<string,string>
      */
     private static $composite_db = [
         "Currency" => "Varchar(3)",

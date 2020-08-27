@@ -14,12 +14,12 @@ use SilverStripe\ORM\DataObject;
 class ExtensionTestState implements TestState
 {
     /**
-     * @var array
+     * @var array<string,array<int,string>>
      */
     protected $extensionsToReapply = [];
 
     /**
-     * @var array
+     * @var array<string,array<int,string>>
      */
     protected $extensionsToRemove = [];
 

@@ -344,7 +344,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Helper method to determine if the current test should enable a test database
      *
-     * @param $fixtureFiles
+     * @param array<string> $fixtureFiles
      * @return bool
      */
     protected function shouldSetupDatabaseForCurrentTest($fixtureFiles)
@@ -758,8 +758,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
      *
-     * @param $matches
-     * @param $dataObjectSet
+     * @param SS_List|array $matches
+     * @param SS_List $dataObjectSet
      */
     public function assertDOSContains($matches, $dataObjectSet)
     {
@@ -812,8 +812,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
      *
-     * @param $matches
-     * @param $dataObjectSet
+     * @param SS_List|array $matches
+     * @param SS_List $dataObjectSet
      */
     public static function assertNotDOSContains($matches, $dataObjectSet)
     {
@@ -836,7 +836,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
      * either pass a single pattern or an array of patterns.
-     * @param mixed $list The {@link SS_List} to test.
+     * @param SS_List $list The {@link SS_List} to test.
      * @param string $message
      */
     public static function assertListEquals($matches, SS_List $list, $message = '')
@@ -860,7 +860,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
      *
-     * @param $matches
+     * @param SS_List|array $matches
      * @param SS_List $dataObjectSet
      */
     public function assertDOSEquals($matches, $dataObjectSet)
@@ -879,8 +879,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Check that every entry in $members has a Status of 'Active':
      *     $this->assertListAllMatch(['Status' => 'Active'], $members);
      *
-     * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
-     * @param mixed $list The {@link SS_List} to test.
+     * @param array $match The pattern to match.  The pattern is a map of key-value pairs.
+     * @param SS_List $list The {@link SS_List} to test.
      * @param string $message
      */
     public static function assertListAllMatch($match, SS_List $list, $message = '')
@@ -904,7 +904,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
      *
-     * @param $match
+     * @param array $match
      * @param SS_List $dataObjectSet
      */
     public function assertDOSAllMatch($match, SS_List $dataObjectSet)

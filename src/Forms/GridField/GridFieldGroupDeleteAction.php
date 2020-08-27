@@ -45,7 +45,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * Get the ActionMenu group (not related to Member group)
      * @param GridField $gridField
      * @param DataObject $record
-     * @param $columnName
+     * @param string $columnName
      * @return null|string
      */
     public function getGroup($gridField, $record, $columnName)
@@ -81,7 +81,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
     }
 
     /**
-     * @param $record - the record of the User to unlink with
+     * @param Member $record the record of the User to unlink with
      * @return bool
      */
     protected function canUnlink($record)

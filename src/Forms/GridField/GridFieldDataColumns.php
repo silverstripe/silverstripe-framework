@@ -34,7 +34,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
      *
      * @param GridField $gridField
-     * @param array - List reference of all column names.
+     * @param array $columns List reference of all column names.
      */
     public function augmentColumns($gridField, &$columns)
     {

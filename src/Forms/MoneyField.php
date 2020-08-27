@@ -211,7 +211,7 @@ class MoneyField extends FormField
      *
      * (see @link MoneyFieldTest_CustomSetter_Object for more information)
      *
-     * @param DataObjectInterface|Object $dataObject
+     * @param DataObjectInterface $dataObject
      */
     public function saveInto(DataObjectInterface $dataObject)
     {

@@ -20,7 +20,7 @@ trait Injectable
      *    $list = DataList::create('SiteTree');
      *    $list = SiteTree::get();
      *
-     * @param array $args
+     * @param array<int, mixed> $args
      * @return static
      */
     public static function create(...$args)

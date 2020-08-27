@@ -146,7 +146,7 @@ class URLSegmentFilter implements FilterInterface
     }
 
     /**
-     * @param boolean
+     * @param boolean $bool
      */
     public function setAllowMultibyte($bool)
     {

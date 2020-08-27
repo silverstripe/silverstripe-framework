@@ -73,9 +73,11 @@ class ViewableData_Debugger extends ViewableData
         $debug .= '</ul>';
 
         if ($this->object->hasMethod('toMap')) {
+            /** @var \SilverStripe\ORM\DataObject */
+            $mappableObject = $this->object;
             $debug .= "<b>Debugging Information: all fields available in '{$class}'</b><br/><ul>";
 
-            foreach ($this->object->toMap() as $field => $value) {
+            foreach ($mappableObject->toMap() as $field => $value) {
                 $debug .= "<li>\$$field</li>";
             }
 
@@ -83,8 +85,12 @@ class ViewableData_Debugger extends ViewableData
         }
 
         // check for an extra attached data
-        if ($this->object->hasMethod('data') && $this->object->data() != $this->object) {
-            $debug .= ViewableData_Debugger::create($this->object->data())->forTemplate();
+        if ($this->object->hasMethod('data')) {
+            /** @var \SilverStripe\ORM\DataObject */
+            $dataContainingObject = $this->object;
+            if ($dataContainingObject != $this->object) {
+                $debug .= ViewableData_Debugger::create($dataContainingObject->data())->forTemplate();
+            }
         }
 
         return $debug;
