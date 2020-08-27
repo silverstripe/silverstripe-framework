@@ -208,7 +208,7 @@ class Director implements TemplateGlobalProvider
             // This is important for classes such as FunctionalTest which emulate cross-request persistence
             $newVars['_SESSION'] = $sessionArray = $session->getAll() ?: [];
             $finally[] = function () use ($session, $sessionArray) {
-                if (isset($_SESSION)) {
+                if (isset($_SESSION) && $_SESSION !== null) {
                     // Set new / updated keys
                     foreach ($_SESSION as $key => $value) {
                         $session->set($key, $value);

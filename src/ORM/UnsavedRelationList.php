@@ -82,7 +82,11 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function changeToList(RelationList $list)
     {
         foreach ($this->items as $key => $item) {
-            $list->add($item, $this->extraFields[$key]);
+            if ($list instanceof ManyManyList || $list instanceof ManyManyThroughList) {
+                $list->add($item, $this->extraFields[$key]);
+            } else {
+                $list->add($item);
+            }
         }
     }
 

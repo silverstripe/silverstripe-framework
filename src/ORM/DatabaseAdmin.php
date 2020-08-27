@@ -322,7 +322,7 @@ class DatabaseAdmin extends Controller
                         try {
                             $count = DB::query("SELECT COUNT(*) FROM \"$tableName\"")->value();
                             $countSuffix = " ($count records)";
-                        } catch (Exception $e) {
+                        } catch (\Exception $e) {
                             $countSuffix = " (error getting record count)";
                         }
                     } else {
