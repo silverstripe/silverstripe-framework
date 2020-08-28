@@ -959,11 +959,17 @@ class Requirements_Backend
      */
     protected function insertTagsIntoHead($jsRequirements, $content)
     {
+        /**
+         * Negative lookahead regex to match the *last* case of "</head>"
+         *
+         * @see https://regex101.com/r/YlJxzh/1
+         */
         $content = preg_replace(
-            '/(<\/head>)/i',
+            '/(<\/head>)(?!.*\1)/si',
             $this->escapeReplacement($jsRequirements) . '\\1',
             $content
         );
+
         return $content;
     }
 
