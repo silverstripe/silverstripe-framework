@@ -56,7 +56,8 @@ abstract class PasswordEncryptor
             return new $class;
         }
 
-        $arguments = $encryptors[$algorithm];
+        // Don't treat array keys as argument names - keeps PHP 7 and PHP 8 operating similarly
+        $arguments = array_values($encryptors[$algorithm]);
         return($refClass->newInstanceArgs($arguments));
     }
 
