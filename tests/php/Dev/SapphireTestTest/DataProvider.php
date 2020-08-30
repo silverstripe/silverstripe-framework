@@ -42,34 +42,34 @@ class DataProvider implements TestOnly
     public static function provideEqualLists()
     {
         return [
-            [
-                'oneParameterOneItem' => [
+            'oneParameterOneItem' => [
+                [
                     ['FirstName' => 'Ingo'],
                 ],
                 self::$oneItemList,
             ],
-            [
-                'twoParametersOneItem' => [
+            'twoParametersOneItem' => [
+                [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                 ],
                 self::$oneItemList,
             ],
-            [
-                'oneParameterTwoItems' => [
+            'oneParameterTwoItems' => [
+                [
                     ['FirstName' => 'Ingo'],
                     ['FirstName' => 'Sam'],
                 ],
                 self::$twoItemList,
             ],
-            [
-                'twoParametersTwoItems' => [
+            'twoParametersTwoItems' => [
+                [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'Minnee'],
                 ],
                 self::$twoItemList,
             ],
-            [
-                'mixedParametersTwoItems' => [
+            'mixedParametersTwoItems' => [
+                [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam'],
                 ],
@@ -85,34 +85,34 @@ class DataProvider implements TestOnly
     {
 
         return [
-            [
-                'checkAgainstEmptyList' => [
+            'checkAgainstEmptyList' => [
+                [
                     ['FirstName' => 'Ingo'],
                 ],
                 [],
             ],
-            [
-                'oneItemExpectedListContainsMore' => [
+            'oneItemExpectedListContainsMore' => [
+                [
                     ['FirstName' => 'Ingo'],
                 ],
                 self::$twoItemList,
             ],
-            [
-                'oneExpectationHasWrontParamter' => [
+            'oneExpectationHasWrontParamter' => [
+                [
                     ['FirstName' => 'IngoXX'],
                     ['FirstName' => 'Sam'],
                 ],
                 self::$twoItemList,
             ],
-            [
-                'differentParametersInDifferentItemsAreWrong' => [
+            'differentParametersInDifferentItemsAreWrong' => [
+                [
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX'],
                 ],
                 self::$twoItemList,
             ],
-            [
-                'differentParametersNotMatching' => [
+            'differentParametersNotMatching' => [
+                [
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
                     ['FirstName' => 'Dan'],
                 ],
