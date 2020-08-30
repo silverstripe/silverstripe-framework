@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\MapIterator;
 use League\Csv\Reader;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
@@ -76,9 +77,16 @@ class CsvBulkLoader extends BulkLoader
             $filepath = Director::getAbsFile($filepath);
             $csvReader = Reader::createFromPath($filepath, 'r');
             $csvReader->setDelimiter($this->delimiter);
-            $csvReader->stripBom(true);
 
-            $tabExtractor = function ($row, $rowOffset, $iterator) {
+            // league/csv 9
+            if (method_exists($csvReader, 'skipInputBOM')) {
+                $csvReader->skipInputBOM();
+            // league/csv 8
+            } else {
+                $csvReader->stripBom(true);
+            }
+
+            $tabExtractor = function ($row, $rowOffset) {
                 foreach ($row as &$item) {
                     // [SS-2017-007] Ensure all cells with leading tab and then [@=+] have the tab removed on import
                     if (preg_match("/^\t[\-@=\+]+.*/", $item)) {
@@ -90,8 +98,9 @@ class CsvBulkLoader extends BulkLoader
 
             if ($this->columnMap) {
                 $headerMap = $this->getNormalisedColumnMap();
-                $remapper = function ($row, $rowOffset, $iterator) use ($headerMap, $tabExtractor) {
-                    $row = $tabExtractor($row, $rowOffset, $iterator);
+
+                $remapper = function ($row, $rowOffset) use ($headerMap, $tabExtractor) {
+                    $row = $tabExtractor($row, $rowOffset);
                     foreach ($headerMap as $column => $renamedColumn) {
                         if ($column == $renamedColumn) {
                             continue;
@@ -110,9 +119,18 @@ class CsvBulkLoader extends BulkLoader
             }
 
             if ($this->hasHeaderRow) {
-                $rows = $csvReader->fetchAssoc(0, $remapper);
+                if (method_exists($csvReader, 'fetchAssoc')) {
+                    $rows = $csvReader->fetchAssoc(0, $remapper);
+                } else {
+                    $csvReader->setHeaderOffset(0);
+                    $rows = new MapIterator($csvReader->getRecords(), $remapper);
+                }
             } elseif ($this->columnMap) {
-                $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+                if (method_exists($csvReader, 'fetchAssoc')) {
+                    $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+                } else {
+                    $rows = new MapIterator($csvReader->getRecords($headerMap), $remapper);
+                }
             }
 
             foreach ($rows as $row) {

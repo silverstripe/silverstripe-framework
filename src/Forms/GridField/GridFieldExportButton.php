@@ -257,6 +257,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
+        if (method_exists($csvWriter, 'getContent')) {
+            return $csvWriter->getContent();
+        }
+
         return (string)$csvWriter;
     }
 
