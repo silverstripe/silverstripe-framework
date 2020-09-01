@@ -963,7 +963,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function exists()
     {
-        return $this->count() > 0;
+        return $this->dataQuery->exists();
     }
 
     /**

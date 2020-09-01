@@ -454,6 +454,41 @@ class DataQuery
     }
 
     /**
+     * Return whether this dataquery will have records. This will use `EXISTS` statements in SQL which are more
+     * performant - especially when used in combination with indexed columns (that you're filtering on)
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        // Grab a statement selecting "everything" - the engine shouldn't care what's being selected in an "EXISTS"
+        // statement anyway
+        $statement = $this->getFinalisedQuery();
+
+        // Clear limit, distinct, and order as it's not relevant for an exists query
+        $statement->setDistinct(false);
+        $statement->setOrderBy(null);
+        $statement->setLimit(null);
+
+        // We can remove grouping if there's no "having" that might be relying on an aggregate
+        // Additionally, the columns being selected no longer matter
+        $having = $statement->getHaving();
+        if (empty($having)) {
+            $statement->setSelect('*');
+            $statement->setGroupBy(null);
+        }
+
+        // Wrap the whole thing in an "EXISTS"
+        $sql = 'SELECT EXISTS(' . $statement->sql($params) . ')';
+        $result = DB::prepared_query($sql, $params);
+        $row = $result->first();
+        $result = reset($row);
+
+        // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
+        return $result === true || $result === 1 || $result === 't';
+    }
+
+    /**
      * Return the maximum value of the given field in this DataList
      *
      * @param string $field Unquoted database column name. Will be ANSI quoted
