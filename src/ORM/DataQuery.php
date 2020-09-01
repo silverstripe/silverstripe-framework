@@ -459,7 +459,7 @@ class DataQuery
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         // Grab a statement selecting "everything" - the engine shouldn't care what's being selected in an "EXISTS"
         // statement anyway
