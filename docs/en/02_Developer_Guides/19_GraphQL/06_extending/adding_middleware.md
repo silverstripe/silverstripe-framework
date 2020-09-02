@@ -17,6 +17,11 @@ In `silverstripe-graphql`, middleware is used for query execution,
 but could ostensibly be used elsewhere too if the API ever accomodates
 such an expansion.
 
+[notice]
+The middleware API in the silverstripe-graphql module is separate from other common middleware
+APIs in Silverstripe CMS, such as HTTPMiddleware.
+[/notice]
+
 The signature for middleware is pretty simple:
 
 ```php
