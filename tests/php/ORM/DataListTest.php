@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
@@ -751,24 +752,23 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
     }
 
-    /**
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     * @expectedExceptionMessage Class DataListFilter.Bogus does not exist
-     */
     public function testSimpleFilterWithNonExistingComparisator()
     {
+        $this->expectException(InjectorNotFoundException::class);
+        $this->expectExceptionMessageRegExp('/Class "?DataListFilter.Bogus"? does not exist/');
+
         $list = TeamComment::get();
         $list->filter('Comment:Bogus', 'team comment');
     }
 
     /**
      * Invalid modifiers are treated as failed filter construction
-     *
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     * @expectedExceptionMessage Class DataListFilter.invalidmodifier does not exist
      */
     public function testInvalidModifier()
     {
+        $this->expectException(InjectorNotFoundException::class);
+        $this->expectExceptionMessageRegExp('/Class "?DataListFilter.invalidmodifier"? does not exist/');
+
         $list = TeamComment::get();
         $list->filter('Comment:invalidmodifier', 'team comment');
     }
