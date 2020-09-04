@@ -1243,6 +1243,22 @@ window.document.addEventListener('DOMContentLoaded', () => {
   );
 });
 ```
+[hint]
+GraphQL scaffolding derives the names for the schema from the first part of the namespace and the classname, while in
+the Injector the database table name is used. So in the case of
+```php
+namespace Foo\Bar;
+// …
+class MyVersionedObject extends DataObject
+{
+    private static $table_name = 'FBVersionedObject';
+    // …
+}
+```
+you would have to use `readOneFooMyVersionedObject`, `rollbackFooMyVersionedObject` and
+`HistoryViewerToolbar.VersionedAdmin.HistoryViewer.FBVersionedObject.HistoryViewerVersionDetail` respectively
+[/hint]
+
 
 For more information, see [ReactJS, Redux and GraphQL](../../customising_the_admin_interface/react_redux_and_graphql).
 
