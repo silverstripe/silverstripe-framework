@@ -43,6 +43,11 @@ A flat file in the path `/var/www/project/query-mapping.json` should contain som
 ```json
 {"someUniqueID":"query{validateToken{Valid Message Code}}"}
 ```
+
+[notice]
+The file path must be absolute.
+[/notice]
+
 #### HTTPProvider
 
 ```yaml
