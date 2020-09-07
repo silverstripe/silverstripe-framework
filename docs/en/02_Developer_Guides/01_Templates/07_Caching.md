@@ -1,6 +1,6 @@
 ---
 title: Caching
-summary: Reduce rendering time with cached templates and understand the limitations of the ViewableData object caching.
+summary: How template variables are cached.
 icon: rocket
 ---
 
@@ -35,13 +35,11 @@ When we render `$Counter` to the template we would expect the value to increase 
 
 ## Partial caching
 
-Partial caching is a feature that allows the caching of just a portion of a page. Instead of fetching the required data
-from the database to display, the contents of the area are fetched from a [cache backend](../performance/caching).
+Partial caching is a feature that allows caching of a portion of a page as a single string value. For more details read [its own documentation](partial_template_caching).
 
+Example:
 ```ss
-<% cached 'MyCachedContent', LastEdited %>
-    $Title
+<% cached $CacheKey if $CacheCondition %>
+    $CacheableContent
 <% end_cached %>
 ```
-
-
