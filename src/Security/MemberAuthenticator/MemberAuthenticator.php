@@ -12,6 +12,7 @@ use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * Authenticator for the default "member" method
@@ -33,7 +34,15 @@ class MemberAuthenticator implements Authenticator
     public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null)
     {
         // Find authenticated member
-        $member = $this->authenticateMember($data, $result);
+        if (class_exists(Versioned::class)) {
+            [$member, $result] = Versioned::withVersionedMode(function () use ($data) {
+                Versioned::set_stage(Versioned::DRAFT);
+                $member = $this->authenticateMember($data, $result);
+                return [$member, $result];
+            });
+        } else {
+            $member = $this->authenticateMember($data, $result);
+        }
 
         // Optionally record every login attempt as a {@link LoginAttempt} object
         $this->recordLoginAttempt($data, $request, $member, $result->isValid());
