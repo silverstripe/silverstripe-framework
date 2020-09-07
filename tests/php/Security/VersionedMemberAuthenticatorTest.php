@@ -46,6 +46,12 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
         }
     }
 
+    protected function tearDown()
+    {
+        $this->logOut();
+        parent::tearDown();
+    }
+
     public function testAuthenticate()
     {
         $mockDate1 = '2010-01-01 10:00:00';
