@@ -45,7 +45,6 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
     }
 
     /**
-     * @depends testConnectionCharsetControl
      * @dataProvider charsetProvider
      */
     public function testConnectionCollationControl($charset, $defaultCollation, $customCollation)
