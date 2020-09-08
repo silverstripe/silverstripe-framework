@@ -29,7 +29,7 @@ class EmbedResource implements Embeddable
     /**
      * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * @var DispatcherInterface
