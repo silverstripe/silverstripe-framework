@@ -76,7 +76,7 @@ class TreeMultiselectField extends TreeDropdownField
 
         $data['data'] = array_merge($data['data'], [
             'hasEmptyDefault' => false,
-            'multiple'        => true,
+            'multiple' => true,
         ]);
         return $data;
     }
