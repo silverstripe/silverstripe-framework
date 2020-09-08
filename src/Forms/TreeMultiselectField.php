@@ -91,9 +91,9 @@ class TreeMultiselectField extends TreeDropdownField
         foreach ($items as $item) {
             if ($item instanceof DataObject) {
                 $values[] = [
-                    'id'        => $item->obj($this->getKeyField())->getValue(),
-                    'title'     => $item->obj($this->getTitleField())->getValue(),
-                    'parentid'  => $item->ParentID,
+                    'id' => $item->obj($this->getKeyField())->getValue(),
+                    'title' => $item->obj($this->getTitleField())->getValue(),
+                    'parentid' => $item->ParentID,
                     'treetitle' => $item->obj($this->getLabelField())->getSchemaValue(),
                 ];
             } else {
@@ -116,7 +116,7 @@ class TreeMultiselectField extends TreeDropdownField
 
     /**
      * Return this field's linked items
-     * @return SS_List $items
+     * @return ArrayList|DataList $items
      */
     public function getItems()
     {
@@ -164,9 +164,6 @@ class TreeMultiselectField extends TreeDropdownField
             ->filter($this->getKeyField(), $ids);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setValue($value, $source = null)
     {
         // If loading from a dataobject, get items by relation
@@ -225,10 +222,10 @@ class TreeMultiselectField extends TreeDropdownField
         $properties = array_merge(
             $properties,
             [
-                'Title'      => $title,
+                'Title' => $title,
                 'EmptyTitle' => $emptyTitle,
-                'Link'       => $dataUrlTree,
-                'Value'      => $value
+                'Link' => $dataUrlTree,
+                'Value' => $value
             ]
         );
         return FormField::Field($properties);
