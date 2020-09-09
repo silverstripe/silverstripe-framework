@@ -152,7 +152,7 @@ class CookieJar implements Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string|array $value The value for the cookie to hold
-     * @param int $expiry The time the cookie expires. 0 expires at the end of the session
+     * @param int $expiry A Unix timestamp indicating when the cookie expires; 0 means it will expire at the end of the session
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
