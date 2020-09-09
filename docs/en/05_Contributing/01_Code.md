@@ -194,6 +194,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 * When introducing something "noteworthy" (new feature, API change), [update the release changelog](/changelogs) for the next release this commit will be included in.
 * If you get stuck, please post to the [forum](https://www.silverstripe.org/community/forums)
 * When working with the CMS, please read the ["CMS Architecture Guide"](/developer_guides/customising_the_admin_interface/cms_architecture) first
+* Try to respond to feedback in a timely manner. PRs that go more than a month without a response from the author are considered stale, and will be politely chased up. If a response still isn't received, the PR will be closed two weeks after that.
 
 ## Commit Messages
 
