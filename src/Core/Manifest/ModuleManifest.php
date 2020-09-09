@@ -67,6 +67,20 @@ class ModuleManifest
     private static $project = null;
 
     /**
+     * Constructs and initialises a new configuration object, either loading
+     * from the cache or re-scanning for classes.
+     *
+     * @param string $base The project base path.
+     * @param CacheFactory $cacheFactory Cache factory to use
+     */
+    public function __construct($base, CacheFactory $cacheFactory = null)
+    {
+        $this->base = $base;
+        $this->cacheKey = sha1($base) . '_modules';
+        $this->cacheFactory = $cacheFactory;
+    }
+
+    /**
      * Adds a path as a module
      *
      * @param string $path
@@ -102,20 +116,6 @@ class ModuleManifest
     {
         $module = $this->getModule($name);
         return !empty($module);
-    }
-
-    /**
-     * Constructs and initialises a new configuration object, either loading
-     * from the cache or re-scanning for classes.
-     *
-     * @param string $base The project base path.
-     * @param CacheFactory $cacheFactory Cache factory to use
-     */
-    public function __construct($base, CacheFactory $cacheFactory = null)
-    {
-        $this->base = $base;
-        $this->cacheKey = sha1($base) . '_modules';
-        $this->cacheFactory = $cacheFactory;
     }
 
     /**
@@ -175,7 +175,7 @@ class ModuleManifest
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);
                 }
-            }
+            },
         ]);
         $finder->find($this->base);
 
@@ -226,20 +226,18 @@ class ModuleManifest
 
     /**
      * Sort modules sorted by priority
-     *
-     * @return void
      */
     public function sort()
     {
         $order = static::config()->uninherited('module_priority');
         $project = static::config()->get('project');
 
-        /* @var PrioritySorter $sorter */
+        /** @var PrioritySorter $sorter */
         $sorter = Injector::inst()->createWithArgs(
             PrioritySorter::class . '.modulesorter',
             [
                 $this->modules,
-                $order ?: []
+                $order ?: [],
             ]
         );
 
@@ -269,13 +267,28 @@ class ModuleManifest
 
         // Find based on loaded modules
         $modules = ModuleLoader::inst()->getManifest()->getModules();
+
         foreach ($modules as $module) {
             // Check if path is in module
-            $realPath = realpath($module->getPath());
-            if ($realPath && stripos($path, $realPath) !== 0) {
-                continue;
+            $modulePath = realpath($module->getPath());
+            // if there is a real path
+            if ($modulePath) {
+                // we remove separator to ensure that we are comparing fairly
+                $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
+                $path = rtrim($path, DIRECTORY_SEPARATOR);
+                // if the paths are not the same
+                if ($modulePath !== $path) {
+                    //add separator to avoid mixing up, for example:
+                    //silverstripe/framework and silverstripe/framework-extension
+                    $modulePath .= DIRECTORY_SEPARATOR;
+                    $path .= DIRECTORY_SEPARATOR;
+                    // if the module path is not the same as the start of the module path being tested
+                    if (stripos($path, $modulePath) !== 0) {
+                        // then we need to test the next module
+                        continue;
+                    }
+                }
             }
-
             // If this is the root module, keep looking in case there is a more specific module later
             if (empty($module->getRelativePath())) {
                 $rootModule = $module;

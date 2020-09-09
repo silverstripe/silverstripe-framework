@@ -1025,7 +1025,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function column($colName = "ID")
     {
-        return $this->dataQuery->distinct(false)->column($colName);
+        $dataQuery = clone $this->dataQuery;
+        return $dataQuery->distinct(false)->column($colName);
     }
 
     /**
