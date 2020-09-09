@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
 
@@ -34,6 +35,7 @@ class ModuleManifestTest extends SapphireTest
                 'module',
                 'silverstripe/awesome-module',
                 'silverstripe/modulec',
+                'silverstripe/modulecbetter',
                 'silverstripe/root-module',
             ],
             array_keys($modules)
@@ -104,5 +106,38 @@ class ModuleManifestTest extends SapphireTest
             'composer.json',
             $module->getResource('composer.json')->getRelativePath()
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function providerTestGetModuleByPath()
+    {
+        return [
+            ['vendor/silverstripe/modulec/code/VendorClassA.php', 'silverstripe/modulec'],
+            ['vendor/silverstripe/modulecbetter/code/VendorClassX.php', 'silverstripe/modulecbetter'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestGetModuleByPath
+     * @param string $path
+     * @param string $expectedModuleName
+     */
+    public function testGetModuleByPath($path, $expectedModuleName)
+    {
+        // important - load the manifest that we are working with to the ModuleLoader
+        ModuleLoader::inst()->pushManifest($this->manifest);
+
+        // work out variables
+        $path = $this->base . '/' . $path;
+        $module = $this->manifest->getModuleByPath($path);
+        $actualModuleName = $module->getName();
+
+        // it is testing time!
+        $this->assertEquals($expectedModuleName, $actualModuleName);
+
+        // bye bye bogus manifest
+        ModuleLoader::inst()->popManifest();
     }
 }
