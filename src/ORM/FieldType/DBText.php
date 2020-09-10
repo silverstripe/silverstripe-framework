@@ -128,7 +128,7 @@ class DBText extends DBString
 
         // If no $elipsis string is provided, use the default one.
         if ($add === false) {
-           $add = $this->defaultEllipsis();
+            $add = $this->defaultEllipsis();
         }
 
         // Split on sentences (don't remove period)
@@ -199,11 +199,11 @@ class DBText extends DBString
         }
 
         if ($prefix === false) {
-            $prefix = $this->getDefaultValue() . ' ';
+            $prefix = $this->defaultEllipsis() . ' ';
         }
 
         if ($suffix === false) {
-            $prefix = $this->getDefaultValue();
+            $suffix = $this->defaultEllipsis();
         }
 
         // Get raw text value, but XML encode it (as we'll be merging with HTML tags soon)
@@ -270,5 +270,4 @@ class DBText extends DBString
     {
         return new TextField($this->name, $title);
     }
-
 }
