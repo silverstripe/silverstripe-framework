@@ -174,6 +174,12 @@ class TreeMultiselectField extends TreeDropdownField
             }
         }
 
+        // Handle legacy value; form-submitted `unchanged` implies empty set.
+        // See TreeDropdownField.js
+        if ($value === 'unchanged') {
+            $value = [];
+        }
+
         return parent::setValue($value);
     }
 

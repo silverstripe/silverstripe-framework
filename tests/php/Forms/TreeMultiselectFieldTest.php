@@ -333,5 +333,12 @@ class TreeMultiselectFieldTest extends SapphireTest
             $expectedItem,
             $field->getItems()
         );
+
+        // Handle legacy empty value (form submits 'unchanged')
+        $field->setValue('unchanged');
+        $this->assertListEquals(
+            [],
+            $field->getItems()
+        );
     }
 }
