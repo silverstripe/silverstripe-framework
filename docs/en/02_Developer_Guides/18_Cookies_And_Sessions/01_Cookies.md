@@ -25,6 +25,10 @@ Cookie::set($name, $value, $expiry = 90, $path = null, $domain = null, $secure =
 // Cookie::set('MyApplicationPreference', 'Yes');
 ```
 
+[info]
+To set a cookie for less than 1 day, you can assign an `$expiry` value that is lower than 1. e.g `Cookie::set('name', 'value', $expiry = 0.5);` will set a cookie for 12 hours.
+[/info]
+
 ### get
 
 Returns the value of cookie.
