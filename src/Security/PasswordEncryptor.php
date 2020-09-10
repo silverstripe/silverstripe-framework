@@ -100,6 +100,6 @@ abstract class PasswordEncryptor
      */
     public function check($hash, $password, $salt = null, $member = null)
     {
-        return $hash === $this->encrypt($password, $salt, $member);
+        return hash_equals($hash, $this->encrypt($password, $salt, $member));
     }
 }
