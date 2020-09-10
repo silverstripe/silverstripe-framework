@@ -301,7 +301,7 @@ class DBFieldTest extends SapphireTest
         foreach ($allFields as $stringField) {
             $stringField = DBString::create_field($stringField, $value);
             for ($i = 1; $i < mb_strlen($value); $i++) {
-                $expected = mb_substr($value, 0, $i) . '...';
+                $expected = mb_substr($value, 0, $i) . '…';
                 $this->assertEquals($expected, $stringField->LimitCharacters($i));
             }
         }
@@ -311,10 +311,10 @@ class DBFieldTest extends SapphireTest
             $stringObj = DBString::create_field($stringField, $value);
 
             // Converted to plain text
-            $this->assertEquals('üåäö&ÜÅÄ...', $stringObj->LimitCharacters(8));
+            $this->assertEquals('üåäö&ÜÅÄ…', $stringObj->LimitCharacters(8));
 
             // But which will be safely cast in templates
-            $this->assertEquals('üåäö&amp;ÜÅÄ...', $stringObj->obj('LimitCharacters', [8])->forTemplate());
+            $this->assertEquals('üåäö&amp;ÜÅÄ…', $stringObj->obj('LimitCharacters', [8])->forTemplate());
         }
 
         $this->assertEquals('ÅÄÖ', DBText::create_field('Text', 'åäö')->UpperCase());

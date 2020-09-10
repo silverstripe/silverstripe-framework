@@ -115,15 +115,20 @@ class DBText extends DBString
      * Builds a basic summary, up to a maximum number of words
      *
      * @param int $maxWords
-     * @param string $add
+     * @param string|false $add
      * @return string
      */
-    public function Summary($maxWords = 50, $add = '...')
+    public function Summary($maxWords = 50, $add = false)
     {
         // Get plain-text version
         $value = $this->Plain();
         if (!$value) {
             return '';
+        }
+
+        // If no $elipsis string is provided, use the default one.
+        if ($add === false) {
+            $add = $this->defaultEllipsis();
         }
 
         // Split on sentences (don't remove period)
@@ -176,21 +181,29 @@ class DBText extends DBString
      * @param int $characters Number of characters in the summary
      * @param string $keywords Supplied string ("keywords"). Will fall back to 'Search' querystring arg.
      * @param bool $highlight Add a highlight <mark> element around search query?
-     * @param string $prefix Prefix text
-     * @param string $suffix Suffix text
+     * @param string|false $prefix Prefix text
+     * @param string|false $suffix Suffix text
      * @return string HTML string with context
      */
     public function ContextSummary(
         $characters = 500,
         $keywords = null,
         $highlight = true,
-        $prefix = "... ",
-        $suffix = "..."
+        $prefix = false,
+        $suffix = false
     ) {
 
         if (!$keywords) {
             // Use the default "Search" request variable (from SearchForm)
             $keywords = isset($_REQUEST['Search']) ? $_REQUEST['Search'] : '';
+        }
+
+        if ($prefix === false) {
+            $prefix = $this->defaultEllipsis() . ' ';
+        }
+
+        if ($suffix === false) {
+            $suffix = $this->defaultEllipsis();
         }
 
         // Get raw text value, but XML encode it (as we'll be merging with HTML tags soon)

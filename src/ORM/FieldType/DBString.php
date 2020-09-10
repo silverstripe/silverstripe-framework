@@ -119,16 +119,16 @@ abstract class DBString extends DBField
      * HTML tags in the string of text.
      *
      * @param int $limit Number of characters to limit by
-     * @param string $add Ellipsis to add to the end of truncated string
+     * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string
      */
-    public function LimitCharacters($limit = 20, $add = '...')
+    public function LimitCharacters($limit = 20, $add = false)
     {
         $value = $this->Plain();
         if (mb_strlen($value) <= $limit) {
             return $value;
         }
-        return mb_substr($value, 0, $limit) . $add;
+        return $this->addEllipsis(mb_substr($value, 0, $limit), $add);
     }
 
     /**
@@ -137,10 +137,10 @@ abstract class DBString extends DBField
      * from the field.
      *
      * @param int $limit Number of characters to limit by
-     * @param string $add Ellipsis to add to the end of truncated string
+     * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string Plain text value with limited characters
      */
-    public function LimitCharactersToClosestWord($limit = 20, $add = '...')
+    public function LimitCharactersToClosestWord($limit = 20, $add = false)
     {
         // Safely convert to plain text
         $value = $this->Plain();
@@ -154,11 +154,14 @@ abstract class DBString extends DBField
         $value = mb_substr($value, 0, $limit);
 
         // If value exceeds limit, strip punctuation off the end to the last space and apply ellipsis
-        $value = preg_replace(
-            '/[^\w_]+$/',
-            '',
-            mb_substr($value, 0, mb_strrpos($value, " "))
-        ) . $add;
+        $value = $this->addEllipsis(
+            preg_replace(
+                '/[^\w_]+$/',
+                '',
+                mb_substr($value, 0, mb_strrpos($value, " "))
+            ),
+            $add
+        );
         return $value;
     }
 
@@ -166,11 +169,11 @@ abstract class DBString extends DBField
      * Limit this field's content by a number of words.
      *
      * @param int $numWords Number of words to limit by.
-     * @param string $add Ellipsis to add to the end of truncated string.
+     * @param false $add Ellipsis to add to the end of truncated string.
      *
      * @return string
      */
-    public function LimitWordCount($numWords = 26, $add = '...')
+    public function LimitWordCount($numWords = 26, $add = false)
     {
         $value = $this->Plain();
         $words = explode(' ', $value);
@@ -180,7 +183,7 @@ abstract class DBString extends DBField
 
         // Limit
         $words = array_slice($words, 0, $numWords);
-        return implode(' ', $words) . $add;
+        return $this->addEllipsis(implode(' ', $words), $add);
     }
 
     /**
@@ -211,5 +214,29 @@ abstract class DBString extends DBField
     public function Plain()
     {
         return trim($this->RAW());
+    }
+
+    /**
+     * Swap add for defaultEllipsis if need be
+     * @param string $string
+     * @param false|string $add
+     * @return string
+     */
+    private function addEllipsis(string $string, $add): string
+    {
+        if ($add === false) {
+            $add = $this->defaultEllipsis();
+        }
+
+        return $string . $add;
+    }
+
+    /**
+     * Get the default string to indicate that a string was cut off.
+     * @return string
+     */
+    public function defaultEllipsis(): string
+    {
+        return _t(self::class . '.ELLIPSIS', '…');
     }
 }

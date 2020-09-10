@@ -49,9 +49,9 @@ class DBHTMLTextTest extends SapphireTest
     {
         // HTML characters are stripped safely
         return [
-            ['The little brown fox jumped over the lazy cow.', 'The little brown fox...'],
+            ['The little brown fox jumped over the lazy cow.', 'The little brown fox…'],
             ['<p>Short &amp; Sweet</p>', 'Short &amp; Sweet'],
-            ['This text contains &amp; in it', 'This text contains &amp;...'],
+            ['This text contains &amp; in it', 'This text contains &amp;…'],
         ];
     }
 
@@ -77,7 +77,7 @@ class DBHTMLTextTest extends SapphireTest
         // HTML is converted safely to plain text
         return [
             // Standard words limited, ellipsis added if truncated
-            ['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit...'],
+            ['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit…'],
 
             // Complete words less than the character limit don't get truncated, ellipsis not added
             ['<p>Lorem ipsum</p>', 24, 'Lorem ipsum'],
@@ -88,10 +88,10 @@ class DBHTMLTextTest extends SapphireTest
             ['Nice &amp; Easy', 24, 'Nice &amp; Easy'],
 
             // HTML is safely converted to plain text
-            ['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit...'],
-            ['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, 'Lorem ipsum dolor sit...'],
+            ['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit…'],
+            ['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, 'Lorem ipsum dolor sit…'],
             ['<p>Lorem ipsum</p>', 24, 'Lorem ipsum'],
-            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp; ipsum dolor sit...']
+            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp; ipsum dolor sit…']
         ];
     }
 
@@ -151,12 +151,12 @@ class DBHTMLTextTest extends SapphireTest
             [
                 '<p>A long paragraph should be cut off if limit is set</p>',
                 5,
-                'A long paragraph should be...',
+                'A long paragraph should be…',
             ],
             [
                 '<p>No matter <i>how many <b>tags</b></i> are in it</p>',
                 5,
-                'No matter how many tags...',
+                'No matter how many tags…',
             ],
             [
                 '<p>A sentence is. nicer than hard limits</p>',
@@ -299,7 +299,7 @@ class DBHTMLTextTest extends SapphireTest
                 'This is some text. It is a test',
                 20,
                 'test',
-                '... text. It is a <mark>test</mark>'
+                '… text. It is a <mark>test</mark>'
             ],
             [
                 // Retains case of original string
@@ -307,13 +307,13 @@ class DBHTMLTextTest extends SapphireTest
                 50,
                 'some test',
                 'This is <mark>some</mark> <mark>test</mark> text.'
-                . ' <mark>Test</mark> <mark>test</mark> what if you have...'
+                . ' <mark>Test</mark> <mark>test</mark> what if you have…'
             ],
             [
                 'Here is some text &amp; HTML included',
                 20,
                 'html',
-                '... text &amp; <mark>HTML</mark> inc...'
+                '… text &amp; <mark>HTML</mark> inc…'
             ],
             [
                 'A dog ate a cat while looking at a Foobar',
@@ -343,16 +343,16 @@ class DBHTMLTextTest extends SapphireTest
                  <p>with about more stuff after the line break</p>',
                 35,
                 'test',
-                '... really, this is a <mark>test</mark> sentence...'
+                '… really, this is a <mark>test</mark> sentence…'
             ],
             [
                 '<p>This is a lot of text before this but really, this is a test sentence</p>
                  <p>with about more stuff after the line break</p>',
                 50,
                 'with',
-                '... sentence<br />
+                '… sentence<br />
 <br />
-                 <mark>with</mark> about more stuff...'
+                 <mark>with</mark> about more stuff…'
             ]
         ];
     }
@@ -442,7 +442,7 @@ class DBHTMLTextTest extends SapphireTest
         );
         // Test summary methods
         $this->assertEquals(
-            'Some content shortcode...',
+            'Some content shortcode…',
             $obj->Summary(3)
         );
         $this->assertEquals(
@@ -450,7 +450,7 @@ class DBHTMLTextTest extends SapphireTest
             $obj->LimitSentences(1)
         );
         $this->assertEquals(
-            'Some content shortco...',
+            'Some content shortco…',
             $obj->LimitCharacters(20)
         );
     }
@@ -598,7 +598,7 @@ class DBHTMLTextTest extends SapphireTest
             $field->FirstSentence()
         );
         $this->assertEquals(
-            'Replaced short...',
+            'Replaced short…',
             $field->Summary(2)
         );
         $this->assertEquals(
