@@ -217,7 +217,7 @@ those will not have any effect on the parent template caching blocks.
 [/warning]
 
 
-### Nesting in FOR and IF blocks
+### Nesting in LOOP and IF blocks
 
 Currently, a cache block cannot be included in `if` and `loop` blocks.  
 The template engine will throw an error letting you know if you've done this.
