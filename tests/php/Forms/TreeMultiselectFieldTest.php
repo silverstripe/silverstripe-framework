@@ -301,4 +301,44 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertContains($field->ID(), $html);
         $this->assertContains($this->fieldValue, $html);
     }
+
+    public function testGetItems()
+    {
+        // Default items scaffolded from 'unchanged' value (empty)
+        $field = $this->field;
+        $this->assertListEquals(
+            [],
+            $field->getItems()
+        );
+
+        $expectedItem = array_map(
+            function ($folder) {
+                return [
+                    'Filename' => $folder->Filename,
+                ];
+            },
+            $this->loadFolders()
+        );
+
+        // Set list of items by array of ids
+        $field->setValue($this->folderIds);
+        $this->assertListEquals(
+            $expectedItem,
+            $field->getItems()
+        );
+
+        // Set list of items by comma separated ids
+        $field->setValue($this->fieldValue);
+        $this->assertListEquals(
+            $expectedItem,
+            $field->getItems()
+        );
+
+        // Handle legacy empty value (form submits 'unchanged')
+        $field->setValue('unchanged');
+        $this->assertListEquals(
+            [],
+            $field->getItems()
+        );
+    }
 }
