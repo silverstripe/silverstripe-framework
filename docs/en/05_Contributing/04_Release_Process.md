@@ -255,7 +255,7 @@ See [Silverstripe CMS Core Release Process](making_a_silverstripe_core_release).
 ### Pre-announcement mailing list
 
 In addition to our public disclosure process, we maintain a private mailing list where upcoming
-"high" or "critical" security releases are pre-announced.
+"high" and "critical" security releases are pre-announced.
 Members of this list will receive a security pre-announcement, as soon as it has been
 sufficiently researched, with a timeline for the upcoming release. 
 This will happen a few days before the announcement goes public alongside a new release, 
@@ -269,6 +269,10 @@ as well as a demonstrated need for this level of information
 You don’t need to be a client of Silverstripe Ltd to get on board, 
 but we will need to perform some low-touch background checks to verify your identity. 
 Please contact [security@silverstripe.org](mailto:security@silverstripe.org) for details.
+
+Only "high" and "critical" issues are pre-announced via the mailing list. If you want
+to know about all the minor security mitigations, keep an eye on the ["releases" forum category](https://forum.silverstripe.org/c/releases),
+changelogs and the website section [Security Releases](https://www.silverstripe.org/download/security-releases/).
 
 
 ## Quality Assurance and Testing
