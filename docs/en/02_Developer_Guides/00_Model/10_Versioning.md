@@ -1251,7 +1251,7 @@ namespace Foo\Bar;
 // …
 class MyVersionedObject extends DataObject
 {
-    private static $table_name = 'FBVersionedObject';
+    private static $table_name = 'MyTableName';
     // …
 }
 ```
