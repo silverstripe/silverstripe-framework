@@ -1256,7 +1256,7 @@ class MyVersionedObject extends DataObject
 }
 ```
 you would have to use `readOneFooMyVersionedObject`, `rollbackFooMyVersionedObject` and
-`HistoryViewerToolbar.VersionedAdmin.HistoryViewer.FBVersionedObject.HistoryViewerVersionDetail` respectively
+`HistoryViewerToolbar.VersionedAdmin.HistoryViewer.MyTableName.HistoryViewerVersionDetail` respectively
 [/hint]
 
 
