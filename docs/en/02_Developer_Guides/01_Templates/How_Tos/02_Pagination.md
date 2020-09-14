@@ -110,6 +110,8 @@ list.
 | `$NextLink`, `$PrevLink` | They will return blank if there's no appropriate page to go to, so `$PrevLink` will return blank when you're on the first page. |
 | `$CurrentPage` | Current page iterated on. |
 | `$TotalPages` | The actual (limited) list of records, use in an inner loop |
+| `$FirstItem` | Returns the number of the first item being displayed on the current page. This is useful for things like “displaying 10-20”. | 
+| `$LastItem` | Returns the number of the last item being displayed on this page. | 
 | `$TotalItems` | This returns the total number of items across all pages. | 
 | `$Pages` | Total number of pages. |
 | `$PageNum` | Page number, starting at 1 (within `$Pages`) |
