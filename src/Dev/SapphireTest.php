@@ -173,6 +173,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public static function tempDB()
     {
+        if (!class_exists(TempDatabase::class)) {
+            return null;
+        }
+
         if (!static::$tempDB) {
             static::$tempDB = TempDatabase::create();
         }
@@ -280,18 +284,28 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         }
 
         // i18n needs to be set to the defaults or tests fail
-        i18n::set_locale(i18n::config()->uninherited('default_locale'));
+        if (class_exists(i18n::class)) {
+            i18n::set_locale(i18n::config()->uninherited('default_locale'));
+        }
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
 
-        Member::set_password_validator(null);
-        Cookie::config()->update('report_errors', false);
+        if (class_exists(Member::class)) {
+            Member::set_password_validator(null);
+        }
+
+        if (class_exists(Cookie::class)) {
+            Cookie::config()->update('report_errors', false);
+        }
+
         if (class_exists(RootURLController::class)) {
             RootURLController::reset();
         }
 
-        Security::clear_database_is_ready();
+        if (class_exists(Security::class)) {
+            Security::clear_database_is_ready();
+        }
 
         // Set up test routes
         $this->setUpRoutes();
@@ -308,14 +322,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         }
 
         // turn off template debugging
-        SSViewer::config()->update('source_file_comments', false);
+        if (class_exists(SSViewer::class)) {
+            SSViewer::config()->update('source_file_comments', false);
+        }
 
         // Set up the test mailer
-        Injector::inst()->registerService(new TestMailer(), Mailer::class);
-        Email::config()->remove('send_all_emails_to');
-        Email::config()->remove('send_all_emails_from');
-        Email::config()->remove('cc_all_emails_to');
-        Email::config()->remove('bcc_all_emails_to');
+        if (class_exists(TestMailer::class)) {
+            Injector::inst()->registerService(new TestMailer(), Mailer::class);
+        }
+
+        if (class_exists(Email::class)) {
+            Email::config()->remove('send_all_emails_to');
+            Email::config()->remove('send_all_emails_from');
+            Email::config()->remove('cc_all_emails_to');
+            Email::config()->remove('bcc_all_emails_to');
+        }
     }
 
 
@@ -392,7 +413,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         static::$state->setUpOnce(static::class);
 
         // Build DB if we have objects
-        if (static::getExtraDataObjects()) {
+        if (class_exists(DataObject::class) && static::getExtraDataObjects()) {
             DataObject::reset();
             static::resetDBSchema(true, true);
         }
@@ -574,15 +595,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected function tearDown()
     {
         // Reset mocked datetime
-        DBDatetime::clear_mock_now();
+        if (class_exists(DBDatetime::class)) {
+            DBDatetime::clear_mock_now();
+        }
 
         // Stop the redirection that might have been requested in the test.
         // Note: Ideally a clean Controller should be created for each test.
         // Now all tests executed in a batch share the same controller.
-        $controller = Controller::has_curr() ? Controller::curr() : null;
-        if ($controller && ($response = $controller->getResponse()) && $response->getHeader('Location')) {
-            $response->setStatusCode(200);
-            $response->removeHeader('Location');
+        if (class_exists(Controller::class)) {
+            $controller = Controller::has_curr() ? Controller::curr() : null;
+            if ($controller && ($response = $controller->getResponse()) && $response->getHeader('Location')) {
+                $response->setStatusCode(200);
+                $response->removeHeader('Location');
+            }
         }
 
         // Call state helpers
@@ -986,30 +1011,42 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         }
         static::set_is_running_test(true);
 
-        // Mock request
-        $_SERVER['argv'] = ['vendor/bin/phpunit', '/'];
-        $request = CLIRequestBuilder::createFromEnvironment();
-
         // Test application
         $kernel = new TestKernel(BASE_PATH);
-        $app = new HTTPApplication($kernel);
-        $flush = array_key_exists('flush', $request->getVars());
 
-        // Custom application
-        $app->execute($request, function (HTTPRequest $request) {
-            // Start session and execute
-            $request->getSession()->init($request);
+        if (class_exists(HTTPApplication::class)) {
+            // Mock request
+            $_SERVER['argv'] = ['vendor/bin/phpunit', '/'];
+            $request = CLIRequestBuilder::createFromEnvironment();
 
-            // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
-            // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
-            DataObject::reset();
-
-            // Set dummy controller;
-            $controller = Controller::create();
-            $controller->setRequest($request);
-            $controller->pushCurrent();
-            $controller->doInit();
-        }, $flush);
+            $app = new HTTPApplication($kernel);
+            $flush = array_key_exists('flush', $request->getVars());
+    
+            // Custom application
+            $app->execute($request, function (HTTPRequest $request) {
+                // Start session and execute
+                $request->getSession()->init($request);
+    
+                // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
+                // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
+                DataObject::reset();
+    
+                // Set dummy controller;
+                $controller = Controller::create();
+                $controller->setRequest($request);
+                $controller->pushCurrent();
+                $controller->doInit();
+            }, $flush);
+        } else {
+            // Allow flush from the command line in the absence of HTTPApplication's special sauce
+            $flush = false;
+            foreach ($_SERVER['argv'] as $arg) {
+                if (preg_match('/^(--)?flush(=1)?$/', $arg)) {
+                    $flush = true;
+                }
+            }
+            $kernel->boot($flush);
+        }
 
         // Register state
         static::$state = SapphireTestState::singleton();
@@ -1024,6 +1061,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public static function resetDBSchema($includeExtraDataObjects = false, $forceCreate = false)
     {
+        if (!static::$tempDB) {
+            return;
+        }
+
         // Check if DB is active before reset
         if (!static::$tempDB->isUsed()) {
             if (!$forceCreate) {
@@ -1234,6 +1275,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
     protected function setUpRoutes()
     {
+        if (!class_exists(Director::class)) {
+            return;
+        }
+
         // Get overridden routes
         $rules = $this->getExtraRoutes();
 
