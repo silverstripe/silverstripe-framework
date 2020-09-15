@@ -387,7 +387,7 @@ class DebugView
             $line = $caller['line'];
             $header .= "<b>Debug (line {$line} of {$file}):</b>\n";
         }
-        return "<p class=\"message warning\">\n" . $header . Convert::raw2xml($message) . "</p>\n";
+        return "<p class=\"alert alert-warning\">\n" . $header . Convert::raw2xml($message) . "</p>\n";
     }
 
     /**
