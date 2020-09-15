@@ -33,32 +33,27 @@ by default using the `paginateList` plugin. This will work, too, but requires a 
 
 Let's add the plugin to our query:
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      queries:
-        readCountries:
-          type: '[Country]'
-          plugins:
-            paginate: {}
+  queries:
+    readCountries:
+      type: '[Country]'
+      plugins:
+        paginate: {}
 
 ```
 
 Right now the plugin will add the necessary arguments to the query, build and update the return types. But
 we still need to provide this generic plugin a way of actually limiting the result set, so we need a resolver.
 
-
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      queries:
-        readCountries:
-          type: '[Country]'
-          plugins:
-            paginate:
-              resolver: ['MyProject\Resolvers\Resolver', 'paginateCountries']
+  queries:
+    readCountries:
+      type: '[Country]'
+      plugins:
+        paginate:
+          resolver: ['MyProject\Resolvers\Resolver', 'paginateCountries']
 
 ```
 

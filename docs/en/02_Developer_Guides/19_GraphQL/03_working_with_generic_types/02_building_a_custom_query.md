@@ -11,17 +11,15 @@ summary: Add a custom query for any type of data
 We've now defined the shape of our data, now we need to build a way to access it. For this,
 we'll need a query. Let's add one to the `queries` section of our config.
 
-```yml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          fields:
-            code: String!
-            name: String!
-      queries:
-        readCountries: '[Country]'
+*app/_graphql/schema.yml*
+```yaml
+types:
+  Country:
+    fields:
+      code: String!
+      name: String!
+queries:
+  readCountries: '[Country]'
 ```
 
 Now we have a query that will return all the countries. In order to make this work, we'll
@@ -51,20 +49,17 @@ class MyResolver
 Resolvers are pretty loosely defined, and don't have to adhere to any specific contract
 other than that they **must be static methods**. You'll see why when we add it to the configuration:
 
-
-```yml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          fields:
-            code: String!
-            name: String!
-      queries:
-        readCountries:
-          type: '[Country]'
-          resolver: [ 'MyResolver', 'resolveCountries' ]
+*app/_graphql/schema.yml
+```yaml
+  types:
+    Country:
+      fields:
+        code: String!
+        name: String!
+  queries:
+    readCountries:
+      type: '[Country]'
+      resolver: [ 'MyResolver', 'resolveCountries' ]
 ```
 
 Now, we just have to build the schema:

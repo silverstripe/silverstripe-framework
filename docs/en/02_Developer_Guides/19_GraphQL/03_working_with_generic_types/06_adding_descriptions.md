@@ -16,37 +16,33 @@ The trade-off for using descriptions is that the YAML configuration becomes a bi
 
 Let's add some descriptions to our types and fields.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          description: A record that describes one of the world's sovereign nations
-          fields:
-            code:
-              type: String!
-              description: The unique two-letter country code
-            name:
-              type: String!
-              description: The canonical name of the country, in English
+  types:
+    Country:
+      description: A record that describes one of the world's sovereign nations
+      fields:
+        code:
+          type: String!
+          description: The unique two-letter country code
+        name:
+          type: String!
+          description: The canonical name of the country, in English
 ```
 
 We can also add descriptions to our query arguments. We'll have to remove the inline argument
 definition to do that.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      queries:
-        readCountries:
-          type: '[Country]'
-          description: Get all the countries in the world
-          args:
-            limit:
-              type: Int = 20
-              description: The limit that is applied to the result set
+  queries:
+    readCountries:
+      type: '[Country]'
+      description: Get all the countries in the world
+      args:
+        limit:
+          type: Int = 20
+          description: The limit that is applied to the result set
 ```
 
 ### Further reading

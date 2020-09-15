@@ -17,8 +17,7 @@ plugins to include, and for DataObject queries, these include:
 * sort
 * paginateList
 * inheritance
-* canViewItem (readOne)
-* canViewList (read)
+* canView (read, readOne)
 
 Other modules, such as `silverstripe-versioned` may augment that list with even more.
 
@@ -62,16 +61,13 @@ isn't something we do in Silverstripe CMS.
 
 Just set it to `false` in the configuration.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\ProductCategory:
-          operations:
-            read:
-              plugins:
-                paginateList: false
+MyProject\Models\ProductCategory:
+  operations:
+    read:
+      plugins:
+        paginateList: false
 ```
 
 
@@ -107,7 +103,7 @@ included with the the module, including:
 * endswith (ends with)
 
 Example:
-```yaml
+```graphql
 query {
   readSiteTrees(
     filter: {
@@ -127,7 +123,7 @@ disjunctive groups (e.g. "OR" and "AND" clauses) is not yet supported.
 
 Nested fields are supported by default:
 
-```yaml
+```graphql
 query {
   readProductCategories(
     filter: {
@@ -152,37 +148,31 @@ query {
 By default, all fields on the dataobject, including relationships, are included. To customise
 this, just add a `fields` config to the plugin definition:
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\ProductCategory:
+MyProject\Models\ProductCategory:
+  fields:
+    title: true
+    featured: true
+  operations:
+    read:
+      plugins:
+        filter:
           fields:
             title: true
-            featured: true
-          operations:
-            read:
-              plugins:
-                filter:
-                  fields:
-                    title: true
 ```
 
 #### Disabling the filter plugin
 
 Just set it to `false` in the configuration.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\ProductCategory:
-          operations:
-            read:
-              plugins:
-                filter: false
+MyProject\Models\ProductCategory:
+  operations:
+    read:
+      plugins:
+        filter: false
 ```
 
 ### The sort plugin
@@ -190,7 +180,7 @@ SilverStripe\GraphQL\Schema\Schema:
 The sort plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QuerySort`) adds a
 special `sort` argument to the `read` and `readOne` operations.
 
-```yaml
+```graphql
 query {
   readSiteTrees(
     sort: { created: DESC }
@@ -204,7 +194,7 @@ query {
 
 Nested fields are supported by default, but only for linear relationships (e.g has_one):
 
-```yaml
+```graphql
 query {
   readProducts(
     sort: {
@@ -225,37 +215,31 @@ query {
 By default, all fields on the dataobject, including `has_one` relationships, are included.
 To customise this, just add a `fields` config to the plugin definition:
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\ProductCategory:
+MyProject\Models\ProductCategory:
+  fields:
+    title: true
+    featured: true
+  operations:
+    read:
+      plugins:
+        sort:
           fields:
             title: true
-            featured: true
-          operations:
-            read:
-              plugins:
-                sort:
-                  fields:
-                    title: true
 ```
 
 #### Disabling the sort plugin
 
 Just set it to `false` in the configuration.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\ProductCategory:
-          operations:
-            read:
-              plugins:
-                sort: false
+MyProject\Models\ProductCategory:
+  operations:
+    read:
+      plugins:
+        sort: false
 ```
 
 ### Further reading

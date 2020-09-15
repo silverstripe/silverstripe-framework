@@ -12,13 +12,10 @@ summary: Add arguments to your fields, queries, and mutations
 Fields can have arguments, and queries are just fields, so let's add a simple
 way of influencing our query response:
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      # ...
-      queries:
-        'readCountries(limit: Int!)': '[Country]'
+  queries:
+    'readCountries(limit: Int!)': '[Country]'
 ```
 
 We've provided the required argument `limit` to the query, which will allow us to truncate the results.
@@ -57,13 +54,10 @@ query {
 This works pretty well, but maybe it's a bit over the top to *require* the `limit` argument. We want to optimise
 performance, but we also don't want to burden the developer with tedium like this. Let's give it a default value.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      # ...
-      queries:
-        'readCountries(limit: Int = 20)': '[Country]'
+  queries:
+    'readCountries(limit: Int = 20)': '[Country]'
 ```
 
 Rebuild the schema, and notice that the IDE is no longer yelling at you for a `limit` argument.

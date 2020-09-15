@@ -32,17 +32,14 @@ Let's take a simple example. Imagine we have this design:
 
 Now, let's expose `Page` to graphql:
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        Page:
-          fields:
-            title: true
-            content: true
-            bannerImage: true
-          operations: '*'
+Page:
+  fields:
+    title: true
+    content: true
+    bannerImage: true
+  operations: '*'
 ```
 
 Here's how we can query the inherited fields:
@@ -102,20 +99,17 @@ And the `NewsPage` type would contain the following fields:
 
 So if we want that `PublishDate`, we need to add it to the schema explicitly:
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        Page:
-          fields:
-            title: true
-            content: true
-            bannerImage: true
-          operations: '*'
-        MyProject\Pages\NewsPage:
-          fields:
-            publishDate: true
+Page:
+  fields:
+    title: true
+    content: true
+    bannerImage: true
+  operations: '*'
+MyProject\Pages\NewsPage:
+  fields:
+    publishDate: true
 ```
 
 Now we can query it:

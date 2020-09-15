@@ -73,16 +73,13 @@ SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
 
 And use it:
 
+**app/_graphql/models.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\MyDataObject:
-          fields: '*'
-          operations:
-            read: true
-            duplicate: true
+MyProject\Models\MyDataObject:
+  fields: '*'
+  operations:
+    read: true
+    duplicate: true
 ```
 
 ### Further reading

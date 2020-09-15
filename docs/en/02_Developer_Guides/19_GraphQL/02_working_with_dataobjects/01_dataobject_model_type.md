@@ -28,15 +28,11 @@ Naturally, this module comes bundled with a model type for subclasses of `DataOb
 
 Let's use the `models` config to expose some content.
 
-**app/_config/my-schema.yml**
+**app/_graphql/models.yml**
 ```
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        SilverStripe\CMS\Model\SiteTree:
-          fields: '*'
-          operations: '*'
+SilverStripe\CMS\Model\SiteTree:
+  fields: '*'
+  operations: '*'
 ```
 
 The class `SilverStripe\CMS\Model\SiteTree` is a subclass of `DataObject`, so the bundled model
@@ -94,25 +90,22 @@ Did you get a permissions error? Make sure you're authenticated as someone with 
 
 Let's add some more dataobjects, but this time, we'll only add a subset of fields and operations.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        SilverStripe\CMS\Model\SiteTree:
-          fields: '*'
-          operations: '*'
-        MyProject\Models\Product:
-          fields:
-            onSale: true
-            title: true
-            price: true
-          operations:
-            delete: true
-        MyProject\Models\ProductCategory:
-          fields:
-            title: true
-            featured: true
+SilverStripe\CMS\Model\SiteTree:
+  fields: '*'
+  operations: '*'
+MyProject\Models\Product:
+  fields:
+    onSale: true
+    title: true
+    price: true
+  operations:
+    delete: true
+MyProject\Models\ProductCategory:
+  fields:
+    title: true
+    featured: true
 ```
 
 A couple things to note here:
@@ -132,17 +125,14 @@ convention in GraphQL APIs to use lowerCamelCase fields, so this is given by def
 You don't have to rely on the model to tell you how fields should resolve. Just like
 generic types, you can customise them with arguments and resolvers.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\Product:
-          fields:
-            title:
-              type: String
-              resolver: [ 'MyProject\Resolver', 'resolveSpecialTitle' ]
-            'price(currency: String = "NZD")': true
+MyProject\Models\Product:
+  fields:
+    title:
+      type: String
+      resolver: [ 'MyProject\Resolver', 'resolveSpecialTitle' ]
+    'price(currency: String = "NZD")': true
 ```
 
 For more information on custom arguments and resolvers, see the [adding arguments](../working_with_generic_types/adding_arguments) and [resolver discovery](../working_with_generic_types/resolver_discovery) documentation.
@@ -165,6 +155,7 @@ the `$className` as a parameter.
 
 Let's turn `MyProject\Models\Product` into the more specific `MyProjectProduct`
 
+*app/_config/graphql.yml*
 ```yaml
 SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
   type_formatter: ['MyProject\Formatters', 'formatType' ]
@@ -191,6 +182,7 @@ public static function formatType(string $className): string
 You can also add prefixes to all your DataObject types. This can be a scalar value or a callable,
 using the same signature as `type_formatter`.
 
+*app/_config/graphql.yml*
 ```yaml
 SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
   type_prefix: 'MyProject'

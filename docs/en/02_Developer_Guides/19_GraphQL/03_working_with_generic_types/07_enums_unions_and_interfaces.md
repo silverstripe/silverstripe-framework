@@ -19,14 +19,12 @@ often used in arguments to queries, such as `{sort: DESC }`.
 
 It's very easy to add enum types to your schema. Just use the `enums` section of the config.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      enums:
-        SortDirection:
-          DESC: Descending order
-          ASC: Ascending order
+  enums:
+    SortDirection:
+      DESC: Descending order
+      ASC: Ascending order
 ```
 
 
@@ -39,17 +37,15 @@ chefs must have names and ages.
 
 To define an interface, use the `interfaces` section of the config.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      interfaces:
-        Person:
-          fields:
-            firstName: String!
-            surname: String!
-            age: Int!
-          resolveType: [ 'MyProject\MyResolver', 'resolvePersonType' ]
+  interfaces:
+    Person:
+      fields:
+        firstName: String!
+        surname: String!
+        age: Int!
+      resolveType: [ 'MyProject\MyResolver', 'resolvePersonType' ]
 ```
 
 Interfaces must define a `resolveType` resolver method to inform the interface
@@ -75,14 +71,12 @@ for "Articles" could return a list containing both "Blog" and "NewsStory" types.
 
 To add a union type, use the `unions` section of the configuration.
 
+**app/_graphql/schema.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      unions:
-        Article:
-          types: [ 'Blog', 'NewsStory' ]
-          typeResolver: [ 'MyProject\MyResolver', 'resolveArticleUnion' ]
+  unions:
+    Article:
+      types: [ 'Blog', 'NewsStory' ]
+      typeResolver: [ 'MyProject\MyResolver', 'resolveArticleUnion' ]
 ```
 
 Like interfaces, unions need to know how to resolve their types. These methods are also

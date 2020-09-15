@@ -70,16 +70,13 @@ SilverStripe\Core\Injector\Injector:
 
 And now we can apply it to any string field we want:
 
+**app/_graphql/types.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          name:
-            type: String
-            plugins:
-              truncate: true
+Country:
+  name:
+    type: String
+    plugins:
+      truncate: true
 ```
 
 ### Further reading

@@ -31,10 +31,10 @@ own set of persisted queries. In these examples, we're using the `default`schema
 ```yaml
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\PersistedQuery\PersistedQueryMappingProvider:
-    class: SilverStripe\GraphQL\PersistedQuery\FileProvider:
-      properties:
-       schemaMapping:
-         default: '/var/www/project/query-mapping.json'
+    class: SilverStripe\GraphQL\PersistedQuery\FileProvider
+    properties:
+     schemaMapping:
+       default: '/var/www/project/query-mapping.json'
 ```
 
 
@@ -53,10 +53,10 @@ The file path must be absolute.
 ```yaml
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\PersistedQuery\PersistedQueryMappingProvider:
-    class: SilverStripe\GraphQL\PersistedQuery\HTTPProvider:
-      properties:
-       schemaMapping:
-         default: 'http://example.com/myqueries.json'
+    class: SilverStripe\GraphQL\PersistedQuery\HTTPProvider
+    properties:
+     schemaMapping:
+       default: 'http://example.com/myqueries.json'
 ```
 
 A flat file at the URL `http://example.com/myqueries.json` should contain something like:
@@ -70,10 +70,10 @@ A flat file at the URL `http://example.com/myqueries.json` should contain someth
 ```yaml
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\PersistedQuery\PersistedQueryMappingProvider:
-    class: SilverStripe\GraphQL\PersistedQuery\HTTPProvider:
-      properties:
-       schemaMapping:
-         default: '{"myMutation":"mutation{createComment($comment:String!){Comment}}"}'
+    class: SilverStripe\GraphQL\PersistedQuery\HTTPProvider
+    properties:
+     schemaMapping:
+       default: '{"myMutation":"mutation{createComment($comment:String!){Comment}}"}'
 ```
 
 The queries are hardcoded into the configuration.

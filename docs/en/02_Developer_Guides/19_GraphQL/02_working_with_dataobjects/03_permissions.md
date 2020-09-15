@@ -36,11 +36,8 @@ It is critical that you have a `canView()` method defined on your dataobjects. W
 assumed to have permission to view a record.
 [/notice]
 
-For `readOne`, a plugin called `canViewItem` is installed by default. If the permission check for `canView($member)`
-fails, the result comes back `null`.
 
-For `read`, a plugin called `canViewList` or `canViewPaginated` (for paginated lists) will filter the result
-set by the `canView($memeber)` check.
+For `read` and `readOne` a plugin called `canView` will filter the result set by the `canView($memeber)` check.
 
 [notice]
 When paginated items fail a `canView()` check, the `pageInfo` field is not affected. This can result in pages
@@ -52,18 +49,16 @@ for `limit` and `offset` parameters.
 
 Though not recommended, you can disable query permissions by setting their plugins to `false`.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      Page:
-        operations:
-          read:
-            plugins:
-              canViewPaginated: false
-          readOne:
-            plugins:
-              canViewItem: false
+  Page:
+    operations:
+      read:
+        plugins:
+          canView: false
+      readOne:
+        plugins:
+          canView: false
 ```
 
 ### Further reading

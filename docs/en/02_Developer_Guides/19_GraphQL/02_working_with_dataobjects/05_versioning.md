@@ -104,17 +104,15 @@ by default. They include:
 All of these identifiers can be used in the `operations` config for your versioned
 DataObject. They will all be included if you use `operations: '*'`.
 
+*app/_graphql/models.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      MyProject\Models\MyObject:
-        fields: '*'
-        operations:
-          publish: true
-          unpublish: true
-          rollback: true
-          copyToStage: true
+  MyProject\Models\MyObject:
+    fields: '*'
+    operations:
+      publish: true
+      unpublish: true
+      rollback: true
+      copyToStage: true
 
 ```
 

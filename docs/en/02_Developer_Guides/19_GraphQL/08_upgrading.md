@@ -63,12 +63,21 @@ SilverStripe\GraphQL\Manager:
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
-      types: {}
-      queries: {}
-      mutations: {}
-      interfaces: {}
-      unions: {}
-      enums: {}
+      src: app/_graphql # A directory of your choice
+```
+
+Add the appropriate yaml files to the directory. For more information on this pattern, see
+the [configuring your schema](01_getting_started/02_configuring_your_schema) section.
+
+```
+app/_graphql
+  types.yml
+  queries.yml
+  mutations.yml
+  models.yml
+  enums.yml
+  interfaces.yml
+  unions.yml
 ```
 
 ## TypeCreator, QueryCreator, and MutationCreator are gone
@@ -107,16 +116,14 @@ class GroupTypeCreator extends TypeCreator
 ```
 
 **after**
+
+**app/_graphql/types.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        group:
-          fields:
-            ID: ID!
-            Title: String
-            Description: String
+group:
+  fields:
+    ID: ID!
+    Title: String
+    Description: String
 ```
 
 That's a simple type, and obviously there's a lot more to it than that, but have a look at the
@@ -166,14 +173,11 @@ which you can learn more about in the documentation.
 
 Alternatively, you can hardcode the resolver into your config:
 
+**app/_graphql/queries.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      queries:
-        latestPost:
-          type: Post
-          resolver: ['MyResolvers', 'latestPost' ]
+latestPost:
+  type: Post
+  resolver: ['MyResolvers', 'latestPost' ]
 ```
 
 ## ScaffoldingProviders are now SchemaUpdaters
@@ -267,20 +271,18 @@ SilverStripe\GraphQL\Manager:
 ```
 
 **after**
+
+**app/_graphql/models.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        SilverStripe\Security\Member:
-          fields: '*'
-          operations: '*'
-        SilverStripe\CMS\Model\SiteTree:
-          fields:
-            title: true
-            content: true
-          operations:
-            read: true
+SilverStripe\Security\Member:
+  fields: '*'
+  operations: '*'
+SilverStripe\CMS\Model\SiteTree:
+  fields:
+    title: true
+    content: true
+  operations:
+    read: true
 ```
 
 ## DataObject field names are lowerCamelCase by default
@@ -382,15 +384,13 @@ configuration layer.
 (A type creator that has been hacked to return an `Enum` singleton?)
 
 **after**
+
+**app/_graphql/enums.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      enums:
-        Status:
-          SHIPPED: Shipped
-          CANCELLED: Cancelled
-          PENDING: Pending
+Status:
+  SHIPPED: Shipped
+  CANCELLED: Cancelled
+  PENDING: Pending
 ```
 
 ## Middleware signature is more loosely typed

@@ -252,20 +252,17 @@ Let's look at each approach:
 
 #### Case-by-case
 
+**app/_graphql/models.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      models:
-        MyProject\Models\Event:
-          plugins:
-            geocode: true
-          fields:
-            title: true
-          operations:
-            read:
-              plugins:
-                geocodeableQuery: true
+MyProject\Models\Event:
+  plugins:
+    geocode: true
+  fields:
+    title: true
+  operations:
+    read:
+      plugins:
+        geocodeableQuery: true
 ```
 
 This can get pretty verbose, so you might just want to register them as default plugins for all DataObjects

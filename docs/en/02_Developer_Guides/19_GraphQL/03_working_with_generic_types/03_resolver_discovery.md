@@ -93,13 +93,10 @@ for this query:
 
 Now that we're using logic to discover our resolver, we can clean up the config a bit.
 
+**app/_graphql/schema.yml**
 ```yml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      # ...
-      queries:
-        readCountries: '[Country]'
+  queries:
+    readCountries: '[Country]'
 ```
 
 Re-run the schema build, with a flush, and let's go!
@@ -113,16 +110,14 @@ A less magical approach to resolver discovery is defining a `fieldResolver` prop
 types. This is a generic handler for all fields on a given type and can be a nice middle
 ground between the rigor of hard coding everything and the opacity of discovery logic.
 
+**app/_graphql/schema.yml**
 ```yml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          fields:
-            name: String
-            code: String
-          fieldResolver: [ 'MyProject\MyResolver', 'resolveCountryField' ]
+  types:
+    Country:
+      fields:
+        name: String
+        code: String
+      fieldResolver: [ 'MyProject\MyResolver', 'resolveCountryField' ]
 ```
 
 You'll need to do explicit checks for the `fieldName` in your resolver to make this work.

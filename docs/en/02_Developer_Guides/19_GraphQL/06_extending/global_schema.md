@@ -16,6 +16,7 @@ is critical that all schemas can leverage its schema modifications.
 
 The global schema is named `*`.
 
+**app/_config/graphql.yml**
 ```yaml
 SilverStripe\GraphQL\Schema\Schema:
   schemas:

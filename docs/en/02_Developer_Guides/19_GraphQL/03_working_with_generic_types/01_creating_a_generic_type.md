@@ -12,15 +12,12 @@ summary: Creating a type that doesn't map to a DataObject
 Let's create a simple type that will work with the inbuilt features of Silverstripe CMS.
 We'll define some languages based on the `i18n` API.
 
-```yml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    default:
-      types:
-        Country:
-          fields:
-            code: String!
-            name: String!
+*app/_graphql/types.yml*
+```yaml
+Country:
+  fields:
+    code: String!
+    name: String!
 ```
 
 We've defined a type called `Country` that has two fields: `code` and `name`. An example record
