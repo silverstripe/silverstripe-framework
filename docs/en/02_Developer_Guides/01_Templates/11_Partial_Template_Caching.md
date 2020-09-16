@@ -169,6 +169,22 @@ If you have good `$CacheKey` and `$CacheCondition` implementations, you may want
 improve performance.
 [/note]
 
+Example below shows how to set partial cache expiry to one hour.
+
+```yaml
+# app/_config/cache.yml
+
+---
+Name: app-cache
+After:
+  - 'corecache'
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.cacheblock:
+    constructor:
+      namespace: "cacheblock"
+      defaultLifetime: 3600
+```
 
 ### Nested cached blocks
 
