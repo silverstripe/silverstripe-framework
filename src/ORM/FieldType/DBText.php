@@ -80,7 +80,7 @@ class DBText extends DBString
         }
 
         // Do a word-search
-        $words = preg_split('/\s+/u', $value);
+        $words = preg_split('/\s+/u', $value) ?: [];
         $sentences = 0;
         foreach ($words as $i => $word) {
             if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
@@ -133,8 +133,8 @@ class DBText extends DBString
         // Split on sentences (don't remove period)
         $sentences = array_filter(array_map(function ($str) {
             return trim($str);
-        }, preg_split('@(?<=\.)@', $value)));
-        $wordCount = count(preg_split('#\s+#u', $sentences[0]));
+        }, preg_split('@(?<=\.)@', $value) ?: []));
+        $wordCount = count(preg_split('#\s+#u', $sentences[0]) ?: []);
 
         // if the first sentence is too long, show only the first $maxWords words
         if ($wordCount > $maxWords) {
@@ -149,7 +149,7 @@ class DBText extends DBString
 
             // If more sentences to process, count number of words
             if ($sentences) {
-                $wordCount += count(preg_split('#\s+#u', $sentences[0]));
+                $wordCount += count(preg_split('#\s+#u', $sentences[0]) ?: []);
             }
         } while ($wordCount < $maxWords && $sentences && trim($sentences[0]));
 
@@ -169,7 +169,7 @@ class DBText extends DBString
         }
 
         // Split paragraphs and return first
-        $paragraphs = preg_split('#\n{2,}#', $value);
+        $paragraphs = preg_split('#\n{2,}#', $value) ?: [];
         return reset($paragraphs);
     }
 
