@@ -5,8 +5,8 @@ summary: A high-level view of what you'll need to change when upgrading to Graph
 
 # Upgrading from GraphQL 3
 
-The 4.0 release of `silverstripe-graphql` is underwent a massive set of changes that represent almost an
-entire rewrite of the module. This was done as part of a years long plan to improve performance. While
+The 4.0 release of `silverstripe-graphql`  underwent a massive set of changes representing an
+entire rewrite of the module. This was done as part of a year-long plan to improve performance. While
 there is no specific upgrade path, there are some key things to look out for and general guidelines on how
 to adapt your code from the 3.x release to 4.x.
 
@@ -14,9 +14,9 @@ In this section, we'll cover each of these upgrade issues in order of impact.
 
 ## GraphQL schemas require a build step
 
-The most critical change you'll experience moving from 3.x to 4.x is one that affects the developer experience.
+The most critical change moving from 3.x to 4.x affects the developer experience.
 The key to improving performance in GraphQL requests was eliminating the overhead of generating the schema at
-runtime. This didn't scale. As the GraphQL schema grew, API responses became more latent.
+runtime. This didn't scale. As the GraphQL schema grew, API response latency increase.
 
 To eliminate this overhead, the GraphQL API relies on **generated code** for the schema. You need to run a
 task to build it.
@@ -34,14 +34,15 @@ Most of the time, the name of your schema is `default`. If you're editing DataOb
 with GraphQL in the CMS, you may have to build the `admin` schema as well.
 [/info]
 
-This build process is a larger topic with a few more things to be aware of. To learn more, check out the
-[building the schema](getting_started/building_the_schema) docuementation.
+This build process is a larger topic with a few more things to be aware of. 
+Check the [building the schema](getting_started/building_the_schema) documentation to learn more.
+
 
 ## The Manager class, the godfather of GraphQL 3, is gone
 
 `silverstripe-graphql` 3.x relied heavily on the `Manager` class. This became a catch-all that handled
 registration of types, execution of scaffolding, running queries and middleware, error handling, and more. This
-class has been broken up into separate concerns
+class has been broken up into separate concerns:
 
 * `Schema` <- register your stuff here
 * `QueryHandlerInterface` <- Handles GraphQL queries. You'll probably never have to touch it.
@@ -88,10 +89,6 @@ real reason to be instance-based. Most of the time, they can easily be ported to
 
 ### Upgrading
 
-The first thing you have to do is look at any resolvers that are being used in your creator classes. Make
-sure they can be transformed to **static methods**. Resolvers can no longer be instance based. They need to
-be rendered as static callables in PHP code. It is rare that one of these creator classes would be relying on
-`$this` in its resolver, but just double check.
 
 **before**
 ```php
@@ -287,10 +284,10 @@ SilverStripe\CMS\Model\SiteTree:
 
 ## DataObject field names are lowerCamelCase by default
 
-The 3.x release of the module embraced an anti-pattern of using UpperCamelCase field names so that they could
-map more seamlessly to the conventions of the ORM. This makes frontend code look awkward, and there's no great
-reason for the Silverstripe CMS graphql server to break convention, so in this major release,
-the lowerCamelCase approach is encouraged.
+The 3.x release of the module embraced an anti-pattern of using **UpperCamelCase** field names so that they could
+map to the conventions of the ORM. This makes frontend code look awkward, and there's no great
+reason for the Silverstripe CMS graphql server to break convention. In this major release,
+the **lowerCamelCase** approach is encouraged.
 
 ### Upgrading
 
@@ -347,10 +344,11 @@ The good news is that all DataObject queries are paginated by default, and you s
 this, but if you are writing a custom query and want it paginated, check out the section on
 [adding pagination to a custom query](getting_started/working_with_generic_types/adding_pagination).
 
-Additionally, the sorting features that were provided by `Connection` have been moved to a plugin dedicated
+Additionally, the sorting features that were provided by `Connection` have been moved to a plugin dedicated to
 `SS_List` results. Again, this plugin is applied to all DataObjects by default, and will include all of their
 sortable fields by default. This is configurable, however. See the
 [query plugins](getting_started/working_with_dataobjects/query_plugins) section for more information.
+
 
 ### Upgrading
 
