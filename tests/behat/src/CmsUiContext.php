@@ -81,7 +81,7 @@ class CmsUiContext implements Context
      */
     public function iShouldSeeANotice($notice)
     {
-        $this->getMainContext()->assertElementContains('.toast, .notice', $notice);
+        $this->getMainContext()->assertElementContains('.toast, .notice-wrap', $notice);
     }
 
     /**
