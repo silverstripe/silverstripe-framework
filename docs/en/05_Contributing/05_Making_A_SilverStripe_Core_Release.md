@@ -37,7 +37,7 @@ Projects wanting to pick up this individual patch will need to alias it in their
 
 ```
     "requirements": {
-        "silverstripe/recipe-cms": "^4.6.1",
+        "silverstripe/recipe-cms": "4.6.1",
         "silverstripe/cms": "4.6.2 as 4.6.1"
     }
 ```
