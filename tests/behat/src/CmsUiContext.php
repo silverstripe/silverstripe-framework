@@ -100,7 +100,7 @@ class CmsUiContext implements Context
         $this->iShouldSeeAToast($notice, $type);
 
         $actions = explode(',', $actions);
-        foreach($actions as $order => $action) {
+        foreach ($actions as $order => $action) {
             $this->getMainContext()->assertElementContains(
                 sprintf('.toast--%s .toast__action:nth-child(%s)', $type, $order+1),
                 trim($action)
