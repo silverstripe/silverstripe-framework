@@ -77,10 +77,49 @@ class CmsUiContext implements Context
 
     /**
      * @Then /^I should see a "([^"]*)" notice$/
+     * @deprecated 4.7.0 Use `iShouldSeeAToast` instead
      */
     public function iShouldSeeANotice($notice)
     {
-        $this->getMainContext()->assertElementContains('.notice-wrap', $notice);
+        $this->getMainContext()->assertElementContains('.toast, .notice-wrap', $notice);
+    }
+
+    /**
+     * @Then /^I should see a "([^"]+)" (\w+) toast$/
+     */
+    public function iShouldSeeAToast($notice, $type)
+    {
+        $this->getMainContext()->assertElementContains('.toast--' . $type, $notice);
+    }
+
+    /**
+     * @Then /^I should see a "([^"]+)" (\w+) toast with these actions: (.+)$/
+     */
+    public function iShouldSeeAToastWithAction($notice, $type, $actions)
+    {
+        $this->iShouldSeeAToast($notice, $type);
+
+        $actions = explode(',', $actions);
+        foreach ($actions as $order => $action) {
+            $this->getMainContext()->assertElementContains(
+                sprintf('.toast--%s .toast__action:nth-child(%s)', $type, $order+1),
+                trim($action)
+            );
+        }
+    }
+
+    /**
+     * @param $action
+     * @When /^I click the "([^"]*)" toast action$/
+     */
+    public function stepIClickTheToastAction($action)
+    {
+        $page = $this->getMainContext()->getSession()->getPage();
+        $toasts = $page->find('css', '.toasts');
+        assertNotNull($toasts, "We have a toast container");
+        $toastAction = $toasts->find('named', ['link_or_button', "'{$action}'"]);
+        assertNotNull($toastAction, "We have a $action toast action");
+        $toastAction->click();
     }
 
     /**
