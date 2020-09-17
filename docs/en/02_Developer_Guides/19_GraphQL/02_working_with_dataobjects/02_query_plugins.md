@@ -18,7 +18,9 @@ plugins to include, and for DataObject queries, these include:
 * paginateList
 * inheritance
 * canView (read, readOne)
+* firstResult (readOne)
 
+When the `silverstripe/cms` module is installed, a plugin known as `getByLink` is also added.
 Other modules, such as `silverstripe-versioned` may augment that list with even more.
 
 ### The pagination plugin
@@ -240,6 +242,33 @@ MyProject\Models\ProductCategory:
     read:
       plugins:
         sort: false
+```
+
+### The getByLink plugin
+
+When the `silverstripe/cms` module is installed (it is in most cases), a plugin called `getByLink`
+will ensure that queries that return a single DataObject model (e.g. readOne) get a new filter argument
+called `link` (configurable on the `field_name` property of `LinkablePlugin`).
+
+When the `filter` plugin is also activated for the query (it is by default for readOne), the `link` field will be added to the filter
+input type. Note that all other filters won't apply in this case, as `link`, like `id`, is exclusive 
+by definition.
+
+If the `filter` plugin is not activated for the query, a new `link` argument will be added to the query
+on its own.
+
+With the standard `filter` plugin applied:
+```graphql
+readOneSiteTree(filter: { link: "/about-us" }) {
+  title
+}
+```
+
+When the `filter` plugin is disabled:
+```graphql
+readOneSiteTree(link: "/about-us" ) {
+  title
+}
 ```
 
 ### Further reading
