@@ -20,6 +20,28 @@ While this document is not normally applicable to normal silverstripe contributo
 it is still useful to have it available in a public location so that these users
 are aware of these processes.
 
+## Module releases
+
+Occasionally a fix to an individual module warrants a patch release outside of the standard quarterly release cycle. Rather than generating a full new recipe release, the following process should be followed to perform a patch release for an individual module:
+
+1. Check out the module locally
+1. Determine the new module version to be released (e.g. current version is 4.6.1, therefore new version will be 4.6.2)
+1. Generate a changelog using our standard changelog format and the current release + branch name:
+   ```
+   > git log --oneline --pretty=format:"* %s (%an) - %h" --no-merges 4.6.1...4.6
+   ```
+1. Draft a new Release in GitHub, targeting the correct branch, specifying the version to be released, and pasting the changelog in the description field.
+1. Publish the release, and ensure the new version becomes visible in Packagist.
+
+Projects wanting to pick up this individual patch will need to alias it in their `composer.json` file if they're using a recipe:
+
+```
+    "requirements": {
+        "silverstripe/recipe-cms": "4.6.1",
+        "silverstripe/cms": "4.6.2 as 4.6.1"
+    }
+```
+
 ## First time setup
 
 As a core contributor it is necessary to have installed the following set of tools:
