@@ -93,6 +93,10 @@ class HasManyList extends RelationList
         $item->$foreignKey = $foreignID;
 
         $item->write();
+
+        if ($this->addCallbacks) {
+            $this->addCallbacks->call($this, $item, []);
+        }
     }
 
     /**
@@ -135,6 +139,10 @@ class HasManyList extends RelationList
         ) {
             $item->$foreignKey = null;
             $item->write();
+        }
+
+        if ($this->removeCallbacks) {
+            $this->removeCallbacks->call($this, [$item->ID]);
         }
     }
 }
