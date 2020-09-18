@@ -86,6 +86,34 @@ To access a persisted query, simply pass an `id` parameter in the request in lie
 
 Note that if you pass `query` along with `id`, an exception will be thrown.
 
+## Query caching (Caution: EXPERIMENTAL)
+
+The `QueryCachingMiddleware` class is an experimental cache layer that persists the results of a GraphQL
+query to limit unnecessary calls to the database. The query cache is automatically expired when any 
+DataObject that it relies on is modified. The entire cache will be discarded on `?flush` requests.
+
+To implement query caching, add the middleware to your `QueryHandlerInterface`
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\GraphQL\QueryHandler\QueryHandlerInterface.default:
+    class: SilverStripe\GraphQL\QueryHandler\QueryHandler
+    properties:
+      Middlewares:
+        cache: '%$SilverStripe\GraphQL\Middleware\QueryCachingMiddleware'
+```
+
+And you will also need to apply an extension to all DataObjects:
+
+```yaml
+SilverStripe\ORM\DataObject:
+  extensions:
+    - SilverStripe\GraphQL\Extensions\QueryRecorderExtension
+```
+
+[warning]
+This feature is experimental, and has not been thoroughly evaluated for security. Use at your own risk.
+[/warning]
 
 
 ## Schema introspection
