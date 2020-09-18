@@ -29,8 +29,7 @@ class YamlWriter implements Writer
     protected function getDumper()
     {
         if (!$this->dumper) {
-            $this->dumper = new Dumper();
-            $this->dumper->setIndentation(2);
+            $this->dumper = new Dumper(2);
         }
         return $this->dumper;
     }
