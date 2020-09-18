@@ -55,7 +55,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -69,7 +69,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $button = new GridFieldExportButton();
         $button->setExportColumns(['Name' => 'My Name']);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -89,7 +89,7 @@ class GridFieldExportButtonTest extends SapphireTest
         $button = new GridFieldExportButton();
         $button->setExportColumns(['Name' => 'My Name']);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -108,7 +108,7 @@ class GridFieldExportButtonTest extends SapphireTest
             }
         ]);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -125,7 +125,7 @@ class GridFieldExportButtonTest extends SapphireTest
             'City' => 'strtolower',
         ]);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -143,7 +143,7 @@ class GridFieldExportButtonTest extends SapphireTest
         ]);
         $button->setCsvHasHeader(false);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -167,7 +167,7 @@ class GridFieldExportButtonTest extends SapphireTest
 
         $exportData = $button->generateExportFileData($this->gridField);
 
-        $csvReader = Reader::createFromString($exportData);
+        $csvReader = $this->createReader($exportData);
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
@@ -183,12 +183,24 @@ class GridFieldExportButtonTest extends SapphireTest
             'RugbyTeamNumber' => 'Rugby Team Number'
         ]);
 
-        $csvReader = Reader::createFromString($button->generateExportFileData($this->gridField));
+        $csvReader = $this->createReader($button->generateExportFileData($this->gridField));
         $bom = $csvReader->getInputBOM();
 
         $this->assertEquals(
             "$bom\"Rugby Team Number\"\r\n2\r\n0\r\n",
             (string) $csvReader
         );
+    }
+
+    protected function createReader($string)
+    {
+        $reader = Reader::createFromString($string);
+
+        // Explicitly set the output BOM in league/csv 9
+        if (method_exists($reader, 'getContent')) {
+            $reader->setOutputBOM(Reader::BOM_UTF8);
+        }
+
+        return $reader;
     }
 }

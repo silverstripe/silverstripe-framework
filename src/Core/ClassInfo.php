@@ -439,7 +439,13 @@ class ClassInfo
             $tokenName = is_array($token) ? $token[0] : $token;
 
             // Get the class name
-            if ($class === null && is_array($token) && $token[0] === T_STRING) {
+            if (\defined('T_NAME_QUALIFIED') && is_array($token) &&
+                ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
+            ) {
+                // PHP 8 exposes the FQCN as a single T_NAME_QUALIFIED or T_NAME_FULLY_QUALIFIED token
+                $class .= $token[1];
+                $hadNamespace = true;
+            } elseif ($class === null && is_array($token) && $token[0] === T_STRING) {
                 $class = $token[1];
             } elseif (is_array($token) && $token[0] === T_NS_SEPARATOR) {
                 $class .= $token[1];

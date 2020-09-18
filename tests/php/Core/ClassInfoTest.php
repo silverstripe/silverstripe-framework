@@ -105,7 +105,7 @@ class ClassInfoTest extends SapphireTest
     public function testNonClassName()
     {
         $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessage('Class IAmAClassThatDoesNotExist does not exist');
+        $this->expectExceptionMessageRegExp('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
         $this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
     }
 

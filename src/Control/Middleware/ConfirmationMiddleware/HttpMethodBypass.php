@@ -48,7 +48,7 @@ class HttpMethodBypass implements Bypass
         // uppercase and exclude empties
         $methods = array_reduce(
             $methods,
-            static function &(&$result, $method) {
+            function ($result, $method) {
                 $method = strtoupper(trim($method));
                 if (strlen($method)) {
                     $result[] = $method;

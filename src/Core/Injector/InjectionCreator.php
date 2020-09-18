@@ -20,6 +20,8 @@ class InjectionCreator implements Factory
         }
 
         if (count($params)) {
+            // Remove named keys to ensure that PHP7 and PHP8 interpret these the same way
+            $params = array_values($params);
             return $reflector->newInstanceArgs($params);
         }
 

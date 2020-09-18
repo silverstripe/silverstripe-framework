@@ -570,6 +570,13 @@ class i18nTextCollector
             if (is_array($token)) {
                 list($id, $text) = $token;
 
+                // PHP 8 namespace tokens
+                if (\defined('T_NAME_QUALIFIED') && in_array($id, [T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED])) {
+                    $inNamespace = true;
+                    $currentClass[] = $text;
+                    continue;
+                }
+
                 // Check class
                 if ($id === T_NAMESPACE) {
                     $inNamespace = true;

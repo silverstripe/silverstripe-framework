@@ -296,12 +296,17 @@ class Convert
      * @param string $val
      * @param boolean $disableDoctypes Disables the use of DOCTYPE, and will trigger an error if encountered.
      * false by default.
-     * @param boolean $disableExternals Disables the loading of external entities. false by default.
+     * @param boolean $disableExternals Disables the loading of external entities. false by default. No-op in PHP 8.
      * @return array
      * @throws Exception
      */
     public static function xml2array($val, $disableDoctypes = false, $disableExternals = false)
     {
+        // PHP 8 deprecates libxml_disable_entity_loader() as it is no longer needed
+        if (\PHP_VERSION_ID >= 80000) {
+            $disableExternals = false;
+        }
+
         // Check doctype
         if ($disableDoctypes && preg_match('/\<\!DOCTYPE.+]\>/', $val)) {
             throw new InvalidArgumentException('XML Doctype parsing disabled');
