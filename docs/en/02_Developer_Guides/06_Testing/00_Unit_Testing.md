@@ -109,9 +109,12 @@ end of each test.
 ```php
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Versioned\Versioned;
 
 class PageTest extends SapphireTest
 {
+    protected $usesDatabase = true;
+
     public function setUp()
     {
         parent::setUp();
