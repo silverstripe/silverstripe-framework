@@ -1482,7 +1482,6 @@ class Form extends ViewableData implements HasRequestHandler
 
             // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
-
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
