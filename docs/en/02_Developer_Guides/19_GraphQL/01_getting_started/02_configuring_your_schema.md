@@ -83,12 +83,18 @@ SilverStripe\GraphQL\Schema\Schema:
         myOtherDir: module/_graphql
 ```
 
+[info]
+Your directory can also be a module reference, e.g. `somevendor/somemodule: _graphql`
+[info]
+
 Now, in our `app/_graphql` file, we can create YAML file definitions.
 
 [notice]
 This doesn't mean there is never a need to flush your schema config. If you were to add a new
  one, or make a change to the value of this `src` attribute, those are still a standard config changes.
 [/notice]
+
+
 
 **app/_graphql/schema.yml**
 ```yaml

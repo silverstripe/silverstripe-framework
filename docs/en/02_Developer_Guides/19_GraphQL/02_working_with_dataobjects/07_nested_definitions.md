@@ -10,7 +10,7 @@ summary: Define dependent types inline with a parent type
 
 For readability and ergonomics, you can take advantage of nested type definitions. Let's imagine
 we have a `Blog` and we want to expose `Author` and `Categories`, but while we're at it, we want
-to specify what fields they should have, and maybe even some operations of their own.
+to specify what fields they should have.
 
 *app/_graphql/models.yml*
 ```yaml
@@ -22,7 +22,6 @@ MyProject\Pages\Blog:
         firstName: true
         surname: true
         email: true
-      operations: '*'
     categories:
       fields: '*'
 ```
@@ -41,10 +40,13 @@ SilverStripe\Securty\Member:
     firstName: true
     surname: true
     email: true
-  operations: '*'
 MyProject\Models\BlogCategory:
   fields: '*'
 ```
+
+[info]
+You cannot define operations on nested types. They only accept fields.
+[/info]
 
 ### Further reading
 
