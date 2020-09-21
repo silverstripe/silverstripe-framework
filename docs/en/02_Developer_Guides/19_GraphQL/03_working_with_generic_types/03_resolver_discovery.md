@@ -101,7 +101,7 @@ Now that we're using logic to discover our resolver, we can clean up the config 
 
 Re-run the schema build, with a flush, and let's go!
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default flush=1`
+`$ vendor/bin/sake dev/graphql/build schema=default flush=1`
 
 
 ### Field resolvers

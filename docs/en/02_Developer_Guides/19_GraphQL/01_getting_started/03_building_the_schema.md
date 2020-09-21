@@ -23,11 +23,11 @@ whenever the schema changes.
 
 The task that generates the schema code is `build-schema`. It takes a parameter of `schema`, whose value should be the name of the schema you want to build.
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default`
+`$ vendor/bin/sake dev/graphql/build schema=default`
 
 Keep in mind that many of your changes will be in YAML, which also requires a flush.
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default flush=1
+`$ vendor/bin/sake dev/graphql/build schema=default flush=1
 
 [info]
 If you do not provide a `schema` parameter, the task will build all schemas.
@@ -47,7 +47,7 @@ If the type hasn't changed, it doesn't re-render. This reduces build times to **
 
 Normally, we'd use `flush=1` to clear the cache, but since you almost always need to run `flush=1` with the build task, it isn't a good fit. Instead, use `clear=1`.
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default clear=1`
+`$ vendor/bin/sake dev/graphql/build schema=default clear=1`
 
 If your schema is producing unexpected results, try using `clear=1` to eliminate the possibility
 of a caching issue. If the issue is resolved, record exactly what you changed and [create an issue](https://github.com/silverstripe/silverstripe-graphql/issues/new).

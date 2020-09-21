@@ -54,7 +54,7 @@ The `*` value on `operations` tells the schema to create all available queries a
 
 Now that we've changed our schema, we need to build it using the `build-schema` task:
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default`
+`$ vendor/bin/sake dev/graphql/build schema=default`
 
 Now, we can access our schema on the default graphql endpoint, `/graphql`.
 

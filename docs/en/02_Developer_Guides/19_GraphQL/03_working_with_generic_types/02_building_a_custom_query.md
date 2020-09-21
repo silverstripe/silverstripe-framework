@@ -64,7 +64,7 @@ other than that they **must be static methods**. You'll see why when we add it t
 
 Now, we just have to build the schema:
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=default`
+`$ vendor/bin/sake dev/graphql/build schema=default`
 
 Let's test this out in our GraphQL IDE. If you have the [graphql-devtools](https://github.com/silverstripe/silverstripe-graphql-devtools) module installed, just open it up and set it to the `/graphql` endpoint.
 

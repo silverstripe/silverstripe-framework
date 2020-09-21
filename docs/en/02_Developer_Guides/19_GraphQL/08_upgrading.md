@@ -23,11 +23,11 @@ task to build it.
 
 To run the task, use:
 
-`$ vendor/bin/sake dev/tasks/build-schema schema=mySchema`
+`$ vendor/bin/sake dev/graphql/build schema=mySchema`
 
 You can also run the task in the browser:
 
-`http://example.com/dev/tasks/build-schema?schema=mySchema`
+`http://example.com/dev/graphql/build?schema=mySchema`
 
 [info]
 Most of the time, the name of your schema is `default`. If you're editing DataObjects that are accessed
