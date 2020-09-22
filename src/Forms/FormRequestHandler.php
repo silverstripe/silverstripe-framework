@@ -220,6 +220,8 @@ class FormRequestHandler extends RequestHandler
             // Or we can use the Validator attached to the form
             $result = $this->form->validationResult();
             if (!$result->isValid()) {
+                $this->form->setActionButtonState('save', 'dirty');
+                $this->form->setActionButtonState('publish', 'dirty');
                 return $this->getValidationErrorResponse($result);
             }
 
@@ -250,6 +252,8 @@ class FormRequestHandler extends RequestHandler
             // The ValidationResult contains all the relevant metadata
             $result = $e->getResult();
             $this->form->loadMessagesFrom($result);
+            $this->form->setActionButtonState('save', 'dirty');
+            $this->form->setActionButtonState('publish', 'dirty');
             return $this->getValidationErrorResponse($result);
         }
 

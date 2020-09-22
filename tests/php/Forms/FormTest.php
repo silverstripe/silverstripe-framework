@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FieldList;
@@ -1107,5 +1108,49 @@ class FormTest extends FunctionalTest
             ),
             new FieldList()
         );
+    }
+
+    public function testSetActionButtonState()
+    {
+        /** @var FormAction $action */
+        $classes = [
+            'save' => [
+                'dirty' => 'btn-primary font-icon-save',
+                'pristine' => 'btn-outline-primary font-icon-tick',
+            ],
+            'publish' => [
+                'dirty' => 'btn-primary font-icon-rocket',
+                'pristine' => 'btn-outline-primary font-icon-tick',
+            ]
+        ];
+        $majorActions = new CompositeField([
+            new FormAction('doSave', 'Save'),
+            new FormAction('doPublish', 'Publish')
+        ]);
+        $majorActions->setName('MajorActions');
+        $form = new Form(
+            new FormTest\TestController(),
+            'Form',
+            new FieldList(new TextField('MyField')),
+            new FieldList($majorActions)
+        );
+
+        // save button
+        $action = $form->Actions()->fieldByName('MajorActions')->getChildren()[0];
+        $form->setActionButtonState('save', 'dirty');
+        $this->assertTrue(strpos($action->extraClass(), $classes['save']['dirty']) !== false);
+        $this->assertTrue(strpos($action->extraClass(), $classes['save']['pristine']) === false);
+        $form->setActionButtonState('save', 'pristine');
+        $this->assertTrue(strpos($action->extraClass(), $classes['save']['dirty']) === false);
+        $this->assertTrue(strpos($action->extraClass(), $classes['save']['pristine']) !== false);
+
+        // publish button
+        $action = $form->Actions()->fieldByName('MajorActions')->getChildren()[1];
+        $form->setActionButtonState('publish', 'dirty');
+        $this->assertTrue(strpos($action->extraClass(), $classes['publish']['dirty']) !== false);
+        $this->assertTrue(strpos($action->extraClass(), $classes['publish']['pristine']) === false);
+        $form->setActionButtonState('publish', 'pristine');
+        $this->assertTrue(strpos($action->extraClass(), $classes['publish']['dirty']) === false);
+        $this->assertTrue(strpos($action->extraClass(), $classes['publish']['pristine']) !== false);
     }
 }

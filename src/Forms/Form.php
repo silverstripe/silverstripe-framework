@@ -476,6 +476,47 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
+     * Set the state of an action button to dirty or pristine if the button exists
+     *
+     * @param string $actionButton - "save" or "publish"
+     * @param string $state - "pristine" or "dirty"
+     */
+    public function setActionButtonState(string $actionButton, string $state): void
+    {
+        /** @var CompositeField $majorActions */
+        /** @var FormAction $action */
+        $oppositeState = $state === 'dirty' ? 'pristine' : 'dirty';
+        $classes = [
+            'save' => [
+                'dirty' => 'btn-primary font-icon-save',
+                'pristine' => 'btn-outline-primary font-icon-tick',
+            ],
+            'publish' => [
+                'dirty' => 'btn-primary font-icon-rocket',
+                'pristine' => 'btn-outline-primary font-icon-tick',
+            ]
+        ];
+        // action_save and action_publish are used by SiteTree
+        // action_doSave and action_doPublish are used by GridFieldDetailForm_ItemRequest
+        $names = [
+            'save' => ['action_save', 'action_doSave'],
+            'publish' => ['action_publish', 'action_doPublish'],
+        ];
+        $this->extend('updateActionButtonState', $classes, $names);
+        $majorActions = $this->Actions()->fieldByName('MajorActions');
+        if (!$majorActions) {
+            return;
+        }
+        foreach ($majorActions->getChildren() as $action) {
+            if (!in_array($action->getName(), $names[$actionButton])) {
+                continue;
+            }
+            $action->removeExtraClass($classes[$actionButton][$oppositeState]);
+            $action->addExtraClass($classes[$actionButton][$state]);
+        }
+    }
+
+    /**
      * Populate this form with messages from the given ValidationResult.
      * Note: This will not clear any pre-existing messages
      *
