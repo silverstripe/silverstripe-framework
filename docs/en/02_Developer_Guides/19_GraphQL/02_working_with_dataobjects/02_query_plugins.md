@@ -37,7 +37,7 @@ Let's test it out:
 
 ```graphql
 query {
-  readSiteTrees(limit: 10, offset: 20) {
+  readPages(limit: 10, offset: 20) {
     nodes {
       title
     }
@@ -80,7 +80,7 @@ special `filter` argument to the `read` and `readOne` operations.
 
 ```yaml
 query {
-  readSiteTrees(
+  readPages(
     filter: { title: { eq: "Blog" } }
   ) {
   nodes {
@@ -107,7 +107,7 @@ included with the the module, including:
 Example:
 ```graphql
 query {
-  readSiteTrees(
+  readPages (
     filter: {
       title: { ne: "Home" },
       created: { gt: "2020-06-01", lte: "2020-09-01" }
@@ -184,7 +184,7 @@ special `sort` argument to the `read` and `readOne` operations.
 
 ```graphql
 query {
-  readSiteTrees(
+  readPages (
     sort: { created: DESC }
   ) {
   nodes {

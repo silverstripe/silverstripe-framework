@@ -295,7 +295,7 @@ Change the casing in your queries.
 
 **before**
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     Title
     ShowInMenus
@@ -305,7 +305,7 @@ query readSiteTrees {
 
 **after**
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     showInMenus

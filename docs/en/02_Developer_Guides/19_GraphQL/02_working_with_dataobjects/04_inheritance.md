@@ -45,7 +45,7 @@ Page:
 Here's how we can query the inherited fields:
 
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     content
@@ -101,7 +101,7 @@ So if we want that `PublishDate`, we need to add it to the schema explicitly:
 
 *app/_graphql/models.yml*
 ```yaml
-Page:
+MyProject\Pages\BannerPage:
   fields:
     title: true
     content: true
@@ -115,12 +115,12 @@ MyProject\Pages\NewsPage:
 Now we can query it:
 
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     content
     __extends {
-      Page {
+      BannerPage {
          bannerImage {
            url
          }
@@ -143,12 +143,12 @@ Operations are not implicitly exposed. If you add a `read` operation to `SiteTre
 One drawback of this approach is that it results in a lot of duplication. Take for instance this query:
 
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     content
     __extends {
-      Page {
+      BannerPage {
          title
          bannerImage {
            url

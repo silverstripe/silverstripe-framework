@@ -41,7 +41,7 @@ The `version` field on your DataObject will include the following fields:
 Let's look at it in context:
 
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     version {
@@ -60,7 +60,7 @@ The `versions` field on your DataObject will return a list of the `version` obje
 The list is sortable by version number, using the `sort` parameter.
 
 ```graphql
-query readSiteTrees {
+query readPages {
   nodes {
     title
     versions(sort: { version: DESC }) {

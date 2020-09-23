@@ -30,12 +30,12 @@ Let's use the `models` config to expose some content.
 
 **app/_graphql/models.yml**
 ```
-SilverStripe\CMS\Model\SiteTree:
+Page:
   fields: '*'
   operations: '*'
 ```
 
-The class `SilverStripe\CMS\Model\SiteTree` is a subclass of `DataObject`, so the bundled model
+The class `Page` is a subclass of `DataObject`, so the bundled model
 type will kick in here and provide a lot of assistance in building out this part of our API.
 
 Case in point, by supplying a value of `*` for `fields` , we're saying that we want _all_ of the fields
@@ -63,7 +63,7 @@ Test it out!
 A query:
 ```graphql
 query {
-  readSiteTrees {
+  readPages {
     nodes {
       title
     }
@@ -73,7 +73,7 @@ query {
 A mutation:
 ```graphql
 mutation {
-  createSiteTree(input: {
+  createPage(input: {
     title: "my page"
   }) {
     title
@@ -93,7 +93,7 @@ want by setting them to `true` (or `false` to remove them).
 
 **app/_graphql/models.yml**
 ```
-SilverStripe\CMS\Model\SiteTree:
+Page:
   fields: '*'
   operations:
     read: true
@@ -104,7 +104,7 @@ Operations are also configurable, and accept a nested map of config.
 
 **app/_graphql/models.yml**
 ```
-SilverStripe\CMS\Model\SiteTree:
+Page:
   fields: '*'
   operations:
     create: true
@@ -119,7 +119,7 @@ Let's add some more dataobjects, but this time, we'll only add a subset of field
 
 *app/_graphql/models.yml*
 ```yaml
-SilverStripe\CMS\Model\SiteTree:
+Page:
   fields: '*'
   operations: '*'
 MyProject\Models\Product:
