@@ -86,6 +86,33 @@ mutation {
 Did you get a permissions error? Make sure you're authenticated as someone with appropriate access.
 [/info]
 
+### Configuring operations
+
+You may not always want to add _all_ operations with the `*` wildcard. You can whitelist those you
+want by setting them to `true` (or `false` to remove them).
+
+**app/_graphql/models.yml**
+```
+SilverStripe\CMS\Model\SiteTree:
+  fields: '*'
+  operations:
+    read: true
+    create: true
+```
+
+Operations are also configurable, and accept a nested map of config.
+
+**app/_graphql/models.yml**
+```
+SilverStripe\CMS\Model\SiteTree:
+  fields: '*'
+  operations:
+    create: true
+    read:
+      name: getAllThePages
+```
+
+
 ### Adding more fields
 
 Let's add some more dataobjects, but this time, we'll only add a subset of fields and operations.

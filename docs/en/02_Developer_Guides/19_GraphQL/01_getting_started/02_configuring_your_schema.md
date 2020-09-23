@@ -85,7 +85,7 @@ SilverStripe\GraphQL\Schema\Schema:
 
 [info]
 Your directory can also be a module reference, e.g. `somevendor/somemodule: _graphql`
-[info]
+[/info]
 
 Now, in our `app/_graphql` file, we can create YAML file definitions.
 
