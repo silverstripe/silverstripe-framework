@@ -42,19 +42,28 @@ comparison uses the database's default. For MySQL and MSSQL, this is case-insens
 case-sensitive.
 
 ```php
-// Fetch players that their FirstName is 'Sam' or 'sam' or 'sAm'... (NOT case-sensitive)
+// Fetch players that their FirstName is 'Sam'
+// Caution: This might be case in-sensitive if MySQL or MSSQL is used
 $players = Player::get()->filter([
     'FirstName:ExactMatch' => 'Sam'
 ]);
 
-// Fetch players that their FirstName is 'Sam' (case-sensitive)
+// Fetch players that their FirstName is 'Sam' (force case-sensitive)
 $players = Player::get()->filter([
     'FirstName:ExactMatch:case' => 'Sam'
 ]);
 
-// Shorthand versions of the above:
-$players = Player::get()->filter('FirstName', 'Sam'); // NOT case-sensitive
+// Fetch players that their FirstName is 'Sam' (force NOT case-sensitive)
+$players = Player::get()->filter([
+    'FirstName:ExactMatch:nocase' => 'Sam'
+]);
+```
+
+By default the `:ExactMatch` filter is applied, hence why we can shorthand the above to:
+```php
+$players = Player::get()->filter('FirstName', 'Sam'); // Default DB engine behaviour
 $players = Player::get()->filter('FirstName:case', 'Sam'); // case-sensitive
+$players = Player::get()->filter('FirstName:nocase', 'Sam'); // NOT case-sensitive
 ```
 
 Note that all search filters (e.g. `:PartialMatch`) refer to services registered with [Injector](api:SilverStripe\Core\Injector\Injector)
