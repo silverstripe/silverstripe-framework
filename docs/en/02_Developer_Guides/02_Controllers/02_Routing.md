@@ -256,7 +256,7 @@ class FeedController extends ContentController
 The YAML rule, in contrast, is simple. It needs to provide only enough information for the framework to choose the desired controller.
 
 ```yml
-Director:
+SilverStripe\Control\Director:
   rules:
     'feed': 'FeedController'
 ```
