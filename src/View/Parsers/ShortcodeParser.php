@@ -191,7 +191,7 @@ class ShortcodeParser
         // Missing tag
         if ($content === false) {
             if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
-                user_error('Unknown shortcode tag ' . $tag['open'], E_USER_ERROR);
+                throw new \InvalidArgumentException('Unknown shortcode tag ' . $tag['open']);
             } elseif (self::$error_behavior == self::WARN && $isHTMLAllowed) {
                 $content = '<strong class="warning">' . $tag['text'] . '</strong>';
             } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
@@ -381,7 +381,7 @@ class ShortcodeParser
 
                 if ($err) {
                     if (self::$error_behavior == self::ERROR) {
-                        user_error($err, E_USER_ERROR);
+                        throw new \Exception($err);
                     }
                 } else {
                     if ($tags[$i]['escaped']) {
@@ -603,7 +603,7 @@ class ShortcodeParser
             }
             // NOP
         } else {
-            user_error('Unknown value for $location argument ' . $location, E_USER_ERROR);
+            throw new \UnexpectedValueException('Unknown value for $location argument ' . $location);
         }
     }
 
@@ -664,7 +664,7 @@ class ShortcodeParser
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {
                 if (self::$error_behavior == self::ERROR) {
-                    user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERROR);
+                    throw new \Exception('Couldn\'t decode HTML when processing short codes');
                 } else {
                     $continue = false;
                 }
@@ -706,9 +706,8 @@ class ShortcodeParser
 
                 if (!$parent) {
                     if ($location !== self::INLINE) {
-                        user_error(
-                            "Parent block for shortcode couldn't be found, but location wasn't INLINE",
-                            E_USER_ERROR
+                        throw new \RuntimeException(
+                            "Parent block for shortcode couldn't be found, but location wasn't INLINE"
                         );
                     }
                 } else {

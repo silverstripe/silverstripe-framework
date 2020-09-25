@@ -183,17 +183,17 @@ trait Extensible
         }
         $extensionClass = $matches[1];
         if (!class_exists($extensionClass)) {
-            user_error(
-                sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
-                E_USER_ERROR
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Object::add_extension() - Can\'t find extension class for "%s"',
+                $extensionClass
+            ));
         }
 
-        if (!is_subclass_of($extensionClass, 'SilverStripe\\Core\\Extension')) {
-            user_error(
-                sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass),
-                E_USER_ERROR
-            );
+        if (!is_subclass_of($extensionClass, Extension::class)) {
+            throw new InvalidArgumentException(sprintf(
+                'Object::add_extension() - Extension "%s" is not a subclass of Extension',
+                $extensionClass
+            ));
         }
 
         // unset some caches
@@ -334,7 +334,7 @@ trait Extensible
         $sources = [];
 
         foreach ($extensions as $extension) {
-            list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
+            [$extensionClass, $extensionArgs] = ClassInfo::parse_class_spec($extension);
             // Strip service name specifier
             $extensionClass = strtok($extensionClass, '.');
             $sources[] = $extensionClass;

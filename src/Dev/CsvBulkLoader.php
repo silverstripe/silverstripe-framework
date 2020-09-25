@@ -344,7 +344,7 @@ class CsvBulkLoader extends BulkLoader
                 }
             } elseif (strpos($fieldName, '.') !== false) {
                 // we have a relation column with dot notation
-                list($relationName, $columnName) = explode('.', $fieldName);
+                [$relationName, $columnName] = explode('.', $fieldName);
                 // always gives us an component (either empty or existing)
                 $relationObj = $obj->getComponent($relationName);
                 if (!$preview) {
@@ -445,15 +445,19 @@ class CsvBulkLoader extends BulkLoader
                 } elseif ($SNG_objectClass->hasMethod($duplicateCheck['callback'])) {
                     $existingRecord = $SNG_objectClass->{$duplicateCheck['callback']}($record[$fieldName], $record);
                 } else {
-                    user_error("CsvBulkLoader::processRecord():"
-                        . " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
+                    throw new \RuntimeException(
+                        "CsvBulkLoader::processRecord():"
+                        . " {$duplicateCheck['callback']} not found on importer or object class."
+                    );
                 }
 
                 if ($existingRecord) {
                     return $existingRecord;
                 }
             } else {
-                user_error('CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks', E_USER_ERROR);
+                throw new \InvalidArgumentException(
+                    'CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks'
+                );
             }
         }
 

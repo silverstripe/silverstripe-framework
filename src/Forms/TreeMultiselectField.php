@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use http\Exception\InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
@@ -252,10 +253,9 @@ class TreeMultiselectField extends TreeDropdownField
         $saveDest = $record->$fieldName();
         if (!$saveDest) {
             $recordClass = get_class($record);
-            user_error(
+            throw new \RuntimeException(
                 "TreeMultiselectField::saveInto() Field '$fieldName' not found on"
-                . " {$recordClass}.{$record->ID}",
-                E_USER_ERROR
+                . " {$recordClass}.{$record->ID}"
             );
         }
 

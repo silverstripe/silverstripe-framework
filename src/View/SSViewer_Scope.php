@@ -191,7 +191,7 @@ class SSViewer_Scope
         switch ($name) {
             case 'Up':
                 if ($this->upIndex === null) {
-                    user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+                    throw new \LogicException('Up called when we\'re already at the top of the scope');
                 }
 
                 list(

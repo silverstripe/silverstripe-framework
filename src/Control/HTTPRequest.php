@@ -858,7 +858,7 @@ class HTTPRequest implements ArrayAccess
     public function setHttpMethod($method)
     {
         if (!self::isValidHttpMethod($method)) {
-            user_error('HTTPRequest::setHttpMethod: Invalid HTTP method', E_USER_ERROR);
+            throw new \InvalidArgumentException('HTTPRequest::setHttpMethod: Invalid HTTP method');
         }
 
         $this->httpMethod = strtoupper($method);
@@ -912,12 +912,11 @@ class HTTPRequest implements ArrayAccess
     {
         if (isset($postVars['_method'])) {
             if (!self::isValidHttpMethod($postVars['_method'])) {
-                user_error('HTTPRequest::detect_method(): Invalid "_method" parameter', E_USER_ERROR);
+                throw new InvalidArgumentException('HTTPRequest::detect_method(): Invalid "_method" parameter');
             }
             return strtoupper($postVars['_method']);
-        } else {
-            return $origMethod;
         }
+        return $origMethod;
     }
 
     /**

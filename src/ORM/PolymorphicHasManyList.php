@@ -109,8 +109,7 @@ class PolymorphicHasManyList extends HasManyList
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(
-                "HasManyList::remove() expecting a $this->dataClass object, or ID",
-                E_USER_ERROR
+                "HasManyList::remove() expecting a $this->dataClass object, or ID"
             );
         }
 

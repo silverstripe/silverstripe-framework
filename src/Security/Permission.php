@@ -246,7 +246,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                     $argClause = "AND \"Arg\" IN (?, ?) ";
                     $argParams = [-1, $arg];
                 } else {
-                    user_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 
@@ -408,10 +408,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if (is_numeric($arg)) {
                     $perm->Arg = $arg;
                 } else {
-                    user_error(
-                        "Permission::checkMember: bad arg '$arg'",
-                        E_USER_ERROR
-                    );
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 
@@ -446,10 +443,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if (is_numeric($arg)) {
                     $perm->Arg = $arg;
                 } else {
-                    user_error(
-                        "Permission::checkMember: bad arg '$arg'",
-                        E_USER_ERROR
-                    );
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 

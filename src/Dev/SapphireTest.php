@@ -480,11 +480,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $id = $state->getFixtureFactory(static::class)->getId($className, $identifier);
 
         if (!$id) {
-            user_error(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 "Couldn't find object '%s' (class: %s)",
                 $identifier,
                 $className
-            ), E_USER_ERROR);
+            ));
         }
 
         return $id;
@@ -519,11 +519,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $obj = $state->getFixtureFactory(static::class)->get($className, $identifier);
 
         if (!$obj) {
-            user_error(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 "Couldn't find object '%s' (class: %s)",
                 $identifier,
                 $className
-            ), E_USER_ERROR);
+            ));
         }
 
         return $obj;
@@ -1021,16 +1021,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
             $app = new HTTPApplication($kernel);
             $flush = array_key_exists('flush', $request->getVars());
-    
+
             // Custom application
             $app->execute($request, function (HTTPRequest $request) {
                 // Start session and execute
                 $request->getSession()->init($request);
-    
+
                 // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
                 // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
                 DataObject::reset();
-    
+
                 // Set dummy controller;
                 $controller = Controller::create();
                 $controller->setRequest($request);

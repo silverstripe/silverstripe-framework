@@ -115,7 +115,8 @@ developers know:
     * Things that will prevent an internal function from continuing.  Throw a warning and return null.
 
 *  **E_USER_ERROR:** Throwing one of these errors is going to take down the production site.  So you should only throw
-E_USER_ERROR if it's going to be **dangerous** or **impossible** to continue with the request.
+E_USER_ERROR if it's going to be **dangerous** or **impossible** to continue with the request. Note that it is
+preferable to now throw exceptions instead of `E_USER_ERROR`.
 
 ## Configuring error logging
 

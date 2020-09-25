@@ -431,9 +431,8 @@ abstract class Database
                     break;
 
                 default:
-                    user_error(
+                    throw new \InvalidArgumentException(
                         "SS_Database::manipulate() Can't recognise command '{$writeInfo['command']}'",
-                        E_USER_ERROR
                     );
             }
         }

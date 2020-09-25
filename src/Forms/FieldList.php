@@ -165,15 +165,12 @@ class FieldList extends ArrayList
             $errorSuffix = '';
         }
 
-        user_error(
-            sprintf(
-                "%s() I noticed that a field called '%s' appears twice%s",
-                $functionName,
-                $field->getName(),
-                $errorSuffix
-            ),
-            E_USER_ERROR
-        );
+        throw new \RuntimeException(sprintf(
+            "%s() I noticed that a field called '%s' appears twice%s",
+            $functionName,
+            $field->getName(),
+            $errorSuffix
+        ));
     }
 
     protected function flushFieldsCache()
@@ -213,9 +210,8 @@ class FieldList extends ArrayList
                     } else {
                         $errSuffix = '';
                     }
-                    user_error(
-                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.",
-                        E_USER_ERROR
+                    throw new \RuntimeException(
+                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix."
                     );
                 }
                 $list[$name] = $field;
@@ -493,10 +489,9 @@ class FieldList extends ArrayList
                         ? " named '{$parentPointer->getName()}'"
                         : null;
                     $parentPointerClass = get_class($parentPointer);
-                    user_error(
+                    throw new \InvalidArgumentException(
                         "FieldList::addFieldToTab() Tried to add a tab to object"
-                        . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist.",
-                        E_USER_ERROR
+                        . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist."
                     );
                 }
             }

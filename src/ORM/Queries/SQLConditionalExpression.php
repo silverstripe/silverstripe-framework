@@ -612,9 +612,8 @@ abstract class SQLConditionalExpression extends SQLExpression
                 if ($parameterCount === 1) {
                     $key .= " = ?";
                 } elseif ($parameterCount > 1) {
-                    user_error(
-                        "Incorrect number of '?' in predicate $key. Expected $parameterCount but none given.",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Incorrect number of '?' in predicate $key. Expected $parameterCount but none given."
                     );
                 }
             }
@@ -622,9 +621,11 @@ abstract class SQLConditionalExpression extends SQLExpression
         } elseif (is_array($value)) {
             // If predicates are nested one per array (as per the internal format)
             // then run a quick check over the contents and recursively parse
-            if (count($value) != 1) {
-                user_error('Nested predicates should be given as a single item array in '
-                        . 'array($predicate => array($prameters)) format)', E_USER_ERROR);
+            if (count($value) !== 1) {
+                throw new \InvalidArgumentException(
+                    'Nested predicates should be given as a single item array in '
+                        . 'array($predicate => array($prameters)) format)'
+                );
             }
             foreach ($value as $key => $pairValue) {
                 return $this->parsePredicate($key, $pairValue);

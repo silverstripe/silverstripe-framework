@@ -74,7 +74,7 @@ class HasManyList extends RelationList
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
         } elseif (!($item instanceof $this->dataClass)) {
-            user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+            throw new InvalidArgumentException("HasManyList::add() expecting a $this->dataClass object, or ID value");
         }
 
         $foreignID = $this->getForeignID();
@@ -123,10 +123,7 @@ class HasManyList extends RelationList
     public function remove($item)
     {
         if (!($item instanceof $this->dataClass)) {
-            throw new InvalidArgumentException(
-                "HasManyList::remove() expecting a $this->dataClass object, or ID",
-                E_USER_ERROR
-            );
+            throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID");
         }
 
         // Don't remove item which doesn't belong to this list

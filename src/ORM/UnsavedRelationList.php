@@ -95,10 +95,10 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function push($item, $extraFields = null)
     {
         if ((is_object($item) && !$item instanceof $this->dataClass)
-            || (!is_object($item) && !is_numeric($item))) {
+            || (!is_object($item) && !is_numeric($item))
+        ) {
             throw new InvalidArgumentException(
-                "UnsavedRelationList::add() expecting a $this->dataClass object, or ID value",
-                E_USER_ERROR
+                "UnsavedRelationList::add() expecting a $this->dataClass object, or ID value"
             );
         }
         if (is_object($item) && $item->ID) {

@@ -27,25 +27,23 @@ use SilverStripe\ORM\DataObject;
 class Player extends DataObject 
 {
     private static $has_many = [
-        "Teams" => "Team",
+        'Teams' => 'Team',
     ];
     
     public function onBeforeWrite() 
     {
         // check on first write action, aka "database row creation" (ID-property is not set)
-        if(!$this->isInDb()) {
+        if (!$this->isInDb()) {
             $currentPlayer = Security::getCurrentUser();
         
-            if(!$currentPlayer->IsTeamManager()) {
-                user_error('Player-creation not allowed', E_USER_ERROR);
-                exit();
+            if (!$currentPlayer->IsTeamManager()) {
+                throw new \Exception('Player-creation not allowed');
             }
         }
         
         // check on every write action
-        if(!$this->record['TeamID']) {
-            user_error('Cannot save player without a valid team', E_USER_ERROR);
-            exit();
+        if (!$this->record['TeamID']) {
+            throw new \Exception('Cannot save player without a valid team');
         }
         
         // CAUTION: You are required to call the parent-function, otherwise

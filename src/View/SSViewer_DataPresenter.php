@@ -249,7 +249,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             case 'Up':
                 $upIndex = $this->getUpIndex();
                 if ($upIndex === null) {
-                    user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+                    throw new \LogicException('Up called when we\'re already at the top of the scope');
                 }
 
                 $overlayIndex = $upIndex; // Parent scope
