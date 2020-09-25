@@ -432,7 +432,7 @@ abstract class Database
 
                 default:
                     throw new \InvalidArgumentException(
-                        "SS_Database::manipulate() Can't recognise command '{$writeInfo['command']}'",
+                        "SS_Database::manipulate() Can't recognise command '{$writeInfo['command']}'"
                     );
             }
         }
