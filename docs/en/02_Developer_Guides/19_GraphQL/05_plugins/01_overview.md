@@ -17,6 +17,52 @@ Plugins are used to distribute reusable functionality across your schema. Some e
 * Ensuring `Member` is in the schema
 * And many more...
 
+### Default plugins
+
+By default, the CMS `default` schema ships with some plugins installed that will benefit most schemas:
+
+* The `DataObject` model (i.e. any dataobject based type) has:
+    * An `inheritance` plugin that builds the `__extends` field, and merges ancestral fields.
+    * An `inheritedPlugins` plugin (a bit meta!) that merges plugins from ancestral types into descendants.
+    * A `versioning` plugin that adds `version` fields to the dataobject type (if `silverstripe/versioned` is installed).
+* The `read` and `readOne` operations have:
+    * A `readVersion` plugin (if `silverstripe/versioned` is installed)
+    * A `filter` plugin for filtering queries
+    * A `sort` plugin for sorting queries
+    * A `canView` plugin for hiding records that do not pass a `canView()` check
+ * The `read` operation has:
+    * A `paginateList` plugin for adding pagination arguments and types (e.g. `nodes`)
+
+All of these are defined in the `defaults` section of the schema (see [configuring your schema](../getting_started/configuring_your_schema)). For reference, see the graphql configuration in `silverstripe/admin`, which applies
+these default plugins to the `default` schema.
+
+ #### Overriding default plugins
+ 
+ You can override default plugins on your dataobject type and these changes will be inherited by descendants.
+ 
+ **app/_graphql/models.yml**
+ ```yaml
+Page:
+  plugins:
+    inheritance: false
+MyProject\MyCustomPage: {} # now has no inheritance plugin 
+```
+
+Likewise, you can do the same for operations:
+
+ **app/_graphql/models.yml**
+ ```yaml
+Page:
+  operations:
+    read:
+      plugins:
+        readVersion: false
+MyProject\MyCustomPage:
+  operations:
+    read: true # has no readVersion plugin 
+```
+
+
 ### What plugins must do
 
 There isn't a huge API surface to a plugin. They just have to:
