@@ -9,6 +9,7 @@ icon: search
 The `filter` and `exclude` operations specify exact matches by default. However, when filtering `DataList`s, there are a number of suffixes that
 you can put on field names to change this behavior. These are represented as `SearchFilter` subclasses and include.
 
+ * [ExactMatchFilter](api:SilverStripe\ORM\Filters\ExactMatchFilter)
  * [StartsWithFilter](api:SilverStripe\ORM\Filters\StartsWithFilter)
  * [EndsWithFilter](api:SilverStripe\ORM\Filters\EndsWithFilter) 
  * [PartialMatchFilter](api:SilverStripe\ORM\Filters\PartialMatchFilter)
@@ -39,6 +40,31 @@ These suffixes can also take modifiers themselves. The modifiers currently suppo
 `":case"`. These negate the filter, make it case-insensitive and make it case-sensitive, respectively. The default
 comparison uses the database's default. For MySQL and MSSQL, this is case-insensitive. For PostgreSQL, this is 
 case-sensitive.
+
+```php
+// Fetch players that their FirstName is 'Sam'
+// Caution: This might be case in-sensitive if MySQL or MSSQL is used
+$players = Player::get()->filter([
+    'FirstName:ExactMatch' => 'Sam'
+]);
+
+// Fetch players that their FirstName is 'Sam' (force case-sensitive)
+$players = Player::get()->filter([
+    'FirstName:ExactMatch:case' => 'Sam'
+]);
+
+// Fetch players that their FirstName is 'Sam' (force NOT case-sensitive)
+$players = Player::get()->filter([
+    'FirstName:ExactMatch:nocase' => 'Sam'
+]);
+```
+
+By default the `:ExactMatch` filter is applied, hence why we can shorthand the above to:
+```php
+$players = Player::get()->filter('FirstName', 'Sam'); // Default DB engine behaviour
+$players = Player::get()->filter('FirstName:case', 'Sam'); // case-sensitive
+$players = Player::get()->filter('FirstName:nocase', 'Sam'); // NOT case-sensitive
+```
 
 Note that all search filters (e.g. `:PartialMatch`) refer to services registered with [Injector](api:SilverStripe\Core\Injector\Injector)
 within the `DataListFilter.` prefixed namespace. New filters can be registered using the below yml
