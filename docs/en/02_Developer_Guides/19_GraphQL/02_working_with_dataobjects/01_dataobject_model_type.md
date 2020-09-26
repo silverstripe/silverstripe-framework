@@ -112,6 +112,24 @@ Page:
       name: getAllThePages
 ```
 
+#### Customising the input types
+
+The input types, specifically in `create` and `update` can be customised with a whitelist 
+and/or blacklist of fields.
+
+**app/_graphql/models.yml**
+```
+Page:
+  fields: '*'
+  operations:
+    create:
+      fields:
+        - title
+        - content
+    update:
+      exclude:
+        - sensitiveField
+```
 
 ### Adding more fields
 
