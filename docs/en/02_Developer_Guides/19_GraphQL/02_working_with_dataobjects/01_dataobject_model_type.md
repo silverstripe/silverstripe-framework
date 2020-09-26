@@ -164,6 +164,31 @@ MyProject\Models\Product:
 
 For more information on custom arguments and resolvers, see the [adding arguments](../working_with_generic_types/adding_arguments) and [resolver discovery](../working_with_generic_types/resolver_discovery) documentation.
 
+### Excluding or customising "*" declarations
+
+You can use the `*` as a field or operation, and anything that follows it will override the
+all-inclusive collection. This is almost like a spread operator in Javascript:
+
+```js
+const newObj = {...oldObj, someProperty: 'custom' }
+```
+
+Here's an example:
+
+**app/_graphql/models.yml**
+```yaml
+Page:
+  fields:
+    '*': true # Get everything
+    sensitiveData: false # hide this field
+    'content(summaryLength: Int)': true # add an argument to this field
+  operations:
+    '*': true
+    read:
+      plugins:
+        paginateList: false # don't paginate the read operation
+```
+
 ### Customising the type name
 
 Most DataObject classes are namespaced, so converting them to a type name ends up
