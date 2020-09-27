@@ -360,7 +360,8 @@ class DataObjectSchema
         }
 
         // Recursively merge
-        $parentFields = $this->databaseFields(get_parent_class($class));
+        $parentClass = get_parent_class($class);
+        $parentFields = $parentClass ? $this->databaseFields($parentClass) : [];
         return array_merge($fields, array_diff_key($parentFields, $fields));
     }
 
