@@ -88,7 +88,7 @@ Did you get a permissions error? Make sure you're authenticated as someone with 
 
 ### Configuring operations
 
-You may not always want to add _all_ operations with the `*` wildcard. You can whitelist those you
+You may not always want to add _all_ operations with the `*` wildcard. You can allow those you
 want by setting them to `true` (or `false` to remove them).
 
 **app/_graphql/models.yml**
