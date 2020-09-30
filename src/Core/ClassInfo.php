@@ -430,7 +430,7 @@ class ClassInfo
         // Keep track of the current bucket that we're putting data into
         $bucket = &$args;
         $bucketStack = [];
-        $hadNamespace = false;
+        $lastTokenWasNSSeparator = false;
         $currentKey = null;
 
         foreach ($tokens as $token) {
@@ -443,20 +443,20 @@ class ClassInfo
                 ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
             ) {
                 // PHP 8 exposes the FQCN as a single T_NAME_QUALIFIED or T_NAME_FULLY_QUALIFIED token
-                $class .= $token[1];
-                $hadNamespace = true;
+                $class = $token[1];
             } elseif ($class === null && is_array($token) && $token[0] === T_STRING) {
                 $class = $token[1];
             } elseif (is_array($token) && $token[0] === T_NS_SEPARATOR) {
                 $class .= $token[1];
-                $hadNamespace = true;
+                $lastTokenWasNSSeparator = true;
             } elseif ($token === '.') {
                 // Treat service name separator as NS separator
                 $class .= '.';
-                $hadNamespace = true;
-            } elseif ($hadNamespace && is_array($token) && $token[0] === T_STRING) {
+                $lastTokenWasNSSeparator = true;
+            } elseif ($lastTokenWasNSSeparator && is_array($token) && $token[0] === T_STRING) {
+                // Found another section of a namespaced class
                 $class .= $token[1];
-                $hadNamespace = false;
+                $lastTokenWasNSSeparator = false;
             // Get arguments
             } elseif (is_array($token)) {
                 switch ($token[0]) {

@@ -265,4 +265,41 @@ class ClassInfoTest extends SapphireTest
             'ClassInfo::testClassesWithExtension() returns no classes after an extension being removed'
         );
     }
+
+    /**
+     * @dataProvider provideClassSpecCases
+     */
+    public function testParseClassSpec($input, $output)
+    {
+        $this->assertEquals(
+            $output,
+            ClassInfo::parse_class_spec($input)
+        );
+    }
+
+    public function provideClassSpecCases()
+    {
+        return [
+            'Standard class' => [
+                'SimpleClass',
+                ['SimpleClass', []],
+            ],
+            'Namespaced class' => [
+                'Foo\\Bar\\NamespacedClass',
+                ['Foo\\Bar\\NamespacedClass', []],
+            ],
+            'Namespaced class with service name' => [
+                'Foo\\Bar\\NamespacedClass.withservicename',
+                ['Foo\\Bar\\NamespacedClass.withservicename', []],
+            ],
+            'Namespaced class with argument' => [
+                'Foo\\Bar\\NamespacedClass(["with-arg" => true])',
+                ['Foo\\Bar\\NamespacedClass', [["with-arg" => true]]],
+            ],
+            'Namespaced class with service name and argument' => [
+                'Foo\\Bar\\NamespacedClass.withmodifier(["and-arg" => true])',
+                ['Foo\\Bar\\NamespacedClass.withmodifier', [["and-arg" => true]]],
+            ],
+        ];
+    }
 }
