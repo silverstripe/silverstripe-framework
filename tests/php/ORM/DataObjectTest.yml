@@ -143,7 +143,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Company:
   company1:
     Name: Company corp
     Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
-  company1:
+  company2:
     Name: 'Team co.'
     Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player2
 SilverStripe\ORM\Tests\DataObjectTest\Bracket:
