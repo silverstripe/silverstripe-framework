@@ -355,17 +355,6 @@ class DatabaseAdmin extends Controller
                 }
             }
 
-            // Remap obsolete class names
-            $remappingConfig = $this->config()->get('classname_value_remapping');
-            $remappingFields = $this->getClassNameRemappingFields();
-            foreach ($remappingFields as $className => $fieldNames) {
-                foreach ($fieldNames as $fieldName) {
-                    foreach ($remappingConfig as $oldClassName => $newClassName) {
-                        $this->updateLegacyClassNames($className, $fieldName, $oldClassName, $newClassName);
-                    }
-                }
-            }
-
             // Require all default records
             foreach ($dataClasses as $dataClass) {
                 // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
@@ -406,6 +395,24 @@ class DatabaseAdmin extends Controller
         }
 
         ClassInfo::reset_db_cache();
+    }
+
+    /**
+     * Iterates through every classname mapping defined at `classname_value_remapping`
+     * and updates all of the references of the old classnames to the new ones.
+     */
+    public function updateAllLegacyClassNames()
+    {
+        // Remap obsolete class names
+        $remappingConfig = $this->config()->get('classname_value_remapping');
+        $remappingFields = $this->getClassNameRemappingFields();
+        foreach ($remappingFields as $className => $fieldNames) {
+            foreach ($fieldNames as $fieldName) {
+                foreach ($remappingConfig as $oldClassName => $newClassName) {
+                    $this->updateLegacyClassNames($className, $fieldName, $oldClassName, $newClassName);
+                }
+            }
+        }
     }
 
     /**

@@ -315,7 +315,8 @@ SilverStripe\ORM\DatabaseAdmin:
     ExampleModuleDummyDataObject: ExampleUser\SilverstripeExampleModule\Models\DummyDataObject
 ```
 
-On the first `dev/build` after a successful upgrade, the `ClassName` field on each DataObject table will be substituted with the namespaced classname.
+Once you've mapped the class names, you need to run the UpdateLegacyClassNamesTask (`/dev/tasks/UpdateLegacyClassNamesTask`) task.
+This will update affected columns and the `ClassName` field on each DataObject table will be substituted with the namespaced classname.
 
     
 ## Extra steps

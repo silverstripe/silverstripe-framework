@@ -1205,7 +1205,7 @@ This is a good point to commit your changes to your source control system before
 
 If you've updated your class names to use namespaces you will need to reflect those changes in any existing database fields. For example, if you've renamed your `HomePage` class to `App\HomePage` then the database `ClassName` column needs to be updated to point to the `App\HomePage` class, otherwise the CMS will tell you that the page is obsolete. This also applies to polymorphic relationships.
 
-There is no automated way to do this, but you can use the list generated in .upgrade.yml and copy it to `app/_config/legacy.yml`, removing any classes that don't extend DataObject.
+There is no automated way to do this, but you can use the list generated in `.upgrade.yml` and copy it to `app/_config/legacy.yml`, removing any classes that don't extend DataObject.
 
 ```
 SilverStripe\ORM\DatabaseAdmin:
@@ -1213,7 +1213,8 @@ SilverStripe\ORM\DatabaseAdmin:
     HomePage: App\HomePage
 ```
 
-This will automatically update affected columns when you first build the database.
+Once you've mapped the class names, you need to run the UpdateLegacyClassNamesTask (`/dev/tasks/UpdateLegacyClassNamesTask`) task.
+This will update affected columns and the `ClassName` field on each DataObject table will be substituted with the namespaced classname.
 
 
 ## Step 11 - Running your upgraded site for the first time {#step11}
