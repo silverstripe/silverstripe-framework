@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\NumericField;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -45,7 +45,7 @@ class DBInt extends DBField
     {
         $output = new ArrayList();
         for ($i = 0; $i < $this->value; $i++) {
-            $output->push(new ArrayData([ 'Number' => $i + 1 ]));
+            $output->push(ArrayData::create(['Number' => $i + 1]));
         }
 
         return $output;

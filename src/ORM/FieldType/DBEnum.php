@@ -130,7 +130,7 @@ class DBEnum extends DBString
      * @param string $emptyString
      * @return DropdownField
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null)
+    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
     {
 
         if (!$title) {
@@ -154,13 +154,12 @@ class DBEnum extends DBString
     }
 
     /**
-     * @param string
-     *
+     * @param string $title
      * @return DropdownField
      */
     public function scaffoldSearchField($title = null)
     {
-        $anyText = _t('SilverStripe\\ORM\\FieldType\\DBEnum.ANY', 'Any');
+        $anyText = _t(__CLASS__ . '.ANY', 'Any');
         return $this->formField($title, null, true, '', "($anyText)");
     }
 

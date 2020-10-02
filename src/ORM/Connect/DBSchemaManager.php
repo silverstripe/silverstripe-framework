@@ -788,51 +788,45 @@ MESSAGE
         if (!$this->supressOutput) {
             if (Director::is_cli()) {
                 switch ($type) {
-                    case "created":
-                    case "changed":
-                    case "repaired":
-                        $sign = "+";
+                    case 'created':
+                    case 'changed':
+                    case 'repaired':
+                        $sign = '+';
                         break;
-                    case "obsolete":
-                    case "deleted":
+                    case 'obsolete':
+                    case 'deleted':
                         $sign = '-';
                         break;
-                    case "notice":
+                    case 'notice':
                         $sign = '*';
                         break;
-                    case "error":
-                        $sign = "!";
+                    case 'error':
+                        $sign = '!';
                         break;
                     default:
-                        $sign = " ";
+                        $sign = ' ';
                 }
                 $message = strip_tags($message);
                 echo "  $sign $message\n";
             } else {
                 switch ($type) {
-                    case "created":
-                        $class = "success";
+                    case 'created':
+                        $class = 'success';
                         break;
-                    case "obsolete":
-                        $class = "error";
+                    case 'obsolete':
+                    case 'error':
+                    case 'deleted':
+                        $class = 'error';
                         break;
-                    case "notice":
-                        $class = "warning";
+                    case 'notice':
+                        $class = 'warning';
                         break;
-                    case "error":
-                        $class = "error";
-                        break;
-                    case "deleted":
-                        $class = "error";
-                        break;
-                    case "changed":
-                        $class = "info";
-                        break;
-                    case "repaired":
-                        $class = "info";
+                    case 'changed':
+                    case 'repaired':
+                        $class = 'info';
                         break;
                     default:
-                        $class = "";
+                        $class = '';
                 }
                 echo "<li class=\"$class\">$message</li>";
             }
@@ -878,7 +872,7 @@ MESSAGE
 
         $this->alterationMessage(
             "Table $tableName: renamed from $currentName",
-            "repaired"
+            'repaired'
         );
 
         // Rename via temp table to avoid case-sensitivity issues

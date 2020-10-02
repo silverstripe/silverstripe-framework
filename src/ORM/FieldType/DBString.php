@@ -11,12 +11,12 @@ abstract class DBString extends DBField
      * @var array
      */
     private static $casting = [
-        "LimitCharacters" => "Text",
-        "LimitCharactersToClosestWord" => "Text",
-        "LimitWordCount" => "Text",
-        "LowerCase" => "Text",
-        "UpperCase" => "Text",
-        "Plain" => "Text",
+        'LimitCharacters' => 'Text',
+        'LimitCharactersToClosestWord' => 'Text',
+        'LimitWordCount' => 'Text',
+        'LowerCase' => 'Text',
+        'UpperCase' => 'Text',
+        'Plain' => 'Text',
     ];
 
     /**

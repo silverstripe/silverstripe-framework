@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DB;
 
 /**
  * Supports double precision DB types

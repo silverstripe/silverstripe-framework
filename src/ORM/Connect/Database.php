@@ -254,9 +254,8 @@ abstract class Database
                 Backtrace::backtrace();
             }
             return $result;
-        } else {
-            return $callback($sql);
         }
+        return $callback($sql);
     }
 
     /**

@@ -19,8 +19,8 @@ class DBVarchar extends DBString
 {
 
     private static $casting = [
-        "Initial" => "Text",
-        "URL" => "Text",
+        'Initial' => 'Text',
+        'URL' => 'Text',
     ];
 
     /**
@@ -68,11 +68,11 @@ class DBVarchar extends DBString
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
         $parts = [
-            'datatype'=>'varchar',
-            'precision'=>$this->size,
-            'character set'=> $charset,
-            'collate'=> $collation,
-            'arrayValue'=>$this->arrayValue
+            'datatype' => 'varchar',
+            'precision' => $this->size,
+            'character set' => $charset,
+            'collate' => $collation,
+            'arrayValue' => $this->arrayValue
         ];
 
         $values = [
@@ -107,9 +107,8 @@ class DBVarchar extends DBString
         $value = $this->RAW();
         if (preg_match('#^[a-zA-Z]+://#', $value)) {
             return $value;
-        } else {
-            return "http://" . $value;
         }
+        return 'http://' . $value;
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
-use SilverStripe\Forms\CheckboxSetField;
 
 /**
  * Represents an multi-select enumeration field.
@@ -25,7 +25,7 @@ class DBMultiEnum extends DBEnum
                 if (!in_array($thisDefault, $this->enum)) {
                     throw new \InvalidArgumentException(
                         "Enum::__construct() The default value '$thisDefault' does not match "
-                        . "any item in the enumeration"
+                        . 'any item in the enumeration'
                     );
                 }
             }
@@ -38,16 +38,16 @@ class DBMultiEnum extends DBEnum
         // @todo: Remove mysql-centric logic from this
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
-        $values=[
-            'type'=>'set',
-            'parts'=>[
-                'enums'=>$this->enum,
-                'character set'=> $charset,
-                'collate'=> $collation,
-                'default'=> $this->default,
-                'table'=>$this->tableName,
-                'arrayValue'=>$this->arrayValue
-            ]
+        $values = [
+            'type' => 'set',
+            'parts' => [
+                'enums' => $this->enum,
+                'character set' => $charset,
+                'collate' => $collation,
+                'default' => $this->default,
+                'table' => $this->tableName,
+                'arrayValue' => $this->arrayValue,
+            ],
         ];
 
         DB::require_field($this->tableName, $this->name, $values);
@@ -64,7 +64,7 @@ class DBMultiEnum extends DBEnum
      * @param string $emptyString
      * @return CheckboxSetField
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null)
+    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
     {
 
         if (!$title) {
@@ -74,8 +74,6 @@ class DBMultiEnum extends DBEnum
             $name = $this->name;
         }
 
-        $field = new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value);
-
-        return $field;
+        return new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value);
     }
 }

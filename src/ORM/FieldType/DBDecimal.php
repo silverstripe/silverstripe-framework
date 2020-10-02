@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\ORM\DB;
 
 /**
  * Represents a Decimal field.

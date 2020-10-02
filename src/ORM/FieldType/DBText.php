@@ -2,14 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
 
 /**
  * Represents a variable-length string of up to 16 megabytes, designed to store raw text
@@ -29,12 +29,12 @@ class DBText extends DBString
 {
 
     private static $casting = [
-        "BigSummary" => "Text",
-        "ContextSummary" => "HTMLFragment", // Always returns HTML as it contains formatting and highlighting
-        "FirstParagraph" => "Text",
-        "FirstSentence" => "Text",
-        "LimitSentences" => "Text",
-        "Summary" => "Text",
+        'BigSummary' => 'Text',
+        'ContextSummary' => 'HTMLFragment', // Always returns HTML as it contains formatting and highlighting
+        'FirstParagraph' => 'Text',
+        'FirstSentence' => 'Text',
+        'LimitSentences' => 'Text',
+        'Summary' => 'Text',
     ];
 
     /**
@@ -43,8 +43,8 @@ class DBText extends DBString
      */
     public function requireField()
     {
-        $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
-        $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
+        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
+        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
         $parts = [
             'datatype' => 'mediumtext',
@@ -76,7 +76,7 @@ class DBText extends DBString
 
         $value = $this->Plain();
         if (!$value) {
-            return "";
+            return '';
         }
 
         // Do a word-search
@@ -94,10 +94,9 @@ class DBText extends DBString
         // Failing to find the number of sentences requested, fallback to a logical default
         if ($maxSentences > 1) {
             return $value;
-        } else {
-            // If searching for a single sentence (and there are none) just do a text summary
-            return $this->Summary(20);
         }
+        // If searching for a single sentence (and there are none) just do a text summary
+        return $this->Summary(20);
     }
 
 
@@ -260,10 +259,9 @@ class DBText extends DBString
         if (!$this->nullifyEmpty) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
             return NullableField::create(TextareaField::create($this->name, $title));
-        } else {
-            // Automatically determine null (empty string)
-            return TextareaField::create($this->name, $title);
         }
+        // Automatically determine null (empty string)
+        return TextareaField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)

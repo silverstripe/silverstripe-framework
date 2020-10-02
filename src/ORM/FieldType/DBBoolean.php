@@ -11,7 +11,6 @@ use SilverStripe\ORM\DB;
  */
 class DBBoolean extends DBField
 {
-
     public function __construct($name = null, $defaultVal = 0)
     {
         $this->defaultVal = ($defaultVal) ? 1 : 0;
@@ -21,15 +20,15 @@ class DBBoolean extends DBField
 
     public function requireField()
     {
-        $parts=[
-            'datatype'=>'tinyint',
-            'precision'=>1,
-            'sign'=>'unsigned',
-            'null'=>'not null',
-            'default'=>$this->defaultVal,
-            'arrayValue'=>$this->arrayValue
+        $parts = [
+            'datatype' => 'tinyint',
+            'precision' => 1,
+            'sign' => 'unsigned',
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue
         ];
-        $values=['type'=>'boolean', 'parts'=>$parts];
+        $values = ['type' => 'boolean', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
@@ -81,9 +80,11 @@ class DBBoolean extends DBField
     {
         if (is_bool($value)) {
             return $value ? 1 : 0;
-        } elseif (empty($value)) {
+        }
+        if (empty($value)) {
             return 0;
-        } elseif (is_string($value)) {
+        }
+        if (is_string($value)) {
             switch (strtolower($value)) {
                 case 'false':
                 case 'f':

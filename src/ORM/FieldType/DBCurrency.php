@@ -35,7 +35,6 @@ class DBCurrency extends DBDecimal
      */
     public function Nice()
     {
-        // return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
         $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
         if ($this->value < 0) {
             return "($val)";

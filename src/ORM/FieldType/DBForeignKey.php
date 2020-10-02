@@ -79,7 +79,7 @@ class DBForeignKey extends DBInt
         }
 
         // Build selector / numeric field
-        $titleField = $hasOneSingleton->hasField('Title') ? "Title" : "Name";
+        $titleField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
         $list = DataList::create($hasOneClass);
         // Don't scaffold a dropdown for large tables, as making the list concrete
         // might exceed the available PHP memory in creating too many DataObject instances
@@ -118,7 +118,10 @@ class DBForeignKey extends DBInt
             $field->setEmptyString(' ');
         } else {
             $field = new NumericField($this->name, $title);
-            $field->setRightTitle(_t(self::class . '.DROPDOWN_THRESHOLD_FALLBACK_MESSAGE', 'Too many related objects; fallback field in use'));
+            $field->setRightTitle(_t(
+                self::class . '.DROPDOWN_THRESHOLD_FALLBACK_MESSAGE',
+                'Too many related objects; fallback field in use'
+            ));
         }
         return $field;
     }

@@ -335,11 +335,11 @@ class DBDate extends DBField
 
         if ($y1 != $y2) {
             return "$d1 $m1 $y1 - $d2 $m2 $y2";
-        } elseif ($m1 != $m2) {
-            return "$d1 $m1 - $d2 $m2 $y1";
-        } else {
-            return "$d1 - $d2 $m1 $y1";
         }
+        if ($m1 != $m2) {
+            return "$d1 $m1 - $d2 $m2 $y1";
+        }
+        return "$d1 - $d2 $m1 $y1";
     }
 
     /**
@@ -393,19 +393,18 @@ class DBDate extends DBField
         $now = DBDatetime::now()->getTimestamp();
         if ($timestamp <= $now) {
             return _t(
-                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFAGO',
+                __CLASS__ . '.TIMEDIFFAGO',
                 "{difference} ago",
                 'Natural language time difference, e.g. 2 hours ago',
                 ['difference' => $this->TimeDiff($includeSeconds, $significance)]
             );
-        } else {
-            return _t(
-                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
-                "in {difference}",
-                'Natural language time difference, e.g. in 2 hours',
-                ['difference' => $this->TimeDiff($includeSeconds, $significance)]
-            );
         }
+        return _t(
+            __CLASS__ . '.TIMEDIFFIN',
+            "in {difference}",
+            'Natural language time difference, e.g. in 2 hours',
+            ['difference' => $this->TimeDiff($includeSeconds, $significance)]
+        );
     }
 
     /**
@@ -423,20 +422,24 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         if ($ago < 60 && !$includeSeconds) {
-            return _t('SilverStripe\\ORM\\FieldType\\DBDate.LessThanMinuteAgo', 'less than a minute');
-        } elseif ($ago < $significance * 60 && $includeSeconds) {
-            return $this->TimeDiffIn('seconds');
-        } elseif ($ago < $significance * 3600) {
-            return $this->TimeDiffIn('minutes');
-        } elseif ($ago < $significance * 86400) {
-            return $this->TimeDiffIn('hours');
-        } elseif ($ago < $significance * 86400 * 30) {
-            return $this->TimeDiffIn('days');
-        } elseif ($ago < $significance * 86400 * 365) {
-            return $this->TimeDiffIn('months');
-        } else {
-            return $this->TimeDiffIn('years');
+            return _t(__CLASS__ . '.LessThanMinuteAgo', 'less than a minute');
         }
+        if ($ago < $significance * 60 && $includeSeconds) {
+            return $this->TimeDiffIn('seconds');
+        }
+        if ($ago < $significance * 3600) {
+            return $this->TimeDiffIn('minutes');
+        }
+        if ($ago < $significance * 86400) {
+            return $this->TimeDiffIn('hours');
+        }
+        if ($ago < $significance * 86400 * 30) {
+            return $this->TimeDiffIn('days');
+        }
+        if ($ago < $significance * 86400 * 365) {
+            return $this->TimeDiffIn('months');
+        }
+        return $this->TimeDiffIn('years');
     }
 
     /**
@@ -456,7 +459,7 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         switch ($format) {
-            case "seconds":
+            case 'seconds':
                 $span = $ago;
                 return _t(
                     __CLASS__ . '.SECONDS_SHORT_PLURALS',
@@ -464,7 +467,7 @@ class DBDate extends DBField
                     ['count' => $span]
                 );
 
-            case "minutes":
+            case 'minutes':
                 $span = round($ago / 60);
                 return _t(
                     __CLASS__ . '.MINUTES_SHORT_PLURALS',
@@ -472,7 +475,7 @@ class DBDate extends DBField
                     ['count' => $span]
                 );
 
-            case "hours":
+            case 'hours':
                 $span = round($ago / 3600);
                 return _t(
                     __CLASS__ . '.HOURS_SHORT_PLURALS',
@@ -480,7 +483,7 @@ class DBDate extends DBField
                     ['count' => $span]
                 );
 
-            case "days":
+            case 'days':
                 $span = round($ago / 86400);
                 return _t(
                     __CLASS__ . '.DAYS_SHORT_PLURALS',
@@ -488,7 +491,7 @@ class DBDate extends DBField
                     ['count' => $span]
                 );
 
-            case "months":
+            case 'months':
                 $span = round($ago / 86400 / 30);
                 return _t(
                     __CLASS__ . '.MONTHS_SHORT_PLURALS',
@@ -496,7 +499,7 @@ class DBDate extends DBField
                     ['count' => $span]
                 );
 
-            case "years":
+            case 'years':
                 $span = round($ago / 86400 / 365);
                 return _t(
                     __CLASS__ . '.YEARS_SHORT_PLURALS',
@@ -554,6 +557,7 @@ class DBDate extends DBField
      * </code>
      *
      * @param string $adjustment PHP strtotime style
+     * @return $this
      */
     public function modify(string $adjustment): self
     {
@@ -588,7 +592,7 @@ class DBDate extends DBField
     protected function fixInputDate($value)
     {
         // split
-        list($year, $month, $day, $time) = $this->explodeDateString($value);
+        [$year, $month, $day, $time] = $this->explodeDateString($value);
 
         if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
             return null;

@@ -93,7 +93,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * Return a date and time formatted as per a CMS user's settings.
      *
      * @param Member $member
-     * @return boolean | string A time and date pair formatted as per user-defined settings.
+     * @return boolean|string A time and date pair formatted as per user-defined settings.
      */
     public function FormatFromSettings($member = null)
     {
@@ -150,7 +150,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
                 'SilverStripe\\Forms\\FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
-                [ 'format' => $date ]
+                ['format' => $date]
             ))
             ->setAttribute('placeholder', $dateTimeFormat);
 

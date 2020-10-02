@@ -32,7 +32,7 @@ class DBTime extends DBField
         $value = $this->parseTime($value);
         if ($value === false) {
             throw new InvalidArgumentException(
-                "Invalid date passed. Use " . $this->getISOFormat() . " to prevent this error."
+                'Invalid date passed. Use ' . $this->getISOFormat() . ' to prevent this error.'
             );
         }
         $this->value = $value;

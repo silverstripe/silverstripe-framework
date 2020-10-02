@@ -21,12 +21,12 @@ class DBFloat extends DBField
     public function requireField()
     {
         $parts = [
-            'datatype'=>'float',
-            'null'=>'not null',
-            'default'=>$this->defaultVal,
-            'arrayValue'=>$this->arrayValue
+            'datatype' => 'float',
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue
         ];
-        $values = ['type'=>'float', 'parts'=>$parts];
+        $values = ['type' => 'float', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
@@ -66,7 +66,9 @@ class DBFloat extends DBField
     {
         if ($value === true) {
             return 1;
-        } elseif (empty($value) || !is_numeric($value)) {
+        }
+
+        if (empty($value) || !is_numeric($value)) {
             return 0;
         }
 
