@@ -4,9 +4,9 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Represents a classname selector, which respects obsolete clasess.

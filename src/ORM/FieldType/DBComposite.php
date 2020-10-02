@@ -126,7 +126,7 @@ abstract class DBComposite extends DBField
     public function isChanged()
     {
         // When unbound, use the local changed flag
-        if (! ($this->record instanceof DataObject)) {
+        if (!$this->record instanceof DataObject) {
             return $this->isChanged;
         }
 

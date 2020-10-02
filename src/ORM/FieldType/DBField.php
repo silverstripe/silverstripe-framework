@@ -232,7 +232,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @param mixed $value
      * @param DataObject|array $record An array or object that this field is part of
-     * @param bool $markChanged Indicate wether this field should be marked changed.
+     * @param bool $markChanged Indicate whether this field should be marked changed.
      *  Set to FALSE if you are initializing this field after construction, rather
      *  than setting a new value.
      * @return $this
@@ -335,7 +335,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * will be escaped automatically by the prepared query processor, so it
      * should not be escaped or quoted at all.
      *
-     * @param $value mixed The value to check
+     * @param mixed $value The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
     public function prepValueForDB($value)

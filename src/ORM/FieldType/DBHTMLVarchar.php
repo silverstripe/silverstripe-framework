@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
@@ -88,9 +88,8 @@ class DBHTMLVarchar extends DBVarchar
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**

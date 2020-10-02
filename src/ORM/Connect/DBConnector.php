@@ -122,9 +122,8 @@ abstract class DBConnector
         $operation = $matches['operation'];
         if (is_array($type)) {
             return in_array(strtolower($operation), $type);
-        } else {
-            return strcasecmp($sql, $type) === 0;
         }
+        return strcasecmp($sql, $type) === 0;
     }
 
     /**
