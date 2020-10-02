@@ -33,6 +33,17 @@ Keep in mind that many of your changes will be in YAML, which also requires a fl
 If you do not provide a `schema` parameter, the task will build all schemas.
 [/info]`
 
+### Building on dev/build
+
+By default, all schemas will be built as a side-effect of `dev/build`. To disable this, change
+the config:
+
+```yaml
+SilverStripe\GraphQL\Extensions\DevBuildExtension:
+  enabled: false
+```
+
+
 ### Caching
 
 Generating code is a pretty expensive process. A large schema with 50 dataobjects exposing
