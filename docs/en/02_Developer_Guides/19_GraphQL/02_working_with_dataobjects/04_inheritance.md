@@ -64,6 +64,10 @@ The `__extends` field is semantically aligned with is PHP counterpart -- it's an
 names of all the types that are descendants of the parent type. Each of those objects contains all the fields
 on that type, both inherited and native.
 
+[info]
+The `__extends` field is only available on base classes, e.g. `SiteTree`.
+[/info]
+
 But what if one of those pages is a `NewsPage`, and we want to access its `PublishDate` field
  if available? This raises an interesting point.
 
@@ -138,9 +142,10 @@ Operations are not implicitly exposed. If you add a `read` operation to `SiteTre
 `NewsPage` and `ContactPage`, etc. You have to opt into those.
 [/info]
 
-### A note about duplication
+### Pseudo-unions fields are de-duped
 
-One drawback of this approach is that it results in a lot of duplication. Take for instance this query:
+To keep things tidy, the pseudo unions in the `__extends` field remove any fields that are already in 
+the parent.
 
 ```graphql
 query readPages {
@@ -149,13 +154,13 @@ query readPages {
     content
     __extends {
       BannerPage {
-         title
+         title <---- Doesn't exist
          bannerImage {
            url
          }
       }
       NewsPage {
-        content
+        content <--- Doesn't exist
         publishDate
       }
     }
@@ -163,9 +168,6 @@ query readPages {
 }
 ```
 
-The `title` on `Page` and `content` on `NewsPage` are identical to the fields that are queried in the parent type.
-This may be of some benefit when destructuring your frontend code, but for the most part, it's just important to
-remember that there's nothing distinct about these fields.
 
 ### Further reading
 

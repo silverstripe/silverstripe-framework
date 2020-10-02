@@ -72,6 +72,16 @@ MyProject\Models\ProductCategory:
         paginateList: false
 ```
 
+To disable pagination globally, use `modelConfig`:
+
+*app/_graphql/modelConfig.yml*
+```yaml
+DataObject:
+  operations:
+    read:
+      plugins:
+        paginateList: false
+```
 
 ### The filter plugin
 
@@ -177,6 +187,17 @@ MyProject\Models\ProductCategory:
         filter: false
 ```
 
+To disable filtering globally, use `modelConfig`:
+
+*app/_graphql/modelConfig.yml*
+```yaml
+DataObject:
+  operations:
+    read:
+      plugins:
+        filter: false
+```
+
 ### The sort plugin
 
 The sort plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QuerySort`) adds a
@@ -238,6 +259,17 @@ Just set it to `false` in the configuration.
 *app/_graphql/models.yml*
 ```yaml
 MyProject\Models\ProductCategory:
+  operations:
+    read:
+      plugins:
+        sort: false
+```
+
+To disable sort globally, use `modelConfig`:
+
+*app/_graphql/modelConfig.yml*
+```yaml
+DataObject:
   operations:
     read:
       plugins:

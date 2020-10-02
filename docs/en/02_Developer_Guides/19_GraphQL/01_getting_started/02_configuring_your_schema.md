@@ -163,24 +163,28 @@ The following are perfectly valid:
 
 ### Changing schema defaults
 
-In addition to all the keys mentioned above, each schema can declare a `defaults` section, which will apply
-default values to various sections of the config. It's mostly used for assigning or removing 
-default plugins to models and operations.
+In addition to all the keys mentioned above, each schema can declare a couple of generic
+ configuration files, `defaults` and `modelConfig`. These are
+ mostly used for assigning or removing  default plugins to models and operations.
 
-Like the other sections, it can have its own `defaults.yml`, or just be added as a `defaults:` mapping to a generic
-schema yaml document.
+[info]
+As of now, the only one of these being used 
+ is `modelConfig`, but `defaults` could some day apply non-model configuration to the schema.
+[/info]
 
-**app/_graphql/defaults.yml**
+Like the other sections, it can have its own `modelConfig.yml`, or just be added as a `modelConfig:` 
+mapping to a generic schema yaml document.
+
+**app/_graphql/modelConfig.yml**
 ```yaml
-operations:
-  read:
-    plugins:
-      readVersion: false
-      paginateList: false
-models:
-  DataObject:
-    plugins:
-      inheritance: true
+DataObject:
+  plugins:
+    inheritance: true
+  operations:
+    read:
+      plugins:
+        readVersion: false
+        paginateList: false
 ```
 
 

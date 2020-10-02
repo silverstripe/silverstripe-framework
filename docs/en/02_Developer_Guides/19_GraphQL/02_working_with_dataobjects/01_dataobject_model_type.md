@@ -207,6 +207,13 @@ Page:
         paginateList: false # don't paginate the read operation
 ```
 
+### Model configuration
+
+There are several settings you can apply to your model class (typically `DataObjectModel`),
+but because they can have distinct values _per schema_, the standard `_config` layer is not
+an option. Model configuration has to be done within the schema definition in the `modelConfig`
+section.
+
 ### Customising the type name
 
 Most DataObject classes are namespaced, so converting them to a type name ends up
@@ -225,13 +232,18 @@ the `$className` as a parameter.
 
 Let's turn `MyProject\Models\Product` into the more specific `MyProjectProduct`
 
-*app/_config/graphql.yml*
+*app/_graphql/modelConfig.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
+DataObject: 
   type_formatter: ['MyProject\Formatters', 'formatType' ]
 ```
 
-And your function could look something like:
+[info]
+In the above example, `DataObject` is the result of the `DataObjectModel::getIdentifier()`. Each
+model class must declare one of these.
+[/info]
+
+Your formatting function could look something like:
 
 ```php
 public static function formatType(string $className): string
@@ -252,9 +264,9 @@ public static function formatType(string $className): string
 You can also add prefixes to all your DataObject types. This can be a scalar value or a callable,
 using the same signature as `type_formatter`.
 
-*app/_config/graphql.yml*
+*app/_graphql/modelConfig.yml*
 ```yaml
-SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
+DataObject
   type_prefix: 'MyProject'
 ```
 
