@@ -382,8 +382,7 @@ class Member extends DataObject
             return false;
         }
 
-        $idField = static::config()->get('unique_identifier_field');
-        $attempts = LoginAttempt::getByEmail($this->{$idField})
+        $attempts = LoginAttempt::getByEmail($this->Email)
             ->sort('Created', 'DESC')
             ->limit($maxAttempts);
 
