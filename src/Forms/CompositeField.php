@@ -251,11 +251,10 @@ class CompositeField extends FormField
                     if (isset($list[$name])) {
                         $fieldClass = get_class($field);
                         $otherFieldClass = get_class($list[$name]);
-                        user_error(
+                        throw new \RuntimeException(
                             "collateDataFields() I noticed that a field called '$name' appears twice in"
                              . " your form: '{$formName}'.  One is a '{$fieldClass}' and the other is a"
-                             . " '{$otherFieldClass}'",
-                            E_USER_ERROR
+                             . " '{$otherFieldClass}'"
                         );
                     }
                     $list[$name] = $field;

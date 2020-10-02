@@ -160,11 +160,9 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
     public function testBadDetectMethod()
     {
+        $this->expectException(\InvalidArgumentException::class);
         HTTPRequest::detect_method('POST', ['_method' => 'Boom']);
     }
 
@@ -191,11 +189,9 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals($request, $returnedRequest);
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
     public function testBadSetHttpMethod()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $request = new HTTPRequest('GET', '/hello');
         $request->setHttpMethod('boom');
     }

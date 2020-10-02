@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\ArrayLib;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
 
 /**
@@ -77,9 +78,8 @@ class DBEnum extends DBString
                 if (in_array($default, $enum)) {
                     $this->setDefault($default);
                 } else {
-                    user_error(
-                        "Enum::__construct() The default value '$default' does not match any item in the enumeration",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Enum::__construct() The default value '$default' does not match any item in the enumeration"
                     );
                 }
             } elseif (is_int($default) && $default < count($enum)) {
@@ -99,8 +99,8 @@ class DBEnum extends DBString
      */
     public function requireField()
     {
-        $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
-        $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
+        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
+        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
         $parts = [
             'datatype' => 'enum',

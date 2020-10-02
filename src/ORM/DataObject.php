@@ -1391,8 +1391,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->brokenOnWrite = true;
         $this->onBeforeWrite();
         if ($this->brokenOnWrite) {
-            user_error(static::class . " has a broken onBeforeWrite() function."
-                . " Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
+            throw new LogicException(
+                static::class . " has a broken onBeforeWrite() function."
+                . " Make sure that you call parent::onBeforeWrite()."
+            );
         }
     }
 
@@ -1737,8 +1739,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->brokenOnDelete = true;
         $this->onBeforeDelete();
         if ($this->brokenOnDelete) {
-            user_error(static::class . " has a broken onBeforeDelete() function."
-                . " Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
+            throw new LogicException(
+                static::class . " has a broken onBeforeDelete() function."
+                . " Make sure that you call parent::onBeforeDelete()."
+            );
         }
 
         // Deleting a record without an ID shouldn't do anything
@@ -2874,7 +2878,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function setCastedField($fieldName, $value)
     {
         if (!$fieldName) {
-            user_error("DataObject::setCastedField: Called without a fieldName", E_USER_ERROR);
+            throw new InvalidArgumentException("DataObject::setCastedField: Called without a fieldName");
         }
         $fieldObj = $this->dbObject($fieldName);
         if ($fieldObj) {

@@ -199,7 +199,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function handleRequest(HTTPRequest $request)
     {
         if (!$request) {
-            user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
+            throw new \RuntimeException('Controller::handleRequest() not passed a request!');
         }
 
         //set up the controller for the incoming request

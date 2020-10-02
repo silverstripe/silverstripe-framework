@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
 use SilverStripe\Forms\CheckboxSetField;
 
@@ -22,9 +23,10 @@ class DBMultiEnum extends DBEnum
             $defaults = preg_split('/ *, */', trim($default));
             foreach ($defaults as $thisDefault) {
                 if (!in_array($thisDefault, $this->enum)) {
-                    user_error("Enum::__construct() The default value '$thisDefault' does not match "
-                        . "any item in the enumeration", E_USER_ERROR);
-                    return;
+                    throw new \InvalidArgumentException(
+                        "Enum::__construct() The default value '$thisDefault' does not match "
+                        . "any item in the enumeration"
+                    );
                 }
             }
             $this->default = implode(',', $defaults);
@@ -34,8 +36,8 @@ class DBMultiEnum extends DBEnum
     public function requireField()
     {
         // @todo: Remove mysql-centric logic from this
-        $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
-        $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
+        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
+        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
         $values=[
             'type'=>'set',
             'parts'=>[

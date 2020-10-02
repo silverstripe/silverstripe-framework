@@ -368,9 +368,8 @@ class Hierarchy extends DataExtension
             // Validate the ID list
             foreach ($idList as $id) {
                 if (!is_numeric($id)) {
-                    user_error(
-                        "Bad ID passed to Versioned::prepopulate_numchildren_cache() in \$idList: " . $id,
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Bad ID passed to Versioned::prepopulate_numchildren_cache() in \$idList: " . $id
                     );
                 }
             }

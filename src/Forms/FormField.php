@@ -1414,12 +1414,7 @@ class FormField extends RequestHandler
         }
 
         $class = static::class;
-        user_error(
-            "rootFieldList() called on {$class} object without a containerFieldList",
-            E_USER_ERROR
-        );
-
-        return null;
+        throw new \RuntimeException("rootFieldList() called on {$class} object without a containerFieldList");
     }
 
     /**

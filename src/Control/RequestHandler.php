@@ -187,7 +187,7 @@ class RequestHandler extends ViewableData
             }
             $action = "index";
         } elseif (!is_string($action)) {
-            user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+            throw new InvalidArgumentException("Non-string method name: " . var_export($action, true));
         }
 
         $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;

@@ -19,7 +19,7 @@ class Member_GroupSet extends ManyManyList
     {
         // Do not join the table directly
         if ($this->extraFields) {
-            user_error('Member_GroupSet does not support many_many_extraFields', E_USER_ERROR);
+            throw new \BadMethodCallException('Member_GroupSet does not support many_many_extraFields');
         }
     }
 

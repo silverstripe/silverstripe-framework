@@ -2,9 +2,9 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Core\Config\Config;
 use mysqli;
 use mysqli_stmt;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Connector for MySQL using the MySQLi method
@@ -238,11 +238,9 @@ class MySQLiConnector extends DBConnector
                 case 'array':
                 case 'unknown type':
                 default:
-                    user_error(
-                        "Cannot bind parameter \"$value\" as it is an unsupported type ($phpType)",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Cannot bind parameter \"$value\" as it is an unsupported type ($phpType)"
                     );
-                    break;
             }
             $values[] = $value;
         }

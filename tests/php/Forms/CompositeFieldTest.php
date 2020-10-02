@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use PHPUnit_Framework_Error;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CompositeField;
@@ -161,12 +160,13 @@ class CompositeFieldTest extends SapphireTest
         $this->assertNull($result['title']);
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     * @expectedExceptionMessageRegExp /a field called 'Test' appears twice in your form.*TextField.*TextField/
-     */
     public function testCollateDataFieldsThrowsErrorOnDuplicateChildren()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageRegExp(
+            "/a field called 'Test' appears twice in your form.*TextField.*TextField/"
+        );
+
         $field = CompositeField::create(
             TextField::create('Test'),
             TextField::create('Test')

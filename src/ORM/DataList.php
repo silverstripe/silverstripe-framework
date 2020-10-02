@@ -1274,7 +1274,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function offsetSet($key, $value)
     {
-        user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }
 
     /**
@@ -1284,6 +1284,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function offsetUnset($key)
     {
-        user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }
 }

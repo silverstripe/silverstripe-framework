@@ -212,10 +212,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
             $this->lastItems[$key] = $value;
         }
 
-        user_error(
-            'Map is read-only. Please use $map->push($key, $value) to append values',
-            E_USER_ERROR
-        );
+        throw new \BadMethodCallException('Map is read-only. Please use $map->push($key, $value) to append values');
     }
 
     /**
@@ -243,9 +240,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
             return;
         }
 
-        user_error(
-            "Map is read-only. Unset cannot be called on keys derived from the DataQuery",
-            E_USER_ERROR
+        throw new \BadMethodCallException(
+            'Map is read-only. Unset cannot be called on keys derived from the DataQuery'
         );
     }
 

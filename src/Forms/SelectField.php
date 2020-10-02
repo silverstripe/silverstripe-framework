@@ -173,7 +173,7 @@ abstract class SelectField extends FormField
             $source = $source->toArray();
         }
         if (!is_array($source) && !($source instanceof ArrayAccess)) {
-            user_error('$source passed in as invalid type', E_USER_ERROR);
+            throw new \InvalidArgumentException('$source passed in as invalid type');
         }
 
         return $source;
