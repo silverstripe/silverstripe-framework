@@ -21,7 +21,6 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
 
         $base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
-
         $body = '<!DOCTYPE html>
         <html>
             <head><base href="' . Director::absoluteBaseURL() . '"><!--[if lte IE 6]></base><![endif]--></head>
@@ -32,17 +31,14 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
             </body>
         </html>';
 
-
         //Mock a request
         $request = new HTTPRequest('GET', $_SERVER['REQUEST_URI']);
-
 
         //Hand through the Middleware to be "processed"
         $middleware = new RewriteHashLinksMiddleware();
         $result = $middleware->process($request, function (HTTPRequest $request) use ($body) {
             return HTTPResponse::create($body);
         })->getBody();
-
 
         $this->assertContains(
             '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
@@ -71,7 +67,6 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
 
         $base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
-
         $body = '<!DOCTYPE html>
         <html>
             <head></head>
@@ -82,17 +77,14 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
             </body>
         </html>';
 
-
         //Mock a request
         $request = new HTTPRequest('GET', $_SERVER['REQUEST_URI']);
-
 
         //Hand through the Middleware to be "processed"
         $middleware = new RewriteHashLinksMiddleware();
         $result = $middleware->process($request, function (HTTPRequest $request) use ($body) {
             return HTTPResponse::create($body);
         })->getBody();
-
 
         $this->assertNotContains(
             '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
@@ -121,7 +113,6 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
 
         $base = Convert::raw2att('/file.com?foo"onclick="alert(\'xss\')""');
 
-
         $body = json_encode(['test' => '<!DOCTYPE html>
         <html>
             <head><base href="' . Director::absoluteBaseURL() . '"><!--[if lte IE 6]></base><![endif]--></head>
@@ -136,13 +127,11 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
         //Mock a request
         $request = new HTTPRequest('GET', $_SERVER['REQUEST_URI']);
 
-
         //Hand through the Middleware to be "processed"
         $middleware = new RewriteHashLinksMiddleware();
         $result = $middleware->process($request, function (HTTPRequest $request) use ($body) {
             return HTTPResponse::create($body)->addHeader('content-type', 'application/json; charset=utf-8');
         })->getBody();
-
 
         $this->assertNotContains(
             '<a class=\\"inline\\" href=\\"' . $base . '#anchor\\">InlineLink<\\/a>',
