@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Control\Middleware;
 
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Convert;
