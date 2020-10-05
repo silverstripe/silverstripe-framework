@@ -50,6 +50,14 @@ class MySQLDatabase extends Database implements TransactionManager
     private static $charset = 'utf8';
 
     /**
+     * Default sql_mode
+     *
+     * @config
+     * @var string
+     */
+    private static $sql_mode = 'ANSI';
+
+    /**
      * Cache for getTransactionManager()
      *
      * @var TransactionManager
@@ -84,8 +92,8 @@ class MySQLDatabase extends Database implements TransactionManager
         // Notify connector of parameters
         $this->connector->connect($parameters);
 
-        // This is important!
-        $this->setSQLMode('ANSI');
+        // Set sql_mode
+        $this->setSQLMode(static::config()->get('sql_mode'));
 
         if (isset($parameters['timezone'])) {
             $this->selectTimezone($parameters['timezone']);
