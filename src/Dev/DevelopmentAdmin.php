@@ -147,7 +147,7 @@ class DevelopmentAdmin extends Controller
         $controllerClass = null;
 
         $baseUrlPart = $request->param('Action');
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
         if (isset($reg[$baseUrlPart])) {
             $controllerClass = $reg[$baseUrlPart]['controller'];
         }
@@ -156,7 +156,7 @@ class DevelopmentAdmin extends Controller
             return $controllerClass::create();
         }
 
-        $msg = 'Error: no controller registered in ' . __CLASS__ . ' for: ' . $request->param('Action');
+        $msg = 'Error: no controller registered in ' . static::class . ' for: ' . $request->param('Action');
         if (Director::is_cli()) {
             // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
             throw new Exception($msg);
@@ -179,7 +179,7 @@ class DevelopmentAdmin extends Controller
     {
         $links = [];
 
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
         foreach ($reg as $registeredController) {
             if (isset($registeredController['links'])) {
                 foreach ($registeredController['links'] as $url => $desc) {
@@ -192,7 +192,7 @@ class DevelopmentAdmin extends Controller
 
     protected function getRegisteredController($baseUrlPart)
     {
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
 
         if (isset($reg[$baseUrlPart])) {
             $controllerClass = $reg[$baseUrlPart]['controller'];
