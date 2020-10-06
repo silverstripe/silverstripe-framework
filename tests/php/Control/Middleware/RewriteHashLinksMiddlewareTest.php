@@ -30,6 +30,8 @@ class RewriteHashLinksMiddlewareTest extends SapphireTest
      */
     protected function tearDown()
     {
+        parent::tearDown();
+        
         if ($this->currentHost === false) {
             unset($_SERVER['HTTP_HOST']);
         } else {
