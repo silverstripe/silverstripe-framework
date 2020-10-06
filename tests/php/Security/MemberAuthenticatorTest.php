@@ -46,6 +46,7 @@ class MemberAuthenticatorTest extends SapphireTest
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
 
+        // Enforce dummy validation (this can otherwise be influenced by recipe config)
         PasswordValidator::singleton()
             ->setMinLength(0)
             ->setTestNames([]);

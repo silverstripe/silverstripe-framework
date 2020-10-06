@@ -44,6 +44,11 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
             $this->markTestSkipped("Versioned is required");
             return;
         }
+
+        // Enforce dummy validation (this can otherwise be influenced by recipe config)
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
     }
 
     protected function tearDown()
