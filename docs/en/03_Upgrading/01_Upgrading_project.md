@@ -1214,7 +1214,7 @@ SilverStripe\ORM\DatabaseAdmin:
 ```
 
 Once you've mapped the class names, you need to run the UpdateLegacyClassNamesTask (`/dev/tasks/UpdateLegacyClassNamesTask`) task.
-This will update affected columns and the `ClassName` field on each DataObject table will be substituted with the namespaced classname.
+This will update affected columns and the `ClassName` field on each DataObject table will be substituted with the new FQCN (fully qualified class name).
 
 
 ## Step 11 - Running your upgraded site for the first time {#step11}
