@@ -1108,6 +1108,7 @@ class FormTest extends FunctionalTest
             new FieldList()
         );
     }
+
     /**
      * In some cases and locales, validation expects non-breaking spaces.
      * This homogenises narrow and regular NBSPs to a regular space character
