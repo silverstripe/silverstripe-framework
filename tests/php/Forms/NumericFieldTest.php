@@ -13,16 +13,23 @@ class NumericFieldTest extends SapphireTest
 
     /**
      * In some cases and locales, validation expects non-breaking spaces.
+     * This homogenises narrow and regular NBSPs to a regular space character
      *
      * Duplicates non-public NumericField::clean method
      *
      * @param  string $input
-     * @return string The input value, with all spaces replaced with non-breaking spaces
+     * @return string The input value, with all non-breaking spaces replaced with spaces
      */
     protected function clean($input)
     {
-        $nbsp = html_entity_decode('&nbsp;', null, 'UTF-8');
-        return str_replace(' ', $nbsp, trim($input));
+        return str_replace(
+            [
+                html_entity_decode('&nbsp;', null, 'UTF-8'),
+                html_entity_decode('&#8239;', null, 'UTF-8'), // narrow non-breaking space
+            ],
+            ' ',
+            trim($input)
+        );
     }
 
     /**

@@ -1052,8 +1052,8 @@ class FormTest extends FunctionalTest
         );
 
         $this->assertContains(
-            '<input type="text" name="SomeFrenchNumericField" value="9 876,5432" ',
-            $body,
+            '<input type="text" name="SomeFrenchNumericField" value="9 876,5432" ',
+            $this->clean($body),
             'Our reloaded form should contain a SomeFrenchNumericField with the value "9 876,5432"'
         );
 
@@ -1064,8 +1064,8 @@ class FormTest extends FunctionalTest
         );
 
         $this->assertContains(
-            '<input type="text" name="SomeFrenchMoneyField[Amount]" value="9 876,54" ',
-            $body,
+            '<input type="text" name="SomeFrenchMoneyField[Amount]" value="9 876,54" ',
+            $this->clean($body),
             'Our reloaded form should contain a SomeFrenchMoneyField[Amount] with the value "9 876,54"'
         );
 
@@ -1106,6 +1106,25 @@ class FormTest extends FunctionalTest
                     ->setTimeFormat("hh 'o''clock' a mm ss") // Swatch Internet Time format
             ),
             new FieldList()
+        );
+    }
+
+    /**
+     * In some cases and locales, validation expects non-breaking spaces.
+     * This homogenises narrow and regular NBSPs to a regular space character
+     *
+     * @param  string $input
+     * @return string The input value, with all non-breaking spaces replaced with spaces
+     */
+    protected function clean($input)
+    {
+        return str_replace(
+            [
+                html_entity_decode('&nbsp;', null, 'UTF-8'),
+                html_entity_decode('&#8239;', null, 'UTF-8'), // narrow non-breaking space
+            ],
+            ' ',
+            trim($input)
         );
     }
 }
