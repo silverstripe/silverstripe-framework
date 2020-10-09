@@ -124,11 +124,11 @@ Page:
   operations:
     create:
       fields:
-        - title
-        - content
+        title: true
+        content: true
     update:
       exclude:
-        - sensitiveField
+        sensitiveField: true
 ```
 
 ### Adding more fields
