@@ -19,26 +19,45 @@ Plugins are used to distribute reusable functionality across your schema. Some e
 
 ### Default plugins
 
-By default, the CMS `default` schema ships with some plugins installed that will benefit most schemas:
+By default, all schemas ship with some plugins installed that will benefit most use cases:
 
 * The `DataObject` model (i.e. any dataobject based type) has:
     * An `inheritance` plugin that builds the `__extends` field, and merges ancestral fields.
     * An `inheritedPlugins` plugin (a bit meta!) that merges plugins from ancestral types into descendants.
-    * A `versioning` plugin that adds `version` fields to the dataobject type (if `silverstripe/versioned` is installed).
+ installed).
 * The `read` and `readOne` operations have:
-    * A `readVersion` plugin (if `silverstripe/versioned` is installed)
-    * A `filter` plugin for filtering queries
-    * A `sort` plugin for sorting queries
     * A `canView` plugin for hiding records that do not pass a `canView()` check
  * The `read` operation has:
     * A `paginateList` plugin for adding pagination arguments and types (e.g. `nodes`)
 
-All of these are defined in the `defaults` section of the schema (see [configuring your schema](../getting_started/configuring_your_schema)). For reference, see the graphql configuration in `silverstripe/admin`, which applies
+In addition to the above, the `default` schema specifically ships with an even richer set of default
+ plugins, including:
+
+* A `versioning` plugin that adds `version` fields to the dataobject type (if `silverstripe/versioned` is installed)
+* A `readVersion` plugin (if `silverstripe/versioned` is installed) that allows versioned operations on
+`read` and `readOne` queries.
+* A `filter` plugin for filtering queries (adds a `filter` argument)
+* A `sort` plugin for sorting queries (adds a `sort` argument)
+
+
+All of these are defined in the `modelConfig` section of the schema (see [configuring your schema](../getting_started/configuring_your_schema)). For reference, see the graphql configuration in `silverstripe/admin`, which applies
 these default plugins to the `default` schema.
 
  #### Overriding default plugins
+ You can override default plugins generically in the `modelConfig` section.
  
- You can override default plugins on your dataobject type and these changes will be inherited by descendants.
+ **app/_graphql/modelConfig.yml**
+ ```yaml
+DataObject:
+  plugins:
+    inheritance: false # No dataobject models get this plugin unless opted into
+  operations:
+    read:
+      plugins:
+        paginateList: false # No dataobject models have paginated read operations unless opted into
+ ```
+
+ You can override default plugins on your specific dataobject type and these changes will be inherited by descendants.
  
  **app/_graphql/models.yml**
  ```yaml
