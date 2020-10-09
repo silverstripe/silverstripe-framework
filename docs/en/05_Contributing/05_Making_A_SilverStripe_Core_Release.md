@@ -524,6 +524,9 @@ will need to be regularly updated.
 * For major or minor releases: Work with SilverStripe marketing to get a blog post out.
   They might choose to announce the release on social media as well. 
 * If the minor or major release includes security fixes, follow the publication instructions in the [Security Release Process](#security-release-process) section.
+* If you released a minor, raise a PR to add a provisional changelog for the next minor release based on the
+  [template](https://github.com/silverstripe/silverstripe-installer/blob/4/.cow/changelog.md.twig). This allows
+  contributors to start adding release notes for changes in the next minor prior to its release.
 
 ## See also
 
