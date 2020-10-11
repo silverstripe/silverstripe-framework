@@ -4,6 +4,7 @@ namespace SilverStripe\i18n\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\Messages\YamlReader;
+use Symfony\Component\Translation\Exception\InvalidResourceException;
 
 class YamlReaderTest extends SapphireTest
 {
@@ -37,5 +38,16 @@ class YamlReaderTest extends SapphireTest
             ],
         ];
         $this->assertEquals($expected, $output);
+    }
+
+
+    public function testThrowsMeaningfulExceptionWhenYmlIsCorrupted()
+    {
+        $path = __DIR__ . '/i18nTest/_fakewebroot/i18ntestmodule/lang/en_corrupt.yml';
+        $this->expectException(InvalidResourceException::class);
+        $regex_path = str_replace('.', '\.', $path);
+        $this->expectExceptionMessageRegExp('@^Error parsing YAML, invalid file "' . $regex_path . '"\. Message: ([\w ].*) line 5 @');
+        $reader = new YamlReader();
+        $reader->read('en', $path);
     }
 }

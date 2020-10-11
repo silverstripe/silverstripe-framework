@@ -39,7 +39,7 @@ class YamlReader implements Reader
             // Normalise messages
             return $this->normaliseMessages($yaml[$locale]);
         } catch (ParseException $exception) {
-            throw new InvalidResourceException(sprintf('Error parsing YAML, invalid file "%s"', $path), 0, $exception);
+            throw new InvalidResourceException(sprintf('Error parsing YAML, invalid file "%s". Message: %s', $path, $exception->getMessage()), 0, $exception);
         }
     }
 
