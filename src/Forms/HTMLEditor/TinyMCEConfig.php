@@ -694,6 +694,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         }
 
         foreach ($settings['image_size_presets'] as &$preset) {
+            if (isset($preset['width'])) {
+                $preset['width'] = (int) $preset['width'];
+            }
+
             if (isset($preset['i18n'])) {
                 $preset['text'] = _t(
                     $preset['i18n'],
