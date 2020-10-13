@@ -21,6 +21,9 @@
     "bin": [
         "sake"
     ],
+    "conflict": {
+        "symfony/translation-contracts": ">=2.0"
+    },
     "require": {
         "bramus/monolog-colored-line-formatter": "~2.0",
         "composer/installers": "~1.0",
