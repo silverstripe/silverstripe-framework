@@ -203,17 +203,23 @@ Most importantly: Keep the first line short, and add more detail below.
 This ensures commits are easy to browse, and look nice on github.com
 (more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
 
-As we automatically generate [changelogs](https://docs.silverstripe.org/en/changelogs/) from them, we need a way to categorize and filter. 
-Please prefix **noteworthy** commit messages with one of the following tags: 
+Our [changelog](https://docs.silverstripe.org/en/changelogs/) generation tool relies upon commit prefixes (tags)
+to categorize the patches accordingly and produce more readable output. Prefixes are usually a single case-insensitive word,
+at the beginning of the commit message. Although prefixing is optional, **noteworthy** patches should have them to fall into
+correct categories.
 
-* `NEW` New feature or major enhancement (both for users and developers)
-* `API` Addition of a new API, or modification/removal/deprecation of an existing API. Includes any change developers should be aware of when upgrading.
-* `BUG` Bugfix or minor enhancement on something developers or users are likely to encounter.
+| Prefix | Description                                                                                                                                      |
+| ---    | ---                                                                                                                                              |
+| API    | Addition of a new API, or modification/removal/deprecation of an existing API. Includes any change developers should be aware of when upgrading. |
+| FIX    | Bugfix on something developers or users are likely to encounter.                                                                                 |
+| DOC    | Any documentation changes.                                                                                                                       |
+| NEW    | New feature or major enhancement (both for users and developers)                                                                                 |
+| ENH    | Improvements of existing functionality (with no API changes), UI/UX enhancements, refactoring and configuration updates.                         |
+| MNT    | Maintenance commits that have no impact on users and applications (e.g. CI configs)                                                              |
+| DEP    | Dependency version updates (updates for composer.json, package.json etc)                                                                         |
+| Merge  | PR merges and merge-ups                                                                                                                          |
 
-All other commits should not be tagged if they are so trivial that most developers
-can ignore them during upgrades or when reviewing changes to the codebase.
-For example, adding unit tests or documentation would not be considered "noteworthy".
-Same goes for version control plumbing like merges, file renames or reverts.
+If you can't find the correct prefix for your commit, it is alright to leave it untagged, then it will fall into "Other" category.
 
 Further guidelines:
 
@@ -234,7 +240,7 @@ also added another form field for password validation
 Example: Good commit message
 
 ```
-BUG Formatting through prepValueForDB() 
+FIX Formatting through prepValueForDB() 
 
 Added prepValueForDB() which is called on DBField->writeToManipulation() 
 to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
