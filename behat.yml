@@ -9,7 +9,7 @@ default:
   suites:
     framework:
       paths:
-        - %paths.modules.admin%/tests/behat/features
+        - '%paths.modules.admin%/tests/behat/features'
       contexts:
         - SilverStripe\Framework\Tests\Behaviour\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
@@ -19,7 +19,7 @@ default:
         - SilverStripe\BehatExtension\Context\LoginContext
         -
           SilverStripe\BehatExtension\Context\FixtureContext:
-            - %paths.modules.admin%/tests/behat/features/files/
+            - '%paths.modules.admin%/tests/behat/features/files/'
 
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
@@ -30,5 +30,5 @@ default:
         wd_host: "http://127.0.0.1:9515" #chromedriver port
 
     SilverStripe\BehatExtension\Extension:
-      screenshot_path: %paths.base%/artifacts/screenshots
+      screenshot_path: '%paths.base%/artifacts/screenshots'
       bootstrap_file: "tests/behat/serve-bootstrap.php"
