@@ -7,6 +7,14 @@ summary: Use PHP code to build your schema
 
 [CHILDREN asList]
 
+[alert]
+You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
+Help us improve it by joining #graphql on the [Community Slack](https://www.silverstripe.org/blog/community-slack-channel/),
+and report any issues at [github.com/silverstripe/silverstripe-graphql](https://github.com/silverstripe/silverstripe-graphql). 
+Docs for the current stable version (3.x) can be found
+[here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
+[/alert]
+
 ## Building a schema with procedural code
 
 Sometimes you need access to dynamic information to populate your schema. For instance, you
