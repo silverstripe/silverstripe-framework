@@ -31,7 +31,7 @@ The pagination plugin augments your queries in two main ways:
 * Wrapping the return type in a "connection" type with the following fields:
   * `nodes: '[YourType]'`
   * `edges: '[{ node: YourType }]'`
-  * `pageInfo: '{ hasNextPage: Boolean, hasPrevPage: Boolean: totalCount: Int }'`
+  * `pageInfo: '{ hasNextPage: Boolean, hasPreviousPage: Boolean: totalCount: Int }'`
 
 Let's test it out:
 
@@ -54,10 +54,12 @@ query {
 }
 ```
 
+[notice]
 If you're not familiar with the jargon of `edges` and `node`, don't worry too much about it
 for now. It's just a pretty well-established convention for pagination in GraphQL, mostly owing
 to its frequent use with [cursor-based pagination](https://graphql.org/learn/pagination/), which
 isn't something we do in Silverstripe CMS.
+[/notice]
 
 #### Disabling pagination
 
@@ -103,16 +105,16 @@ query {
 In the above example, the `eq` is known as a *comparator*. There are several of these
 included with the the module, including:
 
-* eq (exact match)
-* ne (not equal)
-* contains (fuzzy match)
-* gt (greater than)
-* lt (less than)
-* gte (greater than or equal)
-* lte (less than or equal)
-* in (in a given list)
-* startswith (starts with)
-* endswith (ends with)
+* `eq` (exact match)
+* `ne` (not equal)
+* `contains` (fuzzy match)
+* `gt` (greater than)
+* `lt` (less than)
+* `gte` (greater than or equal)
+* `lte` (less than or equal)
+* `in` (in a given list)
+* `startswith` (starts with)
+* `endswith` (ends with)
 
 Example:
 ```graphql
@@ -130,8 +132,10 @@ query {
 }
 ```
 
-**NB**: While it is possible to filter using multiple comparators, segmenting them into
+[notice]
+While it is possible to filter using multiple comparators, segmenting them into
 disjunctive groups (e.g. "OR" and "AND" clauses) is not yet supported.
+[/notice]
 
 Nested fields are supported by default:
 
@@ -215,7 +219,7 @@ query {
 }
 ```
 
-Nested fields are supported by default, but only for linear relationships (e.g has_one):
+Nested fields are supported by default, but only for linear relationships (e.g `has_one`):
 
 ```graphql
 query {
@@ -226,8 +230,9 @@ query {
       }
     }
   ) {
-  nodes {
-    title
+      nodes {
+        title
+      }
   }
 }
 ```

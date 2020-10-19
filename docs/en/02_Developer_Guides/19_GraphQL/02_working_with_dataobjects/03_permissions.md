@@ -9,8 +9,9 @@ summary: A look at how permissions work for DataObject queries and mutations
 
 ## DataObject operation permissions
 
-Any of the operations that come pre-configured for DataObjects are secured by the appropriate `canXXX` permissions
+Any of the operations that come pre-configured for DataObjects are secured by the appropriate permissions
 by default.
+Please see [Model-Level Permissions](/model/permissions/#model-level-permissions) for more information.
 
 ### Mutation permssions
 

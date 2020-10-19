@@ -4,7 +4,7 @@ summary: Ensure your GraphQL api is only accessible to provisioned users
 icon: user-lock
 ---
 
-# Security & best practices
+# Security & Best Practices
 
 [CHILDREN asList]
 
@@ -18,9 +18,11 @@ the same Member session is used to authenticate GraphQL requests, however if you
 are performing requests from an anonymous/external application you may need to
 authenticate before you can complete a request.
 
+[notice]
 Please note that when implementing GraphQL resources it is the developer's
 responsibility to ensure that permission checks are implemented wherever
 resources are accessed.
+[/notice]
 
 ### Default authentication
 

@@ -84,22 +84,22 @@ by their descendants, and descendant classes will only expose their ancestors' e
 
 In our case, we've exposed:
 
-* title (`SiteTree` field)
-* content (`SiteTree` field)
-* bannerImage (`Page` field)
+* `title` (`SiteTree` field)
+* `content` (`SiteTree` field)
+* `bannerImage` (`Page` field)
 
 The `SiteTree` type will contain the following fields:
 
-* id (required for all DataObject types)
-* title
-* content
+* `id` (required for all DataObject types)
+* `title`
+* `content`
 
 And the `NewsPage` type would contain the following fields:
 
-* id (required for all DataObject types)
-* title
-* content
-* bannerImage
+* `id` (required for all DataObject types)
+* `title`
+* `content`
+* `bannerImage`
 
 So if we want that `PublishDate`, we need to add it to the schema explicitly:
 
@@ -139,7 +139,7 @@ query readPages {
 
 [info]
 Operations are not implicitly exposed. If you add a `read` operation to `SiteTree`, you will not get one for
-`NewsPage` and `ContactPage`, etc. You have to opt into those.
+`NewsPage` and `ContactPage`, etc. You have to opt in to those.
 [/info]
 
 ### Pseudo-unions fields are de-duped

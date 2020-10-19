@@ -41,7 +41,10 @@ type will kick in here and provide a lot of assistance in building out this part
 Case in point, by supplying a value of `*` for `fields` , we're saying that we want _all_ of the fields
 on site tree. This includes the first level of relationships, as well, as defined on `has_one`, `has_many`,
 or `many_many`.
-by default.
+
+[notice]
+Fields on relationships will not inherit the `*` fields selector, and will only expose their ID by default.
+[/notice]
 
 The `*` value on `operations` tells the schema to create all available queries and mutations
  for the dataobject, including:
@@ -164,6 +167,7 @@ onSale:
 
 * The mapping of our field names to the DataObject property is case-insensitive. It is a
 convention in GraphQL APIs to use lowerCamelCase fields, so this is given by default.
+[/notice]
 
 ### Customising model fields
 

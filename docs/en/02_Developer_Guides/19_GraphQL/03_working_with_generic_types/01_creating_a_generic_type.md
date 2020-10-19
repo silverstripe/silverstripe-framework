@@ -3,7 +3,7 @@ title: Creating a generic type
 summary: Creating a type that doesn't map to a DataObject
 ---
 
-# Working with generic types
+# Working with Generic Types
 
 [CHILDREN asList]
 

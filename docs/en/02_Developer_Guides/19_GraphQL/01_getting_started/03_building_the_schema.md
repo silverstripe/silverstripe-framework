@@ -13,7 +13,7 @@ The primary API surface of the `silverstripe-graphql` module is the configuratio
 some [procedural configuration](using_procedual_code) as well. It is important to understand
 that **none of this configuration gets interpreted at runtime**. Loading the schema configuration
 at runtime and converting it to executable code has dire effects on performance, making
-API request slower and slower as the schema grows larger and larger.
+API requests slower and slower as the schema grows larger.
 
 To mitigate this problem, the schema that gets executed at runtime is **generated PHP code**.
 This code generation happens during a build step, and it is critical to run this build step
@@ -46,10 +46,10 @@ SilverStripe\GraphQL\Extensions\DevBuildExtension:
 
 ### Caching
 
-Generating code is a pretty expensive process. A large schema with 50 dataobjects exposing
+Generating code is a pretty expensive process. A large schema with 50 dataobject classes exposing
 all their operations can take up to **20 seconds** to generate. This may be acceptable
 for initial builds and deployments, but during incremental development this can really
-things slow down.
+slow things down.
 
 To mitigate this, the generated code for each type is cached against a signature.
 If the type hasn't changed, it doesn't re-render. This reduces build times to **under one second** for incremental changes.

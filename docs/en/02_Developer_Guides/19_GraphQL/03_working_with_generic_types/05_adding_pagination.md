@@ -94,7 +94,8 @@ query {
     nodes {
       name
     }
-  }
+    }
+} 
 ```
 
 ### Further reading

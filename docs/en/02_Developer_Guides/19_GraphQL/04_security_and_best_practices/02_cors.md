@@ -67,8 +67,10 @@ Once you have enabled CORS you can then control four new headers in the HTTP Res
  Allow-Headers: 'Authorization, Content-Type, Content-Language'
  ```
 
- **Note** If you add extra headers to your GraphQL server, you will need to write a
+[notice]
+If you add extra headers to your GraphQL server, you will need to write a
  custom resolver function to handle the response.
+ [/notice]
 
 3. **Access-Control-Allow-Methods.**
 

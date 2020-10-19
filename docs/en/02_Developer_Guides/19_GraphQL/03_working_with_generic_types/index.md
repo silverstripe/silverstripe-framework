@@ -1,6 +1,6 @@
 ---
 title: Working with generic types
-summary: Break away from the magic of DataObject model and build types and queries from scratch.
+summary: Break away from the magic of DataObject models and build types and queries from scratch.
 ---
 
 In this section of the documentation, we cover the fundamentals that are behind a lot of the magic that goes
@@ -15,4 +15,3 @@ cases.
 
 
 [CHILDREN]
-
