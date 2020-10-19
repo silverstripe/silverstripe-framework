@@ -3,7 +3,6 @@
 namespace SilverStripe\View\Shortcodes;
 
 use Embed\Http\DispatcherInterface;
-use League\Flysystem\Exception;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SilverStripe\Core\Convert;
