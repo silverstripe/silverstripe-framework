@@ -97,19 +97,20 @@ But we're not done yet! What is `SearchRadiusInput`? We haven't defined that yet
 to look like this:
 
 ```graphql
-query readEvents(within: {
-    lat: 123.123456,
-    lon: 123.123456,
-    proximity: 500,
+query {
+  readEvents(within: {
+    lat: 123.123456, 
+    lon: 123.123456, 
+    proximity: 500, 
     unit: METER
-}) {
+  }) {
     nodes {
-        title
-        lat
-        lon
+      title
+      lat
+      lon
     }
+  }
 }
-```
 
 ### Step 3: Adding an input type
 

@@ -23,8 +23,11 @@ which cover most use cases:
 
 ### Configuring query mapping providers
 
-All of these implementations can be configured through `Injector`. Note that each schema gets its
-own set of persisted queries. In these examples, we're using the `default`schema.
+All of these implementations can be configured through `Injector`.
+
+[notice]
+Note that each schema gets its own set of persisted queries. In these examples, we're using the `default`schema.
+[/notice]
 
 #### FileProvider
 
@@ -84,7 +87,9 @@ To access a persisted query, simply pass an `id` parameter in the request in lie
 
 `GET http://example.com/graphql?id=someID`
 
+[notice]
 Note that if you pass `query` along with `id`, an exception will be thrown.
+[/notice]
 
 ## Query caching (Caution: EXPERIMENTAL)
 

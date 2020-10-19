@@ -84,7 +84,11 @@ interface, which requires you to define an `authenticate` method to return a Mem
 and `isApplicable` method which tells the `Handler` whether or not this authentication method
 is applicable in the current request context (provided as an argument).
 
-Here's an example for implementing HTTP basic authentication (note that basic auth is enabled by default anyway):
+Here's an example for implementing HTTP basic authentication:
+
+[notice]
+Note that basic auth is enabled by default.
+[/notice]
 
 ```yaml
 SilverStripe\GraphQL\Auth\Handler:

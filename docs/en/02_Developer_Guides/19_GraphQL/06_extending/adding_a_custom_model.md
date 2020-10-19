@@ -2,7 +2,7 @@
 title: Adding a custom model
 summary: Add a new class-backed type beyond DataObject
 ---
-# Extending the schema
+# Extending the Schema
 
 [CHILDREN asList]
 

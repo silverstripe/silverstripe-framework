@@ -54,7 +54,7 @@ query readPages {
 }
 ```
 
-##### The "versions" field
+##### The `versions` field
 
 The `versions` field on your DataObject will return a list of the `version` objects described above.
 The list is sortable by version number, using the `sort` parameter.
