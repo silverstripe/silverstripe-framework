@@ -41,7 +41,10 @@ assumed to have permission to view a record.
 For `read` and `readOne` a plugin called `canView` will filter the result set by the `canView($memeber)` check.
 
 [notice]
-When paginated items fail a `canView()` check, the `pageInfo` field is not affected. This can result in pages
+When paginated items fail a `canView()` check, the `pageInfo` field is not affected.
+Limits and pages are determined through database queries,
+it would be too inefficient to perform in-memory checks on large data sets. 
+This can result in pages
 showing a smaller number of items than what the page should contain, but keeps the pagination calls consistent
 for `limit` and `offset` parameters.
 [/notice]
