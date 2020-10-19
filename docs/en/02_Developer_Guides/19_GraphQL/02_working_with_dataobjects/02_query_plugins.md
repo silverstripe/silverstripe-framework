@@ -214,9 +214,10 @@ query {
   readPages (
     sort: { created: DESC }
   ) {
-  nodes {
-    title
-    created
+      nodes {
+        title
+        created
+      }
   }
 }
 ```

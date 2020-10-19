@@ -156,6 +156,7 @@ MyProject\Models\ProductCategory:
     featured: true
 ```
 
+[notice]
 A couple things to note here:
 
 * By assigning a value of `true` to the field, we defer to the model to infer the type for the field. To override that, we can always add a `type` property:

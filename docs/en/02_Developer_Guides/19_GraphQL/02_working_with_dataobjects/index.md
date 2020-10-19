@@ -11,6 +11,5 @@ and adding read/write operations. Additionally, we'll cover some of the plugins 
 like [sorting, filtering, and pagination](query_plugins), as well as some more advanced concepts like
 [permissions](permissions), [inheritance](inheritance) and [property mapping](property_mapping).
 
-[CHILDREN]
-
+[CHILDREN asList]
 
