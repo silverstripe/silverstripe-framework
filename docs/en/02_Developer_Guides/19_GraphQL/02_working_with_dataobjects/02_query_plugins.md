@@ -158,6 +158,8 @@ query {
 }
 ```
 
+Filters are only querying against the database by default,
+it is not possible to filter by fields with custom resolvers.
 
 #### Customising the filter fields
 
