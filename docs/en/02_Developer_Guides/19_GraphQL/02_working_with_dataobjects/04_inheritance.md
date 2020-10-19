@@ -24,10 +24,10 @@ conventional but more ergonomic way using a plugin called `inheritance`.
 Let's take a simple example. Imagine we have this design:
 
 ```
-> SiteTree
-  > Page
-    > NewsPage
-    > Contact Page
+> SiteTree (fields: title, content)
+  > Page (fields: pageField)
+    > NewsPage (fields: newsPageField)
+    > Contact Page (fields: contactPageField)
 ```
 
 Now, let's expose `Page` to graphql:
@@ -38,8 +38,11 @@ Page:
   fields:
     title: true
     content: true
-    bannerImage: true
+    pageField: true
   operations: '*'
+NewsPage:
+  fields:
+    newsPageField: true
 ```
 
 Here's how we can query the inherited fields:
@@ -49,93 +52,54 @@ query readPages {
   nodes {
     title
     content
-    __extends {
-      Page {
-         bannerImage {
-           url
-         }
+    pageField
+    _extend {
+      NewsPage {
+        newsPageField
       }
     }
   }
 }
 ```
 
-The `__extends` field is semantically aligned with is PHP counterpart -- it's an object whose fields are the
+The `_extend` field is semantically aligned with is PHP counterpart -- it's an object whose fields are the
 names of all the types that are descendants of the parent type. Each of those objects contains all the fields
 on that type, both inherited and native.
 
 [info]
-The `__extends` field is only available on base classes, e.g. `SiteTree`.
+The `_extend` field is only available on base classes, e.g. `Page` in the example above.
 [/info]
-
-But what if one of those pages is a `NewsPage`, and we want to access its `PublishDate` field
- if available? This raises an interesting point.
 
 ### Implicit exposure
 
 By exposing `Page`, we implicitly expose *all of its ancestors* and *all of its descendants*. Adding `Page`
-to our schema implies that we also want its parent SiteTree in the schema (after all, that's where most of its fields
+to our schema implies that we also want its parent `SiteTree` in the schema (after all, that's where most of its fields
 come from), but we also need to be mindful that queries for page will return descendants of `Page`, as well.
 
 But these types are implicitly added to the schema, what are their fields?
 
 The answer is *only the fields you've already opted into*. Parent classes will apply the fields exposed
 by their descendants, and descendant classes will only expose their ancestors' exposed fields.
+If you are opting into all fields on a model (`fields: "*"`), this only applies to the
+model itself, not its subclasses.
 
 In our case, we've exposed:
 
-* `title` (`SiteTree` field)
-* `content` (`SiteTree` field)
-* `bannerImage` (`Page` field)
+* `title` (on `SiteTree`)
+* `content` (on `SiteTree`)
+* `pageField` (on `Page`)
+* `newsPageField` (on `NewsPage`)
 
-The `SiteTree` type will contain the following fields:
+The `Page` type will contain the following fields:
 
 * `id` (required for all DataObject types)
 * `title`
 * `content`
+* `pageField`
 
 And the `NewsPage` type would contain the following fields:
 
-* `id` (required for all DataObject types)
-* `title`
-* `content`
-* `bannerImage`
-
-So if we want that `PublishDate`, we need to add it to the schema explicitly:
-
-*app/_graphql/models.yml*
-```yaml
-MyProject\Pages\BannerPage:
-  fields:
-    title: true
-    content: true
-    bannerImage: true
-  operations: '*'
-MyProject\Pages\NewsPage:
-  fields:
-    publishDate: true
-```
-
-Now we can query it:
-
-```graphql
-query readPages {
-  nodes {
-    title
-    content
-    __extends {
-      BannerPage {
-         bannerImage {
-           url
-         }
-      }
-      NewsPage {
-        publishDate
-      }
-    }
-  }
-}
-```
+* `newsPageField`
 
 [info]
 Operations are not implicitly exposed. If you add a `read` operation to `SiteTree`, you will not get one for
@@ -144,7 +108,7 @@ Operations are not implicitly exposed. If you add a `read` operation to `SiteTre
 
 ### Pseudo-unions fields are de-duped
 
-To keep things tidy, the pseudo unions in the `__extends` field remove any fields that are already in 
+To keep things tidy, the pseudo unions in the `_extend` field remove any fields that are already in 
 the parent.
 
 ```graphql
@@ -152,16 +116,10 @@ query readPages {
   nodes {
     title
     content
-    __extends {
-      BannerPage {
-         title <---- Doesn't exist
-         bannerImage {
-           url
-         }
-      }
+    _extend {
       NewsPage {
-        content <--- Doesn't exist
-        publishDate
+         title <---- Doesn't exist
+         newsPageField
       }
     }
   }
