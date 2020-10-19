@@ -21,7 +21,8 @@ Lastly, if you just prefer writing PHP to writing YAML, this is a good option, t
 
 [notice]
 One thing you cannot do with the procedural API, though it may be tempting, is define resolvers
-on the fly as closures. Resolvers must be static methods on a class.
+on the fly as closures. Resolvers must be static methods on a class, and are evaluated during
+the schema build.
 [/notice]
 
 ### Adding a schema builder
