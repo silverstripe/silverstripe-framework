@@ -100,6 +100,12 @@ And the expected response:
 }
 ```
 
+[notice]
+Keep in mind that [plugins](../02_working_with_dataobjects/02_query_plugins.md)
+don't apply in this context. Most importantly, this means you need to 
+implement your own `canView()` checks.
+[/notice]
+
 This is great, but as we write more and more queries for types with more and more fields,
 it's going to get awfully laborious mapping all these resolvers. Let's clean this up a bit by
 adding a bit of convention over configuration, and save ourselves a lot of time to boot. We can do
