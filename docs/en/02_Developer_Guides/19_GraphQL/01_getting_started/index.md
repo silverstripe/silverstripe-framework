@@ -1,6 +1,6 @@
 ---
 title: Getting started
-summary: Open up your first graphql server and build out your schema
+summary: Open up your first GraphQL server and build your schema
 icon: rocket
 ---
 
@@ -10,4 +10,3 @@ This section of the documentation will give you an overview of how to get a simp
 up and running with some dataobject content.
 
 [CHILDREN]
-

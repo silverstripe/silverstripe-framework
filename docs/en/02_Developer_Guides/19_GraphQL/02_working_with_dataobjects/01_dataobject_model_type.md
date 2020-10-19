@@ -40,7 +40,7 @@ type will kick in here and provide a lot of assistance in building out this part
 
 Case in point, by supplying a value of `*` for `fields` , we're saying that we want _all_ of the fields
 on site tree. This includes the first level of relationships, as well, as defined on `has_one`, `has_many`,
-or `many_many`. Fields on relationships will not inherit the `*` fields selector, and will only expose their ID
+or `many_many`.
 by default.
 
 The `*` value on `operations` tells the schema to create all available queries and mutations

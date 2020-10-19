@@ -1,6 +1,6 @@
 ---
 title: Activating the default server
-summary: Open up a the default server that comes pre-configured with the module
+summary: Open up the default server that comes pre-configured with the module
 icon: rocket
 ---
 
@@ -18,7 +18,7 @@ route is left open for you to configure on your own, the modules contained in th
 
 These separate endpoints have their own identifiers. `default` refers to the GraphQL server
 in the user space (e.g. `/graphql`) while `admin` refers to the GraphQL server used by CMS modules
-(`admin/graphql`). You can also [set up a new schema](#setting-up-a-new-graphql-schema) if you wish.
+(`admin/graphql`). You can also [set up a new schema](#setting-up-a-custom-graphql-server) if you wish.
 
 By default, this module does not route any GraphQL servers. To activate the default,
 public-facing GraphQL server that ships with the module, just add a rule to `Director`.

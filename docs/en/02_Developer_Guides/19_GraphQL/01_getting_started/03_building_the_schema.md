@@ -47,7 +47,7 @@ SilverStripe\GraphQL\Extensions\DevBuildExtension:
 ### Caching
 
 Generating code is a pretty expensive process. A large schema with 50 dataobjects exposing
-all their operations can take up to **20 seconds** to generate. While this may be acceptable
+all their operations can take up to **20 seconds** to generate. This may be acceptable
 for initial builds and deployments, but during incremental development this can really
 things slow down.
 
@@ -70,7 +70,7 @@ Anything influencing the output of the schema will require a build. This could i
 tangential changes such as:
 
 * Updating the `$db` array (or relationships) of a DataObject that has `fields: '*'`.
-* Adding a new resolver for a type that uses [resolver discovery](working_with_generic_types/resolver_discovery)
+* Adding a new resolver for a type that uses [resolver discovery](../working_with_generic_types/resolver_discovery)
 * Adding an extension to a DataObject
 * Adding a new subclass to a DataObject that is already exposed
 

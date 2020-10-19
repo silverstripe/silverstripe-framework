@@ -34,7 +34,7 @@ SilverStripe\GraphQL\Schema\Schema:
     # your schemas here
 ```
 
-Let's populate schema that is pre-configured for us out of the box, `default`.
+Let's populate a schema that is pre-configured for us out of the box, `default`.
 
 **app/_config/graphql.yml**
 ```yml
@@ -202,7 +202,7 @@ Country:
     languages: '[String]'
 ```
 
-If you're familiar with [GraphQL type language](https://graphql.org/learn/schema/#type-language), this should look pretty familiar. There are only a handful of scalar types available in
+If you're familiar with [GraphQL type language](https://graphql.org/learn/schema/#type-language), this should look pretty familiar. There are only a handful of [scalar types](https://graphql.org/learn/schema/#scalar-types) available in
 GraphQL by default. They are:
 
 * String
@@ -221,8 +221,8 @@ Look out for the footgun, here. Make sure your bracketed type is in quotes, othe
 [/notice]
 
 That's all there is to it! To learn how we can take this further, check out the
-[working with generic types](working_with_generic_types) documentation. Otherwise,
-let's get started on [**adding some dataobjects**](working_with_dataobjects).
+[working with generic types](../working_with_generic_types) documentation. Otherwise,
+let's get started on [**adding some dataobjects**](../working_with_dataobjects).
 
 
 ### Further reading
