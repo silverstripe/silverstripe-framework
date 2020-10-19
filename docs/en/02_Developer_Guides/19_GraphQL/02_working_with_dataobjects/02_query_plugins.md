@@ -9,7 +9,7 @@ summary: Learn about some of the useful goodies that come pre-packaged with Data
 
 ## DataObject query plugins
 
-This module has a [plugin system](plugins.md) that affords extensibility to queries, mutations,
+This module has a [plugin system](../plugins) that affords extensibility to queries, mutations,
 types, fields, and just about every other thread of the schema. Model types can define default
 plugins to include, and for DataObject queries, these include:
 
