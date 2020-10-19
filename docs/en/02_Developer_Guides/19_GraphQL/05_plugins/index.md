@@ -1,12 +1,17 @@
-# Silverstripe CMS GraphQL server
+---
+title: Plugins
+summary: Learn what plugins are and how you can use them to extend your schema
+---
 
-GraphQL is the content API layer for Silverstripe CMS. It is the
-recommended way of getting data in and out of the content management
-system.
+# Plugins
 
-For more information on GraphQL, visit its [documentation site](https://graphql.org).
+Plugins play a critical role in distributing reusable functionality across your schema. They can apply to just about
+everything loaded into the schema, including types, fields, queries, mutations, and even specifically to model types
+and their fields and operations.
 
-[CHILDREN includeFolders]
+Let's dive in!
+
+[CHILDREN]
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).

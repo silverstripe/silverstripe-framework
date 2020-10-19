@@ -1,12 +1,13 @@
-# Silverstripe CMS GraphQL server
+---
+title: Extending the schema
+summary: Add new functionality to the schema
+---
 
-GraphQL is the content API layer for Silverstripe CMS. It is the
-recommended way of getting data in and out of the content management
-system.
+In this section of the documentation, we'll look at some advanced
+features for developers who want to extend their GraphQL server 
+using custom models, middleware, and new operations.
 
-For more information on GraphQL, visit its [documentation site](https://graphql.org).
-
-[CHILDREN includeFolders]
+[CHILDREN]
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).

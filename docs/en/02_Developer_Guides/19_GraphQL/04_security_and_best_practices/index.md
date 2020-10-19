@@ -1,12 +1,15 @@
-# Silverstripe CMS GraphQL server
+---
+title: Security & best practices
+icon: user-lock
+summary: A guide to keeping your GraphQL API secure and accessible
+---
 
-GraphQL is the content API layer for Silverstripe CMS. It is the
-recommended way of getting data in and out of the content management
-system.
+# Security and best practices
 
-For more information on GraphQL, visit its [documentation site](https://graphql.org).
+In this section we'll cover several options you have for keeping your GraphQL API secure and compliant
+with best practices. Some of these tools require configuration, while others come pre-installed.
 
-[CHILDREN includeFolders]
+[CHILDREN]
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).

@@ -1,12 +1,13 @@
-# Silverstripe CMS GraphQL server
+---
+title: Getting started
+summary: Open up your first GraphQL server and build your schema
+icon: rocket
+---
 
-GraphQL is the content API layer for Silverstripe CMS. It is the
-recommended way of getting data in and out of the content management
-system.
+# Getting started
 
-For more information on GraphQL, visit its [documentation site](https://graphql.org).
-
-[CHILDREN includeFolders]
+This section of the documentation will give you an overview of how to get a simple GraphQL API
+up and running with some dataobject content.
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
@@ -15,3 +16,5 @@ and report any issues at [github.com/silverstripe/silverstripe-graphql](https://
 Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
+
+[CHILDREN]
