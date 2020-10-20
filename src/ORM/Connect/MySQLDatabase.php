@@ -50,7 +50,8 @@ class MySQLDatabase extends Database implements TransactionManager
     private static $charset = 'utf8';
 
     /**
-     * Default sql_mode
+     * SQL Mode used on connections to MySQL. Defaults to ANSI. For basic ORM
+     * compatibility, this setting must always include ANSI or ANSI_QUOTES.
      *
      * @config
      * @var string
