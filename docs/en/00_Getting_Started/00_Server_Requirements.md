@@ -1,7 +1,7 @@
 ---
 title: Server Requirements
 icon: server
-summary: What you will need to run Silverstripe CMS on a web server 
+summary: What you will need to run Silverstripe CMS on a web server
 ---
 
 
@@ -27,7 +27,11 @@ Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your c
  * PostgreSQL ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/postgresql), community supported)
  * SQL Server ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/mssql), community supported)
  * SQLite ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/sqlite3), community supported)
- 
+
+ ### Connection mode (sql_mode) when using MySQL server >=5.7.5
+
+ MySQL versions >=5.7.5 the `ANSI` sql_mode setting behaves differently and includes the `ONLY_FULL_GROUP_BY` setting. In most cases it is recommended to leave this setting as-is because it results in deterministic SQL. However for some advanced cases the sql_mode can be configured on the database connection via the configuration API.
+
 ## Webserver Configuration
 
 ### Overview
@@ -138,14 +142,14 @@ See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) 
 The default installation includes [silverstripe/errorpage](https://addons.silverstripe.org/add-ons/silverstripe/errorpage),
 which generates static error pages that bypass PHP execution when those pages are published in the CMS.
 Once published, the static files are located in `public/assets/error-404.html` and `public/assets/error-500.html`.
-The default `public/.htaccess` file is configured to have Apache serve those pages based on their HTTP status code. 
+The default `public/.htaccess` file is configured to have Apache serve those pages based on their HTTP status code.
 
 ### Other webservers (Nginx, IIS, Lighttpd)
 
 Serving through webservers other than Apache requires more manual configuration,
 since the defaults configured through `.htaccess` don't apply.
 Please apply the considerations above to your webserver to ensure a secure hosting environment.
-In particular, configure protected assets correctly to avoid exposing draft or protected files uploaded through the CMS. 
+In particular, configure protected assets correctly to avoid exposing draft or protected files uploaded through the CMS.
 
 There are various community supported installation instructions for different environments.
 Nginx is a popular choice, see [Nginx webserver configuration](https://forum.silverstripe.org/t/nginx-webserver-configuration/2246).
@@ -182,9 +186,9 @@ SilverStripe's PHP support has changed over time and if you are looking to upgra
 SilverStripe CMS supports the following web browsers:
 * Google Chrome
 * Internet Explorer 11
-* Microsoft Edge 
+* Microsoft Edge
 * Mozilla Firefox
- 
+
 We aim to provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating systems.
 
 ## End user requirements
