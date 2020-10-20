@@ -30,7 +30,7 @@ Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your c
 
  ### Connection mode (sql_mode) when using MySQL server >=5.7.5
 
- MySQL versions >=5.7.5 the `ANSI` sql_mode setting behaves differently and includes the `ONLY_FULL_GROUP_BY` setting. In most cases it is recommended to leave this setting as-is because it results in deterministic SQL. However for some advanced cases the sql_mode can be configured on the database connection via the configuration API.
+In MySQL versions >=5.7.5, the `ANSI` sql_mode setting behaves differently and includes the `ONLY_FULL_GROUP_BY` setting. It is generally recommended to leave this setting as-is because it results in deterministic SQL. However, for some advanced cases, the sql_mode can be configured on the database connection via the configuration API (see `MySQLDatabase::$sql_mode` for more details.) This setting is only available in Silverstripe CMS 4.7 and later.
 
 ## Webserver Configuration
 
