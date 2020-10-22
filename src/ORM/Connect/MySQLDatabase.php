@@ -50,6 +50,15 @@ class MySQLDatabase extends Database implements TransactionManager
     private static $charset = 'utf8';
 
     /**
+     * SQL Mode used on connections to MySQL. Defaults to ANSI. For basic ORM
+     * compatibility, this setting must always include ANSI or ANSI_QUOTES.
+     *
+     * @config
+     * @var string
+     */
+    private static $sql_mode = 'ANSI';
+
+    /**
      * Cache for getTransactionManager()
      *
      * @var TransactionManager
@@ -84,8 +93,8 @@ class MySQLDatabase extends Database implements TransactionManager
         // Notify connector of parameters
         $this->connector->connect($parameters);
 
-        // This is important!
-        $this->setSQLMode('ANSI');
+        // Set sql_mode
+        $this->setSQLMode(static::config()->get('sql_mode'));
 
         if (isset($parameters['timezone'])) {
             $this->selectTimezone($parameters['timezone']);
