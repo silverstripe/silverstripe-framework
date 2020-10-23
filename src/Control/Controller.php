@@ -230,7 +230,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     protected function prepareResponse($response)
     {
-        if ($response instanceof HTTPResponse) {
+        if (!is_object($response)) {
+            $this->getResponse()->setBody($response);
+        } elseif ($response instanceof HTTPResponse) {
             if (isset($_REQUEST['debug_request'])) {
                 $class = static::class;
                 Debug::message(
