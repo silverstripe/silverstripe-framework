@@ -499,7 +499,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         HTTPCacheControlMiddleware::singleton()->disableCache();
         Requirements::clear();
-        return 1;
+        return HTTPResponse::create()->setBody('1');
     }
 
     /**
