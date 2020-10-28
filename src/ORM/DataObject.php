@@ -26,6 +26,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
+use SilverStripe\ORM\RelatedData\RelatedDataService;
 use SilverStripe\ORM\UniqueKey\UniqueKeyInterface;
 use SilverStripe\ORM\UniqueKey\UniqueKeyService;
 use SilverStripe\Security\Member;
@@ -4351,5 +4352,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private function getUniqueKeyComponents(): array
     {
         return $this->extend('cacheKeyComponent');
+    }
+
+    /**
+     * Find all other DataObject instances that are related to this DataObject in the database
+     * through has_one and many_many relationships. For example:
+     * This method is called on a File.  The MyPage model $has_one File.  There is a Page record that has
+     * a FileID = $this->ID. This SS_List returned by this method will include that Page instance.
+     *
+     * @param string[] $excludedClasses
+     * @return SS_List
+     * @internal
+     */
+    public function findAllRelatedData(array $excludedClasses = []): SS_List
+    {
+        $service = Injector::inst()->get(RelatedDataService::class);
+        return $service->findAll($this, $excludedClasses);
     }
 }
