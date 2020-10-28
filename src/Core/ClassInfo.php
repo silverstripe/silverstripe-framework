@@ -400,7 +400,7 @@ class ClassInfo
      */
     public static function hasMethod($object, $method)
     {
-        if (empty($object)) {
+        if (empty($object) || (!is_object($object) && !is_string($object))) {
             return false;
         }
         if (method_exists($object, $method)) {
