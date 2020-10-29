@@ -1,0 +1,22 @@
+# TODO
+
+service:
+  - xvfb
+
+addons:
+  apt:
+    packages:
+      - tidy
+      - chromium-chromedriver
+      - chromium-browser
+
+env:
+  global:
+    - COMPOSER_ROOT_VERSION=1.x-dev
+    - DISPLAY=":99"
+    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+    - SS_BASE_URL="http://localhost:8080/"
+
+before_script:
+# Extra $PATH
+  - export PATH=/usr/lib/chromium-browser/:$PATH
