@@ -247,11 +247,11 @@ class MySQLSchemaManager extends DBSchemaManager
         // https://github.com/silverstripe/silverstripe-framework/issues/9453
         // Note: MariaDB did not change its behaviour
         $v = $this->database->getVersion();
-        if(false !== strpos($v, 'MariaDB')) {
+        if (false !== strpos($v, 'MariaDB')) {
             // MariaDB is included in the version string: https://mariadb.com/kb/en/version/
             return true;
         }
-        return version_compare($v,'8.0.17','<');
+        return version_compare($v, '8.0.17', '<');
     }
 
     public function fieldList($table)
@@ -419,7 +419,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default
         //'{$this->defaultVal}'");
         $width = $this->shouldUseIntegerWidth() ? '(1)' : '';
-        return 'tinyint'.$width.' unsigned not null' . $this->defaultClause($values);
+        return 'tinyint' . $width . ' unsigned not null' . $this->defaultClause($values);
     }
 
     /**
@@ -533,7 +533,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)$this->default);
         //DB::requireField($this->tableName, $this->name, "int(11) not null default '{$this->defaultVal}'");
         $width = $this->shouldUseIntegerWidth() ? '(11)' : '';
-        return "int$width not null" . $this->defaultClause($values);
+        return 'int' . $width . ' not null' . $this->defaultClause($values);
     }
 
     /**
@@ -550,7 +550,7 @@ class MySQLSchemaManager extends DBSchemaManager
         //$values=Array('type'=>'bigint', 'parts'=>$parts);
         //DB::requireField($this->tableName, $this->name, $values);
         $width = $this->shouldUseIntegerWidth() ? '(20)' : '';
-        return 'bigint'.$width.' not null' . $this->defaultClause($values);
+        return 'bigint' . $width . ' not null' . $this->defaultClause($values);
     }
 
     /**
@@ -632,7 +632,7 @@ class MySQLSchemaManager extends DBSchemaManager
     public function IdColumn($asDbValue = false, $hasAutoIncPK = true)
     {
         $width = $this->shouldUseIntegerWidth() ? '(11)' : '';
-        return 'int'.$width.' not null auto_increment';
+        return 'int' . $width . ' not null auto_increment';
     }
 
     /**
