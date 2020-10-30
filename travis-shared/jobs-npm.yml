@@ -1,0 +1,7 @@
+jobs:
+  include:
+    - php: 7.2
+      env:
+        - DB=MYSQL
+        - NPM_TEST=1
+        - GENERAL_RECIPE_VERSION="$GENERAL_RECIPE_LATEST_MINOR_VERSION"

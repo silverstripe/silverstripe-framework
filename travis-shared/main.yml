@@ -1,0 +1,66 @@
+language: php
+
+dist: xenial
+
+# xvfb needs to be in this file, not in behat.yml as travis shared config does not currently seem to merge 'services'
+services:
+  - mysql
+  - postgresql
+  - xvfb
+
+env:
+  global:
+    - SS_ENVIRONMENT_TYPE=dev
+    - GENERAL_RECIPE_EARLIEST_MINOR_VERSION=~4.4.0@dev # these do work, though not for any core modules in recipe-cms 
+    - GENERAL_RECIPE_LATEST_MINOR_VERSION=4.6.x-dev    # that need to specify COMPOSER_ROOT_VERSION
+    - GENERAL_RECIPE_MAJOR_VERSION=4.x-dev
+    - RECIPE_TESTING_VERSION=^1
+    - FRAMEWORKTEST_VERSION=0.1.0
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+before_script:
+  # Init PHP
+  - phpenv rehash
+  - phpenv config-rm xdebug.ini || true
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo 'always_populate_raw_post_data = -1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
+  # Composer
+  - composer validate
+  - if [[ $DB == PGSQL ]]; then composer require --no-update silverstripe/postgresql:^2 --no-update --prefer-dist; fi
+  - if [[ $REQUIRE_CORE_RECIPE ]]; then composer require silverstripe/recipe-core:$GENERAL_RECIPE_VERSION --no-update --prefer-dist; fi
+  - if [[ $REQUIRE_CMS_RECIPE ]]; then composer require silverstripe/recipe-cms:$GENERAL_RECIPE_VERSION --no-update --prefer-dist; fi
+  - if [[ $REQUIRE_INSTALLER ]]; then composer require silverstripe/installer:$GENERAL_RECIPE_VERSION --no-update --prefer-dist; fi
+  - if [[ $REQUIRE_RECIPE_TESTING ]]; then composer require silverstripe/recipe-testing:$RECIPE_TESTING_VERSION --no-update --prefer-dist; fi
+  - if [[ $FRAMEWORKTEST_VERSION ]]; then composer require silverstripe/frameworktest:$FRAMEWORKTEST_VERSION --no-update --prefer-dist; fi
+  - if [[ $COMPOSER_INSTALL ]]; then composer install $COMPOSER_ARG; else composer update $COMPOSER_ARG; fi
+
+  # Remove preinstalled Chrome (google-chrome)
+  # this would conflict with our chromium-browser installation
+  # and its version is incompatible with chromium-chromedriver
+  - if [[ $BEHAT_TEST ]]; then sudo apt-get remove -y --purge google-chrome-stable || true; fi
+
+  # Start behat services
+  - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
+  - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
+  - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
+  - if [[ $BEHAT_TEST ]]; then (chromedriver > artifacts/chromedriver.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
+
+  # Install NPM dependencies
+  - if [[ $NPM_TEST ]]; then rm -rf client/dist && nvm install && nvm use && npm install -g yarn && yarn install --network-concurrency 1 && (cd vendor/silverstripe/admin && yarn install --network-concurrency 1) && yarn run build; fi
+
+script:
+  - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit tests/php; fi
+  - if [[ $NPM_TEST ]]; then git diff-files --quiet -w --relative=client; fi
+  - if [[ $NPM_TEST ]]; then git diff --name-status --relative=client; fi
+  - if [[ $NPM_TEST ]]; then yarn run test; fi
+  - if [[ $NPM_TEST ]]; then yarn run lint; fi
+  - if [[ $BEHAT_TEST ]] && [[ $BEHAT_SUITE ]]; then vendor/bin/behat $BEHAT_SUITE; fi
+  - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
+
+after_failure:
+  - if [[ $BEHAT_TEST ]]; php ./vendor/silverstripe/framework/tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/ --artifacts-path ./artifacts/; fi

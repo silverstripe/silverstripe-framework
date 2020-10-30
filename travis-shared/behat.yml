@@ -1,0 +1,15 @@
+addons:
+  apt:
+    packages:
+      - tidy
+      - chromium-chromedriver
+      - chromium-browser
+
+env:
+  global:
+    - SS_BASE_URL="http://localhost:8080/"
+    - DISPLAY=":99"
+    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+
+before_script:
+  - export PATH=/usr/lib/chromium-browser/:$PATH
