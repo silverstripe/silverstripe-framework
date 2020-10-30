@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\QueryCache;
 use Iterator;
 use SilverStripe\ORM\DataQueryExecutorInterface;
 use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\FutureQueryHints;
 
 class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQueryStoreInterface
 {
@@ -15,11 +16,6 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
     const COUNT = 'count';
 
     /**
-     * @var DataQueryStoreInterface
-     */
-    protected $queryStore;
-
-    /**
      * @var array
      */
     protected $store = [];
@@ -27,10 +23,14 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
     /**
      * @param DataQuery $dataQuery
      * @param string $modifier
+     * @param FutureQueryHints|null $hints
      * @return iterable
      */
-    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable
-    {
+    public function execute(
+        DataQuery $dataQuery,
+        ?string $modifier = null,
+        ?FutureQueryHints $hints = null
+    ): iterable {
         $results = $this->getCachedResult($dataQuery, $modifier);
         if ($results !== null) {
             return $results;
@@ -43,9 +43,10 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
      * @return iterable
      */
-    public function getFirstRow(DataQuery $dataQuery): iterable
+    public function getFirstRow(DataQuery $dataQuery, ?FutureQueryHints $hints = null): iterable
     {
         $result = $this->getCachedResult($dataQuery, self::FIRST_ROW);
         if ($result) {
@@ -58,9 +59,10 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
      * @return iterable
      */
-    public function getLastRow(DataQuery $dataQuery): iterable
+    public function getLastRow(DataQuery $dataQuery, ?FutureQueryHints $hints = null): iterable
     {
         $result = $this->getCachedResult($dataQuery, self::LAST_ROW);
         if ($result) {
@@ -73,9 +75,10 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
     /**
      * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
      * @return string
      */
-    public function getCount(DataQuery $dataQuery): string
+    public function getCount(DataQuery $dataQuery, ?FutureQueryHints $hints = null): string
     {
         if ($count = $this->getCachedResult($dataQuery, self::COUNT)) {
             return $count;
@@ -136,5 +139,4 @@ class CachedDataQueryExecutor implements DataQueryExecutorInterface, DataQuerySt
 
         return $prefix . $dataQuery->getSignature();
     }
-
 }

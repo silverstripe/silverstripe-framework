@@ -23,15 +23,10 @@ class HasOneEagerLoaderTest extends SapphireTest
     public function testEagerLoadRelation()
     {
         $loader = new HasOneEagerLoader();
-        $list = Player::get();
         $store = new CachedDataQueryExecutor();
-//        $relatedRecords = $loader->eagerLoadRelation($list, 'FavouriteTeam', $store);
-//        $ids = $relatedRecords->column('ID');
-//        $this->assertEmpty($ids);
-//
         $this->buildState();
         $list = Player::get();
-        $relatedRecords = $loader->eagerLoadRelation($list, 'FavouriteTeam', $store);
+        $relatedRecords = $loader->eagerLoadRelation($list->dataQuery(), 'FavouriteTeam', $store);
         $titles = $relatedRecords->column('Title');
         sort($titles);
         $expectedTitles = [

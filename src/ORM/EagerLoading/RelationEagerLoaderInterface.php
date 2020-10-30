@@ -3,16 +3,16 @@
 namespace SilverStripe\ORM\EagerLoading;
 
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
 
 interface RelationEagerLoaderInterface
 {
     /**
-     * @param DataList $list
+     * @param DataQuery $list
      * @param string $relation
      * @param DataQueryStoreInterface $store
-     * @return DataList
+     * @return DataQuery
      */
-    public function eagerLoadRelation(DataList $list, string $relation, DataQueryStoreInterface $store): DataList;
-
+    public function eagerLoadRelation(DataQuery $list, string $relation, DataQueryStoreInterface $store): DataQuery;
 }

@@ -4,29 +4,35 @@ namespace SilverStripe\ORM\EagerLoading;
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
+use SilverStripe\ORM\RelationList;
 
 class HasManyEagerLoader implements RelationEagerLoaderInterface
 {
     /**
-     * @param DataList $list
+     * @param DataQuery $query
      * @param string $relation
      * @param DataQueryStoreInterface $store
-     * @return DataList
+     * @return DataQuery
      * @throws \Exception
      */
-    public function eagerLoadRelation(DataList $list, string $relation, DataQueryStoreInterface $store): DataList
+    public function eagerLoadRelation(DataQuery $query, string $relation, DataQueryStoreInterface $store): DataQuery
     {
-        $parentClass = $list->dataClass();
+        $parentClass = $query->dataClass();
         $schema = DataObject::getSchema();
         $joinField = $schema->getRemoteJoinField($parentClass, $relation, 'has_many');
         $relatedClass = $schema->hasManyComponent($parentClass, $relation);
-        $relatedRecords = $list->relation($relation);
+        $ids = $query->column('ID');
+        $singleton = DataObject::singleton($parentClass);
+        /* @var RelationList $relatedRecords */
+        $relatedRecords = $singleton->$relation($ids);
 
         $map = [];
-        foreach ($list as $item) {
-            $map[$item->ID] = [];
+        foreach ($query->execute() as $item) {
+            $map[$item['ID']] = [];
         }
         foreach ($relatedRecords as $item) {
             $parentID = $item->$joinField;
@@ -39,6 +45,6 @@ class HasManyEagerLoader implements RelationEagerLoaderInterface
             $store->persist($query->dataQuery(), $records);
         }
 
-        return $relatedRecords;
+        return $relatedRecords->dataQuery();
     }
 }

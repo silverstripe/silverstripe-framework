@@ -577,8 +577,6 @@ class DataQuery
      */
     public function count()
     {
-        // TODO: queryExectuor should have a getCount()
-
         $quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
         return $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}");
     }

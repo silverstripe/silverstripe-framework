@@ -9,10 +9,11 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataQueryExecutorInterface;
 use SilverStripe\ORM\EagerLoading\DataListEagerLoader;
+use SilverStripe\ORM\QueryCache\CachedDataQueryExecutor;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
-use SilverStripe\ORM\Tests\EagerLoading\DataListEagerLoaderTest\DebuggableCachedDataQueryExecutor;
+use SilverStripe\ORM\Tests\EagerLoading\DataListEagerLoaderTest\DebuggableDataListEagerLoader;
 use SilverStripe\ORM\Tests\EagerLoading\DataListEagerLoaderTest\DebuggableNaiveDataQueryExecutor;
 
 class DataListEagerLoaderTest extends SapphireTest
@@ -28,42 +29,37 @@ class DataListEagerLoaderTest extends SapphireTest
         TeamComment::class,
     ];
 
-    public function testRelations()
-    {
-        $loader = new DataListEagerLoader();
-        $loader->addRelations([
-            'a1',
-            'a2',
-            'a3' => [
-                'a3b1',
-            ]
-        ]);
-
-        $loader->addRelations([
-            'a4',
-            'a3' => ['a3b2']
-        ]);
-
-        $loader->addRelations([
-            'a5' => ['a5b1']
-        ]);
-
-        $this->assertEquals([
-            'a1',
-            'a2',
-            'a3' => [
-                'a3b1',
-                'a3b2',
-            ],
-            'a4',
-            'a5' => ['a5b1'],
-        ], $loader->getRelations());
-    }
-
-    public function testExecute()
-    {
-
-    }
+//    public function testRelations()
+//    {
+//        $loader = new DataListEagerLoader(new CachedDataQueryExecutor());
+//        $loader->addRelations([
+//            'a1',
+//            'a2',
+//            'a3' => [
+//                'a3b1',
+//            ]
+//        ]);
+//
+//        $loader->addRelations([
+//            'a4',
+//            'a3' => ['a3b2']
+//        ]);
+//
+//        $loader->addRelations([
+//            'a5' => ['a5b1']
+//        ]);
+//
+//        $this->assertEquals([
+//            'a1',
+//            'a2',
+//            'a3' => [
+//                'a3b1',
+//                'a3b2',
+//            ],
+//            'a4',
+//            'a5' => ['a5b1'],
+//        ], $loader->getRelations());
+//    }
 
     public function testHasManyEagerLoading()
     {
@@ -322,7 +318,7 @@ class DataListEagerLoaderTest extends SapphireTest
             }
         }
 
-        $expectedQueryCount = 7;
+        $expectedQueryCount = 6;
         $this->assertEquals($output, $newOutput);
         $this->assertEquals($expectedQueryCount, $this->getExecutor()->getQueries());
     }
@@ -463,21 +459,19 @@ class DataListEagerLoaderTest extends SapphireTest
 
     protected function goNaive()
     {
-        Injector::inst()->load([
-            DataQueryExecutorInterface::class => [
-                'class' => DebuggableNaiveDataQueryExecutor::class,
-            ]
-        ]);
+        Injector::inst()->registerService(
+            new DebuggableNaiveDataQueryExecutor(),
+            DataQueryExecutorInterface::class
+        );
         $this->getExecutor()->reset();
     }
 
     protected function goCached()
     {
-        Injector::inst()->load([
-            DataQueryExecutorInterface::class => [
-                'class' => DebuggableCachedDataQueryExecutor::class,
-            ]
-        ]);
+        Injector::inst()->registerService(
+            new DebuggableDataListEagerLoader(new CachedDataQueryExecutor()),
+            DataQueryExecutorInterface::class
+        );
         $this->getExecutor()->reset();
 
     }

@@ -2,70 +2,60 @@
 
 namespace SilverStripe\ORM\EagerLoading;
 
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\QueryCache\DataQueryStoreInterface;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DataQueryExecutorInterface;
+use SilverStripe\ORM\FutureQueryHints;
+use SilverStripe\ORM\QueryCache\CachedDataQueryExecutor;
 use SilverStripe\ORM\DataObject;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use Psr\Container\NotFoundExceptionInterface;
 
-class DataListEagerLoader implements QueryEagerLoaderInterface
+class DataListEagerLoader implements DataQueryExecutorInterface
 {
-    protected $eagerLoad = [];
-
-    protected $loaded = false;
+    /**
+     * @var CachedDataQueryExecutor
+     */
+    private $cacheExecutor;
 
     /**
-     * @param array $relations
-     * @return $this|QueryEagerLoaderInterface
+     * DataListEagerLoader constructor.
+     * @param CachedDataQueryExecutor $cacheExecutor
      */
-    public function addRelations(array $relations): QueryEagerLoaderInterface
+    public function __construct(CachedDataQueryExecutor $cacheExecutor)
     {
-        $this->eagerLoad = array_merge_recursive($this->eagerLoad, $relations);
-
-        return $this;
+        $this->cacheExecutor = $cacheExecutor;
     }
 
     /**
-     * @return array
+     * @param DataQuery $dataQuery
+     * @param string $modifier
+     * @param FutureQueryHints|null $hints
+     * @return iterable
      */
-    public function getRelations(): array
-    {
-        return $this->eagerLoad;
-    }
-
-    /**
-     * @param DataList $parentList
-     * @param DataQueryStoreInterface $store
-     * @return $this
-     * @throws NotFoundExceptionInterface
-     */
-    public function execute(DataList $parentList, DataQueryStoreInterface $store): QueryEagerLoaderInterface
-    {
-        if ($this->loaded) {
-            return $this;
+    public function execute(
+        DataQuery $dataQuery,
+        ?string $modifier = null,
+        ?FutureQueryHints $hints = null
+    ): iterable {
+        if ($hints) {
+            $this->applyEagerLoading($dataQuery, $hints);
         }
-        $this->loaded = true;
-
-        return $this->applyEagerLoading($parentList, $this->eagerLoad, $store);
+        return $this->cacheExecutor->execute($dataQuery);
     }
 
     /**
-     * @param DataList $parentList
-     * @param $relations
-     * @param DataQueryStoreInterface $store
+     * @param DataQuery $parentQuery
+     * @param FutureQueryHints|null $hints
      * @return $this
      * @throws NotFoundExceptionInterface
      */
-    protected function applyEagerLoading(DataList $parentList, $relations, DataQueryStoreInterface $store): self
+    protected function applyEagerLoading(DataQuery $parentQuery, FutureQueryHints $hints): self
     {
-        $class = $parentList->dataClass();
+        $class = $parentQuery->dataClass();
         $dataObject = DataObject::singleton($class);
 
-        foreach ($relations as $key => $val) {
-            $relation = is_numeric($key) ? $val : $key;
-            $nestedRelations = is_array($val) ? $val : null;
-
+        foreach ($hints->getRelations() as $relation => $nested) {
             $type = $dataObject->getRelationType($relation);
             $loader = null;
             if (!$type) {
@@ -90,15 +80,61 @@ class DataListEagerLoader implements QueryEagerLoaderInterface
                     $loader = Injector::inst()->get(HasManyEagerLoader::class);
                     break;
             }
-
-            $newParentList = $loader->eagerLoadRelation($parentList, $relation, $store);
-
-            if ($nestedRelations) {
-                $this->applyEagerLoading($newParentList, $nestedRelations, $store);
+            /* @var RelationEagerLoaderInterface $loader */
+            $newParentList = $loader->eagerLoadRelation($parentQuery, $relation, $this->cacheExecutor);
+            if ($nested) {
+                $this->applyEagerLoading($newParentList, $nested);
             }
         }
 
-        return $this;
 
+        return $this;
+    }
+
+    /**
+     * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
+     * @return string
+     */
+    public function getCount(DataQuery $dataQuery, ?FutureQueryHints $hints = null): string
+    {
+        if ($hints) {
+            $this->applyEagerLoading($dataQuery, $hints);
+        }
+        return $this->cacheExecutor->getCount($dataQuery);
+    }
+
+    /**
+     * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
+     * @return iterable|null
+     */
+    public function getLastRow(DataQuery $dataQuery, ?FutureQueryHints $hints = null): ?iterable
+    {
+        if ($hints) {
+            $this->applyEagerLoading($dataQuery, $hints);
+        }
+        return $this->cacheExecutor->getLastRow($dataQuery);
+    }
+
+    /**
+     * @param DataQuery $dataQuery
+     * @param FutureQueryHints|null $hints
+     * @return iterable|null
+     */
+    public function getFirstRow(DataQuery $dataQuery, ?FutureQueryHints $hints = null): ?iterable
+    {
+        if ($hints) {
+            $this->applyEagerLoading($dataQuery, $hints);
+        }
+        return $this->cacheExecutor->getFirstRow($dataQuery);
+    }
+
+    /**
+     * @return CachedDataQueryExecutor
+     */
+    public function getCacheExecutor(): CachedDataQueryExecutor
+    {
+        return $this->cacheExecutor;
     }
 }

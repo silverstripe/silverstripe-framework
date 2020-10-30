@@ -5,17 +5,22 @@ namespace SilverStripe\ORM\Tests\EagerLoading\DataListEagerLoaderTest;
 
 
 use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\EagerLoading\DataListEagerLoader;
+use SilverStripe\ORM\FutureQueryHints;
 use SilverStripe\ORM\QueryCache\CachedDataQueryExecutor;
 
-class DebuggableCachedDataQueryExecutor extends CachedDataQueryExecutor
+class DebuggableDataListEagerLoader extends DataListEagerLoader
 {
     protected $hits = 0;
 
     protected $queries = 0;
 
-    public function execute(DataQuery $dataQuery, ?string $modifier = null): iterable
+    public function execute(DataQuery $dataQuery, ?string $modifier = null, ?FutureQueryHints $hints = null): iterable
     {
-        if ($this->getCachedResult($dataQuery, $modifier) !== null) {
+        if ($hints) {
+            $this->applyEagerLoading($dataQuery, $hints);
+        }
+        if ($this->getCacheExecutor()->getCachedResult($dataQuery, $modifier) !== null) {
             $this->hits++;
         } else {
             $this->queries++;

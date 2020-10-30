@@ -285,8 +285,7 @@ trait CustomMethods
 
                 $methodInfo = self::$extra_methods[$class][$method];
 
-                if (
-                    // always check for property
+                if (// always check for property
                     (isset($methodInfo['property']) && $methodInfo['property'] === $property) &&
                     // check for index only if provided
                     (!$index || ($index && isset($methodInfo['index']) && $methodInfo['index'] === $index))

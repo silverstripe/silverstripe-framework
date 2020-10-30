@@ -65,9 +65,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected $dataQueryExecutor;
 
     /**
-     * @var QueryEagerLoaderInterface
+     * @var FutureQueryHints|null
      */
-    protected $eagerLoader;
+    protected $futureQueryHints;
 
 
     /**
@@ -188,29 +188,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $this->dataQueryExecutor = $executor;
 
         return $this;
-    }
-
-    /**
-     * @param QueryEagerLoaderInterface $eagerLoader
-     * @return $this
-     */
-    public function setEagerLoader(QueryEagerLoaderInterface $eagerLoader)
-    {
-        $this->eagerLoader = $eagerLoader;
-
-        return $this;
-    }
-
-    /**
-     * @return QueryEagerLoaderInterface
-     */
-    public function getEagerLoader()
-    {
-        if (!$this->eagerLoader) {
-            $this->eagerLoader = Injector::inst()->create(QueryEagerLoaderInterface::class);
-        }
-
-        return $this->eagerLoader;
     }
 
     /**
@@ -806,38 +783,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
-        $this->performEagerLoading();
-        $rows = $this->getDataQueryExecutor()->execute($this->dataQuery);
+        $rows = $this->getDataQueryExecutor()->execute($this->dataQuery, null, $this->futureQueryHints);
         $results = [];
-//        $row = $rows->nextRecord();
-//        if ($row) {
-//            $results[] = $this->createDataObject($row);
-//        }
         foreach ($rows as $row) {
             $results[] = $this->createDataObject($row);
         }
 
         return $results;
-    }
-
-    /**
-     * @throws BadMethodCallException
-     */
-    protected function performEagerLoading()
-    {
-        if (empty($this->getEagerLoader()->getRelations())) {
-            return;
-        }
-
-        if (!$this->getDataQueryExecutor() instanceof DataQueryStoreInterface) {
-            throw new BadMethodCallException(sprintf(
-                '%s::%s can only be used with an instance of %s for the dataQueryExecutor',
-                __CLASS__,
-                __FUNCTION__,
-                DataQueryStoreInterface::class
-            ));
-        }
-        $this->getEagerLoader()->execute($this, $this->getDataQueryExecutor());
     }
 
     /**
@@ -973,7 +925,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function count()
     {
-        return $this->getDataQueryExecutor()->getCount($this->dataQuery);
+        return $this->getDataQueryExecutor()->getCount($this->dataQuery, $this->futureQueryHints);
     }
 
     /**
@@ -1030,8 +982,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function first()
     {
-        $rows = $this->getDataQueryExecutor()->getFirstRow($this->dataQuery);
-        foreach($rows as $row) {
+        $rows = $this->getDataQueryExecutor()->getFirstRow($this->dataQuery, $this->futureQueryHints);
+        foreach ($rows as $row) {
             return $this->createDataObject($row);
         }
 
@@ -1047,8 +999,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function last()
     {
-        $rows = $this->getDataQueryExecutor()->getLastRow($this->dataQuery);
-        foreach($rows as $row) {
+        $rows = $this->getDataQueryExecutor()->getLastRow($this->dataQuery, $this->futureQueryHints);
+        foreach ($rows as $row) {
             return $this->createDataObject($row);
         }
 
@@ -1213,10 +1165,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function with($relations = [])
     {
+        if (!$this->futureQueryHints) {
+            $this->futureQueryHints = Injector::inst()->create(FutureQueryHints::class);
+        }
         if (!is_array($relations)) {
             $relations = [$relations];
         }
-        $this->getEagerLoader()->addRelations($relations);
+        $this->futureQueryHints->addRelations($relations);
 
         return $this;
     }
