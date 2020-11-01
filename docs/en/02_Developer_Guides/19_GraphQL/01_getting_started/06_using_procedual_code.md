@@ -86,7 +86,7 @@ need, but the key methods map directly to their configuration counterparts:
         $myQuery = Query::create('readCountries', '[Country]')
             ->addArg('limit', 'Int');
 
-        $myModel = ModelType::create(MyDataObject::class)
+        $myModel = $schema->createModel(MyDataObject::class)
             ->addAllFields()
             ->addAllOperations();
         $schema->addModel($myModel);
