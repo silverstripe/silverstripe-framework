@@ -16,11 +16,22 @@ eo:
     TEXT1: 'Jen via'
     TEXT2: 'pasvorta reagorda ligilo'
     TEXT3: por
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET-parametro'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'La URL estas: "{url}"'
+    CONFIRMATION_NAME: 'URL estas protektata'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'La tuta URL estas: "{url}"'
+    CONFIRMATION_NAME: 'URL komenciĝas per "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Malvalida peto'
     REQUEST_ABORTED: 'Ĉesigis peton'
   SilverStripe\Core\Manifest\VersionProvider:
     VERSIONUNKNOWN: Nekonata
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Konfirmi eble danĝeran operacion'
+    INFO_TITLE: 'Sekurecon konfirmi'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Jes
@@ -35,6 +46,8 @@ eo:
     MAXIMUM: 'Pasvorto devas esti ne pli ol {min} signojn longa.'
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   SilverStripe\Forms\DateField:
+    NOTSET: 'ne sendita'
+    TODAY: hodiaŭ
     VALIDDATEFORMAT2: 'Bonvole enigu validan datan formaton ({format})'
     VALIDDATEMAXDATE: 'Necesas ke via dato estu pli aĝa ol, aŭ egala al la maksimuma permesita dato ({date})'
     VALIDDATEMINDATE: 'Necesas ke via dato estu pli nova ol, aŭ egala al la minimuma permesita dato ({date})'
@@ -44,6 +57,7 @@ eo:
     VALIDDATETIMEMINDATE: 'Necesas ke via dato estu pli nova ol, aŭ egala al la minimuma permesita dato ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Elekti)
+    SEARCH_OR_CHOOSE_MODEL: '(Serĉi aŭ elekti je {name})'
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
@@ -53,6 +67,7 @@ eo:
     BAD_METHOD: 'Ĉi tiu formularo bezonas {method} sendaĵon'
     CSRF_EXPIRED_MESSAGE: 'Via seanco finiĝis. Bonvole resendu la formularon.'
     CSRF_FAILED_MESSAGE: 'Ŝajne okazis teknika problemo. Bonvolu alklaki la retrobutonon, refreŝigi vian foliumilon, kaj reprovi.'
+    FIELDISREQUIRED: '{name} estas bezonata'
     VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
     VALIDATIONPASSWORDSNOTEMPTY: 'Pasvortoj ne povas est malplena'
     VALIDATIONSTRONGPASSWORD: 'Pasvorto devas havi almenaŭ unu signon kaj unu literon.'
@@ -73,6 +88,7 @@ eo:
     LinkExisting: 'Ligi ekzistantajn'
     NewRecord: 'Novaj {type}'
     NoItemsFound: 'Neniu elemento troviĝis'
+    OpenFilter: 'Malfermi serĉon kaj filtrilon'
     PRINTEDAT: 'Presita ĉe'
     PRINTEDBY: 'Presita de'
     PlaceHolder: 'Serĉi je {type}'
@@ -92,14 +108,30 @@ eo:
     DeletePermissionsFailure: 'Mankas permeso forigi'
     Deleted: 'Forigita {type} {name}'
     Save: Konservi
+    Saved: 'Konservita {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'Ŝajnas ke vi ne havas la bezonatajn permesojn por redakti je {ObjectTitle}'
+    NEW: 'Aldoni novan rikordon'
+    NEXT: 'Iri al la sekva rikordo'
+    PREVIOUS: 'Iri al la antaŭa rikordo'
+    ViewPermissionsFailure: 'Ŝajnas ke vi ne havas la bezonatajn permesojn por vidi je {ObjectTitle}'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Redakti
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Serĉi por {name}'
+    SearchFormFaliure: 'Ne eblis generi serĉan formularon'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Ne povas forigi vin el ĉi tiu grupo; vi perdus administrajn rajtojn'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Paĝo
     View: Vido
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vido
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Pleja kongruo'
+    ORIGINAL: Origina
+    PIXEL_WIDTH: '{width} bilderoj'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
@@ -110,6 +142,8 @@ eo:
     IsNullLabel: 'Estas senvalora'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ne estas numero, nur numeroj estas akcepteblaj por ĉi tiu kampo'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'La valoro por {name} devas ne havi longon pli ol {maxLength} signoj'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bonvole enigu validan horan formaton ({format})'
   SilverStripe\ORM\DataObject:
@@ -168,6 +202,12 @@ eo:
     SUCCESS: Sukseso
     SUCCESSCONTENT: '<p>Ensaluto suksesis. Se vi ne aŭtomate alidirektiĝos, <a target="_top" href="{link}">alklaku ĉi tie</a></p>'
     SUCCESS_TITLE: 'Ensaluto sukcesis'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Ruli la agon'
+    EMPTY_TITLE: 'Nenio konfirmota'
+    REFUSE: Rezigni
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Konfirmi eble danĝeran operacion'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Apriora administranto'
   SilverStripe\Security\Group:
@@ -241,7 +281,9 @@ eo:
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: 'Familia nomo'
     VALIDATIONADMINLOSTACCESS: 'Ne povas forigi ĉiujn administrajn grupojn el via profilo'
+    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama {identifier}'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
+    WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
     belongs_many_many_Groups: Grupoj
     db_Locale: 'Interfaca Lokaĵaro'
