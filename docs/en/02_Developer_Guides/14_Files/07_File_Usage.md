@@ -43,7 +43,7 @@ class UsedOnTableExtension extends Extension
     // This extension hook will alter a DataObject after it was fetched via MyDataObject::get()
     // This allows a greater level of flexibility to exclude or modify individual DataObjects
     // It is less efficient to use this extension hook that `updateUsageExcludedClasses()` above
-    public function updateUsageDataObject(DataObject $dataObject)
+    public function updateUsageDataObject(?DataObject &$dataObject)
     {
         if (!($dataObject instanceof MyDataObject)) {
             return;
