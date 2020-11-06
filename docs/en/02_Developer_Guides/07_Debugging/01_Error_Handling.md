@@ -142,7 +142,7 @@ SilverStripe\Core\Injector\Injector:
         - error
       properties:
         ContentType: text/html
-        Formatter: %$SilverStripe\Logging\DetailedErrorFormatter
+        Formatter: '%$SilverStripe\Logging\DetailedErrorFormatter'
 ```
 
 The first section 4 lines passes a new handler to `Logger::pushHandler()` from the named service `MailHandler`. The
@@ -181,7 +181,7 @@ The handler key of the default handler is `pushDisplayErrorHandler`, so you can 
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface.errorhandler:
     calls:
-      pushDisplayErrorHandler:  %%remove%%
+      pushDisplayErrorHandler: '%%remove%%'
 ```
 
 ### Setting a different configuration for dev
@@ -205,8 +205,8 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "notice"
     properties:
-      Formatter: %$SilverStripe\Logging\DetailedErrorFormatter
-      CLIFormatter: %$SilverStripe\Logging\DetailedErrorFormatter
+      Formatter: '%$SilverStripe\Logging\DetailedErrorFormatter'
+      CLIFormatter: '%$SilverStripe\Logging\DetailedErrorFormatter'
 ---
 Name: live-errors
 Except:
@@ -234,7 +234,7 @@ SilverStripe\Core\Injector\Injector:
       - "../silverstripe.log"
       - "notice"
     properties:
-      Formatter: %$Monolog\Formatter\HtmlFormatter
+      Formatter: '%$Monolog\Formatter\HtmlFormatter'
       ContentType: text/html
   
   # Handler for displaying errors in the browser or CLI
@@ -243,7 +243,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - "error"
     properties:
-      Formatter: %$SilverStripe\Logging\DebugViewFriendlyErrorFormatter
+      Formatter: '%$SilverStripe\Logging\DebugViewFriendlyErrorFormatter'
      
   # Configuration for the "friendly" error formatter
   SilverStripe\Logging\DebugViewFriendlyErrorFormatter:
