@@ -182,7 +182,6 @@ MyClass::get()->where("\"Title\" = 'my title'");
 
 Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
 
-
 ## Secure Development
 
 See [security](/developer_guides/security) for conventions related to handing security permissions.
