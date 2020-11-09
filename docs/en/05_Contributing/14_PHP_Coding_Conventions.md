@@ -182,11 +182,14 @@ MyClass::get()->where("\"Title\" = 'my title'");
 
 Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
 
+
 ## Secure Development
 
 See [security](/developer_guides/security) for conventions related to handing security permissions.
 
 ## Related
 
+ * [PHPCS Coding Standard](https://github.com/silverstripe/silverstripe-framework/blob/4/phpcs.xml.dist)
  * [JavaScript Coding Conventions](/contributing/javascript_coding_conventions)
  * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)
+ 
