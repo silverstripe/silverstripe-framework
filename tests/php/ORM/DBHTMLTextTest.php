@@ -265,7 +265,12 @@ class DBHTMLTextTest extends SapphireTest
             [
                 '<p>Collapses</p><p></p><p>Excessive<br/><br /><br>Newlines</p>',
                 "Collapses\n\nExcessive\n\nNewlines",
-            ]
+            ],
+            // non-latin characters
+            [
+                '<p>新西兰，奥特亚罗瓦&mdash;<br /><br /><br />&mdash;创新思维之乡</p>',
+                "新西兰，奥特亚罗瓦—\n\n—创新思维之乡"
+            ],
         ];
     }
 

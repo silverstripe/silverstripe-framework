@@ -228,7 +228,7 @@ class DBHTMLText extends DBText
         $text = strip_tags($text);
 
         // Implode >3 consecutive linebreaks into 2
-        $text = preg_replace('~(\R){2,}~', "\n\n", $text);
+        $text = preg_replace('~(\R){2,}~u', "\n\n", $text);
 
         // Decode HTML entities back to plain text
         return trim(Convert::xml2raw($text));
