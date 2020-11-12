@@ -270,7 +270,7 @@ class CoreKernel implements Kernel
         $databaseConfig = DB::getConfig();
         // Gracefully fail if no DB is configured
         if (empty($databaseConfig['database'])) {
-            $msg = 'SilverStripe Framework requires a "database" key in DB::getConfig(). ' .
+            $msg = 'Silverstripe Framework requires a "database" key in DB::getConfig(). ' .
                 'Did you forget to set SS_DATABASE_NAME or SS_DATABASE_CHOOSE_NAME in your environment?';
             $this->detectLegacyEnvironment();
             $this->redirectToInstaller($msg);
