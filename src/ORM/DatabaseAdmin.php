@@ -410,7 +410,6 @@ class DatabaseAdmin extends Controller
      */
     protected function updateLegacyClassNames($dataClass, $fieldName, $oldClassName, $newClassName)
     {
-        // no-op
         Deprecation::notice('5.0', 'use updateLegacyClassNameField instead');
         $this->updateLegacyClassNameField($dataClass, $fieldName, [$oldClassName => $newClassName]);
     }
