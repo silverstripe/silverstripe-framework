@@ -1023,7 +1023,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $flush = array_key_exists('flush', $request->getVars());
 
             // Custom application
-            $app->execute($request, function (HTTPRequest $request) {
+            $res = $app->execute($request, function (HTTPRequest $request) {
                 // Start session and execute
                 $request->getSession()->init($request);
 
@@ -1037,6 +1037,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
                 $controller->pushCurrent();
                 $controller->doInit();
             }, $flush);
+
+            if ($res && $res->isError()) {
+                throw new LogicException($res->getBody());
+            }
         } else {
             // Allow flush from the command line in the absence of HTTPApplication's special sauce
             $flush = false;
