@@ -1669,6 +1669,31 @@ class DataObjectTest extends SapphireTest
         $dataObject->newClassInstance('Controller');
     }
 
+    public function testNewClassInstanceFromUnsavedDataObject()
+    {
+        $dataObject = new DataObjectTest\Team([
+            'Title' => 'Team 1'
+        ]);
+        $changedDO = $dataObject->newClassInstance(DataObjectTest\SubTeam::class);
+        $changedFields = $changedDO->getChangedFields();
+
+        // Don't write the record, it will reset changed fields
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
+        $this->assertContains('ClassName', array_keys($changedFields));
+        $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['RecordClassName']['after'], DataObjectTest\SubTeam::class);
+
+        $changedDO->write();
+
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertNotEmpty($changedDO->ID, 'New class instance got an ID generated on write');
+    }
+
     public function testMultipleManyManyWithSameClass()
     {
         $team = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
@@ -2561,7 +2586,21 @@ class DataObjectTest extends SapphireTest
             'Salary' => 50,
         ], DataObject::CREATE_HYDRATED);
         $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
         $this->assertEquals([], $staff->getChangedFields());
+
+        // Test hydration (DataObject::CREATE_HYDRATED)
+        // Defaults are not used, changes are not tracked
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_MEMORY_HYDRATED);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals([], $staff->getChangedFields());
+        $this->assertFalse(
+            $staff->isInDB(),
+            'DataObject hydrated from memory without an ID are assumed to not be in the Database.'
+        );
 
         // Test singleton (DataObject::CREATE_SINGLETON)
         // Values are ingored
@@ -2571,5 +2610,16 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(null, $staff->EmploymentType);
         $this->assertEquals(null, $staff->Salary);
         $this->assertEquals([], $staff->getChangedFields());
+    }
+
+    public function testDataObjectCreationHydrateWithoutID()
+    {
+        $this->expectExceptionMessage(
+            "Hydrated records must be passed a record array including an ID."
+        );
+        // Hydrating a record without an ID should throw an exception
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_HYDRATED);
     }
 }
