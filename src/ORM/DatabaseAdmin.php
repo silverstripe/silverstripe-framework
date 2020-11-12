@@ -3,12 +3,14 @@
 namespace SilverStripe\ORM;
 
 use BadMethodCallException;
+use Generator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DatabaseException;
@@ -38,17 +40,17 @@ class DatabaseAdmin extends Controller
      * Obsolete classname values that should be remapped in dev/build
      */
     private static $classname_value_remapping = [
-        'File' => 'SilverStripe\\Assets\\File',
-        'Image' => 'SilverStripe\\Assets\\Image',
-        'Folder' => 'SilverStripe\\Assets\\Folder',
-        'Group' => 'SilverStripe\\Security\\Group',
-        'LoginAttempt' => 'SilverStripe\\Security\\LoginAttempt',
-        'Member' => 'SilverStripe\\Security\\Member',
-        'MemberPassword' => 'SilverStripe\\Security\\MemberPassword',
-        'Permission' => 'SilverStripe\\Security\\Permission',
-        'PermissionRole' => 'SilverStripe\\Security\\PermissionRole',
+        'File'               => 'SilverStripe\\Assets\\File',
+        'Image'              => 'SilverStripe\\Assets\\Image',
+        'Folder'             => 'SilverStripe\\Assets\\Folder',
+        'Group'              => 'SilverStripe\\Security\\Group',
+        'LoginAttempt'       => 'SilverStripe\\Security\\LoginAttempt',
+        'Member'             => 'SilverStripe\\Security\\Member',
+        'MemberPassword'     => 'SilverStripe\\Security\\MemberPassword',
+        'Permission'         => 'SilverStripe\\Security\\Permission',
+        'PermissionRole'     => 'SilverStripe\\Security\\PermissionRole',
         'PermissionRoleCode' => 'SilverStripe\\Security\\PermissionRoleCode',
-        'RememberLoginHash' => 'SilverStripe\\Security\\RememberLoginHash',
+        'RememberLoginHash'  => 'SilverStripe\\Security\\RememberLoginHash',
     ];
 
     /**
@@ -207,7 +209,7 @@ class DatabaseAdmin extends Controller
         $file = TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(['\\','/',':'], '.', Director::baseFolder());
+            . str_replace(['\\', '/', ':'], '.', Director::baseFolder());
 
         if (file_exists($file)) {
             return filemtime($file);
@@ -219,9 +221,9 @@ class DatabaseAdmin extends Controller
     /**
      * Updates the database schema, creating tables & fields as necessary.
      *
-     * @param boolean $quiet Don't show messages
+     * @param boolean $quiet    Don't show messages
      * @param boolean $populate Populate the database, as well as setting up its schema
-     * @param bool $testMode
+     * @param bool    $testMode
      */
     public function doBuild($quiet = false, $populate = true, $testMode = false)
     {
@@ -356,15 +358,7 @@ class DatabaseAdmin extends Controller
             }
 
             // Remap obsolete class names
-            $remappingConfig = $this->config()->get('classname_value_remapping');
-            $remappingFields = $this->getClassNameRemappingFields();
-            foreach ($remappingFields as $className => $fieldNames) {
-                foreach ($fieldNames as $fieldName) {
-                    foreach ($remappingConfig as $oldClassName => $newClassName) {
-                        $this->updateLegacyClassNames($className, $fieldName, $oldClassName, $newClassName);
-                    }
-                }
-            }
+            $this->migrateClassNames();
 
             // Require all default records
             foreach ($dataClasses as $dataClass) {
@@ -398,7 +392,7 @@ class DatabaseAdmin extends Controller
         }
 
         if (!$quiet) {
-            echo (Director::is_cli()) ? "\n Database build completed!\n\n" :"<p>Database build completed!</p>";
+            echo (Director::is_cli()) ? "\n Database build completed!\n\n" : "<p>Database build completed!</p>";
         }
 
         ClassInfo::reset_db_cache();
@@ -412,8 +406,23 @@ class DatabaseAdmin extends Controller
      * @param string $fieldName    The field name to look in for obsolete class names
      * @param string $oldClassName The old class name
      * @param string $newClassName The new class name
+     * @deprecated This method performs inefficiently so it's been disabled
      */
     protected function updateLegacyClassNames($dataClass, $fieldName, $oldClassName, $newClassName)
+    {
+        // no-op
+        Deprecation::notice('5.0');
+    }
+
+    /**
+     * Given a base data class, a field name and an old and new class name (value), look for obsolete ($oldClassName)
+     * values in the $dataClass's $fieldName column and replace it with $newClassName.
+     *
+     * @param string   $dataClass The data class to look up
+     * @param string   $fieldName The field name to look in for obsolete class names
+     * @param string[] $mapping   Map of old to new classnames
+     */
+    protected function updateLegacyClassNameField($dataClass, $fieldName, $mapping)
     {
         $schema = DataObject::getSchema();
         // Check first to ensure that the class has the specified field to update
@@ -422,36 +431,59 @@ class DatabaseAdmin extends Controller
         }
 
         // Load a list of any records that have obsolete class names
-        $badRecordCount = DataObject::get($dataClass)
-            ->filter([$fieldName => $oldClassName])
-            ->count();
+        $table = $schema->tableName($dataClass);
+        $currentClassNameList = DB::query("SELECT DISTINCT(\"{$fieldName}\") FROM \"{$table}\"")->column();
 
-        if (!$badRecordCount) {
+        // Get all invalid classes for this field
+        $invalidClasses = array_intersect($currentClassNameList, array_keys($mapping));
+        if (!$invalidClasses) {
             return;
         }
 
-        if (Director::is_cli()) {
-            echo " * Correcting {$badRecordCount} obsolete {$fieldName} values for {$newClassName}\n";
-        } else {
-            echo "<li>Correcting {$badRecordCount} obsolete {$fieldName} values for {$newClassName}</li>\n";
+        $numberClasses = count($invalidClasses);
+        DB::alteration_message(
+            "Correcting obsolete {$fieldName} values for {$numberClasses} outdated types",
+            'obsolete'
+        );
+
+        // Build case assignment based on all intersected legacy classnames
+        $cases = [];
+        $params = [];
+        foreach ($invalidClasses as $invalidClass) {
+            $cases[] = "WHEN \"{$fieldName}\" = ? THEN ?";
+            $params[] = $invalidClass;
+            $params[] = $mapping[$invalidClass];
         }
+
+        foreach ($this->getClassTables($dataClass) as $table) {
+            $casesSQL = implode(' ', $cases);
+            $sql = "UPDATE \"{$table}\" SET \"{$fieldName}\" = CASE {$casesSQL} ELSE \"{$fieldName}\" END";
+            DB::prepared_query($sql, $params);
+        }
+    }
+
+    /**
+     * Get tables to update for this class
+     *
+     * @param string $dataClass
+     * @return Generator|string[]
+     */
+    protected function getClassTables($dataClass)
+    {
+        $schema = DataObject::getSchema();
         $table = $schema->tableName($dataClass);
 
-        $updateQuery = "UPDATE \"{$table}%s\" SET \"{$fieldName}\" = ? WHERE \"{$fieldName}\" = ?";
-        $updateQueries = [sprintf($updateQuery, '')];
+        // Base table
+        yield $table;
 
         // Remap versioned table class name values as well
-        /** @var Versioned|DataObject $class */
-        $class = DataObject::singleton($dataClass);
-        if ($class->hasExtension(Versioned::class)) {
-            if ($class->hasStages()) {
-                $updateQueries[] = sprintf($updateQuery, '_Live');
+        /** @var Versioned|DataObject $dataClass */
+        $dataClass = DataObject::singleton($dataClass);
+        if ($dataClass->hasExtension(Versioned::class)) {
+            if ($dataClass->hasStages()) {
+                yield "{$table}_Live";
             }
-            $updateQueries[] = sprintf($updateQuery, '_Versions');
-        }
-
-        foreach ($updateQueries as $query) {
-            DB::prepared_query($query, [$newClassName, $oldClassName]);
+            yield "{$table}_Versions";
         }
     }
 
@@ -528,6 +560,22 @@ class DatabaseAdmin extends Controller
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Migrate all class names
+     *
+     * @todo Migrate to separate build task
+     */
+    protected function migrateClassNames()
+    {
+        $remappingConfig = $this->config()->get('classname_value_remapping');
+        $remappingFields = $this->getClassNameRemappingFields();
+        foreach ($remappingFields as $className => $fieldNames) {
+            foreach ($fieldNames as $fieldName) {
+                $this->updateLegacyClassNameField($className, $fieldName, $remappingConfig);
             }
         }
     }
