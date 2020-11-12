@@ -406,17 +406,18 @@ class DatabaseAdmin extends Controller
      * @param string $fieldName    The field name to look in for obsolete class names
      * @param string $oldClassName The old class name
      * @param string $newClassName The new class name
-     * @deprecated This method performs inefficiently so it's been disabled
+     * @deprecated 5.0 use updateLegacyClassNameField instead
      */
     protected function updateLegacyClassNames($dataClass, $fieldName, $oldClassName, $newClassName)
     {
         // no-op
-        Deprecation::notice('5.0');
+        Deprecation::notice('5.0', 'use updateLegacyClassNameField instead');
+        $this->updateLegacyClassNameField($dataClass, $fieldName, [$oldClassName => $newClassName]);
     }
 
     /**
-     * Given a base data class, a field name and an old and new class name (value), look for obsolete ($oldClassName)
-     * values in the $dataClass's $fieldName column and replace it with $newClassName.
+     * Given a base data class, a field name and a mapping of class replacements, look for obsolete
+     * values in the $dataClass's $fieldName column and replace it with $mapping
      *
      * @param string   $dataClass The data class to look up
      * @param string   $fieldName The field name to look in for obsolete class names
