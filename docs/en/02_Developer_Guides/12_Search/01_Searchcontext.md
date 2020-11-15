@@ -69,7 +69,7 @@ class MyDataObject extends DataObject
         ];
 
         return new SearchContext(
-            $this->class, 
+            static::class, 
             $fields, 
             $filters
         );
