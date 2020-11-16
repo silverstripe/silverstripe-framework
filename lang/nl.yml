@@ -27,8 +27,6 @@ nl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Fout bij verwerken'
     REQUEST_ABORTED: 'Fout bij verwerken (geannuleerd)'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Onbekend
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bevestig het uitvoeren van mogelijk gevaarlijke taak'
     INFO_TITLE: Beveiligingswaarschuwing

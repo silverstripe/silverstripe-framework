@@ -19,8 +19,6 @@ fr:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Requête invalide'
     REQUEST_ABORTED: 'Requête non aboutie'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Inconnu
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Non
     YESANSWER: Oui
