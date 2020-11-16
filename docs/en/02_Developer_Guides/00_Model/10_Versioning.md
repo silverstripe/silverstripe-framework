@@ -1264,18 +1264,33 @@ For more information, see [ReactJS, Redux and GraphQL](../../customising_the_adm
 
 ### Adding the HistoryViewerField
 
-You can add the [HistoryViewerField](api:SilverStripe\VersionedAdmin\Forms\HistoryViewerField) to your object's CMS
+Firstly ensure your javascript bundle is included throughout the CMS:
+
+```yml
+---
+Name: CustomAdmin
+After:
+  - 'versionedadmincmsconfig'
+  - 'versionededitform'
+  - 'cmsscripts'
+  - 'elemental' # Only needed if silverstripe-elemental is installed
+---
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - app/client/dist/js/bundle.js
+
+```
+
+Then you can add the [HistoryViewerField](api:SilverStripe\VersionedAdmin\Forms\HistoryViewerField) to your object's CMS
 fields in the same way as any other form field:
 
 ```php
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
-use SilverStripe\View\Requirements;
 
 public function getCMSFields()
 {
     $fields = parent::getCMSFields();
 
-    Requirements::javascript('app/client/dist/js/bundle.js');
     $fields->addFieldToTab('Root.History', HistoryViewerField::create('MyObjectHistory'));
 
     return $fields;
