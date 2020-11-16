@@ -27,8 +27,6 @@ en:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Unknown
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
     INFO_TITLE: 'Security Confirmation'
@@ -182,6 +180,8 @@ en:
     ANY: Any
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Too many related objects; fallback field in use'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -365,3 +365,5 @@ en:
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDRESETSENTHEADER: 'Password reset link sent'
     PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'There was a problem loading the media.'

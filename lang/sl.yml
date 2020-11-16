@@ -27,8 +27,6 @@ sl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neveljavni zahtevek'
     REQUEST_ABORTED: 'Zahtevek prekinjen'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Neznana
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Potrdite potencialno škodljivo akcijo'
     INFO_TITLE: 'Varnostno preverjanje'
