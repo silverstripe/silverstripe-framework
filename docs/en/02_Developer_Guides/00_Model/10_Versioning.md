@@ -1264,7 +1264,7 @@ For more information, see [ReactJS, Redux and GraphQL](../../customising_the_adm
 
 ### Adding the HistoryViewerField
 
-Firstly ensure your javascript bundle is included throughout the CMS:
+Firstly, ensure your JavaScript bundle is included throughout the CMS:
 
 ```yml
 ---
