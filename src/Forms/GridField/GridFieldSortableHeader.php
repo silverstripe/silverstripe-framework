@@ -18,7 +18,7 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
 
     /**
@@ -119,7 +119,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
         $forTemplate = new ArrayData([]);
         $forTemplate->Fields = new ArrayList;
 
-        $state = $gridField->State->GridFieldSortableHeader;
+        $state = $this->getState($gridField);
         $columns = $gridField->getColumns();
         $currentColumn = 0;
 
@@ -236,7 +236,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
             return;
         }
 
-        $state = $gridField->State->GridFieldSortableHeader;
+        $state = $this->getState($gridField);
         switch ($actionName) {
             case 'sortasc':
                 $state->SortColumn = $arguments['SortColumn'];
@@ -266,11 +266,26 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
         }
 
         /** @var Sortable $dataList */
-        $state = $gridField->State->GridFieldSortableHeader;
+        $state = $this->getState($gridField);
         if ($state->SortColumn == "") {
             return $dataList;
         }
 
         return $dataList->sort($state->SortColumn, $state->SortDirection('asc'));
+    }
+
+    /**
+     * Extract state data from the parent gridfield
+     * @param GridField $gridField
+     * @return GridState_Data
+     */
+    private function getState(GridField $gridField): GridState_Data
+    {
+        return $gridField->State->GridFieldSortableHeader;
+    }
+
+    public function initDefaultState(GridState_Data $data): void
+    {
+        $data->GridFieldSortableHeader->initDefaults(['SortColumn' => null, 'SortDirection' => 'asc']);
     }
 }
