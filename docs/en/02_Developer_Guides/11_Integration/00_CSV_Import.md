@@ -80,7 +80,7 @@ below the search form on the left.
 You can have more customised logic and interface feedback through a custom controller. 
 Let's create a simple upload form (which is used for `MyDataObject` instances). 
 You'll need to add a route to your controller to make it accessible via URL 
-(see [director](/reference/director)).
+(see [Routing](../../controllers/routing/)).
 
 
 ```php
