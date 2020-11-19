@@ -126,7 +126,7 @@ Plugins have to be registered with Injector.
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\Schema\Registry\PluginRegistry:
     constructor:
-      myPlugin: '%$MyProject\Plugins\MyPlugin'
+      - 'MyProject\Plugins\MyPlugin'
 ```
 
 [info]
