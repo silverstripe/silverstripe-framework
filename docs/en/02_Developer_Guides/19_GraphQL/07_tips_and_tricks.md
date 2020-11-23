@@ -13,6 +13,43 @@ Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
 
+## Getting the type name for a model class
+
+Often times, you'll need to know the name of the type given a class name. There's a bit of context to this.
+
+### Getting the type name at build time
+
+If you need to know the name of the type _during the build_, e.g. creating the name of an operation, field, query, etc,
+you should use the `Build::requireActiveBuild()` accessor. This will get you the schema that is currently being built,
+and throw if no build is active. A more tolerant method is `getActiveBuild()` which will return null if no schema
+is being built.
+
+```php
+Build::requireActiveBuild()->findOrMakeModel($className)->getName();
+```
+
+### Getting the type name from within your app
+
+If you need the type name during normal execution of your app, e.g. to display in your UI, you can rely
+on the cached typenames, which are persisted alongside your generated schema code.
+
+```php
+Schema::create('default')->getTypeNameForClass($className);
+```
+
+### Why is there a difference?
+
+It is expensive to load all of the schema config. The `getTypeNameForClass` function avoids the need to
+load the config, and reads directly from the cache. To be clear, the following is functionally equivalent,
+but slow:
+
+```php
+Schema::create('default')
+  ->loadFromConfig()
+  ->findOrMakeModel($className)
+  ->getName();
+```
+
 ## Persisting queries
 
 A common pattern in GraphQL APIs is to store queries on the server by an identifier. This helps save
