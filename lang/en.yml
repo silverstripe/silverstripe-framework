@@ -27,6 +27,8 @@ en:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Unknown
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
     INFO_TITLE: 'Security Confirmation'
