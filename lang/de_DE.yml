@@ -16,6 +16,8 @@ de_DE:
     TEXT1: 'Hier ist dein'
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Unbekannt
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nein
     YESANSWER: Ja

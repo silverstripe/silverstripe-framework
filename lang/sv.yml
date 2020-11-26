@@ -19,6 +19,8 @@ sv:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ogiltig förfrågan'
     REQUEST_ABORTED: 'Förfrågan avbruten'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Okänd
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nej
     YESANSWER: Ja

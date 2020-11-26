@@ -19,6 +19,8 @@ it:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Richiesta non valida'
     REQUEST_ABORTED: 'Richiesta annullata'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Sconosciuto
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sì

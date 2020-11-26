@@ -27,6 +27,8 @@ eo:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Malvalida peto'
     REQUEST_ABORTED: 'Ĉesigis peton'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Nekonata
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Konfirmi eble danĝeran operacion'
     INFO_TITLE: 'Sekurecon konfirmi'
