@@ -179,14 +179,11 @@ class StandardRelatedDataService implements RelatedDataService
         $class = get_class($record);
         foreach ($record->manyMany() as $component => $componentClass) {
             $componentClass = $this->updateComponentClass($componentClass, $throughClasses);
-            if (
-                // Ignore belongs_many_many_through with dot syntax
-                strpos($componentClass, '.') !== false ||
-                // Prevent duplicate counting of self-referential relations e.g.
-                // MyFile::$many_many = [ 'MyFile' => MyFile::class ]
-                // This relation will still be counted in $this::addRelatedReverseManyManys()
-                $record instanceof $componentClass
-            ) {
+            // Ignore belongs_many_many_through with dot syntax, AND
+            // Prevent duplicate counting of self-referential relations e.g.
+            // MyFile::$many_many = [ 'MyFile' => MyFile::class ]
+            // This relation will still be counted in $this::addRelatedReverseManyManys()
+            if (strpos($componentClass, '.') !== false || $record instanceof $componentClass) {
                 continue;
             }
             $results = $this->fetchManyManyResults($record, $class, $component, false);
