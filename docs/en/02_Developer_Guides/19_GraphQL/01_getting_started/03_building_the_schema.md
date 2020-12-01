@@ -84,8 +84,7 @@ tangential changes such as:
 
 ### Viewing the generated code
 
-TODO, once we figure out where it will go
-
+By default, the generated code is placed in the `.graphql/` directory in the root of your project.
 
 ### Further reading
 

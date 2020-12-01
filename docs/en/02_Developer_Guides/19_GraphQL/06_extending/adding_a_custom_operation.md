@@ -73,10 +73,13 @@ public static function resolve(array $resolverContext = []): Closure
 Now, just add the operation to the `DataObjectModel` configuration
 to make it available to all DataObject types.
 
+**app/_graphql/config.yml**
 ```yaml
-SilverStripe\GraphQL\Schema\DataObject\DataObjectModel:
-  operations:
-    duplicate: 'MyProject\Operations\DuplicateCreator'
+modelConfig:
+  DataObject:
+    operations:
+      duplicate:
+        class: 'MyProject\Operations\DuplicateCreator'
 ```
 
 And use it:

@@ -49,6 +49,8 @@ Let's populate a schema that is pre-configured for us out of the box, `default`.
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
+      config:
+        # general schema config here
       types:
         # your generic types here
       models:
@@ -79,7 +81,10 @@ SilverStripe\GraphQL\Schema\Schema:
       src: app/_graphql
 ```
 
-It can also be an array of directories.
+[info]
+It is recommended that you define your sources as an array so that further source files are merged.
+ Otherwise, another config file could completely override part of your schema definition.
+[/info]
 
 **app/_config/graphql.yml**
 ```yml
@@ -87,8 +92,8 @@ SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
       src:
-        myDir: app/_graphql
-        myOtherDir: module/_graphql
+        - app/_graphql
+        - module/_graphql
 ```
 
 [info]
@@ -107,6 +112,8 @@ This doesn't mean there is never a need to flush your schema config. If you were
 **app/_graphql/schema.yml**
 ```yaml
 # no schema key needed. it's implied!
+config:
+  # your schema config here
 types:
   # your generic types here
 models:
@@ -121,7 +128,7 @@ mutations:
 
 Your schema YAML file will get quite bloated if it's just used as a monolithic source of truth
 like this. We can tidy this up quite a bit by simply placing the files in directories that map
-to the keys they populate -- e.g. `types/`, `models/`, `queries/`, `mutations/`, etc.
+to the keys they populate -- e.g. `config/`, `types/`, `models/`, `queries/`, `mutations/`, etc.
 
 There are two approaches to namespacing:
 * By filename
@@ -131,6 +138,11 @@ There are two approaches to namespacing:
 
 If you use a parent directory name (at any depth) of one of the four keywords above, it will
 be implicitly placed in the corresponding section of the schema.
+
+**app/_graphql/types/config.yml**
+```yaml
+# my schema config here
+```
 
 **app/_graphql/types/types.yml**
 ```yaml
@@ -169,30 +181,29 @@ The following are perfectly valid:
 * `app/_graphql/news-and-blog/models/blog.yml`
 * `app/_graphql/mySchema.yml`
 
-### Changing schema defaults
+### Schema config
 
-In addition to all the keys mentioned above, each schema can declare a couple of generic
- configuration files, `defaults` and `modelConfig`. These are
- mostly used for assigning or removing  default plugins to models and operations.
+In addition to all the keys mentioned above, each schema can declare a generic
+ configuration section, `config`. This are mostly used for assigning or removing plugins
+ and resolvers.
 
-[info]
-As of now, the only one of these being used 
- is `modelConfig`, but `defaults` could some day apply non-model configuration to the schema.
-[/info]
+An important subsection of `config` is `modelConfig`, where you can configure settings for specific
+models, e.g. `DataObject`.
 
-Like the other sections, it can have its own `modelConfig.yml`, or just be added as a `modelConfig:` 
+Like the other sections, it can have its own `config.yml`, or just be added as a `config:` 
 mapping to a generic schema yaml document.
 
-**app/_graphql/modelConfig.yml**
+**app/_graphql/config.yml**
 ```yaml
-DataObject:
-  plugins:
-    inheritance: true
-  operations:
-    read:
-      plugins:
-        readVersion: false
-        paginateList: false
+modelConfig:
+  DataObject:
+    plugins:
+      inheritance: true
+    operations:
+      read:
+        plugins:
+          readVersion: false
+          paginateList: false
 ```
 
 

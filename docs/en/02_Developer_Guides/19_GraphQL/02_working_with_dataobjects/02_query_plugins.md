@@ -283,13 +283,14 @@ MyProject\Models\ProductCategory:
 
 To disable sort globally, use `modelConfig`:
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject:
-  operations:
-    read:
-      plugins:
-        sort: false
+modelConfig:
+  DataObject:
+    operations:
+      read:
+        plugins:
+          sort: false
 ```
 
 ### The getByLink plugin

@@ -224,8 +224,8 @@ Page:
 
 There are several settings you can apply to your model class (typically `DataObjectModel`),
 but because they can have distinct values _per schema_, the standard `_config` layer is not
-an option. Model configuration has to be done within the schema definition in the `modelConfig`
-section.
+an option. Model configuration has to be done within the schema config in the `modelConfig`
+subsection.
 
 ### Customising the type name
 
@@ -245,10 +245,11 @@ the `$className` as a parameter.
 
 Let's turn `MyProject\Models\Product` into the more specific `MyProjectProduct`
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject: 
-  type_formatter: ['MyProject\Formatters', 'formatType' ]
+modelConfig:
+  DataObject: 
+    type_formatter: ['MyProject\Formatters', 'formatType' ]
 ```
 
 [info]
@@ -277,10 +278,11 @@ public static function formatType(string $className): string
 You can also add prefixes to all your DataObject types. This can be a scalar value or a callable,
 using the same signature as `type_formatter`.
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject
-  type_prefix: 'MyProject'
+modelConfig:
+  DataObject
+    type_prefix: 'MyProject'
 ```
 
 ### Further reading
