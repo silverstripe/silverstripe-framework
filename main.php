@@ -61,7 +61,9 @@ require_once('core/Constants.php');
 session_cache_limiter('');
 
 // Enable the entity loader to be able to load XML in Zend_Locale_Data
-libxml_disable_entity_loader(false);
+if (version_compare(phpversion(), '8') < 0) {
+	libxml_disable_entity_loader(false);
+}
 
 /**
  * Figure out the request URL

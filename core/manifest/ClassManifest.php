@@ -85,6 +85,18 @@ class SS_ClassManifest {
 	 * @return TokenisedRegularExpression
 	 */
 	public static function get_namespace_parser() {
+		if (version_compare(phpversion(), '8') >= 0) {
+			return new TokenisedRegularExpression(array(
+				0 => T_NAMESPACE,
+				1 => array(T_WHITESPACE, 'optional' => true),
+				2 => array(T_NS_SEPARATOR, 'save_to' => 'namespaceName[]', 'optional' => true),
+				3 => array(T_STRING, 'save_to' => 'namespaceName[]', 'can_jump_to' => 2, 'optional' => true),
+				4 => array(T_NAME_QUALIFIED, 'save_to' => 'namespaceName[]', 'optional' => true),
+				5 => array(T_WHITESPACE, 'optional' => true),
+				6 => ';',
+			));
+		}
+
 		return new TokenisedRegularExpression(array(
 			0 => T_NAMESPACE,
 			1 => array(T_WHITESPACE, 'optional' => true),

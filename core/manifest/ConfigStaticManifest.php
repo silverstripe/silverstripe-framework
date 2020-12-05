@@ -355,7 +355,7 @@ class SS_ConfigStaticManifest_Parser {
 						$next = $this->next();
 					}
 
-					if(!is_string($next) && $next[0] != T_STRING) {
+					if(!is_string($next) && $next[0] != T_STRING && (!defined('T_NAME_QUALIFIED') || $next[0] != T_NAME_QUALIFIED)) {
 						user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);
 					}
 
@@ -439,6 +439,9 @@ class SS_ConfigStaticManifest_Parser {
 				}
 				else if($type == ';' || ($type == ',' && !$depth)) {
 					break;
+				}
+				else if($type == T_COMMENT || $type == T_DOC_COMMENT) {
+					// NOP
 				}
 				// Statics can reference class constants with self:: (and that won't work in eval)
 				else if($type == T_STRING && $token[1] == 'self') {
