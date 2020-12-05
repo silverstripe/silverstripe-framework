@@ -441,7 +441,7 @@ class RestfulService extends ViewableData implements Flushable {
  	* @param string $attr The name of the attribute
  	*/
 
-	public function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
+	public function getAttribute($xml, $collection=NULL, $element=NULL, $attr=null){
 		$xml = new SimpleXMLElement($xml);
 		$attr_value = "";
 
