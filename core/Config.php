@@ -545,7 +545,8 @@ class Config {
 		// Finally, merge in the values from the parent class
 		if (
 			($sourceOptions & self::UNINHERITED) != self::UNINHERITED &&
-			(($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)
+			(($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null) &&
+			class_exists($class)
 		) {
 			$parent = get_parent_class($class);
 			if ($parent) $this->getUncached($parent, $name, $sourceOptions, $result, $suppress, $tags);
