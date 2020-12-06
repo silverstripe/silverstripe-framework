@@ -196,7 +196,7 @@ abstract class SS_Object {
 				else self::$_cache_inst_args[$classSpec.$firstArg] = SS_Object::create($classSpec, $firstArg);
 
 			} else {
-				list($class, $args) = self::parse_class_spec($classSpec);
+				[$class, $args] = self::parse_class_spec($classSpec);
 
 				if($firstArg !== null) array_unshift($args, $firstArg);
 				array_unshift($args, $class);
@@ -231,11 +231,13 @@ abstract class SS_Object {
 			// Get the class name
 			if($class === null && is_array($token) && $token[0] === T_STRING) {
 				$class = $token[1];
+			} elseif (defined('T_NAME_QUALIFIED') && is_array($token) && $token[0] === T_NAME_QUALIFIED) {
+				$class = $token[1];
 			} elseif(is_array($token) && $token[0] === T_NS_SEPARATOR) {
 				$class .= $token[1];
 				$hadNamespace = true;
 			} elseif($hadNamespace && is_array($token) && $token[0] === T_STRING) {
-				$class .= $token[1];
+				$class        .= $token[1];
 				$hadNamespace = false;
 			// Get arguments
 			} else if(is_array($token)) {
@@ -669,7 +671,7 @@ abstract class SS_Object {
 			$sources = array();
 
 			foreach($extensions as $extension) {
-				list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
+				[$extensionClass, $extensionArgs] = self::parse_class_spec($extension);
 				$sources[] = $extensionClass;
 
 				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
@@ -911,7 +913,7 @@ abstract class SS_Object {
 				if (!isset(self::$extra_methods[$this->class][$method])) {
 					continue;
 				}
-				
+
 				$methodInfo = self::$extra_methods[$this->class][$method];
 
 				if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {

@@ -55,7 +55,8 @@ class TokenisedRegularExpression {
 		$expectation = is_array($expressionRule) ? $expressionRule[0] : $expressionRule;
 		if(!is_array($expressionRule)) $expressionRule = array();
 
-		if($expectation == $tokens[$tokenPos][0]) {
+		if((is_array($expectation) && in_array($tokens[$tokenPos][0], $expectation)) ||
+		   (!is_array($expectation) && $expectation == $tokens[$tokenPos][0])) {
 			if(isset($expressionRule['save_to'])) {
 				// Append to an array
 				if(substr($expressionRule['save_to'],-2) == '[]') {
