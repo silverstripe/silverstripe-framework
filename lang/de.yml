@@ -27,6 +27,8 @@ de:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ungültige Anfrage'
     REQUEST_ABORTED: 'Anfrage abgebrochen'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Unbekannt
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bestätige potenziell gefährliche Aktion'
     INFO_TITLE: Sicherheitsbestätigung

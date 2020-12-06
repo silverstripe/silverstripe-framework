@@ -19,6 +19,8 @@ da:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ugyldig forespørgsel'
     REQUEST_ABORTED: 'Forespørgsel annulleret'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Ukendt
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nej
     YESANSWER: Ja

@@ -19,6 +19,8 @@ pl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
     REQUEST_ABORTED: 'Żądanie zostało przerwane'
+  SilverStripe\Core\Manifest\VersionProvider:
+    VERSIONUNKNOWN: Nieznany
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Potwierdź potencjalnie niebezpieczną operację'
     INFO_TITLE: 'Potwierdzenie bezpieczeństwa'
