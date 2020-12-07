@@ -246,8 +246,8 @@ Back to Injector:
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\Schema\Registry\PluginRegistry:
     constructor:
-      geocodeQuery: '%$MyProject\Plugins\GeocodableQuery'
-      geocodeDataObject: '%$MyProject\Plugins\GeocodableDataObject'
+      - 'MyProject\Plugins\GeocodableQuery'
+      - 'MyProject\Plugins\GeocodableDataObject'
 ```
 
 ### Step 6: Apply the plugins

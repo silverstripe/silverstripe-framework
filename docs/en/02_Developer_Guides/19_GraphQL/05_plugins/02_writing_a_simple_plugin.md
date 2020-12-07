@@ -73,7 +73,7 @@ Let's register the plugin:
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\Schema\Registry\PluginRegistry:
     constructor:
-      truncate: '%$MyProject\Plugins\Truncator'
+      - 'MyProject\Plugins\Truncator'
 ```
 
 And now we can apply it to any string field we want:
