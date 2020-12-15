@@ -844,7 +844,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function offsetSet($offset, $value)
     {
-        if ($offset == null) {
+        if ($offset === null) {
             $this->items[] = $value;
         } else {
             $this->items[$offset] = $value;

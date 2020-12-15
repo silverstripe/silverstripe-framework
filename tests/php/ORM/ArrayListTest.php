@@ -1251,4 +1251,14 @@ class ArrayListTest extends SapphireTest
 
         $this->assertNotEquals(range(1, $upperLimit), $list->toArray());
     }
+
+    public function testOffsetSet()
+    {
+        $list = new ArrayList(['first value', 'second value']);
+        $this->assertSame(2, $list->count());
+        $list->offsetSet(0, 'new value');
+        $this->assertSame(2, $list->count());
+        $this->assertSame('new value', $list->offsetGet(0));
+        $this->assertSame('second value', $list->offsetGet(1));
+    }
 }
