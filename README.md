@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-framework.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-framework)
 [![Build Docs](https://github.com/silverstripe/silverstripe-framework/workflows/Build%20Docs/badge.svg)](https://docs.silverstripe.org/)
-[![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](http://www.silverstripe.org/stable-download/)
+[![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](https://www.silverstripe.org/stable-download/)
 [![Latest Unstable Version](https://poser.pugx.org/silverstripe/framework/v/unstable.svg)](https://packagist.org/packages/silverstripe/framework)
 [![codecov](https://codecov.io/gh/silverstripe/silverstripe-framework/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-framework)
 [![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
@@ -39,5 +39,5 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
 	
 ## Attribution ##
 
- * Some icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](http://creativecommons.org/licenses/by/3.0/).
- * default_media.png by Thibault Geffroy from [The Noun Project](http://thenounproject.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](http://creativecommons.org/licenses/by/3.0/).
+ * Some icons by [Yusuke Kamiyamane](https://p.yusukekamiyamane.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](https://creativecommons.org/licenses/by/3.0/).
+ * default_media.png by Thibault Geffroy from [The Noun Project](https://thenounproject.com/). All rights reserved. Licensed under a [Creative Commons Attribution 3.0 License](https://creativecommons.org/licenses/by/3.0/).
