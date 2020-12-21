@@ -521,7 +521,7 @@ class FormField extends RequestHandler
     /**
      * Sets the right title for this formfield
      *
-     * @param string|DBField Plain text string, or a DBField with appropriately escaped HTML
+     * @param string|DBField $rightTitle Plain text string, or a DBField with appropriately escaped HTML
      * @return $this
      */
     public function setRightTitle($rightTitle)
@@ -1012,7 +1012,7 @@ class FormField extends RequestHandler
 
         $result = $context->renderWith($this->getTemplates());
 
-        // Trim whitespace from the result, so that trailing newlines are supressed. Works for strings and HTMLText values
+        // Trim whitespace from the result, so that trailing newlines are suppressed. Works for strings and HTMLText values
         if (is_string($result)) {
             $result = trim($result);
         } elseif ($result instanceof DBField) {
@@ -1294,7 +1294,7 @@ class FormField extends RequestHandler
      *
      * It's handy for assigning HTML classes. Doesn't signify the input type attribute.
      *
-     * @see {link getAttributes()}.
+     * @see {@link getAttributes()}.
      *
      * @return string
      */

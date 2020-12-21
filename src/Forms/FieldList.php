@@ -881,7 +881,7 @@ class FieldList extends ArrayList
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0).
      * Returns FALSE if the field can't be found.
      */

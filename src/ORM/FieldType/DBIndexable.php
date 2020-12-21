@@ -27,8 +27,8 @@ interface DBIndexable
     /**
      * Set the desired index type to use
      *
-     * @param string|bool $indexType Either of the types listed in {@link SilverStripe\ORM\FieldType\DBIndexable}, or
-     *                               boolean true to indicate that the default index type should be used.
+     * @param string|bool $type Either of the types listed in {@link SilverStripe\ORM\FieldType\DBIndexable}, or
+     *                          boolean true to indicate that the default index type should be used.
      * @return $this
      * @throws \InvalidArgumentException If $type is not one of TYPE_INDEX, TYPE_UNIQUE or TYPE_FULLTEXT
      */

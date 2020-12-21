@@ -29,7 +29,7 @@ class PaginatedList extends ListDecorator
      *
      * @param SS_List $list The list to paginate. The getRange method will
      *        be used to get the subset of objects to show.
-     * @param array|ArrayAccess Either a map of request parameters or
+     * @param array|ArrayAccess $request Either a map of request parameters or
      *        request object that the pagination offset is read from.
      * @throws Exception
      */
@@ -72,7 +72,7 @@ class PaginatedList extends ListDecorator
     /**
      * Returns the number of items displayed per page. This defaults to 10.
      *
-     * @return int.
+     * @return int
      */
     public function getPageLength()
     {
@@ -511,7 +511,7 @@ class PaginatedList extends ListDecorator
     /**
      * Set the request object for this list
      *
-     * @param HTTPRequest|ArrayAccess
+     * @param HTTPRequest|ArrayAccess $request
      */
     public function setRequest($request)
     {

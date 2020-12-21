@@ -344,8 +344,7 @@ class Hierarchy extends DataExtension
      * a list of record IDs, for more efficient database querying.  If $idList
      * is null, then every record will be pre-cached.
      *
-     * @param string $class
-     * @param string $stage
+     * @param string $baseClass
      * @param array $idList
      */
     public static function prepopulate_numchildren_cache($baseClass, $idList = null)

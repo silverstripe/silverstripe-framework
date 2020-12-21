@@ -33,12 +33,12 @@ class HTMLEditorSanitiser
      */
     private static $link_rel_value = 'noopener noreferrer';
 
-    /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
+    /** @var stdClass - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
     protected $elements = [];
-    /** @var [stdClass] - Sequential list of whitelist element rules where the element name is a pattern */
+    /** @var stdClass - Sequential list of whitelist element rules where the element name is a pattern */
     protected $elementPatterns = [];
 
-    /** @var [stdClass] - The list of attributes that apply to all further whitelisted elements added */
+    /** @var stdClass - The list of attributes that apply to all further whitelisted elements added */
     protected $globalAttributes = [];
 
     /**

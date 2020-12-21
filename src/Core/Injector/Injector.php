@@ -1103,7 +1103,7 @@ class Injector implements ContainerInterface
      * Additional parameters are passed through as
      *
      * @param string $name
-     * @param mixed $argument,... arguments to pass to the constructor
+     * @param mixed ...$argument arguments to pass to the constructor
      * @return mixed A new instance of the specified object
      */
     public function create($name, $argument = null)

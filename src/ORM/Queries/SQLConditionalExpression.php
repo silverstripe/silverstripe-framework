@@ -133,7 +133,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param int $order A numerical index to control the order that joins are added to the query; lower order values
      *                   will cause the query to appear first. The default is 20, and joins created automatically by the
      *                   ORM have a value of 10.
-     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
     public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
@@ -161,7 +161,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param int $order A numerical index to control the order that joins are added to the query; lower order
      * values will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
-     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
     public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = [])
@@ -256,7 +256,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     }
 
     /**
-     * Retrieves the finalised list of joins
+     * Retrieves the finalized list of joins
      *
      * @todo This part of the code could be simplified
      *
@@ -374,7 +374,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @see http://stackoverflow.com/q/4353739/139301
      *
-     * @param array &$array The array to sort
+     * @param array $array The array to sort (by reference)
      * @param callable|string $cmpFunction The function to use for comparison
      */
     protected function mergesort(&$array, $cmpFunction = 'strcmp')
@@ -426,8 +426,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @see SQLConditionalExpression::addWhere() for syntax examples
      *
-     * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $where,... Unlimited additional predicates
+     * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function setWhere($where)
@@ -440,7 +439,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * Adds a WHERE clause.
      *
-     * Note that the database will execute any parameterised queries using
+     * Note that the database will execute any parameterized queries using
      * prepared statements whenever available.
      *
      * There are several different ways of doing this.
@@ -513,8 +512,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *  ));
      * </code>
      *
-     * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $where,... Unlimited additional predicates
+     * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function addWhere($where)
@@ -530,8 +528,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * @see SQLConditionalExpression::addWhere()
      *
-     * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $filters,... Unlimited additional predicates
+     * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function setWhereAny($filters)
@@ -545,8 +542,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * @see SQLConditionalExpression::addWhere()
      *
-     * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $filters,... Unlimited additional predicates
+     * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function addWhereAny($filters)
@@ -583,19 +579,19 @@ abstract class SQLConditionalExpression extends SQLExpression
 
     /**
      * Given a key / value pair, extract the predicate and any potential paramaters
-     * in a format suitable for storing internally as a list of paramaterised conditions.
+     * in a format suitable for storing internally as a list of parameterized conditions.
      *
      * @param string|integer $key The left hand (key index) of this condition.
      * Could be the predicate or an integer index.
      * @param mixed $value The The right hand (array value) of this condition.
-     * Could be the predicate (if non-paramaterised), or the parameter(s). Could also be
+     * Could be the predicate (if non-parameterized), or the parameter(s). Could also be
      * an array containing a nested condition in the similar format this function outputs.
      * @return array|SQLConditionGroup A single item array in the format
      * array($predicate => array($parameters)), unless it's a SQLConditionGroup
      */
     protected function parsePredicate($key, $value)
     {
-        // If a string key is given then presume this is a paramaterised condition
+        // If a string key is given then presume this is a parameterized condition
         if ($value instanceof SQLConditionGroup) {
             return $value;
         } elseif (is_string($key)) {
@@ -631,14 +627,14 @@ abstract class SQLConditionalExpression extends SQLExpression
                 return $this->parsePredicate($key, $pairValue);
             }
         } else {
-            // Non-paramaterised condition
+            // Non-parameterized condition
             return [$value => []];
         }
     }
 
     /**
      * Given a list of conditions in any user-acceptable format, convert this
-     * to an array of paramaterised predicates suitable for merging with $this->where.
+     * to an array of parameterized predicates suitable for merging with $this->where.
      *
      * Normalised predicates are in the below format, in order to avoid key collisions.
      *
@@ -691,7 +687,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function splitQueryParameters($conditions, &$predicates, &$parameters)
     {
-        // Merge all filters with paramaterised queries
+        // Merge all filters with parameterized queries
         $predicates = [];
         $parameters = [];
         foreach ($conditions as $condition) {
@@ -742,7 +738,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     {
         $regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?(=|IN)/';
 
-        // @todo - Test this works with paramaterised queries
+        // @todo - Test this works with parameterized queries
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
             if (preg_match($regexp, $predicate)) {
                 return true;

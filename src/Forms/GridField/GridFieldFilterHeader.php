@@ -165,6 +165,8 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
+     * @param string $actionName
+     * @param array $data
      * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)

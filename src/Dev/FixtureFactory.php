@@ -239,7 +239,7 @@ class FixtureFactory
     }
 
     /**
-     * @param String $name
+     * @param string $name
      * @return FixtureBlueprint|false
      */
     public function getBlueprint($name)

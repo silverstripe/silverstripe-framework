@@ -170,9 +170,9 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * The SS template to render this form HTML into.
      * Default is "Form", but this can be changed to
-     * another template for customisation.
+     * another template for customization.
      *
-     * @see Form->setTemplate()
+     * @see Form::setTemplate()
      * @var string|array|null
      */
     protected $template;
@@ -326,7 +326,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * @param bool
+     * @param bool $flag
      */
     public function setNotifyUnsavedChanges($flag)
     {
@@ -664,7 +664,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Set actions that are exempt from validation
      *
-     * @param array
+     * @param array $actions
      * @return $this
      */
     public function setValidationExemptActions($actions)
@@ -916,7 +916,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
      * another frame
     *
-     * @param string|FormTemplateHelper
+     * @param string|FormTemplateHelper $helper
     */
     public function setTemplateHelper($helper)
     {
@@ -1371,9 +1371,9 @@ class Form extends ViewableData implements HasRequestHandler
      * Escaping happens automatically on saving the data through
      * {@link saveInto()}.
      *
-     * @uses FieldList->dataFields()
-     * @uses FormField->setSubmittedValue()
-     * @uses FormField->setValue()
+     * @uses FieldList::dataFields()
+     * @uses FormField::setSubmittedValue()
+     * @uses FormField::setValue()
      *
      * @param array|DataObject $data
      * @param int $mergeStrategy

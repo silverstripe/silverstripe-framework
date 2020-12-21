@@ -324,7 +324,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the end of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function push(FormField $field)
     {
@@ -334,7 +334,7 @@ class CompositeField extends FormField
     /**
      * Add a new child field to the beginning of the set.
      *
-     * @param FormField
+     * @param FormField $field
      */
     public function unshift(FormField $field)
     {
@@ -342,10 +342,11 @@ class CompositeField extends FormField
     }
 
     /**
-     * @uses FieldList->insertBefore()
+     * @uses FieldList::insertBefore()
      *
      * @param string $insertBefore
      * @param FormField $field
+     * @param bool $appendIfMissing
      * @return false|FormField
      */
     public function insertBefore($insertBefore, $field, $appendIfMissing = true)
@@ -354,9 +355,10 @@ class CompositeField extends FormField
     }
 
     /**
-     * @uses FieldList->insertAfter()
+     * @uses FieldList::insertAfter()
      * @param string $insertAfter
      * @param FormField $field
+     * @param bool $appendIfMissing
      * @return false|FormField
      */
     public function insertAfter($insertAfter, $field, $appendIfMissing = true)
@@ -470,7 +472,7 @@ class CompositeField extends FormField
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
      *             be found.
      */
@@ -496,9 +498,9 @@ class CompositeField extends FormField
     }
 
     /**
-     * Transform the named field into a readonly feld.
+     * Transform the named field into a readonly field.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return bool
      */
     public function makeFieldReadonly($field)

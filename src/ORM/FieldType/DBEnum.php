@@ -167,7 +167,7 @@ class DBEnum extends DBString
      * Returns the values of this enum as an array, suitable for insertion into
      * a {@link DropdownField}
      *
-     * @param boolean
+     * @param bool $hasEmpty
      *
      * @return array
      */

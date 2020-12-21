@@ -223,7 +223,7 @@ class PasswordValidator
     }
 
     /**
-     * @param String $password
+     * @param string $password
      * @param Member $member
      * @return ValidationResult
      */

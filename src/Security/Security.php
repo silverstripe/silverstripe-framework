@@ -611,7 +611,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the HTML Content for the $Content area during login
      *
-     * @param string &$messageType Type of message, if available, passed back to caller
+     * @param string $messageType Type of message, if available, passed back to caller (by reference)
      * @return string Message in HTML format
      */
     protected function getSessionMessage(&$messageType = null)

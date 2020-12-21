@@ -19,7 +19,7 @@ class HttpMethodBypass implements Bypass
     /**
      * Initialize the bypass with HTTP methods
      *
-     * @param string[] ...$method
+     * @param string[] ...$methods
      */
     public function __construct(...$methods)
     {

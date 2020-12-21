@@ -403,12 +403,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * If passing in an associative array, the key of each item should be the plugin name.
      * The value of each item is one of:
-     *  - null - Will be treated as a stardard plugin in the standard location
+     *  - null - Will be treated as a standard plugin in the standard location
      *  - relative path - Will be treated as a relative url
      *  - absolute url - Some url to an external plugin
      *  - An instance of ModuleResource object containing the plugin
      *
-     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array ...$plugin a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
     public function enablePlugins($plugin)
@@ -432,7 +432,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
     /**
      * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
-     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array ...$plugin a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
     public function disablePlugins($plugin)
@@ -492,7 +492,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * Totally re-set the buttons on a given line
      *
      * @param int $line The line number to redefine, from 1 to 3
-     * @param string $buttons,... A string or several strings, or a single array of strings.
+     * @param string ...$buttons A string or several strings, or a single array of strings.
      * The button names to assign to this line.
      * @return $this
      */
@@ -509,7 +509,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * Add buttons to the end of a line
      * @param int $line The line number to redefine, from 1 to 3
-     * @param string $buttons,... A string or several strings, or a single array of strings.
+     * @param string ...$buttons A string or several strings, or a single array of strings.
      * The button names to add to this line
      * @return $this
      */
@@ -554,11 +554,11 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
-     * Insert buttons before the first occurance of another button
+     * Insert buttons before the first occurrence of another button
      * @param string $before the name of the button to insert other buttons before
-     * @param string $buttons,... a string, or several strings, or a single array of strings.
+     * @param string ...$buttons a string, or several strings, or a single array of strings.
      * The button names to insert before that button
-     * @return bool True if insertion occured, false if it did not (because the given button name was not found)
+     * @return bool True if insertion occurred, false if it did not (because the given button name was not found)
      */
     public function insertButtonsBefore($before, $buttons)
     {
@@ -573,11 +573,11 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
-     * Insert buttons after the first occurance of another button
+     * Insert buttons after the first occurrence of another button
      * @param string $after the name of the button to insert other buttons before
-     * @param string $buttons,... a string, or several strings, or a single array of strings.
+     * @param string ...$buttons a string, or several strings, or a single array of strings.
      * The button names to insert after that button
-     * @return bool True if insertion occured, false if it did not (because the given button name was not found)
+     * @return bool True if insertion occurred, false if it did not (because the given button name was not found)
      */
     public function insertButtonsAfter($after, $buttons)
     {
@@ -592,8 +592,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
-     * Remove the first occurance of buttons
-     * @param string $buttons,... one or more strings - the name of the buttons to remove
+     * Remove the first occurrence of buttons
+     * @param string ...$buttons one or more strings - the name of the buttons to remove
      */
     public function removeButtons($buttons)
     {

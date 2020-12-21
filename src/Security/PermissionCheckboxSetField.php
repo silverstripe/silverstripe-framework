@@ -39,10 +39,10 @@ class PermissionCheckboxSetField extends FormField
     protected $source = null;
 
     /**
-     * @param String $name
-     * @param String $title
-     * @param String $managedClass
-     * @param String $filterField
+     * @param string $name
+     * @param string $title
+     * @param string $managedClass
+     * @param string $filterField
      * @param Group|SS_List $records One or more {@link Group} or {@link PermissionRole} records
      *  used to determine permission checkboxes.
      *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.

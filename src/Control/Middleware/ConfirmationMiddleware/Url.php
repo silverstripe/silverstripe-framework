@@ -80,7 +80,7 @@ class Url implements Rule, Bypass
      * against parameter values accordingly. Null
      * as a value in the array matches any parameter values.
      *
-     * @param string|null $httpMethods
+     * @param string|null $params
      *
      * @return $this
      */
@@ -186,6 +186,7 @@ class Url implements Rule, Bypass
     /**
      * Generates the unique token depending on the path
      *
+     * @param string $httpMethod HTTP method
      * @param string $path URL path
      *
      * @return string

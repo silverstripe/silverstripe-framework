@@ -1186,7 +1186,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     	$matchrule = "QuotedString"; $result = $this->construct($matchrule, $matchrule, null);
     	$_154 = NULL;
     	do {
-    		$stack[] = $result; $result = $this->construct( $matchrule, "q" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "q" );
     		if (( $subres = $this->rx( '/[\'"]/' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -1196,7 +1196,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$result = array_pop($stack);
     			$_154 = FALSE; break;
     		}
-    		$stack[] = $result; $result = $this->construct( $matchrule, "String" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "String" );
     		if (( $subres = $this->rx( '/ (\\\\\\\\ | \\\\. | [^'.$this->expression($result, $stack, 'q').'\\\\])* /' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -1549,7 +1549,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$pos_211 = $this->pos;
     		$_210 = NULL;
     		do {
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Not" ); 
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Not" );
     			if (( $subres = $this->literal( 'not' ) ) !== FALSE) {
     				$result["text"] .= $subres;
     				$subres = $result; $result = array_pop($stack);
@@ -1944,7 +1944,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		else { $_286 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_286 = FALSE; break; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Call" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Call" );
     		$_282 = NULL;
     		do {
     			$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
@@ -2449,7 +2449,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$_379 = NULL;
     		do {
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
     			$_375 = NULL;
     			do {
     				$_373 = NULL;
@@ -2875,7 +2875,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_511 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" );
     		$_464 = NULL;
     		do {
     			$_462 = NULL;
@@ -2934,7 +2934,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$_480 = NULL;
     		do {
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
+    			$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
     			$_476 = NULL;
     			do {
     				$_474 = NULL;
@@ -3874,7 +3874,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			unset( $pos_641 );
     		}
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Zap" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Zap" );
     		if (( $subres = $this->literal( '%>' ) ) !== FALSE) {
     			$result["text"] .= $subres;
     			$subres = $result; $result = array_pop($stack);
@@ -4284,7 +4284,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_699 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		$stack[] = $result; $result = $this->construct( $matchrule, "Tag" ); 
+    		$stack[] = $result; $result = $this->construct( $matchrule, "Tag" );
     		$_693 = NULL;
     		do {
     			if (( $subres = $this->literal( 'end_' ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -5071,6 +5071,7 @@ EOC;
 
     /**
      * @param string $code
+     * @param string $templateName
      * @return string $code
      */
     protected function includeDebuggingComments($code, $templateName)

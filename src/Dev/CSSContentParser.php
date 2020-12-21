@@ -68,7 +68,7 @@ class CSSContentParser
      * Currently the selector engine only supports querying by tag, id, and class.
      * See {@link getByXpath()} for a more direct selector syntax.
      *
-     * @param String $selector
+     * @param string $selector
      * @return SimpleXMLElement[]
      */
     public function getBySelector($selector)
@@ -80,7 +80,7 @@ class CSSContentParser
     /**
      * Allows querying the content through XPATH selectors.
      *
-     * @param String $xpath SimpleXML compatible XPATH statement
+     * @param string $xpath SimpleXML compatible XPATH statement
      * @return SimpleXMLElement[]
      */
     public function getByXpath($xpath)
@@ -92,7 +92,7 @@ class CSSContentParser
      * Converts a CSS selector into an equivalent xpath expression.
      * Currently the selector engine only supports querying by tag, id, and class.
      *
-     * @param String $selector See {@link getBySelector()}
+     * @param string $selector See {@link getBySelector()}
      * @return String XPath expression
      */
     public function selector2xpath($selector)

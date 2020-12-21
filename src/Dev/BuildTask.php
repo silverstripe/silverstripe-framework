@@ -55,7 +55,7 @@ abstract class BuildTask
      * execute via the TaskRunner
      *
      * @param HTTPRequest $request
-     * @return
+     * @return void
      */
     abstract public function run($request);
 

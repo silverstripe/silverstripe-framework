@@ -26,7 +26,7 @@ class HTTPResponse_Exception extends Exception
      * response.
      * @param int $statusCode
      * @param string $statusDescription
-     * @see HTTPResponse::__construct();
+     * @see HTTPResponse::__construct()
      */
     public function __construct($body = null, $statusCode = null, $statusDescription = null)
     {
