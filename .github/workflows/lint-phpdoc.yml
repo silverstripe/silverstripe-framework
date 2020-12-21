@@ -1,0 +1,18 @@
+name: Lint phpdocs
+
+on: [push]
+
+jobs:
+  build-phpdoc:
+    name: build-phpdoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create a config file
+        run: echo "<?php return new Doctum\Doctum('src/');" > doctum-config.php
+      - name: build doctum docs
+        uses: sudo-bot/action-doctum@v5
+        with:
+          config-file: doctum-config.php
+          method: "parse"
+          cli-args: "--output-format=github --ignore-parse-errors --no-ansi --no-progress -v"
