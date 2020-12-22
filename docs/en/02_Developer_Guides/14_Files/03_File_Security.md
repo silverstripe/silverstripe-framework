@@ -396,7 +396,7 @@ class AssetStoreExtension extends Extension
 Enable the extension with YML configuration:
 
 ```yml
-SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
+SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   extensions:
     - App\MySite\AssetStoreExtension
 ```
