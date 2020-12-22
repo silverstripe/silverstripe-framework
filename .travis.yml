@@ -1,106 +1,56 @@
-language: php
+version: ~> 1.0
 
-dist: xenial
-
-services:
-  - mysql
-  - postgresql
-
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
-addons:
-  apt:
-    packages:
-      - tidy
+import:
+  - silverstripe/silverstripe-travis-shared:config/provision/standard.yml
 
 env:
   global:
-    - COMPOSER_ROOT_VERSION=4.x-dev
+    - COMPOSER_ROOT_VERSION="4.x-dev"
+    - REQUIRE_RECIPE="4.x-dev"
 
-matrix:
+# Using a manual matrix to exlude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
+# e.g. https://travis-ci.com/github/silverstripe/silverstripe-framework/jobs/457096837
+jobs:
   fast_finish: true
   include:
     - php: 7.1
       env:
-        - DB=PGSQL
+        - DB=MYSQL
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
         - PHPCS_TEST=1
-        - PHPUNIT_TEST=framework
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
         - COMPOSER_INSTALL_ARG="--prefer-lowest"
-
     - php: 7.2
       env:
         - DB=PGSQL
         - PDO=1
-        - PHPUNIT_TEST=framework
-
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_TEST="framework"
     - php: 7.3
       env:
         - DB=MYSQL
         - PDO=1
-        - PHPUNIT_TEST=framework
-
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+    - php: 7.3
+      env:
+        - DB=MYSQL
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="cms"
     - php: 7.4
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=framework
-      addons:
-        apt:
-          packages:
-            - libonig-dev
-
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
     - php: nightly
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=framework
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
         - COMPOSER_INSTALL_ARG="--ignore-platform-reqs"
-      addons:
-        apt:
-          packages:
-            - libonig-dev
-
-    - php: 7.3
-      if: type IN (cron)
-      env:
-        - DB=MYSQL
-        - PHPUNIT_COVERAGE_TEST=framework
-
-    - php: 7.3
-      env:
-        - DB=MYSQL
-        - PHPUNIT_TEST=cms
-
-before_script:
-# Extra $PATH
-  - export PATH=~/.composer/vendor/bin:$PATH
-
-# Init PHP
-  - pecl channel-update pecl.php.net
-  - phpenv rehash
-  - phpenv config-rm xdebug.ini || true
-  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
-# Install composer dependencies
-  - composer validate
-  - mkdir ./public
-  - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.x-dev --no-update; fi
-  - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.x-dev --no-update; fi
-  - composer require silverstripe/recipe-core:4.x-dev silverstripe/admin:1.x-dev silverstripe/versioned:1.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]]; then composer require silverstripe/recipe-cms:4.x-dev --no-update; fi
-  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
-  - composer update --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile $COMPOSER_INSTALL_ARG
-
-# Log constants to CI for debugging purposes
-  - php ./tests/dump_constants.php
-
-script:
-  - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
-  - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
-  - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
-  - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
-  - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
-
-after_success:
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
