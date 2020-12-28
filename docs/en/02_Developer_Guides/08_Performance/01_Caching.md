@@ -182,14 +182,14 @@ interface. Use this interface to trigger `clear()` on your caches.
 SilverStripe tries to identify the most performant cache available on your system
 through the [DefaultCacheFactory](api:SilverStripe\Core\Cache\DefaultCacheFactory) implementation:
 
- * - `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).
+ * `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).
      This cache has relatively low [memory defaults](http://php.net/manual/en/opcache.configuration.php#ini.opcache.memory-consumption).
      We recommend increasing it for large applications, or enabling the
      [file_cache fallback](http://php.net/manual/en/opcache.configuration.php#ini.opcache.file-cache)
- * - `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
- * - `FilesystemCache` if none of the above is available
+ * `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
+ * `FilesystemCache` if none of the above is available
  
-The library supports various [cache adapters](https://github.com/symfony/cache/tree/master/Simple)
+The library supports various [cache adapters](https://github.com/symfony/cache/tree/5.x/Adapter)
 which can provide better performance, particularly in multi-server environments with shared caches like Memcached.
 
 Since we're using dependency injection to create caches, 
