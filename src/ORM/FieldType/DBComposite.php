@@ -331,7 +331,7 @@ abstract class DBComposite extends DBField
         if ($type = $this->getIndexType()) {
             $columns = array_map(function ($name) {
                 return $this->getName() . $name;
-            }, array_keys((array) static::config()->get('composite_db')));
+            }, array_keys((array) $this->compositeDatabaseFields()));
 
             return [
                 'type' => $type,
