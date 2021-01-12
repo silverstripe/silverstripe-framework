@@ -23,16 +23,24 @@ The Core Committers team is reviewed approximately annually, new members are add
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
 * [Will Rossiter](https://github.com/wilr/)
 
+## What is Silverstripe Core?
+
+The "core" of Silverstripe is a set of non-dev dependencies contained in
+[silverstripe/recipe-cms](https://github.com/silverstripe/recipe-cms)
+and [silverstripe/recipe-core](https://github.com/silverstripe/recipe-cms).
+It is limited to dependencies owned by the "silverstripe" Packagist vendor,
+but can include "dev" dependencies.
 ## House rules for the Core Committer team
 
-The "Core Committers" consist of everybody with write permissions to our codebase.
+The "Core Committers" consist of everybody with write permissions to Silverstripe Core.
 With great power comes great responsibility, so we have agreed on certain expectations:
 
  * Be friendly, encouraging and constructive towards other community members
  * Frequently review pull requests and new issues (in particular, respond quickly to @mentions)
- * Treat issues according to our [issue guidelines](issues_and_bugs)
- * Don't commit directly to core, raise pull requests instead (except trivial fixes)
+ * Treat issues according to our [issue guidelines](issues_and_bugs), and use the [triage resources](triage_resources)
+ * Don't commit directly to a release branch, raise pull requests instead (except trivial fixes)
  * Only merge code you have tested and fully understand. If in doubt, ask for a second opinion.
+ * Follow the [Supported Modules Standard](https://www.silverstripe.org/software/addons/supported-modules-definition/)
  * Ensure contributions have appropriate [test coverage](../developer_guides/testing), are documented, and pass our [coding conventions](/getting_started/coding_conventions)
  * Keep the codebase "releasable" at all times (check our [release process](release_process))
  * Follow [Semantic Versioning](code/#picking-the-right-version) by putting any changes into the correct branch
@@ -55,3 +63,12 @@ often working alongside Core Committers. They are guided by additional rules:
  * For these complex or impactful changes, Core Committers should be given 1-2 working days to review. Ideally at this point, the API has already been agreed on through issue comments outlining the planned work (see [RFC Process](request_for_comment]).
  * More straightforward changes (e.g. documentation, styling) or areas which require quite specialised expertise (e.g. React) that's less available through most Core Committers can be approved or merged by team members who aren't Core Committers
  * Self-merges should be avoided, but are preferable to having work go stale or forcing other team members to waste time by context switching into a complex review (e.g. because the original reviewer went on leave). Any self-merge should be accompanied by a comment why this couldn't be handled in another way, and a (preferably written) approval from another team member.
+
+## Supported Modules
+
+In addition to Silverstripe Core, there are many [Supported Modules](https://www.silverstripe.org/software/addons/supported-modules-definition/)
+which have the backing of Silverstripe Ltd. While it's a good idea to apply the rules outlined in this documented,
+work on these modules is guided by the 
+[Supported Modules Standard](https://www.silverstripe.org/software/addons/supported-modules-definition/).
+Commit access in Supported Modules is handled by agreement of the repository maintainers,
+or any additional guidelines outlined via a `CONTRIBUTING` file.
