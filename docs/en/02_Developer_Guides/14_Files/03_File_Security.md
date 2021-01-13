@@ -439,20 +439,30 @@ SilverStripe\ORM\DataObject:
   AssetControl: null
 ```
 
-### Configuring: Web server settings
+## Webserver Configuration
+
+### Protected files location
+
+Protected files are stored in `public/assets/.protected` by default
+(assuming you're using the [public/ subfolder](/getting_started/directory_structure)).
+While default configuration is in place to avoid the webserver serving these files,
+we recommend moving them out of the webroot altogether -
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
+
+### Config templates
 
 If the default server configuration is not appropriate for your specific environment, then you can
-further customise the .htaccess or web.config by editing one or more of the below:
+further customise the `.htaccess` or `web.config` by editing one or more of the below:
 
 * `PublicAssetAdapter_HTAccess.ss`: Template for public permissions on the Apache server.
 * `PublicAssetAdapter_WebConfig.ss`: Template for public permissions on the IIS server.
 * `ProtectedAssetAdapter_HTAccess.ss`: Template for the protected store on the Apache server (should deny all requests).
 * `ProtectedAssetAdapter_WebConfig.ss`: Template for the protected store on the IIS server (should deny all requests).
 
-Each of these files will be regenerated on ?flush, so it is important to ensure that these files are
+Each of these files will be regenerated on `?flush`, so it is important to ensure that these files are
 overridden at the template level, not via manually generated configuration files.
 
-#### Configuring Web Server: Apache server
+#### Apache
 
 In order to ensure that public files are served correctly, you should check that your `assets/.htaccess`
 bypasses PHP requests for files that do exist. The default template
@@ -486,7 +496,7 @@ For instance your server configuration should look similar to the below:
 The `php_admin_flag` will protect against uploaded `.htaccess` files accidentally re-enabling script
 execution within the assets directory.
 
-#### Configuring Web Server: Windows IIS 7.5+
+#### Windows IIS 7.5+
 
 Configuring via IIS requires the Rewrite extension to be installed and configured properly.
 Any rules declared for the assets folder should be able to dynamically serve up existing files,
@@ -508,7 +518,7 @@ The default rule for IIS is as below (only partial configuration displayed):
 You will need to make sure that the `allowOverride` property of your root web.config is not set
 to false, to allow these to take effect.
 
-#### Configuring Web Server: Other server types
+#### Other server types
 
 If using a server configuration which must be configured outside of the web or asset root, you
 will need to make sure you manually configure these rules.

@@ -68,7 +68,7 @@ dynamically generated whitelist based on the `File.allowed_extensions` setting
 This whitelist uses the same defaults configured through file upload
 through SilverStripe, so is considered a second line of defence.
 
-### Secure Assets
+### Secure Assets {#secure-assets}
 
 Files can be kept in draft stage,
 and access restricted to certain user groups.
@@ -79,6 +79,32 @@ Requests to files in the `.protected` folder
 are routed to PHP by default when using Apache, through `public/assets/.htaccess`.
 If you are using another webserver, please follow our guides to ensure a secure setup.
 See [Developer Guides: File Security](/developer_guides/files/file_security) for details.
+
+For additional security, we recommend moving the `.protected/` folder out of `public/assets/`.
+This removes the possibility of a misconfigured webserver accidentally exposing
+these files under URL paths, and forces read access via PHP.
+
+This can be configured via [.env](/getting_started/environment_management) variable,
+relative to the `index.php` location.
+
+```
+SS_PROTECTED_ASSETS_PATH="../.protected/"
+```
+
+The resulting folder structure will look as follows:
+
+```
+.protected/
+  <hash>/my-protected-file.txt
+public/
+  index.php
+  assets/
+    my-public-file.txt
+vendor/
+app/
+```
+
+Don't forget to include this additional folder in any syncing and backup processes!
 
 
 ### Web Worker Concurrency

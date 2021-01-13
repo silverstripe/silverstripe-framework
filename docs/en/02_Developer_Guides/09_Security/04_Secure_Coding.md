@@ -509,25 +509,35 @@ standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 ## Filesystem
 
-### Don't script-execution in /assets
+### Don't allow script-execution in /assets
 
 Please refer to the article on [file security](/developer_guides/files/file_security)
 for instructions on how to secure the assets folder against malicious script execution.
 
-### Don't allow access to YAML files
+### Don't run Silverstripe in the webroot
 
-YAML files are often used to store sensitive or semi-sensitive data for use by 
-SilverStripe, such as configuration files. We block access to any files
-with a `.yml` or `.yaml` extension through the default web server rewriting rules.
-If you need users to access files with this extension,
-you can bypass the rules for a specific directory.
-Here's an example for a `.htaccess` file used by the Apache web server:
+Silverstripe routes all execution through a [public/ subfolder](/getting_started/directory_structure))
+by default. This enables you to keep application code and configuration outside of webserver routing.
+But since this was introduced after the 4.0, there's a fallback `.htaccess` file in place
+which allows you to set the webroot to the project root. Don't rely on this, since it increases your security surface.
 
 ```
-<Files ~ "\.ya?ml$">
-    Require all granted
-</Files>
+.htaccess <- fallback, shouldn't be used
+public/ <- this should be your webroot
+  .htaccess
+  index.php
+app/
+  _config/
+    secrets.yml <- this isn't routed if public/ is your webroot
 ```
+
+### Don't place protected files in the webroot
+
+Protected files are stored in `public/assets/.protected` by default
+(assuming you're using the [public/ subfolder](/getting_started/directory_structure)).
+While default configuration is in place to avoid the webserver serving these files,
+we recommend moving them out of the webroot altogether -
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
 
 ### User uploaded files
 

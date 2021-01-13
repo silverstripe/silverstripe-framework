@@ -122,7 +122,8 @@ It leaves out the `.protected/` folder, and leaves that to SilverStripe's integr
 `http://www.example.com/assets/my-protected-folder/b63923d8d4/my-protected-file.jpg`.
 
 For more information on how protected files are stored see the [file security](/developer_guides/files/file_security)
-section.
+section. We recommend moving this folder outside of the webroot,
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
 
 ## Versioned file paths
 
