@@ -126,7 +126,7 @@ Page:
 #### Customising the input types
 
 The input types, specifically in `create` and `update` can be customised with a whitelist 
-and/or blacklist of fields.
+and/or [blacklist](#blacklisted-fields) of fields.
 
 **app/_graphql/models.yml**
 ```
@@ -218,6 +218,26 @@ Page:
     read:
       plugins:
         paginateList: false # don't paginate the read operation
+```
+
+### Blacklisted fields {#blacklisted-fields}
+
+While selecting all fields via `*` is usedful, there are some fields that you
+don't want to accidentally expose, especially if you're a module author
+and expect models within this code to be used through custom GraphQL endpoints.
+For example, a module might add a secret "preview token" to each `SiteTree`.
+A custom GraphQL endpoint might have used `fields: '*'` on `SiteTree` to list pages
+on the public site, which now includes a sensitive field.
+
+The `graphql_blacklisted_fields` property on `DataObject` allows you to
+blacklist fields globally for all GraphQL schemas.
+This blacklist applies for all operations (read, update, etc).  
+
+**app/_config/graphql.yml**
+```yaml
+SilverStripe\CMS\Model\SiteTree:
+    graphql_blacklisted_fields:
+      myPreviewTokenField: true
 ```
 
 ### Model configuration
