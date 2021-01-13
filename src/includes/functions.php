@@ -49,7 +49,7 @@ function project()
  * @param string $entity Entity that identifies the string. It must be in the form
  * "Namespace.Entity" where Namespace will be usually the class name where this
  * string is used and Entity identifies the string inside the namespace.
- * @param mixed $arg,... Additional arguments are parsed as such:
+ * @param mixed $arg Additional arguments are parsed as such:
  *  - Next string argument is a default. Pass in a `|` pipe-delimeted value with `{count}`
  *    to do pluralisation.
  *  - Any other string argument after default is context for i18nTextCollector

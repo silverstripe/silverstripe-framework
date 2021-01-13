@@ -158,7 +158,7 @@ class i18nTextCollector
      * i18n feature, parse the _t() calls and write the resultant files
      * in the lang folder of each module.
      *
-     * @uses DataObject->collectI18nStatics()
+     * @uses DataObject::collectI18nStatics()
      *
      * @param array $restrictToModules
      * @param bool $mergeWithExisting Merge new master strings with existing

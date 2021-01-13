@@ -14,7 +14,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
     /**
      * List of rows to be inserted
      *
-     * @var array[SQLAssignmentRow]
+     * @var SQLAssignmentRow[]
      */
     protected $rows = [];
 

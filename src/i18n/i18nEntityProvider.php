@@ -18,7 +18,7 @@ use SilverStripe\i18n\TextCollection\i18nTextCollector;
  * Classes must be able to be constructed without mandatory arguments, otherwise
  * this interface will have no effect.
  *
- * @uses i18nTextCollector->collectFromEntityProviders()
+ * @uses i18nTextCollector::collectFromEntityProviders()
  */
 interface i18nEntityProvider
 {

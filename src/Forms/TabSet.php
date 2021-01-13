@@ -218,6 +218,7 @@ class TabSet extends CompositeField
      *
      * @param string $insertBefore Name of the field to insert before
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
     public function insertBefore($insertBefore, $field, $appendIfMissing = true)
@@ -233,6 +234,7 @@ class TabSet extends CompositeField
      *
      * @param string $insertAfter Name of the field to insert after
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
     public function insertAfter($insertAfter, $field, $appendIfMissing = true)

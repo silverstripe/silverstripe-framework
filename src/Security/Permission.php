@@ -160,7 +160,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Check that the given member has the given permission.
      *
-     * @param int|Member memberID The ID of the member to check. Leave blank for the current member.
+     * @param int|Member $member The ID of the member to check. Leave blank for the current member.
      *  Alternatively you can use a member object.
      * @param string|array $code Code of the permission to check (case-sensitive)
      * @param string $arg Optional argument (e.g. a permissions for a specific page)

@@ -13,8 +13,8 @@ class NullSecurityToken extends SecurityToken
 {
 
     /**
-     * @param String
-     * @return boolean
+     * @param string $compare
+     * @return bool
      */
     public function check($compare)
     {
@@ -43,8 +43,8 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @param String $url
-     * @return String
+     * @param string $url
+     * @return string
      */
     public function addToUrl($url)
     {
@@ -52,7 +52,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getValue()
     {
@@ -60,7 +60,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @param String $val
+     * @param string $val
      */
     public function setValue($val)
     {
@@ -68,7 +68,7 @@ class NullSecurityToken extends SecurityToken
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function generate()
     {

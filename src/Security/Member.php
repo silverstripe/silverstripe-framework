@@ -1103,7 +1103,7 @@ class Member extends DataObject
 
     /**
      * @param array $columns Column names on the Member record to show in {@link getTitle()}.
-     * @param String $sep Separator
+     * @param string $sep Separator
      */
     public static function set_title_columns($columns, $sep = ' ')
     {

@@ -41,7 +41,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     }
 
     /**
-     * @param MemberCacheFlusher[]
+     * @param MemberCacheFlusher[] $services
      * @throws InvalidArgumentException
      * @return $this
      */

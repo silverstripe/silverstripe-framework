@@ -55,7 +55,7 @@ class MySQLiConnector extends DBConnector
      * Retrieve a prepared statement for a given SQL string
      *
      * @param string $sql
-     * @param boolean &$success
+     * @param boolean $success (by reference)
      * @return mysqli_stmt
      */
     public function prepareStatement($sql, &$success)
@@ -190,7 +190,7 @@ class MySQLiConnector extends DBConnector
      * Prepares the list of parameters in preparation for passing to mysqli_stmt_bind_param
      *
      * @param array $parameters List of parameters
-     * @param array &$blobs Out parameter for list of blobs to bind separately
+     * @param array $blobs Out parameter for list of blobs to bind separately (by reference)
      * @return array List of parameters appropriate for mysqli_stmt_bind_param function
      */
     public function parsePreparedParameters($parameters, &$blobs)

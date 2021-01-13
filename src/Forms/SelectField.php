@@ -260,7 +260,7 @@ abstract class SelectField extends FormField
      *
      * @see FormField::castedCopy()
      *
-     * @param String $classOrCopy
+     * @param string $classOrCopy
      * @return FormField
      */
     public function castedCopy($classOrCopy)

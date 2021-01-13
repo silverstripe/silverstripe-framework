@@ -39,7 +39,7 @@ class ArrayData extends ViewableData
             } elseif (count($value) === 0) {
                 $this->array = [];
             } else {
-                $message = 'ArrayData constructor expects an object or associative array, 
+                $message = 'ArrayData constructor expects an object or associative array,
                             enumerated array passed instead. Did you mean to use ArrayList?';
                 throw new InvalidArgumentException($message);
             }
@@ -112,7 +112,7 @@ class ArrayData extends ViewableData
     /**
      * Converts an associative array to a simple object
      *
-     * @param array
+     * @param array $arr
      * @return stdClass $obj
      */
     public static function array_to_object($arr = null)

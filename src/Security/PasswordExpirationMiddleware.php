@@ -238,7 +238,6 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
      * Allow the current request to be finished without password expiration check
      *
      * @param Session $session Session where we persist the redirect URL
-     * @param string $url change password form address
      */
     public static function allowCurrentRequest(Session $session)
     {

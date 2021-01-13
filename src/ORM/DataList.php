@@ -309,7 +309,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
      *
-     * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+     * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
      * @return static
      */
     public function sort()
@@ -512,7 +512,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      *
      * @param string $field Name of field or relation to apply
-     * @param string &$columnName Quoted column name
+     * @param string $columnName Quoted column name (by reference)
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return $this DataList with this relation applied

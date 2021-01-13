@@ -1237,7 +1237,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * This called after {@link $this->validate()}, so you can be sure that your data is valid.
      *
-     * @uses DataExtension->onBeforeWrite()
+     * @uses DataExtension::onBeforeWrite()
      */
     protected function onBeforeWrite()
     {
@@ -1253,7 +1253,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * $this->changed will have a record
      * database.  Don't forget to call parent::onAfterWrite(), though!
      *
-     * @uses DataExtension->onAfterWrite()
+     * @uses DataExtension::onAfterWrite()
      */
     protected function onAfterWrite()
     {
@@ -1283,7 +1283,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * You can overload this to clean up or otherwise process data before delete this
      * record.  Don't forget to call parent::onBeforeDelete(), though!
      *
-     * @uses DataExtension->onBeforeDelete()
+     * @uses DataExtension::onBeforeDelete()
      */
     protected function onBeforeDelete()
     {
@@ -1309,7 +1309,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Will traverse the defaults of the current class and all its parent classes.
      * Called by the constructor when creating new records.
      *
-     * @uses DataExtension->populateDefaults()
+     * @uses DataExtension::populateDefaults()
      * @return DataObject $this
      */
     public function populateDefaults()
@@ -1560,7 +1560,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  - $this->onBeforeWrite() gets called beforehand.
      *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
      *
-     * @uses DataExtension->augmentWrite()
+     * @uses DataExtension::augmentWrite()
      *
      * @param boolean       $showDebug Show debugging information
      * @param boolean       $forceInsert Run INSERT command rather than UPDATE, even if record already exists
@@ -1733,7 +1733,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Delete this data object.
      * $this->onBeforeDelete() gets called.
      * Note that in Versioned objects, both Stage and Live will be deleted.
-     * @uses DataExtension->augmentSQL()
+     * @uses DataExtension::augmentSQL()
      */
     public function delete()
     {
@@ -3490,7 +3490,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * @see $sourceQueryParams
-     * @param array
+     * @param array $array
      */
     public function setSourceQueryParams($array)
     {
@@ -3525,7 +3525,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Check the database schema and update it as necessary.
      *
-     * @uses DataExtension->augmentDatabase()
+     * @uses DataExtension::augmentDatabase()
      */
     public function requireTable()
     {
@@ -3607,7 +3607,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * this to add default records when the database is built, but make sure you
      * call parent::requireDefaultRecords().
      *
-     * @uses DataExtension->requireDefaultRecords()
+     * @uses DataExtension::requireDefaultRecords()
      */
     public function requireDefaultRecords()
     {
