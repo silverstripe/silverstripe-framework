@@ -195,9 +195,9 @@ following to your `app/_config/config.yml` file:
 
 ```yml
 SilverStripe\Core\Injector\Injector:
- SilverStripe\Assets\Image_Backend:
-   properties:
-     Quality: 90
+  SilverStripe\Assets\Image_Backend:
+    properties:
+      Quality: 90
 ```
 
 ## Changing the manipulation driver to Imagick
