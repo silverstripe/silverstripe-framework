@@ -137,6 +137,17 @@ Depending on your hosting and deployment mechanisms,
 you may need to configure the plugin to copy files instead.
 See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) for details.
 
+### Caches
+
+Silverstripe relies on various [caches](https://docs.silverstripe.org/en/4/developer_guides/performance/caching/)
+to achieve performant responses. By default, those caches are stored in a temporary filesystem folder,
+and are not shared between multiple server instances. Alternative cache backends such as Redis can be
+[configured](https://docs.silverstripe.org/en/4/developer_guides/performance/caching/).
+
+While cache objects can expire, when using filesystem caching the files are not actively pruned.
+For long-lived server instances, this can become a capacity issue over time - see
+[workaround](https://github.com/silverstripe/silverstripe-framework/issues/6678).
+
 ### Error pages
 
 The default installation includes [silverstripe/errorpage](https://addons.silverstripe.org/add-ons/silverstripe/errorpage),

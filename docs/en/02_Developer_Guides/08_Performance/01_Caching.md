@@ -25,6 +25,11 @@ executing the action is limited to the following cases when performed via a web 
  * A user is logged in with ADMIN permissions
  * An error occurs during startup
 
+Caution: Not all caches are cleared through `flush=1`.
+While cache objects can expire, when using filesystem caching the files are not actively pruned.
+For long-lived server instances, this can become a capacity issue over time - see
+[workaround](https://github.com/silverstripe/silverstripe-framework/issues/6678).
+
 ## Configuration
 
 We are using the [PSR-16](http://www.php-fig.org/psr/psr-16/) standard ("SimpleCache")
