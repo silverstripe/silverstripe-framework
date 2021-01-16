@@ -158,6 +158,7 @@ class URLSegmentFilter implements FilterInterface
      */
     public function getAllowMultibyte()
     {
-        return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
+        return ($this->allowMultibyte !== null) ? $this->allowMultibyte
+            : $this->config()->get('default_allow_multibyte');
     }
 }

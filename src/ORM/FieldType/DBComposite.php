@@ -115,7 +115,7 @@ abstract class DBComposite extends DBField
      */
     public function compositeDatabaseFields()
     {
-        return $this->config()->composite_db;
+        return $this->config()->get('composite_db');
     }
 
 

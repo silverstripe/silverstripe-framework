@@ -606,7 +606,7 @@ class Member extends DataObject
             );
             $lifetime = (86400 * $lifetime); // Method argument is days, convert to seconds
         } else {
-            $lifetime = $this->config()->auto_login_token_lifetime;
+            $lifetime = $this->config()->get('auto_login_token_lifetime');
         }
 
         do {

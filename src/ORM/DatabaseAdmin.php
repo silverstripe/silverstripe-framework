@@ -298,7 +298,7 @@ class DatabaseAdmin extends Controller
             }
         }
 
-        $showRecordCounts = (boolean)$this->config()->show_record_counts;
+        $showRecordCounts = (boolean)$this->config()->get('show_record_counts');
 
         // Initiate schema update
         $dbSchema = DB::get_schema();

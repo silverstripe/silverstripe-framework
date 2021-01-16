@@ -55,7 +55,7 @@ class Member_Validator extends RequiredFields
         $required = array_merge($required, $this->customRequired);
 
         // check for config API values and merge them in
-        $config = $this->config()->customRequired;
+        $config = $this->config()->get('customRequired');
         if (is_array($config)) {
             $required = array_merge($required, $config);
         }
