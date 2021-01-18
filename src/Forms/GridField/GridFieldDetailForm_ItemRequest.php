@@ -14,6 +14,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
@@ -564,27 +565,20 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     private function getAdjacentRecordID($offset)
     {
         $gridField = $this->getGridField();
+        /** @var DataList $list */
         $list = $gridField->getManipulatedList();
-        $state = $gridField->getState(false);
-        $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
-        if (!empty($gridStateStr)) {
-            $state->setValue($gridStateStr);
+
+        $table = DataObject::getSchema()->tableForField($this->record, 'ID');
+        if ($offset > 0) {
+            $list = $list->where(["\"$table\".\"ID\" >= ?" => $this->record->ID])
+                ->sort(['ID' => 'ASC']);
+        } else {
+            $list = $list->where(["\"$table\".\"ID\" <= ?"  => $this->record->ID])
+                ->sort(['ID' => 'DESC']);
         }
-        $data = $state->getData();
-        $paginator = $data->getData('GridFieldPaginator');
-        if (!$paginator) {
-            return false;
-        }
-
-        $currentPage = $paginator->getData('currentPage');
-        $itemsPerPage = $paginator->getData('itemsPerPage');
-
-        $limit = $itemsPerPage + 2;
-        $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
-
-        $map = $list->limit($limit, $limitOffset)->column('ID');
+        $map = $list->limit(abs($offset)+1)->column('ID');
         $index = array_search($this->record->ID, $map);
-        return isset($map[$index+$offset]) ? $map[$index+$offset] : false;
+        return isset($map[abs($offset)]) ? $map[abs($offset)] : false;
     }
 
     /**
