@@ -85,7 +85,7 @@ class CmsUiContext implements Context
     }
 
     /**
-     * @Then /^I should see a "([^"]+)" (\w+) toast$/
+     * @Then /^I should see a "(.+)" (\w+) toast$/
      */
     public function iShouldSeeAToast($notice, $type)
     {
@@ -93,7 +93,7 @@ class CmsUiContext implements Context
     }
 
     /**
-     * @Then /^I should see a "([^"]+)" (\w+) toast with these actions: (.+)$/
+     * @Then /^I should see a "(.+)" (\w+) toast with these actions: (.+)$/
      */
     public function iShouldSeeAToastWithAction($notice, $type, $actions)
     {
@@ -110,7 +110,7 @@ class CmsUiContext implements Context
 
     /**
      * @param $action
-     * @When /^I click the "([^"]*)" toast action$/
+     * @When /^I click the "(.*)" toast action$/
      */
     public function stepIClickTheToastAction($action)
     {
