@@ -8,7 +8,10 @@ use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
 
 class TreeDropdownFieldTest extends SapphireTest
@@ -245,5 +248,22 @@ class TreeDropdownFieldTest extends SapphireTest
             '<input type="hidden" name="TestTree" value="' . $fileMock->ID . '" />',
             $result
         );
+    }
+
+    /**
+     * This is to test setting $key to an Object in the protected function objectForKey()
+     * This is to fix an issue where postgres will not fail gracefully when you do this
+     */
+    public function testObjectForKeyObjectValue()
+    {
+        $form = Form::create();
+        $fieldList = FieldList::create();
+        $field = TreeDropdownField::create('TestTree', 'Test tree', File::class);
+        $fieldList->add($field);
+        $form->setFields($fieldList);
+        $field->setValue(DataObject::create());
+        // The following previously errored in postgres
+        $field->getSchemaStateDefaults();
+        $this->assertTrue(true);
     }
 }

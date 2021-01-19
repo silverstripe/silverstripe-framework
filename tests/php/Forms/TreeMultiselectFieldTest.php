@@ -340,5 +340,12 @@ class TreeMultiselectFieldTest extends SapphireTest
             [],
             $field->getItems()
         );
+
+        // Andle empty string none value
+        $field->setValue('');
+        $this->assertListEquals(
+            [],
+            $field->getItems()
+        );
     }
 }
