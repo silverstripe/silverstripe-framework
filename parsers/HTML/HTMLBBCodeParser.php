@@ -502,7 +502,8 @@ class SSHTMLBBCodeParser
 				{
 					if (trim($tag['text']) == '') {
 						//just an empty indentation or newline without value?
-						continue;
+						//skip this iteration of the foreach loop
+						continue 2;
 					}
 					$newTagArray[] = $child;
 					$openTags[] = $child['tag'];
