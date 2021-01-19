@@ -812,10 +812,13 @@ class TreeDropdownField extends FormField
      * Get the object where the $keyField is equal to a certain value
      *
      * @param string|int $key
-     * @return DataObject
+     * @return DataObject|null
      */
     protected function objectForKey($key)
     {
+        if (!is_string($key) && !is_int($key)) {
+            return null;
+        }
         return DataObject::get($this->getSourceObject())
             ->filter($this->getKeyField(), $key)
             ->first();
