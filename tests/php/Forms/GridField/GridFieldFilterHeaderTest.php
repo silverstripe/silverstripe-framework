@@ -118,4 +118,25 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('place', $searchSchema->filters->Search__City);
         $this->assertEquals('testfield', $searchSchema->gridfield);
     }
+
+    public function testHandleActionReset()
+    {
+        // Init Grid state with some pre-existing filters
+        $state = $this->gridField->State;
+        $state->GridFieldFilterHeader = [];
+        $state->GridFieldFilterHeader->Columns = [];
+        $state->GridFieldFilterHeader->Columns->Name = 'test';
+
+        $this->component->handleAction(
+            $this->gridField,
+            'reset',
+            [],
+            '{"GridFieldFilterHeader":{"Columns":{"Name":"test"}}}'
+        );
+
+        $this->assertEmpty(
+            $state->GridFieldFilterHeader->Columns->toArray(),
+            'GridFieldFilterHeader::handleAction resets the gridstate filter when the user resets the search.'
+        );
+    }
 }

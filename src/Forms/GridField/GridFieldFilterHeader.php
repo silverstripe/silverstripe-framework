@@ -176,6 +176,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         $state = $this->getState($gridField);
+        $state->Columns = [];
 
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
