@@ -75,7 +75,7 @@ often working alongside Core Committers. They are guided by additional rules:
  * Contributing Committers have write access to core repositories in order to work effectively with Github issues. They are expected to use those permissions with good judgement regarding merges of pull requests.
  * Complex or impactful changes need to be reviewed and approved by one or more Core Committers. This includes any additions, removals or changes to commonly used APIs. If that's not possible in the team, ping `@silverstripe/core-team` to get other Core Committers involved.
  * For these complex or impactful changes, Core Committers should be given 1-2 working days to review. Ideally at this point, the API has already been agreed on through issue comments outlining the planned work (see [RFC Process](request_for_comment]).
- * More straightforward changes (e.g. documentation, styling) or areas which require quite specialised expertise (e.g. React) that's less available through most Core Committers can be approved or merged by team members who aren't Core Committers
+ * More straightforward changes (e.g. documentation, styling) or areas which require quite specialised expertise (e.g. React) that's less available through most Core Committers can be approved or merged by team members who aren't Core Committers.
  * Self-merges should be avoided, but are preferable to having work go stale or forcing other team members to waste time by context switching into a complex review (e.g. because the original reviewer went on leave). Any self-merge should be accompanied by a comment why this couldn't be handled in another way, and a (preferably written) approval from another team member.
 
 This role may be granted by any Core Committer,
