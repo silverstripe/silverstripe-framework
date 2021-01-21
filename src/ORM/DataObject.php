@@ -199,9 +199,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Value for 2nd argument to constructor, indicating that a record is being hydrated from the database
-     * Neither setters and nor default population will be called
+     * Setter methods are not called, and population via private static $defaults will not occur.
      */
     const CREATE_HYDRATED = 2;
+
+    /**
+     * Value for 2nd argument to constructor, indicating that a record is being hydrated from memory. This can be used
+     * to initialised a record that doesn't yet have an ID. Setter methods are not called, and population via private
+     * static $defaults will not occur.
+     */
+    const CREATE_MEMORY_HYDRATED = 3;
 
     /**
      * An array indexed by fieldname, true if the field has been changed.
@@ -339,7 +346,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Construct a new DataObject.
      *
      * @param array $record Initial record content, or rehydrated record content, depending on $creationType
-     * @param int|boolean $creationType Set to DataObject::CREATE_OBJECT, DataObject::CREATE_HYDRATED, or DataObject::CREATE_SINGLETON. Used by SilverStripe internals as best left as the default by regular users.
+     * @param int|boolean $creationType Set to DataObject::CREATE_OBJECT, DataObject::CREATE_HYDRATED,
+     *   DataObject::CREATE_MEMORY_HYDRATED or DataObject::CREATE_SINGLETON. Used by Silverstripe internals and best
+     *   left as the default by regular users.
      * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
      */
     public function __construct($record = [], $creationType = self::CREATE_OBJECT, $queryParams = [])
@@ -366,31 +375,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->record = [];
 
         switch ($creationType) {
-            // Hydrate a record from the database
+            // Hydrate a record
             case self::CREATE_HYDRATED:
-                if (!is_array($record) || empty($record['ID'])) {
-                    throw new \InvalidArgumentException("Hydrated records must be passed a record array including an ID");
-                }
-
-                $this->record = $record;
-
-                // Identify fields that should be lazy loaded, but only on existing records
-                // Get all field specs scoped to class for later lazy loading
-                $fields = static::getSchema()->fieldSpecs(
-                    static::class,
-                    DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
-                );
-                foreach ($fields as $field => $fieldSpec) {
-                    $fieldClass = strtok($fieldSpec, ".");
-                    if (!array_key_exists($field, $record)) {
-                        $this->record[$field . '_Lazy'] = $fieldClass;
-                    }
-                }
-
-                $this->original = $this->record;
-                $this->changed = [];
-                $this->changeForced = false;
-
+            case self::CREATE_MEMORY_HYDRATED:
+                $this->hydrate($record, $creationType === self::CREATE_HYDRATED);
                 break;
 
             // Create a new object, using the constructor argument as the initial content
@@ -447,6 +435,43 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             default:
                 throw new \LogicException('Bad creationType ' . $this->creationType);
         }
+    }
+
+    /**
+     * Constructor hydration logic for CREATE_HYDRATED and CREATE_MEMORY_HYDRATED.
+     * @param array $record
+     * @param bool $mustHaveID If true, an exception will be thrown if $record doesn't have an ID.
+     */
+    private function hydrate(array $record, bool $mustHaveID)
+    {
+        if ($mustHaveID && empty($record['ID'])) {
+            // CREATE_HYDRATED requires an ID to be included in the record
+            throw new \InvalidArgumentException(
+                "Hydrated records must be passed a record array including an ID."
+            );
+        } elseif (empty($record['ID'])) {
+            // CREATE_MEMORY_HYDRATED implicitely set the record ID to 0 if not provided
+            $record['ID'] = 0;
+        }
+
+        $this->record = $record;
+
+        // Identify fields that should be lazy loaded, but only on existing records
+        // Get all field specs scoped to class for later lazy loading
+        $fields = static::getSchema()->fieldSpecs(
+            static::class,
+            DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
+        );
+        foreach ($fields as $field => $fieldSpec) {
+            $fieldClass = strtok($fieldSpec, ".");
+            if (!array_key_exists($field, $record)) {
+                $this->record[$field . '_Lazy'] = $fieldClass;
+            }
+        }
+
+        $this->original = $this->record;
+        $this->changed = [];
+        $this->changeForced = false;
     }
 
     /**
@@ -750,7 +775,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $originalClass = $this->ClassName;
 
         /** @var DataObject $newInstance */
-        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_HYDRATED);
+        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_MEMORY_HYDRATED);
 
         // Modify ClassName
         if ($newClassName != $originalClass) {
