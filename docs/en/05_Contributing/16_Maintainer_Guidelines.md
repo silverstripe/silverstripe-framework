@@ -9,7 +9,7 @@ iconBrand: wpforms
 
 This doc is a cheat sheet for maintainers. It explains what that means to be a module maintainer and contains links to other resources with extra information.
 
-Module maintainers are people taking care of the repositories, CI, documentation, source code, conventions, community communications, release management etc.
+Module maintainers are people taking care of the repositories, CI, documentation, source code, conventions, community communications, issue triage, and release management.
 
 One of the most important maintainer responsibilities is to collaborate with other maintainers. Another important role is to facilitate community contributions (such as issue reports and pull requests).
 
