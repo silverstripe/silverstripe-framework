@@ -21,11 +21,13 @@ All maintainers should be familiar with those docs as they explain many details 
 
 ## What is Silverstripe Core
 
-The "core" of Silverstripe is a set of non-dev dependencies contained in
-[silverstripe/recipe-cms](https://github.com/silverstripe/recipe-cms)
-and [silverstripe/recipe-core](https://github.com/silverstripe/recipe-cms).
-It is limited to dependencies owned by the "silverstripe" Packagist vendor,
-but can include "dev" dependencies.
+Silverstripe CMS is powered by a system of components in the form of Composer packages. These packages will be categorised as either a _module_ or a _recipe_.
+
+The "core" of Silverstripe refers to the module packages owned by the "silverstripe" Packagist vendor that fall under one of the following recipes:
+
+* [silverstripe/recipe-core](https://github.com/silverstripe/recipe-cms)
+* [silverstripe/recipe-cms](https://github.com/silverstripe/recipe-cms)
+* [silverstripe/installer](https://github.com/silverstripe/silverstripe-installer)
 
 ## What are Supported Modules
 
