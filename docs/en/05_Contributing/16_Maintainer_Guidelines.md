@@ -113,7 +113,7 @@ Applying [labels](./code/#labels) is the main mechanism used to escalate critica
 
 
 How to do it
-  - Regularly check the repository for new issues
+  - Regularly check the repository for new issues or use the ["Untriaged" filter](https://silverstripe-github-issues.now.sh/?mode=untriaged) in our cross-repository issue tracker.
   - Ideally subscribe to the repository via [GitHub Watch](https://docs.github.com/en/free-pro-team@latest/github/managing-subscriptions-and-notifications-on-github/viewing-your-subscriptions#configuring-your-watch-settings-for-an-individual-repository) functionality
   - Read the docs about [how we use labels](./code/#labels)
   - If unsure about anything, it’s usually good to ask other maintainers for their opinions (on Slack or via mentioning them directly on GitHub)
