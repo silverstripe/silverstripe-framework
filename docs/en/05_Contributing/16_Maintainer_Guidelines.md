@@ -109,7 +109,7 @@ Some of the Supported Modules have their own house rules (usually explained in t
 
 Triaging GitHub issues and pull requests imply responding to issue/pr creators with following closing or labelling. Labelling allows the other maintainers to pick up proper issues/prs accordingly to their dedication or available resources.
 
-It is also the main way to escalate critical and high impact issues, give feedback to the community, or peer review a PR and let other maintainers know it is “good to be merged on green CI tests”.
+Applying [labels](./code/#labels) is the main mechanism used to escalate critical and high impact issues, give feedback to the community, or peer review a PR and let other maintainers know it is “good to be merged on green CI tests”.
 
 
 How to do it
