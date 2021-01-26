@@ -46,24 +46,6 @@ or any additional guidelines outlined via `README` and `CONTRIBUTING` files.
 The people looking after the Silverstripe Core modules.
 See the details on the [Core Committers](./core_committers) page.
 
-#### House rules of the Core Committer team
-
- * Be friendly, encouraging and constructive towards other community members
- * Frequently review pull requests and new issues (in particular, respond quickly to @mentions)
- * Treat issues according to our [issue guidelines](issues_and_bugs), and use the [triage resources](triage_resources)
- * Don't commit directly to a release branch, raise pull requests instead (except trivial fixes)
- * Only merge code you have tested and fully understand. If in doubt, ask for a second opinion.
- * Follow the [Supported Modules Standard](https://www.silverstripe.org/software/addons/supported-modules-definition/)
- * Ensure contributions have appropriate [test coverage](../developer_guides/testing), are documented, and pass our [coding conventions](/getting_started/coding_conventions)
- * Keep the codebase "releasable" at all times (check our [release process](release_process))
- * Follow [Semantic Versioning](code/#picking-the-right-version) by putting any changes into the correct branch
- * API changes and non-trivial features should not be merged into release branches. 
- * API changes on master should not be merged until they have the buy-in of at least two Core Committers (or better, through the [core mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev))
- * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
- * Avoid `git push --force`, and be careful with your git remotes (no accidental pushes)
- * Use your own forks to create feature branches
- * We release using the standard process. See the [Making a SilverStripe Core Release](making_a_silverstripe_core_release)
-
 
 ### Contributing Committers
 
@@ -98,11 +80,24 @@ With great power (write access) comes great responsibility.
 
 First and foremost rule of a maintainer is to collaborate with other maintainers. Follow the house rules and remember that others also care about the modules they maintain.
 
-Remember to follow the [House rules of the Core Committer team](#house-rules-of-the-core-committer-team) and the supported module [guidelines](https://www.silverstripe.org/software/addons/supported-modules-definition/).
 
-[warning]
-Some of the Supported Modules have their own house rules (usually explained in the repository README or CONTRIBUTING files). Please remember to read those carefully.
-[/warning]
+### House rules overview
+
+ * Be friendly, encouraging and constructive towards other community members
+ * Frequently review pull requests and new issues (in particular, respond quickly to @mentions)
+ * Treat issues according to our [issue guidelines](issues_and_bugs), and use the [triage resources](triage_resources)
+ * Don't commit directly to a release branch, raise pull requests instead (except trivial fixes)
+ * Only merge code you have tested and fully understand. If in doubt, ask for a second opinion.
+ * Follow the [Supported Modules Standard](https://www.silverstripe.org/software/addons/supported-modules-definition/)
+ * Ensure contributions have appropriate [test coverage](../developer_guides/testing), are documented, and pass our [coding conventions](/getting_started/coding_conventions)
+ * Keep the codebase "releasable" at all times (check our [release process](release_process))
+ * Follow [Semantic Versioning](code/#picking-the-right-version) by putting any changes into the correct branch
+ * API changes and non-trivial features should not be merged into release branches. 
+ * API changes on master should not be merged until they have the buy-in of at least two Core Committers (or better, through the [core mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev))
+ * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
+ * Avoid `git push --force`, and be careful with your git remotes (no accidental pushes)
+ * Use your own forks to create feature branches
+ * We release using the standard process. See the [Making a SilverStripe Core Release](making_a_silverstripe_core_release)
 
 
 ### How to triage
