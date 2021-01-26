@@ -7,7 +7,7 @@ iconBrand: wpforms
 
 # Maintainer Guidelines
 
-This doc is a cheat sheet for maintainers. It explains what that means to be a module maintainer and contains links to other resources with extra information.
+This doc outlines expectations on maintainers of Silverstripe Core. It also forms the default expectations for maintainers of Supported Modules, unless more specific contribution guidelines are available for a module.
 
 Module maintainers are people taking care of the repositories, CI, documentation, source code, conventions, community communications, issue triage, and release management.
 
