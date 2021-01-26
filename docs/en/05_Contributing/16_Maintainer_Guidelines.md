@@ -107,7 +107,7 @@ Some of the Supported Modules have their own house rules (usually explained in t
 
 ### How to triage
 
-Triaging GitHub issues and pull requests imply responding to issue/pr creators with following closing or labelling. Labelling allows the other maintainers to pick up proper issues/prs accordingly to their dedication or available resources.
+Triaging issues and pull requests involves review, applying labels, as well as closing invalid submissions.
 
 Applying [labels](./code/#labels) is the main mechanism used to escalate critical and high impact issues, give feedback to the community, or peer review a PR and let other maintainers know it is “good to be merged on green CI tests”.
 
