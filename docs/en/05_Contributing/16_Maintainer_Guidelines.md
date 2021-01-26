@@ -92,7 +92,7 @@ Triage roles may be granted by any Core Committer,
 who should give other Core Committers an opportunity to weigh in on the decision.
 
 
-## The Guidelines
+## Guidelines
 
 With great power (write access) comes great responsibility.
 
