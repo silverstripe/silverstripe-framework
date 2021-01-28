@@ -103,31 +103,20 @@ that gets presented to them. Currently this is a mix of PHP defaults (for readon
 browser defaults (for `DateField` on browsers supporting HTML5), and [Moment.JS](http://momentjs.com/)
 client-side logic (for `DateField` polyfills and other readonly dates and times).
 
-### Language Names
+### Adding locales
 
-SilverStripe comes with a built-in list of common languages, listed by locale and region.
-They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [config setting](/developer_guides/configuration).
+SilverStripe now uses the php-intl extension.  Before adding an extra locale, make sure the ICU library on your server supports it (see https://www.php.net/manual/en/resourcebundle.locales.php for more info).
+
+They can be accessed via the `SilverStripe\i18n\Data\Intl\IntlLocales.locales`  [config setting](/developer_guides/configuration).
 
 In order to add a value, add the following to your `config.yml`:
 
-
 ```yml
-SilverStripe\i18n\i18n:
-  common_locales:
-    de_CGN:
-      name: German (Cologne)
-      native: Kölsch
+SilverStripe\i18n\Data\Intl\IntlLocales:
+  locales:
+    fr_LU: French (Luxembourg)   
 ```
 
-Similarly, to change an existing language label, you can overwrite one of these keys:
-
-
-```yml
-SilverStripe\i18n\i18n:
-  common_locales:
-    en_NZ:
-      native: Niu Zillund
-```
 
 ### i18n in URLs
 
