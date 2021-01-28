@@ -16,6 +16,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -24,6 +26,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\Filters\SummaryPartialMatchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\RelatedData\RelatedDataService;
@@ -2378,6 +2381,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             (array)$_params
         );
         $fields = new FieldList();
+
+        $fields->push(HiddenField::create('q', 'Generic Search'));
+
         foreach ($this->searchableFields() as $fieldName => $spec) {
             if ($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) {
                 continue;
@@ -2430,6 +2436,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             $fields->push($field);
         }
+
         return $fields;
     }
 
@@ -3925,7 +3932,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
+        if ($genericField = $this->genericSearchFilter()) {
+            $filters['q'] = $genericField;
+        }
+
         return $filters;
+    }
+
+    public function genericSearchFilter()
+    {
+        $fields = $this->summaryFields();
+        $list = self::get();
+
+        $fields = array_filter($fields, function ($field) use ($list) {
+            return $list->canFilterBy($field);
+        });
+
+        if (empty($fields)) {
+            return null;
+        }
+
+        return SummaryPartialMatchFilter::create('q', false, [], $fields);
     }
 
     /**
