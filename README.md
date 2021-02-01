@@ -20,7 +20,7 @@ and [installation from source](https://doc.silverstripe.org/framework/en/install
 ## Bugtracker ##
 
 Bugs are tracked on [github.com](https://github.com/silverstripe/silverstripe-framework/issues). 
-Please read our [issue reporting guidelines](https://docs.silverstripe.org/en/4/contributing/issues_and_bugs/).
+Please read our [issue reporting guidelines](https://docs.silverstripe.org/en/contributing/issues_and_bugs/).
 
 ## Development and Contribution ##
 
@@ -28,8 +28,8 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
 
 ## Links ##
 
- * [Server Requirements](https://docs.silverstripe.org/en/4/getting_started/server_requirements/)
- * [Changelogs](https://docs.silverstripe.org/en/4/changelogs/)
+ * [Server Requirements](https://docs.silverstripe.org/en/getting_started/server_requirements/)
+ * [Changelogs](https://docs.silverstripe.org/en/changelogs/)
  * [Bugtracker: Framework](https://github.com/silverstripe/silverstripe-framework/issues)
  * [Bugtracker: CMS](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Bugtracker: Installer](https://github.com/silverstripe/silverstripe-installer/issues)
