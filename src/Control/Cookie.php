@@ -42,7 +42,7 @@ class Cookie
      * @param bool $secure
      * @param bool $httpOnly
      *
-     * See http://php.net/set_session
+     * See http://php.net/setcookie
      */
     public static function set(
         $name,
@@ -51,9 +51,10 @@ class Cookie
         $path = null,
         $domain = null,
         $secure = false,
-        $httpOnly = true
+        $httpOnly = true,
+        $sameSite = null
     ) {
-        return self::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        return self::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     /**

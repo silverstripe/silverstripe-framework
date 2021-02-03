@@ -329,10 +329,27 @@ class Session
 
                 session_start();
 
+                $sameSite = null;
+                $sessionParams = session_get_cookie_params();
+
+                // If samesite param is set, then we can pass it into the Cookie::set call below as we are on >= PHP 7.3
+                if (isset($sessionParams['samesite'])) {
+                    $sameSite = $sessionParams['samesite'];
+                }
+
                 // Session start emits a cookie, but only if there's no existing session. If there is a session timeout
                 // tied to this request, make sure the session is held for the entire timeout by refreshing the cookie age.
                 if ($timeout && $this->requestContainsSessionId($request)) {
-                    Cookie::set(session_name(), session_id(), $timeout / 86400, $path, $domain ?: null, $secure, true);
+                    Cookie::set(
+                        session_name(),
+                        session_id(),
+                        $timeout / 86400,
+                        $path,
+                        $domain ?: null,
+                        $secure,
+                        true,
+                        $sameSite
+                    );
                 }
             } else {
                 // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning

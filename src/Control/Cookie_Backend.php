@@ -29,8 +29,19 @@ interface Cookie_Backend
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
+     * @param string|null $sameSite One of 'None', 'Lax', 'Strict' or null to not pass a SameSite attribute. Note that
+     *                              this only works in PHP 7.3 or higher, and will be ignored in any earlier version.
      */
-    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true);
+    public function set(
+        $name,
+        $value,
+        $expiry = 90,
+        $path = null,
+        $domain = null,
+        $secure = false,
+        $httpOnly = true,
+        $sameSite = null
+    );
 
     /**
      * Get the cookie value by name

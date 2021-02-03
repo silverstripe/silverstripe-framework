@@ -68,9 +68,19 @@ class CookieJar implements Cookie_Backend
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
+     * @param string|null $sameSite One of 'None', 'Lax', 'Strict' or null to not pass a SameSite attribute. Note that
+     *                              this only works in PHP 7.3 or higher, and will be ignored in any earlier version.
      */
-    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true)
-    {
+    public function set(
+        $name,
+        $value,
+        $expiry = 90,
+        $path = null,
+        $domain = null,
+        $secure = false,
+        $httpOnly = true,
+        $sameSite = null
+    ) {
         //are we setting or clearing a cookie? false values are reserved for clearing cookies (see PHP manual)
         $clear = false;
         if ($value === false || $value === '' || $expiry < 0) {
@@ -85,8 +95,9 @@ class CookieJar implements Cookie_Backend
         }
         //set the path up
         $path = $path ? $path : Director::baseURL();
+
         //send the cookie
-        $this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        $this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly, $sameSite);
         //keep our variables in check
         if ($clear) {
             unset($this->new[$name], $this->current[$name]);
@@ -166,11 +177,39 @@ class CookieJar implements Cookie_Backend
         $path = null,
         $domain = null,
         $secure = false,
-        $httpOnly = true
+        $httpOnly = true,
+        $sameSite = null
     ) {
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
-            return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+            if (version_compare(PHP_VERSION, '7.3.0') >= 0) {
+                // PHP version is 7.3+, we can set the SameSite cookie
+                return setcookie(
+                    $name,
+                    $value,
+                    [
+                        'expires' => $expiry,
+                        'path' => $path,
+                        'domain' => $domain,
+                        'secure' => $secure,
+                        'httponly' => $httpOnly,
+                        'samesite' => $sameSite
+                    ]
+                );
+            } else {
+                // We can't set the SameSite cookie, if it isn't the default value of null then throw an error
+                if (!is_null($sameSite)) {
+                    $errorMessage = <<<ERR
+                        Cookie '%s' can't be set because it includes a SameSite value on a version of PHP that does not
+                        support SameSite (%s). Please upgrade your version of PHP if you need to use the SameSite
+                        attribute.
+ERR;
+
+                    throw new LogicException(sprintf($errorMessage, $name, PHP_VERSION));
+                }
+
+                return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+            }
         }
 
         if (Cookie::config()->uninherited('report_errors')) {
