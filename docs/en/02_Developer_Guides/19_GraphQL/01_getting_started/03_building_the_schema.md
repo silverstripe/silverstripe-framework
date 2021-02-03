@@ -81,6 +81,11 @@ tangential changes such as:
 * Adding a new resolver for a type that uses [resolver discovery](../working_with_generic_types/resolver_discovery)
 * Adding an extension to a DataObject
 * Adding a new subclass to a DataObject that is already exposed
+* If you are using Silverstripe CMS **without the [silverstripe/assets](https://github.com/silverstripe/silverstripe-assets) module installed, the build task will leave a `.graphql` file artefact in your public directory for CMS reference.
+Though it doesn't contain any highly sensitive data, we recommend you block this file from being viewed by outside
+  traffic.
+  
+
 
 ### Viewing the generated code
 
