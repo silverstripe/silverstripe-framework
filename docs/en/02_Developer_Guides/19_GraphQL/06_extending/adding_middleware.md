@@ -30,26 +30,39 @@ The middleware API in the silverstripe-graphql module is separate from other com
 APIs in Silverstripe CMS, such as HTTPMiddleware.
 [/notice]
 
-The signature for middleware is pretty simple:
+The signature for middleware looks like this:
 
 ```php
-public function process(array $params, callable $next)
+public function process(Schema $schema, $query, $context, $vars, callable $next)
 ```
 
-`$params` is an arbitrary array of data, much like an event object
-passed to an event handler. The `$next` parameter refers to the next
-middleware in the chain.
+ * `$schema`: The underlying [Schema](http://webonyx.github.io/graphql-php/type-system/schema/) object.
+   Useful to inspect whether types are defined in a schema.
+ * `$query`: The raw query string.
+ * `$context`: An arbitrary array which holds information shared between resolvers.
+   Use implementors of `SilverStripe\GraphQL\Schema\Interfaces\ContextProvider` to get and set
+   data, rather than relying on the array keys directly.
+ * `$vars`: An array of (optional) [Query Variables](https://graphql.org/learn/queries/#variables).
+ * `$next`: A callable referring to the next middleware in the chain
 
 Let's write a simple middleware that logs our queries as they come in.
 
 ```php
+use SilverStripe\GraphQL\QueryHandler\UserContextProvider;
+use GraphQL\Type\Schema;
+
 class LoggingMiddleware implements Middleware
 {
-    public function process(array $params, callable $next)
+    public function process(Schema $schema, $query, $context, $vars, callable $next)
     {
-        $query = $params['query'];
+        $member = UserContextProvider::get($context);
+        
         Injector::inst()->get(LoggerInterface::class)
-        	->info('Query executed: ' . $query);
+        	->info(sprintf(
+                'Query executed: %s by %s',
+                $query,
+                $member ? $member->Title : '<anonymous>';
+            ));
         
         // Hand off execution to the next middleware
         return $next($params);
@@ -67,3 +80,4 @@ Now we can register the middleware with our query handler:
       Middlewares:
         logging: '%$MyProject\Middleware\LoggingMiddleware'
 ```
+
