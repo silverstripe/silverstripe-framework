@@ -479,7 +479,7 @@ class DataQuery
         }
 
         // Wrap the whole thing in an "EXISTS"
-        $sql = 'SELECT EXISTS(' . $statement->sql($params) . ')';
+        $sql = 'SELECT CASE WHEN EXISTS(' . $statement->sql($params) . ') THEN 1 ELSE 0 END';
         $result = DB::prepared_query($sql, $params);
         $row = $result->first();
         $result = reset($row);
