@@ -31,13 +31,15 @@ use SilverStripe\ORM\Hierarchy\MarkedSet;
  * <b>Usage</b>.
  *
  * <code>
+ * use SilverStripe\CMS\Model\SiteTree;
+ * ...
  * static $has_one = array(
- *   'RightContent' => 'SiteTree'
+ *   'RightContent' => SiteTree::class
  * );
  *
  * function getCMSFields() {
  * ...
- * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", "SiteTree");
+ * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", SiteTree::class);
  * ..
  * }
  * </code>
