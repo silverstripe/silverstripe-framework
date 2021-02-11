@@ -41,7 +41,7 @@ functionality may not be included.
 ```
 
 The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as `<img
-src="someimage.jpg" />) will become relative to the URI specified in the base tag. This ensures the browser knows where
+src="someimage.jpg" alt="">`) will become relative to the URI specified in the base tag. This ensures the browser knows where
 to locate your site’s images and css files.
 
 It renders in the template as `<base href="http://www.yoursite.com" /><!--[if lte IE 6]></base><![endif]-->`
