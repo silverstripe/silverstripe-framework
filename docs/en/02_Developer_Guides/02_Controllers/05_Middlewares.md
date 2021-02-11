@@ -5,7 +5,7 @@ summary: Create objects for modifying request and response objects across contro
 
 # HTTP Middlewares
 
-HTTP Middlewares allow you to put code that will run before or after. These might be used for
+HTTP Middlewares allow you to add code that will run before or after a request has been delegated to the router. These might be used for
 authentication, logging, caching, request processing, and many other purposes. Note this interface
 replaces the SilverStripe 3 interface [RequestFilter](api:SilverStripe\Control\RequestFilter), which still works but is deprecated.
 
