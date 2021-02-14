@@ -361,9 +361,9 @@ echo $versions->First()->Version; // instance of Versioned_Version
 
 ### Writing changes to a versioned DataObject
 
-When you call the `write()` method on a versioned DataObject, this will transparently create a new version of this DataObject in the the _Stage_ stage.
+When you call the `write()` method on a versioned DataObject, this will transparently create a new version of this DataObject in the _Stage_ stage.
 
-To write your changes without creating new version, call `writeWithoutVersion()` instead.(api:SilverStripe\Versioned\Versioned::writeWithoutVersion()) instead.
+To write your changes without creating new version, call [writeWithoutVersion()](api:SilverStripe\Versioned\Versioned::writeWithoutVersion()) instead.
 ```php
 <?php
 
@@ -406,7 +406,7 @@ $record->publishRecursive();
 
 ### Unpublishing and archiving a versioned DataObject
 
-Archiving and unpublishing are similar operations, both will prevent a versioned DataObject from being publicly accessible. Archiving will also remove the record from the _Stage_ stage ; other ORMs may refer to this concept as _soft-deletion_.
+Archiving and unpublishing are similar operations, both will prevent a versioned DataObject from being publicly accessible. Archiving will also remove the record from the _Stage_ stage; other ORMs may refer to this concept as _soft-deletion_.
 
 Use `doUnpublish()` to unpublish an item. Simply call `delete()` to archive an item. The SilverStripe ORM doesn't allow you to _hard-delete_ versioned DataObjects.
 
@@ -422,7 +422,7 @@ $record->doUnpublish();
 $record->delete();
 ```
 
-Note that `doUnpublish()` and `doArchive()` do not work recursively. If you wish to unpublish or archive dependants records, you have to it manually.
+Note that `doUnpublish()` and `doArchive()` do not work recursively. If you wish to unpublish or archive dependants records, you have to do it manually.
 
 ### Rolling back to an older version
 Rolling back allows you to return a DataObject to a previous state. You can rollback a single DataObject using the `rollbackSingle()` method. You can also rollback all dependant records using the `rollbackRecursive()` method.
