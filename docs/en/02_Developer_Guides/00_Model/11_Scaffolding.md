@@ -79,7 +79,7 @@ class MyDataObject extends DataObject
 }
 ```
 
-Searchable fields will be appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
+Searchable fields will appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
 default search filter assigned (usually an [ExactMatchFilter](api:SilverStripe\ORM\Filters\ExactMatchFilter)). To override these defaults, you can specify 
 additional information on `$searchable_fields`:
 
