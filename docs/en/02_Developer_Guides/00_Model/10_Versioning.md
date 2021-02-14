@@ -700,7 +700,7 @@ your template, or by implementing your visibility check in PHP.
 
 #### Version specific _can_ methods
 
-Versioned DataObjects get additional permission check methods to verify what oepration a Member is allowed to perform:
+Versioned DataObjects get additional permission check methods to verify what operation a Member is allowed to perform:
 * `canPublish()`
 * `canUnpublish()`
 * `canArchive()`
