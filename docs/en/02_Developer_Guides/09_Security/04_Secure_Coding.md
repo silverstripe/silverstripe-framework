@@ -854,7 +854,7 @@ class MySecureController extends Controller
 Caching is hard. If you get it wrong, private or draft content might leak
 to unauthenticated users. We have created an abstraction which allows you to express
 your intent around HTTP caching without worrying too much about the details.
-See [/developer_guides/performances/http_cache_headers](Developer Guides > Performance > HTTP Cache Headers)
+See [HTTP Cache Headers](/developer_guides/performance/http_cache_headers/)
 for details on how to apply caching safely, and read Google's
 [Web Fundamentals on Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching).
 
