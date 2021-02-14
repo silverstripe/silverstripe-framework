@@ -114,7 +114,7 @@ It is possible for an item to be included both implicitly and explicitly in a ch
 
 This section explains how to take a regular DataObject and add versioning to it.
 
-### Applying the `Versioned` extension to your DataObject
+### Applying the Versioned extension to your DataObject
 
 ```php
 <?php
