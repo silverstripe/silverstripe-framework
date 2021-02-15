@@ -43,11 +43,13 @@ the [CSRF Middleware](csrf_protection) enabled. (It is by default).**
 ### HTTP basic authentication
 
 Silverstripe CMS has built-in support for [HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
-There is a `BasicAuthAuthenticator` which is configured for GraphQL by default, but
+
+There is a `BasicAuthAuthenticator` which can be configured for GraphQL that
 will only activate when required. It is kept separate from the SilverStripe CMS
 authenticator because GraphQL needs to use the successfully authenticated member
 for CMS permission filtering, whereas the global `BasicAuth` does not log the
-member in or use it for model security.
+member in or use it for model security.  Note that basic auth will bypass MFA authentication
+so if MFA is enabled it is not recommended that you also use basic auth for graphql.
 
 When using HTTP basic authentication, you can feel free to remove the [CSRF Middleware](csrf_protection),
 as it just adds unnecessary overhead to the request.
@@ -95,7 +97,7 @@ is applicable in the current request context (provided as an argument).
 Here's an example for implementing HTTP basic authentication:
 
 [notice]
-Note that basic auth is enabled by default.
+Note that basic authentication for graphql will bypass Multi-Factor Authentication (MFA) if that's enabled. Using basic authentication for graphql is considered insecure if you are using MFA .
 [/notice]
 
 ```yaml
