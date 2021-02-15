@@ -35,11 +35,11 @@ The task that generates the schema code is `build-schema`. It takes a parameter 
 
 Keep in mind that many of your changes will be in YAML, which also requires a flush.
 
-`$ vendor/bin/sake dev/graphql/build schema=default flush=1
+`$ vendor/bin/sake dev/graphql/build schema=default flush=1`
 
 [info]
 If you do not provide a `schema` parameter, the task will build all schemas.
-[/info]`
+[/info]
 
 ### Building on dev/build
 
