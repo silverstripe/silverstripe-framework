@@ -35,7 +35,7 @@ tasks silently in the background.
   * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_PATH`)
 
 All requests go through `index.php`, which sets up the core [Kernel](api:SilverStripe\Core\Kernel) and [HTTPApplication](api:SilverStripe\Control\HTTPApplication)
-objects. See [/developer_guides/execution_pipeline/app_object_and_kernel] for details on this.
+objects. See [App Object and Kernel](/developer_guides/execution_pipeline/app_object_and_kernel) for details on this.
 The main process follows:
 
  
