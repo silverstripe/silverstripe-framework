@@ -74,6 +74,7 @@ class UsedOnTableExtension extends Extension
         $ancestorDataObjects[] = $grandParentIWantToLink;
     }
 }
+```
 
 ### Example YML file:
 
