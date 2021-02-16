@@ -142,12 +142,12 @@ This feature is experimental, and has not been thoroughly evaluated for security
 [/warning]
 
 
-## Schema introspection
+## Schema introspection {#schema-introspection}
 
 Some GraphQL clients such as [Apollo](http://apollographql.com) require some level of introspection
 into the schema. The `SchemaTranscriber` class will persist this data to a static file in an event 
 that is fired on completion of the schema build. This file can then be consumed by a client side library
-like Apollo. The `silverstripe-admin` module is built to consume this data and expects it to be in a
+like Apollo. The `silverstripe/admin` module is built to consume this data and expects it to be in a
 web-accessible location.
 
 
@@ -167,3 +167,18 @@ web-accessible location.
    }
 
 ```
+By default, the file will be stored in `public/_graphql`. Files are only generated for the `silverstripe/admin` module.
+
+If you need these types for your own uses, add a new handler:
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\EventDispatcher\Dispatch\Dispatcher:
+    properties:
+      handlers:
+        graphqlTranscribe:
+          on: [ graphqlSchemaBuild.mySchema ]
+          handler: '%$SilverStripe\GraphQL\Schema\Services\SchemaTranscribeHandler'
+```
+
+This handler will only apply to events fired in the `mySchema` context.

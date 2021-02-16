@@ -47,7 +47,7 @@ Files contained inside the `app/client/dist` and `app/images` will be made publi
 
 SilverStripe projects should not track the "resources" directory in their source control system.
 
-### Exposing assets in the web root
+### Exposing assets in the web root {#exposing-assets-webroot}
 
 SilverStripe projects ship with [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
 This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
