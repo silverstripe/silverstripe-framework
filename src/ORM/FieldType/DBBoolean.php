@@ -96,4 +96,8 @@ class DBBoolean extends DBField
         }
         return $value ? 1 : 0;
     }
+
+    public function RAW() {
+        return $this->prepValueForDB($this->getValue());
+    }
 }
