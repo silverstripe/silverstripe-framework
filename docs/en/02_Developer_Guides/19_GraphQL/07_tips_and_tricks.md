@@ -24,7 +24,7 @@ If you need the type name during normal execution of your app, e.g. to display i
 on the cached typenames, which are persisted alongside your generated schema code.
 
 ```php
-SchemaFactory::singleton()->get('default')->getTypeNameForClass($className);
+SchemaBuilder::singleton()->read('default')->getTypeNameForClass($className);
 ```
 
 ## Persisting queries
