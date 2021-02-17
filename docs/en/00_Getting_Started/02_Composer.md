@@ -20,7 +20,7 @@ Next, [install composer](https://getcomposer.org/download/). For our documentati
 
 You can then run Composer commands by calling `composer`.  For example:
 
-```
+```shell
 	composer help
 
 ```
@@ -31,7 +31,7 @@ It is also possible to keep `composer.phar` out of your path, for example, to pu
 
 If you already have composer installed you can update it by running:
 
-```
+```shell
 	sudo composer self-update
 	
 ```
@@ -43,7 +43,7 @@ For those that use WAMP as a development environment, [detailed information is a
 
 Composer can create a new site for you, using the installer as a template (by default composer will download the latest stable version):
 
-```
+```shell
 	composer create-project silverstripe/installer ./my/website/folder
 
 ```
@@ -53,10 +53,12 @@ Now visit the site in your web browser, and the installation process will be com
 
 You can also specify a version to download that version explicitly, i.e. this will download the older `3.0.3` release:
 
-```
+```shell
 	composer create-project silverstripe/installer ./my/website/folder 3.0.3
 	
 ```
+
+When `create-project` is used with a release version like above,
 it will try to get the code from archives instead of creating
 git repositories. If you're planning to contribute to SilverStripe,
 see [Using development versions](#using-development-versions).
@@ -65,25 +67,31 @@ see [Using development versions](#using-development-versions).
 
 Composer isn't only used to download SilverStripe CMS, it can also be used to manage all SilverStripe modules.  Installing a module can be done with the following command:
 
-```
+```shell
 	composer require "silverstripe/forum:*"
 
 ```
+
+This will install the forum module in the latest compatible version.
 By default, Composer updates other existing modules (like `framework` and `cms`),
 and installs "dev" dependencies like PHPUnit. In case you don't need those dependencies,
 use the following command instead:
 
-```
+```shell
 	composer require --no-update "silverstripe/forum:*"
 	composer update --no-dev
 
 ```
+
+The `require` command has two parts. First is `silverstripe/forum`. This is the name of the package.
 You can find other packages with the following command:
 
-```
+```shell
 	composer search silverstripe
 
 ```
+
+This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
 The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
 
@@ -97,10 +105,12 @@ Except for the control code of the Voyager space probe, every piece of code in t
 
 To get the latest updates of the modules in your project, run this command:
 
-```
+```shell
 	composer update --no-dev
 
 ```
+
+Updates to the required modules will be installed, and the `composer.lock` file will get updated with the specific commits of each of those.
 
 ## Deploying projects with Composer
 
@@ -123,7 +133,7 @@ Since SilverStripe modules are installed into their own folder, you have to mana
 
 Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
 
-```
+```.gitignore
 	assets/*
 	_ss_environment.php
 	tools/phing-metadata
@@ -139,6 +149,8 @@ Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore)
 
 ```
 
+In large projects it can get difficult to manage your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it contains all composer managed modules and themes.
+
 You can automate this with the [SSAutoGitIgnore](https://github.com/guru-digital/SSAutoGitIgnore/) package.
 This package will maintain your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it is kept up to date with your composer managed modules without affecting custom ignores. Once installed and setup, it will automatically run every time you install, remove or update modules using composer.
 
@@ -146,23 +158,28 @@ This package will maintain your [.gitignore](http://git-scm.com/docs/gitignore) 
 
 Include the package in your project by running this command
 
-```
+```shell
     composer require gdmedia/ss-auto-git-ignore --dev
 
 ```
 
-```
+Edit your `composer.json` and insert
+
+```json
     "scripts": {
          "post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
     }
 
 ```
+
+This will instruct composer to run SSAutoGitIgnore after every update. SSAutoGitIgnore will then ensure composer managed models and themes are correctly added to your [.gitignore](http://git-scm.com/docs/gitignore).
+
 For more information about SSAutoGitIgnore, see the [SSAutoGitIgnore home page](https://github.com/guru-digital/SSAutoGitIgnore/).    
 For more information about post-updated-cmd and scripts, read the ["Scripts" chapter of the Composer documentation](https://getcomposer.org/doc/articles/scripts.md).
 
-Full example of composer.json with the SSAutoGitIgnore installed and enabled
+Full example of `composer.json` with the SSAutoGitIgnore installed and enabled
 
-```
+```json
 	{
 		"name": "silverstripe/installer",
 		"description": "The SilverStripe Framework Installer",
@@ -185,6 +202,8 @@ Full example of composer.json with the SSAutoGitIgnore installed and enabled
 
 ```
 
+# Dev Environments for Contributing Code {#contributing}
+
 So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
 You have to tell composer three things in order to be able to do this:
 
@@ -195,10 +214,11 @@ You have to tell composer three things in order to be able to do this:
 The first two steps are done as part of the initial create project using additional arguments.
 
 
-```
+```shell
 	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
-
 ```
+
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 3.0 release line. To check out from master instead,
 replace `3.0.x-dev` with `dev-master` (more info on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifying-the-version)).
 
 The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
@@ -224,7 +244,7 @@ create forks and send pull requests.
 
 To remove dependencies, or if you prefer seeing all your dependencies in a text file, you can edit the `composer.json` file.  It will appear in your project root, and by default, it will look something like this:
 
-```
+```json
 	{
 		"name": "silverstripe/installer",
 		"description": "The SilverStripe Framework Installer",
@@ -246,10 +266,12 @@ To add modules, you should add more entries into the `"require"` section.  For e
 
 Save your file, and then run the following command to refresh the installed packages:
 
-```
+```shell
 	composer update
 
 ```
+
+## Using development versions
 
 Composer will by default download the latest stable version of silverstripe/installer.
 The `composer.json` file that comes with silverstripe/installer may also explicitly state it requires the stable version of cms and framework - this is to ensure that when developers are getting started, running `composer update` won't upgrade their project to an unstable version
@@ -260,15 +282,19 @@ is this required if you want to contribute back to the SilverStripe project, it 
 This is a two step process. First you get composer to start a project based on
 the latest unstable silverstripe/installer
 
-```
+```shell
 	composer create-project silverstripe/installer ./my/website/folder master-dev
 
 ```
 
-```
+Or for the latest development version in the 3.0.x series
+
+```shell
 	composer create-project silverstripe/installer ./my/website/folder 3.0.x-dev
 
 ```
+
+## Working with project forks and unreleased modules
 
 By default, Composer will install modules listed on the packagist site.  There a few reasons that you might not
 want to do this.  For example:
@@ -280,10 +306,11 @@ There are many ways that you can address this, but this is one that we recommend
 
 This is how you do it:
 
- * **Ensure that all of your fork repositories have correct composer.json files.** Set up the project forks as you would a distributed package.  If you have cloned a repository that already has a composer.json file, then there's nothing you need to do, but if not, you will need to create one yourself.
+ * **Ensure that all of your fork repositories have correct composer.json files.** Set up the project forks as you would a distributed package.  If you have cloned a repository that already has a `composer.json` file, then there's nothing you need to do, but if not, you will need to create one yourself.
 
  * **List all your fork repositories in your project's composer.json files.**  You do this in a `repositories` section.  Set the `type` to `vcs`, and `url` to the URL of the repository.  The result will look something like this:
 
+```json
  		{
  			"name": "silverstripe/installer",
  			"description": "The SilverStripe Framework Installer",
@@ -296,20 +323,25 @@ This is how you do it:
  			],
  			...
  		}
+```
 
  * **Install the module as you would normally.** Use the regular composer function - there are no special flags to use a fork. Your fork will be used in place of the package version.
 
+```shell
  		composer require silverstripe/cms
+```
 
 Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove the `repositories` section from `composer.json` and run `composer update`.
 
 Now add an "upstream" remote to the original repository location so you can rebase or merge your fork as required.
 
-```
+```shell
 	cd cms
 	git remote add -f upstream git://github.com/silverstripe/silverstripe-cms.git
 
 ```
+
+For more information, read the ["Repositories" chapter of the Composer documentation](http://getcomposer.org/doc/05-repositories.md).
 
 ### Forks and branch names
 
@@ -321,7 +353,7 @@ In this case, you need to use Composer's aliasing feature to specify how you wan
 
 Open `composer.json`, and find the module's `require`.  Then put `as (core version name)` on the end.
 
-```
+```json
 	{
 		...
 		"require": {
@@ -334,6 +366,8 @@ Open `composer.json`, and find the module's `require`.  Then put `as (core versi
 	}
 
 ```
+
+What this means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
 
 Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer versions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
 
@@ -362,7 +396,7 @@ Then register the module on [packagist.org](http://packagist.org).
 
 Follow the packagist.org advice on choosing a [unique name and vendor prefix](https://packagist.org/about). Please don't use the `silverstripe/<modulename>` vendor prefix, since that's reserved
 for modules produced by SilverStripe Ltd. In order to declare that your module is
-in fact a SilverStripe module, use the "silverstripe" tag in the composer.json file,
+in fact a SilverStripe module, use the "silverstripe" tag in the `composer.json` file,
 and set the "type" to "silverstripe-module".
 
 ### What about themes?
