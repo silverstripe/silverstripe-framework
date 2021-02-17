@@ -106,6 +106,26 @@ app/
 
 Don't forget to include this additional folder in any syncing and backup processes!
 
+### Building, Packaging and Deployment
+
+It is common to build a SilverStripe application into a package on one environment (e.g. a CI server),
+and then deploy the package to a (separate) webserver environment(s).
+This approach relies on all auto-generated files required by SilverStripe to
+be included in the package, or generated on the fly on each webserver environment.
+
+The easiest way to ensure this is to commit auto generated files to source control.
+If those changes are considered too noisy, here's some pointers for auto-generated files
+to trigger and include in a deployment package:
+
+ * `public/_resources/`: Frontend assets copied from the (inaccessible) `vendor/` folder
+   via [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
+   See [Templates: Requirements](/developer_guides/templates/requirements#exposing-assets-webroot).
+ * `.graphql/` and `public/_graphql/`: Schema and type definitions required by CMS and any GraphQL API endpoint. Generated through
+   [silverstripe/graphql v4](https://github.com/silverstripe/silverstripe-graphql).
+   Triggered by `dev/build`, or [GraphQL Schema Build](/developer_guides/graphql/getting_started/building_the_schema).
+ * Various recipes create default files in `app/` and `public/` on `composer install`
+   and `composer update` via
+   [silverstripe/recipe-plugin](https://github.com/silverstripe/recipe-plugin).
 
 ### Web Worker Concurrency
 
@@ -215,7 +235,7 @@ SilverStripe's PHP support has changed over time and if you are looking to upgra
 | 3.6                  | 5.3 - 7.1   | |
 | 3.7                  | 5.3 - 7.3   | [changelog](https://docs.silverstripe.org/en/3/changelogs/3.7.0/) |
 | 4.0 - 4.4            | 5.6+        | |
-| 4.5+ (unreleased)    | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
+| 4.5+                 | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
 
 
 ## CMS browser requirements
