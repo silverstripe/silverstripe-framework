@@ -140,6 +140,8 @@ On your Silverstripe instance:
 
 ```
 
+### Setting up _ss_environment.php to use SSL certificates
+
 [notice]
 `SS_DATABASE_SERVER does not accept IP-based hostnames. Also, if the domain name of the host does not match the common name you used to generate the server certificate, you will get an `SSL certificate mismatch error`.
 [/notice]
