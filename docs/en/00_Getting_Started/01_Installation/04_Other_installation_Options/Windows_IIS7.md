@@ -135,6 +135,8 @@ This is an op-code cacher which speeds up PHP execution on Windows.
 	php_tidy.dll
 
 ```
+
+ * Go to **Configure error reporting** and check **Development machine**
  * Go to **Manage all settings** and set the following:
 
 ```
@@ -145,6 +147,8 @@ This is an op-code cacher which speeds up PHP execution on Windows.
 
 ```
 
+Tweak the above values as necessary if your requirements differ.
+
 ## Folder permissions for PHP
 
 Now we need to set up folder permissions for PHP. Open the php.ini and find the paths for sessions and file uploads. They will look like this:
@@ -154,6 +158,8 @@ Now we need to set up folder permissions for PHP. Open the php.ini and find the 
 	session.save_path="C:\Windows\Temp"
 
 ```
+
+Two other important folders to set the permissions on are `assets` and `silverstripe-cache` (if used) in your web root.
 
 You will need to give **Modify** permission to **IUSR** user. To do it right click the folder and choose **Properties**. Then open the security tab, press **Edit** and add the **IUSR** user to the list by clicking the **Add** button. Afterwards tick **Modify** under **Allow** for that user. Repeat these steps for each folder.
 
@@ -183,10 +189,12 @@ Inside the newly created _ss_environment.php file, insert the following code:
 
 ```
 
+Insert the password you created for SQL Server earlier into the **SS_DATABASE_PASSWORD** field that is currently empty.
+
   * Grab the latest stable version from here: http://www.silverstripe.org/stable-download
   * Extract contents to **C:\inetpub\wwwroot\ss**
 
-After gettng the code installed, make sure you set the folder permissions properly (see *Folder permissions for PHP* above).
+After getting the code installed, make sure you set the folder permissions properly (see *Folder permissions for PHP* above).
 
 ## Install the SilverStripe SQL Server module ("mssql")
 
