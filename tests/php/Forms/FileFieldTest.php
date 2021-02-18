@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use ReflectionMethod;
+use SilverStripe\Assets\Upload_Validator;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FileField;
@@ -37,6 +38,67 @@ class FileFieldTest extends FunctionalTest
         $fileField->setValue($fileFieldValue);
 
         $this->assertTrue($form->validationResult()->isValid());
+    }
+
+    /**
+     * Test that FileField::validate() is run on FileFields with both single and multi-file syntax
+     * By default FileField::validate() will return true early if the $_FILES super-global does not contain the
+     * corresponding FileField::name. This early return means the files was not fully run through FileField::validate()
+     * So for this test we create an invalid file upload on purpose and test that false was returned which means that
+     * the file was run through FileField::validate() function
+     */
+    public function testMultiFileSyntaxUploadIsValidated()
+    {
+        $names = [
+            'single_file_syntax',
+            'multi_file_syntax_a[]',
+            'multi_file_syntax_b[0]',
+            'multi_file_syntax_c[key]'
+        ];
+        foreach ($names as $name) {
+            $form = new Form(
+                Controller::curr(),
+                'Form',
+                new FieldList($fileField = new FileField($name, 'My desc')),
+                new FieldList()
+            );
+            $fileData = $this->createInvalidUploadedFileData($name, "FileFieldTest.txt");
+            // FileFields with multi_file_syntax[] files will appear in the $_FILES super-global
+            // with the [] brackets trimmed e.g. $_FILES[multi_file_syntax]
+            $_FILES = [preg_replace('#\[(.*?)\]#', '', $name) => $fileData];
+            $fileField->setValue($fileData);
+            $validator = $form->getValidator();
+            $isValid = $fileField->validate($validator);
+            $this->assertFalse($isValid, "$name was run through the validate() function");
+        }
+    }
+
+    protected function createInvalidUploadedFileData($name, $tmpFileName): array
+    {
+        $tmpFilePath = TEMP_PATH . DIRECTORY_SEPARATOR . $tmpFileName;
+
+        // multi_file_syntax
+        if (strpos($name, '[') !== false) {
+            $key = 0;
+            if (preg_match('#\[(.+?)\]#', $name, $m)) {
+                $key = $m[1];
+            }
+            return [
+                'name' => [$key => $tmpFileName],
+                'type' => [$key => 'text/plaintext'],
+                'size' => [$key => 0],
+                'tmp_name' => [$key => $tmpFilePath],
+                'error' => [$key => UPLOAD_ERR_NO_FILE],
+            ];
+        }
+        // single_file_syntax
+        return [
+            'name' => $tmpFileName,
+            'type' => 'text/plaintext',
+            'size' => 0,
+            'tmp_name' => $tmpFilePath,
+            'error' => UPLOAD_ERR_NO_FILE,
+        ];
     }
 
     /**
