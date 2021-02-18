@@ -20,6 +20,8 @@ Docs for the current stable version (3.x) can be found
 For the most part, if your DataObject has the `Versioned` extension applied, there is nothing you need to do
 explicitly, but be aware that it will affect the operations and fields of your type.
 
+By default, records will be queried in "Live" mode.
+
 ### Versioned plugins
 
 There are several plugins provided by the `silverstripe-versioned` module that affect how versioned DataObjects
@@ -94,6 +96,17 @@ fields:
 The query will automatically apply the settings from the `versioning` input type to the query and affect
 the resulting `DataList`.
 
+Get all pages in draft mode:
+
+```graphql
+query readPages(versioning: {
+    mode: DRAFT
+}) {
+  nodes {
+    title
+  }
+}
+```
 
 #### The "unpublishOnDelete" plugin
 
