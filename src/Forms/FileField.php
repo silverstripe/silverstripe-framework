@@ -177,13 +177,46 @@ class FileField extends FormField implements FileHandleField
 
     public function validate($validator)
     {
-        if (!isset($_FILES[$this->name])) {
+        // FileField with the name multi_file_syntax[] or multi_file_syntax[key] will have the brackets trimmed in
+        // $_FILES super-global so it will be stored as $_FILES['mutli_file_syntax']
+        // multi-file uploads, which are not officially supported by Silverstripe, though may be
+        // implemented in custom code, so we should still ensure they are at least validated
+        $isMultiFileUpload = strpos($this->name, '[') !== false;
+        $fieldName = preg_replace('#\[(.*?)\]$#', '', $this->name);
+
+        if (!isset($_FILES[$fieldName])) {
             return true;
         }
 
-        $tmpFile = $_FILES[$this->name];
+        if ($isMultiFileUpload) {
+            $isValid = true;
+            foreach (array_keys($_FILES[$fieldName]['name']) as $key) {
+                $fileData = [
+                    'name' => $_FILES[$fieldName]['name'][$key],
+                    'type' => $_FILES[$fieldName]['type'][$key],
+                    'tmp_name' => $_FILES[$fieldName]['tmp_name'][$key],
+                    'error' => $_FILES[$fieldName]['error'][$key],
+                    'size' => $_FILES[$fieldName]['size'][$key],
+                ];
+                if (!$this->validateFileData($validator, $fileData)) {
+                    $isValid = false;
+                }
+            }
+            return $isValid;
+        }
 
-        $valid = $this->upload->validate($tmpFile);
+        // regular single-file upload
+        return $this->validateFileData($validator, $_FILES[$this->name]);
+    }
+
+    /**
+     * @param Validator $validator
+     * @param array $fileData
+     * @return bool
+     */
+    private function validateFileData($validator, array $fileData): bool
+    {
+        $valid = $this->upload->validate($fileData);
         if (!$valid) {
             $errors = $this->upload->getErrors();
             if ($errors) {
@@ -193,7 +226,6 @@ class FileField extends FormField implements FileHandleField
             }
             return false;
         }
-
         return true;
     }
 
