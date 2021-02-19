@@ -166,24 +166,23 @@ mutation copySiteTreeToStage(id: 123, fromStage: DRAFT, toStage: LIVE) {
 Versioning is great for Content APIs (e.g. previews), but often not necessary for public APIs focusing on published data.
 You can disable versioning for your schema in the `modelConfig` section:
 
+**app/_graphql/config.yml**
+
 ```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    mySchema:
-      modelConfig:
-        DataObject:
-          plugins:
-            versioning: false
-          operations:
-            read:
-              plugins:
-                readVersion: false
-            readOne:
-              plugins:
-                readVersion: false
-            delete:
-              plugins:
-                unpublishOnDelete: false
+modelConfig:
+  DataObject:
+    plugins:
+      versioning: false
+    operations:
+      read:
+        plugins:
+          readVersion: false
+      readOne:
+        plugins:
+          readVersion: false
+      delete:
+        plugins:
+          unpublishOnDelete: false
 ```
 
 ### Further reading
