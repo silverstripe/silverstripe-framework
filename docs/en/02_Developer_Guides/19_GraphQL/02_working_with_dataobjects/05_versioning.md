@@ -19,6 +19,7 @@ Docs for the current stable version (3.x) can be found
 
 For the most part, if your DataObject has the `Versioned` extension applied, there is nothing you need to do
 explicitly, but be aware that it will affect the operations and fields of your type.
+You can also [disable](#disable) versioning for your schema if you don't need it.
 
 ### Versioned plugins
 
@@ -158,6 +159,30 @@ mutation copySiteTreeToStage(id: 123, fromStage: DRAFT, toStage: LIVE) {
   id
   title
 }
+```
+
+### Disabling versioning on your schema {#disable}
+
+Versioning is great for Content APIs (e.g. previews), but often not necessary for public APIs focusing on published data.
+You can disable versioning for your schema in the `modelConfig` section:
+
+**app/_graphql/config.yml**
+
+```yaml
+modelConfig:
+  DataObject:
+    plugins:
+      versioning: false
+    operations:
+      read:
+        plugins:
+          readVersion: false
+      readOne:
+        plugins:
+          readVersion: false
+      delete:
+        plugins:
+          unpublishOnDelete: false
 ```
 
 ### Further reading
