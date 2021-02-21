@@ -95,24 +95,9 @@ class CompositeValidator extends Validator
             return $this->result;
         }
 
-        $data = $this->form->getData();
-
         foreach ($this->getValidators() as $validator) {
-            // Reset the validation results for this Validator
-            $validator->resetResult();
-
-            // This Validator has been disabled, so skip it
-            if (!$validator->getEnabled()) {
-                continue;
-            }
-
-            // Run validation, and exit early if it's valid
-            if ($validator->php($data)) {
-                continue;
-            }
-
-            // Validation result was invalid. Combine our ValidationResult messages
-            $this->getResult()->combineAnd($validator->getResult());
+            // validate() will return a ValidationResult, and we will combine this with the result we already have
+            $this->getResult()->combineAnd($validator->validate());
         }
 
         return $this->result;
