@@ -37,16 +37,15 @@ If you installed on windows with WAMP, it will likely be at *c:\wamp\www*. On Ma
 
 Let's have a look at the folder structure.
 
- | Directory | | Description  | 
- | --------- | | -----------  | 
- | assets/   | | Contains images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS. | 
- | cms/      | | Contains all the files that form the CMS area of your site. Its structure is similar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. | 
- | framework/ | | The framework that builds both your own site and the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly.                                                             | 
- | mysite/   | | Contains all your site's code (mainly PHP).  | 
- | themes/   | | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme". | 
-```
-      
-```
+ | Directory | Description |
+ | --------- | ----------- |
+ | assets/   | Contains images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS. | 
+ | cms/      | Contains all the files that form the CMS area of your site. Its structure is similar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. |
+ | framework/ | The framework that builds both your own site and the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly. |
+ | mysite/   | Contains all your site's code (mainly PHP). |
+ | themes/   | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme". |
+
+When designing your site you should only need to modify the *mysite*, *themes* and *assets* folders. The rest of the folders contain files and data that are not specific to any site.
 
 ##  Using the CMS
 
@@ -118,6 +117,8 @@ Open *themes/simple/templates/Page.ss*. It uses standard HTML apart from these e
 	<% base_tag %>
 
 ```
+
+The base_tag variable is replaced with the HTML [base element](http://www.w3.org/TR/html401/struct/links.html#h-12.4). This
 ensures the browser knows where to locate your site's images and css files.
 
 ```ss
@@ -126,14 +127,21 @@ ensures the browser knows where to locate your site's images and css files.
 
 ```
 
+These two variables are found within the html `<title>` tag, and are replaced by the "Page Name" and "Settings -> Site Title" fields in the CMS.
+
 ```ss
 	$MetaTags 
 
 ```
+
+The MetaTags variable will add meta tags, which are used by search engines. You can define your meta tags in the tab fields at the bottom of the content editor in the CMS.
+
 ```ss
 	$Layout 
 
 ```
+
+The Layout variable is replaced with the contents of a template file with the same name as the page type we are using.
 
 Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more SilverStripe template replacement tags and variables.
 
@@ -141,6 +149,8 @@ Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more S
 	$Content
 
 ```
+
+The Content variable is replaced with the content of the page currently being viewed. This allows you to make all changes to
 your site's content in the CMS.
 
 These template markers are processed by SilverStripe into HTML before being sent to your
@@ -169,6 +179,8 @@ The Menu for our site is created using a **loop**. Loops allow us to iterate ove
 	<% loop $Menu(1) %>
 
 ```
+
+returns a set of first level menu items. We can then use the template variable
 *$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page, and `$isSection` and `$isCurrent` to help style our menu with CSS (explained in more detail shortly).
 
 > *$Title* refers to **Page Name** in the CMS, whereas *$MenuTitle* refers to (the often shorter) **Navigation label**
@@ -184,6 +196,8 @@ The Menu for our site is created using a **loop**. Loops allow us to iterate ove
 	</ul>
 
 ```
+
+Here we've created an unordered list called *Menu1*, which *themes/simple/css/layout.css* will style into the menu.
 Then, using a loop over the page control *Menu(1)*, we add a link to the list for each menu item. 
 
 This creates the navigation at the top of the page:
@@ -205,10 +219,14 @@ For example, if you were here: "Home > Company > Staff > Bob Smith", you may wan
 
 ```
 
+You will then be able to target a section in css (*simple/css/layout.css*), e.g.:
+
 ```css
 	.section { background:#ccc; } 
 
 ```
+
+## A second level of navigation
 
 The top navigation system is currently quite restrictive. There is no way to
 nest pages, so we have a completely flat site. Adding a second level in SilverStripe is easy. First (if you haven't already done so), let's add some pages. 
@@ -240,6 +258,8 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 	</ul>
 
 ```
+
+This should look very familiar. It is the same idea as our first menu, except the loop block now uses *Menu(2)* instead of *Menu(1)*.
 As we can see here, the *Menu* control takes a single
 argument - the level of the menu we want to get. Our css file will style this linked list into the second level menu,
 using our usual `is` technique to highlight the current page.
@@ -265,6 +285,8 @@ like this:
 	<% end_if %>  	
 
 ```
+
+The `if` block only includes the code inside it if the condition is true. In this case, it checks for the existence of
 *Menu(2)*. If it exists then the code inside will be processed and the menu will be shown. Otherwise the code will not
 be processed and the menu will not be shown.
 
@@ -280,6 +302,8 @@ Open up */themes/simple/templates/Includes/BreadCrumbs.ss* template and look at 
 	<% end_if %>	
 
 ```
+
+Breadcrumbs are only useful on pages that aren't in the top level. We can ensure that we only show them if we aren't in
 the top level with another if statement.
 
 The *Level* page control allows you to get data from the page's parents, e.g. if you used *Level(1)*, you could use:
@@ -289,6 +313,7 @@ The *Level* page control allows you to get data from the page's parents, e.g. if
 
 ```
 
+to get the top level page title. In this case, we merely use it to check the existence of a second level page: if one exists then we include breadcrumbs.
 Both the top menu, and the sidebar menu should be updating and highlighting as you move from page to page. They will also mirror changes done in the SilverStripe CMS, such as renaming pages or moving them around.
 
 ![](../_images/tutorial1_menu-two-level.jpg)
