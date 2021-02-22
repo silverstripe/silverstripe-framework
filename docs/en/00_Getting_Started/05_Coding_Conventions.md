@@ -19,7 +19,7 @@ If you are unsure about a specific standard, imitate existing SilverStripe code.
 
 ### Indentation
 
-Always use hard tabs rather then spaces for indentation, with one tab per nesting level.
+Always use hard tabs rather than spaces for indentation, with one tab per nesting level.
 
 ### Maximum Line Length
 
@@ -46,8 +46,9 @@ Class and filenames are in `UpperCamelCase` format:
 
 ```php
 	class MyClass {}
-
 ```
+
+If a class name is comprised of more than one word, the first letter of each
 new words must be capitalized. Successive capitalized letters are used in 
 acronyms, e.g. a class `XMLImporter` is used while `XmlImporter` is not.
 
@@ -57,16 +58,18 @@ Static methods should be in `lowercase_with_underscores()` format:
 
 ```php
 	public static function my_static_method() {}
-
 ```
+
+Action handlers on controllers should be in `completelylowercase()` format.
 This is because they go into the controller URL in the same format (eg, `home/successfullyinstalled`).
 Method names are allowed to contain underscores here, in order to allow URL parts with dashes
 (`mypage\my-action` gets translated to `my_action()` automatically).
 
 ```php
 	public function mycontrolleraction() {}
-
 ```
+
+Object methods that will be callable from templates should be in `$this->UpperCamelCase()` format.
 Alternatively, `$this->getUpperCamelCase()` will work the same way in templates -
 you can access both coding styles as `$UpperCamelCase`.
 
@@ -74,22 +77,25 @@ Other instance methods should be in `$this->lowerCamelCase()` format:
 
 ```php
 	public function myInstanceMethod() {}
-
 ```
+
+Methods inside classes must always declare their visibility by using one of the private, protected, or public modifiers.
 
 ### Variables
 
-Static variables should be `self::$lowercase_with_underscores`
+Static variables should be `self::$lowercase_with_underscores`:
 
 ```php
 	self::$my_static_variable = 'foo';
-
 ```
+
+Member variables should be `$this->lowerCamelCase`:
 
 ```php
 	$this->myMemberVariable = 'foo';
-
 ```
+
+Member variables always declare their visibility by using one of the private, protected, or public modifiers.
 
 ### Constants
 
@@ -102,6 +108,8 @@ while all words in a constant name must be separated by underscore characters.
 	define('INTEREST_RATE', 0.19);
 
 ```
+
+Constants must be defined as class members with the `const` modifier.
 Defining constants in the global scope with the `define` function is permitted but strongly discouraged.
 
 ### File Naming and Directory Structure
@@ -120,8 +128,9 @@ Example: `mysite/code/MyClass.php`
 	class MyClass_Controller {}
 	
 	class MyClass_OtherRelatedClass {}
-
 ```
+
+To help with namespacing common class names (like Database) it is recommended to use a prefix convention `SS_ClassName` but the filename will remain `ClassName.php`.
 
 See [directory structure](directory_structure) for more information.
 
@@ -152,12 +161,16 @@ When a string is literal (contains no variable substitutions), the apostrophe or
 
 ```
 
+#### String Literals Containing Apostrophes
+
 When a literal string itself contains apostrophes, it is permitted to demarcate the string with quotation marks or "double quotes". 
 
 ```php
 	$greeting = "They said 'hello'";
 
 ```
+
+This syntax is preferred over escaping apostrophes as it is much easier to read.
 
 #### String Substitution
 
@@ -169,10 +182,7 @@ Variable substitution is permitted using either of these forms:
 
 ```
 
-```php
-	$greeting = "Hello ${name}, welcome back!";
-
-```
+#### String Concatenation
 
 Strings must be concatenated using the "." operator. A space must always be added before and after the "." operator to improve readability:
 
@@ -180,6 +190,8 @@ Strings must be concatenated using the "." operator. A space must always be adde
 	$copyright = 'SilverStripe Ltd (' . $year . ')';
 
 ```
+
+When concatenating strings with the "." operator, it is encouraged to break the statement into multiple lines to improve readability.
 In these cases, each successive line should be padded with white space such that the "."; operator is aligned under the "=" operator:
 
 ```php
@@ -188,6 +200,8 @@ In these cases, each successive line should be padded with white space such that
 	     . 'ORDER BY "Name" ASC ';
 
 ```
+
+### Arrays
 
 #### Numerically Indexed Arrays
 
@@ -200,6 +214,8 @@ When declaring indexed arrays with the Array function, a trailing space must be 
 	$sampleArray = array(1, 2, 3, 'Zend', 'Studio');
 
 ```
+
+It is permitted to declare multi-line indexed arrays using the "array" construct.
 In this case, each successive line must be padded with spaces such that beginning of each line is aligned:
 
 ```php
@@ -208,6 +224,8 @@ In this case, each successive line must be padded with spaces such that beginnin
 	                     56.44, $d, 500);
 
 ```
+
+Alternately, the initial array item may begin on the following line.
 If so, it should be padded at one indentation level greater than the line containing the array declaration, 
 and all successive lines should have the same indentation; 
 the closing paren should be on a line by itself at the same indentation level as the line containing the array declaration:
@@ -220,6 +238,8 @@ the closing paren should be on a line by itself at the same indentation level as
 	);
 
 ```
+
+When using this latter declaration, we encourage using a trailing comma for the last item in the array;
 this minimizes the impact of adding new items on successive lines, and helps to ensure no parse errors occur due to a missing comma.
 
 #### Associative Arrays
@@ -232,6 +252,8 @@ In this case, each successive line must be padded with white space such that bot
 	                     'secondKey' => 'secondValue');
 
 ```
+
+Alternately, the initial array item may begin on the following line.
 If so, it should be padded at one indentation level greater than the line containing the array declaration, 
 and all successive lines should have the same indentation; the closing paren should be on a line by itself at the 
 same indentation level as the line containing the array declaration. 
@@ -245,14 +267,18 @@ For readability, the various "=>" assignment operators should be padded such tha
 
 ```
 
+### Function and Method Declaration
+
 No method or function invocation is allowed to have spaces directly
-before or after the opening parathesis, as well as no space before the closing parenthesis.
+before or after the opening parenthesis, as well as no space before the closing parenthesis.
 
 ```php
 	public function foo($arg1, $arg2) {} // good
 	public function foo ( $arg1, $arg2 ) {} // bad
 
 ```
+
+Keep the opening brace on the same line as the statement.
 
 ```php
 	// good
@@ -267,6 +293,8 @@ before or after the opening parathesis, as well as no space before the closing p
 	}
 
 ```
+
+In cases where the argument list exceeds the maximum line length, you may introduce line breaks.
 Additional arguments to the function or method must be indented one additional level beyond the function or method declaration. 
 A line break should then occur before the closing argument paren, 
 which should then be placed on the same line as the opening brace of the function 
@@ -280,6 +308,8 @@ or method with one space separating the two, and at the same indentation level a
 	}
 
 ```
+
+Function and method arguments should be separated by a single trailing space after the comma delimiter,
 apart from the last argument.
 
 ### Control Structures
@@ -298,6 +328,8 @@ Any content within the braces must be indented using a tab.
 	}
 
 ```
+
+If the conditional statement causes the line length to exceed the maximum line length and has several clauses,
 you may break the conditional into multiple lines. In such a case, break the line prior to a logic operator, 
 and pad the line such that it aligns under the first character of the conditional clause. 
 The closing paren in the conditional will then be placed on a line with the opening brace, 
@@ -312,6 +344,8 @@ with one space separating the two, at an indentation level equivalent to the ope
 	}
 
 ```
+
+The intention of this latter declaration format is to prevent issues when adding or removing clauses
 from the conditional during later revisions. For `if` statements that include `elseif` or `else`, 
 the formatting conventions are similar to the `if` construct. 
 The following examples demonstrate proper formatting for `if` statements with `else` and/or `elseif` constructs:
@@ -327,6 +361,8 @@ The following examples demonstrate proper formatting for `if` statements with `e
 
 ```
 
+Statements with `if` can be written without braces on a single line as the block, as long as no `else` statement exists.
+
 ```php
 	// good
 	if($a == $b) doThis();
@@ -336,6 +372,8 @@ The following examples demonstrate proper formatting for `if` statements with `e
 	else doThat();
 
 ```
+
+#### switch
 
 All content within the "switch" statement must be indented using tabs. 
 Content under each "case" statement must be indented using an additional tab.
@@ -351,6 +389,8 @@ Content under each "case" statement must be indented using an additional tab.
 	}
 
 ```
+
+The construct `default` should never be omitted from a switch statement.
 
 #### for/foreach/while
 
@@ -371,6 +411,8 @@ Try to avoid using PHP's ability to mix HTML into the code.
 
 ```
 
+Better: Keep HTML in template files:
+
 ```php
 	// PHP code
 	public function getTitle() {
@@ -381,6 +423,8 @@ Try to avoid using PHP's ability to mix HTML into the code.
 	<h2>$Title</h2>
 
 ```
+
+## Comments
 
 Use [phpdoc](http://phpdoc.org/) syntax before each definition (see [tutorial](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_phpDocumentor.quickstart.pkg.html)
 and [tag overview](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.pkg.html)).
@@ -445,14 +489,17 @@ with the column or table name escaped with double quotes as below.
 	MyClass::get()->where(array("\"Score\" > ?" => 50));
 
 ```
+
+It is preferable to use parameterised queries whenever necessary to provide conditions
 to a SQL query, where values placeholders are each replaced with a single unquoted question mark.
-If it's absolutely necessary to use literal values in a query make sure that values
+If it's absolutely necessary to use literal values in a query, make sure that values
 are single quoted.
 
 ```php
 	MyClass::get()->where("\"Title\" = 'my title'");
-
 ```
+
+Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
 
 ### Secure Development 
 
