@@ -1134,6 +1134,9 @@ class Director implements TemplateGlobalProvider
         return [
             'absoluteBaseURL',
             'baseURL',
+            'isDev',
+            'isTest',
+            'isLive',
             'is_ajax',
             'isAjax' => 'is_ajax',
             'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
