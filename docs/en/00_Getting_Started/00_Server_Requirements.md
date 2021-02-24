@@ -28,7 +28,20 @@ Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your c
  * SQL Server ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/mssql), community supported)
  * SQLite ([third party module](https://addons.silverstripe.org/add-ons/silverstripe/sqlite3), community supported)
 
- ### Connection mode (sql_mode) when using MySQL server >=5.7.5
+### Default MySQL Collation
+
+In Silverstripe CMS Recipe 4.7 and later, new projects default to the `utf8mb4_unicode_ci` collation when running against MySQL, which offers better support for multi-byte characters such as emoji. However, this may cause issues related to Varchar fields exceeding the maximum indexable size:
+
+- MySQL 5.5 and lower cannot support indexes larger than 768 bytes (192 characters)
+- MySQL 5.6 supports larger indexes (3072 bytes) if the `innodb_large_prefix` setting is enabled (but not by default)
+- MySQL 5.7 and newer have `innodb_large_prefix` enabled by default
+- MariaDB ~10.1 matches MySQL 5.6's behaviour, >10.2 matches 5.7's.
+
+You can rectify this issue by upgrading MySQL, enabling the `innodb_large_prefix` setting if available, or reducing the size of affected fields. If none of these solutions are currently suitable, you can remove the new collation configuration from `app/_config/mysite.yml` to default back to the previous default collation.
+
+Existing projects that upgrade to Recipe 4.7.0 will unintentionally adopt this configuration change. Recipe 4.7.1 and later are unaffected. See [the release notes](/changelogs/4.7.0/#default-mysql-collation-updated) for more information.
+
+### Connection mode (sql_mode) when using MySQL server >=5.7.5
 
 In MySQL versions >=5.7.5, the `ANSI` sql_mode setting behaves differently and includes the `ONLY_FULL_GROUP_BY` setting. It is generally recommended to leave this setting as-is because it results in deterministic SQL. However, for some advanced cases, the sql_mode can be configured on the database connection via the configuration API (see `MySQLDatabase::$sql_mode` for more details.) This setting is only available in Silverstripe CMS 4.7 and later.
 
