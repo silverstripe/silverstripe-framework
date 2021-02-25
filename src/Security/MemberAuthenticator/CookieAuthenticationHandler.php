@@ -267,7 +267,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         $secure = $this->getTokenCookieSecure();
         Cookie::set($this->getTokenCookieName(), null, null, null, null, $secure);
         Cookie::set($this->getDeviceCookieName(), null, null, null, null, $secure);
-        Cookie::force_expiry($this->getTokenCookieName(), null, null, null, null, $secure);
-        Cookie::force_expiry($this->getDeviceCookieName(), null, null, null, null, $secure);
+        Cookie::force_expiry($this->getTokenCookieName(), null, null, null, $secure);
+        Cookie::force_expiry($this->getDeviceCookieName(), null, null, null, $secure);
     }
 }

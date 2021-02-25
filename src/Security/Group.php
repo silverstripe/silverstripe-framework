@@ -626,6 +626,7 @@ class Group extends DataObject
      */
     public function AllChildrenIncludingDeleted()
     {
+        /** @phpstan-ignore-next-line */
         $children = parent::AllChildrenIncludingDeleted();
 
         $filteredChildren = new ArrayList();

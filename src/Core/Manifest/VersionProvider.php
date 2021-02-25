@@ -146,9 +146,9 @@ class VersionProvider
         $jsonData = file_get_contents($composerLockPath);
 
         if ($cache) {
-            $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
+            $cacheStore = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
             $cacheKey = md5($jsonData);
-            if ($versions = $cache->get($cacheKey)) {
+            if ($versions = $cacheStore->get($cacheKey)) {
                 $lockData = json_decode($versions, true);
             }
         }
@@ -157,7 +157,7 @@ class VersionProvider
             $lockData = json_decode($jsonData, true);
 
             if ($cache) {
-                $cache->set($cacheKey, $jsonData);
+                $cacheStore->set($cacheKey, $jsonData);
             }
         }
 

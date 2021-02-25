@@ -124,4 +124,12 @@ class NestedTransactionManager implements TransactionManager
     {
         return $this->child->supportsSavepoints();
     }
+
+    public function resetNesting()
+    {
+        if ($this->transactionNesting > 0) {
+            $this->transactionRollback();
+        }
+        $this->transactionNesting = 0;
+    }
 }

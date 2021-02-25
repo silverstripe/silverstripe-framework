@@ -96,6 +96,7 @@ class CsvBulkLoader extends BulkLoader
                 return $row;
             };
 
+            $headerMap = null;
             if ($this->columnMap) {
                 $headerMap = $this->getNormalisedColumnMap();
 
@@ -125,12 +126,14 @@ class CsvBulkLoader extends BulkLoader
                     $csvReader->setHeaderOffset(0);
                     $rows = new MapIterator($csvReader->getRecords(), $remapper);
                 }
-            } elseif ($this->columnMap) {
+            } elseif ($headerMap) {
                 if (method_exists($csvReader, 'fetchAssoc')) {
                     $rows = $csvReader->fetchAssoc($headerMap, $remapper);
                 } else {
                     $rows = new MapIterator($csvReader->getRecords($headerMap), $remapper);
                 }
+            } else {
+                $rows = [];
             }
 
             foreach ($rows as $row) {

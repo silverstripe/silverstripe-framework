@@ -109,6 +109,11 @@ class GridField extends FormField
     protected $name = '';
 
     /**
+     * @deprecated
+     */
+    public $id;
+
+    /**
      * A whitelist of readonly component classes allowed if performReadonlyTransform is called.
      *
      * @var array

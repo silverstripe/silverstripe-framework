@@ -37,12 +37,14 @@ class CMSSecurity extends Security
         parent::init();
 
         // Assign default cms theme and replace user-specified themes
-        SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
+        if (class_exists(LeftAndMain::class)) {
+            SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
 
-        if (ModuleLoader::getModule('silverstripe/admin')) {
-            // Core styles / vendor scripts
-            Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');
-            Requirements::css('silverstripe/admin: client/dist/styles/bundle.css');
+            if (ModuleLoader::getModule('silverstripe/admin')) {
+                // Core styles / vendor scripts
+                Requirements::javascript('silverstripe/admin: client/dist/js/vendor.js');
+                Requirements::css('silverstripe/admin: client/dist/styles/bundle.css');
+            }
         }
     }
 

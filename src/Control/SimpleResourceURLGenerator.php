@@ -102,6 +102,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         // Apply nonce
         // Don't add nonce to directories
         if ($this->nonceStyle && $exists && is_file($absolutePath)) {
+            $method = null;
+
             switch ($this->nonceStyle) {
                 case 'mtime':
                     $method = 'filemtime';
@@ -114,10 +116,12 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
                     break;
             }
 
-            if ($query) {
-                $query .= '&';
+            if ($method && function_exists($method)) {
+                if ($query) {
+                    $query .= '&';
+                }
+                $query .= "m=" . call_user_func($method, $absolutePath);
             }
-            $query .= "m=" . call_user_func($method, $absolutePath);
         }
 
         // Add back querystring

@@ -22,7 +22,7 @@ class ModuleLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ? self::$instance : self::$instance = new self();
     }
 
     /**

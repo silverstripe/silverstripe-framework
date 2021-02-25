@@ -28,6 +28,11 @@ class FieldList extends ArrayList
     protected $sequentialSaveableSet;
 
     /**
+     * @deprecated
+     */
+    public $form;
+
+    /**
      * If this fieldlist is owned by a parent field (e.g. CompositeField)
      * this is the parent field.
      *

@@ -376,7 +376,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 $_SESSION['Permission_groupList'][$member->ID] = $groupList;
             }
 
-            return isset($groupList) ? $groupList : null;
+            return $groupList;
         }
         return null;
     }

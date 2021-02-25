@@ -26,8 +26,9 @@ class ConfigLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ? self::$instance : self::$instance = new self();
     }
+
 
     /**
      * Returns the currently active class manifest instance that is used for
@@ -97,7 +98,7 @@ class ConfigLoader
         $manifest = clone $this->getManifest();
 
         // Create new blank loader with new stack (top level nesting)
-        $newLoader = new static;
+        $newLoader = new self();
         $newLoader->pushManifest($manifest);
 
         // Activate new loader

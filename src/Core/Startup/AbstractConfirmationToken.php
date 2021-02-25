@@ -32,6 +32,11 @@ abstract class AbstractConfirmationToken
     protected $token = null;
 
     /**
+     * Create a token with the given name for the given request
+     */
+    abstract function __construct($parameterName, HTTPRequest $request);
+
+    /**
      * Given a list of token names, suppress all tokens that have not been validated, and
      * return the non-validated token with the highest priority
      *

@@ -397,8 +397,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $templates = $this->templates[$action];
         } elseif (isset($this->templates['index']) && $this->templates['index']) {
             $templates = $this->templates['index'];
-        } elseif ($this->template) {
-            $templates = $this->template;
         } else {
             // Build templates based on class hierarchy
             $actionTemplates = [];

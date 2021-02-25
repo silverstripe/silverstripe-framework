@@ -256,7 +256,7 @@ class DBText extends DBString
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        if (!$this->nullifyEmpty) {
+        if (!$this->options['nullifyEmpty']) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
             return NullableField::create(TextareaField::create($this->name, $title));
         }

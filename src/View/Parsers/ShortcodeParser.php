@@ -658,7 +658,7 @@ class ShortcodeParser
             // use a proper DOM
             list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
-        /** @var HTMLValue $htmlvalue */
+            /** @var HTMLValue $htmlvalue */
             $htmlvalue = Injector::inst()->create('HTMLValue', $content);
 
             // Now parse the result into a DOM
@@ -671,7 +671,7 @@ class ShortcodeParser
             }
         }
 
-        if ($continue) {
+        if ($continue && isset($htmlvalue) && isset($tags)) {
             // First, replace any shortcodes that are in attributes
             $this->replaceAttributeTagsWithContent($htmlvalue);
 

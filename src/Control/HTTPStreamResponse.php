@@ -91,7 +91,7 @@ class HTTPStreamResponse extends HTTPResponse
     public function getBody()
     {
         $body = $this->getSavedBody();
-        if (isset($body)) {
+        if ($body !== null) {
             return $body;
         }
 

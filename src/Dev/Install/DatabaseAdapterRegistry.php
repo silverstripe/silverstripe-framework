@@ -2,11 +2,12 @@
 
 namespace SilverStripe\Dev\Install;
 
+use Exception;
 use InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Core\Flushable;
 
 /**
  * This class keeps track of the available database adapters

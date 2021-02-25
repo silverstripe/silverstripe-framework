@@ -25,7 +25,7 @@ class InjectorLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return self::$instance ? self::$instance : self::$instance = new self();
     }
 
     /**
@@ -96,7 +96,7 @@ class InjectorLoader
         $manifest = clone $this->getManifest();
 
         // Create new blank loader with new stack (top level nesting)
-        $newLoader = new static;
+        $newLoader = new self();
         $newLoader->pushManifest($manifest);
 
         // Activate new loader

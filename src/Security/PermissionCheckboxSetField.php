@@ -39,6 +39,16 @@ class PermissionCheckboxSetField extends FormField
     protected $source = null;
 
     /**
+     * @var string
+     */
+    protected $filterField;
+
+    /**
+     * @var string
+     */
+    protected $managedClass;
+
+    /**
      * @param string $name
      * @param string $title
      * @param string $managedClass

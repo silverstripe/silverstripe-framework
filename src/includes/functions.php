@@ -23,7 +23,7 @@ function singleton($className)
     if ($className === Config::class) {
         throw new InvalidArgumentException("Don't pass Config to singleton()");
     }
-    if (!isset($className)) {
+    if (!$className) {
         throw new InvalidArgumentException("singleton() Called without a class");
     }
     if (!is_string($className)) {

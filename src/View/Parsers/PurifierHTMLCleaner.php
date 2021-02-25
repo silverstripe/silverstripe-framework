@@ -12,8 +12,13 @@ class PurifierHTMLCleaner extends HTMLCleaner
 {
     public function cleanHTML($content)
     {
-        $html = new HTMLPurifier();
-        $doc = HTMLValue::create($html->purify($content));
-        return $doc->getContent();
+        if (class_exists(HTMLPurifier::class)) {
+            $html = new HTMLPurifier();
+            $doc = HTMLValue::create($html->purify($content));
+            return $doc->getContent();
+        }
+
+        // No class, no-op
+        return $content;
     }
 }

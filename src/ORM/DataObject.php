@@ -433,7 +433,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 break;
 
             default:
-                throw new \LogicException('Bad creationType ' . $this->creationType);
+                throw new \LogicException('Bad creationType ' . $creationType);
         }
     }
 
@@ -2551,6 +2551,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 'getCMSValidator() is removed in 5.0 in favour of getCMSCompositeValidator()'
             );
 
+            /** @phpstan-ignore-next-line */
             $compositeValidator->addValidator($this->getCMSValidator());
         }
 

@@ -402,7 +402,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
         }
 
-        $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
+        $parts = $gridField->getRequest()->getHeader('X-Formschema-Request');
         $schemaID = $gridField->getRequest()->getURL();
         $data = FormSchema::singleton()
             ->getMultipartSchema($parts, $schemaID, $form);

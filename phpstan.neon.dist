@@ -1,0 +1,47 @@
+parameters:
+  level: 1
+  paths:
+   - src
+  excludePaths:
+  # Attempts to link the Parser from php-peg crash phpstan
+   - src/View/SSTemplateParseException.php
+   - src/View/SSTemplateParser.php
+  ignoreErrors:
+    -
+      message: '#Class SilverStripe\\Admin\\LeftAndMain not found.#'
+      path: src/Forms/GridField/GridFieldDetailForm_ItemRequest.php
+    -
+      message: '#Class SilverStripe\\CMS\\Model\\SiteTree not found#'
+      path: src/Core/ClassInfo.php
+    -
+      message: '#Class SilverStripe\\CMS\\Model\\SiteTree not found#'
+      path: src/ORM/Search/FulltextSearchable.php
+    -
+      message: '#Class SilverStripe\\CMS\\Model\\SiteTree not found#'
+      path: src/ORM/Connect/MySQLDatabase.php
+    -
+      message: '#Class Page not found#'
+      path: src/Security/Security.php
+    -
+      message: '#Constructor of class .* has an unused parameter \$form#'
+      path: src/Forms/ConfirmedPasswordField.php
+    -
+      message: '#Constructor of class .* has an unused parameter \$extraFields.#'
+      path: src/ORM/ManyManyThroughList.php
+    -
+      message: '#Constructor of class .* has an unused parameter \$database.#'
+      path: src/ORM/Connect/MySQLQuery.php
+    -
+      message: '#Constructor of class .* has an unused parameter \$validator.#'
+      path: src/Security/LogoutForm.php
+    -
+      message: '#Class Parser was not found while trying to analyse it - discovering symbols is probably not configured properly.#'
+      path: src/View/SSTemplateParser.php
+    -
+      message: '#Class Parser was not found while trying to analyse it - discovering symbols is probably not configured properly.#'
+      path: src/View/SSTemplateParseException.php
+
+
+  scanDirectories:
+    - thirdparty/simpletest
+    - thirdparty/difflib

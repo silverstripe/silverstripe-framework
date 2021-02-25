@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use BadMethodCallException;
+use Exception;
 use Generator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;

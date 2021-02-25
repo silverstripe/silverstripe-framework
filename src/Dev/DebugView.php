@@ -30,38 +30,7 @@ class DebugView
     private static $columns = 100;
 
     protected static $error_types = [
-        0 => [
-            'title' => 'Emergency',
-            'class' => 'error'
-        ],
-        1 => [
-            'title' => 'Alert',
-            'class' => 'error'
-        ],
-        2 => [
-            'title' => 'Critical',
-            'class' => 'error'
-        ],
-        3 => [
-            'title' => 'Error',
-            'class' => 'error'
-        ],
-        4 =>  [
-            'title' => 'Warning',
-            'class' => 'warning'
-        ],
-        5 => [
-            'title' => 'Notice',
-            'class' => 'notice'
-        ],
-        6 => [
-            'title' => 'Information',
-            'class' => 'info'
-        ],
-        7=> [
-            'title' => 'SilverStripe\\Dev\\Debug',
-            'class' => 'debug'
-        ],
+
         E_USER_ERROR => [
             'title' => 'User Error',
             'class' => 'error'
@@ -85,10 +54,6 @@ class DebugView
         E_USER_DEPRECATED => [
             'title' => 'User Deprecated',
             'class' => 'notice'
-        ],
-        E_CORE_ERROR => [
-            'title' => 'Core Error',
-            'class' => 'error'
         ],
         E_WARNING => [
             'title' => 'Warning',

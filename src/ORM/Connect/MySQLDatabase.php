@@ -2,16 +2,18 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Exception;
 use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\DataList;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Connect\TransactionManager;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\Queries\SQLSelect;
-use Exception;
 
 /**
  * MySQL connector class.
@@ -377,17 +379,14 @@ class MySQLDatabase extends Database implements TransactionManager
     }
 
     /**
-     * In error condition, set transactionNesting to zero
+     * @deprecated
      */
     protected function resetTransactionNesting()
     {
-        // Check whether to use a connector's built-in transaction methods
-        if ($this->connector instanceof TransactionalDBConnector) {
-            if ($this->transactionNesting > 0) {
-                $this->connector->transactionRollback();
-            }
+        $transactionManager = $this->getTransactionManager();
+        if (method_exists($transactionManager, 'resetNesting')) {
+            $transactionManager->resetNesting();
         }
-        $this->transactionNesting = 0;
     }
 
     public function query($sql, $errorLevel = E_USER_ERROR)
@@ -413,8 +412,9 @@ class MySQLDatabase extends Database implements TransactionManager
         // See https://dev.mysql.com/doc/internals/en/transactions-notes-on-ddl-and-normal-transaction.html
         // on why we need to be over-eager
         $isDDL = $this->getConnector()->isQueryDDL($sql);
-        if ($isDDL) {
-            $this->resetTransactionNesting();
+        $transactionManager = $this->getTransactionManager();
+        if ($isDDL && method_exists($transactionManager, 'resetNesting')) {
+            $transactionManager->resetNesting();
         }
     }
 

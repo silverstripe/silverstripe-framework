@@ -567,7 +567,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         // Use the default setting for which Page to use to render the security page
         $pageClass = $this->config()->get('page_class');
-        if (!$pageClass || !class_exists($pageClass)) {
+        if (!$pageClass || !class_exists($pageClass) || !class_exists(ModelAsController::class)) {
             return $this;
         }
 
