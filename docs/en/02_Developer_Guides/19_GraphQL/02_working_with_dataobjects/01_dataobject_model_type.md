@@ -125,8 +125,8 @@ Page:
 
 #### Customising the input types
 
-The input types, specifically in `create` and `update` can be customised with a whitelist 
-and/or [blacklist](#blacklisted-fields) of fields.
+The input types, specifically in `create` and `update` can be customised with a
+list of fields, which can include explicitly _disallowed_ fields.
 
 **app/_graphql/models.yml**
 ```
@@ -138,8 +138,9 @@ Page:
         title: true
         content: true
     update:
-      exclude:
-        sensitiveField: true
+      fields:
+        '*': true
+        sensitiveField: false
 ```
 
 ### Adding more fields
