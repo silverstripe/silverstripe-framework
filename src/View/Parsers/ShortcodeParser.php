@@ -263,8 +263,8 @@ class ShortcodeParser
 		([^\s\/\'"=,]+)       # Name
 		\s* = \s*
 		(?:
-			(?:\'([^\']+)\') | # Value surrounded by \'
-			(?:"([^"]+)")    | # Value surrounded by "
+			(?:\'([^\']*)\') | # Value surrounded by \'
+			(?:"([^"]*)")    | # Value surrounded by "
 			([^\s,\]]+)          # Bare value
 		)
 ';
