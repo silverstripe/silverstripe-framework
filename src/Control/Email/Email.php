@@ -570,6 +570,7 @@ class Email extends ViewableData
     public function setData($data)
     {
         $this->data = $data;
+        $this->setBody(null);
 
         return $this;
     }
@@ -589,6 +590,8 @@ class Email extends ViewableData
             $this->data->$name = $value;
         }
 
+        $this->setBody(null);
+
         return $this;
     }
 
@@ -606,6 +609,8 @@ class Email extends ViewableData
             $this->data->$name = null;
         }
 
+        $this->setBody(null);
+        
         return $this;
     }
 
