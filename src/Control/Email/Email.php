@@ -643,7 +643,8 @@ class Email extends ViewableData
     /**
      * @return $this
      */
-    public function invalidateBody() {
+    public function invalidateBody()
+    {
         $this->setBody(null);
 
         return $this;
