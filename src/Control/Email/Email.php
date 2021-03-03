@@ -570,6 +570,7 @@ class Email extends ViewableData
     public function setData($data)
     {
         $this->data = $data;
+        $this->invalidateBody();
 
         return $this;
     }
@@ -589,6 +590,8 @@ class Email extends ViewableData
             $this->data->$name = $value;
         }
 
+        $this->invalidateBody();
+
         return $this;
     }
 
@@ -606,6 +609,8 @@ class Email extends ViewableData
             $this->data->$name = null;
         }
 
+        $this->invalidateBody();
+        
         return $this;
     }
 
@@ -631,6 +636,16 @@ class Email extends ViewableData
 
         $body = HTTP::absoluteURLs($body);
         $this->getSwiftMessage()->setBody($body);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function invalidateBody()
+    {
+        $this->setBody(null);
 
         return $this;
     }
