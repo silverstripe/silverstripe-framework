@@ -51,7 +51,7 @@ Once you have enabled CORS you can then control four new headers in the HTTP Res
  Allow requests from one specific external domain.
 
  ```yaml
- Allow-Origin: 'my.domain.com'
+ Allow-Origin: 'https://my.domain.com'
  ```
 
  * **Multiple Domains**:
@@ -60,8 +60,8 @@ Once you have enabled CORS you can then control four new headers in the HTTP Res
 
  ```yaml
  Allow-Origin:
-   - 'my.domain.com'
-   - 'your.domain.org'
+   - 'https://my.domain.com'
+   - 'https://your.domain.org'
  ```
 
 2. **Access-Control-Allow-Headers.**
@@ -131,7 +131,7 @@ If you add extra headers to your GraphQL server, you will need to write a
 SilverStripe\GraphQL\Controller:
   cors:
     Enabled: true
-    Allow-Origin: 'silverstripe.org'
+    Allow-Origin: 'https://silverstripe.org'
     Allow-Headers: 'Authorization, Content-Type'
     Allow-Methods:  'GET, POST, OPTIONS'
     Allow-Credentials: 'true'
