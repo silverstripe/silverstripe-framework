@@ -171,6 +171,9 @@ class CompositeValidator extends Validator
     /**
      * Return all Validators that match a certain class name. EG: RequiredFields::class
      *
+     * The keys for the return array match the keys in the unfiltered array. You cannot assume the keys will be
+     * sequential or that the first key will be ZERO.
+     *
      * @param string $className
      * @return array|Validator[]
      */
