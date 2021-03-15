@@ -559,6 +559,39 @@ class EmailTest extends SapphireTest
         $this->assertCount(1, $email->getSwiftMessage()->getChildren());
     }
 
+    public function testRerender()
+    {
+        $email = new Email();
+        $email->setData([
+            'EmailContent' => 'my content',
+        ]);
+        $email->render();
+        $this->assertContains('my content', $email->getBody());
+        $children = $email->getSwiftMessage()->getChildren();
+        $this->assertCount(1, $children);
+        $plainPart = reset($children);
+        $this->assertEquals('my content', $plainPart->getBody());
+
+        // Ensure setting data causes a rerender
+        $email->setData([
+            'EmailContent' => 'your content'
+        ]);
+        $email->render();
+        $this->assertContains('your content', $email->getBody());
+
+        // Ensure removing data causes a rerender
+        $email->removeData('EmailContent');
+        $email->render();
+        $this->assertNotContains('your content', $email->getBody());
+
+        // Ensure adding data causes a rerender
+        $email->addData([
+            'EmailContent' => 'their content'
+        ]);
+        $email->render();
+        $this->assertContains('their content', $email->getBody());
+    }
+
     public function testRenderPlainOnly()
     {
         $email = new Email();
