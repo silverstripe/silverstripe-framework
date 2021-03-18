@@ -40,6 +40,7 @@ the middleware to `false`.
 
 
 ```yaml
+SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\QueryHandler\QueryHandlerInterface.default:
     class: SilverStripe\GraphQL\QueryHandler\QueryHandler
     properties:
