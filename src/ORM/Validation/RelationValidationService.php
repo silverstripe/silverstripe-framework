@@ -16,7 +16,8 @@ use SilverStripe\ORM\DB;
  * Basic validation of relationship setup, this tool makes sure your relationships are setup correctly in both directions
  * The validation is configurable and inspection can be narrowed down by namespace, class and relation name
  *
- * It is recommended to hook this up either to dev/build or your unit test suite
+ * This tool runs automatically via dev/build and outputs notices
+ * For strict validation it is recommended to hook this up to your unit test suite
  *
  * @package SilverStripe\ORM\Validation
  */
@@ -27,29 +28,46 @@ class RelationValidationService implements Resettable
     use Injectable;
 
     /**
-     * Relation listed here will not be inspected
-     * The format 1 is <class>.<relation>
-     * for example: Page::class.'.LinkTracking'
-     * Format 2 is <class>
-     * for example: Page::class
-     * This will make all relations defined in the class not being inspected
+     * Only inspect classes with the following namespaces/class prefixes
+     * Empty string is a special value which represents classes without namespaces
+     * Set value to null to disable the rule (useful when overriding configuration)
      *
      * @var array
      */
-    private static $disallowed_relations = [];
-
-    /**
-     * Only inspect classes with the following namespaces
-     * Empty string represents classes without namespaces
-     * Set value to null will disable the namespace (useful when overriding configuration)
-     *
-     * @var array
-     */
-    private static $allowed_namespaces = [
-        'no-namespace' => '',
+    private static $allow_rules = [
+        'empty' => '',
         'app' => 'App',
     ];
 
+    /**
+     * Any classes with the following namespaces/class prefixes will not be inspected
+     * This config is intended to be used together with @see $allow_rules to narrow down the inspected classes
+     * Empty string is a special value which represents classes without namespaces
+     * Set value to null to disable the rule (useful when overriding configuration)
+     *
+     * @var array
+     */
+    private static $deny_rules = [];
+
+    /**
+     * Relations listed here will not be inspected
+     * Format is <class>.<relation>
+     * for example: Page::class.'.LinkTracking'
+     *
+     * @var array
+     */
+    private static $deny_relations = [];
+
+    /**
+     * Ignore any configuration, useful for debugging specific classes
+     *
+     * @var bool
+     */
+    protected $ignoreConfig = false;
+
+    /**
+     * @var array
+     */
     protected $errors = [];
 
     public function flushErrors(): void
@@ -59,33 +77,9 @@ class RelationValidationService implements Resettable
 
     public static function reset(): void
     {
-        self::singleton()->flushErrors();
-    }
-
-    /**
-     * Hook this into the @see DataObject::requireDefaultRecords() if you want the valid to run every dev build
-     * for example:
-     *
-     * public function requireDefaultRecords()
-     * {
-     *      parent::requireDefaultRecords();
-     *
-     *      if (static::class !== self::class) {
-     *          return;
-     *      }
-     *
-     *      RelationValidationService::singleton()->devBuildCheck();
-     * }
-     *
-     * @throws ReflectionException
-     */
-    public function devBuildCheck(): void
-    {
-        $errors = $this->validateRelations();
-
-        foreach ($errors as $message) {
-            DB::alteration_message($message, 'notice');
-        }
+        $service = self::singleton();
+        $service->flushErrors();
+        $service->ignoreConfig = false;
     }
 
     /**
@@ -102,7 +96,165 @@ class RelationValidationService implements Resettable
         self::reset();
         $classes = ClassInfo::subclassesFor(DataObject::class);
 
+        return $this->validateClasses($classes);
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function devBuildCheck(): void
+    {
+        $errors = $this->validateRelations();
+        $count = count($errors);
+
+        if ($count === 0) {
+            return;
+        }
+
+        DB::alteration_message(
+            sprintf(
+                '%s : %d issues found (listed below)',
+                ClassInfo::shortName(static::class),
+                $count
+            ),
+            'notice'
+        );
+
+        foreach ($errors as $message) {
+            DB::alteration_message($message, 'notice');
+        }
+    }
+
+    /**
+     * Inspect specified classes - this ignores any configuration
+     * Useful for checking specific classes when trying to fix relation configuration
+     *
+     * @param array $classes
+     * @return array
+     */
+    public function inspectClasses(array $classes): array
+    {
+        self::reset();
+        $this->ignoreConfig = true;
+
+        return $this->validateClasses($classes);
+    }
+
+    /**
+     * Check if class is ignored during inspection or not
+     * Useful checking if your configuration works as expected
+     * Check goes through rules in this order (from generic to more specific):
+     * 1 - Allow rules
+     * 2 - Deny rules
+     * 3 - Deny relations
+     *
+     * @param string $class
+     * @param string|null $relation
+     * @return bool
+     */
+    public function isIgnored(string $class, ?string $relation = null): bool
+    {
+        // Top level override - bail out if configuration should be ignored
+        if ($this->ignoreConfig) {
+            return false;
+        }
+
+        // Allow rules - if class doesn't match any allow rule we bail out
+        if (!$this->matchRules($class, 'allow_rules')) {
+            return true;
+        }
+
+        // Deny rules - if class matches any deny rule we bail out
+        if ($this->matchRules($class, 'deny_rules')) {
+            return true;
+        }
+
+        if ($relation === null) {
+            // Check is for the class as a whole so we don't need to check specific relation
+            // Class is considered NOT ignored
+            return false;
+        }
+
+        // Deny relations
+        $rules = (array) $this->config()->get('deny_relations');
+
+        foreach ($rules as $relationData) {
+            if ($relationData === null) {
+                // Disabled rule - bail out
+                continue;
+            }
+
+            $parsedRelation = $this->parsePlainRelation($relationData);
+
+            if ($parsedRelation === null) {
+                // Invalid rule - bail out
+                continue;
+            }
+
+            if ($class === $parsedRelation['class'] && $relation === $parsedRelation['relation']) {
+                // This class and relation combination is supposed to be ignored
+                return true;
+            }
+        }
+
+        // Default - Class is considered NOT ignored
+        return false;
+    }
+
+    /**
+     * Match class against specified rules
+     *
+     * @param string $class
+     * @param string $rule
+     * @return bool
+     */
+    protected function matchRules(string $class, string $rule): bool
+    {
+        $rules = (array) $this->config()->get($rule);
+
+        foreach ($rules as $key => $pattern) {
+            if ($pattern === null) {
+                // Disabled rule - bail out
+                continue;
+            }
+
+            // Special case for classes without a namespace
+            if ($pattern === '') {
+                if ($class === ClassInfo::shortName($class)) {
+                    // This is a class without namespace so we match this rule
+                    return true;
+                }
+
+                continue;
+            }
+
+            if (mb_strpos($class, $pattern) === 0) {
+                // Classname prefix matches the pattern
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Execute validation for specified classes
+     *
+     * @param array $classes
+     * @return array
+     */
+    protected function validateClasses(array $classes): array
+    {
         foreach ($classes as $class) {
+            if ($class === DataObject::class) {
+                // This is a generic class and doesn't need to be validated
+                continue;
+            }
+
+            if ($this->isIgnored($class)) {
+                continue;
+            }
+
             $this->validateClass($class);
         }
 
@@ -114,14 +266,8 @@ class RelationValidationService implements Resettable
      */
     protected function validateClass(string $class): void
     {
-        if ($this->isIgnored($class)) {
-            return;
-        }
-
-        $singleton = DataObject::singleton($class);
-
-        if (!$singleton instanceof DataObject) {
-            $this->logError($class,  '', 'Inspected class is not a DataObject.');
+        if (!is_subclass_of($class, DataObject::class)) {
+            $this->logError($class, '', 'Inspected class is not a DataObject.');
 
             return;
         }
@@ -146,13 +292,27 @@ class RelationValidationService implements Resettable
                 continue;
             }
 
-            $relatedObject = DataObject::singleton($relationData);
-
-            if (!$relatedObject instanceof DataObject) {
-                $this->logError($class, $relationName, sprintf('Related class %s is not a DataObject.', $relationData));
+            if (mb_strpos($relationData, '.') !== false) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Relation %s is not in the expected format (needs class only format).', $relationData)
+                );
 
                 return;
             }
+
+            if (!is_subclass_of($relationData, DataObject::class)) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Related class %s is not a DataObject.', $relationData)
+                );
+
+                return;
+            }
+
+            $relatedObject = DataObject::singleton($relationData);
 
             // Try to find the back relation - it can be either in belongs_to or has_many
             $belongsTo = (array) $relatedObject->config()->uninherited('belongs_to');
@@ -185,7 +345,7 @@ class RelationValidationService implements Resettable
                     $relationName,
                     'Back relation not found or ambiguous (needs class.relation format)'
                 );
-            } else if ($found > 1) {
+            } elseif ($found > 1) {
                 $this->logError($class, $relationName, 'Back relation is ambiguous');
             }
         }
@@ -207,21 +367,29 @@ class RelationValidationService implements Resettable
             $parsedRelation = $this->parsePlainRelation($relationData);
 
             if ($parsedRelation === null) {
-                $this->logError($class, $relationName, 'Relation is not in the expected format (class.relation)');
+                $this->logError(
+                    $class,
+                    $relationName,
+                    'Relation is not in the expected format (needs class.relation format)'
+                );
 
                 continue;
             }
 
             $relatedClass = $parsedRelation['class'];
             $relatedRelation = $parsedRelation['relation'];
-            $relatedObject = DataObject::singleton($relatedClass);
 
-            if (!$relatedObject instanceof DataObject) {
-                $this->logError($class, $relationName, sprintf('Related class %s is not a DataObject.', $relatedClass));
+            if (!is_subclass_of($relatedClass, DataObject::class)) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Related class %s is not a DataObject.', $relatedClass)
+                );
 
                 continue;
             }
 
+            $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('has_one');
 
             if (array_key_exists($relatedRelation, $relatedRelations)) {
@@ -248,21 +416,29 @@ class RelationValidationService implements Resettable
             $parsedRelation = $this->parsePlainRelation($relationData);
 
             if ($parsedRelation === null) {
-                $this->logError($class, $relationName, 'Relation is not in the expected format (class.relation)');
+                $this->logError(
+                    $class,
+                    $relationName,
+                    'Relation is not in the expected format (needs class.relation format)'
+                );
 
                 continue;
             }
 
             $relatedClass = $parsedRelation['class'];
             $relatedRelation = $parsedRelation['relation'];
-            $relatedObject = DataObject::singleton($relatedClass);
 
-            if (!$relatedObject instanceof DataObject) {
-                $this->logError($class, $relationName, sprintf('Related class %s is not a DataObject.', $relatedClass));
+            if (!is_subclass_of($relatedClass, DataObject::class)) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Related class %s is not a DataObject.', $relatedClass)
+                );
 
                 continue;
             }
 
+            $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('has_one');
 
             if (array_key_exists($relatedRelation, $relatedRelations)) {
@@ -291,14 +467,18 @@ class RelationValidationService implements Resettable
             }
 
             $relatedClass = $this->parseManyManyRelation($relationData);
-            $relatedObject = DataObject::singleton($relatedClass);
 
-            if (!$relatedObject instanceof DataObject) {
-                $this->logError($class, $relationName, sprintf('Related class %s is not a DataObject.', $relatedClass));
+            if (!is_subclass_of($relatedClass, DataObject::class)) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Related class %s is not a DataObject.', $relatedClass)
+                );
 
                 continue;
             }
 
+            $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('belongs_many_many');
             $found = 0;
 
@@ -326,7 +506,7 @@ class RelationValidationService implements Resettable
                     $relationName,
                     'Back relation not found or ambiguous (needs class.relation format)'
                 );
-            } else if ($found > 1) {
+            } elseif ($found > 1) {
                 $this->logError($class, $relationName, 'Back relation is ambiguous');
             }
         }
@@ -348,21 +528,29 @@ class RelationValidationService implements Resettable
             $parsedRelation = $this->parsePlainRelation($relationData);
 
             if ($parsedRelation === null) {
-                $this->logError($class, $relationName, 'Relation is not in the expected format (class.relation)');
+                $this->logError(
+                    $class,
+                    $relationName,
+                    'Relation is not in the expected format (needs class.relation format)'
+                );
 
                 continue;
             }
 
             $relatedClass = $parsedRelation['class'];
             $relatedRelation = $parsedRelation['relation'];
-            $relatedObject = DataObject::singleton($relatedClass);
 
-            if (!$relatedObject instanceof DataObject) {
-                $this->logError($class, $relationName, sprintf('Related class %s is not a DataObject.', $relatedClass));
+            if (!is_subclass_of($relatedClass, DataObject::class)) {
+                $this->logError(
+                    $class,
+                    $relationName,
+                    sprintf('Related class %s is not a DataObject.', $relatedClass)
+                );
 
                 continue;
             }
 
+            $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('many_many');
 
             if (array_key_exists($relatedRelation, $relatedRelations)) {
@@ -371,61 +559,6 @@ class RelationValidationService implements Resettable
 
             $this->logError($class, $relationName, 'Back relation not found');
         }
-    }
-
-    /**
-     * @param string $class
-     * @param string|null $relation
-     * @return bool
-     */
-    protected function isIgnored(string $class, ?string $relation = null): bool
-    {
-        // First, we match against disallowed rules
-        $disallowedRelations = (array) $this->config()->get('disallowed_relations');
-
-        if ($relation === null) {
-            // Any relation in a class is supposed to be ignored so we don't need to check individual relations
-            return in_array($class, $disallowedRelations);
-        }
-
-        foreach ($disallowedRelations as $relationData) {
-            $parsedRelation = $this->parsePlainRelation($relationData);
-
-            if ($parsedRelation === null) {
-                continue;
-            }
-
-            if ($class === $parsedRelation['class'] && $relation === $parsedRelation['relation']) {
-                // This class and relation combination is supposed to be ignored
-                return true;
-            }
-        }
-
-        // Second, we match against allowed rules
-        $allowedNamespaces = (array) $this->config()->get('allowed_namespaces');
-
-        foreach ($allowedNamespaces as $namespace) {
-            if ($namespace === null) {
-                continue;
-            }
-
-            // Special case for classes without a namespace
-            if ($namespace === '') {
-                if ($class === ClassInfo::shortName($class)) {
-                    return false;
-                }
-
-                continue;
-            }
-
-            // Match namespace
-            if (mb_strpos($class, $namespace) === 0) {
-                return false;
-            }
-        }
-
-        // Class is not allowed
-        return true;
     }
 
     /**
@@ -469,12 +602,11 @@ class RelationValidationService implements Resettable
             $to = $relationData['to'];
             $through = $relationData['through'];
 
-            $throughObject = DataObject::singleton($through);
-
-            if (!$throughObject instanceof DataObject) {
+            if (!is_subclass_of($through, DataObject::class)) {
                 return null;
             }
 
+            $throughObject = DataObject::singleton($through);
             $throughRelations = (array) $throughObject->config()->uninherited('has_one');
 
             if (!array_key_exists($to, $throughRelations)) {
