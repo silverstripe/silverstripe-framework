@@ -1593,4 +1593,12 @@ class MemberTest extends FunctionalTest
 
         $this->assertSame('Johnson', $member->getLastName(), 'getLastName should proxy to Surname');
     }
+    
+    public function testEmailIsTrimmed()
+    {
+        $member = new Member();
+        $member->Email = " trimmed@test.com\r\n";
+        $member->write();
+        $this->assertNotNull(Member::get()->find('Email', 'trimmed@test.com'));
+    }
 }
