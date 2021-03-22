@@ -872,7 +872,7 @@ class Member extends DataObject
     public function onBeforeWrite()
     {
         // Prevent spaces in emails
-        if($this->Email) {
+        if ($this->Email) {
             $this->Email = trim($this->Email);
         }
         
