@@ -62,13 +62,13 @@ class DBBoolean extends DBField
     {
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         $source = [
+            '' => $anyText,
             1 => _t(__CLASS__ . '.YESANSWER', 'Yes'),
             0 => _t(__CLASS__ . '.NOANSWER', 'No')
         ];
 
-        $field = new DropdownField($this->name, $title, $source);
-        $field->setEmptyString("($anyText)");
-        return $field;
+        return (new DropdownField($this->name, $title, $source))
+            ->setEmptyString($anyText);
     }
 
     public function nullValue()
