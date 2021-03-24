@@ -172,19 +172,25 @@ class RememberLoginHash extends DataObject
      * only the token for the provided device ID will be removed
      *
      * @param Member $member
-     * @param string $alcDevice
+     * @param string|null $alcDevice Null when logging out of non-persi-tien session
      */
     public static function clear(Member $member, $alcDevice = null)
     {
         if (!$member->exists()) {
+            // If we don't have a valid user, we can't clear any "Remember me" tokens
             return;
         }
-        $filter = ['MemberID'=>$member->ID];
-        if (!static::config()->logout_across_devices && $alcDevice) {
-            $filter['DeviceID'] = $alcDevice;
+
+        if (static::config()->logout_across_devices) {
+            self::get()->filter(['MemberID' => $member->ID])->removeAll();
+        } elseif ($alcDevice) {
+            self::get()->filter([
+                'MemberID' => $member->ID,
+                'DeviceID' => $alcDevice
+            ])->removeAll();
         }
-        RememberLoginHash::get()
-            ->filter($filter)
-            ->removeAll();
+
+        // We've logged in without checking the "Remember me" checkbox and `logout_across_devices` is disable ...
+        // so we don't have any RememberLoginHash to clear
     }
 }
