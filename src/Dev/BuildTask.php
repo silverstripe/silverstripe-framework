@@ -6,6 +6,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Control\Director;
 
 /**
  * Interface for a generic build task. Does not support dependencies. This will simply
@@ -82,4 +83,16 @@ abstract class BuildTask
     {
         return $this->description;
     }
+    
+    /**
+     * @return string  e.g. /dev/tasks/MyTask-In-Full
+     */
+    public function Link() : string
+    {
+        $link = $this->Config()->get('segment');
+        if (! $link) {
+            $link = str_replace('\\', '-', static::class);
+        }
+        return Director::absoluteUrl('dev/tasks/') . $link;
+    }    
 }
