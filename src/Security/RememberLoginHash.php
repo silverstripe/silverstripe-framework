@@ -189,8 +189,5 @@ class RememberLoginHash extends DataObject
                 'DeviceID' => $alcDevice
             ])->removeAll();
         }
-
-        // We've logged in without checking the "Remember me" checkbox and `logout_across_devices` is disable ...
-        // so we don't have any RememberLoginHash to clear
     }
 }
