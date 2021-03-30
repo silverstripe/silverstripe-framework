@@ -166,7 +166,6 @@ sk:
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
     FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
-    KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo

@@ -216,7 +216,6 @@ sv:
     ERRORWRONGCRED: 'Antingen e-postadressen eller lösenordet är fel. Försök igen.'
     FIRSTNAME: Förnamn
     INTERFACELANG: Gränssnittsspråk
-    KEEPMESIGNEDIN: 'Håll mig inloggad'
     LOGGEDINAS: 'Du är inloggad som {name}.'
     NEWPASSWORD: 'Nytt lösenord'
     PASSWORD: Lösenord
@@ -225,7 +224,6 @@ sv:
     PLURALS:
       one: 'En medlem'
       other: '{count} medlemmar'
-    REMEMBERME: 'Kom ihåg mig nästa gång? (i {count} dagar på denna enhet)'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'

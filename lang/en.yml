@@ -266,7 +266,7 @@ en:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
-    KEEPMESIGNEDIN: 'Keep me signed in'
+    KEEPMESIGNEDIN: 'Remember me for {count} days'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
@@ -275,7 +275,6 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
-    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'

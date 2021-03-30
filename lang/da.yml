@@ -220,7 +220,6 @@ da:
     ERRORWRONGCRED: 'De indtastede værdier ser ikke ud til at være korrekte. Forsøg venligst igen.'
     FIRSTNAME: Fornavn
     INTERFACELANG: 'Sprog i brugerfladen'
-    KEEPMESIGNEDIN: 'Hold mig logget ind'
     LOGGEDINAS: 'Du er logget ind som {name}.'
     NEWPASSWORD: 'Nyt kodeord'
     PASSWORD: Kodeord
@@ -229,7 +228,6 @@ da:
     PLURALS:
       one: 'En bruger'
       other: '{count} brugere'
-    REMEMBERME: 'Husk mig til næste gang? (i {count} dage på denne enhed)'
     SINGULARNAME: Bruger
     SUBJECTPASSWORDCHANGED: 'Dit kodeord er blevet ændret'
     SUBJECTPASSWORDRESET: 'Link til at nulstille dit kodeord'

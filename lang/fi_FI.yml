@@ -258,7 +258,6 @@ fi_FI:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     FIRSTNAME: Etunimi
     INTERFACELANG: 'Käyttöliittymän kieli'
-    KEEPMESIGNEDIN: 'Pidä minut kirjautuneena'
     LOGGEDINAS: 'Olet kirjautuneena nimellä {name}.'
     NEWPASSWORD: 'Uusi salasana'
     PASSWORD: Salasana
@@ -267,7 +266,6 @@ fi_FI:
     PLURALS:
       one: Käyttäjä
       other: '{count} Käyttäjää'
-    REMEMBERME: 'Muista minut? ({days} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
