@@ -726,7 +726,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				$curMember->logOut();
 			}
 
-			if (!headers_sent()) {
+			if (!headers_sent() && session_status() == PHP_SESSION_ACTIVE) {
 				// To avoid a potential session fixation attack
 				// we're refreshing the session id so that it's
 				// always new and random for every authentication
