@@ -155,11 +155,11 @@ class FieldList extends ArrayList
      */
     protected function fieldNameError(FormField $field, $functionName)
     {
-        if ($this->form) {
+        if ($field->getForm()) {
             $errorSuffix = sprintf(
                 " in your '%s' form called '%s'",
-                get_class($this->form),
-                $this->form->getName()
+                get_class($field->getForm()),
+                $field->getForm()->getName()
             );
         } else {
             $errorSuffix = '';
