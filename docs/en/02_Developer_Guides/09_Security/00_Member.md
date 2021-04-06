@@ -139,7 +139,8 @@ class MyMemberExtension extends DataExtension
 Logins can be "remembered" across multiple devices when user checks the "Remember Me" box. By default, a new login token
 will be created and associated with the device used during authentication. When user logs out, all previously saved tokens
 for all devices will be revoked, unless [`RememberLoginHash::$logout_across_devices`](api:SilverStripe\Security\RememberLoginHash::$logout_across_devices) is set to false. For extra security,
-single tokens can be enforced by setting [`RememberLoginHash::$force_single_token`](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.
+single tokens can be enforced by setting [`RememberLoginHash::$force_single_token`](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.  Tokens will be valid for 30 days by
+default and this can be modified via [`RememberLoginHash::$token_expiry_days`](api:SilverStripe\Security\RememberLoginHash::$token_expiry_days).
 
 ## Acting as another user
 
