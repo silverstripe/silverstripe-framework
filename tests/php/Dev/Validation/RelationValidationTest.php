@@ -1,11 +1,11 @@
 <?php
 
-namespace SilverStripe\ORM\Tests\Validation;
+namespace SilverStripe\Dev\Tests\Validation;
 
 use Page;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Validation\RelationValidationService;
+use SilverStripe\Dev\Validation\RelationValidationService;
 
 class RelationValidationTest extends SapphireTest
 {
@@ -78,8 +78,8 @@ class RelationValidationTest extends SapphireTest
                     'Hatter' => Member::class,
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Member / Hat : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Hat / Hatter : Relation is not in the expected format (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Member / Hat : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Hat / Hatter : Relation is not in the expected format (needs class.relation format)',
                 ],
             ],
             'ambiguous has_one - incorrect relation name' => [
@@ -89,8 +89,8 @@ class RelationValidationTest extends SapphireTest
                     'Hatter' => Member::class . '.ObviouslyWrong',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Member / Hat : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Hat / Hatter : Back relation not found',
+                    'SilverStripe\Dev\Tests\Validation\Member / Hat : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Hat / Hatter : Back relation not found',
                 ],
             ],
             'ambiguous has_one - too many relations' => [
@@ -101,7 +101,7 @@ class RelationValidationTest extends SapphireTest
                     'HatterCopy' => Member::class . '.Hat',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Member / Hat : Back relation is ambiguous',
+                    'SilverStripe\Dev\Tests\Validation\Member / Hat : Back relation is ambiguous',
                 ],
             ],
             'invalid has one' => [
@@ -112,7 +112,7 @@ class RelationValidationTest extends SapphireTest
                     'Hat' => Hat::class,
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Member / HomeTeam : Relation SilverStripe\ORM\Tests\Validation\Team.UnnecessaryRelation is not in the expected format (needs class only format).'
+                    'SilverStripe\Dev\Tests\Validation\Member / HomeTeam : Relation SilverStripe\Dev\Tests\Validation\Team.UnnecessaryRelation is not in the expected format (needs class only format).'
                 ],
             ],
             'ambiguous has_many - no relation name' => [
@@ -123,8 +123,8 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerMembers' => Freelancer::class . '.TemporaryTeam',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / Members : Relation is not in the expected format (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Member / HomeTeam : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Team / Members : Relation is not in the expected format (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Member / HomeTeam : Back relation not found or ambiguous (needs class.relation format)',
                 ],
             ],
             'ambiguous has_many - incorrect relation name' => [
@@ -135,8 +135,8 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerMembers' => Freelancer::class . '.TemporaryTeam',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / Members : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Member / HomeTeam : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Team / Members : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Member / HomeTeam : Back relation not found or ambiguous (needs class.relation format)',
                 ],
             ],
             'ambiguous has_many - too many relations' => [
@@ -148,7 +148,7 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerMembers' => Freelancer::class . '.TemporaryTeam',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Member / HomeTeam : Back relation is ambiguous',
+                    'SilverStripe\Dev\Tests\Validation\Member / HomeTeam : Back relation is ambiguous',
                 ],
             ],
             'ambiguous many_many - no relation name' => [
@@ -158,8 +158,8 @@ class RelationValidationTest extends SapphireTest
                     'TeamHats' => Team::class,
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / ReserveHats : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Hat / TeamHats : Relation is not in the expected format (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Team / ReserveHats : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Hat / TeamHats : Relation is not in the expected format (needs class.relation format)',
                 ],
             ],
             'ambiguous many_many - incorrect relation name' => [
@@ -169,8 +169,8 @@ class RelationValidationTest extends SapphireTest
                     'TeamHats' => Team::class . '.ObviouslyWrong',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / ReserveHats : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Hat / TeamHats : Back relation not found',
+                    'SilverStripe\Dev\Tests\Validation\Team / ReserveHats : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Hat / TeamHats : Back relation not found',
                 ],
             ],
             'ambiguous many_many - too many relations' => [
@@ -181,7 +181,7 @@ class RelationValidationTest extends SapphireTest
                     'TeamHatsCopy' => Team::class . '.ReserveHats',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / ReserveHats : Back relation is ambiguous',
+                    'SilverStripe\Dev\Tests\Validation\Team / ReserveHats : Back relation is ambiguous',
                 ],
             ],
             'ambiguous many_many through - no relation name' => [
@@ -191,8 +191,8 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerTeams' => Team::class,
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / Freelancers : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Member / FreelancerTeams : Relation is not in the expected format (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Team / Freelancers : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Member / FreelancerTeams : Relation is not in the expected format (needs class.relation format)',
                 ],
             ],
             'ambiguous many_many through - incorrect relation name' => [
@@ -202,8 +202,8 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerTeams' => Team::class . '.ObviouslyWrong',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / Freelancers : Back relation not found or ambiguous (needs class.relation format)',
-                    'SilverStripe\ORM\Tests\Validation\Member / FreelancerTeams : Back relation not found',
+                    'SilverStripe\Dev\Tests\Validation\Team / Freelancers : Back relation not found or ambiguous (needs class.relation format)',
+                    'SilverStripe\Dev\Tests\Validation\Member / FreelancerTeams : Back relation not found',
                 ],
             ],
             'ambiguous many_many through - too many relations' => [
@@ -214,7 +214,7 @@ class RelationValidationTest extends SapphireTest
                     'FreelancerTeamsCopy' => Team::class . '.Freelancers',
                 ],
                 [
-                    'SilverStripe\ORM\Tests\Validation\Team / Freelancers : Back relation is ambiguous',
+                    'SilverStripe\Dev\Tests\Validation\Team / Freelancers : Back relation is ambiguous',
                 ],
             ],
         ];
@@ -245,7 +245,7 @@ class RelationValidationTest extends SapphireTest
                 Team::class,
                 'Members',
                 [
-                    'allow_rules' => ['app' => 'SilverStripe\ORM\Tests\Validation'],
+                    'allow_rules' => ['app' => 'SilverStripe\Dev\Tests\Validation'],
                 ],
                 false,
             ],
@@ -253,7 +253,7 @@ class RelationValidationTest extends SapphireTest
                 Team::class,
                 null,
                 [
-                    'allow_rules' => ['app' => 'SilverStripe\ORM\Tests\Validation'],
+                    'allow_rules' => ['app' => 'SilverStripe\Dev\Tests\Validation'],
                     'deny_rules' => [Team::class],
                 ],
                 true,
@@ -262,7 +262,7 @@ class RelationValidationTest extends SapphireTest
                 Team::class,
                 'Members',
                 [
-                    'allow_rules' => ['app' => 'SilverStripe\ORM\Tests\Validation'],
+                    'allow_rules' => ['app' => 'SilverStripe\Dev\Tests\Validation'],
                     'deny_rules' => [Team::class],
                 ],
                 true,
@@ -271,7 +271,7 @@ class RelationValidationTest extends SapphireTest
                 Team::class,
                 'Members',
                 [
-                    'allow_rules' => ['app' => 'SilverStripe\ORM\Tests\Validation'],
+                    'allow_rules' => ['app' => 'SilverStripe\Dev\Tests\Validation'],
                     'deny_relations' => [Team::class . '.Members'],
                 ],
                 true,
@@ -280,7 +280,7 @@ class RelationValidationTest extends SapphireTest
                 Member::class,
                 'HomeTeam',
                 [
-                    'allow_rules' => ['app' => 'SilverStripe\ORM\Tests\Validation'],
+                    'allow_rules' => ['app' => 'SilverStripe\Dev\Tests\Validation'],
                     'deny_rules' => [Team::class],
                     'deny_relations' => [Team::class . '.Members'],
                 ],

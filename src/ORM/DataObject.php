@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\Validation\RelationValidationService;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
@@ -3650,7 +3651,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database default data
+        // Validate relations (this needs to be triggered only once)
+        if (static::class === \Page::class) {
+            RelationValidationService::singleton()->devBuildCheck();
+        }
+
+        // Let any extensions make their own database default data
         $this->extend('requireDefaultRecords', $dummy);
     }
 

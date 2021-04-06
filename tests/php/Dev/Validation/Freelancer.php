@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Tests\Validation;
+namespace SilverStripe\Dev\Tests\Validation;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;

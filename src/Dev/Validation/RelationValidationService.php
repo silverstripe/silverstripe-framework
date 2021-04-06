@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Validation;
+namespace SilverStripe\Dev\Validation;
 
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
@@ -18,8 +18,6 @@ use SilverStripe\ORM\DB;
  *
  * This tool runs automatically via dev/build and outputs notices
  * For strict validation it is recommended to hook this up to your unit test suite
- *
- * @package SilverStripe\ORM\Validation
  */
 class RelationValidationService implements Resettable
 {
