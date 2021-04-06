@@ -1211,4 +1211,38 @@ EOS
             'css has correct sri attributes'
         );
     }
+
+    public function testCustomAttributesJavascript()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->javascript('javascript/RequirementsTest_a.js', [
+            'attributes' => [
+                'abc' => 123,
+                'nonce' => 'the_request_nonce',
+                'crossorigin' => 'ignored_value',
+            ],
+            'crossorigin' => 'not_ignored',
+        ]);
+        $backend->css('css/RequirementsTest_a.css', null, ['attributes' => [
+            'onload' => "this.media='all'",
+            'media' => "print",
+        ]]);
+        $html = $backend->includeInHTML(self::$html_template);
+
+        /* Javascript has correct attributes */
+        $this->assertRegExp(
+            '#<script type="application/javascript" src=".*/javascript/RequirementsTest_a.js.*" abc="123" nonce="the_request_nonce" crossorigin="not_ignored"#',
+            $html,
+            'javascript has correct attributes'
+        );
+
+        /* CSS has correct attributes */
+        $this->assertRegExp(
+            '#<link .*href=".*/RequirementsTest_a\.css.*" onload="this.media=&\#039;all&\#039;" media="print"#',
+            $html,
+            'css has correct attributes'
+        );
+    }
 }

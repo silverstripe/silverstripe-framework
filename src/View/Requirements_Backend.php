@@ -402,6 +402,7 @@ class Requirements_Backend
      * - 'type' : Override script type= value.
      * - 'integrity' : SubResource Integrity hash
      * - 'crossorigin' : Cross-origin policy for the resource
+     * - 'attributes' : An array of custom attributes
      */
     public function javascript($file, $options = [])
     {
@@ -436,12 +437,15 @@ class Requirements_Backend
         $integrity = $options['integrity'] ?? null;
         $crossorigin = $options['crossorigin'] ?? null;
 
+        $additionalAttributes = $options['attributes'] ?? null;
+
         $this->javascript[$file] = [
             'async' => $async,
             'defer' => $defer,
             'type' => $type,
             'integrity' => $integrity,
             'crossorigin' => $crossorigin,
+            'attributes' => $additionalAttributes
         ];
 
         // Record scripts included in this file
@@ -641,6 +645,7 @@ class Requirements_Backend
      * @param array $options List of options. Available options include:
      * - 'integrity' : SubResource Integrity hash
      * - 'crossorigin' : Cross-origin policy for the resource
+     * - 'attributes' : An array of custom attributes
      */
     public function css($file, $media = null, $options = [])
     {
@@ -648,11 +653,13 @@ class Requirements_Backend
 
         $integrity = $options['integrity'] ?? null;
         $crossorigin = $options['crossorigin'] ?? null;
+        $additionalAttributes = $options['attributes'] ?? null;
 
         $this->css[$file] = [
             "media" => $media,
             "integrity" => $integrity,
             "crossorigin" => $crossorigin,
+            "attributes" => $additionalAttributes,
         ];
     }
 
@@ -823,6 +830,10 @@ class Requirements_Backend
                 'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
                 'src' => $this->pathForFile($file),
             ];
+            if (!empty($attributes['attributes'])) {
+                // We do this first so that the other settings can override these ones
+                $htmlAttributes = array_merge($htmlAttributes, $attributes['attributes']);
+            }
             if (!empty($attributes['async'])) {
                 $htmlAttributes['async'] = 'async';
             }
@@ -856,6 +867,10 @@ class Requirements_Backend
                 'type' => 'text/css',
                 'href' => $this->pathForFile($file),
             ];
+            if (!empty($params['attributes'])) {
+                // We do this first so that the other settings can override these ones
+                $htmlAttributes = array_merge($htmlAttributes, $params['attributes']);
+            }
             if (!empty($params['media'])) {
                 $htmlAttributes['media'] = $params['media'];
             }
