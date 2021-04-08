@@ -98,7 +98,7 @@ foreach ($members as $member) {
 }
 ```
 
-`chunkedFetch()` will respect any filter or sort condition applied to the DataList. By default, chunk will limit each query to 100 results. You can explicitly set this limit by passing an integer to `chunkedFetch()`.
+`chunkedFetch()` will respect any filter or sort condition applied to the DataList. By default, chunk will limit each query to 1000 results. You can explicitly set this limit by passing an integer to `chunkedFetch()`.
 
 ```php
 $members = Member::get()
