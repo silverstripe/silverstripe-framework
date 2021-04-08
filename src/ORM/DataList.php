@@ -1298,7 +1298,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @throws InvalidArgumentException If `$chunkSize` has an invalid size.
      * @return Generator|DataObject[]
      */
-    public function chunkedFetch(int $chunkSize = 100): iterable
+    public function chunkedFetch(int $chunkSize = 1000): iterable
     {
         if ($chunkSize < 1) {
             throw new InvalidArgumentException(sprintf(
