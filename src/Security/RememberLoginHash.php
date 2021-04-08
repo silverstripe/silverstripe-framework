@@ -60,7 +60,7 @@ class RememberLoginHash extends DataObject
      * @config
      * @var int
      */
-    private static $token_expiry_days = 90;
+    private static $token_expiry_days = 30;
 
     /**
      * Number of days the device ID will be valid for
