@@ -79,11 +79,11 @@ echo $members->column('Email');
 // ];
 ```
 
-## Iterating over a large list {#chunk}
+## Iterating over a large list {#chunkedFetch}
 
 When iterating over a DataList, all DataObjects in the list will be loaded in memory. This can consume a lot of memory when working with a large data set.
 
-To limit the number of DataObjects loaded in memory, you can use the `chunk()` method on your DataList. In most cases, you can iterate over the results of `chunk()` the same way you would iterate over your DataList. Internally, `chunk()` will split your DataList query into smaller queries and keep running through them until it runs out of results.
+To limit the number of DataObjects loaded in memory, you can use the `chunkedFetch()` method on your DataList. In most cases, you can iterate over the results of `chunkedFetch()` the same way you would iterate over your DataList. Internally, `chunkedFetch()` will split your DataList query into smaller queries and keep running through them until it runs out of results.
 
 ```php
 $members = Member::get();
@@ -92,26 +92,26 @@ foreach ($members as $member) {
 }
 
 // This call will produce the same output, but it will use less memory and run more queries against the database
-$members = Member::get()->chunk();
+$members = Member::get()->chunkedFetch();
 foreach ($members as $member) {
     echo $member->Email;
 }
 ```
 
-`chunk()` will respect any filter or sort condition applied to the DataList. By default, chunk will limit each query to 100 results. You can explicitly set this limit by passing an integer to `chunk()`.
+`chunkedFetch()` will respect any filter or sort condition applied to the DataList. By default, chunk will limit each query to 100 results. You can explicitly set this limit by passing an integer to `chunkedFetch()`.
 
 ```php
 $members = Member::get()
     ->filter('Email:PartialMatch', 'silverstripe.com')
     ->sort('Email')
-    ->chunk(10);
+    ->chunkedFetch(10);
 foreach ($members as $member) {
     echo $member->Email;
 }
 ```
 
 They are some limitations:
-* `chunk()` will ignore any limit or offset you have applied to your DataList
+* `chunkedFetch()` will ignore any limit or offset you have applied to your DataList
 * you can not "count" a chunked list or do any other call against it aside from iterating it
 * while iterating over a chunked list, you can not perform any operation that would alter the order of the items.
 

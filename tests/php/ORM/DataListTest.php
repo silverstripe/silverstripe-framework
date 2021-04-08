@@ -11,7 +11,6 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
 use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
@@ -1887,7 +1886,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             $expectedIDs,
-            Team::get()->setDataQuery($dataQuery)->chunk(),
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(),
             $dataQuery,
             1
         );
@@ -1895,7 +1894,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             $expectedIDs,
-            Team::get()->setDataQuery($dataQuery)->chunk(1),
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(1),
             $dataQuery,
             $expectedSize+1
         );
@@ -1903,7 +1902,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             $expectedIDs,
-            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize),
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize),
             $dataQuery,
             2
         );
@@ -1911,7 +1910,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             $expectedIDs,
-            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize-1),
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize-1),
             $dataQuery,
             2
         );
@@ -1919,7 +1918,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             $expectedIDs,
-            Team::get()->setDataQuery($dataQuery)->chunk($expectedSize+1),
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize+1),
             $dataQuery,
             1
         );
@@ -1930,7 +1929,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
-            Team::get()->setDataQuery($dataQuery)->filter('ClassName', Team::class)->chunk(),
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', Team::class)->chunkedFetch(),
             $dataQuery,
             1
         );
@@ -1941,7 +1940,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
-            Team::get()->setDataQuery($dataQuery)->sort('ID', 'Desc')->chunk(),
+            Team::get()->setDataQuery($dataQuery)->sort('ID', 'Desc')->chunkedFetch(),
             $dataQuery,
             1
         );
@@ -1952,7 +1951,7 @@ class DataListTest extends SapphireTest
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(
             [],
-            Team::get()->setDataQuery($dataQuery)->filter('ClassName', 'non-sense')->chunk(),
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', 'non-sense')->chunkedFetch(),
             $dataQuery,
             1
         );
