@@ -224,6 +224,7 @@ it:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
+    KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
     PASSWORD: Password
@@ -232,6 +233,7 @@ it:
     PLURALS:
       one: 'Un Utente'
       other: '{count} Utenti'
+    REMEMBERME: 'Ricordati di me la prossima volta? (per {count} giorni su questo dispositivo)'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'

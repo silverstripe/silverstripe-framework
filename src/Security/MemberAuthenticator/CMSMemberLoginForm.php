@@ -59,7 +59,7 @@ class CMSMemberLoginForm extends MemberLoginForm
                 CheckboxField::create(
                     "Remember",
                     _t(
-                        'SilverStripe\\Security\\Member.KEEPMESIGNEDIN',
+                        'SilverStripe\\Security\\Member.REMEMBER_ME',
                         "Remember me for {count} days",
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )

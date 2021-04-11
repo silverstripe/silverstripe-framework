@@ -282,6 +282,7 @@ sl:
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
     FIRSTNAME: Ime
     INTERFACELANG: Jezik
+    KEEPMESIGNEDIN: 'Ohranjaj prijavo'
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo
@@ -292,6 +293,7 @@ sl:
       two: '{count} uporabnika'
       few: '{count} uporabnikov'
       other: '{count} uporabnikov'
+    REMEMBERME: 'Ohranjaj prijavo na tej napravi naslednjih {count} dni.'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'

@@ -217,6 +217,7 @@ bg:
     ERRORWRONGCRED: 'Детайлите не са коректни. Моля, опитайте отново.'
     FIRSTNAME: Име
     INTERFACELANG: Език
+    KEEPMESIGNEDIN: 'Нека да остана логнат'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -225,6 +226,7 @@ bg:
     PLURALS:
       one: Потребител
       other: '{count} потребителя'
+    REMEMBERME: 'Запомни ме следващия път? (за {count} ден/дни на това устройство)'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
