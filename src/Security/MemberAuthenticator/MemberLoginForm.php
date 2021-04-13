@@ -159,7 +159,6 @@ class MemberLoginForm extends BaseLoginForm
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
-                    ->setAttribute('data-toggle', 'tooltip')
                     ->setAttribute(
                         'title',
                         _t(

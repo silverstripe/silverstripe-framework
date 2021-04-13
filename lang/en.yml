@@ -277,6 +277,7 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
+    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
