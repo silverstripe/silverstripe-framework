@@ -267,6 +267,8 @@ en:
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     KEEPMESIGNEDIN: 'Keep me signed in'
+    REMEMBER_ME: 'Remember me for {count} days'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using. Authenticated devices can be managed in your profile.'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
