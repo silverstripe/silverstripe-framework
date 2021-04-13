@@ -938,12 +938,13 @@ class Director implements TemplateGlobalProvider
     public static function absoluteBaseURLWithAuth(HTTPRequest $request = null)
     {
         // Detect basic auth
-        $user = $request->getHeader('PHP_AUTH_USER');
-        if ($user) {
-            $password = $request->getHeader('PHP_AUTH_PW');
-            $login = sprintf("%s:%s@", $user, $password) ;
-        } else {
-            $login = '';
+        $login = '';
+        if ($request) {
+            $user = $request->getHeader('PHP_AUTH_USER');
+            if ($user) {
+                $password = $request->getHeader('PHP_AUTH_PW');
+                $login = sprintf("%s:%s@", $user, $password);
+            }
         }
 
         return Director::protocol($request) . $login . static::host($request) . Director::baseURL();
