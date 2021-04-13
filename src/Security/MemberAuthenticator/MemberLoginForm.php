@@ -153,15 +153,20 @@ class MemberLoginForm extends BaseLoginForm
             $fields->push(
                 CheckboxField::create(
                     "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
-                )->setAttribute(
-                    'title',
                     _t(
-                        'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
+                        'SilverStripe\\Security\\Member.REMEMBER_ME',
+                        "Remember me for {count} days",
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
+                    ->setAttribute(
+                        'title',
+                        _t(
+                            'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN_TOOLTIP',
+                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using. Authenticated devices can be managed in your profile.',
+                            ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
+                        )
+                    )
             );
         }
 
