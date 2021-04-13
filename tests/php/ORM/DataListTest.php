@@ -11,10 +11,11 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
+use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
-use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Sortable;
 use SilverStripe\ORM\Tests\DataObjectTest\Staff;
@@ -1874,5 +1875,123 @@ class DataListTest extends SapphireTest
             'Product A',
             'Product B',
         ], $productTitles);
+    }
+
+    public function testChunkedFetch()
+    {
+        $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
+        $expectedSize = sizeof($expectedIDs);
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(1),
+            $dataQuery,
+            $expectedSize+1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize-1),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize+1),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testFilteredChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', Team::class)->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testSortedChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
+            Team::get()->setDataQuery($dataQuery)->sort('ID', 'Desc')->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testEmptyChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            [],
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', 'non-sense')->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testInvalidChunkSize()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        foreach (Team::get()->chunkedFetch(0) as $item) {
+            // You don't get the error until you iterate over the list
+        };
+    }
+
+    /**
+     * Loop over a chunck list and make sure it matches our expected results
+     * @param int[] $expectedIDs
+     * @param iterable $chunkList
+     */
+    private function chunkTester(
+        array $expectedIDs,
+        iterable $chunkList,
+        DataListQueryCounter $dataQuery,
+        int $expectedQueryCount
+    ) {
+        foreach ($chunkList as $chunkedTeam) {
+            $this->assertInstanceOf(
+                Team::class,
+                $chunkedTeam,
+                'Chunk return the correct type of data object'
+            );
+
+            $expectedID = array_shift($expectedIDs);
+
+            $this->assertEquals(
+                $expectedID,
+                $chunkedTeam->ID,
+                'chunk returns the same results in the same order as the regular iterator'
+            );
+        }
+
+        $this->assertEmpty($expectedIDs, 'chunk returns all the results that the regular iterator does');
+        $this->assertEquals($expectedQueryCount, $dataQuery->getCount());
     }
 }

@@ -10,7 +10,7 @@ Whenever using the ORM to fetch records or navigate relationships you will recei
 either [DataList](api:SilverStripe\ORM\DataList) or [RelationList](api:SilverStripe\ORM\RelationList). This object gives you the ability to iterate over each of the results or
 modify.
 
-## Iterating over the list.
+## Iterating over the list
 
 [SS_List](api:SilverStripe\ORM\SS_List) implements `IteratorAggregate`, allowing you to loop over the instance.
 
@@ -32,7 +32,7 @@ Or in the template engine:
 <% end_loop %>
 ```
 
-## Finding an item by value.
+## Finding an item by value
 
 ```php
 // $list->find($key, $value);
@@ -78,6 +78,42 @@ echo $members->column('Email');
 //    'will@silverstripe.com'
 // ];
 ```
+
+## Iterating over a large list {#chunkedFetch}
+
+When iterating over a DataList, all DataObjects in the list will be loaded in memory. This can consume a lot of memory when working with a large data set.
+
+To limit the number of DataObjects loaded in memory, you can use the `chunkedFetch()` method on your DataList. In most cases, you can iterate over the results of `chunkedFetch()` the same way you would iterate over your DataList. Internally, `chunkedFetch()` will split your DataList query into smaller queries and keep running through them until it runs out of results.
+
+```php
+$members = Member::get();
+foreach ($members as $member) {
+    echo $member->Email;
+}
+
+// This call will produce the same output, but it will use less memory and run more queries against the database
+$members = Member::get()->chunkedFetch();
+foreach ($members as $member) {
+    echo $member->Email;
+}
+```
+
+`chunkedFetch()` will respect any filter or sort condition applied to the DataList. By default, chunk will limit each query to 1000 results. You can explicitly set this limit by passing an integer to `chunkedFetch()`.
+
+```php
+$members = Member::get()
+    ->filter('Email:PartialMatch', 'silverstripe.com')
+    ->sort('Email')
+    ->chunkedFetch(10);
+foreach ($members as $member) {
+    echo $member->Email;
+}
+```
+
+They are some limitations:
+* `chunkedFetch()` will ignore any limit or offset you have applied to your DataList
+* you can not "count" a chunked list or do any other call against it aside from iterating it
+* while iterating over a chunked list, you can not perform any operation that would alter the order of the items.
 
 ## ArrayList
 
