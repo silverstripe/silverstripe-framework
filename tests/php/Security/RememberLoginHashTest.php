@@ -72,4 +72,18 @@ class RememberLoginHashTest extends SapphireTest
             );
         }
     }
+
+    public function testGetSetLogoutAcrossDevices()
+    {
+        // set config directly
+        RememberLoginHash::config()->set('logout_across_devices', true);
+        $this->assertTrue(RememberLoginHash::getLogoutAcrossDevices());
+        RememberLoginHash::config()->set('logout_across_devices', false);
+        $this->assertFalse(RememberLoginHash::getLogoutAcrossDevices());
+        // override using public API
+        RememberLoginHash::setLogoutAcrossDevices(true);
+        $this->assertTrue(RememberLoginHash::getLogoutAcrossDevices());
+        RememberLoginHash::setLogoutAcrossDevices(false);
+        $this->assertFalse(RememberLoginHash::getLogoutAcrossDevices());
+    }
 }

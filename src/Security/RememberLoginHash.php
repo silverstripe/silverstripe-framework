@@ -84,6 +84,42 @@ class RememberLoginHash extends DataObject
      */
     private $token = null;
 
+    /**
+     * Used to override the config value of logout_across_devices
+     * Tri-state where null denotes an unset override value
+     *
+     * @internal
+     * @var bool|null
+     */
+    protected static $logoutAcrossDevices = null;
+
+    /**
+     * @internal
+     * @return bool
+     */
+    public static function getLogoutAcrossDevices(): bool
+    {
+        if (is_bool(static::$logoutAcrossDevices)) {
+            return static::$logoutAcrossDevices;
+        }
+        return static::config()->get('logout_across_devices');
+    }
+
+    /**
+     * Override the config value of logout_across_devices for the duration of the request
+     * Useful if an authenticator is causing the wrong number of devices to loose their tokens
+     * A value of false will prevent all devices from having their token removed when a single device logs out
+     * A value of true will remove all devices tokens when a single device logs out
+     * Use this public API instead of modifying the config value directly
+     *
+     * @internal
+     * @param bool $value
+     */
+    public static function setLogoutAcrossDevices(bool $value): void
+    {
+        static::$logoutAcrossDevices = $value;
+    }
+
     public function getToken()
     {
         return $this->token;
@@ -181,7 +217,7 @@ class RememberLoginHash extends DataObject
             return;
         }
 
-        if (static::config()->logout_across_devices) {
+        if (static::getLogoutAcrossDevices()) {
             self::get()->filter(['MemberID' => $member->ID])->removeAll();
         } elseif ($alcDevice) {
             self::get()->filter([
