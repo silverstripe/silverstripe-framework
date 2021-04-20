@@ -28,7 +28,7 @@ use SilverStripe\Core\TempFolder;
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
- * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_ressources"
+ * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_resources"
  */
 
 require_once __DIR__ . '/functions.php';
