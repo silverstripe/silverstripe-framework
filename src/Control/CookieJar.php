@@ -81,12 +81,15 @@ class CookieJar implements Cookie_Backend
         //expiry === 0 is a special case where we set a cookie for the current user session
         if ($expiry !== 0) {
             //don't do the maths if we are clearing
-            $expiry = $clear ? -1 : DBDatetime::now()->getTimestamp() + (86400 * $expiry);
+            $expires = $clear ? -1 : DBDatetime::now()->getTimestamp() + (86400 * $expiry);
+        } else {
+            $expires = 0;
         }
+
         //set the path up
         $path = $path ? $path : Director::baseURL();
         //send the cookie
-        $this->outputCookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        $this->outputCookie($name, $value, $expires, $path, $domain, $secure, $httpOnly);
         //keep our variables in check
         if ($clear) {
             unset($this->new[$name], $this->current[$name]);
@@ -152,7 +155,7 @@ class CookieJar implements Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string|array $value The value for the cookie to hold
-     * @param int $expiry A Unix timestamp indicating when the cookie expires; 0 means it will expire at the end of the session
+     * @param int $expires A Unix timestamp indicating when the cookie expires; 0 means it will expire at the end of the session
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
@@ -162,7 +165,7 @@ class CookieJar implements Cookie_Backend
     protected function outputCookie(
         $name,
         $value,
-        $expiry = 90,
+        $expires = 0,
         $path = null,
         $domain = null,
         $secure = false,
@@ -170,7 +173,28 @@ class CookieJar implements Cookie_Backend
     ) {
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
-            return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+            $sameSite = Cookie::get_valid_samesite_value(Cookie::config()->get('samesite'), true);
+            // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#none
+            if ($sameSite === 'None') {
+                $secure = true;
+            }
+
+            if (PHP_VERSION_ID < 70300 || '' === $sameSite) {
+                if ('' !== $sameSite) {
+                    $path = $path ?: '/'; // we must have a value for path to esploit the php bug for PHP<7.3
+                    $path = "{$path}; SameSite={$sameSite}";
+                }
+                return setcookie($name, $value, $expires, $path, $domain, $secure, $httpOnly);
+            }
+
+            return setcookie($name, $value, [
+                'expires'  => $expires,
+                'path'     => $path,
+                'domain'   => $domain,
+                'secure'   => $secure,
+                'httponly' => $httpOnly,
+                'samesite' => $sameSite
+            ]);
         }
 
         if (Cookie::config()->uninherited('report_errors')) {

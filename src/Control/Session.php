@@ -6,6 +6,16 @@ use BadMethodCallException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\Deprecation;
 
+use function headers_sent;
+use function session_cache_limiter;
+use function session_id;
+use function session_name;
+use function session_save_path;
+use function session_set_cookie_params;
+use function session_start;
+
+use const PHP_VERSION_ID;
+
 /**
  * Handles all manipulation of the session.
  *
@@ -134,6 +144,12 @@ class Session
      * @var string
      */
     private static $cookie_name_secure = 'SECSESSID';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $cookie_samesite = '';
 
     /**
      * Name of session cache limiter to use.
@@ -307,7 +323,27 @@ class Session
         $data = [];
         if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
             if (!headers_sent()) {
-                session_set_cookie_params($timeout ?: 0, $path, $domain ?: null, $secure, true);
+                $sameSite = Cookie::get_valid_samesite_value(self::config()->get('cookie_samesite'), true);
+                // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#none
+                if ($sameSite === 'None') {
+                    $secure = true;
+                }
+
+                if (PHP_VERSION_ID < 70300 || '' === $sameSite) {
+                    if ('' !== $sameSite) {
+                        $path = "{$path}; SameSite={$sameSite}";
+                    }
+                    session_set_cookie_params($timeout, $path, $domain ?: null, $secure, true);
+                } else {
+                    session_set_cookie_params([
+                        'lifetime' => $timeout,
+                        'path'     => $path,
+                        'domain'   => $domain ?: null,
+                        'secure'   => $secure,
+                        'httponly' => true,
+                        'samesite' => $sameSite,
+                    ]);
+                }
 
                 $limiter = $this->config()->get('sessionCacheLimiter');
                 if (isset($limiter)) {

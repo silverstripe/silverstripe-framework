@@ -5,6 +5,11 @@ namespace SilverStripe\Control;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 
+use function in_array;
+use function strtolower;
+use function trim;
+use function ucfirst;
+
 /**
  * A set of static methods for manipulating cookies.
  */
@@ -18,6 +23,17 @@ class Cookie
      * @var bool
      */
     private static $report_errors = true;
+
+    /**
+     * @config
+     * @var string One of 'Strict', 'Lax', 'None', ''
+     */
+    private static $samesite = '';
+
+    /*
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#lax
+     */
+    private const SAMESITE_DEFAULT = 'Lax';
 
     /**
      * Fetch the current instance of the cookie backend.
@@ -91,5 +107,29 @@ class Cookie
     public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
         return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
+    }
+
+    /**
+     * Get a valid SameSite atribute value
+     *
+     * @internal Not part of public api: for internal use only
+     *
+     * @param string|null $sameSite
+     * @param bool $allowEmpty Alow returning an empty string
+     * @return string
+     */
+    public static function get_valid_samesite_value(string $sameSite = null, bool $allowEmpty = true): string
+    {
+        $sameSite = trim($sameSite ?? '');
+        if ('' === $sameSite && $allowEmpty) {
+            return $allowEmpty ? '' : self::SAMESITE_DEFAULT;
+        }
+
+        $sameSite = ucfirst(strtolower($sameSite));
+        if (in_array($sameSite, ['Strict', 'Lax', 'None'], true)) {
+            return $sameSite;
+        }
+
+        return $allowEmpty ? '' : self::SAMESITE_DEFAULT;
     }
 }
