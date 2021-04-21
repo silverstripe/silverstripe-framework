@@ -5,6 +5,8 @@ namespace SilverStripe\Control;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
 
+use const PHP_VERSION_ID;
+
 /**
  * A default backend for the setting and getting of cookies
  *
@@ -179,7 +181,7 @@ class CookieJar implements Cookie_Backend
                 $secure = true;
             }
 
-            if (PHP_VERSION_ID < 70300 || '' === $sameSite) {
+            if (PHP_VERSION_ID < 70300) {
                 if ('' !== $sameSite) {
                     $path = $path ?: '/'; // we must have a value for path to esploit the php bug for PHP<7.3
                     $path = "{$path}; SameSite={$sameSite}";

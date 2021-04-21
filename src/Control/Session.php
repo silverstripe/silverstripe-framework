@@ -329,7 +329,7 @@ class Session
                     $secure = true;
                 }
 
-                if (PHP_VERSION_ID < 70300 || '' === $sameSite) {
+                if (PHP_VERSION_ID < 70300) {
                     if ('' !== $sameSite) {
                         $path = "{$path}; SameSite={$sameSite}";
                     }
