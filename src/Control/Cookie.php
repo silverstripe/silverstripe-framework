@@ -121,7 +121,7 @@ class Cookie
     public static function get_valid_samesite_value(string $sameSite = null, bool $allowEmpty = true): string
     {
         $sameSite = trim($sameSite ?? '');
-        if ('' === $sameSite && $allowEmpty) {
+        if ('' === $sameSite) {
             return $allowEmpty ? '' : self::SAMESITE_DEFAULT;
         }
 
