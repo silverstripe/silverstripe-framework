@@ -246,6 +246,10 @@ class MySQLSchemaManager extends DBSchemaManager
         // MySQL 8.0.17 stopped reporting the width attribute for integers
         // https://github.com/silverstripe/silverstripe-framework/issues/9453
         // Note: MariaDB did not change its behaviour
+        $forceWidth = Config::inst()->get(self::class, 'schema_use_int_width');
+        if ($forceWidth !== null) {
+            return $forceWidth;
+        }
         $v = $this->database->getVersion();
         if (false !== strpos($v, 'MariaDB')) {
             // MariaDB is included in the version string: https://mariadb.com/kb/en/version/
