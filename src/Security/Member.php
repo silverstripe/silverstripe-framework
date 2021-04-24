@@ -871,6 +871,11 @@ class Member extends DataObject
      */
     public function onBeforeWrite()
     {
+        // Remove any line-break or space characters accidentally added during a copy-paste operation
+        if ($this->Email) {
+            $this->Email = trim($this->Email);
+        }
+        
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
