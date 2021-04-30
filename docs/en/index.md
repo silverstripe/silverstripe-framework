@@ -32,8 +32,7 @@ Once you have completed the [Getting Started](/getting_started) guide and have g
 installed and running, the following [Tutorials](http://silverstripe.org/learn/lessons) will lead through the basics and core concepts of 
 SilverStripe.
 
-Make sure you know the basic concepts of PHP5 before attempting to follow the tutorials. If you have not programmed with PHP5 be sure to read the [Introduction to PHP5 (zend.com)](http://devzone.zend.com/6/php-101--php-for-the-absolute-beginner).
-
+Make sure you know the basic concepts of PHP 7 before attempting to follow the tutorials.
 
 ## SilverStripe Concepts
 
