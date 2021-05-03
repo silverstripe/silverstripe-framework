@@ -266,4 +266,33 @@ class TreeDropdownFieldTest extends SapphireTest
         $field->getSchemaStateDefaults();
         $this->assertTrue(true);
     }
+
+    public function testTreeBaseID()
+    {
+        $treeBaseID = $this->idFromFixture(Folder::class, 'folder1');
+        $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
+
+        // getSchemaDataDefaults needs the field to be attach to a form
+        new Form(
+            null,
+            'mock',
+            new FieldList($field)
+        );
+
+        $this->assertEmpty($field->getTreeBaseID(), 'TreeBaseId does not have an initial value');
+
+        $field->setTreeBaseID($treeBaseID);
+        $this->assertEquals(
+            $treeBaseID,
+            $field->getTreeBaseID(),
+            'Value passed to setTreeBaseID is returned by getTreeBaseID'
+        );
+
+        $schema = $field->getSchemaDataDefaults();
+        $this->assertEquals(
+            $treeBaseID,
+            $schema['data']['treeBaseId'],
+            'TreeBaseId is included in the default schema data'
+        );
+    }
 }
