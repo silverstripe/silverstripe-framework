@@ -906,6 +906,7 @@ class TreeDropdownField extends FormField
         $data['data'] = array_merge($data['data'], [
             'urlTree' => $this->Link('tree'),
             'showSearch' => $this->getShowSearch(),
+            'treeBaseId' => $this->getTreeBaseID(),
             'emptyString' => $this->getEmptyString(),
             'hasEmptyDefault' => $this->getHasEmptyDefault(),
             'multiple' => false,
