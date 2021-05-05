@@ -117,7 +117,7 @@ class MyAdmin extends ModelAdmin
         // This format can be used to customise the URL segment for this Model. This can
         // be useful if you do not want the fully qualified class name of the Model to
         // appear in the URL. It can also be used to have the same Model appear more than
-        // once, allowing you to create custom views.
+        // once, allowing you to create custom views. (Only available in SS4.7+)
         'product-category' => [
             'dataClass' => Category::class,
             'title' => 'Product categories'
