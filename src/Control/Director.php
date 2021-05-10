@@ -854,6 +854,9 @@ class Director implements TemplateGlobalProvider
      * Useful to check before redirecting based on a URL from user submissions through $_GET or $_POST,
      * and avoid phishing attacks by redirecting to an attackers server.
      *
+     * Provides an extension point to allow extra checks on the URL to allow some external URLs,
+     * e.g. links on secondary domains that point to the same CMS, or subsite domains.
+     *
      * @param string $url
      *
      * @return bool
@@ -868,6 +871,11 @@ class Director implements TemplateGlobalProvider
         // Validate host[:port]
         $urlHost = static::parseHost($url);
         if ($urlHost && $urlHost === static::host()) {
+            return true;
+        }
+
+        // Allow extensions to weigh in (the extend method returns an empty array when no extension applied)
+        if (array_filter(static::singleton()->extend('checkIsSiteUrl', $url))) {
             return true;
         }
 
