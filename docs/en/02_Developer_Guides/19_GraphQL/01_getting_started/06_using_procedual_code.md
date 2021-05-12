@@ -55,7 +55,7 @@ use SilverStripe\GraphQL\Schema\Schema;
 
 class MySchema implements SchemaUpdater
 {
-    public static function updateSchema(Schema $schema): void
+    public static function updateSchema(Schema $schema, array $config = []): void
     {
         // update here
     }

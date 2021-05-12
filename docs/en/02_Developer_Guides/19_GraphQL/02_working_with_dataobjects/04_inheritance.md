@@ -53,60 +53,104 @@ query {
 }
 ```
 
-To solve this problem, the graphql module will automatically change these types of queries to return unions. Unions
-require the special `... on` syntax provided by the graphql spec.
+To solve this problem, the graphql module will automatically change these types of queries to return interfaces.
 
 ```graphql
 query {
-    readPages {
-        nodes {
-            ... on Page {
-                title
-                content
+    readPages { 
+        nodes { # <--- [PageInterface]
+            title
+            content
+        }
+    }
+}
+```
+
+But what about when we want more than `title` and `content`? In some cases, we'll want fields that are specific to
+`BlogPage`. When accessing fields for a specific implementation, we need to use an [inline fragment](https://graphql.org/learn/queries/#inline-fragments) to select them.
+
+```graphql
+query {
+    readPages { 
+        nodes { 
+            title 
+            content
+            ... on HomePage {
+                heroImage {
+                    url
+                }
             }
             ... on BlogPage {
                 date
+                author {
+                    firstName
+                }
             }
         }
     }
 }
 ```
 
-But now we have another problem -- when we get a `BlogPage` result, we won't get `title` and `content`, which we
-would probably want. We could just add these fields to both `... on` blocks, but that gets really repetitive. A better
-way to handle this is to use the common *interface* between `Page` and `BlogPage`.
+So the fields that are common to every possible type in the result set can be directly selected (with no `...on` 
+syntax), because they're part of the common interface. They're guaranteed to exist on every type. But for fields
+that only appear on some types, we need to be explicit.
 
-```graphql
+But let's take this a step further. What if there's another class in between? Imagine this ancestry:
+
+```
+Page:
+  EventPage:
+    ConferencePage
+    WebinarPage
+```
+
+We can use the intermediary interface `EventPageInterface` to consolidate fields that are unique to
+`ConferencePage` and `WebinarPage`.
+
+```
 query {
-    readPages {
-        nodes {
-            ... on PageInterface {
-                title
-                content
+    readPages { 
+        nodes { 
+            title 
+            content
+            ... on EventPageInterface {
+                numberOfTickets
+                featuredSpeaker {
+                    firstName
+                    email
+                }
+            }
+            ... on WebinarPage {
+                zoomLink
+            }
+            ... on ConferencePage {
+                venueSize
             }
             ... on BlogPage {
                 date
+                author {
+                    firstName
+                }
             }
         }
     }
 }
 ```
-Now, `BlogPage` will hit on `PageInterface` and `BlogPage`. You can kind of think of interfaces in this context
-as abstractions of *parent classes*.
+
+You can think of interfaces in this context as abstractions of *parent classes*.
 
 [info]
-A good way to determine whether you want an interface or a concrete type in your ...on block is to ask,
+A good way to determine whether you need an inline fragment is to ask,
 "Can this field appear on any other types in the query?" If the answer is yes, you want to use an interface, 
 which is usually the parent class with the "Interface" suffix.
 [/info]
 
 ### Inheritance: A deep dive
 
-There are several components to the way inheritance is handled at build time:
+There are two components to the way inheritance is handled at build time:
 
 * Implicit field / type exposure
 * Interface generation and assignment to types
-* Union generation and assignment to queries
 
 We'll look at each of these in detail.
 
@@ -192,7 +236,8 @@ interface ConferencePageInterface {
   title: String
   content: String
   numberOfTickets: Int
-  venueAddress: String
+  venueSize: Int
+  venurAddress: String
 }
 
 interface WebinarPageInterface {
@@ -227,9 +272,60 @@ interface DataObjectInterface {
 type Page implements PageInterface & DataObjectInterface {}
 ```
 
-#### Union generation and assignment to queries
+#### Elemental
 
-Models that have descendants will create unions that include themselves and all of their descendants. For queries that return those models, a union is put in its place.
+Almost by definition, content blocks are always abstractions. You're never going to query for a `BaseElement` type 
+specifically. You're always asking for an assortment of its descendants, which adds a lot of polymorphism to
+the query.
+
+```graphql
+query {
+  readElementalPages {
+    nodes {
+      elementalArea {
+        elements {
+          nodes {            
+            title
+            id            
+            ... on ContentBlock {
+              html
+            }
+            ... on CTABlock {
+              link
+              linkText
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+
+### Optional: Use unions instead of interfaces
+
+You can opt out of using interfaces as your return types for queries and instead use a union of all the concrete
+types. This comes at a cost of potentially breaking your API unexpectedly (described below), so it is not enabled by
+default. There is no substantive advantage to using unions over interfaces for your query return types. It would
+typically only be done for conceptual purposes.
+
+To use unions, turn on the `useUnionQueries` setting.
+
+```yaml
+SilverStripe\GraphQL\Schema\Schema:
+  schemas:
+    default:
+      config:
+        modelConfig:
+          DataObject:
+            plugins:
+              inheritance:
+                useUnionQueries: true
+```
+
+This means that models that have descendants will create unions that include themselves and all of their descendants.
+For queries that return those models, a union is put in its place.
 
 Serviced by: `SilverStripe\GraphQL\Schema\DataObject\InheritanceUnionBuilder`
 
@@ -250,7 +346,8 @@ union PageInheritanceUnion = Page | BlogPage | EventsPage | ConferencePage | Web
 union EventsPageInheritanceUnion = EventsPage | ConferencePage | WebinarPage
 ```
 
-"Leaf" models like `BlogPage`, `ConferencePage`, and `WebinarPage` that have no exposed descendants will not create unions, as they are functionally useless.
+"Leaf" models like `BlogPage`, `ConferencePage`, and `WebinarPage` that have no exposed descendants will not create 
+unions, as they are functionally useless.
 
 This means that queries for `readPages` and `readEventsPages` will now return unions.
 
@@ -277,42 +374,7 @@ query {
 }
 ```
 
-
-As mentioned above, a good way of negotiating whether to use interfaces or types in the `... on` block is to 
-ask the question "Could this field appear on more than one type?" If the answer is yes, you want an interface.
-
-#### Elemental
-
-Almost by definition, content blocks are always abstractions. You're never going to query for a `BaseElement` type specifically. You're always asking for an assortment of its descendants, which adds a lot of polymorphism to 
-the query.
-
-```graphql
-query {
-  readElementalPages {
-    nodes {
-      elementalArea {
-        elements {
-          nodes {
-            ... on BaseElementInterface {
-              title
-              id
-            }
-            ... on ContentBlock {
-              html
-            }
-            ... on CTABlock {
-              link
-              linkText
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### Lookout for the footgun!
+#### Lookout for the footgun!
 
 Because unions are force substituted for your queries when a model has exposed descendants, it is possible that adding
 a subclass to a model will break your queries without much warning to you.
@@ -376,7 +438,8 @@ query {
 }
 ```
 
-
+Had we used interfaces, this wouldn't have broken, because the `price` field would have been on `ProductInterface`
+and directly queryable (without the inline fragment).
 
 ### Further reading
 
