@@ -266,7 +266,7 @@ $last = $players->last();
 
 ## Sorting
 
-If would like to sort the list by `FirstName` in a ascending way (from A to Z).
+If you would like to sort the list by `FirstName` in an ascending way (from A to Z).
 
 ```php
  // Sort can either be Ascending (ASC) or Descending (DESC)
@@ -663,7 +663,7 @@ $members = Member::get()
 ```
 
 [alert]
-Passing a *$join* statement to will filter results further by the JOINs performed against the foreign table. It will 
+Passing a *$join* statement will filter results further by the JOINs performed against the foreign table. It will 
 **not** return the additionally joined data.
 [/alert]
 
