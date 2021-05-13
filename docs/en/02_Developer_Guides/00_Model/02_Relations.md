@@ -324,7 +324,7 @@ This is declared via array syntax, with the following keys on the many_many:
  - `from` Name of the has_one relationship pointing back at the object declaring many_many
  - `to` Name of the has_one relationship pointing to the object declaring belongs_many_many.
 
-Just like a any normal DataObject, you can apply a default sort which will be applied when
+Just like in any normal DataObject, you can apply a default sort which will be applied when
 accessing many many through relations.
 
 Note: The `through` class must not also be the name of any field or relation on the parent
@@ -442,7 +442,7 @@ The joined record can be accessed via `Join` or `TeamSupporter` property (many_m
 <% with $Supporter %>
     <% loop $Supports %>
         Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
-    <% end_if %>
+    <% end_loop %>
 <% end_with %>
 ```
 
