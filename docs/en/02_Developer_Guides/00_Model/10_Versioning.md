@@ -161,7 +161,7 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 You can use the `owns` static private property on a DataObject to specify which relationships are ownership relationships. The `owns` property should be defined on the _owner_ DataObject.
 
-For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` own many `Banners`, which in turn own an `Image`.
+For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn owns an `Image`.
 
 
 ```php
