@@ -7,7 +7,7 @@ icon: hammer
 # Scaffolding
 
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 
-SilverStripe will use that information to provide scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
+SilverStripe will use that information to scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans). You can then further 
 customise those fields as required.
 
@@ -232,7 +232,7 @@ class MyDataObject extends DataObject
 
 ```
 
-In order to re-label any summary fields, you can use the $field_labels static.
+In order to re-label any summary fields, you can use the `$field_labels` static.
 
 ```php
 use SilverStripe\ORM\DataObject;
