@@ -139,7 +139,7 @@ function which would build the INSERT and UPDATE queries on the fly. This method
 still exists, but internally uses `SQLUpdate` / `SQLInsert`, although the actual
 query construction is now done by the `DBQueryBuilder` object.
 
-Each of these classes implements the interface `SQLWriteExpression`, noting that each
+Each of these classes implement the interface `SQLWriteExpression`, noting that each
 accepts write key/value pairs in a number of similar ways. These include the following
 API methods:
 
@@ -150,7 +150,7 @@ API methods:
    in the format `['Column' => ['SQL' => ['parameters]]]`
  * `assign` - Singular form of addAssignments, but only assigns a single column value
  * `assignSQL` - Assigns a column the value of a specified SQL expression without parameters
-   `assignSQL('Column', 'SQL)` is shorthand for `assign('Column', ['SQL' => []])`
+   `assignSQL('Column', 'SQL')` is shorthand for `assign('Column', ['SQL' => []])`
 
 SQLUpdate also includes the following API methods:
 
