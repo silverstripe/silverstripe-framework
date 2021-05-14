@@ -143,7 +143,7 @@ class Page extends SiteTree
     }
 }
 ```
-The final step is the render this into the template using the [GroupedList::GroupedBy()](api:SilverStripe\ORM\GroupedList::GroupedBy()) method.
+The final step is to render this into the template using the [GroupedList::GroupedBy()](api:SilverStripe\ORM\GroupedList::GroupedBy()) method.
 
 ```ss
 // Modules list grouped by the Month Posted
