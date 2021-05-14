@@ -110,10 +110,10 @@ foreach ($members as $member) {
 }
 ```
 
-They are some limitations:
+There are some limitations:
 * `chunkedFetch()` will ignore any limit or offset you have applied to your DataList
-* you can not "count" a chunked list or do any other call against it aside from iterating it
-* while iterating over a chunked list, you can not perform any operation that would alter the order of the items.
+* you cannot "count" a chunked list or do any other call against it aside from iterating it
+* while iterating over a chunked list, you cannot perform any operation that would alter the order of the items.
 
 ## ArrayList
 
