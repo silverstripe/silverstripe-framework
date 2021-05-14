@@ -77,7 +77,7 @@ class Car extends DataObject
 When adding a new `$db` field to a DataObject you can specify a default value
 to be applied to all existing records when the column is added in the database
 for the first time. This will also be applied to any newly created objects
-going forward. You do this be passing an argument for the default value in your 
+going forward. You do this by passing an argument for the default value in your 
 `$db` items. 
 
 For integer values, the default is the first parameter in the field specification.
@@ -104,7 +104,7 @@ class Car extends DataObject
 The Data Type does more than setup the correct database schema. They can also define methods and formatting helpers for
 output. You can manually create instances of a Data Type and pass it through to the template. 
 
-If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
+In this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
 **app/code/Player.php**
@@ -134,7 +134,7 @@ echo $player->getName();
 // returns "Sam Minnée";
 
 echo $player->getName()->LimitCharacters(2);
-// returns "Sa.."
+// returns "Sa…"
 ```
 
 ## Casting
