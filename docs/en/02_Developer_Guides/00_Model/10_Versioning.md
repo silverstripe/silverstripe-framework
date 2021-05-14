@@ -31,13 +31,13 @@ The second module extends CMS History UI adding control over nested objects.
 
 ## Understanding versioning concepts
 
-This section discuss how SilverStripe implements versioning and related high level concepts without digging into technical details.
+This section discusses how SilverStripe implements versioning and related high level concepts without digging into technical details.
 
 ### Stages
 
 In most cases, you'll want to have one polished version of a `Page` visible to the general public while your editors might be working off a draft version. SilverStripe handles this through the concept of _stage_.
 
-By default, adding the `Versioned` extension to a DataObject will create a 2 stages:
+By default, adding the `Versioned` extension to a DataObject will create 2 stages:
 * "Stage" for tracking draft content
 * "Live" for tracking content publicly visible.
 
@@ -45,7 +45,7 @@ Publishing a versioned `DataObject` is equivalent to copying the version from th
 
 You can disable stages if your DataObject doesn't require a published version. This will allow you to keep track of all changes that have been applied to a DataObject and who made them.
 
-### Ownership and relations between DataObject {#ownership}
+### Ownership and relations between DataObjects {#ownership}
 
 Typically when publishing versioned DataObjects, it is necessary to ensure that some linked components
 are published along with it. Unless this is done, site content can appear incorrectly published.
@@ -59,9 +59,9 @@ and has_one/has_many, however it relies on a pre-existing relationship to functi
 
 #### Cascade publishing
 
-If an object "owns" other objects, you'll usually want to publish the children object when the parent object gets published. If those children objects themselves own other objects, you'll want the grand-children to be published along with the parent.
+If an object "owns" other objects, you'll usually want to publish the child objects when the parent object gets published. If those child objects themselves own other objects, you'll want the grand-children to be published along with the parent.
 
-SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish a object. When a object is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication, will also cascade to children of children and so on.
+SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish an object. When an object is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication will also cascade to children of children and so on.
 
 A non-recursive publish operation is also available if you want to publish a new version of a object without cascade publishing all its children.
 
@@ -75,21 +75,21 @@ on the owner, but not on the owned object.
 
 An unversioned object can own other versioned object. An unversioned object can be configured to automatically publish children versioned objects on save.
 
-An unversioned object can also be owned by a versioned object. This can be used to recursively publish _children-of-children_ object without requiring the intermediate relationship to go through a versioned object. This behavior can be helpful if you wish to group multiple versioned object together.
+An unversioned object can also be owned by a versioned object. This can be used to recursively publish _children-of-children_ object without requiring the intermediate relationship to go through a versioned object. This behavior can be helpful if you wish to group multiple versioned objects together.
 
 #### Ownership through media insertion in content
 
-Images and other files are tracked as versioned object. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. SilverStripe will automatically pick up when a object references a files through an HTML text field and recursively publish those files.
+Images and other files are tracked as versioned objects. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. SilverStripe will automatically pick up when an object references files through an HTML text field and recursively publish those files.
 
 This behavior works both for versioned and unversioned objects.
 
 ### Grouping versioned DataObjects into a ChangeSet (aka Campaigns)
 
-Sometimes, multiple pages or records may be related in organic ways that can not be properly expressed through an ownership relation. There's still value in being able to publish those as a block.
+Sometimes, multiple pages or records may be related in organic ways that cannot be properly expressed through an ownership relation. There's still value in being able to publish those as a block.
 
-For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsors records, etc. All this content needs to become visible simultaneously.
+For example, your editors may be about to launch a new contest through their website. They've drafted a page to promote the contest, another page with the rules and conditions, a registration page for users to sign up, some promotional images, new sponsor records, etc. All this content needs to become visible simultaneously.
 
-Changes to many objects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet` through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
+Changes to many objects can be grouped together using the [`ChangeSet`](api:SilverStripe\Versioning\ChangeSet) object. In the CMS, editors can manage `ChangeSet`s through the "Campaign" section, if the `silverstripe/campaign-admin` module is installed). By grouping a series of content changes together as cohesive unit, content editors can bulk publish an entire body of content all at once, which affords them much more power and control over interdependent content types.
 
 Records can be added to a changeset in the CMS by using the "Add to campaign" button
 that is available on the edit forms of all pages and files. Programmatically, this is done by creating a `SilverStripe\Versioned\ChangeSet` object and invoking its `addObject(DataObject $record)` method.
@@ -147,7 +147,7 @@ class VersionedModel extends DataObject
 ```
 
 [notice]
-The extension is automatically applied to `SiteTree` class. For more information on extensions see
+The extension is automatically applied to the `SiteTree` class. For more information on extensions see
 <a href="../extending">extending</a> and the <a href="../configuration">Configuration</a> documentation.
 [/notice]
 
@@ -161,7 +161,7 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 You can use the `owns` static private property on a DataObject to specify which relationships are ownership relationships. The `owns` property should be defined on the _owner_ DataObject.
 
-For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn owns an `Image`.
+For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn own an `Image`.
 
 
 ```php
@@ -694,7 +694,7 @@ By default, `Versioned` will come out of the box with security extensions which 
 [alert]
 As is standard practice, user code should always invoke `canView()` on any object before
 rendering it. DataLists do not filter on `canView()` automatically, so this must be
-done via user code. This be be achieved either by wrapping `<% if $canView %>;` in
+done via user code. This can be achieved either by wrapping `<% if $canView %>;` in
 your template, or by implementing your visibility check in PHP.
 [/alert]
 
@@ -706,7 +706,7 @@ Versioned DataObjects get additional permission check methods to verify what ope
 * `canArchive()`
 * `canViewVersioned()`.
 
-These methods accept an optional Member argument. If not provided, they will assume you want to check the permission against the current Member. When performing version operation on behalf of a Member, you'll probably want to use these method to confirm they are authorised,
+These methods accept an optional Member argument. If not provided, they will assume you want to check the permission against the current Member. When performing a version operation on behalf of a Member, you'll probably want to use these methods to confirm they are authorised,
 
 ```php
 <?php
@@ -720,7 +720,7 @@ if ($record->canPublish($member)) {
 
 ```
 
-There's also a `canViewStage()` method which can be use to check if a Member can access a specific stage.
+There's also a `canViewStage()` method which can be used to check if a Member can access a specific stage.
 
 ```php
 <?php
@@ -739,7 +739,7 @@ $record->canViewStage();
 
 #### Customising permissions for a versioned DataObject
 
-Versioned object visibility can be customised in one of the following ways by editing your user code:
+The versioned object visibility can be customised in one of the following ways by editing your user code:
 
  * Override the `canViewVersioned` method in your code. Make sure that this returns true or
    false if the user is not allowed to view this object in the current viewing mode.
@@ -827,8 +827,8 @@ Since the `Versioned` extension is primarily used for page objects, the underlyi
 
 #### Templates Variables
 
-In templates, you don't need to worry about this distinction. The `$Content` variable contain the published content by
-default, and only preview draft content if explicitly requested (e.g. by the "preview" feature in the CMS, or by adding ?stage=Stage to the URL). If you want
+In templates, you don't need to worry about this distinction. The `$Content` variable contains the published content by
+default, and previews draft content only if explicitly requested (e.g. by the "preview" feature in the CMS, or by adding ?stage=Stage to the URL). If you want
 to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
 
 **app/code/MyController.php**
@@ -842,11 +842,11 @@ public function init()
 
 ### Low level write and publication methods
 
-SilverStripe will usually call these low level methods for you when you. However if you have specialised needs, you may call them directly.
+SilverStripe will usually call these low level methods for you. However if you have specialized needs, you may call them directly.
 
 To move a saved version from one stage to another, call [writeToStage(stage)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
 
-`copyVersionToStage($versionID, $stage)` allow you to restore a previous version to a specific stage. This is used internally when performing a rollback.
+`copyVersionToStage($versionID, $stage)` allows you to restore a previous version to a specific stage. This is used internally when performing a rollback.
 
 The current stage is stored as global state on the `Versioned` object. It is usually modified by controllers, e.g. when a preview is initialized. But it can also be set and reset temporarily to force a specific operation to run on a certain stage.
 
@@ -1299,7 +1299,7 @@ public function getCMSFields()
 
 ### Previewable DataObjects
 
-History viewer will automatically detect and render a side-by-side preview panel for DataObjects that implement
+The history viewer will automatically detect and render a side-by-side preview panel for DataObjects that implement
 [CMSPreviewable](api:SilverStripe\ORM\CMSPreviewable). Please note that if you are adding this functionality, you
 will also need to expose the `AbsoluteLink` field in your GraphQL read scaffolding, and add it to the fields in
 `readOneMyVersionedObjectQuery`.
