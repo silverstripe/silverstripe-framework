@@ -161,7 +161,7 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 You can use the `owns` static private property on a DataObject to specify which relationships are ownership relationships. The `owns` property should be defined on the _owner_ DataObject.
 
-For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` owns many `Banners`, which in turn own an `Image`.
+For example, let's say you have a `MyPage` page type that displays banners containing an image. Each `MyPage` own many `Banners`, which in turn own an `Image`.
 
 
 ```php
@@ -739,7 +739,7 @@ $record->canViewStage();
 
 #### Customising permissions for a versioned DataObject
 
-The versioned object visibility can be customised in one of the following ways by editing your user code:
+`Versioned` object visibility can be customised in one of the following ways by editing your user code:
 
  * Override the `canViewVersioned` method in your code. Make sure that this returns true or
    false if the user is not allowed to view this object in the current viewing mode.
@@ -842,7 +842,7 @@ public function init()
 
 ### Low level write and publication methods
 
-SilverStripe will usually call these low level methods for you. However if you have specialized needs, you may call them directly.
+SilverStripe will usually call these low level methods for you. However if you have specialised needs, you may call them directly.
 
 To move a saved version from one stage to another, call [writeToStage(stage)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
 
