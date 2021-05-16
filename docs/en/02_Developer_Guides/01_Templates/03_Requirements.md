@@ -158,7 +158,7 @@ Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides
     '<my-module-dir>/javascript/src/main.js',
     '<my-module-dir>/javascript/src/functions.js'
 ]]);
-Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
+Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will skip this file
 ```
 
 You can also use the second argument to add the 'async' and/or 'defer attributes to the script tag generated:
@@ -175,7 +175,7 @@ Requirements::javascript(
 
 ### Custom Inline CSS or Javascript
 
-You can also quote custom script directly. This may seem a bit ugly, but is useful when you need to transfer some kind
+You can also quote custom scripts directly. This may seem a bit ugly, but is useful when you need to transfer some kind
 of 'configuration' from the database in a raw format.  You'll need to use the `heredoc` syntax to quote JS and CSS, 
 this is generally speaking the best way to do these things - it clearly marks the copy as belonging to a different
 language.
