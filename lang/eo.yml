@@ -27,8 +27,6 @@ eo:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Malvalida peto'
     REQUEST_ABORTED: 'Ĉesigis peton'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Nekonata
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Konfirmi eble danĝeran operacion'
     INFO_TITLE: 'Sekurecon konfirmi'
@@ -182,6 +180,8 @@ eo:
     ANY: Ajna
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Tro multaj rilataj objektoj; retropaŝa kampo uzata'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Tro da idoj ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -365,3 +365,5 @@ eo:
     NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
     PASSWORDRESETSENTHEADER: 'Pasvorta reagorda ligilo sendiĝis'
     PASSWORDRESETSENTTEXT: 'Dankon. Reagorda ligilo sendiĝis, kondiĉe ke konto ekzistas por ĉi tiu retadreso.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Okazis problemo ŝargi la aŭdvidaĵon.'

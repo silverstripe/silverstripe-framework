@@ -27,8 +27,6 @@ fi_FI:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
     REQUEST_ABORTED: 'Pyyntö keskeytetty'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Tuntematon
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Vahvista mahdollisesti kohtalokas toimenpide'
     INFO_TITLE: Suojausvahvistus

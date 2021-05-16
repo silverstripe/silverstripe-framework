@@ -27,8 +27,6 @@ sl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neveljavni zahtevek'
     REQUEST_ABORTED: 'Zahtevek prekinjen'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Neznana
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Potrdite potencialno škodljivo akcijo'
     INFO_TITLE: 'Varnostno preverjanje'
@@ -196,6 +194,8 @@ sl:
     ANY: Katerikoli
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Vnosov je preveč, da bi jih lahko ustrezno prikazali, zato je uporabljeno sistemsko polje. '
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Preveč ({count}) elementov v hierarhiji'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -395,3 +395,5 @@ sl:
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
     PASSWORDRESETSENTHEADER: 'Povezavo za ponovno nastavitev gesla smo vam poslali po e-pošti.'
     PASSWORDRESETSENTTEXT: 'Povezavo za ponovno nastavitev gesla smo vam poslali po e-pošti, če uporabnik s tem e-naslovom obstaja.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Težava pri nalaganju datoteke zaradi napačnega naslova URL. '

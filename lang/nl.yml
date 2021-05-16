@@ -27,8 +27,6 @@ nl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Fout bij verwerken'
     REQUEST_ABORTED: 'Fout bij verwerken (geannuleerd)'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Onbekend
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bevestig het uitvoeren van mogelijk gevaarlijke taak'
     INFO_TITLE: Beveiligingswaarschuwing
@@ -182,6 +180,8 @@ nl:
     ANY: Elke
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Teveel keuzes in de lijst; een alternatief veld wordt getoond.'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: ...
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Teveel onderliggende items ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -365,3 +365,5 @@ nl:
     NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
     PASSWORDRESETSENTHEADER: Verzonden
     PASSWORDRESETSENTTEXT: 'Bedankt! Er is een link verstuurd om uw wachtwoord opnieuw in te stellen (mits het e-mailadres reeds bekend is bij ons).'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Het inladen van de media-bestanden is mislukt.'
