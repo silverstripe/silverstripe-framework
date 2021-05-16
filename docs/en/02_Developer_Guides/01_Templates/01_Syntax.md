@@ -50,7 +50,7 @@ text-based format.
 
 ## Template file location
 
-SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of
+SilverStripe templates are plain text files that have an `.ss` extension and are located within the `templates` directory of
 a module, theme, or your `app/` folder.
 
 By default, templates will have the same name as the class they are used to render. So, your `Page` class will
@@ -272,7 +272,7 @@ include.
 
 ## Looping Over Lists
 
-The `<% loop %>` tag is used to iterate or loop over a collection of items such as [DataList](api:SilverStripe\ORM\DataList) or a [ArrayList](api:SilverStripe\ORM\ArrayList) 
+The `<% loop %>` tag is used to iterate or loop over a collection of items such as [DataList](api:SilverStripe\ORM\DataList) or an [ArrayList](api:SilverStripe\ORM\ArrayList) 
 collection.
 
 ```ss
@@ -288,7 +288,7 @@ This snippet loops over the children of a page, and generates an unordered list 
 page. 
 
 [notice]
-$Title inside the loop refers to the Title property on each object that is looped over, not the current page like
+The `$Title` inside the loop refers to the Title property on each object that is looped over, not the current page like
 the reference of `$Title` outside the loop. 
 
 This demonstrates the concept of [Scope](#scope). When inside a <% loop %> the scope of the template has changed to the 
@@ -386,7 +386,7 @@ pagination.
 
 ### Modulus and MultipleOf
 
-$Modulus and $MultipleOf can help to build column and grid layouts.
+`$Modulus` and `$MultipleOf` can help to build column and grid layouts.
 
 ```ss
 // returns an int
@@ -409,7 +409,7 @@ $MultipleOf(factor, offset)
 `clear: both` to `.column-1`.
 [/hint]
 
-$MultipleOf(value, offset) can also be utilized to build column and grid layouts. In this case we want to add a `<br>` 
+`$MultipleOf(value, offset)` can also be utilized to build column and grid layouts. In this case we want to add a `<br>` 
 after every 3rd item.
 
 ```ss
@@ -450,7 +450,7 @@ For more information on formatting and casting variables see [Formating, Modifyi
 ## Scope
 
 In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<% loop %>...<% end_loop %>`, we were in 
-the scope of the top level `Page`. But inside the loop, we were in the scope of an item in the list (i.e the `Child`) 
+the scope of the top level `Page`. But inside the loop, we were in the scope of an item in the list (i.e the `Child`).
 
 The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a `Page.ss` 
 layout template is the [PageController](api:SilverStripe\CMS\Controllers\ContentController\PageController) that is currently being rendered. 
