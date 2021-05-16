@@ -98,7 +98,7 @@ to determine resolution priority. This search is based on the following three co
  - `SilverStripe\View\SSViewer.themes` - The list of all themes in order of priority (highest first).
    This includes the default set via `$default` as a theme set. This config is normally set by the web
    developer.
- - `SilverStripe\Core\Manifest\ModuleManifest.module_priority` - The list of modules within which $default
+ - `SilverStripe\Core\Manifest\ModuleManifest.module_priority` - The list of modules within which `$default`
    theme templates should be sorted, in order of priority (highest first). This config is normally set by
    the module author, and does not normally need to be customised. This includes the `$project` and
    `$other_modules` placeholder values.
@@ -166,7 +166,7 @@ will only defer to our modules templates folder if not found elsewhere.
 
 The default project structure contains an `app/` folder,
 which also acts as as a module in terms of template priorities.
-See [/getting_started/directory_structure](Directory Structure)
+See [Directory Structure](/../getting_started/directory_structure)
 to find out how to rename this folder.
 
 ### About module "names"
