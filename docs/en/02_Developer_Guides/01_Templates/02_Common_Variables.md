@@ -7,7 +7,7 @@ summary: Some of the common variables and methods your templates can use, includ
 
 The page below describes a few of common variables and methods you'll see in a SilverStripe template. This is not an
 exhaustive list. From your template you can call any method, database field, or relation on the object which is
-currently in scope as well as its' subclasses or extensions.
+currently in scope as well as its subclasses or extensions.
 
 Knowing what methods you can call can be tricky, but the first step is to understand the scope you're in. Scope is
 explained in more detail on the [syntax](syntax#scope) page. Many of the methods listed below can be called from any
@@ -99,7 +99,7 @@ more details).
 
 [notice]
 `SiteConfig` is a module that is bundled with the CMS. If you wish to include `SiteConfig` in your framework only
-web pages. You'll need to install it via composer.
+web pages, you'll need to install it via composer.
 [/notice]
 
 ```ss
@@ -381,7 +381,7 @@ To customise the markup that `$Breadcrumbs` generates, copy `templates/Breadcrum
 $Form
 ```
 
-A page will normally contain some content and potentially a form of some kind. For example, the log-in page has a the
+A page will normally contain some content and potentially a form of some kind. For example, the log-in page has a
 SilverStripe log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form.
 Placing it just below `$Content` is a good default.
 
