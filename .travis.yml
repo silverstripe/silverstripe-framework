@@ -5,7 +5,6 @@ import:
 
 env:
   global:
-    - COMPOSER_ROOT_VERSION="4.x-dev"
     - REQUIRE_RECIPE="4.x-dev"
 
 # Using a manual matrix to exlude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
