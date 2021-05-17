@@ -17,7 +17,7 @@ output the result of the [DBHtmlText::FirstParagraph()](api:SilverStripe\ORM\Fie
 
 ```ss
 $Content.FirstParagraph
-<!-- returns the result of HtmlText::FirstParagragh() -->
+<!-- returns the result of DBHtmlText::FirstParagragh() -->
 
 $LastEdited.Format("d/m/Y")
 <!-- returns the result of DBDatetime::Format("d/m/Y") -->
@@ -72,7 +72,7 @@ $Me
 ## Casting
 
 Methods which return data to the template should either return an explicit object instance describing the type of 
-content that method sends back, or, provide a type in the `$casting` array for the object. When rendering that method 
+content that method sends back, or provide a type in the `$casting` array for the object. When rendering that method 
 to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
 
 ```php
