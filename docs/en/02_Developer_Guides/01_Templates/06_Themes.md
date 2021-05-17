@@ -75,7 +75,7 @@ A `theme` within SilverStripe is simply a collection of templates and other fron
 
 ![themes:basicfiles.gif](../../_images/basicfiles.gif)
 
-SilverStripe 4 has support for cascading themes, which will allow users to define multiple themes for a project. This means you can have a template defined in any theme, and have it continue to look back through the list of themes until a match it found.
+SilverStripe 4 has support for cascading themes, which will allow users to define multiple themes for a project. This means you can have a template defined in any theme, and have it continue to look back through the list of themes until a match is found.
 
 To define extra themes simply add extra entries to the `SilverStripe\View\SSViewer.themes` configuration array. You will probably always want to ensure that you include `'$default'` in your list of themes to ensure that the base templates are used when required.
 
@@ -87,7 +87,7 @@ If you want to submit your theme to the SilverStripe addons directory then check
 * Templates should not contain text inside images and all images provided must be open source and not break any 
 copyright or license laws. This includes any icons your template uses.
 * A theme does not include any PHP files. Only CSS, HTML, images and javascript.
-* Your theme contains a `composer.json` file specifying the theme name, author and license, and that it has `"type": "silverstripe-theme"`.
+* That your theme contains a `composer.json` file specifying the theme name, author and license, and that it has `"type": "silverstripe-theme"`.
 
 Once you've created your module and set up your Composer configuration, create a new repository and push your theme to a Git host such as [GitHub.com](https://github.com). 
 
