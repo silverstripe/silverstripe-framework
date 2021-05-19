@@ -465,7 +465,7 @@ class DataQuery
         // statement anyway
         $statement = $this->getFinalisedQuery();
 
-        // Clear limit, distinct, and order as it's not relevant for an exists query
+        // Clear distinct, and order as it's not relevant for an exists query
         $statement->setDistinct(false);
         $statement->setOrderBy(null);
 
