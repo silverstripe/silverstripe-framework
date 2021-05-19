@@ -63,7 +63,7 @@ class Page extends SiteTree
         'MyShortCodeMethod' => 'HTMLText'
     ];
 
-    public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) 
+    public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName = null) 
     {
         return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
     }
