@@ -332,6 +332,8 @@ class PageController extends ContentController
 
 ```
 
+See [how_tos/handle_nested_data](How to: Handle nested form data) for more advanced use cases.
+
 ## Validation
 
 Form validation is handled by the [Validator](api:SilverStripe\Forms\Validator) class and the `validator` property on the `Form` object. The validator 

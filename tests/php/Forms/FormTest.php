@@ -88,7 +88,8 @@ class FormTest extends FunctionalTest
                 new TextField('key1'),
                 new TextField('namespace[key2]'),
                 new TextField('namespace[key3][key4]'),
-                new TextField('othernamespace[key5][key6][key7]')
+                new TextField('othernamespace[key5][key6][key7]'),
+                new TextField('dot.field')
             ),
             new FieldList()
         );
@@ -108,7 +109,9 @@ class FormTest extends FunctionalTest
                         'key7' => 'val7'
                     ]
                 ]
-            ]
+            ],
+            'dot.field' => 'dot.field val'
+
         ];
 
         $form->loadDataFrom($requestData);
@@ -118,6 +121,7 @@ class FormTest extends FunctionalTest
         $this->assertEquals('val2', $fields->fieldByName('namespace[key2]')->Value());
         $this->assertEquals('val4', $fields->fieldByName('namespace[key3][key4]')->Value());
         $this->assertEquals('val7', $fields->fieldByName('othernamespace[key5][key6][key7]')->Value());
+        $this->assertEquals('dot.field val', $fields->fieldByName('dot.field')->Value());
     }
 
     public function testSubmitReadonlyFields()
@@ -186,7 +190,8 @@ class FormTest extends FunctionalTest
                 new TextField('Name'), // appears in both Player and Team
                 new TextareaField('Biography'),
                 new DateField('Birthday'),
-                new NumericField('BirthdayYear') // dynamic property
+                new NumericField('BirthdayYear'), // dynamic property
+                new TextField('FavouriteTeam.Name') // dot syntax
             ),
             new FieldList()
         );
@@ -200,6 +205,7 @@ class FormTest extends FunctionalTest
                 'Biography' => 'Bio 1',
                 'Birthday' => '1982-01-01',
                 'BirthdayYear' => '1982',
+                'FavouriteTeam.Name' => 'Team 1',
             ],
             'LoadDataFrom() loads simple fields and dynamic getters'
         );
@@ -213,6 +219,7 @@ class FormTest extends FunctionalTest
                 'Biography' => null,
                 'Birthday' => null,
                 'BirthdayYear' => 0,
+                'FavouriteTeam.Name' => null,
             ],
             'LoadNonBlankDataFrom() loads only fields with values, and doesnt overwrite existing values'
         );
@@ -229,6 +236,7 @@ class FormTest extends FunctionalTest
                 new TextareaField('Biography'),
                 new DateField('Birthday'),
                 new NumericField('BirthdayYear'), // dynamic property
+                new TextField('FavouriteTeam.Name'), // dot syntax
                 $unrelatedField = new TextField('UnrelatedFormField')
                 //new CheckboxSetField('Teams') // relation editing
             ),
@@ -245,6 +253,7 @@ class FormTest extends FunctionalTest
                 'Biography' => 'Bio 1',
                 'Birthday' => '1982-01-01',
                 'BirthdayYear' => '1982',
+                'FavouriteTeam.Name' => 'Team 1',
                 'UnrelatedFormField' => 'random value',
             ],
             'LoadDataFrom() doesnt overwrite fields not found in the object'
@@ -261,6 +270,7 @@ class FormTest extends FunctionalTest
                 'Biography' => '',
                 'Birthday' => '',
                 'BirthdayYear' => 0,
+                'FavouriteTeam.Name' => null,
                 'UnrelatedFormField' => null,
             ],
             'LoadDataFrom() overwrites fields not found in the object with $clearMissingFields=true'

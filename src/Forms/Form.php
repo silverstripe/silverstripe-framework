@@ -1463,10 +1463,16 @@ class Form extends ViewableData implements HasRequestHandler
 
             if (is_object($data)) {
                 // Allow dot-syntax traversal of has-one relations fields
-                if (strpos($name, '.') !== false && $data->hasMethod('relField')) {
-                    $val = $data->relField($name);
-                    $exists = true;
-
+                if (strpos($name, '.') !== false) {
+                    $exists = (
+                        $data->hasMethod('relField')
+                    );
+                    try {
+                        $val = $data->relField($name);
+                    } catch (\LogicException $e) {
+                        // There's no other way to tell whether the relation actually exists
+                        $exists = false;
+                    }
                 // Regular ViewableData access
                 } else {
                     $exists = (
