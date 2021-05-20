@@ -1462,19 +1462,39 @@ class Form extends ViewableData implements HasRequestHandler
             $val = null;
 
             if (is_object($data)) {
-                $exists = (
-                    isset($data->$name) ||
-                    $data->hasMethod($name) ||
-                    ($data->hasMethod('hasField') && $data->hasField($name))
-                );
+                // Allow dot-syntax traversal of has-one relations fields
+                if (strpos($name, '.') !== false) {
+                    $exists = (
+                        $data->hasMethod('relField')
+                    );
+                    try {
+                        $val = $data->relField($name);
+                    } catch (\LogicException $e) {
+                        // There's no other way to tell whether the relation actually exists
+                        $exists = false;
+                    }
+                // Regular ViewableData access
+                } else {
+                    $exists = (
+                        isset($data->$name) ||
+                        $data->hasMethod($name) ||
+                        ($data->hasMethod('hasField') && $data->hasField($name))
+                    );
 
-                if ($exists) {
-                    $val = $data->__get($name);
+                    if ($exists) {
+                        $val = $data->__get($name);
+                    }
                 }
+
+            // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
+                // PHP turns the '.'s in POST vars into '_'s
+                } elseif (array_key_exists($altName = str_replace('.', '_', $name), $data)) {
+                    $exists = true;
+                    $val = $data[$altName];
                 } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
                     // If field is in array-notation we need to access nested data
                     //discard first match which is just the whole string

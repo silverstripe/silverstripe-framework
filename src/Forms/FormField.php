@@ -469,8 +469,18 @@ class FormField extends RequestHandler
      */
     public function saveInto(DataObjectInterface $record)
     {
-        if ($this->name) {
-            $record->setCastedField($this->name, $this->dataValue());
+        $component = $record;
+        $fieldName = $this->name;
+
+        // Allow for dot syntax
+        if (($pos = strrpos($this->name, '.')) !== false) {
+            $relation = substr($this->name, 0, $pos);
+            $fieldName = substr($this->name, $pos + 1);
+            $component = $record->relObject($relation);
+        }
+
+        if ($fieldName) {
+            $component->setCastedField($fieldName, $this->dataValue());
         }
     }
 

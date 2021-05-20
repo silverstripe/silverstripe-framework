@@ -511,6 +511,7 @@ class FieldList extends ArrayList
      */
     public function fieldByName($name)
     {
+        $fullName = $name;
         if (strpos($name, '.') !== false) {
             list($name, $remainder) = explode('.', $name, 2);
         } else {
@@ -518,7 +519,9 @@ class FieldList extends ArrayList
         }
 
         foreach ($this as $child) {
-            if (trim($name) == trim($child->getName()) || $name == $child->id) {
+            if (trim($fullName) == trim($child->getName()) || $fullName == $child->id) {
+                return $child;
+            } elseif (trim($name) == trim($child->getName()) || $name == $child->id) {
                 if ($remainder) {
                     if ($child instanceof CompositeField) {
                         return $child->fieldByName($remainder);

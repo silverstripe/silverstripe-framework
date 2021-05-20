@@ -1844,6 +1844,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             return $this->components[$componentName];
         }
 
+        // The join object can be returned as a component, named for its alias
+        if (isset($this->record[$componentName]) && $this->record[$componentName] === $this->joinRecord) {
+            return $this->record[$componentName];
+        }
+
         $schema = static::getSchema();
         if ($class = $schema->hasOneComponent(static::class, $componentName)) {
             $joinField = $componentName . 'ID';
