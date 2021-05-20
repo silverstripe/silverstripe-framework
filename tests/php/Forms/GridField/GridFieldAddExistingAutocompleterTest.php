@@ -147,7 +147,12 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $result = json_decode($response->getBody(), true);
         $this->assertEquals(
             ['Team 1', 'Team 2', 'Team 3', 'Team 4'],
-            array_map(function ($item) { return $item['label']; }, $result)
+            array_map(
+                function ($item) {
+                    return $item['label'];
+                },
+                $result
+            )
         );
 
         $component->setSearchList(Team::get()->sort('Name', 'DESC'));
@@ -157,7 +162,12 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $result = json_decode($response->getBody(), true);
         $this->assertEquals(
             ['Team 4', 'Team 3', 'Team 2', 'Team 1'],
-            array_map(function ($item) { return $item['label']; }, $result)
+            array_map(
+                function ($item) {
+                    return $item['label'];
+                },
+                $result
+            )
         );
     }
 
