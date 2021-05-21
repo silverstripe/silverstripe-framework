@@ -31,7 +31,7 @@ class CategoryController extends Controller implements TestOnly
     public function Form()
     {
         // GridField lists categories for a specific person
-        $person = Person::get()->sort('FirstName')->First();
+        $person = Person::get()->filter('FirstName', 'Jane')->First();
         $detailFields = singleton(Category::class)->getCMSFields();
         $detailFields->addFieldsToTab(
             'Root.Main',
