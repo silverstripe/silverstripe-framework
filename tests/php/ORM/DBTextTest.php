@@ -271,8 +271,43 @@ class DBTextTest extends SapphireTest
                 // check non existant search term
                 'both schön and können…',
             ]
+        ];
+    }
 
-
+    /**
+     * each test is in the format input, word limit, add ellipsis (false or string), expected output
+     *
+     * @return array
+     */
+    public function providerSummary()
+    {
+        return [
+            [
+                'This is some text. It is a test',
+                3,
+                false,
+                'This is some…',
+            ],
+            [
+                // check custom ellipsis
+                'This is a test text in a longer sentence and a custom ellipsis.',
+                8,
+                '...', // regular dots instead of the ellipsis character
+                'This is a test text in a longer...',
+            ],
+            [
+                'both schön and können have umlauts',
+                5,
+                false,
+                'both schön and können have…',
+            ],
+            [
+                // check invalid UTF8 handling — input is an invalid UTF sequence, output should be empty string
+                "\xf0\x28\x8c\xbc",
+                50,
+                false,
+                '',
+            ],
         ];
     }
 
@@ -351,5 +386,19 @@ class DBTextTest extends SapphireTest
     {
         $textObj = new DBText('Test');
         $this->assertEquals('…', $textObj->defaultEllipsis());
+    }
+
+    /**
+     * @dataProvider providerSummary
+     * @param string $originalValue Input
+     * @param int    $words         Number of words
+     * @param mixed  $add           Ellipsis (false for default or string for custom text)
+     * @param string $expectedValue Expected output (XML encoded safely)
+     */
+    public function testSummary($originalValue, $words, $add, $expectedValue)
+    {
+        $text = DBField::create_field(DBText::class, $originalValue);
+        $result = $text->obj('Summary', [$words, $add])->forTemplate();
+        $this->assertEquals($expectedValue, $result);
     }
 }
