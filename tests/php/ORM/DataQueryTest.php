@@ -512,5 +512,4 @@ class DataQueryTest extends SapphireTest
             'exist is false when a limit returns no results'
         );
     }
-
 }
