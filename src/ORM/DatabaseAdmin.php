@@ -314,7 +314,7 @@ class DatabaseAdmin extends Controller
                 }
 
                 // Check if this class should be excluded as per testing conventions
-                $SNG = singleton($dataClass);
+                $SNG = new $dataClass([], DataObject::CREATE_SINGLETON);
                 if (!$testMode && $SNG instanceof TestOnly) {
                     continue;
                 }
