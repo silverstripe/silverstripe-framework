@@ -63,7 +63,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
     /**
      * @inheritdoc
      */
-    public function getUrl($gridField, $record, $columnName)
+    public function getUrl($gridField, $record, $columnName, $addState = true)
     {
         $link = Controller::join_links(
             $gridField->Link('item'),
@@ -71,7 +71,11 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
             'edit'
         );
 
-        return $this->getStateManager()->addStateToURL($gridField, $link);
+        if ($addState) {
+            $link = $this->getStateManager()->addStateToURL($gridField, $link);
+        }
+
+        return $link;
     }
 
     /**
@@ -149,7 +153,7 @@ class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionP
         // which can make the form readonly if no edit permissions are available.
 
         $data = new ArrayData([
-            'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit'),
+            'Link' => $this->getURL($gridField, $record, $columnName, false),
             'ExtraClass' => $this->getExtraClass()
         ]);
 
