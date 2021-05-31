@@ -466,8 +466,50 @@ class DataQueryTest extends SapphireTest
 
     public function testExistsCreatesFunctionalQueries()
     {
-        $this->assertTrue(ObjectE::get()->exists());
-        $this->assertFalse(ObjectE::get()->where(['"Title" = ?' => 'Foo'])->exists());
-        $this->assertTrue(ObjectE::get()->dataQuery()->groupby('"SortOrder"')->exists());
+        $this->assertTrue(
+            ObjectE::get()->exists(),
+            'Query for ObjectE exists because there\'s more than 1 record'
+        );
+        $this->assertFalse(
+            ObjectE::get()->where(['"Title" = ?' => 'Foo'])->exists(),
+            'Query for ObjectE with Title Foo does NOT exists because there\'s no matching record'
+        );
+        $this->assertTrue(
+            ObjectE::get()->dataQuery()->groupby('"SortOrder"')->exists(),
+            'Existence of query for ObjectE is not affected by group by'
+        );
+        $this->assertTrue(
+            ObjectE::get()->limit(1)->exists(),
+            'Existence of query for ObjectE is not affected by limit if records are returned'
+        );
+        $this->assertFalse(
+            ObjectE::get()->limit(4, 9999)->exists(),
+            'Existence of query for ObjectE is affected by limit if no records are returned'
+        );
+
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->exists(),
+            'exist returns true if query return results'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertFalse(
+            $query->where(['"Title" = ?' => 'Foo'])->exists(),
+            'exist returns false if there\'s no results'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->groupby('"SortOrder"')->exists(),
+            'exist is unaffected by group by'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->limit(1)->exists(),
+            'exist is unaffected by limit as long as one recard is returned'
+        );
+        $this->assertFalse(
+            $query->limit(1, 9999)->exists(),
+            'exist is false when a limit returns no results'
+        );
     }
 }
