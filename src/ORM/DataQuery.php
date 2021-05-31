@@ -465,10 +465,9 @@ class DataQuery
         // statement anyway
         $statement = $this->getFinalisedQuery();
 
-        // Clear limit, distinct, and order as it's not relevant for an exists query
+        // Clear distinct, and order as it's not relevant for an exists query
         $statement->setDistinct(false);
         $statement->setOrderBy(null);
-        $statement->setLimit(null);
 
         // We can remove grouping if there's no "having" that might be relying on an aggregate
         // Additionally, the columns being selected no longer matter
