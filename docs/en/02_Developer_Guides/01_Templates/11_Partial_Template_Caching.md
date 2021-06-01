@@ -186,6 +186,8 @@ SilverStripe\Core\Injector\Injector:
       defaultLifetime: 3600
 ```
 
+See [Execution pipeline: Manifests](/developer_guides/execution_pipeline/manifests) for storage of compiled templates.
+
 ### Nested cached blocks
 
 Every nested cache block is processed independently.

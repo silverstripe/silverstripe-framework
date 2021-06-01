@@ -65,8 +65,21 @@ hosting via the `public/`. See [4.1.0 upgrading guide](/changelogs/4.1.0).
 
 ### Filesystem permissions
 
-SilverStripe needs write access for the webserver user to `public/assets`,
-and read access for that user on everything else in your webroot.
+During runtime, Silverstripe needs read access for the webserver user to your base path (including your webroot).
+It also needs write access for the webserver user to the following locations:
+
+ * `public/assets/`: Used by the CMS and other logic to [store uploads](/developer_guides/files/file_storage)
+ * `TEMP_PATH`: Temporary file storage used for the default filesystem-based cache adapters in
+   [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching)
+    and [Partial Template Caching](/developer_guides/templates/partial_template_caching).
+    See [Environment Management](/getting_started/environment_management).
+
+If you aren't explicitly [packaging](#building-packaging-deployment)
+your Silverstripe project during your deployment process,
+additional write access may be required to generate supporting files on the fly.
+This is not recommended, because it can lead to extended execution times
+as well as cause inconsistencies between multiple server environments
+when manifest and cache storage isn't shared between servers.
 
 ### Assets
 
@@ -85,10 +98,10 @@ through SilverStripe, so is considered a second line of defence.
 
 Files can be kept in draft stage,
 and access restricted to certain user groups.
-These files are stored in a special `.protected` folder (defaulting to `public/assets/.protected`).
+These files are stored in a special `.protected/` folder (defaulting to `public/assets/.protected/`).
 **Requests to files in this folder should be denied by your webserver**.
 
-Requests to files in the `.protected` folder
+Requests to files in the `.protected/` folder
 are routed to PHP by default when using Apache, through `public/assets/.htaccess`.
 If you are using another webserver, please follow our guides to ensure a secure setup.
 See [Developer Guides: File Security](/developer_guides/files/file_security) for details.
@@ -119,7 +132,7 @@ app/
 
 Don't forget to include this additional folder in any syncing and backup processes!
 
-### Building, Packaging and Deployment
+### Building, Packaging and Deployment {#building-packaging-deployment}
 
 It is common to build a SilverStripe application into a package on one environment (e.g. a CI server),
 and then deploy the package to a (separate) webserver environment(s).
@@ -135,7 +148,7 @@ to trigger and include in a deployment package:
    See [Templates: Requirements](/developer_guides/templates/requirements#exposing-assets-webroot).
  * `.graphql/` and `public/_graphql/`: Schema and type definitions required by CMS and any GraphQL API endpoint. Generated through
    [silverstripe/graphql v4](https://github.com/silverstripe/silverstripe-graphql).
-   Triggered by `dev/build`, or [GraphQL Schema Build](/developer_guides/graphql/getting_started/building_the_schema).
+   Triggered by `dev/build`, or a [GraphQL Schema Build](/developer_guides/graphql/getting_started/building_the_schema).
  * Various recipes create default files in `app/` and `public/` on `composer install`
    and `composer update` via
    [silverstripe/recipe-plugin](https://github.com/silverstripe/recipe-plugin).
@@ -198,10 +211,10 @@ See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) 
 
 ### Caches
 
-Silverstripe relies on various [caches](https://docs.silverstripe.org/en/4/developer_guides/performance/caching/)
+Silverstripe relies on various [caches](/developer_guides/performance/caching/)
 to achieve performant responses. By default, those caches are stored in a temporary filesystem folder,
 and are not shared between multiple server instances. Alternative cache backends such as Redis can be
-[configured](https://docs.silverstripe.org/en/4/developer_guides/performance/caching/).
+[configured](/developer_guides/performance/caching/).
 
 While cache objects can expire, when using filesystem caching the files are not actively pruned.
 For long-lived server instances, this can become a capacity issue over time - see
