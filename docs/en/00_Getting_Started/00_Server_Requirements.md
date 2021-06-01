@@ -98,7 +98,7 @@ through SilverStripe, so is considered a second line of defence.
 
 Files can be kept in draft stage,
 and access restricted to certain user groups.
-These files are stored in a special `.protected/` folder (defaulting to `public/assets/.protected`).
+These files are stored in a special `.protected/` folder (defaulting to `public/assets/.protected/`).
 **Requests to files in this folder should be denied by your webserver**.
 
 Requests to files in the `.protected/` folder
