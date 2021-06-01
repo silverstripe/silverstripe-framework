@@ -70,6 +70,8 @@ and determines the controller, action and any argument to be used ([Routing](../
 further filtering before content is sent to the end user
  * The response is output to the client
 
+See [App Object and Kernel](app_object_and_kernel) for details.
+
 ## Request Preprocessing and Postprocessing
 
 The framework provides the ability to hook into the request both before and 
