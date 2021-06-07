@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SimpleXMLElement;
 use tidy;
@@ -25,6 +26,7 @@ use Exception;
 class CSSContentParser
 {
     use Injectable;
+    use Configurable;
 
     protected $simpleXML = null;
 
@@ -56,6 +58,13 @@ class CSSContentParser
             $tidy = $content;
         }
 
+        // Prevent loading of external entities to prevent XXE attacks
+        // Note: as of libxml 2.9.0 entity substitution is disabled by default so this won't be required
+        if ($this->config()->get('disable_xml_external_entities')) {
+            libxml_set_external_entity_loader(function () {
+                return null;
+            });
+        }
         $this->simpleXML = @simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
         if (!$this->simpleXML) {
             throw new Exception('CSSContentParser::__construct(): Could not parse content.'
