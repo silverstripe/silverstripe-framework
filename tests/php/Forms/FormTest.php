@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FieldList;
@@ -23,7 +24,6 @@ use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
 use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
 use SilverStripe\Forms\Tests\FormTest\TestController;
-use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TimeField;
@@ -336,6 +336,23 @@ class FormTest extends FunctionalTest
             [],
             'saveInto() should not save into the DataObject for the LookupField'
         );
+    }
+
+    public function testDefaultAction()
+    {
+        $form = Form::create(Controller::curr(), 'Form', new FieldList(), new FieldList(
+            new FormAction('doForm', 'Form Action')
+        ));
+        $this->assertNotNull($form->defaultAction());
+        $this->assertEquals('action_doForm', $form->defaultAction()->getName());
+
+        $form = Form::create(Controller::curr(), 'AnotherForm', new FieldList(), new FieldList(
+            new CompositeField(
+                new FormAction('doAnotherForm', 'Another Form Action')
+            )
+        ));
+        $this->assertNotNull($form->defaultAction());
+        $this->assertEquals('action_doAnotherForm', $form->defaultAction()->getName());
     }
 
     public function testLoadDataFromIgnoreFalseish()
