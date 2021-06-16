@@ -16,11 +16,11 @@ SilverStripe\Control\Director:
     'dev': SilverStripe\Dev\DevelopmentAdmin
 ---
 Name: security-limited
-After:
-  - '#rootroutes'
+Before:
+  - '#coreroutes'
 Except:
   environment: dev
 ---
 SilverStripe\Control\Director:
   rules:
-    'Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'
+    'POST Security//$Action/$ID/$OtherID': '%$RateLimitedSecurityController'
