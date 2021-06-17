@@ -59,8 +59,8 @@ class CMSMemberLoginForm extends MemberLoginForm
                 CheckboxField::create(
                     "Remember",
                     _t(
-                        'SilverStripe\\Security\\Member.REMEMBER_ME',
-                        "Remember me for {count} days",
+                        'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN',
+                        'Keep me signed in for {count} days',
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
@@ -68,7 +68,7 @@ class CMSMemberLoginForm extends MemberLoginForm
                         'title',
                         _t(
                             'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN_TOOLTIP',
-                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using. Authenticated devices can be managed in your profile.',
+                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.',
                             ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
                         )
                     )
