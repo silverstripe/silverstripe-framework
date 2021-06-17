@@ -1593,12 +1593,22 @@ class MemberTest extends FunctionalTest
 
         $this->assertSame('Johnson', $member->getLastName(), 'getLastName should proxy to Surname');
     }
-    
+
     public function testEmailIsTrimmed()
     {
         $member = new Member();
         $member->Email = " trimmed@test.com\r\n";
         $member->write();
         $this->assertNotNull(Member::get()->find('Email', 'trimmed@test.com'));
+    }
+
+    public function testChangePasswordToBlankIsValidated()
+    {
+        // override setup() function which setMinLength(0)
+        PasswordValidator::singleton()->setMinLength(8);
+        // 'test' member has a password defined in yml
+        $member = $this->objFromFixture(Member::class, 'test');
+        $result = $member->changePassword('');
+        $this->assertFalse($result->isValid());
     }
 }
