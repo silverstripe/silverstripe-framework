@@ -267,6 +267,8 @@ en:
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     KEEPMESIGNEDIN: 'Keep me signed in'
+    KEEP_ME_SIGNED_IN: 'Keep me signed in for {count} days'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
@@ -275,7 +277,6 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
-    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
