@@ -211,8 +211,7 @@ and takes a `MemcachedClient` instance as a constructor argument.
 
 ```yml
 ---
-After:
-  - '#corecache'
+After: '#versionedcache'
 ---
 SilverStripe\Core\Injector\Injector:
   MemcachedClient:
