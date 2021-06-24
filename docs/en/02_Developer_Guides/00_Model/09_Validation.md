@@ -6,12 +6,12 @@ icon: check-square
 
 # Validation and Constraints
 
-Traditionally, validation in SilverStripe has been mostly handled on the controller through [form validation](../forms).
+Traditionally, validation in Silverstripe has been mostly handled on the controller through [form validation](../forms).
 
 While this is a useful approach, it can lead to data inconsistencies if the record is modified outside of the 
 controller and form context.
 
-Most validation constraints are actually data constraints which belong on the model. SilverStripe provides the 
+Most validation constraints are actually data constraints which belong on the model. Silverstripe provides the 
 [DataObject::validate()](api:SilverStripe\ORM\DataObject::validate()) method for this purpose.
 
 By default, there is no validation - objects are always valid! However, you can overload this method in your DataObject 
@@ -51,4 +51,4 @@ class MyObject extends DataObject
 ## API Documentation
 
 * [DataObject](api:SilverStripe\ORM\DataObject)
-* [ValidationResult](api:SilverStripe\ORM\ValidationResult);
+* [ValidationResult](api:SilverStripe\ORM\ValidationResult)

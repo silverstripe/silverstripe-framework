@@ -6,10 +6,10 @@ icon: code
 
 # Data Types and Casting
 
-Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
+Each model in a Silverstripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
+A Data Type is represented in Silverstripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -179,7 +179,7 @@ DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
+Most objects in Silverstripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php

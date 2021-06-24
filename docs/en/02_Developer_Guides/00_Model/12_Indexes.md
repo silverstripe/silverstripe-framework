@@ -12,12 +12,12 @@ The addition of an indexes should be carefully evaluated as they can also increa
 `UPDATE`/`INSERT` and `DELETE`. An index on a column whose data is non unique will actually cost you performance.
 E.g. In most cases an index on `boolean` status flag, or `ENUM` state will not increase query performance.
 
-It's important to find the right balance to achieve fast queries using the optimal set of indexes; For SilverStripe 
+It's important to find the right balance to achieve fast queries using the optimal set of indexes; For Silverstripe 
 applications it's a good practice to: 
 - add indexes on columns which are frequently used in `filter`, `where` or `orderBy` statements
 - for these, only include indexes for columns which are the most restrictive (return the least number of rows)
 
-The SilverStripe framework already places certain indexes for you by default:
+The Silverstripe framework already places certain indexes for you by default:
 - The primary key for each model has a `PRIMARY KEY` unique index
 - The `ClassName` column if your model inherits from `DataObject`
 - All relationships defined in the model have indexes for their `has_one` entity (for `many_many` relationships 
@@ -73,7 +73,7 @@ class MyTestObject extends DataObject
 ```
 
 [alert]
-Please note that if you have previously used the removed `value` key to define an index's contents, SilverStripe will
+Please note that if you have previously used the removed `value` key to define an index's contents, Silverstripe will
 now throw an error. Use `columns` instead.
 [/alert]
 

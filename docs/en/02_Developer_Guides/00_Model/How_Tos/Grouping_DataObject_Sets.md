@@ -23,7 +23,7 @@ Similarly, the `GroupedBy()` method builds on this and returns the same data in 
 
 This example deals with breaking up a [SS_List](api:SilverStripe\ORM\SS_List) into sub-headings by the first letter.
 
-Let's say you have a set of Module objects, each representing a SilverStripe module, and you want to output a list of
+Let's say you have a set of Module objects, each representing a Silverstripe module, and you want to output a list of
 these in alphabetical order, with each letter as a heading; something like the following list:
 
 	*	B

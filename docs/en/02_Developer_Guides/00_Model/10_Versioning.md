@@ -5,13 +5,13 @@ summary: Add versioning to your database content through the Versioned extension
 
 # Versioning
 
-Database content in SilverStripe can be "staged" before its publication, as well as track all changes through the
+Database content in Silverstripe can be "staged" before its publication, as well as track all changes through the
 lifetime of a database record.
 
 It is most commonly applied to pages in the CMS (the `SiteTree` class). Draft content edited in the CMS can be different
 from published content shown to your website visitors.
 
-Versioning in SilverStripe is handled through the [Versioned](api:SilverStripe\Versioned\Versioned) class. As a [DataExtension](api:SilverStripe\ORM\DataExtension) it is possible to be applied to any [DataObject](api:SilverStripe\ORM\DataObject) subclass. The extension class will automatically update read and write operations done via the ORM via the `augmentSQL` database hook.
+Versioning in Silverstripe is handled through the [Versioned](api:SilverStripe\Versioned\Versioned) class. As a [DataExtension](api:SilverStripe\ORM\DataExtension) it is possible to be applied to any [DataObject](api:SilverStripe\ORM\DataObject) subclass. The extension class will automatically update read and write operations done via the ORM via the `augmentSQL` database hook.
 
 [notice]
 There are two complementary modules that improve content editor experience around "owned" nested objects (e.g. elemental blocks).
@@ -31,11 +31,11 @@ The second module extends CMS History UI adding control over nested objects.
 
 ## Understanding versioning concepts
 
-This section discusses how SilverStripe implements versioning and related high level concepts without digging into technical details.
+This section discusses how Silverstripe implements versioning and related high level concepts without digging into technical details.
 
 ### Stages
 
-In most cases, you'll want to have one polished version of a `Page` visible to the general public while your editors might be working off a draft version. SilverStripe handles this through the concept of _stage_.
+In most cases, you'll want to have one polished version of a `Page` visible to the general public while your editors might be working off a draft version. Silverstripe handles this through the concept of _stage_.
 
 By default, adding the `Versioned` extension to a DataObject will create 2 stages:
 * "Stage" for tracking draft content
@@ -61,7 +61,7 @@ and has_one/has_many, however it relies on a pre-existing relationship to functi
 
 If an object "owns" other objects, you'll usually want to publish the child objects when the parent object gets published. If those child objects themselves own other objects, you'll want the grand-children to be published along with the parent.
 
-SilverStripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish an object. When an object is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication will also cascade to children of children and so on.
+Silverstripe makes this possible by using the concept of _cascade publishing_. You can choose to recursively publish an object. When an object is recursively published – either through a user action or through code – all other records it owns that implement the Versioned extension will automatically be published. Publication will also cascade to children of children and so on.
 
 A non-recursive publish operation is also available if you want to publish a new version of a object without cascade publishing all its children.
 
@@ -79,7 +79,7 @@ An unversioned object can also be owned by a versioned object. This can be used 
 
 #### Ownership through media insertion in content
 
-Images and other files are tracked as versioned objects. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. SilverStripe will automatically pick up when an object references files through an HTML text field and recursively publish those files.
+Images and other files are tracked as versioned objects. If a file is referenced through an HTML text field, it needs to be published for it to be accessible to the public. Silverstripe will automatically pick up when an object references files through an HTML text field and recursively publish those files.
 
 This behavior works both for versioned and unversioned objects.
 
@@ -201,7 +201,7 @@ Note that ownership cannot be used with polymorphic relations. E.g. has_one to n
 
 #### Unversioned DataObject ownership
 
-*Requires SilverStripe 4.1 or newer*
+*Requires Silverstripe 4.1 or newer*
 
 Ownership can be used with non-versioned DataObjects, as the necessary functionality is included by default
 by the versioned object through the [`RecursivePublishable`](api:SilverStripe\Versioned\RecursivePublishable) extension which is
@@ -408,7 +408,7 @@ $record->publishRecursive();
 
 Archiving and unpublishing are similar operations, both will prevent a versioned DataObject from being publicly accessible. Archiving will also remove the record from the _Stage_ stage; other ORMs may refer to this concept as _soft-deletion_.
 
-Use `doUnpublish()` to unpublish an item. Simply call `delete()` to archive an item. The SilverStripe ORM doesn't allow you to _hard-delete_ versioned DataObjects.
+Use `doUnpublish()` to unpublish an item. Simply call `delete()` to archive an item. The Silverstripe ORM doesn't allow you to _hard-delete_ versioned DataObjects.
 
 ```php
 <?php
@@ -591,7 +591,7 @@ The current stage for each request is determined by `VersionedHTTPMiddleware` be
 `Versioned::choose_site_stage()`. It checks for a `stage` GET parameter, so you can force a draft stage by appending
 `?stage=Stage` to your request.
 
-Since SilverStripe 4.2, the current stage setting is no longer "sticky" in the session.
+Since Silverstripe 4.2, the current stage setting is no longer "sticky" in the session.
 Any links presented on the view produced with `?stage=Stage` need to have the same GET parameters in order
 to retain the stage. If you are using the `SiteTree->Link()` and `Controller->Link()` methods,
 this is automatically the case for `DataObject` links, controller links and form actions.
@@ -842,7 +842,7 @@ public function init()
 
 ### Low level write and publication methods
 
-SilverStripe will usually call these low level methods for you. However if you have specialised needs, you may call them directly.
+Silverstripe will usually call these low level methods for you. However if you have specialised needs, you may call them directly.
 
 To move a saved version from one stage to another, call [writeToStage(stage)](api:SilverStripe\Versioned\Versioned::writeToStage()) on the object. This is used internally to publish DataObjects.
 
@@ -861,7 +861,7 @@ Versioned::set_reading_mode($origMode); // reset current mode
 
 ## Using the history viewer
 
-Since SilverStripe 4.3 you can use the React and GraphQL driven history viewer UI to display historic changes and
+Since Silverstripe 4.3 you can use the React and GraphQL driven history viewer UI to display historic changes and
 comparisons for a versioned DataObject. This is automatically enabled for SiteTree objects and content blocks in
 [dnadesign/silverstripe-elemental](https://github.com/dnadesign/silverstripe-elemental).
 
@@ -873,7 +873,7 @@ If you want to enable the history viewer for a custom versioned DataObject, you 
 * Add a HistoryViewerField to the DataObject's `getCMSFields`
 
 **Please note:** these examples are given in the context of project-level customisation. You may need to adjust
-the webpack configuration slightly for use in a module. They are also designed to be used on SilverStripe 4.3 or
+the webpack configuration slightly for use in a module. They are also designed to be used on Silverstripe 4.3 or
 later.
 
 For these examples, you can use this simple DataObject and create a ModelAdmin for it:

@@ -6,7 +6,7 @@ summary: Modify the data model without using subclasses.
 # Extending DataObjects
 
 You can add properties and methods to existing [DataObject](api:SilverStripe\ORM\DataObject)s like [Member](api:SilverStripe\Security\Member) without hacking core code or sub 
-classing by using [DataExtension](api:SilverStripe\ORM\DataExtension). See the [Extending SilverStripe](../extending) guide for more information on
+classing by using [DataExtension](api:SilverStripe\ORM\DataExtension). See the [Extending Silverstripe](../extending) guide for more information on
 [DataExtension](api:SilverStripe\ORM\DataExtension).
 
 The following documentation outlines some common hooks that the [Extension](api:SilverStripe\Core\Extension) API provides specifically for managing
