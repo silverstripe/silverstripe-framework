@@ -53,6 +53,28 @@ class GridField extends FormField
     ];
 
     /**
+     * Default globally configured readonly components.
+     *
+     * @see $readonlyComponents
+     * @var array
+     */
+    private static $default_readonly_components = [
+        GridField_ActionMenu::class,
+        GridFieldConfig_RecordViewer::class,
+        GridFieldButtonRow::class,
+        GridFieldDataColumns::class,
+        GridFieldDetailForm::class,
+        GridFieldLazyLoader::class,
+        GridFieldPageCount::class,
+        GridFieldPaginator::class,
+        GridFieldFilterHeader::class,
+        GridFieldSortableHeader::class,
+        GridFieldToolbarHeader::class,
+        GridFieldViewButton::class,
+        GridState_Component::class,
+    ];
+
+    /**
      * Data source.
      *
      * @var SS_List
@@ -113,21 +135,7 @@ class GridField extends FormField
      *
      * @var array
      */
-    protected $readonlyComponents = [
-        GridField_ActionMenu::class,
-        GridFieldConfig_RecordViewer::class,
-        GridFieldButtonRow::class,
-        GridFieldDataColumns::class,
-        GridFieldDetailForm::class,
-        GridFieldLazyLoader::class,
-        GridFieldPageCount::class,
-        GridFieldPaginator::class,
-        GridFieldFilterHeader::class,
-        GridFieldSortableHeader::class,
-        GridFieldToolbarHeader::class,
-        GridFieldViewButton::class,
-        GridState_Component::class,
-    ];
+    protected $readonlyComponents = [];
 
     /**
      * Pattern used for looking up
@@ -143,6 +151,9 @@ class GridField extends FormField
     public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
     {
         parent::__construct($name, $title, null);
+
+        // Set readonly components for this gridfield.
+        $this->setReadonlyComponents($this->config()->get('default_readonly_components'));
 
         $this->name = $name;
 
