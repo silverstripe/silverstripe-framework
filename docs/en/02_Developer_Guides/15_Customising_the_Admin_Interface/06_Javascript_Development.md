@@ -1,12 +1,12 @@
 ---
 title: Javascript Development
-summary: Advanced documentation about writing and customizing javascript within SilverStripe.
+summary: Advanced documentation about writing and customizing javascript within Silverstripe CMS.
 iconBrand: js
 ---
 
 # Javascript Development
 
-The following document is an advanced guide on building rich javascript interactions within the SilverStripe CMS and
+The following document is an advanced guide on building rich javascript interactions within the Silverstripe CMS and
 a list of our best practices for contributing and modifying the core javascript framework.
 
 ## ES6 and build tools
@@ -19,7 +19,7 @@ in a browser. This transpiling can be done using a variety of toolchains, but th
  environment as part of your workflow.
    
    As stated above, there are many ways to solve the problem of transpiling. The toolchain
-   we use in core SilverStripe modules includes:
+   we use in core Silverstripe CMS modules includes:
    * [Babel](http://babeljs.io) (ES6 transpiler)
    * [Webpack](http://webpack.js.org) (Module bundler)
 
@@ -31,10 +31,10 @@ If you're developing new functionality in React powered sections please refer to
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 
 We predominantly use [jQuery](http://jquery.com) as our abstraction library for DOM related programming, within the
-SilverStripe CMS and certain framework aspects.
+Silverstripe CMS and certain framework aspects.
 
 For richer interactions such as drag'n'drop, and more complicated interface elements like tabs or accordions,
-SilverStripe CMS uses [jQuery UI](http://ui.jquery.com) on top of jQuery.
+Silverstripe CMS uses [jQuery UI](http://ui.jquery.com) on top of jQuery.
 
 For any custom code developed with jQuery, you have four choices to structure it: Custom jQuery Code, a jQuery Plugin, a
 jQuery UI Widget, or a `jQuery.entwine` behaviour. We'll detail below where each solution is appropriate.
@@ -258,7 +258,7 @@ Global properties are evil. They are accessible by other scripts, might be overw
 ```
 
 You can run `[jQuery.noConflict()](http://docs.jquery.com/Core/jQuery.noConflict)` to avoid namespace clashes.
-NoConflict mode is enabled by default in the SilverStripe CMS javascript.
+NoConflict mode is enabled by default in the Silverstripe CMS javascript.
 
 ### Initialize at document.ready
 
@@ -347,7 +347,7 @@ See [interactive example on jsbin.com](http://jsbin.com/opuva)
 
 You can also use the [jQuery.metadata Plugin](http://docs.jquery.com/Plugins/Metadata/metadata) to serialize data into
 properties of DOM elements. This is useful if you want to encode element-specific data in markup, for example when
-rendering a form element through the SilverStripe templating engine.
+rendering a form element through the Silverstripe CMS templating engine.
 
 Example: Restricted numeric value field
 
@@ -373,14 +373,14 @@ See [interactive example on jsbin.com](http://jsbin.com/axafa)
 
 Ajax responses will sometimes need to update existing DOM elements, for example refresh a set of search results.
 Returning plain HTML is generally a good default behaviour, as it allows you to keep template rendering in one place (in
-SilverStripe PHP code), and is easy to deal with in JavaScript.
+Silverstripe CMS PHP code), and is easy to deal with in JavaScript.
 
 If you need to process or inspect returned data, consider extracting it from the loaded HTML instead (through id/class
 attributes, or the jQuery.metadata plugin). For returning status messages, please use the HTTP status-codes.
 
 Only return evaluated JavaScript snippets if unavoidable. Most of the time you can just pass data around, and let the
 clientside react to changes appropriately without telling it directly through JavaScript in AJAX responses. Don't use
-the [Form](api:SilverStripe\Forms\Form) SilverStripe class, which is built solely around
+the [Form](api:SilverStripe\Forms\Form) Silverstripe CMS class, which is built solely around
 this inflexible concept.
 
 Example: Autocomplete input field loading page matches through AJAX
@@ -460,7 +460,7 @@ $('.autocomplete input').on('change', function() {
 
 Although they are the minority of cases, there are times when a simple HTML fragment isn't enough.  For example, if you
 have server side code that needs to trigger the update of a couple of elements in the CMS left-hand tree, it would be
-inefficient to send back the HTML of entire tree. SilverStripe can serialize to and from JSON (see the [Convert](api:SilverStripe\Core\Convert) class), and jQuery deals very well with it through
+inefficient to send back the HTML of entire tree. Silverstripe CMS can serialize to and from JSON (see the [Convert](api:SilverStripe\Core\Convert) class), and jQuery deals very well with it through
 [jQuery.getJSON()](http://docs.jquery.com/Ajax/jQuery.getJSON#urldatacallback), as long as the HTTP content-type is
 properly set.
 
@@ -526,7 +526,7 @@ Documentation in JavaScript usually resembles the JavaDoc standard, although the
 flexibility of the language it can be hard to generate automated documentation, particularly with the predominant usage
 of closure constructs in jQuery and jQuery.entwine.
 
-To generate documentation for SilverStripe code, use [JSDoc toolkit](http://code.google.com/p/jsdoc-toolkit/) (see
+To generate documentation for Silverstripe CMS code, use [JSDoc toolkit](http://code.google.com/p/jsdoc-toolkit/) (see
 [reference of supported tags](http://code.google.com/p/jsdoc-toolkit/wiki/TagReference)). For more class-oriented
 JavaScript, take a look at the [jsdoc cookbook](http://code.google.com/p/jsdoc-toolkit/wiki/CookBook). The `@lends`
 and `@borrows` properties are particularly useful for documenting jQuery-style code.

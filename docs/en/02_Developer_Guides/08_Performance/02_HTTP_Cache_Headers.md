@@ -8,7 +8,7 @@ icon: tachometer-alt
 
 ## Overview
 
-By default, SilverStripe sends headers which signal to HTTP caches
+By default, Silverstripe CMS sends headers which signal to HTTP caches
 that the response should be not considered cacheable.
 HTTP caches can either be intermediary caches (e.g. CDNs and proxies), or clients (e.g. browsers).
 The cache headers sent are `Cache-Control: no-cache, must-revalidate`;
@@ -121,7 +121,7 @@ class PageController extends ContentController
 }
 ```
 
-Note: SilverStripe will still override this preference when a session is active,
+Note: Silverstripe CMS will still override this preference when a session is active,
 a [CSRF token](/developer_guides/forms/form_security) token is present,
 or draft content has been requested.
 
@@ -150,14 +150,14 @@ class PageController extends ContentController
 }
 ```
 
-Note: SilverStripe will still override this preference when a session is active,
+Note: Silverstripe CMS will still override this preference when a session is active,
 a [CSRF token](/developer_guides/forms/form_security) token is present,
 or draft content has been requested. 
 
 ### Global opt-in, ignoring session (advanced) 
 
 This can be helpful in situations where forms are embedded on the website.
-SilverStripe will still override this preference when draft content has been requested.
+Silverstripe CMS will still override this preference when draft content has been requested.
 CAUTION: This mode relies on a developer examining each execution path to ensure
 that no session data is used to vary output. 
 
@@ -218,7 +218,7 @@ HTTP::register_modification_date('2014-10-10');
 
 A `Vary` header tells caches which aspects of the response should be considered
 when calculating a cache key, usually in addition to the full URL.
-By default, SilverStripe will output a `Vary` header with the following content: 
+By default, Silverstripe CMS will output a `Vary` header with the following content: 
 
 ```
 Vary: X-Forwarded-Protocol

@@ -10,11 +10,11 @@ iconBrand: searchengin
 
 An object representing a SQL select query, which can be serialized into a SQL statement. 
 It is easier to deal with object-wrappers than string-parsing a raw SQL-query. 
-This object is used by the SilverStripe ORM internally.
+This object is used by the Silverstripe CMS ORM internally.
 
 Dealing with low-level SQL is not encouraged, since the ORM provides
 powerful abstraction APIs (see [datamodel](/developer_guides/model/data_model_and_orm)). 
-Starting with SilverStripe 3, records in collections are lazy loaded,
+Starting with Silverstripe CMS 3, records in collections are lazy loaded,
 and these collections have the ability to run efficient SQL
 such as counts or returning a single column.
 
@@ -296,7 +296,7 @@ $map = $players->map('Name', 'NameWithBirthyear');
 
 ### Data types
 
-As of SilverStripe 4.4, the following PHP types will be used to return database content:
+As of Silverstripe CMS 4.4, the following PHP types will be used to return database content:
 
  * booleans will be an integer 1 or 0, to ensure consistency with MySQL that doesn't have native booleans
  * integer types returned as integers
@@ -304,7 +304,7 @@ As of SilverStripe 4.4, the following PHP types will be used to return database 
  * strings returned as strings
  * dates / datetimes returned as strings
 
-Up until SilverStripe 4.3, bugs meant that strings were used for every column type.
+Up until Silverstripe CMS 4.3, bugs meant that strings were used for every column type.
 
 ## Related Lessons
 * [Building custom SQL](https://www.silverstripe.org/learn/lessons/v4/beyond-the-orm-building-custom-sql-1)

@@ -5,8 +5,8 @@ introduction: Make your applications faster by learning how to write more scalab
 icon: tachometer-alt
 ---
 
-The following guide describes the common ways to speed your SilverStripe website up. The general rules for getting 
-the best performance out of SilverStripe include running the latest versions of PHP alongside a 
+The following guide describes the common ways to speed your Silverstripe CMS website up. The general rules for getting 
+the best performance out of Silverstripe CMS include running the latest versions of PHP alongside a 
 [opcode](http://en.wikipedia.org/wiki/Opcode) cache such as [XCache](http://xcache.lighttpd.net/) or 
 [APC](http://nz2.php.net/manual/en/intro.apc.php).
 

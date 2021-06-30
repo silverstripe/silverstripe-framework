@@ -43,7 +43,7 @@ class MyMemberExtension extends DataExtension
 Convention is for extension class names to end in `Extension`. This isn't a requirement but makes it clearer
 [/info]
 
-After this class has been created, it does not yet apply it to any object. We need to tell SilverStripe what classes 
+After this class has been created, it does not yet apply it to any object. We need to tell Silverstripe CMS what classes 
 we want to add the `MyMemberExtension` too. To activate this extension, add the following via the [Configuration API](../configuration).
 
 **app/_config/app.yml**

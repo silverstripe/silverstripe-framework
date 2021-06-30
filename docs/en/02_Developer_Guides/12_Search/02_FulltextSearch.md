@@ -47,7 +47,7 @@ default site search, have a look at those extensions and modify as required.
 
 ### Fulltext Filter
 
-SilverStripe provides a [FulltextFilter](api:SilverStripe\ORM\Filters\FulltextFilter) which you can use to perform custom fulltext searches on
+Silverstripe CMS provides a [FulltextFilter](api:SilverStripe\ORM\Filters\FulltextFilter) which you can use to perform custom fulltext searches on
 [DataList](api:SilverStripe\ORM\DataList)s.
 
 Example DataObject:

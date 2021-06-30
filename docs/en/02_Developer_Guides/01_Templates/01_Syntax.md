@@ -10,7 +10,7 @@ A template can contain any markup language (e.g HTML, CSV, JSON..) and before be
 processed through [SSViewer](api:SilverStripe\View\SSViewer). This process replaces placeholders such as `$Var` with real content from your
 [model](../model) and allows you to define logic controls like `<% if $Var %>`.
 
-An example of a SilverStripe template is below:
+An example of a Silverstripe CMS template is below:
 
 **app/templates/Page.ss**
 
@@ -50,7 +50,7 @@ text-based format.
 
 ## Template file location
 
-SilverStripe templates are plain text files that have an `.ss` extension and are located within the `templates` directory of
+Silverstripe CMS templates are plain text files that have an `.ss` extension and are located within the `templates` directory of
 a module, theme, or your `app/` folder.
 
 By default, templates will have the same name as the class they are used to render. So, your `Page` class will
@@ -236,7 +236,7 @@ You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
 
 ## Includes
 
-Within SilverStripe templates we have the ability to include other templates using the `<% include %>` tag. The includes
+Within Silverstripe CMS templates we have the ability to include other templates using the `<% include %>` tag. The includes
 will be searched for using the same filename look-up rules as a regular template. However in the case of the include tag
 an additional `Includes` directory will be inserted into the resolved path just prior to the filename.
 
@@ -564,7 +564,7 @@ Using standard HTML comments is supported. These comments will be included in th
 $EditForm <!-- Some public comment about the form -->
 ```
 
-However you can also use special SilverStripe comments which will be stripped out of the published site. This is useful
+However you can also use special Silverstripe CMS comments which will be stripped out of the published site. This is useful
 for adding notes for other developers but for things you don't want published in the public html.
 
 ```ss

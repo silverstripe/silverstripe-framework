@@ -7,7 +7,7 @@ icon: lock
 
 ## Introduction
 
-This class implements SilverStripe's permission system.
+This class implements Silverstripe CMS's permission system.
 
 ## Usage
 

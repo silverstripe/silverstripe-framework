@@ -7,12 +7,12 @@ summary: Useful debugging tools you can use right in the browser
 ## Introduction
 
 This page lists a number of "page options" , "rendering tools" or "special URL variables" that you can use to debug your
-SilverStripe applications.  These are consumed in PHP using the $_REQUEST or $_GET superglobals throughout the SilverStripe
-core.
+Silverstripe CMS applications.  These are consumed in PHP using the $_REQUEST or $_GET superglobals throughout the 
+Silverstripe CMS core.
 
 ## Debug Toolbar
 
-The easiest way to debug SilverStripe is through the
+The easiest way to debug Silverstripe CMS is through the
 [lekoala/silverstripe-debugbar](https://github.com/lekoala/silverstripe-debugbar) module.
 It similar to the browser "developer toolbar", and adds itself to the bottom of the screen
 when your site is in development mode. It shows you render times, database queries,

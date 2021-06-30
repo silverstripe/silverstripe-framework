@@ -41,7 +41,7 @@ SilverStripe\Control\Director:
 
 In addition to the default `/graphql` endpoint provided by this module by default,
 along with the `admin/graphql` endpoint provided by the CMS modules (if they're installed),
-you may want to set up another GraphQL server running on the same installation of SilverStripe.
+you may want to set up another GraphQL server running on the same installation of Silverstripe CMS.
 
 Let's set up a new controller to handle the requests.
 

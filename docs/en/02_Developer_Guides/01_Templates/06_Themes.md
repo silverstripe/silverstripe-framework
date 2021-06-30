@@ -1,12 +1,12 @@
 ---
 title: Themes
-summary: What makes up a SilverStripe Theme. How to install one or write your own theme. 
+summary: What makes up a Silverstripe CMS Theme. How to install one or write your own theme. 
 icon: paint-brush
 ---
 
 # Themes
 
-Themes can be used to kick start your SilverStripe projects, can be stored outside of your application code and your
+Themes can be used to kick start your Silverstripe CMS projects, can be stored outside of your application code and your
 application can provide multiple unique themes (i.e a mobile theme).
 
 ## Downloading
@@ -26,13 +26,13 @@ composer require my_vendor/my_theme [version]
 *Note:* `[version]` should be replaced with a version constraint if you know it, otherwise leave it blank to pull the latest version compatible with your project.
 
 [alert]
-As you've added new files to your SilverStripe installation, make sure you clear the SilverStripe cache by appending
+As you've added new files to your Silverstripe CMS installation, make sure you clear the Silverstripe CMS cache by appending
 `?flush=1` to your website URL (e.g http://yoursite.com/?flush=1).
 [/alert]
 
 ### Configuring themes
 
-After installing the files through either method, update the current theme in SilverStripe. This can be done by 
+After installing the files through either method, update the current theme in Silverstripe CMS. This can be done by 
 altering the `SSViewer.themes` setting in a [config.yml](../configuration)
 
 **app/_config/app.yml**
@@ -71,17 +71,17 @@ main styles of syntax:
 
 ## Developing your own theme
 
-A `theme` within SilverStripe is simply a collection of templates and other front end assets such as javascript and CSS located within the `themes` directory. 
+A `theme` within Silverstripe CMS is simply a collection of templates and other front end assets such as javascript and CSS located within the `themes` directory. 
 
 ![themes:basicfiles.gif](../../_images/basicfiles.gif)
 
-SilverStripe 4 has support for cascading themes, which will allow users to define multiple themes for a project. This means you can have a template defined in any theme, and have it continue to look back through the list of themes until a match is found.
+Silverstripe CMS 4 has support for cascading themes, which will allow users to define multiple themes for a project. This means you can have a template defined in any theme, and have it continue to look back through the list of themes until a match is found.
 
 To define extra themes simply add extra entries to the `SilverStripe\View\SSViewer.themes` configuration array. You will probably always want to ensure that you include `'$default'` in your list of themes to ensure that the base templates are used when required.
 
 ## Submitting your theme to addons
 
-If you want to submit your theme to the SilverStripe addons directory then check:
+If you want to submit your theme to the Silverstripe CMS addons directory then check:
 
 * You should ensure your templates are well structured, modular and commented so it's easy for other people to customise 
 * Templates should not contain text inside images and all images provided must be open source and not break any 

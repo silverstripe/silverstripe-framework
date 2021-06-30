@@ -6,10 +6,10 @@ icon: code
 
 # Data Types and Casting
 
-Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
+Each model in a Silverstripe CMS [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
+A Data Type is represented in Silverstripe CMS by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -157,7 +157,7 @@ class Player extends DataObject
 }
 ```
 
-The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
+The properties on any Silverstripe CMS object can be type casted automatically, by transforming its scalar value into an 
 instance of the [DBField](api:SilverStripe\ORM\FieldType\DBField) class, providing additional helpers. For example, a string can be cast as a [DBText](api:SilverStripe\ORM\FieldType\DBText) 
 type, which has a `FirstSentence()` method to retrieve the first sentence in a longer piece of text.
 
@@ -179,7 +179,7 @@ DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
+Most objects in Silverstripe CMS extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php

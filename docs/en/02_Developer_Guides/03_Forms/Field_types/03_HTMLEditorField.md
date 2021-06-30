@@ -6,7 +6,7 @@ icon: file-code
 
 # Rich-text editing (WYSIWYG)
 
-Editing and formatting content is the bread and butter of every content management system, which is why SilverStripe 
+Editing and formatting content is the bread and butter of every content management system, which is why Silverstripe CMS 
 has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
 
 On top of the base functionality, we use our own insertion dialogs to ensure you can effectively select and upload 
@@ -194,7 +194,7 @@ We use [shortcodes](/developer_guides/extending/shortcodes) to store information
 takes care of care of placing the shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
 ### Image size pre-sets
-SilverStripe will suggest pre-set image size in the HTMLEditor. Editors can quickly switch between the pre-set size when interacting with images in the HTMLEditorField.
+Silverstripe CMS will suggest pre-set image size in the HTMLEditor. Editors can quickly switch between the pre-set size when interacting with images in the HTMLEditorField.
 
 The default values are "Best fit" (600 pixels width) and original size. Developers can customise the pre-set sizes by altering their HTMLEditorConfig.
 
@@ -314,7 +314,7 @@ In case you want to adhere to HTML4 instead, use the following configuration:
 HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
 ```
 
-By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it will strip out HTML5 tags like 
+By default, TinyMCE and Silverstripe CMS will generate valid HTML5 markup, but it will strip out HTML5 tags like 
 `<article>` or `<figure>`. If you plan to use those, add them to the 
 [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
@@ -329,7 +329,7 @@ to successfully process HTML5 tags, please use the
 
 In the standard installation, you can insert links (internal/external/anchor/email),
 images as well as flash media files. The forms used for preparing the new content element
-are rendered by SilverStripe, but there's some JavaScript involved to transfer
+are rendered by Silverstripe CMS, but there's some JavaScript involved to transfer
 back and forth between a content representation the editor can understand, present and save.
 
 Example: Remove field for "image captions"

@@ -47,7 +47,7 @@ Test case classes should end with `Test` (e.g `PageTest`) and test methods must 
 Ensure you [import](http://php.net/manual/en/language.namespaces.importing.php#example-252) any classes you need for the test, including `SilverStripe\Dev\SapphireTest` or `SilverStripe\Dev\FunctionalTest`.
 [/info]
 
-A SilverStripe unit test is created by extending one of two classes, [SapphireTest](api:SilverStripe\Dev\SapphireTest) or [FunctionalTest](api:SilverStripe\Dev\FunctionalTest). 
+A Silverstripe CMS unit test is created by extending one of two classes, [SapphireTest](api:SilverStripe\Dev\SapphireTest) or [FunctionalTest](api:SilverStripe\Dev\FunctionalTest). 
 
 [SapphireTest](api:SilverStripe\Dev\SapphireTest) is used to test your model logic (such as a `DataObject`), and [FunctionalTest](api:SilverStripe\Dev\FunctionalTest) is used when 
 you want to test a `Controller`, `Form` or anything that requires a web page.
@@ -63,7 +63,7 @@ documentation.
 
 ## Test Databases and Fixtures
 
-SilverStripe tests create their own database when the test starts and fixture files are specified. New `ss_tmp` databases are created using the same 
+Silverstripe CMS tests create their own database when the test starts and fixture files are specified. New `ss_tmp` databases are created using the same 
 connection details you provide for the main website. The new `ss_tmp` database does not copy what is currently in your 
 application database. To provide seed data use a [Fixture](fixtures) file.
 
@@ -79,7 +79,7 @@ databases on your machine. To get rid of them, run `sake dev/tasks/CleanupTestDa
 
 ## Custom PHPUnit Configuration
 
-The `phpunit` executable can be configured by command line arguments or through an XML file. SilverStripe comes with a 
+The `phpunit` executable can be configured by command line arguments or through an XML file. Silverstripe CMS comes with a 
 default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customize to your 
 needs.
 

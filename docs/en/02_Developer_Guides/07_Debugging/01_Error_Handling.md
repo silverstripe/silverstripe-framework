@@ -6,10 +6,10 @@ icon: exclamation-circle
 
 # Logging and Error Handling
 
-SilverStripe uses Monolog for both error handling and logging. It comes with two default configurations: one for
+Silverstripe CMS uses Monolog for both error handling and logging. It comes with two default configurations: one for
 logging, and another for core error handling. The core error handling implementation also comes with two default
 configurations: one for development environments, and another for test or live environments. On development
-environments, SilverStripe will deal harshly with any warnings or errors: a full call-stack is shown and execution
+environments, Silverstripe CMS will deal harshly with any warnings or errors: a full call-stack is shown and execution
 stops for anything, giving you early warning of a potential issue to handle.
 
 ## Raising errors and logging diagnostic information.
@@ -254,8 +254,8 @@ SilverStripe\Core\Injector\Injector:
 ```
 
 [info]
-In addition to SilverStripe-integrated logging, it is advisable to fall back to PHP's native logging functionality. A
-script might terminate before it reaches the SilverStripe error handling, for example in the case of a fatal error. Make
+In addition to Silverstripe CMS integrated logging, it is advisable to fall back to PHP's native logging functionality. A
+script might terminate before it reaches the Silverstripe CMS error handling, for example in the case of a fatal error. Make
 sure `log_errors` and `error_log` in your PHP ini file are configured.
 [/info]
 
@@ -267,7 +267,7 @@ others.
 
 ### Replacing the logger
 
-Monolog comes by default with SilverStripe, but you may use another PSR-3 compliant logger, if you wish. To do this,
+Monolog comes by default with Silverstripe CMS, but you may use another PSR-3 compliant logger, if you wish. To do this,
 set the `SilverStripe\Core\Injector\Injector.Monolog\Logger` configuration parameter, providing a new injector
 definition. For example:
 
@@ -303,9 +303,9 @@ SilverStripe\Core\Injector\Injector:
 
 You should register something with a `start()` method.
 
-## Differences from SilverStripe 3
+## Differences from Silverstripe CMS 3
 
-In SilverStripe 3, logging was based on the Zend Log module. Customisations were added using `SS_Log::add_writer()`.
+In Silverstripe CMS 3, logging was based on the Zend Log module. Customisations were added using `SS_Log::add_writer()`.
 This function no longer works, and any Zend Log writers will need to be replaced with Monolog handlers. Fortunately,
 a range of handlers are available, both in the core package and in add-ons. See the
 [Monolog documentation](https://github.com/Seldaek/monolog/blob/master/doc/01-usage.md) for more information.

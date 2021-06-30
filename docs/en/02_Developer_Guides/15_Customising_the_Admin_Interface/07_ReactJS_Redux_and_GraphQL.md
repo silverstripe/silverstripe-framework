@@ -19,7 +19,7 @@ There are some several members of this ecosystem that all work together to provi
 All of these pillars of the frontend application can be customised, giving you more control over how the admin interface looks, feels, and behaves.
 
 [alert]
-These technologies underpin the future of SilverStripe CMS development, but their current implementation is
+These technologies underpin the future of Silverstripe CMS development, but their current implementation is
 _experimental_. Our APIs are not expected to change drastically between releases, but they are excluded from
 our [semantic versioning](https://semver.org) commitments for the time being. Any breaking changes will be
 clearly signalled in release notes.
@@ -138,7 +138,7 @@ The above query is almost self-descriptive. It gets a user by ID, returns his or
 }
 ```
 
-On its own, GraphQL offers nothing functional, as it's just a query language. You still need a service that will invoke queries and map their results to UI. For that, SilverStripe uses an implementation of [Apollo](http://dev.apollodata.com/) that works with React.
+On its own, GraphQL offers nothing functional, as it's just a query language. You still need a service that will invoke queries and map their results to UI. For that, Silverstripe CMS uses an implementation of [Apollo](http://dev.apollodata.com/) that works with React.
 
 ## For more information
 
@@ -151,7 +151,7 @@ documentation available all over the web. We recommend:
 
 # The Injector API
 
-Much like SilverStripe's [Injector API](../../extending/injector) in PHP,
+Much like Silverstripe CMS's [Injector API](../../extending/injector) in PHP,
 the client-side framework has its own implementation of dependency injection 
 known as `Injector`. Using Injector, you can register new services, and 
 transform existing services.
@@ -809,7 +809,7 @@ You could manipulate the action called by the originalReducer, there isn't an ex
 
 One of the strengths of GraphQL is that it allows us to declaratively state exactly what data a given component needs to function. Because GraphQL queries and mutations are considered primary concerns of a component, they are not abstracted away somewhere in peripheral asynchronous functions. Rather, they are co-located with the component definition itself.
 
-The downside of this is that, because queries are defined statically at compile time, they don't adapt well to the extension patterns that are inherent to SilverStripe projects. For instance, a query for a Member record may include fields for `FirstName` and `Email`, but if you have customised that class via extensions, and would like the component using that query to display your custom fields, your only option is to override the entire query and the component with a custom implementation. In backend code, this would be tantamount to replacing the entire `Member` class and `SecurityAdmin` section just because you had a new field. You would never do that, right? It's an over-aggressive hack! We need APIs that make extension easy.
+The downside of this is that, because queries are defined statically at compile time, they don't adapt well to the extension patterns that are inherent to Silverstripe CMS projects. For instance, a query for a Member record may include fields for `FirstName` and `Email`, but if you have customised that class via extensions, and would like the component using that query to display your custom fields, your only option is to override the entire query and the component with a custom implementation. In backend code, this would be tantamount to replacing the entire `Member` class and `SecurityAdmin` section just because you had a new field. You would never do that, right? It's an over-aggressive hack! We need APIs that make extension easy.
 
 To that end, the `Injector` library provides a container for abstract representations of GraphQL queries and mutations. You can register and transform them as you do components and reducers. They exist merely as abstract concepts until `Injector` loads, at which time all transformations are applied, and each registered query and mutation is composed and attached to their assigned components.
 

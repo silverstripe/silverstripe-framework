@@ -58,20 +58,20 @@ see `MySQLDatabase::$sql_mode` for more details.) This setting is only available
 
 ### Overview
 
-Silverstripe needs to handle a variety of HTTP requests, and relies on the hosting environment to be configured securely
+Silverstripe CMS needs to handle a variety of HTTP requests, and relies on the hosting environment to be configured securely
 to enforce restrictions. There are secure defaults in place for Apache, but you should be aware of the configuration
 regardless of your webserver setup.
 
 ### Public webroot
 
-The webroot of your webserver should be configured to the `public/` subfolder. Projects created prior to Silverstripe
+The webroot of your webserver should be configured to the `public/` subfolder. Projects created prior to Silverstripe CMS
 4.1 might be using the main project folder as the webroot. In this case, you are responsible for ensuring access to
 system files such as configuration in `*.yml` is protected from public access. We strongly recommend switching to more
 secure hosting via the `public/`. See [4.1.0 upgrading guide](/changelogs/4.1.0).
 
 ### Filesystem permissions
 
-During runtime, Silverstripe needs read access for the webserver user to your base path (including your webroot). It
+During runtime, Silverstripe CMS needs read access for the webserver user to your base path (including your webroot). It
 also needs write access for the webserver user to the following locations:
 
 * `public/assets/`: Used by the CMS and other logic to [store uploads](/developer_guides/files/file_storage)
@@ -81,20 +81,20 @@ also needs write access for the webserver user to the following locations:
   See [Environment Management](/getting_started/environment_management).
 
 If you aren't explicitly [packaging](#building-packaging-deployment)
-your Silverstripe project during your deployment process, additional write access may be required to generate supporting
+your Silverstripe CMS project during your deployment process, additional write access may be required to generate supporting
 files on the fly. This is not recommended, because it can lead to extended execution times as well as cause
 inconsistencies between multiple server environments when manifest and cache storage isn't shared between servers.
 
 ### Assets
 
-Silverstripe allows CMS authors to upload files into the `public/assets/` folder, which should be served by your
+Silverstripe CMS allows CMS authors to upload files into the `public/assets/` folder, which should be served by your
 webserver. **No PHP execution should be allowed in this folder**. This is configured for Apache by default
 via `public/assets/.htaccess`. The file is generated dynamically during the `dev/build` stage.
 
 Additionally, access is whitelisted by file extension through a dynamically generated whitelist based on
 the `File.allowed_extensions` setting
 (see [File Security](/developer_guides/files/file_security#file-types)). This whitelist uses the same defaults
-configured through file upload through Silverstripe, so is considered a second line of defence.
+configured through file upload through Silverstripe CMS, so is considered a second line of defence.
 
 ### Secure Assets {#secure-assets}
 
@@ -134,9 +134,9 @@ Don't forget to include this additional folder in any syncing and backup process
 
 ### Building, Packaging and Deployment {#building-packaging-deployment}
 
-It is common to build a Silverstripe application into a package on one environment (e.g. a CI server), and then deploy
+It is common to build a Silverstripe CMS application into a package on one environment (e.g. a CI server), and then deploy
 the package to a (separate) webserver environment(s). This approach relies on all auto-generated files required by
-Silverstripe to be included in the package, or generated on the fly on each webserver environment.
+Silverstripe CMS to be included in the package, or generated on the fly on each webserver environment.
 
 The easiest way to ensure this is to commit auto generated files to source control. If those changes are considered too
 noisy, here's some pointers for auto-generated files to trigger and include in a deployment package:
@@ -154,14 +154,14 @@ noisy, here's some pointers for auto-generated files to trigger and include in a
 
 ### Web Worker Concurrency
 
-It's generally a good idea to run multiple workers to serve multiple HTTP requests to Silverstripe concurrently. The
+It's generally a good idea to run multiple workers to serve multiple HTTP requests to Silverstripe CMS concurrently. The
 exact number depends on your website needs. The CMS attempts to request multiple views concurrently. It also
 routes [protected and draft files](/developer_guides/files/file_security)
-through Silverstripe. This can increase your concurrency requirements, e.g. when authors batch upload and view dozens of
+through Silverstripe CMS. This can increase your concurrency requirements, e.g. when authors batch upload and view dozens of
 draft files in the CMS.
 
 When allowing upload of large files through the CMS (through PHP settings), these files might be used
-as [protected and draft files](/developer_guides/files/file_security). Files in this state get served by Silverstripe
+as [protected and draft files](/developer_guides/files/file_security). Files in this state get served by Silverstripe CMS
 rather than your webserver. Since the framework uses [PHP streams](https://www.php.net/manual/en/ref.stream.php), this
 allows serving of files larger than your PHP memory limit. Please be aware that streaming operations don't count towards
 PHP's [max_execution_time](https://www.php.net/manual/en/function.set-time-limit.php), which can risk exhaustion of web
@@ -169,34 +169,34 @@ worker pools for long-running downloads.
 
 ### URL Rewriting
 
-Silverstripe expects URL paths to be rewritten to `public/index.php`. For Apache, this is preconfigured
+Silverstripe CMS expects URL paths to be rewritten to `public/index.php`. For Apache, this is preconfigured
 through `.htaccess` files, and expects using the `mod_rewrite` module. By default, these files are located
 in `public/.htaccess` and `public/assets/.htaccess`.
 
 ### HTTP Headers
 
-Silverstripe can add HTTP headers to responses it handles directly. These headers are often sensitive, for example
+Silverstripe CMS can add HTTP headers to responses it handles directly. These headers are often sensitive, for example
 preventing HTTP caching for responses displaying data based on user sessions, or when serving protected assets. You need
 to ensure those headers are kept in place in your webserver. For example, Apache allows this
 through `Header setifempty` (see [docs](https://httpd.apache.org/docs/current/mod/mod_headers.html#header)).
 See [Developer Guide: Performance](/developer_guides/performance/)
 and [Developer Guides: File Security](/developer_guides/files/file_security) for more details.
 
-Silverstripe relies on the `Host` header to construct URLs such as "reset password" links, so you'll need to ensure that
+Silverstripe CMS relies on the `Host` header to construct URLs such as "reset password" links, so you'll need to ensure that
 the systems hosting it only allow valid values for this header.
 See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery)
 .
 
 ### CDNs and other Reverse Proxies
 
-If your Silverstripe site is hosted behind multiple HTTP layers, you're in charge of controlling which forwarded headers
+If your Silverstripe CMS site is hosted behind multiple HTTP layers, you're in charge of controlling which forwarded headers
 are considered valid, and which IPs can set them.
 See [Developer Guide: Security - Request hostname forgery](/developer_guides/security/secure_coding#request-hostname-forgery)
 .
 
 ### Symlinks
 
-Silverstripe is a modular system, with modules installed and updated via the `composer` PHP dependency manager. These
+Silverstripe CMS is a modular system, with modules installed and updated via the `composer` PHP dependency manager. These
 are usually stored in `vendor/`, outside of the `public/` webroot. Since many modules rely on serving frontend assets
 such as CSS files or images, these are mapped over to the `public/_resources/` folder automatically. If the filesystem
 supports it, this is achieved through symlinks. Depending on your hosting and deployment mechanisms, you may need to
@@ -205,7 +205,7 @@ See [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin) 
 
 ### Caches
 
-Silverstripe relies on various [caches](/developer_guides/performance/caching/)
+Silverstripe CMS relies on various [caches](/developer_guides/performance/caching/)
 to achieve performant responses. By default, those caches are stored in a temporary filesystem folder, and are not
 shared between multiple server instances. Alternative cache backends such as Redis can be
 [configured](/developer_guides/performance/caching/).
@@ -232,12 +232,12 @@ through the CMS.
 There are various community supported installation instructions for different environments. Nginx is a popular choice,
 see [Nginx webserver configuration](https://forum.silverstripe.org/t/nginx-webserver-configuration/2246).
 
-Silverstripe is known to work with Microsoft IIS, and generates `web.config` files by default
+Silverstripe CMS is known to work with Microsoft IIS, and generates `web.config` files by default
 (
 see [Microsoft IIS and SQL Server configuration](https://forum.silverstripe.org/t/microsoft-iis-webserver-and-sql-server-support/2245))
 .
 
-Additionally, there are community supported guides for installing Silverstripe on various environments:
+Additionally, there are community supported guides for installing Silverstripe CMS on various environments:
 
 * [Hosting via Bitnami](https://bitnami.com/stack/silverstripe/virtual-machine): In the cloud or as a locally hosted
   virtual machine
@@ -248,12 +248,12 @@ Additionally, there are community supported guides for installing Silverstripe o
 * [Vagrant with silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
 * [Vagrant with BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
 
-## PHP Requirements for older Silverstripe releases {#php-support}
+## PHP Requirements for older Silverstripe CMS releases {#php-support}
 
-Silverstripe's PHP support has changed over time and if you are looking to upgrade PHP on your Silverstripe site, this
+Silverstripe CMS's PHP support has changed over time and if you are looking to upgrade PHP on your Silverstripe CMS site, this
 table may be of use:
 
-| Silverstripe Version | PHP Version | More information |
+| Silverstripe CMS Version | PHP Version | More information |
 | -------------------- | ----------- | ---------------- |
 | 3.0 - 3.5            | 5.3 - 5.6   | [requirements docs](https://docs.silverstripe.org/en/3.4/getting_started/server_requirements/)
 | 3.6                  | 5.3 - 7.1   | |
@@ -264,11 +264,6 @@ table may be of use:
 ## CMS browser requirements
 
 Silverstripe CMS supports the following web browsers:
-
-* Google Chrome
-* Internet Explorer 11
-* Microsoft Edge
-* Mozilla Firefox
 
 We aim to provide satisfactory experiences in Apple Safari. Silverstripe CMS works well across Windows, Linux, and Mac
 operating systems.

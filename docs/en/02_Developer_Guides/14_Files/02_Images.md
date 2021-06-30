@@ -153,12 +153,12 @@ For usage on a website form, see [`FileField`](api:SilverStripe\Assets\FileField
 
 #### Source images
 
-Whenever SilverStripe performs a manipulation on an image, it saves the output
+Whenever Silverstripe CMS performs a manipulation on an image, it saves the output
 as a new image file, and applies compression during the process. If the source
 image already had lossy compression applied, this leads to the image being
 compressed twice over which can produce a poor result. To ensure the best
 quality output images, it's recommended to upload high quality source images 
-(minimal or no compression) in to your asset store, and let SilverStripe take
+(minimal or no compression) in to your asset store, and let Silverstripe CMS take
 care of applying compression.
 
 Very high resolution images may cause GD to crash (especially on shared hosting 
@@ -167,7 +167,7 @@ around 2000px on the longest edge.
 
 #### Forced resampling
 
-Since the 'master' images in your asset store may have a large file size, SilverStripe
+Since the 'master' images in your asset store may have a large file size, Silverstripe CMS
 can apply compression to your images to save bandwidth - even if no other manipulation
 (such as a crop or resize) is taking place. In many cases this can result in a smaller
 overall file size, which may be appropriate for streaming to web users.

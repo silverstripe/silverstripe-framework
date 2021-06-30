@@ -1,11 +1,11 @@
 ---
 title: Command Line Interface
-summary: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
-introduction: Automate SilverStripe, run Cron Jobs or sync with other platforms through the Command Line Interface.
+summary: Automate Silverstripe CMS, run Cron Jobs or sync with other platforms through the Command Line Interface.
+introduction: Automate Silverstripe CMS, run Cron Jobs or sync with other platforms through the Command Line Interface.
 icon: terminal
 ---
 
-SilverStripe can call [Controllers](../controllers) through a command line interface (CLI) just as easily as through a
+Silverstripe CMS can call [Controllers](../controllers) through a command line interface (CLI) just as easily as through a
 web browser. This functionality can be used to automate tasks with cron jobs, run unit tests, or anything else that
 needs to interface over the command line.
 
@@ -23,7 +23,7 @@ more). This can be a good thing, your CLI can be configured to use higher memory
 to have.
 [/notice]
 
-## Sake - SilverStripe Make
+## Sake - Silverstripe CMS Make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use if more than one
 are available. It is accessible via `vendor/bin/sake`.
@@ -48,7 +48,7 @@ This currently only works on UNIX like systems, not on Windows.
 
 ### Configuration
 
-Sometimes SilverStripe needs to know the URL of your site. For example, when sending an email or generating static
+Sometimes Silverstripe CMS needs to know the URL of your site. For example, when sending an email or generating static
 files. When you're visiting the site in a web browser this is easy to work out, but when executing scripts on the
 command line, it has no way of knowing.
 
@@ -155,7 +155,7 @@ vendor/bin/sake myurl "myparam=1&myotherparam=2"
 ## Running Regular Tasks With Cron
 
 On a UNIX machine, you can typically run a scheduled task with a [cron job](http://en.wikipedia.org/wiki/Cron). Run
-`BuildTask` in SilverStripe as a cron job using `sake`.
+`BuildTask` in Silverstripe CMS as a cron job using `sake`.
 
 The following will run `MyTask` every minute.
 

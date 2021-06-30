@@ -18,7 +18,7 @@ Docs for the current stable version (3.x) can be found
 
 ## Authentication
 
-Some SilverStripe resources have permission requirements to perform CRUD operations
+Some Silverstripe CMS resources have permission requirements to perform CRUD operations
 on, for example the `Member` object in the previous examples.
 
 If you are logged into the CMS and performing a request from the same session then
@@ -45,7 +45,7 @@ the [CSRF Middleware](csrf_protection) enabled. (It is by default).**
 Silverstripe CMS has built-in support for [HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
 
 There is a `BasicAuthAuthenticator` which can be configured for GraphQL that
-will only activate when required. It is kept separate from the SilverStripe CMS
+will only activate when required. It is kept separate from the Silverstripe CMS
 authenticator because GraphQL needs to use the successfully authenticated member
 for CMS permission filtering, whereas the global `BasicAuth` does not log the
 member in or use it for model security.  Note that basic auth will bypass MFA authentication
