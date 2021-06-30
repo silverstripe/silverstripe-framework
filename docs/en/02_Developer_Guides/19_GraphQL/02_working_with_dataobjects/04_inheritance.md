@@ -73,8 +73,8 @@ But what about when we want more than `title` and `content`? In some cases, we'l
 query {
     readPages { 
         nodes { 
-            title 
-            content
+            title # Common field
+            content # Common field
             ... on HomePage {
                 heroImage {
                     url
@@ -98,22 +98,23 @@ that only appear on some types, we need to be explicit.
 But let's take this a step further. What if there's another class in between? Imagine this ancestry:
 
 ```
-Page:
-  EventPage:
-    ConferencePage
-    WebinarPage
+Page
+  -> EventPage
+     -> ConferencePage
+     -> WebinarPage
 ```
 
 We can use the intermediary interface `EventPageInterface` to consolidate fields that are unique to
 `ConferencePage` and `WebinarPage`.
 
-```
+```graphql
 query {
     readPages { 
         nodes { 
-            title 
-            content
+            title # Common to all types
+            content # Common to all types
             ... on EventPageInterface {
+                # Common fields for WebinarPage, ConferencePage, EventPage
                 numberOfTickets
                 featuredSpeaker {
                     firstName
@@ -147,10 +148,12 @@ which is usually the parent class with the "Interface" suffix.
 
 ### Inheritance: A deep dive
 
-There are two components to the way inheritance is handled at build time:
+There are several ways inheritance is handled at build time:
 
 * Implicit field / type exposure
-* Interface generation and assignment to types
+* Interface generation
+* Assignment of generated interfaces to types
+* Assignment of generated interfaces to queries
 
 We'll look at each of these in detail.
 
@@ -180,7 +183,7 @@ GalleryPage:
 
 This results in these two types being exposed with the fields as shown, but also results in a `Page` type:
 
-```
+```graphql
 type Page {
   id: ID! # always exposed
   title: String
@@ -189,7 +192,7 @@ type Page {
 }
 ```
 
-#### Interface generation and assignment to types
+#### Interface generation
 
 Any type that's part of an inheritance chain will generate interfaces. Each applicable ancestral interface is added 
 to the type. Like the type inheritance pattern shown above, interfaces duplicate fields from their ancestors as well.
@@ -202,16 +205,16 @@ All of this is serviced by: `SilverStripe\GraphQL\Schema\DataObject\InterfaceBui
 ##### Example
 
 ```
-Page:
-  BlogPage extends Page
-  EventsPage extends Page
-    ConferencePage extends EventsPage
-    WebinarPage extends EventsPage
+Page
+  -> BlogPage extends Page
+  -> EventsPage extends Page
+     -> ConferencePage extends EventsPage
+     -> WebinarPage extends EventsPage
 ```
 
 This will create the following interfaces:
 
-```
+```graphql
 interface PageInterface {
   title: String
   content: String
@@ -249,9 +252,11 @@ interface WebinarPageInterface {
 }
 ```
 
-Types then get these interfaces applied, like so:
+#### Interface assignment to types
 
-```
+The generated interfaces then get applied to the appropriate types, like so:
+
+```graphql
 type Page implements PageInterface {}
 type BlogPage implements BlogPageInterface & PageInterface {}
 type EventsPage implements EventsPageInterface & PageInterface {} 
@@ -261,16 +266,45 @@ type WebinarPage implements WebinarPageInterface & EventsPageInterface & PageInt
 
 Lastly, for good measure, we create a `DataObjectInterface` that applies to everything.
 
-```
+```graphql
 interface DataObjectInterface {
   id: ID!
   # Any other fields you've explicitly exposed in config.modelConfig.DataObject.base_fields
 }
 ```
 
-```
+```graphql
 type Page implements PageInterface & DataObjectInterface {}
 ```
+
+#### Interface assignment to queries
+
+Queries, both at the root, and nested as fields on types, will have their types
+updated if they refer to a type that has had any generated interfaces added to it.
+
+```graphql
+type Query {
+    readPages: [Page]
+}
+
+type BlogPage {
+    download: File   
+}
+```
+
+Becomes:
+
+```graphql
+type Query {
+    readPages: [PageInterface]
+}
+
+type BlogPage {
+    download: FileInterface
+}
+```
+
+All of this is serviced by: `SilverStripe\GraphQL\Schema\DataObject\InterfaceBuilder`
 
 #### Elemental
 
