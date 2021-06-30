@@ -228,7 +228,7 @@ SilverStripe\GraphQL\Schema\Schema:
 ```php
 class MyProvider implements SchemaUpdater
 {
-    public function updateSchema(Schema $schema, array $config = []): void
+    public function updateSchema(Schema $schema): void
     {
         // updates here...
     }
