@@ -1,7 +1,6 @@
 ---
 title: Getting Started
-introduction: Silverstripe is a web application. This means that you will need to have a
-webserver and database. We will take you through the setup of the server environment as well the application itself.
+introduction: Silverstripe is a web application. This means that you will need to have a webserver and database. We will take you through the setup of the server environment as well the application itself.
 icon: rocket
 ---
 
