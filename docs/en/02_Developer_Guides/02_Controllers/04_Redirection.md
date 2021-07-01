@@ -13,7 +13,7 @@ HTTP header.
 
 
 ```php
-$this->redirect('goherenow');
+$this->redirect($this->Link('goherenow'));
 // redirect to Page::goherenow(), i.e on the contact-us page this will redirect to /contact-us/goherenow/
 
 $this->redirect('goherenow/');
