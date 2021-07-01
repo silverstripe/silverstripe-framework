@@ -2622,4 +2622,15 @@ class DataObjectTest extends SapphireTest
             'Salary' => 50,
         ], DataObject::CREATE_HYDRATED);
     }
+
+    public function testDBObjectEnum()
+    {
+        $obj = new DataObjectTest\Fixture();
+        // enums are parsed correctly
+        $vals = ['25', '50', '75', '100'];
+        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnum')->enumValues());
+        // enum with dots in their values are also parsed correctly
+        $vals = ['25.25', '50.00', '75.00', '100.50'];
+        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnumWithDots')->enumValues());
+    }
 }
