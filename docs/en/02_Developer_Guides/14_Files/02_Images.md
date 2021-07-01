@@ -204,7 +204,7 @@ SilverStripe\Core\Injector\Injector:
 
 Images added via the WYSIWYG editor and as objects on templates are [lazy loaded](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading) by default.
 
-To disable lazy loading for an individual image, you can call `$MyImage.setLazyLoad(false)`.
+To disable lazy loading for an individual image, you can call `$MyImage.setLazyLoad(0)`.
 
 You can opt out of lazy loading globally by setting the `Image::lazy_loading_enabled` config to `false`, see example `yml`:
 
