@@ -232,6 +232,8 @@ through the CMS.
 There are various community supported installation instructions for different environments. Nginx is a popular choice,
 see [Nginx webserver configuration](https://forum.silverstripe.org/t/nginx-webserver-configuration/2246).
 
+You can follow this guide [how to install nginx on ubuntu](https://www.armanism.com/blog/install-nginx-on-ubuntu).
+
 Silverstripe is known to work with Microsoft IIS, and generates `web.config` files by default
 (
 see [Microsoft IIS and SQL Server configuration](https://forum.silverstripe.org/t/microsoft-iis-webserver-and-sql-server-support/2245))
