@@ -3155,7 +3155,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             return $value;
         }
 
-        list($class, $spec) = explode('.', $helper);
+        $pos = strpos($helper, '.');
+        $class = substr($helper, 0, $pos);
+        $spec = substr($helper, $pos + 1);
+
         /** @var DBField $obj */
         $table = $schema->tableName($class);
         $obj = Injector::inst()->create($spec, $fieldName);
