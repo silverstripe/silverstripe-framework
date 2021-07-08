@@ -221,7 +221,7 @@ when calculating a cache key, usually in addition to the full URL.
 By default, SilverStripe will output a `Vary` header with the following content: 
 
 ```
-Vary: X-Forwarded-Protocol
+Vary: X-Forwarded-Proto
 ```
 
 To change the value of the `Vary` header, you can change this value by specifying the header in configuration.

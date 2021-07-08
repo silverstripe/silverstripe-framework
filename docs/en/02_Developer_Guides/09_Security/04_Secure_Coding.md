@@ -696,14 +696,14 @@ TrustedProxyMiddleware service:
 SilverStripe\Control\TrustedProxyMiddleware:
   properties:
     ProxyHostHeaders: X-Forwarded-Host
-    ProxySchemeHeaders: X-Forwarded-Protocol
+    ProxySchemeHeaders: X-Forwarded-Proto
     ProxyIPHeaders: X-Forwarded-Ip
 ```
 
 ```
 SS_TRUSTED_PROXY_HOST_HEADER="HTTP_X_FORWARDED_HOST"
 SS_TRUSTED_PROXY_IP_HEADER="HTTP_X_FORWARDED_FOR"
-SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTOCOL"
+SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTO"
 ```
 
 At the same time, you'll also need to define which headers you trust from these proxy IPs. Since there are multiple ways through which proxies can pass through HTTP information on the original hostname, IP and protocol, these values need to be adjusted for your specific proxy. The header names match their equivalent `$_SERVER` values.

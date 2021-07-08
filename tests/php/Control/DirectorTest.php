@@ -757,11 +757,11 @@ class DirectorTest extends SapphireTest
 
         // nothing available
         $headers = [
-            'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
+            'HTTP_X_FORWARDED_PROTO', 'HTTPS', 'SSL'
         ];
         foreach ($headers as $header) {
             if (isset($_SERVER[$header])) {
-                unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
+                unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
             }
         }
 
@@ -778,7 +778,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                ['X-Forwarded-Protocol' => 'https']
+                ['X-Forwarded-Proto' => 'https']
             )->getBody()
         );
 
@@ -790,7 +790,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                ['X-Forwarded-Protocol' => 'http']
+                ['X-Forwarded-Proto' => 'http']
             )->getBody()
         );
 
@@ -802,7 +802,7 @@ class DirectorTest extends SapphireTest
                 null,
                 null,
                 null,
-                ['X-Forwarded-Protocol' => 'ftp']
+                ['X-Forwarded-Proto' => 'ftp']
             )->getBody()
         );
 

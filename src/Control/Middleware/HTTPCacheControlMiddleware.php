@@ -136,7 +136,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @var array
      */
     private static $defaultVary = [
-        "X-Forwarded-Protocol" => true,
+        "X-Forwarded-Proto" => true,
     ];
 
     /**
