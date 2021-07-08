@@ -440,7 +440,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @param null|Member $currentUser
      */
-    public static function setCurrentUser($currentUser = null)
+    public static function setCurrentUser(Member $currentUser = null)
     {
         self::$currentUser = $currentUser;
     }
