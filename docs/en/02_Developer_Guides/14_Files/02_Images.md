@@ -200,6 +200,19 @@ SilverStripe\Core\Injector\Injector:
       Quality: 90
 ```
 
+### Lazy Loading
+
+Images added via the WYSIWYG editor and as objects on templates are [lazy loaded](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading) by default.
+
+To disable lazy loading for an individual image with a template, you can call `$MyImage.LazyLoad(false)`.
+
+You can opt out of lazy loading globally by setting the `Image::lazy_loading_enabled` config to `false`, see example `yml`:
+
+```yml
+SilverStripe\Assets\Image:
+  lazy_loading_enabled: false
+```
+
 ## Changing the manipulation driver to Imagick
 
 If you want to change the image manipulation driver to use Imagick instead of GD, you'll need to change your config so
