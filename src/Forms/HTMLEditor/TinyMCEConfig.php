@@ -492,8 +492,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * Totally re-set the buttons on a given line
      *
      * @param int $line The line number to redefine, from 1 to 3
-     * @param string ...$buttons A string or several strings, or a single array of strings.
-     * The button names to assign to this line.
+     * @param string|string[] $buttons,... An array of strings, or one or more strings.
+     *                                     The button names to assign to this line.
      * @return $this
      */
     public function setButtonsForLine($line, $buttons)
@@ -593,7 +593,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
     /**
      * Remove the first occurrence of buttons
-     * @param string ...$buttons one or more strings - the name of the buttons to remove
+     * @param string|string[] $buttons,... An array of strings, or one or more strings. The button names to remove. 
      */
     public function removeButtons($buttons)
     {
