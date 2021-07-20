@@ -593,7 +593,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 
     /**
      * Remove the first occurrence of buttons
-     * @param string|string[] $buttons,... An array of strings, or one or more strings. The button names to remove. 
+     * @param string|string[] $buttons,... An array of strings, or one or more strings. The button names to remove.
      */
     public function removeButtons($buttons)
     {
