@@ -14,7 +14,7 @@ covers how to create an `Email` instance, customise it with a HTML template, the
 SilverStripe provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an
 extensive list of "transports" for sending mail via different services. 
 
-Out of the box, SilverStripe will use the built-in PHP `mail()` command via the `Swift_MailTransport` class. If you'd
+Out of the box, SilverStripe will use the built-in PHP `mail()` command via the `Swift_SendmailTransport` class. If you'd
 like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
 
 ```yml
