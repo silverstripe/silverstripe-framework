@@ -2,13 +2,16 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_ExpectationFailedException;
-use PHPUnit_Util_InvalidArgumentHelper;
+// use PHPUnit_Framework_Constraint;
+use PHPUnit\Framework\Constraint\Constraint;
+// use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\ExpectationFailedException;
+// use PHPUnit_Util_InvalidArgumentHelper;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
+use SilverStripe\Dev\SapphireTest;
 
-if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+if (!class_exists(Constraint::class)) {
     return;
 }
 
@@ -16,7 +19,7 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  * Constraint for checking if a ViewableData (e.g. ArrayData or any DataObject) contains fields matching the given
  * key-value pairs.
  */
-class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestOnly
+class ViewableDataContains extends Constraint implements TestOnly
 {
     /**
      * @var array
@@ -27,12 +30,10 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      * ViewableDataContains constructor.
      * @param array $match
      */
-    public function __construct($match)
+    public function __construct(array $match)
     {
-        parent::__construct();
-
         if (!is_array($match)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+            throw SapphireTest::createPHPUnitFrameworkException(
                 1,
                 'array'
             );
@@ -57,9 +58,9 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      *
      * @return null|bool
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?bool
     {
         $success = true;
 
@@ -89,7 +90,7 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'contains only Objects where "' . key($this->match) . '" is "' . current($this->match) . '"';
     }

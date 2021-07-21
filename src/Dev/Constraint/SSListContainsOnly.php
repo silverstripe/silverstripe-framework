@@ -2,12 +2,14 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_ExpectationFailedException;
+// use PHPUnit_Framework_Constraint;
+use PHPUnit\Framework\Constraint\Constraint;
+// use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
 
-if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+if (!class_exists(Constraint::class)) {
     return;
 }
 
@@ -40,9 +42,9 @@ class SSListContainsOnly extends SSListContains implements TestOnly
      *
      * @return null|bool
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?null
     {
         $success = true;
 
@@ -71,7 +73,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
         return null;
     }
 
-    protected function getStubForToString()
+    protected function getStubForToString(): string
     {
         return $this->itemNotMatching
             ? parent::getStubForToString()

@@ -2,7 +2,8 @@
 
 namespace SilverStripe\Dev;
 
-use PHPUnit_Framework_AssertionFailedError;
+// use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit\Framework\AssertionFailedError;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
@@ -81,7 +82,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         return $this->mainSession->session();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -113,7 +114,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         SecurityToken::disable();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         SecurityToken::enable();
         unset($this->mainSession);
@@ -267,7 +268,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws AssertionFailedError
      */
     public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -304,7 +305,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matching tags as an array
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws AssertionFailedError
      */
     public function assertExactMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -339,7 +340,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws AssertionFailedError
      */
     public function assertPartialHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
@@ -377,7 +378,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matched tags as an array
      * @param string $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws AssertionFailedError
      */
     public function assertExactHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {

@@ -2,13 +2,15 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_ExpectationFailedException;
+// use PHPUnit_Framework_Constraint;
+use PHPUnit\Framework\Constraint\Constraint;
+// use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
 
-if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+if (!class_exists(Constraint::class)) {
     return;
 }
 
@@ -16,7 +18,7 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
  * Constraint for checking if every item in a SS_List matches a given match,
  * e.g. every Member has isActive set to true
  */
-class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint implements TestOnly
+class SSListContainsOnlyMatchingItems extends Constraint implements TestOnly
 {
     /**
      * @var array
@@ -30,7 +32,6 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
 
     public function __construct($match)
     {
-        parent::__construct();
         $this->exporter = new SSListExporter();
 
         $this->constraint = new ViewableDataContains($match);
@@ -53,9 +54,9 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      *
      * @return null|bool
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?bool
     {
         $success = true;
 
@@ -82,7 +83,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'contains only Objects where "' . key($this->match) . '" is "' . current($this->match) . '"';
     }

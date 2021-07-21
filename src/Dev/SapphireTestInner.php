@@ -57,7 +57,7 @@ if (!class_exists(TestCase::class)) {
  * This class should not be used anywhere outside of unit tests, as phpunit may not be installed
  * in production sites.
  */
-class SapphireTest implements TestOnly
+class SapphireTestInner extends TestCase implements TestOnly
 {
     /**
      * Path to fixture data for this test run.
