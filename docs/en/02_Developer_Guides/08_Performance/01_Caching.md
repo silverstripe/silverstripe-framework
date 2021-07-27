@@ -38,7 +38,7 @@ Note that this library describes usage of [PSR-6](http://www.php-fig.org/psr/psr
 but also exposes caches following the PSR-16 interface. 
 
 Cache objects are configured via YAML
-and SilverStripe's [dependency injection](/developer-guides/extending/injector) system. 
+and SilverStripe's [dependency injection](/developer_guides/extending/injector) system. 
 
 
 ```yml
