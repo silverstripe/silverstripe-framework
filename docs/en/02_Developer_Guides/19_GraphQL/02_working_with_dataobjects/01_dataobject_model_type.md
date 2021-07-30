@@ -77,9 +77,28 @@ query {
   readPages {
     nodes {
       title
+      content
+      ... on BlogPage {
+        date(format: NICE)
+        comments {
+          nodes {
+            comment
+            author {
+              firstName
+            }
+          }
+        }
+      }
     }
 }
 ```
+
+[info]
+Note the use of the default arguments on `date`. Fields created from `DBFields`
+generate their own default sets of arguments. For more information, see the
+[DBFieldArgs](query_plugins#dbfieldargs) for more information.
+[/info]
+
 
 A mutation:
 ```graphql
