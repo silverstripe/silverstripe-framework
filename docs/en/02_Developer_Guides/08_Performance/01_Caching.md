@@ -38,7 +38,7 @@ Note that this library describes usage of [PSR-6](http://www.php-fig.org/psr/psr
 but also exposes caches following the PSR-16 interface. 
 
 Cache objects are configured via YAML
-and SilverStripe's [dependency injection](/developer_guides/extending/injector) system. 
+and Silverstripe CMS's [dependency injection](/developer_guides/extending/injector) system. 
 
 
 ```yml
@@ -184,7 +184,7 @@ interface. Use this interface to trigger `clear()` on your caches.
 
 ## Adapters
 
-SilverStripe tries to identify the most performant cache available on your system
+Silverstripe CMS tries to identify the most performant cache available on your system
 through the [DefaultCacheFactory](api:SilverStripe\Core\Cache\DefaultCacheFactory) implementation:
 
  * `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).

@@ -27,8 +27,8 @@ Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStrip
 of the response.
 
 <div class="notice" markdown="1">
-**Compatibility Notice:** Previous versions of SilverStripe would send a GET request if `post()` was called with no POST variables supplied in the second argument.
-SilverStripe 4.6 and later always sends a POST request for consistency.
+**Compatibility Notice:** Previous versions of Silverstripe CMS would send a GET request if `post()` was called with no POST variables supplied in the second argument.
+Silverstripe CMS 4.6 and later always sends a POST request for consistency.
 </div>
 
 ## Other Requests

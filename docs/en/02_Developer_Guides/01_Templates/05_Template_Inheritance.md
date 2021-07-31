@@ -8,7 +8,7 @@ icon: sitemap
 
 ## Theme types
 
-Templates in SilverStripe are bundled into one of two groups:
+Templates in Silverstripe CMS are bundled into one of two groups:
  - Default Templates, such as those provided in `mymodule/templates` folder.
  - Theme templates, such as those provided in `themes/mytheme/templates` folders.
 
@@ -32,10 +32,10 @@ by the full path (from the `templates` folder onwards).
 
 ### Nested Layouts through `$Layout` type
 
-SilverStripe has basic support for nested layouts through a fixed template variable named `$Layout`. It's used for 
+Silverstripe CMS has basic support for nested layouts through a fixed template variable named `$Layout`. It's used for 
 storing top level template information separate to individual page layouts.
 
-When `$Layout` is found within a root template file (one in `templates`), SilverStripe will attempt to fetch a child 
+When `$Layout` is found within a root template file (one in `templates`), Silverstripe CMS will attempt to fetch a child 
 template from the `templates/<namespace>/Layout/<class>.ss` path, where `<namespace>` and `<class>` represent
 the class being rendered. It will do a full sweep of your modules, core and custom code as it 
 would if it was looking for a new root template, as well as looking down the class hierarchy until

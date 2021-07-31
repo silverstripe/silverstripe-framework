@@ -13,7 +13,7 @@ information.
 *  Each database row maps to a PHP object.
 *  Each database column maps to a property on a PHP object.
 
-All data tables in Silverstripe are defined as subclasses of [DataObject](api:SilverStripe\ORM\DataObject). The [DataObject](api:SilverStripe\ORM\DataObject) class represents a
+All data tables in Silverstripe CMS are defined as subclasses of [DataObject](api:SilverStripe\ORM\DataObject). The [DataObject](api:SilverStripe\ORM\DataObject) class represents a
 single row in a database table, following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern)
 design pattern. Database Columns are defined as [Data Types](/developer_guides/model/data_types_and_casting) in the static `$db` variable
 along with any [relationships](relations) defined as `$has_one`, `$has_many`, `$many_many` properties on the class.
@@ -41,7 +41,7 @@ so on. After writing this class, we need to regenerate the database schema.
 
 ## Generating the Database Schema
 
-After adding, modifying or removing `DataObject` subclasses, make sure to rebuild your Silverstripe database. The
+After adding, modifying or removing `DataObject` subclasses, make sure to rebuild your Silverstripe CMS database. The
 database schema is generated automatically by visiting the URL http://www.yoursite.com/dev/build while authenticated as an administrator.
 
 This script will analyze the existing schema, compare it to what's required by your data classes, and alter the schema
@@ -60,7 +60,7 @@ It **won't** do any of the following
 * Delete tables
 * Delete fields
 * Rename any tables that it doesn't recognize. This allows other applications to coexist in the same database, as long as
-  their table names don't match a Silverstripe data class.
+  their table names don't match a Silverstripe CMS data class.
 
 
 [notice]
@@ -129,7 +129,7 @@ Using the `create()` method provides chainability, which can add elegance and br
 [/notice]
 
 
-Database columns and properties can be set as class properties on the object. The Silverstripe ORM handles the saving
+Database columns and properties can be set as class properties on the object. The Silverstripe CMS ORM handles the saving
 of the values through a custom `__set()` method.
 
 ```php
@@ -692,7 +692,7 @@ Note: Alternatively you can set defaults directly in the database-schema (rather
 ## Subclasses
 
 Inheritance is supported in the data model: separate tables will be linked together, the data spread across these
-tables. The mapping and saving logic is handled by Silverstripe, you don't need to worry about writing SQL most of the
+tables. The mapping and saving logic is handled by Silverstripe CMS , you don't need to worry about writing SQL most of the
 time.
 
 For example, suppose we have the following set of classes:
@@ -751,7 +751,7 @@ The way the ORM stores the data is this:
 *  In all the tables, ID is the primary key.  A matching ID number is used for all parts of a particular record:
    record #2 in Page refers to the same object as record #2 in [SiteTree](api:SilverStripe\CMS\Model\SiteTree).
 
-To retrieve a news article, Silverstripe joins the [SiteTree](api:SilverStripe\CMS\Model\SiteTree), [Page](api:SilverStripe\CMS\Model\SiteTree\Page) and NewsPage tables by their ID fields.
+To retrieve a news article, Silverstripe CMS joins the [SiteTree](api:SilverStripe\CMS\Model\SiteTree), [Page](api:SilverStripe\CMS\Model\SiteTree\Page) and NewsPage tables by their ID fields.
 
 ## Related Lessons
 * [Introduction to the ORM](https://www.silverstripe.org/learn/lessons/v4/introduction-to-the-orm-1)

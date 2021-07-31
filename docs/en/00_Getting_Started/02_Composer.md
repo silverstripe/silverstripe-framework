@@ -3,11 +3,11 @@ title: Composer
 summary: What is composer and how to use it with Silverstripe CMS
 ---
 
-# Using Silverstripe with Composer
+# Using Silverstripe CMS with Composer
 
 ## Requirements
 
-[Composer](http://getcomposer.org/) is a package management tool for PHP that lets you install and upgrade Silverstripe
+[Composer](http://getcomposer.org/) is a package management tool for PHP that lets you install and upgrade Silverstripe CMS
 and its modules. We also have separate instructions
 for [installing modules with Composer](/developer_guides/extending/modules).
 
@@ -49,14 +49,14 @@ composer create-project silverstripe/installer ./my-project 4.3.3
 ```
 
 When `create-project` is used with a release version like above, it will try to get the code from archives instead of
-creating git repositories. If you're planning to contribute to Silverstripe,
+creating git repositories. If you're planning to contribute to Silverstripe CMS,
 see [Using development versions](#using-development-versions).
 
 ## Adding modules to your project
 
-Composer isn't only used to download Silverstripe CMS, it is also used to manage all Silverstripe modules. You can find
-thousands of modules on [https://addons.silverstripe.org](https://addons.silverstripe.org). Installing a module can be
-done with the following command:
+Composer isn't only used to download Silverstripe CMS, it is also used to manage all Silverstripe CMS modules. 
+You can find thousands of modules on [https://addons.silverstripe.org](https://addons.silverstripe.org).
+Installing a module can be done with the following command:
 
 ```
 composer require silverstripe/blog
@@ -79,7 +79,7 @@ a little different. The version string for the `4` branch is `4.x-dev`.
 ## Updating dependencies
 
 Except for the control code of the Voyager space probe, every piece of code in the universe gets updated from time to
-time. Silverstripe modules are no exception.
+time. Silverstripe CMS modules are no exception.
 
 To get the latest updates of the modules in your project, run this command:
 
@@ -111,14 +111,14 @@ So your deployment process, as it relates to Composer, should be as follows:
 
 ## Composer managed modules, Git and .gitignore
 
-Modules and themes managed by Composer should not be committed with your projects source code. Silverstripe ships with
+Modules and themes managed by Composer should not be committed with your projects source code. Silverstripe CMS ships with
 a [.gitignore](http://git-scm.com/docs/gitignore) file by default which prevents this. For more details
 read  [Should I commit the dependencies in my vendor directory?](https://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md)
 .
 
 ## Dev Environments for Contributing Code {#contributing}
 
-So you want to contribute to Silverstripe? Fantastic! You can do this with composer too. You have to tell composer three
+So you want to contribute to Silverstripe CMS? Fantastic! You can do this with composer too. You have to tell composer three
 things in order to be able to do this:
 
 - Keep the full git repository information
@@ -138,11 +138,11 @@ on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifyi
 
 The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
 
-The `--dev` flag is optional, and can be used to add a couple modules which are useful for Silverstripe development:
+The `--dev` flag is optional, and can be used to add a couple modules which are useful for Silverstripe CMS development:
 
 * The `behat-extension` module allows running [Behat](http://behat.org) integration tests
 * The `docsviewer` module will let you preview changes to the project documentation
-* The `buildtools` module which adds [phing](http://phing.info) tasks for creating Silverstripe releases
+* The `buildtools` module which adds [phing](http://phing.info) tasks for creating Silverstripe CMS releases
 
 Once the `create-project` command completes, you need to edit the `composer.json` in the project root and remove
 the `@stable` markers from the `silverstripe/cms` and `silverstripe/framework` version entries.
@@ -194,7 +194,7 @@ is to ensure that when developers are getting started, running `composer update`
 unstable version
 
 However it is relatively easy to tell composer to use development versions. Not only is this required if you want to
-contribute back to the Silverstripe project, it also allows you to get fixes and API changes early.
+contribute back to the Silverstripe CMS project, it also allows you to get fixes and API changes early.
 
 This is a two step process. First you get composer to start a project based on the latest unstable
 silverstripe/installer
@@ -324,7 +324,7 @@ on [packagist.org](http://packagist.org).
 
 Follow the packagist.org advice on choosing a [unique name and vendor prefix](https://packagist.org/about). Please don't
 use the `silverstripe/<modulename>` vendor prefix, since that's reserved for modules produced by Silverstripe Ltd. In
-order to declare that your module is in fact a Silverstripe module, use the "silverstripe" tag in the composer.json
+order to declare that your module is in fact a Silverstripe CMS module, use the "silverstripe" tag in the composer.json
 file, and set the "type" to "silverstripe-module".
 
 ### What about themes?

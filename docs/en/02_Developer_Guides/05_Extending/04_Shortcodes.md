@@ -95,7 +95,7 @@ ShortcodeParser::get('default')->register('my_shortcode', ['Page', 'MyShortCodeM
 
 ## Built-in Shortcodes
 
-SilverStripe comes with several shortcode parsers already.
+Silverstripe CMS comes with several shortcode parsers already.
 
 ### Links
 

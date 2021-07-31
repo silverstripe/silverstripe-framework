@@ -5,26 +5,26 @@ summary: Deploy robust applications by bundling Unit and Behavior tests with you
 
 # Unit and Integration Testing
 
-For behaviour testing in SilverStripe, check out [SilverStripe Behat Documentation](https://github.com/silverstripe-labs/silverstripe-behat-extension/).
+For behaviour testing in Silverstripe CMS, check out [Silverstripe CMS Behat Documentation](https://github.com/silverstripe-labs/silverstripe-behat-extension/).
 
 ## Introduction
 
-The SilverStripe core contains various features designed to simplify the process of creating and managing automated tests.
+The Silverstripe CMS core contains various features designed to simplify the process of creating and managing automated tests.
 
-SilverStripe uses [PHPUnit](http://www.phpunit.de) for unit tests, and the framework contains features to simplify the
+Silverstripe CMS uses [PHPUnit](http://www.phpunit.de) for unit tests, and the framework contains features to simplify the
 process of creating and managing tests.
 
 If you're more familiar with unit testing, but want a refresher of some of the concepts and terminology, you can browse
 the [Testing Glossary](testing_glossary). To get started now, follow the installation instructions below.
 
-If you are familiar with PHP coding but new to unit testing then check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
+If you are familiar with PHP coding but new to unit testing then check out Mark's presentation [Getting to Grips with Silverstripe CMS Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
 
 You should also read over the [PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
 fundamental concepts that we build on in this documentation.
 
 ## Running Tests
 
-In order to run tests, you need to install SilverStripe using [/getting-started/composer](Composer),
+In order to run tests, you need to install Silverstripe CMS using [/getting-started/composer](Composer),
 which will pull in the required development dependencies to run tests.
 
 Tests are run from the commandline, in your webroot folder:
@@ -42,7 +42,7 @@ to your `$PATH` definition in the shell profile (usually `~/.profile`): `PATH=./
 
 ## Caching
 
-Just like on web requests, SilverStripe caches metadata about the execution context.
+Just like on web requests, Silverstripe CMS caches metadata about the execution context.
 This cache can get stale, e.g. when you change YAML configuration or add certain types of PHP code.
 In order to flush the cache, use the `flush=1` CLI parameter:
 
@@ -82,7 +82,7 @@ or through an XML file. File-based configuration has
 the advantage of enforcing certain rules across test executions (e.g. excluding files from code coverage reports), and
 of course this information can be version controlled and shared with other team members.
 
-SilverStripe comes with a default `phpunit.xml.dist` that you can use as a starting point. Copy the file into a new
+Silverstripe CMS comes with a default `phpunit.xml.dist` that you can use as a starting point. Copy the file into a new
 `phpunit.xml` and customize to your needs - PHPUnit will auto-detect its existence, and prioritize it over the default
 file.
 
@@ -92,7 +92,7 @@ There's nothing stopping you from creating multiple XML files (see the `--config
 
 ### Database Permissions
 
-SilverStripe tests create their own temporary database on every execution. Because of this the database user in your config file
+Silverstripe CMS tests create their own temporary database on every execution. Because of this the database user in your config file
 should have the appropriate permissions to create new databases on your server, otherwise tests will not run.
 
 ## Writing Tests
@@ -109,8 +109,8 @@ You will generally write two different kinds of test classes.
 *  **Unit Test:** Test the behaviour of one of your DataObjects.
 *  **Functional Test:** Test the behaviour of one of your controllers.
 
-Tutorials and recipes for creating tests using the SilverStripe framework:
+Tutorials and recipes for creating tests using the Silverstripe CMS:
 
-* [Creating a SilverStripe test](how_tos/write_a_sapphiretest): Writing tests to check core data objects
+* [Creating a Silverstripe CMS test](how_tos/write_a_sapphiretest): Writing tests to check core data objects
 * [Creating a functional test](how_tos/write_a_functionaltest): An overview of functional tests and how to write a functional test
 * [Testing Outgoing Email](how_tos/testing_email): An overview of the built-in email testing code

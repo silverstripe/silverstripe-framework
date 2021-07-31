@@ -72,7 +72,7 @@ Shortcodes represent an embeded asset within a block of HTML text. For instance,
 of a page with a shortcode image:
 
 ```html
-<p>Welcome to SilverStripe! This is the default homepage.</p>
+<p>Welcome to Silverstripe CMS! This is the default homepage.</p>
 <p>[image src="/assets/12824172.jpeg" id="27" width="400" height="400" class="leftAlone ss-htmleditorfield-file image" title="My Image"]</p>
 ```
 
@@ -131,7 +131,7 @@ As with storage, there are also different ways of loading the content (or proper
 
 ### Additional file types
 
-SilverStripe has a pre-defined list of common file types. `File::getFileType` will return "unknown" for files outside that list.
+Silverstripe CMS has a pre-defined list of common file types. `File::getFileType` will return "unknown" for files outside that list.
 
 You can add your own file extensions and its description with the following configuration.
 

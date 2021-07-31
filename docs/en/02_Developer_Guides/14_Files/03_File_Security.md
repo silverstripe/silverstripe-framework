@@ -34,7 +34,7 @@ Access restrictions:
 
 ## Permission Model
 
-Like all other objects in SilverStripe, permissions are generally controlled via `can*()` methods,
+Like all other objects in Silverstripe CMS, permissions are generally controlled via `can*()` methods,
 for example `canView()` (see [permissions](/developer_guides/security/permissions)).
 
 The permission model defines the following actions:
@@ -49,7 +49,7 @@ The permission model defines the following actions:
 There's a few rules guiding their access, in descending order of priority:
 
  * Published and unprotected files can be downloaded by anyone knowing the URL.
-   They bypass any SilverStripe permission checks (served directly by the webserver).
+   They bypass any Silverstripe CMS permission checks (served directly by the webserver).
  * Access can be restricted by custom `can*()` method implementations on `File`
    (through [extensions](/developer_guides/extending/extensions)).
    This logic can overrule any further restrictions below.
@@ -85,7 +85,7 @@ can still be downloaded through a public URL until a `write()` operation is trig
 
 ## Asset stores
 
-Out of the box, SilverStripe comes with two asset stores: a public and a protected one.
+Out of the box, Silverstripe CMS comes with two asset stores: a public and a protected one.
 Most operations which act on assets work independently of this mechanism,
 without having to consider whether any specific file is protected or public, but can normally be
 instructed to favour private or protected stores in some cases.
@@ -226,7 +226,7 @@ a single entity for access control, so specific variants cannot be individually 
 ## How file access is protected
 
 Filesystem paths can change depending if the file is protected or public,
-but its public URL stays the same. You just need to use SilverStripe's APIs to generate URLs to those files.
+but its public URL stays the same. You just need to use Silverstripe CMS's APIs to generate URLs to those files.
 Similarly, operations which modify files do not normally need to be told whether the file is protected or public
 either. This provides a consistent method for interacting with files.
 
@@ -311,7 +311,7 @@ implementation of the `AssetStore` is `FlysystemAssetStore`.
 
 ### Configuring: Protected folder location
 
-In the default SilverStripe configuration, protected assets are placed within the web root into the
+In the default Silverstripe CMS configuration, protected assets are placed within the web root into the
 `assets/.protected` folder, into which is also generated a `.htaccess` or `web.config` configured
 to deny any and all direct web requests.
 

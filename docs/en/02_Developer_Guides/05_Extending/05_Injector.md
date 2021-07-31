@@ -1,12 +1,12 @@
 ---
 title: Injector
-summary: Introduction to using Dependency Injection within SilverStripe.
+summary: Introduction to using Dependency Injection within Silverstripe CMS.
 icon: code
 ---
 
 # Injector
 
-The [Injector](api:SilverStripe\Core\Injector\Injector) class is the central manager of inter-class dependencies in SilverStripe. It offers developers the 
+The [Injector](api:SilverStripe\Core\Injector\Injector) class is the central manager of inter-class dependencies in Silverstripe CMS. It offers developers the 
 ability to declare the dependencies a class type has, or to change the nature of the dependencies defined by other 
 developers. 
 

@@ -27,7 +27,7 @@ is the use of a CSRF token for any requests that destroy or mutate data.
 By default, this module comes with a `CSRFMiddleware` implementation that forces all mutations to check
 for the presence of a CSRF token in the request. That token must be applied to a header named` X-CSRF-TOKEN`.
 
-In SilverStripe, CSRF tokens are most commonly stored in the session as `SecurityID`, or accessed through
+In Silverstripe CMS, CSRF tokens are most commonly stored in the session as `SecurityID`, or accessed through
 the `SecurityToken` API, using `SecurityToken::inst()->getValue()`.
 
 Queries do not require CSRF tokens.

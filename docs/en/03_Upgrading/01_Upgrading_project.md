@@ -1,66 +1,66 @@
 ---
-title: Upgrading to SilverStripe 4
-summary: Upgrade your project SilverStripe 4 and keep it up to date with the latest fixes, security patches and new features.
+title: Upgrading to Silverstripe CMS 4
+summary: Upgrade your project Silverstripe CMS 4 and keep it up to date with the latest fixes, security patches and new features.
 ---
 
-# Upgrading a SilverStripe 3 project to SilverStripe 4
+# Upgrading a Silverstripe CMS 3 project to Silverstripe CMS 4
 
-SilverStripe applications should be kept up to date with the latest security releases. Usually an update or upgrade to
-your SilverStripe installation means overwriting files, flushing the cache and updating your database schema.
+Silverstripe CMS applications should be kept up to date with the latest security releases. Usually an update or upgrade to
+your Silverstripe CMS installation means overwriting files, flushing the cache and updating your database schema.
 
 ## Understanding and planning your upgrade {#planning}
 
 How easy will it be to update my project? It's a fair question, and sometimes a difficult one to answer.
 
-* SilverStripe follows _semantic versioning_ (see our [release process](/contributing/release_process) for details).
+* Silverstripe CMS follows _semantic versioning_ (see our [release process](/contributing/release_process) for details).
   * "Major" releases introduce API changes that may break your application.
   * "Minor" releases (x.y) introduce API changes in a backwards compatible way and can mark some API as deprecated.
   * "Patch" releases (x.y.z) fix bugs without introducing any API changes.
-* If you've made custom branches of SilverStripe core, or any thirdparty module, upgrades are going to be more complex.
+* If you've made custom branches of Silverstripe CMS core, or any thirdparty module, upgrades are going to be more complex.
 * More custom features will mean more work to re-test all of those features, and adapt to API changes in core.
 * Customisations of a well defined type - such as custom page types or custom blog widgets - 
   are going to be easier to upgrade than customisations that modify deep system internals like rewriting SQL queries.
 
 ### Overview of changes
 
-There are some fundamental changes in SilverStripe 4:
+There are some fundamental changes in Silverstripe CMS 4:
 
-* PHP 7.1 is now the minimum required version for SilverStripe 4.5.0 and above. We strongly recommend you only use [supported versions of PHP](https://www.php.net/supported-versions.php). Note: SilverStripe 4.0.0 through 4.4.0 still support PHP 5.6.
-* PHP 7.4 is supported from SilverStripe 4.5.3 and above.
-* SilverStripe is now even more modular which allows you to remove functionality your project might not need.
-* Common functionality sets can now be installed via SilverStripe _recipes_.
-* SilverStripe modules can now be installed in the `vendor/` folder along with your regular PHP packages.
+* PHP 7.1 is now the minimum required version for Silverstripe CMS 4.5.0 and above. We strongly recommend you only use [supported versions of PHP](https://www.php.net/supported-versions.php). Note: Silverstripe CMS 4.0.0 through 4.4.0 still support PHP 5.6.
+* PHP 7.4 is supported from Silverstripe CMS 4.5.3 and above.
+* Silverstripe CMS is now even more modular which allows you to remove functionality your project might not need.
+* Common functionality sets can now be installed via Silverstripe CMS _recipes_.
+* Silverstripe CMS modules can now be installed in the `vendor/` folder along with your regular PHP packages.
 * All classes are namespaced: You have to use these, but can decide if you namespace your project code.
 * PHP _traits_ replace a few core classes (e.g. `Object`) and make it easy to apply common patterns 
 * Public files can now be served from a `public/` webroot for added security.  
 * Versioning is more powerful through an "ownership" concept, and available for all DataObject classes.
 * Changes across objects can be collected in a "campaign" for batch publication.
-* GraphQL is now the favourite way of creating web services with SilverStripe.
+* GraphQL is now the favourite way of creating web services with Silverstripe CMS.
 * Asset management has been completely redone with a brand new React-based UI, protected draft files and versioning.
 * Parts of the CMS UI are now built with React and Bootstrap instead of Entwine and custom CSS.
 * PSR-4 auto-loading is supported for modules and for your project code.
 
-[Learn more about major API changes introduced by SilverStripe 4](#list-of-major-api-changes),
+[Learn more about major API changes introduced by Silverstripe CMS 4](#list-of-major-api-changes),
 and dig into the changelogs for [4.0.0](/changelogs/4.0.0), [4.1.0](/changelogs/4.1.0), [4.2.0](/changelogs/4.2.0), and [4.3.0](/changelogs/4.3.0).
 
 ### Using recipes instead of requiring individual modules
-The SilverStripe CMS and SilverStripe Framework are becoming more modular. Many of the secondary features contained in SilverStripe CMS 3 and SilverStripe Framework 3 have been moved to separate modules.  
+The Silverstripe CMS and Silverstripe Framework are becoming more modular. Many of the secondary features contained in Silverstripe CMS 3 and Silverstripe Framework 3 have been moved to separate modules.  
 
-SilverStripe 4 introduces the concept of _recipes_. Recipes are a combination of modules to achieve a common pattern.
+Silverstripe CMS 4 introduces the concept of _recipes_. Recipes are a combination of modules to achieve a common pattern.
 
 Read the [Switching to recipes](#switching-to-recipes) section of this guide for more information about how recipes work.
 
-### Automating your upgrades using the SilverStripe Upgrader tool
+### Automating your upgrades using the Silverstripe CMS Upgrader tool
 We've developed [an upgrader tool](https://github.com/silverstripe/silverstripe-upgrader) which you can use to help
 with the upgrade process. The upgrader is unlikely to completely upgrade your project, however it can take care of the most tedious part of the upgrade.
-It can also be used to upgrade your existing SilverStripe 4 project to a newer minor release.
+It can also be used to upgrade your existing Silverstripe CMS 4 project to a newer minor release.
 If you have previously used the upgrader tool, make sure to use its newest version.
 Since 1.4.0, there's a [self update feature](https://github.com/silverstripe/silverstripe-upgrader/blob/master/README.md#self-update).
 
 ### Identify known issues
 
 It's sometimes hard to tell if an issue you're hitting is caused by upgrading project code,
-or is a known issue in SilverStripe. Often an issue is fixed already, but not
+or is a known issue in Silverstripe CMS. Often an issue is fixed already, but not
 yet packaged in the release you're upgrading to. Use our 
 [issue search across our core modules](https://silverstripe-github-issues.now.sh/?supported=0&status=all),
 and ensure you're including closed ones (they might be done but not released yet).
@@ -83,7 +83,7 @@ Never update a website on the live server. Get it working on a development copy 
 
 ### Install composer
 
-[Composer](http://getcomposer.org) is a tool for managing PHP dependencies. SilverStripe 4 requires composer version _1.1_ or greater. Read the [SilverStripe _Getting started_ guide](/getting_started/composer) for more details.
+[Composer](http://getcomposer.org) is a tool for managing PHP dependencies. Silverstripe CMS 4 requires composer version _1.1_ or greater. Read the [Silverstripe CMS _Getting started_ guide](/getting_started/composer) for more details.
 
 We recommend using `recipe-cms` in your `composer.json` file to help you keep up to date.
 
@@ -125,7 +125,7 @@ Each command in the upgrader has somewhat different arguments. However, most of 
 * `--root-dir` which can be use to explicitly specify the root of your project. If this is not specified then the current working directory is assumed to be the root of the project.
 
 [info]
-Sample upgrader commands in this guide assume your working directory is the root of your SilverStripe project. You'll need to use the `--root-dir` flag if that's not the case.
+Sample upgrader commands in this guide assume your working directory is the root of your Silverstripe CMS project. You'll need to use the `--root-dir` flag if that's not the case.
 [/info]
 
 #### Install the upgrader globally with composer
@@ -157,7 +157,7 @@ The upgrader comes with an `all` command. This command will attempt to run all t
 upgrade-code all --namespace="App\\Web" --psr4
 ```
 
-* `--recipe-core-constraint` defines your SilverStripe release version (optional, will default to the most recent stable release).
+* `--recipe-core-constraint` defines your Silverstripe CMS release version (optional, will default to the most recent stable release).
 * `--cwp-constraint` can be used instead `--recipe-core-constraint` when upgrading a CWP project.
 * `--namespace` allows you to specify how your project will be namespaced (optional).
 * `--psr4` allows you to specify that your project structure respects the PSR-4 standard and to automatically use sub-namespaces.
@@ -177,11 +177,11 @@ The first step is to update your dependencies' constraints in your `composer.jso
 
 If you've installed the upgrader, you can use the `recompose` command to help you upgrade your dependencies. This command will try to:
 * upgrade your PHP constraint
-* upgrade core SilverStripe modules to their version 4 equivalent
+* upgrade core Silverstripe CMS modules to their version 4 equivalent
 * switch to recipes where possible
-* find SilverStripe 4 compatible versions of third party modules.
+* find Silverstripe CMS 4 compatible versions of third party modules.
 
-Take for example the following SilverStripe 3 `composer.json` file.
+Take for example the following Silverstripe CMS 3 `composer.json` file.
 ```json
 {
     "name": "app/cms-website",
@@ -235,16 +235,16 @@ The instructions in this section assume that you'll be editing your `composer.js
 
 Where possible, we recommend you use recipes.
 
-If your SilverStripe 3 project requires the `silverstripe/cms` module, replace that dependency with `silverstripe/recipe-cms`. The version constraint for `silverstripe/recipe-cms` must match your targeted version of SilverStripe:
-* `~4.0.0` to upgrade to SilverStripe 4.0
-* `~4.1.0` to upgrade to SilverStripe 4.1
-* `~4.2.0` to upgrade to SilverStripe 4.2
+If your Silverstripe CMS 3 project requires the `silverstripe/cms` module, replace that dependency with `silverstripe/recipe-cms`. The version constraint for `silverstripe/recipe-cms` must match your targeted version of Silverstripe CMS:
+* `~4.0.0` to upgrade to Silverstripe CMS 4.0
+* `~4.1.0` to upgrade to Silverstripe CMS 4.1
+* `~4.2.0` to upgrade to Silverstripe CMS 4.2
 * and so on.
 
-If your SilverStripe 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/framework` with `silverstripe/recipe-core`.  The version constraint for `silverstripe/recipe-core` must match your targeted version of SilverStripe:
-* `~4.0.0` to upgrade to SilverStripe 4.0
-* `~4.1.0` to upgrade to SilverStripe 4.1
-* `~4.2.0` to upgrade to SilverStripe 4.2
+If your Silverstripe CMS 3 project requires the `silverstripe/framework` module without `silverstripe/cms`, replace `silverstripe/framework` with `silverstripe/recipe-core`.  The version constraint for `silverstripe/recipe-core` must match your targeted version of Silverstripe CMS:
+* `~4.0.0` to upgrade to Silverstripe CMS 4.0
+* `~4.1.0` to upgrade to Silverstripe CMS 4.1
+* `~4.2.0` to upgrade to Silverstripe CMS 4.2
 * and so on.
 
 The following modules are implicitly required by `silverstripe/recipe-core`. They can be removed from your `composer.json` dependencies if you are using `silverstripe/recipe-core` or `silverstripe/recipe-cms`.
@@ -264,7 +264,7 @@ The following modules are implicitly required by `silverstripe/recipe-cms`. They
 * `silverstripe/versioned`
 * `silverstripe/recipe-core`
 
-Take for example the following SilverStripe 3 `composer.json`.
+Take for example the following Silverstripe CMS 3 `composer.json`.
 ```json
 {
     "name": "app/cms-website",
@@ -277,7 +277,7 @@ Take for example the following SilverStripe 3 `composer.json`.
 }
 ```
 
-After switching to SilverStripe 4 recipes, the `composer.json` file should look like this.
+After switching to Silverstripe CMS 4 recipes, the `composer.json` file should look like this.
 ```json
 {
     "name": "app/cms-website",
@@ -288,11 +288,11 @@ After switching to SilverStripe 4 recipes, the `composer.json` file should look 
 ```
 
 #### Explicitly defining your dependencies
-If you would rather explicitly define your dependencies, you can do so. Update the `silverstripe/framework` constraint and `silverstripe/cms` constraint to match your targeted minor version of SilverStripe 4. If you use `silverstripe/reports` and `silverstripe/siteconfig`, update their constraints as well.
+If you would rather explicitly define your dependencies, you can do so. Update the `silverstripe/framework` constraint and `silverstripe/cms` constraint to match your targeted minor version of Silverstripe CMS 4. If you use `silverstripe/reports` and `silverstripe/siteconfig`, update their constraints as well.
 
 In most cases, you'll also want to require the same modules as the equivalent recipes. If you don't, your users will likely lose some features after the upgrade is completed.
 
-Take for example the following SilverStripe 3 `composer.json`.
+Take for example the following Silverstripe CMS 3 `composer.json`.
 ```json
 {
     "name": "app/cms-website",
@@ -305,7 +305,7 @@ Take for example the following SilverStripe 3 `composer.json`.
 }
 ```
 
-After switching to SilverStripe 4 and explicitly defining your dependencies, the `composer.json` file should look like this.
+After switching to Silverstripe CMS 4 and explicitly defining your dependencies, the `composer.json` file should look like this.
 ```json
 {
     "name": "app/cms-website",
@@ -325,11 +325,11 @@ After switching to SilverStripe 4 and explicitly defining your dependencies, the
 ```
 
 #### Updating third party dependencies
-If you project requires third party modules, you'll need to adjust their associated constraint. This will allow you to retrieve a SilverStripe 4 compatible version of the module.
+If you project requires third party modules, you'll need to adjust their associated constraint. This will allow you to retrieve a Silverstripe CMS 4 compatible version of the module.
 
-[Look up the module on Packagist](https://packagist.org/) to see if a SilverStripe 4 version is provided.
+[Look up the module on Packagist](https://packagist.org/) to see if a Silverstripe CMS 4 version is provided.
 
-Take for example the following SilverStripe 3 `composer.json`.
+Take for example the following Silverstripe CMS 3 `composer.json`.
 ```json
 {
     "name": "app/cms-website",
@@ -341,9 +341,9 @@ Take for example the following SilverStripe 3 `composer.json`.
 }
 ```
 
-Looking at the [Packagist entry for `dnadesign/silverstripe-elemental`](https://packagist.org/packages/dnadesign/silverstripe-elemental#2.0.0), you can see that versions 2.0.0 and above of this module are compatible with SilverStripe 4. So you can update that constraint to `^2.0.0`.
+Looking at the [Packagist entry for `dnadesign/silverstripe-elemental`](https://packagist.org/packages/dnadesign/silverstripe-elemental#2.0.0), you can see that versions 2.0.0 and above of this module are compatible with Silverstripe CMS 4. So you can update that constraint to `^2.0.0`.
 
-Alternatively, you can set a very permissive constraint and let composer find a SilverStripe 4 compatible version. After you're done updating your dependencies, make sure you adjust your constraints to be more specific.
+Alternatively, you can set a very permissive constraint and let composer find a Silverstripe CMS 4 compatible version. After you're done updating your dependencies, make sure you adjust your constraints to be more specific.
 
 Once you've updated your third-party modules constraints, try updating your dependencies by running `composer update`. If composer can't resolve all your dependencies it will throw an error.
 
@@ -353,9 +353,9 @@ You'll likely have some conflicts to resolve, whether you've updated your depend
 
 Running a `composer update` will tell you which modules are conflicted and suggest alternative combinations of modules that might work.
 
-The most typical reason for a conflict is that the maintainer of a module has not released a version compatible with SilverStripe 4.
+The most typical reason for a conflict is that the maintainer of a module has not released a version compatible with Silverstripe CMS 4.
 
-If the maintainer of the module is in the process of upgrading to SilverStripe 4, a development version of the module might be available. In some cases, it can be worthwhile to look up the repository of the module or to reach out to the maintainer.
+If the maintainer of the module is in the process of upgrading to Silverstripe CMS 4, a development version of the module might be available. In some cases, it can be worthwhile to look up the repository of the module or to reach out to the maintainer.
 
 Another possible cause of a dependency conflict is the use of private packages. The `recompose` command does not take into consideration the `repositories` entries in your project's `composer.json` file. Constraints on private packages have to be defined manually.
 
@@ -372,7 +372,7 @@ If you're going to install a development version of third party modules, you sho
 } 
 ```
 
-If no development release is available for SilverStripe 4, you can upgrade the module manually or remove the module from your project.
+If no development release is available for Silverstripe CMS 4, you can upgrade the module manually or remove the module from your project.
 
 #### Upgrading the module manually
 
@@ -384,9 +384,9 @@ This approach has the advantage of keeping the module out of your codebase. It a
 
 When forking the module, you should convert it to a vendor module.
 
-Upgrade the module so it works with version `4` of SilverStripe, commit and push your changes to your forked repository.
+Upgrade the module so it works with version `4` of Silverstripe CMS, commit and push your changes to your forked repository.
  
-See [Upgrading a module](./upgrading_module) for more information on how to upgrade a SilverStripe module.
+See [Upgrading a module](./upgrading_module) for more information on how to upgrade a Silverstripe CMS module.
 
 If you're taking the time to upgrade a third party module, consider doing a pull request against the original project so other developers can benefit from your work. Or you can release your fork as a separate module.
 
@@ -403,13 +403,13 @@ If you want to keep your fork private, you can include it in your project by add
     ...
 ```
 
-[Learn about how to publish a SilverStripe module](/developer_guides/extending/how_tos/publish_a_module)
+[Learn about how to publish a Silverstripe CMS module](/developer_guides/extending/how_tos/publish_a_module)
 
 ##### Integrate the affected module into your project's codebase
 
 You can add the module codebase to your own project. This is the simplest option, but it increases the complexity of your project, and the amount of code you have to maintain, therefore it is discouraged.
 
-If you choose this option, the module will be treated as a root module, which is discouraged in SilverStripe 4.
+If you choose this option, the module will be treated as a root module, which is discouraged in Silverstripe CMS 4.
 
 1. Remove the module from your dependencies by manually editing your `composer.json` file. Do not use `composer remove` as this will remove your folder.
 2. Update your `.gitignore` file to track the module.
@@ -427,7 +427,7 @@ This can be done simply by removing the dependency: `composer remove <package>`
 
 Once you've resolved all conflicts in your `composer.json` file, `composer update` will be able to run without errors.
 
-This will install your new dependencies. You'll notice many of the folders in the root of your project will disappear. That's because SilverStripe 4 modules can be installed in the vendor folder like generic PHP packages.
+This will install your new dependencies. You'll notice many of the folders in the root of your project will disappear. That's because Silverstripe CMS 4 modules can be installed in the vendor folder like generic PHP packages.
 
 If you've decided to use recipes, some generic files will be copied from the recipe into your project. The `extra` attribute in your `composer.json` file will be updated to keep track of those new files.
 
@@ -456,7 +456,7 @@ If your `_ss_environment.php` file contains unusual logic (conditional statement
 
 Create a `.env` file in the root of your project. Replace `define` statements from `_ss_environment.php` with `KEY=VALUE` pairs in `.env`.
 
-Most SilverStripe 3 environment variables have been carried over to SilverStripe 4. See [Environment Management docs](/getting_started/environment_management/) for the full list of available variables. Your `.env` file can contain environment variables specific to your project as well.
+Most Silverstripe CMS 3 environment variables have been carried over to Silverstripe CMS 4. See [Environment Management docs](/getting_started/environment_management/) for the full list of available variables. Your `.env` file can contain environment variables specific to your project as well.
 
 The global array `$_FILE_TO_URL_MAPPING` has been removed and replaced with the `SS_BASE_URL` environment variable. `SS_BASE_URL` expects an absolute url with an optional protocol. The following are values would be valid entries for `SS_BASE_URL`:
 * `http://localhost/`
@@ -553,7 +553,7 @@ By default, the same namespace will be applied to all your classes regardless of
 
 Go through each PHP file under `mysite/code` and add a `namespace` statement at the top, *with the exception of the files for `Page` or `PageController`*.
 
-Take for example this SilverStripe 3 file located at `mysite/code/Products/ExplosiveTennisBall.php`.
+Take for example this Silverstripe CMS 3 file located at `mysite/code/Products/ExplosiveTennisBall.php`.
 ```php
 <?php
 
@@ -628,15 +628,15 @@ Read the [Composer schema autoload documentation](https://getcomposer.org/doc/04
 ### Finalise your project namespacing
 All your classes should now be fully namespaced.
 
-Note that applying a namespace to your project will also affect which template file SilverStripe tries to load when rendering certain objects.
+Note that applying a namespace to your project will also affect which template file Silverstripe CMS tries to load when rendering certain objects.
 
-For example, pretend you have a `RoadRunnerPage` class that extends `Page`. In SilverStripe 3, you would define a template for this page in `themes/example/templates/Layout/RoadRunnerPage.ss`. If you decide to move `RoadRunnerPage` to `App\Web\RoadRunnerPage`, you'll need to move the template to `themes/example/templates/App/Web/Layout/RoadRunnerPage.ss`.
+For example, pretend you have a `RoadRunnerPage` class that extends `Page`. In Silverstripe CMS 3, you would define a template for this page in `themes/example/templates/Layout/RoadRunnerPage.ss`. If you decide to move `RoadRunnerPage` to `App\Web\RoadRunnerPage`, you'll need to move the template to `themes/example/templates/App/Web/Layout/RoadRunnerPage.ss`.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 4 - Update codebase with references to newly namespaced classes {#step4}
 
-All core PHP classes in SilverStripe 4 have been namespaced. For example, `DataObject` is now called `SilverStripe\ORM\DataObject`. Your project codebase, config files and language files need be updated to reference those newly namespaced classes. This will include explicit references in your PHP code, but also string that contain the name of a class.
+All core PHP classes in Silverstripe CMS 4 have been namespaced. For example, `DataObject` is now called `SilverStripe\ORM\DataObject`. Your project codebase, config files and language files need be updated to reference those newly namespaced classes. This will include explicit references in your PHP code, but also string that contain the name of a class.
 If you've opted to namespace your own code in the previous step, those references will need to be updated as well.
 
 ### Automatically update namespaced references with the `upgrade` command
@@ -645,7 +645,7 @@ If you've installed the upgrader, you can use the `upgrade` command to update re
 
 The `upgrade` command will update PHP files, YML configuration files, and YML language files.
 
-Each core SilverStripe 4 module includes a `.upgrade.yml` that defines the equivalent fully qualified name of each class. Most third party SilverStripe modules that have been upgraded to be compatible with SilverStripe 4, also include a `.upgrade.yml`. If you've namespaced your own project, you'll need to provide your own `.upgrade.yml` file . If you've used the upgrader to namespace your project, that file will have been created for you.
+Each core Silverstripe CMS 4 module includes a `.upgrade.yml` that defines the equivalent fully qualified name of each class. Most third party Silverstripe CMS modules that have been upgraded to be compatible with Silverstripe CMS 4, also include a `.upgrade.yml`. If you've namespaced your own project, you'll need to provide your own `.upgrade.yml` file . If you've used the upgrader to namespace your project, that file will have been created for you.
 
 The `upgrade` command will try to update some strings that reference the old name of some classes. In some cases this might not be what you want. You can tell the upgrader to skip specific strings by using the `@skipUpgrade` flag in your PHPDoc comment. For example:  
 
@@ -692,13 +692,13 @@ Add the `--prompt` flag to manually approve ambiguous class renames.
 
 ### Manually update namespaced references
 
-If you decide to update your namespace references by hand, you'll need to go through the entire code base and update them all from the old non-namespaced SilverStripe classes to the new namespaced equivalent. If you are referencing classes from third party modules that have been namespaced, you'll need to update those as well.
+If you decide to update your namespace references by hand, you'll need to go through the entire code base and update them all from the old non-namespaced Silverstripe CMS classes to the new namespaced equivalent. If you are referencing classes from third party modules that have been namespaced, you'll need to update those as well.
 
 #### Update explicit references to classes in your code
 
-Wherever your code explicitly references a SilverStripe class, it will need to be updated to the new namespaced equivalent. You can either update the reference to use the fully qualified name of the class or you can add a `use` statement to your file.
+Wherever your code explicitly references a Silverstripe CMS class, it will need to be updated to the new namespaced equivalent. You can either update the reference to use the fully qualified name of the class or you can add a `use` statement to your file.
 
-For example take the following SilverStripe 3 class. `DataObject` and `FieldList` need to point to their namespace equivalents.
+For example take the following Silverstripe CMS 3 class. `DataObject` and `FieldList` need to point to their namespace equivalents.
 
 ```php
 <?php
@@ -747,7 +747,7 @@ class ExplosiveTennisBall extends SilverStripe\ORM\DataObject
 
 #### Update string references to classes
 
-In many cases, SilverStripe expects to be provided the name of a class as a string. Typical scenarios include:
+In many cases, Silverstripe CMS expects to be provided the name of a class as a string. Typical scenarios include:
 * defining an `has_one` or `has_many` relationship on a DataObject
 * requesting an instance of class via the Injector
 * specifying managed models for a `ModelAdmin`.
@@ -814,9 +814,9 @@ Alternatively, you can spell out the full qualified name of each class in a stri
 
 #### Update references to classes in your YML config
 
-YAML configuration files can reference SilverStripe classes. Those references also need to use the fully qualified name of each class.
+YAML configuration files can reference Silverstripe CMS classes. Those references also need to use the fully qualified name of each class.
 
-Take for example the following SilverStripe 3 YAML configuration file.
+Take for example the following Silverstripe CMS 3 YAML configuration file.
 
 ```yaml
 Injector:
@@ -833,7 +833,7 @@ Email:
   admin_email: no-reply@example.com
 ```
 
-In SilverStripe 4, this will become:
+In Silverstripe CMS 4, this will become:
 ```yaml
 SilverStripe\Core\Injector\Injector:
   App\Web\ProductService:
@@ -851,7 +851,7 @@ SilverStripe\Control\Email\Email:
 
 #### Update references to classes in your language files
 
-Translation keys are normally tied to classes. If you override SilverStripe's default translation or if you are localising your own project, you'll need to update those references to use the fully qualified name of each class.
+Translation keys are normally tied to classes. If you override Silverstripe CMS's default translation or if you are localising your own project, you'll need to update those references to use the fully qualified name of each class.
 
 For example, let's say you had the following translation file in `mysite/lang/eng.yml`.
 ```yaml
@@ -862,7 +862,7 @@ en:
     SALUTATION: Beep Beep
 ```
 
-In SilverStripe 4, it would become:
+In Silverstripe CMS 4, it would become:
 ```yaml
 en:
   SilverStripe\Security\Member:
@@ -883,10 +883,10 @@ In your PHP code, calls to the `_t()` method should be updated to use the full n
 ```php
 <?php
 
-# Old SilverStripe 3 way
+# Old Silverstripe CMS 3 way
 $translation = _t('CMSMain.ACCESS', "Access to ''{title}'' section", ['title' => 'Products']);
 
-# New SilverStripe 4
+# New Silverstripe CMS 4
 use SilverStripe\CMS\Controllers\CMSMain;
 // ...
 $translation = _t(CMSMain::class . '.ACCESS', "Access to '{title}' section", ['title' => 'Products']);
@@ -916,16 +916,16 @@ Avoid using `static::class` or `parent::class` to retrieve translated string. It
 If your template files contain translatable strings, they also need to be updated to referenced the namespaced classes.
 For example, `<%t Member.SINGULARNAME 'Member' %>` would become `<%t SilverStripe\Security\Member.SINGULARNAME 'Member' %>`.
 
-Your codebase should now be referencing valid SilverStripe 4 classes. This means that your classes can be loaded at runtime. However, your codebase will still be using an outdated API.
+Your codebase should now be referencing valid Silverstripe CMS 4 classes. This means that your classes can be loaded at runtime. However, your codebase will still be using an outdated API.
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
-## Step 5 - Updating your codebase to use SilverStripe 4 API {#step5}
+## Step 5 - Updating your codebase to use Silverstripe CMS 4 API {#step5}
 
 This is the most intricate and potentially time-consuming part of the upgrade. It involves going through your entire codebase to remove references to deprecated APIs and update your project logic.
 
 ### Automatically update deprecated API references with the `inspect` command
 
-The upgrader has an `inspect` command that can flag deprecated API usage, and in some cases, update your codebase to the SilverStripe 4 equivalent. This does require you to carefully review each change and warning to make sure the updated logic still work as intended. Even so, it is a huge time-saver compared to reviewing your code base manually.
+The upgrader has an `inspect` command that can flag deprecated API usage, and in some cases, update your codebase to the Silverstripe CMS 4 equivalent. This does require you to carefully review each change and warning to make sure the updated logic still work as intended. Even so, it is a huge time-saver compared to reviewing your code base manually.
 
 Note that the `inspect` command loads your files with PHP interpreter. So basic syntax errors — for example, extending a class that does not exists — will cause an immediate failure. For this reason, you need to complete [Step 4 - Update codebase with references to newly namespaced classes](#step4) before running the `inspect` command.
 
@@ -963,47 +963,47 @@ Changes not saved; Run with --write to commit to disk
 
 ### Manually update deprecated API references
 
-SilverStripe 4 introduces many API changes. To update deprecated API references manually, you have to go through each one of your project files.
+Silverstripe CMS 4 introduces many API changes. To update deprecated API references manually, you have to go through each one of your project files.
 Read the changelogs for [4.0.0](/changelogs/4.0.0/) and for [subsequent minor releases](/changelogs)
 
 ### Finalising the deprecated API update
-At this stage, your site should be using only SilverStripe 4 API logic.
+At this stage, your site should be using only Silverstripe CMS 4 API logic.
 
 You still have some minor clean up tasks and configuration tweaks to apply, but you're almost done.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 6 - Update your entry point {#step6}
-The location of SilverStripe's _entry file_ has changed. Your project and server environment will need
+The location of Silverstripe CMS's _entry file_ has changed. Your project and server environment will need
 to adjust the path to this file from `framework/main.php` to `index.php`.
 
 ### Update your `index.php` file
-You can get a copy of the SilverStripe 4 `index.php` file at
+You can get a copy of the Silverstripe CMS 4 `index.php` file at
 `vendor/silverstripe/recipe-core/public/index.php`.
 
 If you've created your own `index.php` or modified version of `main.php`,
 you'll need to reconcile those changes with the `index.php` file you got from `recipe-core`.
 Otherwise, just use the generic `index.php` file `recipe-core` provides.
 
-Copy your new `index.php` to your project's web root. Unlike SilverStripe 3, `index.php` must be present in your web root.
+Copy your new `index.php` to your project's web root. Unlike Silverstripe CMS 3, `index.php` must be present in your web root.
 
 ### Update your server configuration
-If you're using a `.htaccess` file or `web.config` file to handle your server configuration, you can get the generic SilverStripe 4 version of those file from
+If you're using a `.htaccess` file or `web.config` file to handle your server configuration, you can get the generic Silverstripe CMS 4 version of those file from
 `vendor/silverstripe/recipe-core/public`.
 
-Just like `index.php`, if you've modified your server configuration file from the one that shipped with SilverStripe 3, you'll need to reconcile your changes into the version retrieve from `recipe-core`.
+Just like `index.php`, if you've modified your server configuration file from the one that shipped with Silverstripe CMS 3, you'll need to reconcile your changes into the version retrieve from `recipe-core`.
 
 [Refer to the installation instruction for your platform](/getting_started/installation/) if your server configuration is not managed via a `.htaccess` or `web.config` file.
 
 ### Finalising the entry point upgrade
 
-At this stage, you could in theory run your project in SilverStripe 4.
+At this stage, you could in theory run your project in Silverstripe CMS 4.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 7 - Update project structure (optional) {#step7}
-SilverStripe 4 introduces a new recommended project structure ([details](/changelogs/4.2.0#app-folder-name)).
-Adopting the recommended project structure is optional, but will become mandatory in SilverStripe 5.
+Silverstripe CMS 4 introduces a new recommended project structure ([details](/changelogs/4.2.0#app-folder-name)).
+Adopting the recommended project structure is optional, but will become mandatory in Silverstripe CMS 5.
 
 [Skip to Step 8](#step8)
 
@@ -1073,11 +1073,11 @@ This is a good point to commit your changes to your source control system before
 
 ## Step 8 - Switch to public web-root (optional){#step8}
 
-SilverStripe 4.1 introduces the concept of _public web-root_ this allows you to move
+Silverstripe CMS 4.1 introduces the concept of _public web-root_ this allows you to move
 all publicly accessible assets under a `public` folder ([details](/changelogs/4.1.0#public-folder)).
 This has security benefits as it minimises the possibility that files that are not meant to be access directly get accidentally exposed.
 
-This step is optional and requires SilverStripe 4.1 or greater. It will become mandatory in SilverStripe 5.
+This step is optional and requires Silverstripe CMS 4.1 or greater. It will become mandatory in Silverstripe CMS 5.
 
 [Skip to Step 9](#step9)
 
@@ -1105,19 +1105,19 @@ If you are using a modified `index.php`, `.htaccess`, or `web.config`, you will 
 * Delete the root `resources` or `_resources` directories if present.
 * Run the following command `composer vendor-expose` to make static assets files accessible via the `public` directory.
 
-If you are upgrading from SilverStripe 4.0 to SilverStripe 4.1 (or above), you'll need to update `index.php` before moving it to the public folder. You can get a copy of the generic `index.php` file from `vendor/silverstripe/recipe-core/public`. If you've made modifications to your `index.php` file, you'll need to replicate those into the new `public/index.php` file.
+If you are upgrading from Silverstripe CMS 4.0 to Silverstripe CMS 4.1 (or above), you'll need to update `index.php` before moving it to the public folder. You can get a copy of the generic `index.php` file from `vendor/silverstripe/recipe-core/public`. If you've made modifications to your `index.php` file, you'll need to replicate those into the new `public/index.php` file.
 
 ### Finalising the web root migration
 You'll need to update your server configuration to point to the public directory rather than the root of your project.
-Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre SilverStripe 4.4 release) are still ignored when located under the `public` folder.
+Update your `.gitignore` file so `assets` and `_resources` (or `resources` if using a pre Silverstripe CMS 4.4 release) are still ignored when located under the `public` folder.
 Your project should still be functional, although you may now be missing some static assets.
 
 This is a good point to commit your changes to your source control system before moving on to the next step.
 
 ## Step 9 - Move away from hardcoded paths for referencing static assets {#step9}
 
-SilverStripe 4 introduces a new way to reference static assets like images and css. 
-This enables innovations like moving the SilverStripe module [vendor folder](/changelogs/4.0.0#vendor-folder) or the [public web root](/changelogs/4.1.0#public-folder).
+Silverstripe CMS 4 introduces a new way to reference static assets like images and css. 
+This enables innovations like moving the Silverstripe CMS module [vendor folder](/changelogs/4.0.0#vendor-folder) or the [public web root](/changelogs/4.1.0#public-folder).
 
 This change is mandatory if you've completed either
 [step 7](#step7) (update project structure) or [step 8](#step8) (switch to public web-root).
@@ -1187,7 +1187,7 @@ class MyCustomModelAdmin extends \SilverStripe\Admin\ModelAdmin
 ```
 
 ### Referencing static assets in template files
-SilverStripe template files accept a similar format for referencing static assets. You will need to go through your assets files and remove hardcoded references.
+Silverstripe CMS template files accept a similar format for referencing static assets. You will need to go through your assets files and remove hardcoded references.
 
 ```html
 <img src="$resourceURL(app/images/coyote.png)" />
@@ -1227,7 +1227,7 @@ Run a `dev/build` either on the command line or in your browser.
 ./vendor/bin/sake dev/build
 ```
 
-This should migrate your existing data (non-destructively) to the new SilverStripe 4 structure.
+This should migrate your existing data (non-destructively) to the new Silverstripe CMS 4 structure.
 
 #### Migrating files
 

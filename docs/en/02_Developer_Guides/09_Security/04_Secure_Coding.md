@@ -7,7 +7,7 @@ icon: user-secret
 
 ## Introduction
 
-This page details notes on how to ensure that we develop secure SilverStripe applications. 
+This page details notes on how to ensure that we develop secure Silverstripe CMS applications. 
 See our "[Release Process](/contributing/release_process#security-releases) on how to report security issues.
 
 ## SQL Injection
@@ -70,7 +70,7 @@ DB::prepared_query(
 
 ### Automatic escaping
 
-SilverStripe internally will use parameterised queries in SQL statements wherever possible.
+Silverstripe CMS internally will use parameterised queries in SQL statements wherever possible.
 
 If necessary Silverstripe performs any required escaping through database-specific methods (see [Database::addslashes()](api:SilverStripe\ORM\Connect\Database::addslashes())).
 For [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase), this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
@@ -201,13 +201,13 @@ variables ($RAW_data instead of $data).
 
 ## XSS (Cross-Site-Scripting)
 
-SilverStripe helps you guard any output against clientside attacks initiated by malicious user input, commonly known as
+Silverstripe CMS helps you guard any output against clientside attacks initiated by malicious user input, commonly known as
 XSS (Cross-Site-Scripting). With some basic guidelines, you can ensure your output is safe for a specific use case (e.g.
 displaying a blog post in HTML from a trusted author, or escaping a search parameter from an untrusted visitor before
 redisplaying it).
 
 [notice]
-Note: SilverStripe templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
+Note: Silverstripe CMS templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
 or [sanitize](http://htmlpurifier.org/) it correctly.
 [/notice]
 
@@ -216,12 +216,12 @@ for in-depth information about "Cross-Site-Scripting".
 
 ### What if I can't trust my editors?
 
-The default configuration of SilverStripe assumes some level of trust is given to your editors who have access
+The default configuration of Silverstripe CMS assumes some level of trust is given to your editors who have access
 to the CMS. Though the HTML WYSIWYG editor is configured to provide some control over the HTML an editor provides,
 this is not enforced server side, and so can be bypassed by a malicious editor. A editor that does so can use an
 XSS attack against an admin to perform any administrative action.
 
-If you can't trust your editors, SilverStripe must be configured to filter the content so that any javascript is
+If you can't trust your editors, Silverstripe CMS must be configured to filter the content so that any javascript is
 stripped out
 
 To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
@@ -253,7 +253,7 @@ We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) th
 
 ### Escaping model properties
 
-[SSViewer](api:SilverStripe\View\SSViewer) (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+[SSViewer](api:SilverStripe\View\SSViewer) (the Silverstripe CMS template engine) automatically takes care of escaping HTML tags from specific
 object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a [DBField](api:SilverStripe\ORM\FieldType\DBField) object.
 
 PHP:
@@ -447,7 +447,7 @@ HtmlEditorField::$sanitise_server_side config property to true.
 
 ## Cross-Site Request Forgery (CSRF)
 
-SilverStripe has built-in countermeasures against [CSRF](http://shiflett.org/articles/cross-site-request-forgeries) identity theft for all form submissions. A form object
+Silverstripe CMS has built-in countermeasures against [CSRF](http://shiflett.org/articles/cross-site-request-forgeries) identity theft for all form submissions. A form object
 will automatically contain a `SecurityID` parameter which is generated as a secure hash on the server, connected to the
 currently active session of the user. If this form is submitted without this parameter, or if the parameter doesn't
 match the hash stored in the users session, the request is discarded.
@@ -457,7 +457,7 @@ It is also recommended to limit form submissions to the intended HTTP verb (most
 through [Form::setStrictFormMethodCheck()](api:SilverStripe\Forms\Form::setStrictFormMethodCheck()). 
 
 Sometimes you need to handle state-changing HTTP submissions which aren't handled through
-SilverStripe's form system. In this case, you can also check the current HTTP request
+Silverstripe CMS's form system. In this case, you can also check the current HTTP request
 for a valid token through [SecurityToken::checkRequest()](api:SilverStripe\Security\SecurityToken::checkRequest()).
 
 ## Casting user input
@@ -503,7 +503,7 @@ cast types can be found here:
 *  `(array)` - cast to array
 *  `(object)` - cast to object
 
-Note that there is also a 'SilverStripe' way of casting fields on a class, this is a different type of casting to the
+Note that there is also a 'Silverstripe CMS' way of casting fields on a class, this is a different type of casting to the
 standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 
@@ -570,7 +570,7 @@ list of allowed extensions by adding these to the `File.allowed_extensions` conf
 
 ## Passwords
 
-SilverStripe stores passwords with a strong hashing algorithm (blowfish) by default
+Silverstripe CMS stores passwords with a strong hashing algorithm (blowfish) by default
 (see [PasswordEncryptor](api:SilverStripe\Security\PasswordEncryptor)). It adds randomness to these hashes via
 salt values generated with the strongest entropy generators available on the platform
 (see [RandomGenerator](api:SilverStripe\Security\RandomGenerator)). This prevents brute force attacks with
@@ -581,8 +581,8 @@ you can also enforce specific password policies by configuring a
 [PasswordValidator](api:SilverStripe\Security\PasswordValidator). This can be done through a `_config.php` file
 at runtime, or via YAML configuration.
 
-From SilverStripe 4.3 onwards, the default password validation rules are configured in the framework's `passwords.yml`
-file. You will need to ensure that your config file is processed after it. For SilverStripe <4.3 you will need to
+From Silverstripe CMS 4.3 onwards, the default password validation rules are configured in the framework's `passwords.yml`
+file. You will need to ensure that your config file is processed after it. For Silverstripe CMS <4.3 you will need to
 use a `_config.php` file to modify the class's config at runtime (see `_config.php` installed in your mysite/app folder
 if you're using silverstripe/recipe-core).
 
@@ -660,7 +660,7 @@ as well as the login form.
 
 ## Request hostname forgery {#request-hostname-forgery}
 
-To prevent a forged hostname appearing being used by the application, SilverStripe
+To prevent a forged hostname appearing being used by the application, Silverstripe CMS
 allows the configure of a whitelist of hosts that are allowed to access the system. By defining
 this whitelist in your `.env` file, any request presenting a `Host` header that is
 _not_ in this list will be blocked with a HTTP 400 error:
@@ -672,9 +672,9 @@ SS_ALLOWED_HOSTS="www.example.com,example.com,subdomain.example.com"
 Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)
 that will be accessing the site.
 
-When SilverStripe is run behind a reverse proxy, it's normally necessary for this proxy to
+When Silverstripe CMS is run behind a reverse proxy, it's normally necessary for this proxy to
 use the `X-Forwarded-Host` request header to tell the webserver which hostname was originally
-requested. However, when SilverStripe is not run behind a proxy, this header can still be
+requested. However, when Silverstripe CMS is not run behind a proxy, this header can still be
 used by attackers to fool the server into mistaking its own identity.
 
 The risk of this kind of attack causing damage is especially high on sites which utilise caching
@@ -725,11 +725,11 @@ following in your .htaccess to ensure this behaviour is activated.
 </IfModule>
 ```
 
-As of SilverStripe 4, this behaviour is on by default, and the environment variable is no longer required. For correct operation, it is necessary to always set `SS_TRUSTED_PROXY_IPS` if using a proxy.
+As of Silverstripe CMS 4, this behaviour is on by default, and the environment variable is no longer required. For correct operation, it is necessary to always set `SS_TRUSTED_PROXY_IPS` if using a proxy.
 
 ## Secure Sessions, Cookies and TLS (HTTPS)
 
-SilverStripe recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
+Silverstripe CMS recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
 director function `forceSSL()` 
 
 ```php
@@ -761,7 +761,7 @@ and automatically redirect any requests with basic authentication headers to fir
 disable this behaviour using `CanonicalURLMiddleware::singleton()->setForceBasicAuthToSSL(false)`, or via Injector
 configuration in YAML.
 
-We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell SilverStripe to 
+We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell Silverstripe CMS to 
 use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie). 
 To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`
 
@@ -822,7 +822,7 @@ For sensitive pages, such as members areas, or places where sensitive informatio
  
 - The headers `Cache-control: no-store` and `Pragma: no-cache` along with expiry headers of `Expires: <current date>` 
 and `Date: <current date>` will ensure that sensitive content is not stored locally or able to be retrieved by 
-unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
+unauthorised local persons. Silverstripe CMS adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
  
 ```php

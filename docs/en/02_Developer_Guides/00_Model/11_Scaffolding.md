@@ -7,13 +7,13 @@ icon: hammer
 # Scaffolding
 
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 
-SilverStripe will use that information to scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
+Silverstripe CMS will use that information to scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans). You can then further 
 customise those fields as required.
 
 ## Form Fields
 
-An example is `DataObject`, SilverStripe will automatically create your CMS interface so you can modify what you need.
+An example is `DataObject`, Silverstripe CMS will automatically create your CMS interface so you can modify what you need.
 
 ```php
 use SilverStripe\ORM\DataObject;

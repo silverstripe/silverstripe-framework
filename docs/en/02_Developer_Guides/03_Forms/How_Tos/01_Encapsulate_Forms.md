@@ -13,7 +13,6 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 
 **app/code/Page.php**
 
-
 ```php
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\RequiredFields;

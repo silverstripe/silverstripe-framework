@@ -5,7 +5,7 @@ summary: Some of the common variables and methods your templates can use, includ
 
 # Common Variables
 
-The page below describes a few of common variables and methods you'll see in a SilverStripe template. This is not an
+The page below describes a few of common variables and methods you'll see in a Silverstripe CMS template. This is not an
 exhaustive list. From your template you can call any method, database field, or relation on the object which is
 currently in scope as well as its subclasses or extensions.
 
@@ -47,7 +47,7 @@ to locate your site’s images and css files.
 It renders in the template as `<base href="http://www.yoursite.com" /><!--[if lte IE 6]></base><![endif]-->`
 
 [alert]
-A `<% base_tag %>;` is nearly always required or assumed by SilverStripe to exist.
+A `<% base_tag %>;` is nearly always required or assumed by Silverstripe CMS to exist.
 [/alert]
 
 ## CurrentMember
@@ -67,7 +67,7 @@ $Title
 $MenuTitle
 ```
 
-Most objects within SilverStripe will respond to `$Title` (i.e they should have a `Title` database field or at least a
+Most objects within Silverstripe CMS will respond to `$Title` (i.e they should have a `Title` database field or at least a
 `getTitle()` method).
 
 The CMS module in particular provides two fields to label a page: `Title` and `MenuTitle`. `Title` is the title
@@ -127,14 +127,14 @@ By default `$MetaTags` renders:
 
 ```ss
 <title>Title of the Page</title>
-<meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
+<meta name="generator" content="SilverStripe - https://www.silverstripe.org">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
 `$MetaTags(false)` will render
 
 ```ss
-<meta name="generator" http-equiv="generator" content="SilverStripe 3.0" />
+<meta name="generator" content="SilverStripe - https://www.silverstripe.org">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
@@ -172,7 +172,7 @@ public function MetaComponents()
 <a href="$Link">..</a>
 ```
 
-All objects that could be accessible in SilverStripe should define a `Link` method and an `AbsoluteLink` method. Link
+All objects that could be accessible in Silverstripe CMS should define a `Link` method and an `AbsoluteLink` method. Link
 returns the relative URL for the object and `AbsoluteLink` outputs your full website address along with the relative
 link.
 
@@ -382,7 +382,7 @@ $Form
 ```
 
 A page will normally contain some content and potentially a form of some kind. For example, the log-in page has a
-SilverStripe log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form.
+Silverstripe CMS log-in form. If you are on such a page, the `$Form` variable will contain the HTML content of the form.
 Placing it just below `$Content` is a good default.
 
 

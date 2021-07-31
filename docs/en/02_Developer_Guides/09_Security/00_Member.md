@@ -8,7 +8,7 @@ icon: user
 
 ## Introduction
 
-The [Member](api:SilverStripe\Security\Member) class is used to represent user accounts on a SilverStripe site (including newsletter recipients).
+The [Member](api:SilverStripe\Security\Member) class is used to represent user accounts on a Silverstripe CMS site (including newsletter recipients).
  
 ## Testing For Logged In Users
 

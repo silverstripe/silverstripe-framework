@@ -23,7 +23,7 @@ but in the CMS usually is a [SiteTree](api:SilverStripe\CMS\Model\SiteTree) obje
 A tree node in CMS could be rendered with lot of extra information but a node title, such as a
 link that wraps around the node title, a node's id which is given as id attribute of the node
 &lt;li&gt; tag, a extra checkbox beside the tree title, tree icon class or extra &lt;span&gt;
-tags showing the node status, etc. SilverStripe tree node will be typically rendered into html
+tags showing the node status, etc. Silverstripe CMS tree node will be typically rendered into html
 code like this:
 
 

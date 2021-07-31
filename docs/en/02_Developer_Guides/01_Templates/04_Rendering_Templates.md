@@ -1,6 +1,6 @@
 ---
 title: Rendering data to a template
-summary: Call and render SilverStripe templates manually.
+summary: Call and render Silverstripe CMS templates manually.
 icon: code
 ---
 
@@ -50,7 +50,7 @@ return $this->customise([
 ```
 
 [info]
-Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
+Most classes in Silverstripe CMS you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
 includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:SilverStripe\Forms\FormField) and [DataObject](api:SilverStripe\ORM\DataObject) instances.
 [/info]
 

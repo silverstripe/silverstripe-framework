@@ -11,20 +11,20 @@ coding any references in the `<head>` tag of your template, as it enables a more
 [Requirements](api:SilverStripe\View\Requirements) class.
 
 The examples below are using certain folder naming conventions (CSS files in `css/`, JavaScript files in `javascript/`).
-SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
+Silverstripe CMS core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
 The `Requirements` class can work with arbitrary file paths.
 
 ## Exposing static assets
 
-Before requiring static asset files in PHP code or in a template, those assets need to be "exposed". This process allows SilverStripe projects and SilverStripe modules to make static asset files available via the web server from locations that would otherwise be blocked from web server access, such as the `vendor` folder.
+Before requiring static asset files in PHP code or in a template, those assets need to be "exposed". This process allows Silverstripe CMS projects and Silverstripe CMS modules to make static asset files available via the web server from locations that would otherwise be blocked from web server access, such as the `vendor` folder.
 
 ### Configuring your project "exposed" folders
 
-Exposed assets are made available in your web root in a dedicated "resources" directory. Prior to SilverStripe 4.4, the name of this directory was hardcoded to `resources`. In SilverStripe 4.4 and above, the name of the resources directory can be configured by defining the `extra.resources-dir` key in your `composer.json`. SilverStripe projects created from `silverstripe/installer` 4.4 and above will automatically be configured to use `_resources` as their resource directory.
+Exposed assets are made available in your web root in a dedicated "resources" directory. Prior to Silverstripe CMS 4.4, the name of this directory was hardcoded to `resources`. In Silverstripe CMS 4.4 and above, the name of the resources directory can be configured by defining the `extra.resources-dir` key in your `composer.json`. Silverstripe CMS projects created from `silverstripe/installer` 4.4 and above will automatically be configured to use `_resources` as their resource directory.
 
 Each folder that needs to be exposed must be entered under the `extra.expose` key in your `composer.json` file. Module developers should use a path relative to the root of their module (don't include the "vendor/package-developer/package-name" path).
 
-This is a sample SilverStripe project `composer.json` file configured to expose some assets.
+This is a sample Silverstripe CMS project `composer.json` file configured to expose some assets.
 
 ```json
 {
@@ -45,11 +45,11 @@ This is a sample SilverStripe project `composer.json` file configured to expose 
 
 Files contained inside the `app/client/dist` and `app/images` will be made publicly available under the `_resources` directory.
 
-SilverStripe projects should not track the "resources" directory in their source control system.
+Silverstripe CMS projects should not track the "resources" directory in their source control system.
 
 ### Exposing assets in the web root {#exposing-assets-webroot}
 
-SilverStripe projects ship with [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
+Silverstripe CMS projects ship with [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
 This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
 
 Developers can explicitly expose static assets by calling `composer vendor-expose`. This is necessary after updating your `resources-dir` or `expose` configuration in your `composer.json` file.
@@ -421,14 +421,14 @@ careful when messing with the order of requirements.
 
 ## Javascript placement
 
-By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
+By default, Silverstripe CMS includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
 ```php
 Requirements::set_force_js_to_bottom(true);
 ```
 
-`Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
+`Requirements.force_js_to_bottom`, will force Silverstripe CMS to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
 
 If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,

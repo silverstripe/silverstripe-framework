@@ -1,6 +1,6 @@
 ---
 title: Execution pipeline
-summary: An overview of the steps involved in delivering a SilverStripe web page.
+summary: An overview of the steps involved in delivering a Silverstripe CMS web page.
 icon: route
 ---
 
@@ -9,7 +9,7 @@ icon: route
 ## Introduction
 
 In order to transform a HTTP request or a commandline exeuction into a response,
-SilverStripe needs to boot its core and run through several stages of processing.
+Silverstripe CMS needs to boot its core and run through several stages of processing.
 
 ## Request Rewriting
 
@@ -19,7 +19,7 @@ The implementation depends on your web server; we'll show you the most common on
 Apache with [mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html).
 Check our [installation guides](/getting_started/installation) on how other web servers like IIS or nginx handle rewriting.
 
-The standard SilverStripe project ships with a `.htaccess` file in your webroot for this purpose.
+The standard Silverstripe CMS project ships with a `.htaccess` file in your webroot for this purpose.
 By default, requests will be passed through for files existing on the filesystem.
 Some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files.
 If no file can be directly matched, control is handed off to `index.php`.

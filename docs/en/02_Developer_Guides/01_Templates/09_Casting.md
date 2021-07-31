@@ -73,7 +73,7 @@ $Me
 
 Methods which return data to the template should either return an explicit object instance describing the type of 
 content that method sends back, or provide a type in the `$casting` array for the object. When rendering that method 
-to a template, SilverStripe will ensure that the object is wrapped in the correct type and values are safely escaped.
+to a template, Silverstripe CMS will ensure that the object is wrapped in the correct type and values are safely escaped.
 
 ```php
 use SilverStripe\CMS\Model\SiteTree;
@@ -92,7 +92,7 @@ class Page extends SiteTree
 }
 ```
 
-When calling `$MyCustomMethod` SilverStripe now has the context that this method will contain HTML and escape the data
+When calling `$MyCustomMethod` Silverstripe CMS now has the context that this method will contain HTML and escape the data
 accordingly. 
 
 [note]

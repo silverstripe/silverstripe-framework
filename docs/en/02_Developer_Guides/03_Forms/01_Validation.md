@@ -6,7 +6,7 @@ icon: check-square
 
 # Form Validation
 
-SilverStripe provides server-side form validation out of the box through the [Validator](api:SilverStripe\Forms\Validator) class and its' child class
+Silverstripe CMS provides server-side form validation out of the box through the [Validator](api:SilverStripe\Forms\Validator) class and its' child class
 [RequiredFields](api:SilverStripe\Forms\RequiredFields). A single `Validator` instance is set on each `Form`. Validators are implemented as an argument to 
 the [Form](api:SilverStripe\Forms\Form) constructor or through the function `setValidator`.
 
@@ -82,7 +82,7 @@ public function validate($validator)
 }
 ```
 
-The `validate` method should return `true` if the value passes any validation and `false` if SilverStripe should trigger
+The `validate` method should return `true` if the value passes any validation and `false` if Silverstripe CMS should trigger
 a validation error on the page. In addition a useful error message must be set on the given validator.
 
 [notice]
@@ -218,7 +218,7 @@ $field->setCustomValidationMessage('Whoops, looks like you have missed me!');
 
 ## JavaScript validation
 
-Although there are no built-in JavaScript validation handlers in SilverStripe, the `FormField` API is flexible enough 
+Although there are no built-in JavaScript validation handlers in Silverstripe CMS, the `FormField` API is flexible enough 
 to provide the information required in order to plug in custom libraries like [Parsley.js](http://parsleyjs.org/) or 
 [jQuery.Validate](http://jqueryvalidation.org/). Most of these libraries work on HTML `data-` attributes or special 
 classes added to each input. For Parsley we can structure the form like.
@@ -235,7 +235,7 @@ $field->setAttribute('data-parsley-mincheck', '2');
 
 ## Model Validation
 
-An alternative (or additional) approach to validation is to place it directly on the database model. SilverStripe 
+An alternative (or additional) approach to validation is to place it directly on the database model. Silverstripe CMS 
 provides a [DataObject::validate()](api:SilverStripe\ORM\DataObject::validate()) method to validate data at the model level. See 
 [Data Model Validation](../model/validation).
 

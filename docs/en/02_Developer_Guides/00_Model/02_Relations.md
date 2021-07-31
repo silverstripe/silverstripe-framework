@@ -11,7 +11,7 @@ to one another. An example of this is a `Player` object may have a relationship 
 and could take part in many `Games`. Relations are a key part of designing and building a good data model.
 
 Relations are built through static array definitions on a class, in the format `<relationship-name> => <classname>`.
-SilverStripe supports a number of relationship types and each relationship type can have any number of relations.
+Silverstripe CMS supports a number of relationship types and each relationship type can have any number of relations.
 
 ## has_one
 

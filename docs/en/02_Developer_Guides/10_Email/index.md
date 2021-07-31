@@ -1,20 +1,20 @@
 ---
 title: Email
-summary: Send HTML and plain text email from your SilverStripe application.
+summary: Send HTML and plain text email from your Silverstripe CMS application.
 icon: envelope-open
 ---
 
 # Email
 
-Creating and sending email in SilverStripe is done through the [Email](api:SilverStripe\Control\Email\Email) and [Mailer](api:SilverStripe\Control\Email\Mailer) classes. This document 
+Creating and sending email in Silverstripe CMS is done through the [Email](api:SilverStripe\Control\Email\Email) and [Mailer](api:SilverStripe\Control\Email\Mailer) classes. This document 
 covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
 
 ## Configuration
 
-SilverStripe provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an
+Silverstripe CMS provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an
 extensive list of "transports" for sending mail via different services. 
 
-Out of the box, SilverStripe will use the built-in PHP `mail()` command via the `Swift_MailTransport` class. If you'd
+Out of the box, Silverstripe CMS will use the built-in PHP `mail()` command via the `Swift_MailTransport` class. If you'd
 like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
 
 ```yml
@@ -111,13 +111,13 @@ if ($email->send()) {
 ```
 
 [alert]
-As we've added a new template file (`MyCustomEmail`) make sure you clear the SilverStripe cache for your changes to
+As we've added a new template file (`MyCustomEmail`) make sure you clear the Silverstripe CMS cache for your changes to
 take affect.
 [/alert]
 
 #### Custom plain templates
 
-By default SilverStripe will generate a plain text representation of the email from the HTML body. However if you'd like
+By default Silverstripe CMS will generate a plain text representation of the email from the HTML body. However if you'd like
 to specify your own own plaintext version/template you can use `$email->setPlainTemplate()` to render a custom view of
 the plain email:
 
