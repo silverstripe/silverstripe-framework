@@ -6,6 +6,7 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Environment;
@@ -60,7 +61,14 @@ class DB
      */
     protected static $configs = [];
 
-
+    /**
+     * Array of classes that have been confirmed ready for database queries.
+     * When the database has once been verified as ready, it will not do the
+     * checks again.
+     *
+     * @var boolean[]
+     */
+    protected static $databaseReadyClasses = [];
 
     /**
      * The last SQL query run.
@@ -695,5 +703,101 @@ class DB
     public static function alteration_message($message, $type = "")
     {
         self::get_schema()->alterationMessage($message, $type);
+    }
+
+    /**
+     * Check if all tables and field columns for a class exist in the database.
+     *
+     * @param string $class
+     * @return boolean
+     */
+    public static function databaseIsReady(string $class): bool
+    {
+        if (!is_subclass_of($class, DataObject::class)) {
+            throw new InvalidArgumentException("$class is not a subclass of " . DataObject::class);
+        }
+
+        // Don't check again if we already know the db is ready for this class.
+        // Necessary here before the loop to catch situations where a subclass
+        // is forced as ready without having to check all the superclasses.
+        if (!empty(self::$databaseReadyClasses[$class])) {
+            return true;
+        }
+
+        // Check if all tables and fields required for the class exist in the database.
+        $requiredClasses = ClassInfo::dataClassesFor($class);
+        $schema = DataObject::getSchema();
+        foreach ($requiredClasses as $required) {
+            // Skip test classes, as not all test classes are scaffolded at once
+            if (is_a($required, TestOnly::class, true)) {
+                continue;
+            }
+
+            // Don't check again if we already know the db is ready for this class.
+            if (!empty(self::$databaseReadyClasses[$class])) {
+                continue;
+            }
+
+            // if any of the tables aren't created in the database
+            $table = $schema->tableName($required);
+            if (!ClassInfo::hasTable($table)) {
+                return false;
+            }
+
+            // HACK: DataExtensions aren't applied until a class is instantiated for
+            // the first time, so create an instance here.
+            singleton($required);
+
+            // if any of the tables don't have all fields mapped as table columns
+            $dbFields = DB::field_list($table);
+            if (!$dbFields) {
+                return false;
+            }
+
+            $objFields = $schema->databaseFields($required, false);
+            $missingFields = array_diff_key($objFields, $dbFields);
+
+            if ($missingFields) {
+                return false;
+            }
+
+            // Add each ready class to the cached array.
+            self::$databaseReadyClasses[$required] = true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Resets the databaseReadyClasses cache.
+     *
+     * @param string|null $class The specific class to be cleared.
+     * If not passed, the cache for all classes is cleared.
+     * @param bool $clearFullHeirarchy Whether to clear the full class hierarchy or only the given class.
+     */
+    public static function clearDatabaseIsReady(?string $class = null, bool $clearFullHierarchy = true)
+    {
+        if ($class) {
+            $clearClasses = [$class];
+            if ($clearFullHierarchy) {
+                $clearClasses = ClassInfo::dataClassesFor($class);
+            }
+            foreach ($clearClasses as $clear) {
+                unset(self::$databaseReadyClasses[$clear]);
+            }
+        } else {
+            self::$databaseReadyClasses = [];
+        }
+    }
+
+    /**
+     * For the databaseIsReady call to return a certain value for the given class - used for testing
+     *
+     * @param string $class The class to be forced as ready/not ready.
+     * @param boolean $isReady The value to force.
+     */
+    public static function forceDatabaseIsReady(string $class, bool $isReady)
+    {
+        self::$databaseReadyClasses[$class] = $isReady;
     }
 }

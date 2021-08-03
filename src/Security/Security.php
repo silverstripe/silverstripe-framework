@@ -174,12 +174,16 @@ class Security extends Controller implements TemplateGlobalProvider
     private static $login_recording = false;
 
     /**
+     * @deprecated 5.0 use {@link DB::$databaseReadyClasses} instead
+     *
      * @var boolean If set to TRUE or FALSE, {@link database_is_ready()}
      * will always return FALSE. Used for unit testing.
      */
     protected static $force_database_is_ready;
 
     /**
+     * @deprecated 5.0 use {@link DB::$databaseReadyClasses} instead
+     *
      * When the database has once been verified as ready, it will not do the
      * checks again.
      *
@@ -1229,49 +1233,16 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function database_is_ready()
     {
-        // Used for unit tests
-        if (self::$force_database_is_ready !== null) {
-            return self::$force_database_is_ready;
-        }
-
-        if (self::$database_is_ready) {
-            return self::$database_is_ready;
-        }
-
-        $requiredClasses = ClassInfo::dataClassesFor(Member::class);
-        $requiredClasses[] = Group::class;
-        $requiredClasses[] = Permission::class;
-        $schema = DataObject::getSchema();
-        foreach ($requiredClasses as $class) {
-            // Skip test classes, as not all test classes are scaffolded at once
-            if (is_a($class, TestOnly::class, true)) {
-                continue;
-            }
-
-            // if any of the tables aren't created in the database
-            $table = $schema->tableName($class);
-            if (!ClassInfo::hasTable($table)) {
-                return false;
-            }
-
-            // HACK: DataExtensions aren't applied until a class is instantiated for
-            // the first time, so create an instance here.
-            singleton($class);
-
-            // if any of the tables don't have all fields mapped as table columns
-            $dbFields = DB::field_list($table);
-            if (!$dbFields) {
-                return false;
-            }
-
-            $objFields = $schema->databaseFields($class, false);
-            $missingFields = array_diff_key($objFields, $dbFields);
-
-            if ($missingFields) {
+        $toCheck = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
+        foreach ($toCheck as $class) {
+            if (!DB::databaseIsReady($class)) {
                 return false;
             }
         }
-        self::$database_is_ready = true;
 
         return true;
     }
@@ -1281,8 +1252,14 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function clear_database_is_ready()
     {
-        self::$database_is_ready = null;
-        self::$force_database_is_ready = null;
+        $toClear = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
+        foreach ($toClear as $class) {
+            DB::clearDatabaseIsReady($class);
+        }
     }
 
     /**
@@ -1292,7 +1269,14 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function force_database_is_ready($isReady)
     {
-        self::$force_database_is_ready = $isReady;
+        $toForce = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
+        foreach ($toForce as $class) {
+            DB::forceDatabaseIsReady($class, $isReady);
+        }
     }
 
     /**
