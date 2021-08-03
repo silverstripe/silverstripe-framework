@@ -183,6 +183,11 @@ class FormField extends RequestHandler
     protected $customValidationMessage = '';
 
     /**
+     * @var Tip|null
+     */
+    private $titleTip;
+
+    /**
      * Name of the template used to render this form field. If not set, then will look up the class
      * ancestry for the first matching template where the template name equals the class name.
      *
@@ -1548,7 +1553,7 @@ class FormField extends RequestHandler
      */
     public function getSchemaDataDefaults()
     {
-        return [
+        $data = [
             'name' => $this->getName(),
             'id' => $this->ID(),
             'type' => $this->getInputType(),
@@ -1569,6 +1574,11 @@ class FormField extends RequestHandler
             'autoFocus' => $this->isAutofocus(),
             'data' => [],
         ];
+        $titleTip = $this->getTitleTip();
+        if ($titleTip instanceof Tip) {
+            $data['titleTip'] = $titleTip->getTipSchema();
+        }
+        return $data;
     }
 
     /**
@@ -1638,5 +1648,23 @@ class FormField extends RequestHandler
         }
         $this->extend('updateSchemaValidation', $validationList);
         return $validationList;
+    }
+
+    /**
+     * @return Tip
+     */
+    public function getTitleTip(): ?Tip
+    {
+        return $this->titleTip;
+    }
+
+    /**
+     * @param Tip|null $tip
+     * @return $this
+     */
+    public function setTitleTip(?Tip $tip): self
+    {
+        $this->titleTip = $tip;
+        return $this;
     }
 }

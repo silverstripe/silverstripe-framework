@@ -15,6 +15,7 @@ use SilverStripe\Forms\NullableField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\Tip;
 use SilverStripe\ORM\ValidationResult;
 
 class FormFieldTest extends SapphireTest
@@ -360,6 +361,16 @@ class FormFieldTest extends SapphireTest
         $this->assertInternalType('array', $schema);
     }
 
+    public function testGetSchemaDataDefaultsTitleTip()
+    {
+        $field = new FormField('MyField');
+        $schema = $field->getSchemaDataDefaults();
+        $this->assertFalse(array_key_exists('titleTip', $schema));
+        $field->setTitleTip(new Tip('Test tip'));
+        $schema = $field->getSchemaDataDefaults();
+        $this->assertSame('Test tip', $schema['titleTip']['content']);
+    }
+
     public function testGetSchemaData()
     {
         $field = new FormField('MyField');
@@ -477,5 +488,14 @@ class FormFieldTest extends SapphireTest
             ['onlylower', 'Onlylower'],
             ['SpecialURL', 'Special URL'],
         ];
+    }
+
+    public function testGetSetTitleTip()
+    {
+        $field = new FormField('MyField');
+        $this->assertNull($field->getTitleTip());
+        $field->setTitleTip(new Tip('Test tip'));
+        $this->assertInstanceOf(Tip::class, $field->getTitleTip());
+        $this->assertSame('Test tip', $field->getTitleTip()->getMessage());
     }
 }
