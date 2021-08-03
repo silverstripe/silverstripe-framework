@@ -20,6 +20,7 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridState;
 use SilverStripe\Forms\GridField\GridState_Component;
 use SilverStripe\Forms\GridField\GridState_Data;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component2;
@@ -27,7 +28,9 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\HTMLFragments;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
+use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Versioned\VersionedGridFieldStateExtension;
@@ -639,5 +642,28 @@ class GridFieldTest extends SapphireTest
         $config->addComponent(new GridFieldPaginator(10));
         $endList = $gridField->getManipulatedList();
         $this->assertEquals($endList->count(), 10);
+    }
+
+    public function testValidationMessageInOutput()
+    {
+        $gridField = new GridField('testfield', 'testfield', new ArrayList(), new GridFieldConfig());
+        $fieldList = new FieldList([$gridField]);
+        $validator = new TestValidator();
+        $form = new Form(null, "testForm", $fieldList, new FieldList(), $validator);
+
+        // A form that fails validation should display the validation error in the FieldHolder output.
+        $form->validationResult();
+        $gridfieldOutput = $gridField->FieldHolder();
+        $this->assertContains('<p class="message ' . ValidationResult::TYPE_ERROR . '">error</p>', $gridfieldOutput);
+
+        // Clear validation error from previous assertion.
+        $validator->removeValidation();
+        $gridField->setMessage(null);
+
+        // A form that passes validation should not display a validation error in the FieldHolder output.
+        $form->setValidator(new RequiredFields());
+        $form->validationResult();
+        $gridfieldOutput = $gridField->FieldHolder();
+        $this->assertNotContains('<p class="message ' . ValidationResult::TYPE_ERROR . '">', $gridfieldOutput);
     }
 }
