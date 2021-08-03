@@ -13,15 +13,12 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
@@ -180,6 +177,8 @@ class Security extends Controller implements TemplateGlobalProvider
     protected static $force_database_is_ready;
 
     /**
+     * @deprecated 5.0 use {@link DataObject::getSchema()->tableReadyClasses} instead
+     *
      * When the database has once been verified as ready, it will not do the
      * checks again.
      *
@@ -1238,41 +1237,19 @@ class Security extends Controller implements TemplateGlobalProvider
             return self::$database_is_ready;
         }
 
-        $requiredClasses = ClassInfo::dataClassesFor(Member::class);
-        $requiredClasses[] = Group::class;
-        $requiredClasses[] = Permission::class;
+        $toCheck = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
         $schema = DataObject::getSchema();
-        foreach ($requiredClasses as $class) {
-            // Skip test classes, as not all test classes are scaffolded at once
-            if (is_a($class, TestOnly::class, true)) {
-                continue;
-            }
-
-            // if any of the tables aren't created in the database
-            $table = $schema->tableName($class);
-            if (!ClassInfo::hasTable($table)) {
-                return false;
-            }
-
-            // HACK: DataExtensions aren't applied until a class is instantiated for
-            // the first time, so create an instance here.
-            singleton($class);
-
-            // if any of the tables don't have all fields mapped as table columns
-            $dbFields = DB::field_list($table);
-            if (!$dbFields) {
-                return false;
-            }
-
-            $objFields = $schema->databaseFields($class, false);
-            $missingFields = array_diff_key($objFields, $dbFields);
-
-            if ($missingFields) {
+        foreach ($toCheck as $class) {
+            if (!$schema->tableIsReadyForClass($class)) {
                 return false;
             }
         }
-        self::$database_is_ready = true;
 
+        self::$database_is_ready = true;
         return true;
     }
 
@@ -1283,6 +1260,15 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         self::$database_is_ready = null;
         self::$force_database_is_ready = null;
+        $toClear = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
+        $schema = DataObject::getSchema();
+        foreach ($toClear as $class) {
+            $schema->clearTableReadyForClass($class);
+        }
     }
 
     /**
