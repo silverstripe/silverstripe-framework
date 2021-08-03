@@ -328,7 +328,7 @@ The primary field types that are affected by this include:
 
 #### All available arguments
 
-#### DBText
+##### DBText
 
 * `format: CONTEXT_SUMMARY` (optional "limit" arg)
 * `format: FIRST_PARAGRAPH`
@@ -336,7 +336,7 @@ The primary field types that are affected by this include:
 * `format: SUMMARY` (optional "limit" arg)
 * `parseShortcodes: Boolean` (DBHTMLText only)
 
-#### DBDate
+##### DBDate
 
 * `format: TIMESTAMP`
 * `format: NICE`
@@ -350,23 +350,62 @@ The primary field types that are affected by this include:
 * `format: FULL`
 * `format: CUSTOM` (requires `customFormat: String` arg)
 
-#### DBTime
+##### DBTime
 
 * `format: TIMESTAMP`
 * `format: NICE`
 * `format: SHORT`
 * `format: CUSTOM` (requires `customFormat: String` arg)
 
-#### DBDecimal
+##### DBDecimal
 
 * `format: INT`
 
-#### DBFloat
+##### DBFloat
 
 * `format: NICE`
 * `format: ROUND`
 * `format: NICE_ROUND`
 
+
+#### Enum naming strategy and deduplication
+
+By default, auto-generated Enum types will use as generic name as possible, which is `<FieldName>Enum`, e.g.
+`OrderStatusEnum`. On occasion, this may collide with other types, e.g. `OptionsEnum`. In this case, the
+second enum generated will use `<TypeName><FieldName>Enum`.
+
+If an enum already exists with the same fields and name, it will be reused. For instance, if `OptionsEnum`
+is found and has exactly the same defined values (in the same order) as the Enum being generated,
+it will be reused rather than proceding to the deduplication strategy.
+
+#### Custom enum names
+
+You can specify custom enum names in the plugin config:
+
+```
+modelConfig:
+  DataObject:
+    plugins:
+      dbFieldTypes:
+        enumTypeMapping:
+          MyType:
+            myEnumField: SomeCustomTypeName
+             
+```
+
+You can also specify enums to be ignored. (`ClassName` does this on all DataObjects to prevent inheritance
+issues)
+
+```
+modelConfig:
+  DataObject:
+    plugins:
+      dbFieldTypes:
+        ignore:
+          MyType:
+            myEnumField: true
+             
+```
 
 ### The getByLink plugin
 
