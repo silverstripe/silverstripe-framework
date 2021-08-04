@@ -18,6 +18,7 @@ The Core Committers team is reviewed approximately annually, new members are add
 * [Ingo Schommer](https://github.com/chillu)
 * [Loz Calver](https://github.com/kinglozzer)
 * [Maxime Rainville](https://github.com/maxime-rainville)
+* [Michal Kleiner](https://github.com/michalkleiner)
 * [Paul Clarke](https://github.com/clarkepaul)
 * [Sam Minnée](https://github.com/sminnee)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
