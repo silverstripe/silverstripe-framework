@@ -94,6 +94,7 @@ Example:
 	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
 ```
+[warning]
 It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
 [/warning]
