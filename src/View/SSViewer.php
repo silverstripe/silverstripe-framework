@@ -167,7 +167,7 @@ class SSViewer implements Flushable
      *
      * @var array
      */
-    protected $subTemplates = null;
+    protected $subTemplates = [];
 
     /**
      * @var bool
