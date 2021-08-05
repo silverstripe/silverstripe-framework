@@ -2547,7 +2547,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getCMSCompositeValidator(): CompositeValidator
     {
-        $compositeValidator = new CompositeValidator();
+        $compositeValidator = CompositeValidator::create();
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
