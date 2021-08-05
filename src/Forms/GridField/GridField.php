@@ -438,6 +438,8 @@ class GridField extends FormField
      */
     public function FieldHolder($properties = [])
     {
+        $this->extend('onBeforeRenderHolder', $this, $properties);
+        
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
