@@ -50,7 +50,7 @@ See the details on the [Core Committers](./core_committers) page.
 ### Contributing Committers
 
 Beyond the Core Committer role, there can be individuals which
-focus on core development work - typically sponsored through full-time product development roles by SilverStripe Ltd.
+focus on core development work - typically sponsored through full-time product development roles by Silverstripe Ltd.
 These Contributing Committers require write access to core repositories to maintain their pace,
 often working alongside Core Committers. They are guided by additional rules:
 
@@ -94,10 +94,10 @@ First and foremost rule of a maintainer is to collaborate with other maintainers
  * Follow [Semantic Versioning](code/#picking-the-right-version) by putting any changes into the correct branch
  * API changes and non-trivial features should not be merged into release branches. 
  * API changes on master should not be merged until they have the buy-in of at least two Core Committers (or better, through the [core mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev))
- * Be inclusive. Ensure a wide range of SilverStripe developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
+ * Be inclusive. Ensure a wide range of Silverstripe CMS developers can obtain an understanding of your code and docs, and you're not the only one who can maintain it.
  * Avoid `git push --force`, and be careful with your git remotes (no accidental pushes)
  * Use your own forks to create feature branches
- * We release using the standard process. See the [Making a SilverStripe Core Release](making_a_silverstripe_core_release)
+ * We release using the standard process. See the [Making a Silverstripe CMS Core Release](making_a_silverstripe_core_release)
 
 
 ### How to triage
