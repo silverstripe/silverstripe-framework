@@ -1,15 +1,15 @@
 ---
 title: Contributing Code
-summary: Fix bugs and add new features to help make SilverStripe better.
+summary: Fix bugs and add new features to help make Silverstripe CMS better.
 icon: code
 ---
 
 # Contributing Code - Submitting Bugfixes and Enhancements
 
-SilverStripe will never be finished, and we need your help to keep making it better.  If you're a developer a great way to get involved is to contribute patches to our modules and core codebase, fixing bugs or adding features.
+Silverstripe CMS will never be finished, and we need your help to keep making it better.  If you're a developer a great way to get involved is to contribute patches to our modules and core codebase, fixing bugs or adding features.
 
-The SilverStripe core modules (`framework` and `cms`), as well as some of the more popular modules are in
-git version control. SilverStripe hosts its modules on [github.com/silverstripe](https://github.com/silverstripe/).  After [installing git](https://help.github.com/articles/set-up-git/) and creating a [free github.com account](https://github.com/join/), you can "fork" a module,
+The Silverstripe CMS core modules (`framework` and `cms`), as well as some of the more popular modules are in
+git version control. Silverstripe CMS hosts its modules on [github.com/silverstripe](https://github.com/silverstripe/).  After [installing git](https://help.github.com/articles/set-up-git/) and creating a [free github.com account](https://github.com/join/), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](https://help.github.com/articles/fork-a-repo/)).
 
 For other modules, our [add-ons site](https://addons.silverstripe.org/add-ons/) lists the repository locations, typically using the version control system like "git".
@@ -18,7 +18,7 @@ If you are modifying CSS or JavaScript files in core modules, you'll need to reg
 Please check out our [client-side build tooling](build_tooling) guide for details.
 
 [hint]
-Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
+Note: By supplying code to the Silverstripe CMS core team in patches, tickets and pull requests, you agree to assign copyright of that code to Silverstripe Limited, on the condition that Silverstripe Limited releases that code under the BSD license.
 
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
 [/hint]
@@ -26,7 +26,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 ## Step-by-step: From forking to sending the pull request
 
 [notice]
-**Note:** Please adjust the commands below to the version of SilverStripe that you're targeting.
+**Note:** Please adjust the commands below to the version of Silverstripe CMS that you're targeting.
 [/notice]
 
 1. Create a [fork](https://help.github.com/articles/about-forks/) of the module you want to contribute to (listed on [github.com/silverstripe/](https://github.com/silverstripe/)).
@@ -79,7 +79,7 @@ there are any problems they will follow up with you, so please ensure they have 
 
 ### Picking the right version
 
-The SilverStripe project follows the [Semantic Versioning](http://semver.org) (SemVer) specification for releases. 
+The Silverstripe CMS project follows the [Semantic Versioning](http://semver.org) (SemVer) specification for releases. 
 It clarifies what to expect from different releases, and also guides you in choosing the right branch to base your pull request on.
 
 If you are unsure what branch your pull request should go to, consider asking in the GitHub issue that you address with your patch, or
@@ -141,9 +141,9 @@ The current GitHub labels are grouped into five sections:
 | impact/high | Broken functionality/experience with no obvious workarounds available, or an enhancement that provides a clear benefit to users. Typically affecting major usage flows or core interactions |
 | impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
 | impact/low | A nuisance but doesn't break any functionality (typos, etc) |
-| effort/easy | Someone with limited SilverStripe experience could resolve |
-| effort/medium | Someone with a good understanding of SilverStripe could resolve |
-| effort/hard | Only an expert with SilverStripe could resolve |
+| effort/easy | Someone with limited Silverstripe CMS experience could resolve |
+| effort/medium | Someone with a good understanding of Silverstripe CMS could resolve |
+| effort/hard | Only an expert with Silverstripe CMS could resolve |
 | type/docs | A docs change |
 | type/bug | Does not function as intended, or is inadequate for the purpose it was created for |
 | type/frontend | A change to front-end (CSS, HTML, etc) |
@@ -180,7 +180,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 ## Check List
 
 * Adhere to our [coding conventions](/contributing/coding_conventions)
-* If your patch is extensive, discuss it first on the [SilverStripe Forums](https://forum.silverstripe.org/c/feature-ideas) (ideally before doing any serious coding)
+* If your patch is extensive, discuss it first on the [Silverstripe CMS Forums](https://forum.silverstripe.org/c/feature-ideas) (ideally before doing any serious coding)
 * When working on existing tickets, provide status updates through ticket comments
 * Check your patches against the "master" branch, as well as the latest release branch
 * Write [unit tests](../developer_guides/testing/unit_testing)
