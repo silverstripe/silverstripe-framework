@@ -462,10 +462,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             static::class,
             DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
         );
+
         foreach ($fields as $field => $fieldSpec) {
             $fieldClass = strtok($fieldSpec, ".");
             if (!array_key_exists($field, $record)) {
                 $this->record[$field . '_Lazy'] = $fieldClass;
+            }
+        }
+
+        // Extension point to hydrate additional fields into this object during construction.
+        // Return an array of field names => raw values from your augmentHydrateFields extension method.
+        $extendedAdditionalFields = $this->extend('augmentHydrateFields');
+        foreach ($extendedAdditionalFields as $additionalFields) {
+            foreach ($additionalFields as $field => $value) {
+                $this->record[$field] = $value;
+
+                // If a corresponding lazy-load field exists, remove it as the value has been provided
+                $lazyName = $field . '_Lazy';
+                if (array_key_exists($lazyName, $this->record)) {
+                    unset($this->record[$lazyName]);
+                }
             }
         }
 
