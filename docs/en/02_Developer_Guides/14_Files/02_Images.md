@@ -203,24 +203,24 @@ SilverStripe\Core\Injector\Injector:
 ### Lazy Loading {#lazy-loading}
 
 Most modern browsers support the ability to "lazy load" images by adding a `loading="lazy"` attribute 
-to the `<img />`. This defers the loading of images not in the viewport to improve the initial page 
-load performance.
+to the `<img />` tag. This defers the loading of images not in the viewport to improve the initial 
+page load performance.
 
 Silverstripe CMS automatically adds the `loading="lazy"` to images added in an HTML editor field
 and to images rendered via a SS template file.
 
 Read [Browser-level image lazy-loading for the web](https://web.dev/browser-level-image-lazy-loading/)
-on _web.dev_ more information.
+on _web.dev_ for more information.
 
 #### Selectively disabling lazy loading
 
 Images that are expected to be initially visible on page load, should be _eager_ loaded. This 
 provides a small performance gain since the browser doesn't have to render the entire page layout 
-before determining if the images needs to be loaded. When in doubt it's usually preferable to lazy 
+before determining if the images need to be loaded. When in doubt, it's usually preferable to lazy 
 load the image.
 
 Images that don't have dimensions should not be lazy loaded as that might alter the layout of the 
-page after the initial load. 
+page after the initial page load. 
 
 Content authors have the ability to selectively disable lazy loading when inserting images in an 
 HTML editor field.
