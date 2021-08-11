@@ -442,6 +442,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function setCurrentUser($currentUser = null)
     {
+        static::singleton()->extend('updateSetCurrentUser', $currentUser);
         self::$currentUser = $currentUser;
     }
 

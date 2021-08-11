@@ -37,6 +37,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\SessionManager\Security\LogInAuthenticationHandler;
 use SilverStripe\View\SSViewer;
 
 if (!class_exists(PHPUnit_Framework_TestCase::class)) {
@@ -1161,14 +1162,25 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      *
      * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
      */
-    public function logInAs($member)
+    protected function getMemberFromMixedVariable($member)
     {
         if (is_numeric($member)) {
             $member = DataObject::get_by_id(Member::class, $member);
         } elseif (!is_object($member)) {
             $member = $this->objFromFixture(Member::class, $member);
         }
-        Injector::inst()->get(IdentityStore::class)->logIn($member);
+        return $member;
+    }
+
+    /**
+     * Log in as the given member
+     *
+     * @param mixed $member
+     */
+    public function logInAs($member)
+    {
+        $member = $this->getMemberFromMixedVariable($member);
+        Security::setCurrentUser($member);
     }
 
     /**
@@ -1176,9 +1188,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     public function logOut()
     {
-        /** @var IdentityStore $store */
-        $store = Injector::inst()->get(IdentityStore::class);
-        $store->logOut();
+        Security::setCurrentUser();
     }
 
     /**

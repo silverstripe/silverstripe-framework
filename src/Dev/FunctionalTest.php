@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\BasicAuth;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use SimpleXMLElement;
@@ -90,7 +91,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
             $this->markTestSkipped(sprintf('Skipping %s ', static::class));
         }
 
-        $this->mainSession = new TestSession();
+        $this->ensureMainSessionExists();
 
         // Disable theme, if necessary
         if (static::get_disable_themes()) {
@@ -113,11 +114,33 @@ class FunctionalTest extends SapphireTest implements TestOnly
         SecurityToken::disable();
     }
 
+    private function ensureMainSessionExists()
+    {
+        if (!$this->mainSession) {
+            $this->mainSession = new TestSession();
+        }
+    }
+
     protected function tearDown()
     {
         SecurityToken::enable();
         unset($this->mainSession);
         parent::tearDown();
+    }
+
+    /**
+     * Log in as the given member
+     *
+     * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
+     */
+    function logInAs($member)
+    {
+        parent::logInAs($member);
+        $member = $this->getMemberFromMixedVariable($member);
+        if ($member instanceof Member) {
+            $this->ensureMainSessionExists();
+            $this->mainSession->session()->set('loggedInAs', $member->ID);
+        }
     }
 
     /**
