@@ -266,7 +266,8 @@ class SecurityTest extends FunctionalTest
 
     public function testMemberIDInSessionDoesntExistInDatabaseHasToLogin()
     {
-        /* Log in with a Member ID that doesn't exist in the DB */
+        // Attempt to fake a log in with a Member ID that doesn't exist in the DB
+        // Note: attempting $this->logInAs(500) will throw a TypeError in RequestAuthenticationHandler::logIn()
         $this->session()->set('loggedInAs', 500);
 
         $this->autoFollowRedirection = true;
@@ -282,7 +283,7 @@ class SecurityTest extends FunctionalTest
         $this->autoFollowRedirection = false;
 
         /* Log the user out */
-        $this->session()->set('loggedInAs', null);
+        $this->logOut();
     }
 
     public function testLoginUsernamePersists()
@@ -381,7 +382,7 @@ class SecurityTest extends FunctionalTest
             "Internal relative BackURLs work when passed through to login form"
         );
         // Log the user out
-        $this->session()->set('loggedInAs', null);
+        $this->logOut();
 
         // Test internal absolute redirect
         $response = $this->doTestLoginForm(
@@ -396,7 +397,7 @@ class SecurityTest extends FunctionalTest
             "Internal absolute BackURLs work when passed through to login form"
         );
         // Log the user out
-        $this->session()->set('loggedInAs', null);
+        $this->logOut();
 
         // Test external redirect
         $response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'http://myspoofedhost.com');
@@ -416,7 +417,7 @@ class SecurityTest extends FunctionalTest
         );
 
         // Log the user out
-        $this->session()->set('loggedInAs', null);
+        $this->logOut();
     }
 
     /**
