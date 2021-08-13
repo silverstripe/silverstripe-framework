@@ -8,6 +8,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
@@ -218,9 +219,31 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             return $dataList;
         }
 
+        // remove summary_fields key if using advanced filter
+        if (array_key_exists('summary_fields', $filterArguments)) {
+            if (count($filterArguments) !== 1) {
+                unset($filterArguments['summary_fields']);
+            }
+        }
+
+        $disjunctive = false;
+        if (array_key_exists('summary_fields', $filterArguments)) {
+            $disjunctive = true;
+            $words = explode(' ', $filterArguments['summary_fields']); // split on words
+            $filterArguments = [];
+            $dataClass = $dataList->dataClass();
+            $fields = Injector::inst()->get($dataClass)->config()->get('searchable_fields');
+            if (empty($fields)) {
+                $fields = Injector::inst()->get($dataClass)->config()->get('summary_fields');
+            }
+            foreach ($fields as $field) {
+                $filterArguments[$field] = $words;
+            }
+        }
+
         $dataListClone = clone($dataList);
         $results = $this->getSearchContext($gridField)
-            ->getQuery($filterArguments, false, false, $dataListClone);
+            ->getQuery($filterArguments, false, false, $dataListClone, $disjunctive);
 
         return $results;
     }
@@ -287,6 +310,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         if (array_key_exists($gridField->getName(), $params)) {
             $params = $params[$gridField->getName()];
         }
+        $originalParams = $params;
         if ($context->getSearchParams()) {
             $params = array_merge($context->getSearchParams(), $params);
         }
@@ -297,12 +321,25 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
 
         $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
 
-        // Prefix "Search__" onto the filters for the React component
-        $filters = $context->getSearchParams();
-        if (!$this->useLegacyFilterHeader && !empty($filters)) {
-            $filters = array_combine(array_map(function ($key) {
-                return 'Search__' . $key;
-            }, array_keys($filters)), $filters);
+        // Filters have a "Search__" prefix added for the React component
+        $filters = [];
+        if (count($originalParams) === 1 && array_key_exists('summary_fields', $originalParams)) {
+            // summary fields search
+            $filters = ['summary_fields' => $originalParams['summary_fields']];
+            if (!$this->useLegacyFilterHeader) {
+                $filters['Search__summary_fields'] = $originalParams['summary_fields'];
+            }
+        } else {
+            // advanced search
+            $filters = $context->getSearchParams();
+            if (array_key_exists('summary_fields', $filters)) {
+                unset($filters['summary_fields']);
+            }
+            if (!$this->useLegacyFilterHeader && !empty($filters)) {
+                $filters = array_combine(array_map(function ($key) {
+                    return 'Search__' . $key;
+                }, array_keys($filters)), $filters);
+            }
         }
 
         $searchAction = GridField_FormAction::create($gridField, 'filter', false, 'filter', null);

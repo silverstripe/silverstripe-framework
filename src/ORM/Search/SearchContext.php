@@ -140,10 +140,11 @@ class SearchContext
      *  Falls back to {@link DataObject::$default_sort} if not provided.
      * @param array|bool|string $limit
      * @param DataList $existingQuery
+     * @param bool $disjunctive Use OR to connect WHERE clauses between fields instead of AND
      * @return DataList
      * @throws Exception
      */
-    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
+    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null, $disjunctive = false)
     {
         /** DataList $query */
         $query = null;
@@ -173,13 +174,33 @@ class SearchContext
         $query = $query->sort($sort);
         $this->setSearchParams($searchParams);
 
-        foreach ($this->searchParams as $key => $value) {
-            $key = str_replace('__', '.', $key);
-            if ($filter = $this->getFilter($key)) {
-                $filter->setModel($this->modelClass);
-                $filter->setValue($value);
-                if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery([$filter, 'apply']);
+        if ($disjunctive) {
+            // WHERE .. OR
+            $disjunctiveParams = $this->searchParams;
+            foreach ($this->searchParams as $key => $value) {
+                if ($filter = $this->getFilter($key)) {
+                    // TODO: replace with some sort of reverse lookup on DataListFilter config in case someone
+                    // adds their own filter type that doesn't end in 'Filter'
+                    $parts = explode('\\', get_class($filter));
+                    $classNoNamespace = end($parts);
+                    if (preg_match('#^([A-Za-z0-9]+)Filter$#', $classNoNamespace, $matches)) {
+                        $modifier = $matches[1]; // e.g. PartialMatch
+                        $disjunctiveParams[$key . ':' . $modifier] = $value;
+                        unset($disjunctiveParams[$key]);
+                    }
+                }
+            }
+            $query = $query->filterAny($disjunctiveParams);
+        } else {
+            // WHERE .. AND
+            foreach ($this->searchParams as $key => $value) {
+                $key = str_replace('__', '.', $key);
+                if ($filter = $this->getFilter($key)) {
+                    $filter->setModel($this->modelClass);
+                    $filter->setValue($value);
+                    if (!$filter->isEmpty()) {
+                        $query = $query->alterDataQuery([$filter, 'apply']);
+                    }
                 }
             }
         }

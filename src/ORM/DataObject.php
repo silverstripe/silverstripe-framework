@@ -16,6 +16,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -2378,6 +2379,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             (array)$_params
         );
         $fields = new FieldList();
+
+        // Adds a 'search all summary fields' field to be used as the default search field
+        // The gridfield search simply picks the first field from the list
+        // See GridFieldFilterHeader.php and SearchContext.php
+        $fields->push(HiddenField::create('summary_fields', 'Summary fields search'));
+
         foreach ($this->searchableFields() as $fieldName => $spec) {
             if ($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) {
                 continue;
