@@ -55,11 +55,13 @@ methods. For example:
  */
 public function populateDefaults() 
 {
-    if($parent = $this->Parent()) {
+    $this->FullTitle = $this->Title;
+    if (Controller::has_curr() && is_a(Controller::curr(), CMSPageAddController::class)) {
+        $parentid = Controller::curr()->getRequest()->getVar('ParentID');
+        $parent = Page::get_by_id($parentid);
         $this->FullTitle = $parent->Title . ': ' . $this->Title;
-    } else {
-        $this->FullTitle = $this->Title;
     }
+    
     parent::populateDefaults();
 }
 ```
