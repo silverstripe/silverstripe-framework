@@ -6,23 +6,36 @@ icon: envelope-open
 
 # Email
 
-Creating and sending email in Silverstripe CMS is done through the [Email](api:SilverStripe\Control\Email\Email) and [Mailer](api:SilverStripe\Control\Email\Mailer) classes. This document 
-covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
+Creating and sending email in Silverstripe CMS is done through the [Email](api:SilverStripe\Control\Email\Email) and [Mailer](api:SilverStripe\Control\Email\Mailer) classes. This document covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
 
 ## Configuration
 
-Silverstripe CMS provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an
-extensive list of "transports" for sending mail via different services. 
+Silverstripe CMS provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an extensive list of "transports" for sending mail via different services. 
 
-Out of the box, Silverstripe CMS will use the built-in PHP `mail()` command via the `Swift_MailTransport` class. If you'd
-like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
+For legacy reasons, Silverstripe CMS 4 defaults to using the built-in PHP `mail()` command via a deprecated class `Swift_MailTransport`. However, using this layer is less secure and is strongly discouraged.
+
+It's highly recommended you upgrade to a more robust transport for additional security. The Sendmail transport is the most common one. The `sendmail` binary is widely available across most Linux/Unix servers.
+
+You can use any of the Transport classes provided natively by SwiftMailer. There are also countless PHP libraries offering custom Transports to integrate with third party mailing service:
+- read the [SwiftMailer Transport Types documentation](https://swiftmailer.symfony.com/docs/sending.html#transport-types) for a full list of native Transport
+- search [Packagist for SwiftMailer Transport](https://packagist.org/?query=SwiftMailer+Transport) to discover additional third party integrations
+
+To swap out the transport used by the `Mailer`, create a file `app/_config/email.yml`
+
+To use a `sendmail` binary:
 
 ```yml
+---
+Name: myemailconfig
+After:
+  - '#emailconfig'
+---
 SilverStripe\Core\Injector\Injector:
-  Swift_Transport: Swift_SendmailTransport
+  Swift_Transport:
+    class: Swift_SendmailTransport
 ```
 
-For example, to use SMTP, create a file `app/_config/email.yml`:
+To use SMTP:
 
 ```yml
 ---
@@ -44,6 +57,42 @@ SilverStripe\Core\Injector\Injector:
 ```
 
 Note the usage of backticks to designate environment variables for the credentials - ensure you set these in your `.env` file or in your webserver configuration.
+
+### Mailer Configuration for dev environments
+
+You may wish to use a different mailer configuration in your development environment. This can be used to suppress outgoing messages or to capture them for debugging purposes in a service like [MailCatcher](https://mailcatcher.me/).
+
+You can suppress all emails by using the [`Swift_Transport_NullTransport`](https://github.com/swiftmailer/swiftmailer/blob/master/lib/classes/Swift/Transport/NullTransport.php).
+
+```yml
+---
+Name: mydevemailconfig
+After:
+  - '#emailconfig'
+Only:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport:
+    class: Swift_Transport_NullTransport
+```
+
+If you're using MailCatcher, or a similar tool, you can tell `Swift_SendmailTransport` to use a different binary.
+
+```yml
+---
+Name: mydevemailconfig
+After:
+  - '#emailconfig'
+Only:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport:
+    class: Swift_SendmailTransport
+    constructor:
+      0: '/usr/bin/env catchmail -t'
+```
 
 ## Usage
 
@@ -223,6 +272,7 @@ SilverStripe\Core\Injector\Injector:
 ## SwiftMailer Documentation
 
 For further information on SwiftMailer, consult their docs: http://swiftmailer.org/docs/introduction.html
+
 
 ## API Documentation
 

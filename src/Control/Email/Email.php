@@ -10,6 +10,7 @@ use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -272,7 +273,9 @@ class Email extends ViewableData
      */
     public function setSwiftMessage($swiftMessage)
     {
-        $swiftMessage->setDate(new DateTime());
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
+        $swiftMessage->setDate($dateTime);
         if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
             $swiftMessage->setFrom($defaultFrom);
         }
@@ -454,6 +457,9 @@ class Email extends ViewableData
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getReplyTo()
     {
         return $this->getSwiftMessage()->getReplyTo();

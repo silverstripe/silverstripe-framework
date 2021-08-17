@@ -6,8 +6,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\SwiftMailer;
 use SilverStripe\Dev\SapphireTest;
 use Swift_Mailer;
-use Swift_Mime_SimpleMessage;
-use Swift_SendmailTransport;
+use Swift_MailTransport;
 use Swift_Message;
 use Swift_NullTransport;
 use Swift_Plugins_AntiFloodPlugin;
@@ -24,8 +23,8 @@ class SwiftMailerTest extends SapphireTest
         SwiftMailer::config()->remove('swift_plugins');
         SwiftMailer::config()->update('swift_plugins', [Swift_Plugins_AntiFloodPlugin::class]);
 
-        /** @var Swift_SendmailTransport $transport */
-        $transport = $this->getMockBuilder(Swift_SendmailTransport::class)->getMock();
+        /** @var Swift_MailTransport $transport */
+        $transport = $this->getMockBuilder(Swift_MailTransport::class)->getMock();
         $transport
             ->expects($this->once())
             ->method('registerPlugin')
@@ -56,7 +55,7 @@ class SwiftMailerTest extends SapphireTest
             ->setMethods(['sendSwift'])
             ->getMock();
         $mailer->expects($this->once())->method('sendSwift')->with(
-            $this->isInstanceOf(Swift_Mime_SimpleMessage::class)
+            $this->isInstanceOf(Swift_Message::class)
         );
 
         $mailer->send($email);

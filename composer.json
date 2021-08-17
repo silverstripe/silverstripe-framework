@@ -90,6 +90,9 @@
         },
         "files": [
             "src/includes/constants.php"
+        ],
+        "classmap": [
+            "thirdparty/swiftmailer"
         ]
     },
     "include-path": [

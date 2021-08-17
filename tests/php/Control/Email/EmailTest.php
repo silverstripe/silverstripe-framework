@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Tests\Email;
 
+use DateTime;
 use PHPUnit_Framework_MockObject_MockObject;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
@@ -269,8 +270,9 @@ class EmailTest extends SapphireTest
         $email = new Email();
         $swiftMessage = new Swift_Message();
         $email->setSwiftMessage($swiftMessage);
-        // When swiftmessage is created, it uses DateTime() to set the date, which does not implement mock_now
-        $email->getSwiftMessage()->setDate(new \DateTime(DBDatetime::now()));
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
+        $email->getSwiftMessage()->setDate($dateTime);
         $this->assertCount(1, $email->getFrom());
         $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom()));
         $this->assertEquals(strtotime('2017-01-01 07:00:00'), $swiftMessage->getDate()->getTimestamp());
