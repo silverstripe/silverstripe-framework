@@ -200,13 +200,112 @@ SilverStripe\Core\Injector\Injector:
       Quality: 90
 ```
 
-### Lazy Loading
+### Lazy Loading {#lazy-loading}
 
-Images added via the WYSIWYG editor and as objects on templates are [lazy loaded](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading) by default.
+Most modern browsers support the ability to "lazy load" images by adding a `loading="lazy"` attribute 
+to the `<img />` tag. This defers the loading of images not in the viewport to improve the initial 
+page load performance.
 
-To disable lazy loading for an individual image in a template, use `$MyImage.LazyLoad(false)`.
+Silverstripe CMS automatically adds the `loading="lazy"` to images added in an HTML editor field
+and to images rendered via a SS template file.
 
-To out of lazy loading globally, notably if you already have a custom lazy loading implementation, use the following yml config:
+Content authors have the ability to selectively disable lazy loading when inserting images in an
+HTML editor field.
+
+Read [Browser-level image lazy-loading for the web](https://web.dev/browser-level-image-lazy-loading/)
+on _web.dev_ for more information.
+
+#### Selectively disabling lazy loading in SS templates
+
+Images that are expected to be initially visible on page load, should be _eager_ loaded. This 
+provides a small performance gain since the browser doesn't have to render the entire page layout 
+before determining if the images need to be loaded. When in doubt, it's usually preferable to lazy 
+load the image.
+
+Developers can selectively disable lazy loading for individual image in a SS template by calling 
+`LazyLoad(false)` on the image variable (e.g.: `$MyImage.LazyLoad(false)`).
+
+```ss
+<!-- Image will be lazy loaded -->
+$Logo
+
+<!-- Image will NOT be lazy loaded -->
+$Logo.LazyLoad(false)
+
+<!-- We're allowing content authors to choose if the image is eager loaded-->
+$Logo.LazyLoad($LogoLoading)
+```
+
+Developers can allow content authors to control the loading attribute of a specific image by 
+adding a lazy load field next to the [`UploadField`](api:SilverStripe\Assets\UploadField).
+
+```php
+<?php
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\DropdownField;
+
+class Page extends SiteTree
+{
+    private static $db = [
+        'LogoLoading' => 'Boolean'
+    ];
+
+    private static $has_one = [
+        'Logo' => Image::class
+    ];
+
+    private static $defaults = [
+        'LogoLoading' => true
+    ];
+
+
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+
+        $loadingSource = [
+            true => 'Lazy (Default)',
+            false => 'Eager'
+        ];
+        
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                UploadField::create('Logo'),
+                DropdownField::create('LogoLoading', 'Loading', $loadingSource)
+            ]
+        );
+
+        return $fields;
+    }
+}
+```
+
+#### Controlling lazy loading in for `<img>` tags in SS templates
+
+If you are manually writing `<img>` tags in your SS template, those images will not be automatically
+lazy loaded. You will need to add the `loading="lazy"` attribute yourself if you want the image to be
+lazy loaded.
+
+Images that don't have dimensions should not be lazy loaded as that might alter the layout of the
+page after the initial page load.
+
+```ss
+<img src="$Logo.URL" width="$Logo.Width" width="$Logo.Height" loading="lazy" alt="Company Logo" />
+
+<!-- The size of this image is controlled by a CSS class so it can be lazy loaded -->
+<img src="$resourceURL('themes/example/images/footer.png')" class="64x64square" loading="lazy" alt="" />
+
+<!-- We don't have dimension for this image, so we eager load it -->
+<img src="//example.com/sponsor.webp" alt="A generous sponsor" />
+```
+
+#### Disabling lazy loading globally
+
+To opt out of lazy loading globally, notably if you already have a custom lazy loading 
+implementation, use the following yml config:
 
 ```yml
 SilverStripe\Assets\Image:
