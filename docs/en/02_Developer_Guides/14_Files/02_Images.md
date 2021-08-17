@@ -237,7 +237,7 @@ $Logo.LazyLoad($LogoLoading)
 ```
 
 Developers can allow content authors to control the loading attribute of a specific image by 
-adding lazy load field next to the [`UploadField`](api:SilverStripe\Assets\UploadField).
+adding a lazy load field next to the [`UploadField`](api:SilverStripe\Assets\UploadField).
 
 ```php
 <?php
@@ -285,7 +285,7 @@ class Page extends SiteTree
 
 #### Controlling lazy loading in for `<img>` tags in SS templates
 
-If you are manually writting `<img>` tags in your SS template, those images will not be automatically
+If you are manually writing `<img>` tags in your SS template, those images will not be automatically
 lazy loaded. You will need to add the `loading="lazy"` attribute yourself if you want the image to be
 lazy loaded.
 
