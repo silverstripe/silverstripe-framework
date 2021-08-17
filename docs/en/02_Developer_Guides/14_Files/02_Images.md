@@ -209,26 +209,35 @@ page load performance.
 Silverstripe CMS automatically adds the `loading="lazy"` to images added in an HTML editor field
 and to images rendered via a SS template file.
 
+Content authors have the ability to selectively disable lazy loading when inserting images in an
+HTML editor field.
+
 Read [Browser-level image lazy-loading for the web](https://web.dev/browser-level-image-lazy-loading/)
 on _web.dev_ for more information.
 
-#### Selectively disabling lazy loading
+#### Selectively disabling lazy loading in SS templates
 
 Images that are expected to be initially visible on page load, should be _eager_ loaded. This 
 provides a small performance gain since the browser doesn't have to render the entire page layout 
 before determining if the images need to be loaded. When in doubt, it's usually preferable to lazy 
 load the image.
 
-Images that don't have dimensions should not be lazy loaded as that might alter the layout of the 
-page after the initial page load. 
-
-Content authors have the ability to selectively disable lazy loading when inserting images in an 
-HTML editor field.
-
 Developers can selectively disable lazy loading for individual image in a SS template by calling 
-`LazyLoad(false)` on the image variable. Developers can allow content authors to control the 
-loading attribute of a specific image by adding lazy load field next to the 
-[`UploadField`](api:SilverStripe\Assets\UploadField).
+`LazyLoad(false)` on the image variable (e.g.: `$MyImage.LazyLoad(false)`).
+
+```ss
+<!-- Image will be lazy loaded -->
+$Logo
+
+<!-- Image will NOT be lazy loaded -->
+$Logo.LazyLoad(false)
+
+<!-- We're allowing content authors to choose if the image is eager loaded-->
+$Logo.LazyLoad($LogoLoading)
+```
+
+Developers can allow content authors to control the loading attribute of a specific image by 
+adding lazy load field next to the [`UploadField`](api:SilverStripe\Assets\UploadField).
 
 ```php
 <?php
@@ -274,25 +283,16 @@ class Page extends SiteTree
 }
 ```
 
-#### Controlling lazy loading in SS templates
+#### Controlling lazy loading in for `<img>` tags in SS templates
 
 If you are manually writting `<img>` tags in your SS template, those images will not be automatically
 lazy loaded. You will need to add the `loading="lazy"` attribute yourself if you want the image to be
 lazy loaded.
 
-```html
-<h1>Recommended way of rendering Images</h1>
-<!-- Image will be lazy loaded -->
-$Logo
+Images that don't have dimensions should not be lazy loaded as that might alter the layout of the
+page after the initial page load.
 
-<!-- Image will NOT be lazy loaded -->
-$Logo.LazyLoad(false)
-
-<!-- We're allowing content authors to choose if the image is eager loaded-->
-$Logo.LazyLoad($LogoLoading)
-
-<h1>Manual way of rendering Images</h1>
-
+```ss
 <img src="$Logo.URL" width="$Logo.Width" width="$Logo.Height" loading="lazy" alt="Company Logo" />
 
 <!-- The size of this image is controlled by a CSS class so it can be lazy loaded -->
