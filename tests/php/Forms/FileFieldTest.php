@@ -199,6 +199,5 @@ class FileFieldTest extends FunctionalTest
 
         // PNG is not explicitly defined in config, so would fall back to *
         $this->assertEquals(Convert::memstring2bytes($defaultSize), $fileField->getValidator()->getAllowedMaxFileSize('png'));
-    }    
-
+    }
 }
