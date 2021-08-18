@@ -67,7 +67,7 @@ Making this work well is a subtle business and should be discussed with a few de
 
 ## Using permissions
 
-*  On an individual data record, $page->can("View", $member = null) and be called.  If a member isn't passed, the
+*  On an individual data record, $page->can("View", $member = null) can be called.  If a member isn't passed, the
 currently logged in member is assumed.
 *  On a request, $request->hasPermission("View", $member = null) can be called.  See [datamodel](/developer_guides/model/permissions) for
 information on request objects.
