@@ -34,7 +34,7 @@
         "silverstripe/assets": "^1@dev",
         "silverstripe/vendor-plugin": "^1.4",
         "sminnee/callbacklist": "^0.1",
-        "swiftmailer/swiftmailer": "~5.4",
+        "swiftmailer/swiftmailer": "^6.2",
         "symfony/cache": "^3.3 || ^4",
         "symfony/config": "^3.2 || ^4",
         "symfony/translation": "^2.8 || ^3 || ^4",
@@ -90,6 +90,9 @@
         },
         "files": [
             "src/includes/constants.php"
+        ],
+        "classmap": [
+            "thirdparty/swiftmailer"
         ]
     },
     "include-path": [
