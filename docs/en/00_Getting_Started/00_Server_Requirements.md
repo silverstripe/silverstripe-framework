@@ -15,6 +15,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 ## Web server software requirements
 
  * PHP 7.1 or newer (no support for PHP 8)
+
 [warning]
 Running CMS3 with PHP 7.4 triggers a number of deprecation warnings.
 It's highly recommended you disable deprecation warnings.
@@ -22,6 +23,7 @@ For example, you can add the following to the bottom of your `_ss_environment.ph
 `error_reporting(E_ALL & ~E_DEPRECATED);`
 Read the [`error_reporting` PHP documentation](https://www.php.net/manual/en/function.error-reporting.php)
 [/warning]
+
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
 ```
      * Note: Some PHP 5.5+ packages already have [Zend OpCache](http://php.net/manual/en/book.opcache.php) installed by default. If this is the case on your system, do not try and run additional opcaches alongside Zend OpCache without first disabling it, as it will likely have unexpected consequences.
