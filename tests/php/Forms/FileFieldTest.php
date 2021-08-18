@@ -177,8 +177,8 @@ class FileFieldTest extends FunctionalTest
 
         $fileField = new FileField('DemoField');
 
-        $this->assertEquals($defaultUploadSize, $fieldField->getValidator()->getAllowedMaxFileSize('jpg'));
-        $this->assertEquals($defaultUploadSize, $fieldField->getValidator()->getAllowedMaxFileSize('png'));
+        $this->assertEquals($defaultUploadSize, $fileField->getValidator()->getAllowedMaxFileSize('jpg'));
+        $this->assertEquals($defaultUploadSize, $fileField->getValidator()->getAllowedMaxFileSize('png'));
     }
 
     /**
@@ -195,9 +195,9 @@ class FileFieldTest extends FunctionalTest
 
         $fileField = new FileField('DemoField');
 
-        $this->assertEquals(File::ini2bytes($jpgSize), $fieldField->getValidator()->getAllowedMaxFileSize('jpg'));
+        $this->assertEquals(File::ini2bytes($jpgSize), $fileField->getValidator()->getAllowedMaxFileSize('jpg'));
         
         // PNG is not explicitly defined in config, so would fall back to *
-        $this->assertEquals(File::ini2bytes($defaultSize), $fieldField->getValidator()->getAllowedMaxFileSize('png'));
+        $this->assertEquals(File::ini2bytes($defaultSize), $fileField->getValidator()->getAllowedMaxFileSize('png'));
     }
 }
