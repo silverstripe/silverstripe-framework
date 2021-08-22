@@ -24,7 +24,7 @@ environment variables.
 If you do use a `.env` file on your servers, you must ensure that external access to `.env` files is blocked by the
 webserver.
 
-## Managing environment variables with `.env` files
+## Managing environment variables with .env files
 
 By default a file named `.env` must be placed in your project root (ie: the same folder as your `composer.json`) or the
 parent directory. If this file exists, it will be automatically loaded by the framework and the environment variables
@@ -71,7 +71,7 @@ SilverStripe\Core\Injector\Injector:
 Environment variables cannot be used outside of Injector config as of version 4.2.
 [/info]
 
-## Including an extra `.env` file
+## Including an extra .env file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
 database credentials could be the same. To do this, you can add this snippet to your `app/_config.php` file:
