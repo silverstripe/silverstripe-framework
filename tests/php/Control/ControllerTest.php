@@ -94,8 +94,6 @@ class ControllerTest extends FunctionalTest
 
     public function testAllowedActions()
     {
-        $adminUser = $this->objFromFixture(Member::class, 'admin');
-
         $response = $this->get("UnsecuredController/");
         $this->assertEquals(
             200,
@@ -180,14 +178,14 @@ class ControllerTest extends FunctionalTest
             'Access denied on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
         );
 
-        Member::actAs($adminUser, function () {
-            $response = $this->get("AccessSecuredController/templateaction");
-            $this->assertEquals(
-                200,
-                $response->getStatusCode(),
-                'Access granted for logged in admin on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
-            );
-        });
+        $this->logInAs('admin');
+        $response = $this->get("AccessSecuredController/templateaction");
+        $this->assertEquals(
+            200,
+            $response->getStatusCode(),
+            'Access granted for logged in admin on action with $allowed_actions on defining controller, ' . 'if action is not a method but rather a template discovered by naming convention'
+        );
+        $this->logOut();
 
         $response = $this->get("AccessSecuredController/adminonly");
         $this->assertEquals(
@@ -210,14 +208,14 @@ class ControllerTest extends FunctionalTest
             "Access denied to protected method even if its listed in allowed_actions"
         );
 
-        Member::actAs($adminUser, function () {
-            $response = $this->get("AccessSecuredController/adminonly");
-            $this->assertEquals(
-                200,
-                $response->getStatusCode(),
-                "Permission codes are respected when set in \$allowed_actions"
-            );
-        });
+        $this->logInAs('admin');
+        $response = $this->get("AccessSecuredController/adminonly");
+        $this->assertEquals(
+            200,
+            $response->getStatusCode(),
+            "Permission codes are respected when set in \$allowed_actions"
+        );
+        $this->logOut();
 
         $response = $this->get('AccessBaseController/extensionmethod1');
         $this->assertEquals(
@@ -254,14 +252,14 @@ class ControllerTest extends FunctionalTest
             "Access denied when index action is limited through allowed_actions, " . "and doesn't satisfy checks"
         );
 
-        Member::actAs($adminUser, function () {
-            $response = $this->get('IndexSecuredController/');
-            $this->assertEquals(
-                200,
-                $response->getStatusCode(),
-                "Access granted when index action is limited through allowed_actions, " . "and does satisfy checks"
-            );
-        });
+        $this->logInAs('admin');
+        $response = $this->get('IndexSecuredController/');
+        $this->assertEquals(
+            200,
+            $response->getStatusCode(),
+            "Access granted when index action is limited through allowed_actions, " . "and does satisfy checks"
+        );
+        $this->logOut();
     }
 
     /**

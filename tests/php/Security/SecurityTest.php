@@ -326,7 +326,7 @@ class SecurityTest extends FunctionalTest
         $member = DataObject::get_one(Member::class);
 
         /* Log in with any user that we can find */
-        Security::setCurrentUser($member);
+        $this->logInAs($member);
 
         /* Visit the Security/logout page with a test referer, but without a security token */
         $this->get(
