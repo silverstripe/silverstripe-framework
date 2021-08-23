@@ -248,6 +248,22 @@ Additionally, there are community supported guides for installing Silverstripe C
 * [Vagrant with silverstripe-australia/vagrant-environment](https://github.com/silverstripe-australia/vagrant-environment)
 * [Vagrant with BetterBrief/vagrant-skeleton](https://github.com/BetterBrief/vagrant-skeleton)
 
+### Email
+
+Silverstripe CMS uses SwiftMailer to send email messages. New installations setup with silverstripe/installer are configured to use a `sendmail` found in `/usr/sbin/sendmail` or another location specified via configuration. Alternatively email can be configured to use SMTP or other mail transports instead of sendmail.
+
+You _must_ ensure emails are being sent from your _production_ environment. You can do this by testing that the ***Lost password*** form available at `/Security/lostpassword` sends an email to your inbox, or with the following code snippet that can be run via a `SilverStripe\Dev\BuildTask`:
+
+```php
+$email = new SilverStripe\Control\Email\Email('no-reply@mydomain.com', 'myuser@gmail.com', 'My test subject', 'My email body text');
+$email->send();
+```
+
+Using the code snippet above also tests that the ability to set the "from" address is working correctly.
+
+See the [email section](/developer_guides/email) for futher details, including how to set the administrator "from" email address, change the `sendmail` binary location and how to use SMTP or other mail transports instead of sendmail.
+
+
 ## PHP Requirements for older Silverstripe CMS releases {#php-support}
 
 Silverstripe CMS's PHP support has changed over time and if you are looking to upgrade PHP on your Silverstripe CMS site, this
