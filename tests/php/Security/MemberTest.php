@@ -27,6 +27,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
+use SilverStripe\SessionManager\Models\LoginSession;
 
 class MemberTest extends FunctionalTest
 {
@@ -1198,18 +1199,21 @@ class MemberTest extends FunctionalTest
             ]
         );
         $this->assertEquals(
-            RememberLoginHash::get()->filter(['MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID])->count(),
-            1
+            1,
+            RememberLoginHash::get()->filter(['MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID])->count()
         );
 
-        // Logging out from any device when all login hashes should be removed
-        RememberLoginHash::config()->update('logout_across_devices', true);
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
-        $this->get('Security/logout', $this->session());
-        $this->assertEquals(
-            RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(),
-            0
-        );
+        // If session-manager module is installed then logout_across_devices is modified so skip
+        if (!class_exists(LoginSession::class)) {
+            // Logging out from any device when all login hashes should be removed
+            RememberLoginHash::config()->update('logout_across_devices', true);
+            Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
+            $this->get('Security/logout', $this->session());
+            $this->assertEquals(
+                0,
+                RememberLoginHash::get()->filter('MemberID', $m1->ID)->count()
+            );
+        }
     }
 
     public function testCanDelete()
