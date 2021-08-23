@@ -1319,7 +1319,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         // Cascade deletes
         $deletes = $this->findCascadeDeletes(false);
+
+        /** @var DataObject $delete */
         foreach ($deletes as $delete) {
+            if (!$delete->canDelete()) {
+                // Skip the deletion of models which we do not give us permission to delete
+                continue;
+            }
+
             $delete->delete();
         }
     }
