@@ -294,11 +294,24 @@ class Email extends ViewableData
 
     /**
      * @param string|array $address
+     * @return string|array
+     */
+    private function sanitiseAddress($address)
+    {
+        if (is_array($address)) {
+            return array_map('trim', $address);
+        }
+        return trim($address);
+    }
+
+    /**
+     * @param string|array $address
      * @param string|null $name
      * @return $this
      */
     public function setFrom($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setFrom($address, $name);
 
         return $this;
@@ -311,6 +324,7 @@ class Email extends ViewableData
      */
     public function addFrom($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addFrom($address, $name);
 
         return $this;
@@ -331,6 +345,7 @@ class Email extends ViewableData
      */
     public function setSender($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setSender($address, $name);
 
         return $this;
@@ -352,6 +367,7 @@ class Email extends ViewableData
      */
     public function setReturnPath($address)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReturnPath($address);
         return $this;
     }
@@ -376,6 +392,7 @@ class Email extends ViewableData
      */
     public function setTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setTo($address, $name);
 
         return $this;
@@ -388,6 +405,7 @@ class Email extends ViewableData
      */
     public function addTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addTo($address, $name);
 
         return $this;
@@ -408,6 +426,7 @@ class Email extends ViewableData
      */
     public function setCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setCc($address, $name);
 
         return $this;
@@ -420,6 +439,7 @@ class Email extends ViewableData
      */
     public function addCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addCc($address, $name);
 
         return $this;
@@ -440,6 +460,7 @@ class Email extends ViewableData
      */
     public function setBCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setBcc($address, $name);
 
         return $this;
@@ -452,6 +473,7 @@ class Email extends ViewableData
      */
     public function addBCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addBcc($address, $name);
 
         return $this;
@@ -472,6 +494,7 @@ class Email extends ViewableData
      */
     public function setReplyTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReplyTo($address, $name);
 
         return $this;
@@ -484,6 +507,7 @@ class Email extends ViewableData
      */
     public function addReplyTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addReplyTo($address, $name);
 
         return $this;
