@@ -5,6 +5,7 @@ namespace SilverStripe\Security\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\SessionManager\Models\LoginSession;
 
 class RememberLoginHashTest extends SapphireTest
 {
@@ -49,6 +50,10 @@ class RememberLoginHashTest extends SapphireTest
      */
     public function testClear(bool $logoutAcrossDevices, string $deviceId, array $expected, array $unexpected)
     {
+        // If session-manager module is installed then logout_across_devices is modified so skip
+        if (class_exists(LoginSession::class)) {
+            $this->markTestSkipped();
+        }
         RememberLoginHash::config()->set('logout_across_devices', $logoutAcrossDevices);
 
         RememberLoginHash::clear(
@@ -75,6 +80,10 @@ class RememberLoginHashTest extends SapphireTest
 
     public function testGetSetLogoutAcrossDevices()
     {
+        // If session-manager module is installed then logout_across_devices is modified so skip
+        if (class_exists(LoginSession::class)) {
+            $this->markTestSkipped();
+        }
         // set config directly
         RememberLoginHash::config()->set('logout_across_devices', true);
         $this->assertTrue(RememberLoginHash::getLogoutAcrossDevices());
