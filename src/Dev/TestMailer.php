@@ -104,11 +104,16 @@ class TestMailer implements Mailer
             $matched = true;
 
             foreach (['To', 'From', 'Subject', 'Content'] as $field) {
+                $emailValue = $email[$field];
                 if ($value = $compare[$field]) {
+                    if ($field == 'To') {
+                        $emailValue = $this->normaliseSpaces($emailValue);
+                        $value = $this->normaliseSpaces($value);
+                    }
                     if ($value[0] == '/') {
-                        $matched = preg_match($value, $email[$field]);
+                        $matched = preg_match($value, $emailValue);
                     } else {
-                        $matched = ($value == $email[$field]);
+                        $matched = ($value == $emailValue);
                     }
                     if (!$matched) {
                         break;
@@ -121,5 +126,13 @@ class TestMailer implements Mailer
             }
         }
         return null;
+    }
+
+    /**
+     * @param string $value
+     */
+    private function normaliseSpaces(string $value)
+    {
+        return str_replace([', ', '; '], [',', ';'], $value);
     }
 }
