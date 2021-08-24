@@ -94,6 +94,18 @@ SilverStripe\Core\Injector\Injector:
       0: '/usr/bin/env catchmail -t'
 ```
 
+### Testing that email works
+
+You _must_ ensure emails are being sent from your _production_ environment. You can do this by testing that the
+***Lost password*** form available at `/Security/lostpassword` sends an email to your inbox, or with the following code snippet that can be run via a `SilverStripe\Dev\BuildTask`:
+
+```php
+$email = new Email('no-reply@mydomain.com', 'myuser@gmail.com', 'My test subject', 'My email body text');
+$email->send();
+```
+
+Using the code snippet above also tests that the ability to set the "from" address is working correctly.
+
 ## Usage
 
 ### Sending plain text only
@@ -200,6 +212,8 @@ SilverStripe\Control\Email\Email:
 Remember, setting a `from` address that doesn't come from your domain (such as the users email) will likely see your
 email marked as spam. If you want to send from another address think about using the `setReplyTo` method.
 [/alert]
+
+You will also have to remove the `SS_SEND_ALL_EMAILS_FROM` environment variable if it is present.
 
 ## Redirecting Emails
 
