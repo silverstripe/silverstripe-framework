@@ -276,7 +276,8 @@ By default, services registered with Injector do not inherit from one another; T
 named services, which may not be actual classes, and thus should not behave as though they were.
 
 Thus if you want an object to have the injected dependencies of a service of another name, you must
-assign a reference to that service.
+assign a reference to that service. References are denoted by using a percent and dollar sign, like in the 
+YAML configuration example below.
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
