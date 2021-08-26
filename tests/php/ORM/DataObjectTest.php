@@ -19,6 +19,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
@@ -209,6 +210,31 @@ class DataObjectTest extends SapphireTest
         // Note that automatic conversion of IDs to integer no longer happens as the DB layer does that for us now
         $player = new DataObjectTest\Player(['ID' => 5]);
         $this->assertSame(5, $player->ID);
+    }
+
+    /**
+     * @see SilverStripe\ORM\Tests\DataObjectTest\Team_Extension
+     */
+    public function testConstructHydratesAugmentedValues()
+    {
+        // When creating a DataObject from singleton, DataObject::hydrate() isn't called
+        $team = new Team([], DataObject::CREATE_SINGLETON);
+        $this->assertNull($team->CustomHydratedField);
+
+        // Similarly, when hydrating by creating a DataObject from nothing, hydrate() isn't called
+        $team2 = new Team([]);
+        $id = $team2->write();
+        $this->assertNull($team2->CustomHydratedField);
+
+        // However when rebuilding an object from the database, it is and we can expect our extension to execute
+        /** @var Team $team3 */
+        $team3 = Team::get()->byID($id);
+        $this->assertTrue($team3->CustomHydratedField);
+
+        // Also when rebuilding an object in memory, hydrate() is called and our extension should execute
+        /** @var Team $team4 */
+        $team4 = $team->newClassInstance(Team::class);
+        $this->assertTrue($team4->CustomHydratedField);
     }
 
     public function testValidObjectsForBaseFields()

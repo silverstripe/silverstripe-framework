@@ -12,6 +12,7 @@ use SilverStripe\ORM\ManyManyList;
  * @property string DatabaseField
  * @property array SalaryCap
  * @property string FoundationYear
+ * @property bool CustomHydratedField
  * @method Player Captain()
  * @method Player Founder()
  * @method Player HasOneRelationship()
