@@ -1,6 +1,4 @@
 en:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: unknown
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
@@ -266,7 +264,6 @@ en:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
-    KEEPMESIGNEDIN: 'Keep me signed in'
     KEEP_ME_SIGNED_IN: 'Keep me signed in for {count} days'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.'
     LOGGEDINAS: 'You''re logged in as {name}.'

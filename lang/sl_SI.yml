@@ -53,7 +53,6 @@ sl_SI:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
     FIRSTNAME: Ime
-    KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo

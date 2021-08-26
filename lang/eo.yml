@@ -266,7 +266,8 @@ eo:
     ERRORWRONGCRED: 'La donitaj detaloj ŝajnas malĝustaj. Bonvole reprovu.'
     FIRSTNAME: Antaŭnomo
     INTERFACELANG: 'Interfaca Lingvo'
-    KEEPMESIGNEDIN: 'Konservi mian ensaluton'
+    KEEP_ME_SIGNED_IN: 'Lasu min konektita por {count} tagoj'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Vi restos aŭtentigita ĉe ĉi tiu ilo por {count} tagoj. Uzu ĉi tiun funkcion nur se vi fidas la ilon kiun vi uzas.'
     LOGGEDINAS: 'Vi ensalutis kiel {name}.'
     NEWPASSWORD: 'Novan pasvorton'
     PASSWORD: Pasvorto
@@ -275,7 +276,6 @@ eo:
     PLURALS:
       one: 'Unu membro'
       other: '{count} membroj'
-    REMEMBERME: 'Memoru min je la sekva fojo? (por {count} tagoj ĉe ĉi tiu aparato)'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'

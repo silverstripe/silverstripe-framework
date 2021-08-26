@@ -266,7 +266,6 @@ de:
     ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
     FIRSTNAME: Vorname
     INTERFACELANG: CMS-Sprache
-    KEEPMESIGNEDIN: 'Eingeloggt bleiben'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
@@ -275,7 +274,6 @@ de:
     PLURALS:
       one: 'Ein Mitglied'
       other: '{count}  Mitglieder'
-    REMEMBERME: 'Für das nächste Mal merken? (für {count} Tage auf diesem Gerät)'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'

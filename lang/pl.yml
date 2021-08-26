@@ -264,7 +264,6 @@ pl:
     ERRORWRONGCRED: 'Podane dane są niepoprawne. Proszę spróbować ponownie.'
     FIRSTNAME: Imię
     INTERFACELANG: 'Język interfejsu'
-    KEEPMESIGNEDIN: 'Zapamiętaj mnie'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
     PASSWORD: Hasło
@@ -275,7 +274,6 @@ pl:
       few: '{count} użytkowników'
       many: '{count} użytkowników'
       other: '{count} użytkowników'
-    REMEMBERME: 'Pamiętaj mnie następnym razem? (przez {count} dni na tym urządzeniu)'
     SINGULARNAME: Użytkownik
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'

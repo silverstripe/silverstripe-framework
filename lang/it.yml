@@ -13,7 +13,7 @@ it:
     HELLO: Salve
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Salve
-    TEXT1: 'Questa è la tua'
+    TEXT1: 'Questo è il tuo'
     TEXT2: 'link per l''azzeramento della password'
     TEXT3: per
   SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
@@ -266,7 +266,8 @@ it:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
-    KEEPMESIGNEDIN: 'Resta autenticato'
+    KEEP_ME_SIGNED_IN: 'Lasciami autenticato per {count} giorni'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Rimarrai autenticato su questo dispositivo per {count} giorni. Usa questa funzionalità solo se il dispositivo che stai usando è sicuro.'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
     PASSWORD: Password
@@ -275,7 +276,6 @@ it:
     PLURALS:
       one: 'Un Utente'
       other: '{count} Utenti'
-    REMEMBERME: 'Ricordati di me la prossima volta? (per {count} giorni su questo dispositivo)'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'

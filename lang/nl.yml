@@ -266,7 +266,6 @@ nl:
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
-    KEEPMESIGNEDIN: 'Houd mij ingelogd'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
     PASSWORD: Wachtwoord
@@ -275,7 +274,6 @@ nl:
     PLURALS:
       one: 'Een lid'
       other: '{count} leden'
-    REMEMBERME: 'Onthoud mij voor volgende keer? (voor {count} dagen op dit apparaat)'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'
     SUBJECTPASSWORDRESET: 'Link om uw wachtwoord opnieuw aan te maken'

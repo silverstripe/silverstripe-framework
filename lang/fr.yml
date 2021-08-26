@@ -220,7 +220,6 @@ fr:
     ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Merci de réessayer.'
     FIRSTNAME: Prénom
     INTERFACELANG: 'Langue de l''interface'
-    KEEPMESIGNEDIN: 'Se souvenir de moi'
     LOGGEDINAS: 'Vous êtes connecté en tant que {name}.'
     NEWPASSWORD: 'Nouveau mot de passe'
     PASSWORD: 'Mot de passe'
@@ -229,7 +228,6 @@ fr:
     PLURALS:
       one: 'Un membre'
       other: '{count} membres'
-    REMEMBERME: 'Se souvenir de moi la prochaine fois  ? (pour une durée de {count} jours sur cet appareil)'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
