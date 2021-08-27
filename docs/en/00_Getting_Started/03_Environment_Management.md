@@ -122,5 +122,4 @@ Silverstripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
 | `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |
 | `SS_FLUSH_ON_DEPLOY` | Try to detect deployments through file system modifications and flush on the first request after every deploy. Does not run "dev/build", but only "flush". Possible values are `true` (check for a framework PHP file modification time), `false` (no checks, skip deploy detection) or a path to a specific file or folder to be checked. See [DeployFlushDiscoverer](api:SilverStripe\Core\Startup\DeployFlushDiscoverer) for more details.<br /><br />False by default. |
-| `TEMP_PATH`: Temporary file storage used for the default cache adapters in [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching)
-and [Partial Template Caching](/developer_guides/templates/partial_template_caching)|
+| `TEMP_PATH` | Temporary file storage used for the default cache adapters in [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching) and [Partial Template Caching](/developer_guides/templates/partial_template_caching). |
