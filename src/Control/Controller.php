@@ -5,6 +5,7 @@ namespace SilverStripe\Control;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\BasicAuthMiddleware;
@@ -654,6 +655,20 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function redirectedTo()
     {
         return $this->getResponse() && $this->getResponse()->getHeader('Location');
+    }
+    
+    /**
+     * Returns an RFC1766 compliant locale string, e.g. 'fr-CA'.
+     *
+     * Suitable for insertion into lang= and xml:lang=
+     * attributes in HTML or XHTML output.
+     *
+     * @return string
+     */
+    public function ContentLocale()
+    {
+        $locale = i18n::get_locale();
+        return i18n::convert_rfc1766($locale);
     }
 
     /**
