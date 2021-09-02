@@ -5,7 +5,7 @@ import:
 
 env:
   global:
-    - REQUIRE_RECIPE="4.x-dev"
+    - REQUIRE_RECIPE="4.9.x-dev"
 
 # Using a manual matrix to exlude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
 # e.g. https://travis-ci.com/github/silverstripe/silverstripe-framework/jobs/457096837
