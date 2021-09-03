@@ -660,8 +660,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * Returns an RFC1766 compliant locale string, e.g. 'fr-CA'.
      *
-     * Suitable for insertion into lang= and xml:lang=
-     * attributes in HTML or XHTML output.
+     * Note: The method is overloaded in {@link ContentController} where it takes into account
+     * the current data record (@link SiteTree) and adds support for {@link Translatable}.
      *
      * @return string
      */
