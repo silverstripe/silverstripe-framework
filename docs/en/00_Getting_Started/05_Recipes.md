@@ -4,17 +4,41 @@ summary: What Recipes are, and how they are used in Silverstripe CMS
 icon: clipboard
 ---
 
-# Recipes
+# Adding features to your project with Recipes
 
-Silverstripe CMS is powered by a system of components in the form of Composer packages. It consists of two types of
-package:
+To achived more complex use cases in Silverstripe CMS, you may need to combine many modules together and add some extra configuration to integrate those modules together. Silverstripe CMS Recipes streamline this process for common use cases.
+
+## What are Silverstripe Recipes?
+
+Silverstripe CMS Recipes are used to implement common use case by shipping a collection of modules along with the relevant integration logic. They allow developers to quickly get started while retaining the ability to customise their integration to their specific needs.
+
+Supported recipes have been audited and regression tested to guarantee a high level of confidence for project while allowing developers to get the latest bug fixes as they become available.
+
+## What's the difference between a *recipe* and a *module*?
+
+Silverstripe CMS is powered by a system of components in the form of Composer packages. It consists of two types of package:
 
 - **Modules**, which provide pieces of functionality (such as `silverstripe/cms` and `silverstripe/framework`)
 - **Recipes**, which group related Modules together to make them easier to install and release.
 
-When we announce a new version of Silverstripe CMS and publish a changelog for it, we refer to a new set of _Recipe_
-versions, which include new versions of some or all of their associated Modules. The easiest way to keep up to date with
-new Silverstripe CMS releases is to depend on one of the core Recipes:
+By design, modules tend to be small and serve a specific function. You may need to combine many modules to achieve a wider goal. 
+
+For example, the `silverstripe/blog` module by itself simply allows you to create blog posts. It does not include all the features you could want in a blog, like a comment systems or widgets to display related content.
+
+The `silverstripe/recipe-blog` recipe installs `silverstripe/blog` module, but also:
+- `silverstripe/widgets` and `silverstripe/content-widget` to display widgets
+- `silverstripe/comments` and `silverstripe/comment-notifications` to allow the management of comments on blog post
+- `silverstripe/spamprotection` and `silverstripe/akismet` to provide basic SPAM protection on comments.
+
+## Finding recipes for Silverstripe CMS
+
+The Silverstripe CMS project maintains a number of recipes. Some third parties also maintain recipes.
+
+[Search Packagist for all packages with the `silverstripe-recipe`](https://packagist.org/?query=silverstripe&type=silverstripe-recipe) type to find recipes you can install on your Silverstripe CMS project.
+
+## Releasing supported recipes
+
+When we announce a new release of Silverstripe CMS and publish a changelog for it, we refer to a new set of _Recipe_ versions, which include new versions of some or all of their associated Modules. The easiest way to keep up to date with new Silverstripe CMS releases is to depend on one of the core Recipes:
 
 - [`silverstripe/recipe-core`](https://packagist.org/packages/silverstripe/recipe-core): Contains only the base
   framework, without the admin UI or CMS features.
