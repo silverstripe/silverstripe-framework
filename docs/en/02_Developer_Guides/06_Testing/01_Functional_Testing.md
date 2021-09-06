@@ -54,11 +54,16 @@ Submits the given form (`#ContactForm`) on the current page and returns the [HTT
 $this->logInAs($member);
 ```
 
-Logs a given user in, sets the current session. To log all users out pass `null` to the method.
+Logs a given user in, sets the current session.
 
+When doing a functional testing it's important to use `$this->logInAs($member);` rather than simply `Security::setCurrentUser($member);` or `$this->session()->set('loggedInAs', $member->ID);` as the latter two will not run any logic contained inside login authenticators.
+
+## LogOut
+
+Log out the current user, destroys the current session.
 
 ```php
-$this->logInAs(null);
+$this->logOut();
 ```
 
 ## Assertions
