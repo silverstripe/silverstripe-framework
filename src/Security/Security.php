@@ -438,6 +438,14 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
+     * The intended uses of this function is to temporarily change the current user for things such as
+     * canView() checks or unit tests.  It is stateless and will not persist between requests.  Importantly
+     * it also will not call any logic that may be present in the current IdentityStore logIn() or logout() methods
+     *
+     * If you are unit testing and calling FunctionalTest::get() or FunctionalTest::post() and you need to change
+     * the current user, you should instead use SapphireTest::logInAs() / logOut() which itself will call
+     * Injector::inst()->get(IdentityStore::class)->logIn($member) / logout()
+     *
      * @param null|Member $currentUser
      */
     public static function setCurrentUser($currentUser = null)
