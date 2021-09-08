@@ -281,6 +281,11 @@ table may be of use:
 
 Silverstripe CMS supports the following web browsers:
 
+* Google Chrome
+* Internet Explorer 11
+* Microsoft Edge
+* Mozilla Firefox
+
 We aim to provide satisfactory experiences in Apple Safari. Silverstripe CMS works well across Windows, Linux, and Mac
 operating systems.
 
