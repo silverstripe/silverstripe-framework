@@ -103,17 +103,18 @@ class TestMailer implements Mailer
         foreach ($this->emailsSent as $email) {
             $matched = true;
 
-            foreach (['To', 'From', 'Subject', 'Content'] as $field) {
+            // Loop all our Email fields
+            foreach ($compare as $field => $value) {
                 $emailValue = $email[$field];
-                if ($value = $compare[$field]) {
-                    if ($field == 'To') {
+                if ($value) {
+                    if (in_array($field, ['To', 'From'])) {
                         $emailValue = $this->normaliseSpaces($emailValue);
                         $value = $this->normaliseSpaces($value);
                     }
-                    if ($value[0] == '/') {
+                    if ($value[0] === '/') {
                         $matched = preg_match($value, $emailValue);
                     } else {
-                        $matched = ($value == $emailValue);
+                        $matched = ($value === $emailValue);
                     }
                     if (!$matched) {
                         break;
