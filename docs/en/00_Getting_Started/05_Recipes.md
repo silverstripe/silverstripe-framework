@@ -6,13 +6,13 @@ icon: clipboard
 
 # Adding features to your project with Recipes
 
-To achived more complex use cases in Silverstripe CMS, you may need to combine many modules together and add some extra configuration to integrate those modules together. Silverstripe CMS Recipes streamline this process for common use cases.
+To achieve more complex use cases in Silverstripe CMS, you may need to combine many modules and add extra configuration to integrate these together. Silverstripe CMS Recipes streamline this process for common use cases.
 
-## What are Silverstripe Recipes?
+## What are Silverstripe CMS Recipes?
 
-Silverstripe CMS Recipes are used to implement common use case by shipping a collection of modules along with the relevant integration logic. They allow developers to quickly get started while retaining the ability to customise their integration to their specific needs.
+Recipes are used to implement common broad feature sets by shipping a collection of modules along with the relevant integration logic. They allow developers to quickly get started while retaining the ability to customise their integration to their specific needs.
 
-Supported recipes have been audited and regression tested to guarantee a high level of confidence for project while allowing developers to get the latest bug fixes as they become available.
+Before each version of a supported CMS recipe is released, it is comprehensively regression tested and passed to a third party for a security-focused audit, making sure that projects have a secure starting point or a safe and secure upgrade with each recipe release.
 
 ## What's the difference between a *recipe* and a *module*?
 
@@ -23,7 +23,7 @@ Silverstripe CMS is powered by a system of components in the form of Composer pa
 
 By design, modules tend to be small and serve a specific function. You may need to combine many modules to achieve a wider goal. 
 
-For example, the `silverstripe/blog` module by itself simply allows you to create blog posts. It does not include all the features you could want in a blog, like a comment systems or widgets to display related content.
+For example, the `silverstripe/blog` module by itself simply allows you to create blog posts. It does not include all the features you could want in a blog, like a comment system or widgets to display related content.
 
 The `silverstripe/recipe-blog` recipe installs `silverstripe/blog` module, but also:
 - `silverstripe/widgets` and `silverstripe/content-widget` to display widgets
