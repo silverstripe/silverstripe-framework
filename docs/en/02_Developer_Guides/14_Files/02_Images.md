@@ -283,7 +283,7 @@ class Page extends SiteTree
 }
 ```
 
-#### Controlling lazy loading in for `<img>` tags in SS templates
+#### Controlling lazy loading in for <img> tags in SS templates
 
 If you are manually writing `<img>` tags in your SS template, those images will not be automatically
 lazy loaded. You will need to add the `loading="lazy"` attribute yourself if you want the image to be
