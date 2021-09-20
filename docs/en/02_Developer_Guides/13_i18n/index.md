@@ -225,7 +225,7 @@ class MyObject extends DataObject implements i18nEntityProvider
 ```
 
 In YML format this will be expressed as the below. This follows the
-[ruby i18n convention](guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
+[ruby i18n convention](https://guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
 
 ```yaml
 en:
