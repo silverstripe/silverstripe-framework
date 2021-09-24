@@ -258,7 +258,7 @@ class HierarchyTest extends SapphireTest
         $this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
     }
 
-    public function testNoHideFromHeirarchy()
+    public function testNoHideFromHierarchy()
     {
         /** @var HierarchyTest\HideTestObject $obj4 */
         $obj4 = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
@@ -271,7 +271,7 @@ class HierarchyTest extends SapphireTest
         $this->assertEquals($obj4->liveChildren()->Count(), 2);
     }
 
-    public function testHideFromHeirarchy()
+    public function testHideFromHierarchy()
     {
         HierarchyTest\HideTestObject::config()->update(
             'hide_from_hierarchy',

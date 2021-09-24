@@ -30,7 +30,7 @@ class Hierarchy extends DataExtension
 {
     /**
      * The lower bounds for the amount of nodes to mark. If set, the logic will expand nodes until it reaches at least
-     * this number, and then stops. Root nodes will always show regardless of this settting. Further nodes can be
+     * this number, and then stops. Root nodes will always show regardless of this setting. Further nodes can be
      * lazy-loaded via ajax. This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having 30
      * children, the actual node count will be 50 (all root nodes plus first expanded child).
      *
@@ -286,7 +286,7 @@ class Hierarchy extends DataExtension
 
     /**
      * Return the number of direct children. By default, values are cached after the first invocation. Can be
-     * augumented by {@link augmentNumChildrenCountQuery()}.
+     * augmented by {@link augmentNumChildrenCountQuery()}.
      *
      * @param bool $cache Whether to retrieve values from cache
      * @return int
@@ -322,7 +322,7 @@ class Hierarchy extends DataExtension
     /**
      * Pre-populate any appropriate caches prior to rendering a tree.
      * This is used to allow for the efficient rendering of tree views, notably in the CMS.
-     * In the cace of Hierarchy, it caches numChildren values. Other extensions can provide an
+     * In the case of Hierarchy, it caches numChildren values. Other extensions can provide an
      * onPrepopulateTreeDataCache(DataList $recordList = null, array $options) methods to hook
      * into this event as well.
      *

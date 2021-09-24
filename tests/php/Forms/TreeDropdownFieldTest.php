@@ -56,7 +56,7 @@ class TreeDropdownFieldTest extends SapphireTest
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
-        // case insensitive search against keyword 'sub' for folders
+        // case-insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
@@ -87,7 +87,7 @@ class TreeDropdownFieldTest extends SapphireTest
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
-        // case insensitive search against keyword 'sub' for folders
+        // case-insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json', 'flatList' => '1']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
@@ -176,7 +176,7 @@ class TreeDropdownFieldTest extends SapphireTest
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
-        // case insensitive search against keyword 'sub' for folders
+        // case-insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
@@ -214,7 +214,7 @@ class TreeDropdownFieldTest extends SapphireTest
 
         $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
 
-        // case insensitive search against keyword 'sub' for files
+        // case-insensitive search against keyword 'sub' for files
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
@@ -340,7 +340,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $treeBaseID = $this->idFromFixture(Folder::class, 'folder1');
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
 
-        // getSchemaDataDefaults needs the field to be attach to a form
+        // getSchemaDataDefaults needs the field to be attached to a form
         new Form(
             null,
             'mock',
