@@ -62,3 +62,29 @@ SilverStripe\ORM\Tests\HierarchyTest\TestObject:
     ParentID: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.twoA
   three:
     Title: Three MatchSearchCriteria
+SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject:
+  four:
+    Title: Four SubObject
+  fourA:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.four
+    Title: Child A of Four
+  fourB:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.four
+    Title: Child B of Four SubObject
+  fourA1:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.fourA
+    Title: Child 1 of Child A of Four
+  fourA2:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.fourA
+    Title: Child 2 of Child A of Four SubObject
+  fourB1:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.fourB
+    Title: Child 1 of Child B of Four
+  fourB2:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.fourB
+    Title: Child 2 of Child B of Four
+  fourB3:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.fourB
+    Title: Child 3 of Child B of Four
+  five:
+    Title: Five

@@ -12,6 +12,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
 
 class TreeDropdownFieldTest extends SapphireTest
@@ -20,7 +22,9 @@ class TreeDropdownFieldTest extends SapphireTest
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
 
     protected static $extra_dataobjects = [
-        TestObject::class
+        TestObject::class,
+        HierarchyOnSubclassTestObject::class,
+        HierarchyOnSubclassTestSubObject::class,
     ];
 
     public function testSchemaStateDefaults()
@@ -137,6 +141,37 @@ class TreeDropdownFieldTest extends SapphireTest
         $this->assertEquals($expectedNodeIDs, $actualNodeIDs);
     }
 
+    public function testTreeSearchJsonFlatlistWithLowNodeThresholdUsingSubObject()
+    {
+        // Initialise our TreeDropDownField
+        $field = new TreeDropdownField('TestTree', 'Test tree - Hierarchy on subclass', HierarchyOnSubclassTestSubObject::class);
+        $field->config()->set('node_threshold_total', 2);
+
+        // Search for all Test object matching our criteria
+        $request = new HTTPRequest(
+            'GET',
+            'url',
+            ['search' => 'SubObject', 'format' => 'json', 'flatList' => '1']
+        );
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = json_decode($response->getBody(), true);
+        $actualNodeIDs = array_column($tree['children'], 'id');
+
+        // Get the list of expected node IDs from the YML Fixture
+        $expectedNodeIDs = array_map(
+            function ($key) {
+                return $this->objFromFixture(HierarchyOnSubclassTestSubObject::class, $key)->ID;
+            },
+            ['four', 'fourB', 'fourA2'] // Those are the identifiers of the object we expect our search to find
+        );
+
+        sort($actualNodeIDs);
+        sort($expectedNodeIDs);
+
+        $this->assertEquals($expectedNodeIDs, $actualNodeIDs);
+    }
+
     public function testTreeSearch()
     {
         $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
@@ -230,6 +265,39 @@ class TreeDropdownFieldTest extends SapphireTest
         $this->assertEmpty(
             $noResult,
             $file3->Name . ' is not found'
+        );
+    }
+
+    public function testTreeSearchUsingSubObject()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', HierarchyOnSubclassTestSubObject::class);
+
+        // case-insensitive search against keyword 'SubObject' for objects that have Hierarchy extension
+        // applied to a class that doesn't directly inherit from DataObject
+        $request = new HTTPRequest('GET', 'url', ['search' => 'SubObject']);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = $response->getBody();
+
+        $subObject1 = $this->objFromFixture(HierarchyOnSubclassTestSubObject::class, 'four');
+        $subObject1ChildB = $this->objFromFixture(HierarchyOnSubclassTestSubObject::class, 'fourB');
+
+        $parser = new CSSContentParser($tree);
+        $cssPath = 'ul.tree li#selector-TestTree-' . $subObject1->ID . ' li#selector-TestTree-' . $subObject1ChildB->ID . ' a';
+        $firstResult = $parser->getBySelector($cssPath);
+        $this->assertEquals(
+            $subObject1ChildB->Name,
+            (string)$firstResult[0],
+            $subObject1ChildB->Name . ' is found, nested under ' . $subObject1->Name
+        );
+
+        // other objects which don't contain the keyword 'SubObject' are not returned in search results
+        $subObject2 = $this->objFromFixture(HierarchyOnSubclassTestSubObject::class, 'five');
+        $cssPath = 'ul.tree li#selector-TestTree-' . $subObject2->ID . ' a';
+        $noResult = $parser->getBySelector($cssPath);
+        $this->assertEmpty(
+            $noResult,
+            $subObject2 . ' is not found'
         );
     }
 
