@@ -9,6 +9,8 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HideTestObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject;
 
 /**
  * @internal Only test the right values are returned, not that the cache is actually used.
@@ -22,6 +24,8 @@ class HierachyCacheTest extends SapphireTest
         TestObject::class,
         HideTestObject::class,
         HideTestSubObject::class,
+        HierarchyOnSubclassTestObject::class,
+        HierarchyOnSubclassTestSubObject::class
     ];
 
     public function setUp()
