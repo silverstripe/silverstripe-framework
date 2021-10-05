@@ -1,6 +1,4 @@
 nl:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: onbekend
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Afmetingen
     EDIT: Bewerken
@@ -266,6 +264,8 @@ nl:
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
+    KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de gegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
     PASSWORD: Wachtwoord

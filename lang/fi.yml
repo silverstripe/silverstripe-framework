@@ -1,6 +1,4 @@
 fi:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: tuntematon
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Mitat
     EDIT: Muokkaa

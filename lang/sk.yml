@@ -1,6 +1,4 @@
 sk:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: neznáma
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Rozmery
     EDIT: Editovať

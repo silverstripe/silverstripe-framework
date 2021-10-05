@@ -1,6 +1,4 @@
 fr:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: Inconnu
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Éditer
