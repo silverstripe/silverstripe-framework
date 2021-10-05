@@ -501,7 +501,7 @@ class TreeDropdownField extends FormField
         // Begin marking
         $markingSet->markPartialTree();
 
-        // Explicitely mark our search results if necessary
+        // Explicitly mark our search results if necessary
         foreach ($this->searchIds as $id => $marked) {
             if ($marked) {
                 $object = $this->objectForKey($id);

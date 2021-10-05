@@ -4,6 +4,8 @@ namespace SilverStripe\ORM\Hierarchy;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationResult;
@@ -28,7 +30,7 @@ class Hierarchy extends DataExtension
 {
     /**
      * The lower bounds for the amount of nodes to mark. If set, the logic will expand nodes until it reaches at least
-     * this number, and then stops. Root nodes will always show regardless of this settting. Further nodes can be
+     * this number, and then stops. Root nodes will always show regardless of this setting. Further nodes can be
      * lazy-loaded via ajax. This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having 30
      * children, the actual node count will be 50 (all root nodes plus first expanded child).
      *
@@ -284,7 +286,7 @@ class Hierarchy extends DataExtension
 
     /**
      * Return the number of direct children. By default, values are cached after the first invocation. Can be
-     * augumented by {@link augmentNumChildrenCountQuery()}.
+     * augmented by {@link augmentNumChildrenCountQuery()}.
      *
      * @param bool $cache Whether to retrieve values from cache
      * @return int
@@ -320,7 +322,7 @@ class Hierarchy extends DataExtension
     /**
      * Pre-populate any appropriate caches prior to rendering a tree.
      * This is used to allow for the efficient rendering of tree views, notably in the CMS.
-     * In the cace of Hierarchy, it caches numChildren values. Other extensions can provide an
+     * In the case of Hierarchy, it caches numChildren values. Other extensions can provide an
      * onPrepopulateTreeDataCache(DataList $recordList = null, array $options) methods to hook
      * into this event as well.
      *
@@ -333,7 +335,7 @@ class Hierarchy extends DataExtension
         if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
             $idList = is_array($recordList) ? $recordList :
                 ($recordList instanceof DataList ? $recordList->column('ID') : null);
-            self::prepopulate_numchildren_cache($this->owner->baseClass(), $idList);
+            self::prepopulate_numchildren_cache($this->getHierarchyBaseClass(), $idList);
         }
 
         $this->owner->extend('onPrepopulateTreeDataCache', $recordList, $options);
@@ -408,24 +410,46 @@ class Hierarchy extends DataExtension
     }
 
     /**
+     * Find the first class in the inheritance chain that has Hierarchy extension applied
+     *
+     * @return string
+     */
+    private function getHierarchyBaseClass(): string
+    {
+        $ancestry = ClassInfo::ancestry($this->owner);
+        $ancestorClass = array_shift($ancestry);
+        while ($ancestorClass && !Extensible::has_extension($ancestorClass, self::class)) {
+            $ancestorClass = array_shift($ancestry);
+        }
+
+        return $ancestorClass;
+    }
+
+    /**
      * Return children in the stage site.
      *
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
-     * @param bool $skipParentIDFilter Set to true to supress the ParentID and ID where statements.
+     * @param bool $skipParentIDFilter Set to true to suppress the ParentID and ID where statements.
      * @return DataList
      */
     public function stageChildren($showAll = false, $skipParentIDFilter = false)
     {
-        $hideFromHierarchy = $this->owner->config()->hide_from_hierarchy;
-        $hideFromCMSTree = $this->owner->config()->hide_from_cms_tree;
-        $baseClass = $this->owner->baseClass();
-        $baseTable = $this->owner->baseTable();
-        $staged = DataObject::get($baseClass)->where(sprintf(
+        /** @var DataObject|Hierarchy $owner */
+        $owner = $this->owner;
+        $hideFromHierarchy = $owner->config()->hide_from_hierarchy;
+        $hideFromCMSTree = $owner->config()->hide_from_cms_tree;
+        $class = $this->getHierarchyBaseClass();
+
+        $schema = DataObject::getSchema();
+        $tableForParentID = $schema->tableForField($class, 'ParentID');
+        $tableForID = $schema->tableForField($class, 'ID');
+
+        $staged = DataObject::get($class)->where(sprintf(
             '%s.%s <> %s.%s',
-            Convert::symbol2sql($baseTable),
+            Convert::symbol2sql($tableForParentID),
             Convert::symbol2sql("ParentID"),
-            Convert::symbol2sql($baseTable),
+            Convert::symbol2sql($tableForID),
             Convert::symbol2sql("ID")
         ));
 
@@ -466,7 +490,7 @@ class Hierarchy extends DataExtension
 
         $hideFromHierarchy = $owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $owner->config()->hide_from_cms_tree;
-        $children = DataObject::get($owner->baseClass())
+        $children = DataObject::get($this->getHierarchyBaseClass())
             ->filter('ParentID', (int)$owner->ID)
             ->exclude('ID', (int)$owner->ID)
             ->setDataQueryParam([
