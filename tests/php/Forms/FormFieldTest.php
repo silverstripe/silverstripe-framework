@@ -93,6 +93,19 @@ class FormFieldTest extends SapphireTest
         $this->assertStringEndsWith('class1 class2', $field->extraClass());
     }
 
+    public function testHasExtraClass()
+    {
+        $field = new FormField('MyField');
+        $field->addExtraClass('class1');
+        $field->addExtraClass('class2');
+        $this->assertTrue($field->hasExtraClass('class1'));
+        $this->assertTrue($field->hasExtraClass('class2'));
+        $this->assertTrue($field->hasExtraClass('class1 class2'));
+        $this->assertTrue($field->hasExtraClass('class2 class1'));
+        $this->assertFalse($field->hasExtraClass('class3'));
+        $this->assertFalse($field->hasExtraClass('class2 class3'));
+    }
+
     public function testRemoveExtraClass()
     {
         $field = new FormField('MyField');

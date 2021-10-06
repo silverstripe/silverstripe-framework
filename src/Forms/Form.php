@@ -1780,6 +1780,25 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
+     * Check if a CSS-class has been added to the form container.
+     *
+     * @param string $class A string containing a classname or several class
+     * names delimited by a single space.
+     * @return boolean True if all of the classnames passed in have been added.
+     */
+    public function hasExtraClass($class)
+    {
+        //split at white space
+        $classes = preg_split('/\s+/', $class);
+        foreach ($classes as $class) {
+            if (!isset($this->extraClasses[$class])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Add a CSS-class to the form-container. If needed, multiple classes can
      * be added by delimiting a string with spaces.
      *
