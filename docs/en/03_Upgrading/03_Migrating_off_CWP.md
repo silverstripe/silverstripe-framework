@@ -1,15 +1,15 @@
 ---
-title: Migrating off CWP
-summary: Migrate your project off the Common Web Platform v2
+title: Migrating off CWP CMS recipe
+summary: Migrate your project off the Common Web Platform CMS recipe v2
 ---
 
-# Migrate your project off the Common Web Platform v2
+# Migrate your project off the Common Web Platform CMS recipe v2
 
-Until November 2021, Silverstripe Ltd maintained a specialised version of the Silverstripe CMS project for the New Zealand Government and related New Zealand public-sector agencies. This version was called _Common Web Platform_ (CWP for short).
+Until September 2021, Silverstripe Ltd maintained a specialised version of Silverstripe CMS for the New Zealand Government and related New Zealand public-sector agencies. This version was called _Common Web Platform_ (CWP for short).
 
-The CWP CMS release has been discontinued. CWP projects who wish to continue to receive updates must migrate their code base off the latest CWP release back to the regular Silverstripe CMS release.
+The CWP CMS release has been discontinued. CWP projects who wish to continue to receive CMS updates must migrate their code base off the latest CWP CMS release back to the regular Silverstripe CMS release.
 
-## Steps to migrate away from CWP
+## Steps to migrate away from CWP recipe
 
 Before you begin this process you must identify which version of Silverstripe CMS Recipe you want to upgrade to. You can upgrade to [Silverstripe CMS Recipe 4.9.0](/changelogs/4.9.0/) or greater.
 
@@ -35,6 +35,10 @@ The `silverstripe/recipe-solr-search` and `silverstripe/recipe-ccl` release vers
 Once you've completed the clean up, you should run a `composer update` to sync up your changes in the `composer.lock` file.
 
 ## Questions
+
+### Will this have an effect on the features of my project?
+
+Neither the steps to inline now deprecated recipes, nor replacing those that have a new package name will affect the feature-set of your project. It will also have no effect on how your project is currently hosted. This change simply focuses on ensuring that your project continues to receive CMS upgrades through the standard Silverstripe CMS release line - no longer following the ‘CWP 2.x’ versioning convention.
 
 ### What constraint should I use in my requirement version?
 
