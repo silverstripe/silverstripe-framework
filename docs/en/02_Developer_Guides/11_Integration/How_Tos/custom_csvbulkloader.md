@@ -19,7 +19,7 @@ containing a list of football players and the team they play for. The file we ha
 This data needs to be imported into our application. For this, we have two `DataObjects` setup. `Player` contains 
 information about the individual player and a relation set up for managing the `Team`. 
 
- **app/code/Player.php**.
+ **app/src/Player.php**.
 
 
 ```php
@@ -41,7 +41,7 @@ class Player extends DataObject
 }
 ```
 
-**app/code/FootballTeam.php**
+**app/src/FootballTeam.php**
 
 
 ```php
@@ -71,7 +71,7 @@ column
 
 Our final import looks like this.
 
-**app/code/PlayerCsvBulkLoader.php**
+**app/src/PlayerCsvBulkLoader.php**
 
 
 ```php

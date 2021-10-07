@@ -418,7 +418,7 @@ in a single Ajax request.
 ```php
 use SilverStripe\Admin\LeftAndMain;
 
-// app/code/MyAdmin.php
+// app/src/MyAdmin.php
 class MyAdmin extends LeftAndMain 
 {
     private static $url_segment = 'myadmin';

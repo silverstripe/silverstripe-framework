@@ -51,7 +51,7 @@ ShortcodeParser::get_active()->parse($text);
  
 First we need to define a callback for the shortcode.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php

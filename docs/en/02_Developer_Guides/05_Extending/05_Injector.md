@@ -171,7 +171,7 @@ SilverStripe\Core\Injector\Injector:
     factory: MyFactory
 ```
 
-**app/code/MyFactory.php**
+**app/src/MyFactory.php**
 
 
 ```php

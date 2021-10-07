@@ -28,7 +28,7 @@ Configuration values are static properties on any Silverstripe CMS class. These 
 marked with a `@config` docblock. The API documentation will also list the static properties for the class. They should
 be marked `private static` and follow the `lower_case_with_underscores` structure.
 
-**app/code/MyClass.php**
+**app/src/MyClass.php**
 
 
 ```php
@@ -65,7 +65,7 @@ $config = $this->config()->get('property');
 
 You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` method.
 
-**app/code/MyOtherClass.php**
+**app/src/MyOtherClass.php**
 
 ```php
 use SilverStripe\Core\Config\Configurable;

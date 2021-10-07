@@ -46,7 +46,7 @@ This doesn't cover all cases used by Silverstripe CMS so is not a complete solut
 used. 
 [/notice]
 
-**app/code/MySQLWriteDbAspect.php**
+**app/src/MySQLWriteDbAspect.php**
 
 
 ```php

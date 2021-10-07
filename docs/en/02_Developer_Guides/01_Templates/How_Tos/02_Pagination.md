@@ -11,7 +11,7 @@ all your record, then wraps it in a [PaginatedList](api:SilverStripe\ORM\Paginat
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 use SilverStripe\ORM\PaginatedList;
