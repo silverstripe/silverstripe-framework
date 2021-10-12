@@ -70,9 +70,9 @@ Your project will still work, but will not receive any bug fixes, security fixes
 
 ### What if my project is still using CWP 1?
 
-Read the [Upgrading to Silverstripe CMS 4](Upgrading_project.md) guide first.
+CWP version 1 (based on Silverstripe CMS version 3) support has [reached end of life](https://www.cwp.govt.nz/working-with-cwp/releases/) and will no longer be receiving security updates. Projects still on CWP 1 are at risk of security vulnerabilies and should get in touch with their development team, or the [Silverstripe Service Desk](https://servicedesk.silverstripe.cloud/), and make a plan for upgrading their project to CMS version 4.
 
-Once you've completed the _Upgrade your dependencies_ step, follow the directions in this guide to remove all the legacy CWP CMS recipes.
+Projects will need to have upgraded to CMS 4 before following the directions in this guide to remove all the legacy CWP CMS recipes.
 
 ### Is there a way to create a new project that would require all the modules a CWP project would have?
 
