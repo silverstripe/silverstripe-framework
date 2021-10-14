@@ -25,7 +25,7 @@ use SilverStripe\Security\Security;
  * </code>
  *
  * Date formats all follow CLDR standard format codes
- * @link http://userguide.icu-project.org/formatparse/datetime
+ * @link https://unicode-org.github.io/icu/userguide/format_parse/datetime
  */
 class DBDate extends DBField
 {
@@ -261,7 +261,7 @@ class DBDate extends DBField
      * Return the date using a particular formatting string. Use {o} to include an ordinal representation
      * for the day of the month ("1st", "2nd", "3rd" etc)
      *
-     * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
+     * @param string $format Format code string. See https://unicode-org.github.io/icu/userguide/format_parse/datetime
      * @param string $locale Custom locale to use (add to signature in 5.0)
      * @return string The date in the requested format
      */
