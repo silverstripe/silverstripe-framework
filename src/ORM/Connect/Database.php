@@ -267,7 +267,14 @@ abstract class Database
     protected function displayQuery($query, $endtime)
     {
         $queryCount = sprintf("%04d", $this->queryCount);
-        Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
+        Debug::message(
+            "
+                 \n|###|$queryCount:
+                 \n|##|$query
+                 \n|#|$endtime (seconds)
+             ",
+             false
+        );
     }
 
     /**
