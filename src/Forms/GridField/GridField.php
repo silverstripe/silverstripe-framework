@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -654,6 +655,18 @@ class GridField extends FormField
             $tableAttributes,
             $header . "\n" . $footer . "\n" . $body
         );
+        
+        $message = Convert::raw2xml($this->getMessage());
+        if (is_array($message)) {
+            $message = $message['message'];
+        }
+        if ($message) {
+            $content['after'] .= HTML::createTag(
+                'p',
+                ['class' => 'message ' . $this->getMessageType()],
+                $message
+            );
+        }
 
         return HTML::createTag(
             'fieldset',
