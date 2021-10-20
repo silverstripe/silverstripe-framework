@@ -5,6 +5,7 @@ namespace SilverStripe\Dev\Validation;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\DataObject;
@@ -16,10 +17,10 @@ use SilverStripe\ORM\DB;
  * Basic validation of relationship setup, this tool makes sure your relationships are setup correctly in both directions
  * The validation is configurable and inspection can be narrowed down by namespace, class and relation name
  *
- * This tool runs automatically via dev/build and outputs notices
+ * This tool runs automatically via flush and outputs notices
  * For strict validation it is recommended to hook this up to your unit test suite
  */
-class RelationValidationService implements Resettable
+class RelationValidationService implements Flushable, Resettable
 {
 
     use Configurable;
@@ -81,6 +82,14 @@ class RelationValidationService implements Resettable
     }
 
     /**
+     * @throws ReflectionException
+     */
+    public static function flush(): void
+    {
+        self::singleton()->executeValidation();
+    }
+
+    /**
      * Hook this into your unit tests and assert for empty array like this
      *
      * $messages = RelationValidationService::singleton()->validateRelations();
@@ -100,7 +109,7 @@ class RelationValidationService implements Resettable
     /**
      * @throws ReflectionException
      */
-    public function devBuildCheck(): void
+    public function executeValidation(): void
     {
         $errors = $this->validateRelations();
         $count = count($errors);
