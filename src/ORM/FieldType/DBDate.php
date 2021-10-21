@@ -562,11 +562,7 @@ class DBDate extends DBField
     public function modify(string $adjustment): self
     {
         $modifiedTime = strtotime($adjustment, $this->getTimestamp());
-
-        // Return a clone of this field so this modification doesn't apply to any other object references
-        $field = clone $this;
-
-        return $field->setValue($modifiedTime);
+        return $this->setValue($modifiedTime);
     }
 
     /**

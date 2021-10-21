@@ -48,6 +48,46 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     const ISO_DATETIME_NORMALISED = 'y-MM-dd\'T\'HH:mm:ss';
 
     /**
+     * Flag idicating if this field is considered immutable
+     * when this is enabled setting the value of this field will return a new field instance
+     * instead updatin the old one
+     *
+     * @var bool
+     */
+    protected $immutable = false;
+
+    /**
+     * @param bool $immutable
+     * @return $this
+     */
+    public function setImmutable(bool $immutable): self
+    {
+        $this->immutable = $immutable;
+
+        return $this;
+    }
+
+    public function setValue($value, $record = null, $markChanged = true)
+    {
+        if ($this->immutable) {
+            // This field is set as immutable so we have to create a new field instance
+            // instead of just updating the value
+            $field = clone $this;
+
+            return $field
+                // This field will inherit the immutable status but we have to disable it before setting the value
+                // to avoid recursion
+                ->setImmutable(false)
+                // Update the value so the new field contains the desired value
+                ->setValue($value, $record, $markChanged)
+                // Return the immutable flag to the correct state
+                ->setImmutable(true);
+        }
+
+        return parent::setValue($value, $record, $markChanged);
+    }
+
+    /**
      * Returns the standard localised date
      *
      * @return string Formatted date.
@@ -170,14 +210,13 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function now()
     {
+        $time = self::$mock_now ? self::$mock_now->Value : time();
+
         /** @var DBDatetime $now */
-        $now = null;
-        if (self::$mock_now) {
-            $now = DBField::create_field('Datetime', self::$mock_now->Value);
-        } else {
-            $now = DBField::create_field('Datetime', time());
-        }
-        return $now;
+        $now = DBField::create_field('Datetime', $time);
+
+        // Make this field immutable, so future modifications don't apply to any other object references
+        return $now->setImmutable(true);
     }
 
     /**
