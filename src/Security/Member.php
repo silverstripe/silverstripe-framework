@@ -1715,6 +1715,33 @@ class Member extends DataObject
 
         return $valid;
     }
+    
+    /**
+     * check if user can do something with a dataobject. 
+     * this is useful in templates and other places where short-hand is nice. 
+     * e.g. 
+     * ```php
+     *     $member.canWithObject('view', MyBoat::class);
+     *     $member.canWithObject('edit', $MyCarObject);
+     * ```
+     * @param  string              $method (Create, View, Edit, or Delete)
+     * @param  string|DataObject   $objectOrClassName
+     * @return bool
+     */
+    public function canWithObject(string $method, $objectOrClassName) : bool
+    {
+        if (is_string($objectOrClassName)) {
+            $objectOrClassName = Injector::inst()->get($objectOrClassName);
+        }
+        $method = ucfirst($method);
+        $methods =  ['Create', 'View', 'Edit', 'Delete'];
+        if(! in_array($method, $methods)) {
+            user_error('Method supplied must be one of four key ones: '.implode(', ', $methods) . '; supplied: '.$method);
+        }
+        $method = 'can'.$method;
+        
+        return (bool) $objectOrClassName->{$method}($this);
+    }
 
     /**
      * Change password. This will cause rehashing according to the `PasswordEncryption` property via the
