@@ -2501,6 +2501,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Allows user code to hook into DataObject::getCMSFields after updateCMSFields
+     * being called on extensions
+     *
+     * @param callable $callback The callback to execute
+     */
+    protected function afterUpdateCMSFields(callable $callback)
+    {
+        $this->afterExtending('updateCMSFields', $callback);
+    }
+
+    /**
      * Centerpiece of every data administration interface in Silverstripe,
      * which returns a {@link FieldList} suitable for a {@link Form} object.
      * If not overloaded, we're using {@link scaffoldFormFields()} to automatically

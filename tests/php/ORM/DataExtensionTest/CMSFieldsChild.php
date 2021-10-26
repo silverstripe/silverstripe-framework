@@ -17,7 +17,8 @@ class CMSFieldsChild extends CMSFieldsBase implements TestOnly
 
     private static $db = [
         'ChildField' => 'Varchar(255)',
-        'ChildFieldBeforeExtension' => 'Varchar(255)'
+        'ChildFieldBeforeExtension' => 'Varchar(255)',
+        'ChildFieldAfterExtension' => 'Varchar(255)'
     ];
 
     public function getCMSFields()
@@ -33,6 +34,7 @@ class CMSFieldsChild extends CMSFieldsBase implements TestOnly
             'updateCMSFields',
             function (FieldList $fields) {
                 $fields->removeByName('ExtendedFieldRemove', true);
+                $fields->addFieldToTab('Root.Test', new TextField('ChildFieldAfterExtension'));
             }
         );
 
