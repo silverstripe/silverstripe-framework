@@ -65,9 +65,11 @@ Page:
 
 ```xml
 <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
-    <testsuite name="Default">
-        <directory>app/tests/</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="Default">
+            <directory>app/tests/</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">app/src</directory>

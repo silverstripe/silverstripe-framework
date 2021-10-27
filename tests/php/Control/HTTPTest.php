@@ -19,7 +19,7 @@ use SilverStripe\Dev\FunctionalTest;
  */
 class HTTPTest extends FunctionalTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // Set to disabled at null forcing level
@@ -48,9 +48,9 @@ class HTTPTest extends FunctionalTest
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
         $this->addCacheHeaders($response);
-        $this->assertContains('no-cache', $response->getHeader('Cache-Control'));
-        $this->assertContains('no-store', $response->getHeader('Cache-Control'));
-        $this->assertContains('must-revalidate', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('no-cache', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('no-store', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('must-revalidate', $response->getHeader('Cache-Control'));
 
         // Ensure max-age setting is respected in production.
         HTTPCacheControlMiddleware::config()
@@ -61,8 +61,8 @@ class HTTPTest extends FunctionalTest
         HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
         $this->addCacheHeaders($response);
-        $this->assertContains('max-age=30', $response->getHeader('Cache-Control'));
-        $this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('max-age=30', $response->getHeader('Cache-Control'));
+        $this->assertStringNotContainsString('max-age=0', $response->getHeader('Cache-Control'));
 
         // Still "live": Ensure header's aren't overridden if already set (using purposefully different values).
         $headers = [
@@ -93,11 +93,11 @@ class HTTPTest extends FunctionalTest
 
         // Vary set properly
         $v = $response->getHeader('Vary');
-        $this->assertContains("X-Forwarded-Protocol", $v);
-        $this->assertContains("X-Requested-With", $v);
-        $this->assertNotContains("Cookie", $v);
-        $this->assertNotContains("User-Agent", $v);
-        $this->assertNotContains("Accept", $v);
+        $this->assertStringContainsString("X-Forwarded-Protocol", $v);
+        $this->assertStringContainsString("X-Requested-With", $v);
+        $this->assertStringNotContainsString("Cookie", $v);
+        $this->assertStringNotContainsString("User-Agent", $v);
+        $this->assertStringNotContainsString("Accept", $v);
 
         // No vary
         HTTPCacheControlMiddleware::singleton()
@@ -124,7 +124,7 @@ class HTTPTest extends FunctionalTest
         $response = new HTTPResponse('', 200);
         $this->addCacheHeaders($response);
         $header = $response->getHeader('Vary');
-        $this->assertContains('X-Foo', $header);
+        $this->assertStringContainsString('X-Foo', $header);
     }
 
     public function testDeprecatedCacheControlHandling()
@@ -143,8 +143,8 @@ class HTTPTest extends FunctionalTest
         $response = new HTTPResponse('', 200);
         $this->addCacheHeaders($response);
         $header = $response->getHeader('Cache-Control');
-        $this->assertContains('no-store', $header);
-        $this->assertContains('no-cache', $header);
+        $this->assertStringContainsString('no-store', $header);
+        $this->assertStringContainsString('no-cache', $header);
     }
 
     public function testDeprecatedCacheControlHandlingOnMaxAge()
@@ -164,15 +164,13 @@ class HTTPTest extends FunctionalTest
         $response = new HTTPResponse('', 200);
         $this->addCacheHeaders($response);
         $header = $response->getHeader('Cache-Control');
-        $this->assertContains('max-age=99', $header);
+        $this->assertStringContainsString('max-age=99', $header);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Found unsupported legacy directives in HTTP\.cache_control: unknown/
-     */
     public function testDeprecatedCacheControlHandlingThrowsWithUnknownDirectives()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Found unsupported legacy directives in HTTP\.cache_control: unknown/');
         /** @var Config */
         Config::modify()->set(
             HTTP::class,
@@ -219,7 +217,7 @@ class HTTPTest extends FunctionalTest
         sort($result);
         sort($expected);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals($expected, $result, 'Test that all links within the content are found.');
     }
 
@@ -235,7 +233,7 @@ class HTTPTest extends FunctionalTest
             $controller->setRequest($request);
             $controller->pushCurrent();
             try {
-                $this->assertContains(
+                $this->assertStringContainsString(
                     'relative/url?foo=bar',
                     HTTP::setGetVar('foo', 'bar'),
                     'Omitting a URL falls back to current URL'
@@ -263,7 +261,7 @@ class HTTPTest extends FunctionalTest
             'Absolute URL without path and multipe existing query params, overwriting an existing parameter'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'http://test.com/?foo=new',
             HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=&foo=old'),
             'Absolute URL and empty query param'

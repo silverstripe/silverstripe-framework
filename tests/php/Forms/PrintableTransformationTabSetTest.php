@@ -25,12 +25,12 @@ class PrintableTransformationTabSetTest extends SapphireTest
         $transformationTabSet = new PrintableTransformation_TabSet($tabs);
         $result = $transformationTabSet->FieldHolder();
 
-        $this->assertContains('<h1>Main</h1>', $result);
-        $this->assertContains('<h1>Secondary</h1>', $result);
+        $this->assertStringContainsString('<h1>Main</h1>', $result);
+        $this->assertStringContainsString('<h1>Secondary</h1>', $result);
 
         $transformationTabSet->setTabSet($optionsTabSet);
         $result = $transformationTabSet->FieldHolder();
 
-        $this->assertContains('<h2>Options</h2>', $result);
+        $this->assertStringContainsString('<h2>Options</h2>', $result);
     }
 }

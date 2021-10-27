@@ -133,19 +133,6 @@ class ArrayListTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testZeroLimit()
-    {
-        Deprecation::notification_version('4.3.0');
-        $list = new ArrayList([
-            ['Key' => 1],
-            ['Key' => 2],
-        ]);
-        $list->limit(0);
-    }
-
     public function testAddRemove()
     {
         $list = new ArrayList(
@@ -737,6 +724,7 @@ class ArrayListTest extends SapphireTest
 
         // This call will trigger a fatal error if there are issues with circular dependencies
         $items->sort('Sort');
+        $this->assertTrue(true, 'Sort with circular dependencies does not trigger an error.');
     }
 
     /**

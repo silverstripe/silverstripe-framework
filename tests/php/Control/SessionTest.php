@@ -18,10 +18,10 @@ class SessionTest extends SapphireTest
      */
     protected $session = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->session = new Session([]);
-        return parent::setUp();
+        parent::setUp();
     }
 
     /**
@@ -107,11 +107,11 @@ class SessionTest extends SapphireTest
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException BadMethodCallException
-     * @expectedExceptionMessage Session has already started
      */
     public function testStartErrorsWhenStartingTwice()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('Session has already started');
         $req = new HTTPRequest('GET', '/');
         $session = new Session(null); // unstarted session
         $session->start($req);

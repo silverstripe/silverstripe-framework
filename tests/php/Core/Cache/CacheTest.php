@@ -13,7 +13,7 @@ use Symfony\Component\Cache\Simple\MemcachedCache;
 
 class CacheTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

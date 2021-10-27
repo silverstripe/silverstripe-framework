@@ -215,7 +215,7 @@ class ViewableDataTest extends SapphireTest
         SSViewer::set_themes($themes);
 
         $data = new ViewableData();
-        $this->assertContains(
+        $this->assertStringContainsString(
             'tests/php/View/ViewableDataTest/testtheme',
             $data->ThemeDir()
         );

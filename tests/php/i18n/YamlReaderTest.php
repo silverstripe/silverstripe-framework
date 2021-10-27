@@ -46,7 +46,7 @@ class YamlReaderTest extends SapphireTest
         $path = __DIR__ . '/i18nTest/_fakewebroot/i18ntestmodule/lang/en_corrupt.yml';
         $this->expectException(InvalidResourceException::class);
         $regex_path = str_replace('.', '\.', $path);
-        $this->expectExceptionMessageRegExp('@^Error parsing YAML, invalid file "' . $regex_path . '"\. Message: ([\w ].*) line 5 @');
+        $this->expectExceptionMessageMatches('@^Error parsing YAML, invalid file "' . $regex_path . '"\. Message: ([\w ].*) line 5 @');
         $reader = new YamlReader();
         $reader->read('en', $path);
     }

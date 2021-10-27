@@ -37,7 +37,7 @@ class TinyMCEConfigTest extends SapphireTest
             );
             // Check we don't simplify to locale when a specific version exists
             if (strpos($resource, '_') === false) {
-                $this->assertFileNotExists(
+                $this->assertFileDoesNotExist(
                     "{$langs}/{$locale}.js",
                     "Locale code {$locale} doesn't map to simple {$resource}.js when a better {$locale}.js is available"
                 );
