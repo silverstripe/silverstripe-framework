@@ -56,7 +56,7 @@ you want to test a `Controller`, `Form` or anything that requires a web page.
 `FunctionalTest` is a subclass of `SapphireTest` so will inherit all of the behaviors. By subclassing `FunctionalTest`
 you gain the ability to load and test web pages on the site. 
 
-`SapphireTest` in turn, extends `PHPUnit_Framework_TestCase`. For more information on `PHPUnit_Framework_TestCase` see 
+`SapphireTest` in turn, extends `PHPUnit\Framework\TestCase`. For more information on `PHPUnit\Framework\TestCase` see 
 the [PHPUnit](http://www.phpunit.de) documentation. It provides a lot of fundamental concepts that we build on in this 
 documentation.
 [/info]
@@ -89,9 +89,11 @@ needs.
 ```xml
 
 <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
-    <testsuite name="Default">
-        <directory>app/tests</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="Default">
+            <directory>app/tests</directory>
+        </testsuite>
+    </testsuites>
     <groups>
         <exclude>
             <group>sanitychecks</group>
@@ -115,7 +117,7 @@ class PageTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -152,14 +154,14 @@ use SilverStripe\Dev\SapphireTest;
 
 class PageTest extends SapphireTest
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         // ..
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
@@ -180,7 +182,7 @@ It's important to remember that the `parent::setUp();` functions will need to be
 
 
 ```php
-public static function setUpBeforeClass()
+public static function setUpBeforeClass(): void
 {
     parent::setUpBeforeClass();
     //this will remain for the whole suite and be removed for any other tests

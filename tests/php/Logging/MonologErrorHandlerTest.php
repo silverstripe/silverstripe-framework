@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Logging\Tests;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\MonologErrorHandler;
 
 class MonologErrorHandlerTest extends SapphireTest
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /No Logger properties passed to MonologErrorHandler/
-     */
     public function testStartThrowsExceptionWithoutLoggerDefined()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/No Logger properties passed to MonologErrorHandler/');
         $handler = new MonologErrorHandler();
         $handler->start();
     }

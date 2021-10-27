@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -138,11 +140,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getModelClass
-     *
-     * @expectedException \LogicException
      */
     public function testGridFieldModelClassThrowsException()
     {
+        $this->expectException(LogicException::class);
         $obj = new GridField('testfield', 'testfield', ArrayList::create());
         $obj->getModelClass();
     }
@@ -263,11 +264,10 @@ class GridFieldTest extends SapphireTest
     /**
      * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnContentBadArguments()
     {
+        $this->expectException(InvalidArgumentException::class);
         $list = new ArrayList(
             [
             new Member(["ID" => 1, "Email" => "test@example.org"])
@@ -310,11 +310,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnAttributesBadArguments()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $list = new ArrayList(
             [
             new Member(["ID" => 1, "Email" => "test@example.org"])
@@ -325,11 +324,9 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnAttributes($list->first(), 'Non-existing');
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testGetColumnAttributesBadResponseFromComponent()
     {
+        $this->expectException(\LogicException::class);
         $list = new ArrayList(
             [
             new Member(["ID" => 1, "Email" => "test@example.org"])
@@ -358,11 +355,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     *
-     * @expectedException \LogicException
      */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
+        $this->expectException(\LogicException::class);
         $list = new ArrayList(
             [
             new Member(["ID" => 1, "Email" => "test@example.org"])
@@ -375,11 +371,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnMetadataBadArguments()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $list = ArrayList::create();
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
@@ -388,11 +383,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::handleAction
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testHandleActionBadArgument()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $obj = new GridField('testfield', 'testfield');
         $obj->handleAlterAction('prft', [], []);
     }
@@ -485,7 +479,7 @@ class GridFieldTest extends SapphireTest
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList([$field]), new FieldList());
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>",
             $field->FieldHolder()
         );
@@ -521,7 +515,7 @@ class GridFieldTest extends SapphireTest
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         $form = new Form(null, 'testform', new FieldList([$field]), new FieldList());
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "<div>first\n<strong>second</strong></div>",
             $field->FieldHolder()
         );
@@ -529,11 +523,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * Test that circular dependencies throw an exception
-     *
-     * @expectedException \LogicException
      */
     public function testGridFieldCustomFragmentsCircularDependencyThrowsException()
     {
+        $this->expectException(\LogicException::class);
         $config = GridFieldConfig::create()->addComponents(
             new HTMLFragments(
                 [
@@ -654,7 +647,7 @@ class GridFieldTest extends SapphireTest
         // A form that fails validation should display the validation error in the FieldHolder output.
         $form->validationResult();
         $gridfieldOutput = $gridField->FieldHolder();
-        $this->assertContains('<p class="message ' . ValidationResult::TYPE_ERROR . '">error</p>', $gridfieldOutput);
+        $this->assertStringContainsString('<p class="message ' . ValidationResult::TYPE_ERROR . '">error</p>', $gridfieldOutput);
 
         // Clear validation error from previous assertion.
         $validator->removeValidation();
@@ -664,6 +657,6 @@ class GridFieldTest extends SapphireTest
         $form->setValidator(new RequiredFields());
         $form->validationResult();
         $gridfieldOutput = $gridField->FieldHolder();
-        $this->assertNotContains('<p class="message ' . ValidationResult::TYPE_ERROR . '">', $gridfieldOutput);
+        $this->assertStringNotContainsString('<p class="message ' . ValidationResult::TYPE_ERROR . '">', $gridfieldOutput);
     }
 }

@@ -33,7 +33,7 @@ class ThemeResourceLoaderTest extends SapphireTest
     /**
      * Set up manifest before each test
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -60,7 +60,7 @@ class ThemeResourceLoaderTest extends SapphireTest
         ThemeResourceLoader::flush();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ModuleLoader::inst()->popManifest();
         parent::tearDown();

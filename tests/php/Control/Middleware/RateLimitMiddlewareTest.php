@@ -17,7 +17,7 @@ class RateLimitMiddlewareTest extends FunctionalTest
         TestController::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         DBDatetime::set_mock_now('2017-09-27 00:00:00');

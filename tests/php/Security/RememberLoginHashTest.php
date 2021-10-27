@@ -14,7 +14,7 @@ class RememberLoginHashTest extends SapphireTest
     /** @var RememberLoginHash[]  */
     private $loginHash = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,12 +43,12 @@ class RememberLoginHashTest extends SapphireTest
 
     /**
      * @param bool $logoutAcrossDevices
-     * @param string $deviceId
+     * @param mixed $deviceId
      * @param array $expected
      * @param array $unexpected
      * @dataProvider clearScenarios
      */
-    public function testClear(bool $logoutAcrossDevices, string $deviceId, array $expected, array $unexpected)
+    public function testClear(bool $logoutAcrossDevices, $deviceId, array $expected, array $unexpected)
     {
         // If session-manager module is installed then logout_across_devices is modified so skip
         if (class_exists(LoginSession::class)) {

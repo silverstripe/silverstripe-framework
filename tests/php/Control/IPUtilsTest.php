@@ -17,14 +17,14 @@ use SilverStripe\Control\Util\IPUtils;
 class IPUtilsTest extends SapphireTest
 {
     /**
-     * @dataProvider testIPv4Provider
+     * @dataProvider iPv4Provider
      */
     public function testIPv4($matches, $remoteAddr, $cidr)
     {
         $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
     }
 
-    public function testIPv4Provider()
+    public function iPv4Provider()
     {
         return [
             [true, '192.168.1.1', '192.168.1.1'],
@@ -43,7 +43,7 @@ class IPUtilsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider testIPv6Provider
+     * @dataProvider iPv6Provider
      */
     public function testIPv6($matches, $remoteAddr, $cidr)
     {
@@ -54,7 +54,7 @@ class IPUtilsTest extends SapphireTest
         $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
     }
 
-    public function testIPv6Provider()
+    public function iPv6Provider()
     {
         return [
             [true, '2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65'],
@@ -71,11 +71,11 @@ class IPUtilsTest extends SapphireTest
     }
 
     /**
-     * @expectedException \RuntimeException
      * @requires extension sockets
      */
     public function testAnIPv6WithOptionDisabledIPv6()
     {
+        $this->expectException(\RuntimeException::class);
         if (defined('AF_INET6')) {
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }

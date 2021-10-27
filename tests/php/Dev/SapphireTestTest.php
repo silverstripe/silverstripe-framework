@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev\Tests;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
@@ -122,11 +123,10 @@ class SapphireTestTest extends SapphireTest
      * @param $itemsForList
      *
      * @testdox assertion assertListAllMatch fails when not all items are matching
-     *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
     public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
     {
+        $this->expectException(ExpectationFailedException::class);
         $list = $this->generateArrayListFromItems($itemsForList);
 
         $this->assertListAllMatch($match, $list);
@@ -156,11 +156,10 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $matches
      * @param $itemsForList array
-     *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
     public function testAssertListContainsFailsIfListDoesNotContainMatch($matches, $itemsForList)
     {
+        $this->expectException(ExpectationFailedException::class);
         $list = $this->generateArrayListFromItems($itemsForList);
         $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
         $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
@@ -191,11 +190,10 @@ class SapphireTestTest extends SapphireTest
      * @param $itemsForList
      *
      * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
-     *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
     public function testAssertListNotContainsFailsWhenListContainsAMatch($matches, $itemsForList)
     {
+        $this->expectException(ExpectationFailedException::class);
         $list = $this->generateArrayListFromItems($itemsForList);
         $list->push(Member::create(['FirstName' => 'Foo', 'Surname' => 'Foo']));
         $list->push(Member::create(['FirstName' => 'Bar', 'Surname' => 'Bar']));
@@ -224,11 +222,10 @@ class SapphireTestTest extends SapphireTest
      *
      * @param $matches
      * @param $itemsForList
-     *
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
      */
     public function testAssertListEqualsFailsOnNonEqualLists($matches, $itemsForList)
     {
+        $this->expectException(ExpectationFailedException::class);
         $list = $this->generateArrayListFromItems($itemsForList);
 
         $this->assertListEquals($matches, $list);

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use SilverStripe\Assets\File;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\Form;
@@ -12,6 +13,8 @@ use SilverStripe\View\SSViewer;
 
 class TreeMultiselectFieldTest extends SapphireTest
 {
+    use ArraySubsetAsserts;
+
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
 
     protected static $extra_dataobjects = [
@@ -56,7 +59,7 @@ class TreeMultiselectFieldTest extends SapphireTest
      */
     protected $fieldValue;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -170,8 +173,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(0, $items, 'there must be no items selected');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
-        $this->assertContains('unchanged', $html);
+        $this->assertStringContainsString($field->ID(), $html);
+        $this->assertStringContainsString('unchanged', $html);
     }
 
 
@@ -199,8 +202,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(2, $items, 'there must be exactly 2 items selected');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
-        $this->assertContains($this->fieldValue, $html);
+        $this->assertStringContainsString($field->ID(), $html);
+        $this->assertStringContainsString($this->fieldValue, $html);
     }
 
     /**
@@ -248,7 +251,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(0, $items, 'there must be 0 selected items');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
+        $this->assertStringContainsString($field->ID(), $html);
     }
 
     /**
@@ -298,8 +301,8 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertCount(2, $items, 'there must be exactly 2 selected items');
 
         $html = $field->Field();
-        $this->assertContains($field->ID(), $html);
-        $this->assertContains($this->fieldValue, $html);
+        $this->assertStringContainsString($field->ID(), $html);
+        $this->assertStringContainsString($this->fieldValue, $html);
     }
 
     public function testGetItems()

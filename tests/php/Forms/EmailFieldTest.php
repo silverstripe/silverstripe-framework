@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\EmailField;
 use Exception;
-use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit\Framework\AssertionFailedError;
 use SilverStripe\Forms\Tests\EmailFieldTest\TestValidator;
 
 /**
@@ -51,7 +51,7 @@ class EmailFieldTest extends FunctionalTest
             // If we expect failure and processing gets here without an exception, the test failed
             $this->assertTrue($expectSuccess, $checkText . " (/$email/ passed validation, but not expected to)");
         } catch (Exception $e) {
-            if ($e instanceof PHPUnit_Framework_AssertionFailedError) {
+            if ($e instanceof AssertionFailedError) {
                  // re-throw assertion failure
                 throw $e;
             } elseif ($expectSuccess) {
@@ -77,6 +77,6 @@ class EmailFieldTest extends FunctionalTest
             ['Email' => 'test@test.com']
         );
 
-        $this->assertContains('Test save was successful', $response->getBody());
+        $this->assertStringContainsString('Test save was successful', $response->getBody());
     }
 }

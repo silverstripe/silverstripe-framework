@@ -53,14 +53,6 @@ class ArrayDataTest extends SapphireTest
     {
         $array = [0 => "One", 1 => "Two"];
         $this->assertFalse(ArrayLib::is_associative($array));
-
-        /*
-        * Expect user_error() to be called below, if enabled
-        * (tobych) That should be an exception. Something like:
-        * $this->setExpectedException('InvalidArgumentException');
-        */
-
-        // $arrayData = new ArrayData($array);
     }
 
     public function testSetField()

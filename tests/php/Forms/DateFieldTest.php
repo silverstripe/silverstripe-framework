@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use IntlDateFormatter;
+use LogicException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DateField_Disabled;
@@ -16,7 +17,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class DateFieldTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -192,36 +193,30 @@ class DateFieldTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateFormat/
-     */
     public function testHtml5WithCustomFormatThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setDateFormat/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setDateFormat('d/M/y');
         $dateField->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateLength/
-     */
     public function testHtml5WithCustomDateLengthThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setDateLength/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setDateLength(IntlDateFormatter::MEDIUM);
         $dateField->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setLocale/
-     */
     public function testHtml5WithCustomLocaleThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setLocale/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setLocale('de_DE');

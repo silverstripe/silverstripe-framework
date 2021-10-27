@@ -8,6 +8,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use ReflectionMethod;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\Security\PermissionProvider;
 
 /**
@@ -25,7 +26,7 @@ class NamespacedClassManifestTest extends SapphireTest
      */
     protected $manifest;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -35,7 +36,7 @@ class NamespacedClassManifestTest extends SapphireTest
         ClassLoader::inst()->pushManifest($this->manifest, false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         ClassLoader::inst()->popManifest();
@@ -43,8 +44,9 @@ class NamespacedClassManifestTest extends SapphireTest
 
     public function testClassInfoIsCorrect()
     {
+        $class = 'SilverStripe\\Framework\\Tests\\ClassI';
         $this->assertContains(
-            'SilverStripe\\Framework\\Tests\\ClassI',
+            $class,
             ClassInfo::implementorsOf(PermissionProvider::class)
         );
 
@@ -53,8 +55,13 @@ class NamespacedClassManifestTest extends SapphireTest
         // including all core classes
         $method = new ReflectionMethod($this->manifest, 'coalesceDescendants');
         $method->setAccessible(true);
-        $method->invoke($this->manifest, ModelAdmin::class);
-        $this->assertContains('SilverStripe\\Framework\\Tests\\ClassI', ClassInfo::subclassesFor(ModelAdmin::class));
+        $method->invoke($this->manifest, DataQuery::class);
+        $classes = ClassInfo::subclassesFor(DataQuery::class);
+        $this->assertContains(
+            $class,
+            $classes,
+            $class . ' not contained in [' . implode(',', $classes) . ']'
+        );
     }
 
     public function testGetItemPath()

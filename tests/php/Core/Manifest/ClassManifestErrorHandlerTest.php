@@ -7,12 +7,10 @@ use PhpParser\Error;
 
 class ClassManifestErrorHandlerTest extends SapphireTest
 {
-    /**
-     * @expectedException \PhpParser\Error
-     * @expectedExceptionMessage my error in /my/path
-     */
     public function testIncludesPathname()
     {
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage('my error in /my/path');
         $h = new ClassManifestErrorHandler('/my/path');
         $e = new Error('my error');
         $h->handleError($e);

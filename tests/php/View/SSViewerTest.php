@@ -4,7 +4,7 @@ namespace SilverStripe\View\Tests;
 
 use Exception;
 use InvalidArgumentException;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\Controller;
@@ -25,6 +25,7 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\Requirements_Minifier;
+use SilverStripe\View\SSTemplateParseException;
 use SilverStripe\View\SSTemplateParser;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\SSViewer_FromString;
@@ -49,7 +50,7 @@ class SSViewerTest extends SapphireTest
         SSViewerTest\TestObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         SSViewer::config()->update('source_file_comments', false);
@@ -58,7 +59,7 @@ class SSViewerTest extends SapphireTest
         $this->oldServer = $_SERVER;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $_SERVER = $this->oldServer;
         TestAssetStore::reset();
@@ -221,7 +222,7 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirements()
     {
-        /** @var Requirements_Backend|PHPUnit_Framework_MockObject_MockObject $requirements */
+        /** @var Requirements_Backend|MockObject $requirements */
         $requirements = $this
             ->getMockBuilder(Requirements_Backend::class)
             ->setMethods(["javascript", "css"])
@@ -260,14 +261,14 @@ class SSViewerTest extends SapphireTest
         $testBackend->processCombinedFiles();
         $js = array_keys($testBackend->getJavascript());
         $combinedTestFilePath = Director::publicFolder() . reset($js);
-        $this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
+        $this->assertStringContainsString('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
         // and make sure the combined content matches the input content, i.e. no loss of functionality
         if (!file_exists($combinedTestFilePath)) {
             $this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
         }
         $combinedTestFileContents = file_get_contents($combinedTestFilePath);
-        $this->assertContains($jsFileContents, $combinedTestFileContents);
+        $this->assertStringContainsString($jsFileContents, $combinedTestFileContents);
     }
 
     public function testRequirementsMinification()
@@ -302,7 +303,7 @@ class SSViewerTest extends SapphireTest
         $testBackend->processCombinedFiles();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageRegExp('/^Cannot minify files without a minification service defined./');
+        $this->expectExceptionMessageMatches('/^Cannot minify files without a minification service defined./');
 
         $testBackend->setMinifyCombinedFiles(true);
         $testBackend->setMinifier(null);
@@ -377,12 +378,10 @@ SS;
         );
     }
 
-    /**
-     * @expectedException SilverStripe\View\SSTemplateParseException
-     * @expectedExceptionMessageRegExp /Malformed bracket injection {\$Value(.*)/
-     */
     public function testBasicInjectionMismatchedBrackets()
     {
+        $this->expectException(SSTemplateParseException::class);
+        $this->expectExceptionMessageMatches('/Malformed bracket injection {\$Value(.*)/');
         $this->render('A {$Value here');
         $this->fail("Parser didn't error when encountering mismatched brackets in an injection");
     }
@@ -954,7 +953,7 @@ after'
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-        $this->assertRegExp('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
+        $this->assertMatchesRegularExpression('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
 
         // HTML4 and 5 will only have it for IE
         $tmpl2 = '<!DOCTYPE html>
@@ -962,7 +961,7 @@ after'
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
             $this->render($tmpl2)
         );
@@ -973,7 +972,7 @@ after'
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
             $this->render($tmpl3)
         );
@@ -983,14 +982,14 @@ after'
 
         $response = new HTTPResponse($this->render($tmpl1));
         $negotiator->html($response);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
             $response->getBody()
         );
 
         $response = new HTTPResponse($this->render($tmpl1));
         $negotiator->xhtml($response);
-        $this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<head><base href=".*" \/><\/head>/', $response->getBody());
     }
 
     public function testIncludeWithArguments()
@@ -1707,7 +1706,7 @@ after'
                 );
 
                 // Let's throw something random in there.
-                $this->expectException(InvalidArgumentException::class);
+                $this->expectException(\InvalidArgumentException::class);
                 SSViewer::get_templates_by_class(null);
             }
         );
@@ -1753,23 +1752,23 @@ after'
             '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>'
         );
         $result = $tmpl->process($obj);
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<svg><use xlink:href="#sprite"></use></svg>',
             $result,
             'SSTemplateParser should only rewrite anchor hrefs'
@@ -1808,13 +1807,8 @@ after'
         $code = <<<'EOC'
 <a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
 EOC;
-        $this->assertContains($code, $result);
-        // TODO Fix inline links in PHP mode
-        // $this->assertContains(
-        //  '<a class="inline" href="<?php echo str_replace(',
-        //  $result
-        // );
-        $this->assertContains(
+        $this->assertStringContainsString($code, $result);
+        $this->assertStringContainsString(
             '<svg><use xlink:href="#sprite"></use></svg>',
             $result,
             'SSTemplateParser should only rewrite anchor hrefs'

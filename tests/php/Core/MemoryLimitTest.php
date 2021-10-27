@@ -12,7 +12,7 @@ class MemoryLimitTest extends SapphireTest
     protected $origMemLimit;
     protected $origTimeLimit;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +29,7 @@ class MemoryLimitTest extends SapphireTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (!in_array('suhosin', get_loaded_extensions())) {
             ini_set('memory_limit', $this->origMemLimit);
@@ -42,23 +42,26 @@ class MemoryLimitTest extends SapphireTest
 
     public function testIncreaseMemoryLimitTo()
     {
-        ini_set('memory_limit', '64M');
+        // ini_set('memory_limit', '64M');
+        // current memory usage in travis is 197M, can't ini_set this down to 64M
+        // Using a higher memory limit instead
+        ini_set('memory_limit', '230M');
         Environment::setMemoryLimitMax('256M');
 
         // It can go up
-        Environment::increaseMemoryLimitTo('128M');
-        $this->assertEquals('128M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo('240M');
+        $this->assertEquals('240M', ini_get('memory_limit'));
 
         // But not down
-        Environment::increaseMemoryLimitTo('64M');
-        $this->assertEquals('128M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo('220M');
+        $this->assertEquals('240M', ini_get('memory_limit'));
 
         // Test the different kinds of syntaxes
-        Environment::increaseMemoryLimitTo(1024*1024*200);
-        $this->assertEquals('200M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo(1024*1024*250);
+        $this->assertEquals('250M', ini_get('memory_limit'));
 
         Environment::increaseMemoryLimitTo('109600K');
-        $this->assertEquals('200M', ini_get('memory_limit'));
+        $this->assertEquals('250M', ini_get('memory_limit'));
 
         // Attempting to increase past max size only sets to max
         Environment::increaseMemoryLimitTo('1G');

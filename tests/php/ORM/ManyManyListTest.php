@@ -444,7 +444,7 @@ class ManyManyListTest extends SapphireTest
 
     public function testWriteManipulationWithNonScalarValuesDisallowed()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $left = DataObjectTest\MockDynamicAssignmentDataObject::create();
         $left->write();

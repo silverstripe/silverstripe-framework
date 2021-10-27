@@ -31,7 +31,7 @@ class RequirementsTest extends SapphireTest
 
     static $html_template = '<html><head></head><body></body></html>';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Director::config()->set('alternate_base_folder', __DIR__ . '/SSViewerTest');
@@ -43,7 +43,7 @@ class RequirementsTest extends SapphireTest
         $this->oldThemeResourceLoader = ThemeResourceLoader::inst();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ThemeResourceLoader::set_instance($this->oldThemeResourceLoader);
         TestAssetStore::reset();
@@ -67,14 +67,14 @@ class RequirementsTest extends SapphireTest
 
         $html = $backend->includeInHTML(self::$html_template);
 
-        $this->assertContains('http://www.mydomain.com/test.js', $html, 'Load external javascript URL');
-        $this->assertContains('https://www.mysecuredomain.com/test.js', $html, 'Load external secure javascript URL');
-        $this->assertContains('//scheme-relative.example.com/test.js', $html, 'Load external scheme-relative JS');
-        $this->assertContains('http://www.mydomain.com:3000/test.js', $html, 'Load external with port');
-        $this->assertContains('http://www.mydomain.com/test.css', $html, 'Load external CSS URL');
-        $this->assertContains('https://www.mysecuredomain.com/test.css', $html, 'Load external secure CSS URL');
-        $this->assertContains('//scheme-relative.example.com/test.css', $html, 'Load scheme-relative CSS URL');
-        $this->assertContains('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
+        $this->assertStringContainsString('http://www.mydomain.com/test.js', $html, 'Load external javascript URL');
+        $this->assertStringContainsString('https://www.mysecuredomain.com/test.js', $html, 'Load external secure javascript URL');
+        $this->assertStringContainsString('//scheme-relative.example.com/test.js', $html, 'Load external scheme-relative JS');
+        $this->assertStringContainsString('http://www.mydomain.com:3000/test.js', $html, 'Load external with port');
+        $this->assertStringContainsString('http://www.mydomain.com/test.css', $html, 'Load external CSS URL');
+        $this->assertStringContainsString('https://www.mysecuredomain.com/test.css', $html, 'Load external secure CSS URL');
+        $this->assertStringContainsString('//scheme-relative.example.com/test.css', $html, 'Load scheme-relative CSS URL');
+        $this->assertStringContainsString('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
     }
 
     /**
@@ -181,11 +181,11 @@ class RequirementsTest extends SapphireTest
         );
         $backend->javascript('javascript/RequirementsTest_b.js');
         $result = $backend->includeInHTML(self::$html_template);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<script type="application/json" src=".*/javascript/RequirementsTest_a.js#',
             $result
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<script type="application/javascript" src=".*/javascript/RequirementsTest_b.js#',
             $result
         );
@@ -204,7 +204,7 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(self::$html_template);
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*' . preg_quote($combinedFileName, '/') . '/',
             $html,
             'combined javascript file is included in html header'
@@ -217,31 +217,31 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
         /* COMBINED FILES ARE NOT INCLUDED TWICE */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_b\.js/',
             $html,
             'combined files are not included twice'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_c\.js/',
             $html,
             'combined files are not included twice'
         );
 
         /* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*\/RequirementsTest_a\.js/',
             $html,
             'normal requirements are still included'
@@ -255,7 +255,7 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(self::$html_template);
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*' . preg_quote($combinedFileName, '/') . '/',
             $html,
             'combined javascript file is included in html header'
@@ -268,24 +268,24 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
         /* COMBINED FILES ARE NOT INCLUDED TWICE */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_b\.js/',
             $html,
             'combined files are not included twice'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_c\.js/',
             $html,
             'combined files are not included twice'
@@ -305,14 +305,14 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(false, self::$html_template);
 
         /* ASYNC IS INCLUDED IN SCRIPT TAG */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*' . preg_quote($combinedFileName, '/') . '" async/',
             $html,
             'async is included in script tag'
         );
 
         /* DEFER IS NOT INCLUDED IN SCRIPT TAG */
-        $this->assertNotContains('defer', $html, 'defer is not included');
+        $this->assertStringNotContainsString('defer', $html, 'defer is not included');
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         clearstatcache(); // needed to get accurate file_exists() results
@@ -322,48 +322,48 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
         /* COMBINED FILES ARE NOT INCLUDED TWICE */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_b\.js/',
             $html,
             'combined files are not included twice'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_c\.js/',
             $html,
             'combined files are not included twice'
         );
 
         /* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*\/RequirementsTest_a\.js/',
             $html,
             'normal requirements are still included'
         );
 
         /* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async/',
             $html,
             'normal requirements don\'t have async'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/',
             $html,
             'normal requirements don\'t have defer'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/',
             $html,
             'normal requirements don\'t have async/defer'
@@ -379,14 +379,14 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(self::$html_template);
 
         /* DEFER IS INCLUDED IN SCRIPT TAG */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*' . preg_quote($combinedFileName, '/') . '" defer/',
             $html,
             'defer is included in script tag'
         );
 
         /* ASYNC IS NOT INCLUDED IN SCRIPT TAG */
-        $this->assertNotContains('async', $html, 'async is not included');
+        $this->assertStringNotContainsString('async', $html, 'async is not included');
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         clearstatcache(); // needed to get accurate file_exists() results
@@ -396,48 +396,48 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
         /* COMBINED FILES ARE NOT INCLUDED TWICE */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_b\.js/',
             $html,
             'combined files are not included twice'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_c\.js/',
             $html,
             'combined files are not included twice'
         );
 
         /* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*\/RequirementsTest_a\.js/',
             $html,
             'normal requirements are still included'
         );
 
         /* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async/',
             $html,
             'normal requirements don\'t have async'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/',
             $html,
             'normal requirements don\'t have defer'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/',
             $html,
             'normal requirements don\'t have async/defer'
@@ -453,7 +453,7 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(self::$html_template);
 
         /* ASYNC/DEFER IS INCLUDED IN SCRIPT TAG */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*' . preg_quote($combinedFileName, '/') . '" async="async" defer="defer"/',
             $html,
             'async and defer are included in script tag'
@@ -467,48 +467,48 @@ class RequirementsTest extends SapphireTest
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "alert('c')",
             file_get_contents($combinedFilePath),
             'combined javascript has correct content'
         );
 
         /* COMBINED FILES ARE NOT INCLUDED TWICE */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_b\.js/',
             $html,
             'combined files are not included twice'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_c\.js/',
             $html,
             'combined files are not included twice'
         );
 
         /* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*\/RequirementsTest_a\.js/',
             $html,
             'normal requirements are still included'
         );
 
         /* NORMAL REQUIREMENTS DON'T HAVE ASYNC/DEFER */
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async/',
             $html,
             'normal requirements don\'t have async'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" defer/',
             $html,
             'normal requirements don\'t have defer'
         );
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?m=\d+" async defer/',
             $html,
             'normal requirements don\'t have async/defer'
@@ -538,12 +538,12 @@ class RequirementsTest extends SapphireTest
 
         $html = $backend->includeInHTML(self::$html_template);
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/href=".*\/print\-69ce614\.css/',
             $html,
             'Print stylesheets have been combined.'
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/media="print/',
             $html,
             'Combined print stylesheet retains the media parameter'
@@ -573,7 +573,7 @@ class RequirementsTest extends SapphireTest
         );
 
         $html = $backend->includeInHTML(self::$html_template);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/href=".*\/style\-8011538\.css/',
             $html,
             'Stylesheets have been combined.'
@@ -593,8 +593,8 @@ class RequirementsTest extends SapphireTest
 
         clearstatcache(); // needed to get accurate file_exists() results
         $html = $backend->includeInHTML(self::$html_template);
-        $this->assertFileNotExists($combinedFilePath);
-        $this->assertNotRegExp(
+        $this->assertFileDoesNotExist($combinedFilePath);
+        $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_bc\.js/',
             $html,
             'blocked combined files are not included'
@@ -609,7 +609,7 @@ class RequirementsTest extends SapphireTest
         clearstatcache(); // needed to get accurate file_exists() results
         $backend->includeInHTML(self::$html_template);
         $this->assertFileExists($combinedFilePath2);
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             "alert('b')",
             file_get_contents($combinedFilePath2),
             'blocked uncombined files are not included'
@@ -621,7 +621,7 @@ class RequirementsTest extends SapphireTest
         clearstatcache(); // needed to get accurate file_exists() results
 
         // Exception generated from including invalid file
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             "Requirements_Backend::combine_files(): Already included file(s) %s in combined file '%s'",
             'javascript/RequirementsTest_c.js',
@@ -650,14 +650,14 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML(self::$html_template);
 
         /* Javascript has correct path */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/src=".*\/RequirementsTest_a\.js\?test=1&amp;test=2&amp;test=3&amp;m=\d\d+/',
             $html,
             'javascript has correct path'
         );
 
         /* CSS has correct path */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/href=".*\/RequirementsTest_a\.css\?test=1&amp;test=2&amp;test=3&amp;m=\d\d+/',
             $html,
             'css has correct path'
@@ -825,12 +825,12 @@ class RequirementsTest extends SapphireTest
 
         $backend->setWriteJavascriptToBody(false);
         $html = $backend->includeInHTML($template);
-        $this->assertContains('<head><script', $html);
+        $this->assertStringContainsString('<head><script', $html);
 
         $backend->setWriteJavascriptToBody(true);
         $html = $backend->includeInHTML($template);
-        $this->assertNotContains('<head><script', $html);
-        $this->assertContains("</script>\n</body>", $html);
+        $this->assertStringNotContainsString('<head><script', $html);
+        $this->assertStringContainsString("</script>\n</body>", $html);
     }
 
     public function testIncludedJsIsNotCommentedOut()
@@ -843,7 +843,7 @@ class RequirementsTest extends SapphireTest
         $html = $backend->includeInHTML($template);
         //wiping out commented-out html
         $html = preg_replace('/<!--(.*)-->/Uis', '', $html);
-        $this->assertContains("RequirementsTest_a.js", $html);
+        $this->assertStringContainsString("RequirementsTest_a.js", $html);
     }
 
     public function testCommentedOutScriptTagIsIgnored()
@@ -952,18 +952,18 @@ EOS
 
         $urlGenerator->setNonceStyle('mtime');
         $html = $backend->includeInHTML($template);
-        $this->assertRegExp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
-        $this->assertRegExp('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
-        $this->assertRegExp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
-        $this->assertRegExp('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
+        $this->assertMatchesRegularExpression('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
+        $this->assertMatchesRegularExpression('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
+        $this->assertMatchesRegularExpression('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
+        $this->assertMatchesRegularExpression('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
 
         $urlGenerator->setNonceStyle(null);
         $html = $backend->includeInHTML($template);
-        $this->assertNotContains('RequirementsTest_a.js=', $html);
-        $this->assertNotRegExp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
-        $this->assertNotRegExp('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
-        $this->assertNotRegExp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
-        $this->assertNotRegExp('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
+        $this->assertStringNotContainsString('RequirementsTest_a.js=', $html);
+        $this->assertDoesNotMatchRegularExpression('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
+        $this->assertDoesNotMatchRegularExpression('/RequirementsTest_b\.js\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
+        $this->assertDoesNotMatchRegularExpression('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
+        $this->assertDoesNotMatchRegularExpression('/RequirementsTest_b\.css\?foo=bar&amp;bla=blubb&amp;m=[\d]*"/', $html);
     }
 
     /**
@@ -997,9 +997,9 @@ EOS
             $backend->getProvidedScripts()
         );
         $html = $backend->includeInHTML($template);
-        $this->assertRegExp('/src=".*\/RequirementsTest_a\.js/', $html);
-        $this->assertRegExp('/src=".*\/RequirementsTest_b\.js/', $html);
-        $this->assertNotRegExp('/src=".*\/RequirementsTest_c\.js/', $html);
+        $this->assertMatchesRegularExpression('/src=".*\/RequirementsTest_a\.js/', $html);
+        $this->assertMatchesRegularExpression('/src=".*\/RequirementsTest_b\.js/', $html);
+        $this->assertDoesNotMatchRegularExpression('/src=".*\/RequirementsTest_c\.js/', $html);
 
         // Test that provided files block subsequent combined files
         $backend = Injector::inst()->create(Requirements_Backend::class);
@@ -1022,10 +1022,10 @@ EOS
             $backend->getProvidedScripts()
         );
         $html = $backend->includeInHTML($template);
-        $this->assertRegExp('/src=".*\/combined_a/', $html);
-        $this->assertRegExp('/src=".*\/RequirementsTest_b\.js/', $html);
-        $this->assertNotRegExp('/src=".*\/combined_c/', $html);
-        $this->assertNotRegExp('/src=".*\/RequirementsTest_c\.js/', $html);
+        $this->assertMatchesRegularExpression('/src=".*\/combined_a/', $html);
+        $this->assertMatchesRegularExpression('/src=".*\/RequirementsTest_b\.js/', $html);
+        $this->assertDoesNotMatchRegularExpression('/src=".*\/combined_c/', $html);
+        $this->assertDoesNotMatchRegularExpression('/src=".*\/RequirementsTest_c\.js/', $html);
     }
 
     /**
@@ -1198,14 +1198,14 @@ EOS
         $html = $backend->includeInHTML(self::$html_template);
 
         /* Javascript has correct attributes */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<script type="application/javascript" src=".*/javascript/RequirementsTest_a.js.*" integrity="abc" crossorigin="use-credentials"#',
             $html,
             'javascript has correct sri attributes'
         );
 
         /* CSS has correct attributes */
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<link .*href=".*/RequirementsTest_a\.css.*" integrity="def" crossorigin="anonymous"#',
             $html,
             'css has correct sri attributes'

@@ -308,11 +308,11 @@ class TreeDropdownFieldTest extends SapphireTest
         $field->setValue($fileMock->ID);
         $readonlyField = $field->performReadonlyTransformation();
         $result = (string) $readonlyField->Field();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<span class="readonly" id="TestTree">&lt;Special &amp; characters&gt;</span>',
             $result
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="hidden" name="TestTree" value="' . $fileMock->ID . '" />',
             $result
         );

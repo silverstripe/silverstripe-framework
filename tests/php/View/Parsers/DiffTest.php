@@ -75,7 +75,7 @@ class DiffTest extends SapphireTest
         $expected = "/^ *<del>$sentenceOne<\/del> *$sentenceTwo *<ins>$sentenceOne<\/ins> *$/";
         $actual = Diff::compareHTML($from, $to);
 
-        $this->assertRegExp($expected, $actual);
+        $this->assertMatchesRegularExpression($expected, $actual);
     }
 
     public function testDiffArray()
@@ -85,6 +85,6 @@ class DiffTest extends SapphireTest
         $expected = "/^Lorem,ipsum *<del>dolor<\/del> *$/";
         $actual = Diff::compareHTML($from, $to);
 
-        $this->assertRegExp($expected, $actual);
+        $this->assertMatchesRegularExpression($expected, $actual);
     }
 }

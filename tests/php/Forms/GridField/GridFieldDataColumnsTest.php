@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use InvalidArgumentException;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
@@ -41,11 +42,10 @@ class GridFieldDataColumnsTest extends SapphireTest
     /**
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGridFieldDisplayFieldsWithBadArguments()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new GridField('testfield', 'testfield', Member::get());
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields(new stdClass());
