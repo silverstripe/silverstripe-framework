@@ -18,7 +18,7 @@ class HasManyList extends RelationList
     /**
      * Create a new HasManyList object.
      * Generation of the appropriate record set is left up to the caller, using the normal
-     * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
+     * {@link DataList} methods.  Addition arguments are used to support {@link add()}
      * and {@link remove()} methods.
      *
      * @param string $dataClass The class of the DataObjects that this will list.

@@ -20,7 +20,7 @@ class GroupTest extends FunctionalTest
         TestMember::class
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -164,7 +164,7 @@ class GroupTest extends FunctionalTest
      */
     public function testCannotCollateUnsavedGroupFamilyIds()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot call collateFamilyIDs on unsaved Group.');
         $group = new Group;
         $group->collateFamilyIDs();

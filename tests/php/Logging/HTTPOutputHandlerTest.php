@@ -12,7 +12,7 @@ use SilverStripe\Logging\HTTPOutputHandler;
 
 class HTTPOutputHandlerTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

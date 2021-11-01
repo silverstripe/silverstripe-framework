@@ -48,8 +48,8 @@ class FixtureBlueprint
     ];
 
     /**
-     * @param String $name
-     * @param String $class Defaults to $name
+     * @param string $name
+     * @param string $class Defaults to $name
      * @param array $defaults
      */
     public function __construct($name, $class = null, $defaults = [])

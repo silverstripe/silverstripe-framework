@@ -5,11 +5,11 @@ sl_SI:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
   SilverStripe\Forms\DateField:
-    VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
+    VALIDDATEFORMAT2: 'Vnesite veljavno obliko datuma ({format})'
   SilverStripe\Forms\DropdownField:
-    CHOOSE: (Izberi)
+    CHOOSE: (Izberite)
   SilverStripe\Forms\EmailField:
-    VALIDATION: 'Prosimo vtipkajte e-poštni naslov'
+    VALIDATION: 'Vnesite e-naslov'
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvozi v CSV'
@@ -53,7 +53,6 @@ sl_SI:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
     FIRSTNAME: Ime
-    KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
     LOGGEDINAS: 'Prijavljeni ste kot {name}.'
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo

@@ -476,7 +476,7 @@ class Group extends DataObject
     /**
      * Overloaded to ensure the code is always descent.
      *
-     * @param string
+     * @param string $val
      */
     public function setCode($val)
     {

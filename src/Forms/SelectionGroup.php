@@ -101,6 +101,7 @@ class SelectionGroup extends CompositeField
                         'name' => $this->name,
                         'value' => $item->getValue(),
                         'checked' => $checked,
+                        'disabled' => $item->isDisabled()
                     ]
                 )),
                 "RadioLabel" => $item->getTitle(),

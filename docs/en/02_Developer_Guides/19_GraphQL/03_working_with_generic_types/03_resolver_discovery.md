@@ -22,21 +22,42 @@ an explicit resolver and allow the system to discover one for you based on namin
 
 Let's start by registering a resolver class(es) where we can define a bunch of these functions.
 
+**app/_graphql/config.yml**
 ```yaml
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\GraphQL\Schema\Registry\ResolverRegistry:
-    constructor:
-      myResolver: '%$MyProject\Resolvers\MyResolvers'
+resolvers:
+  - MyProject\Resolvers\MyResolvers
 ```
 
-What we're registering here is called a `ResolverProvider`, and it must implement that interface.
-The only thing this class is obliged to do is return a method name for a resolver given a type name and
-`Field` object. If the class does not contain a resolver for that combination, it may return null and
-defer to other resolver providers, or ultimately fallback on the global default resolver.
+What we're registering here is a generic class that should contain one or more static functions that resolve one
+or many fields. How those functions will be discovered relies on the _resolver strategy_.
+
+### Resolver strategy
+
+Each schema config accepts a `resolverStrategy` property. This should map to a callable that will return
+a method name given a class name, type name, and `Field` instance.
 
 ```php
-public static function getResolverMethod(?string $typeName = null, ?Field $field = null): ?string;
+public static function getResolverMethod(string $className, ?string $typeName = null, ?Field $field = null): ?string;
 ```
+
+#### The default resolver strategy
+
+By default, all schemas use `SilverStripe\GraphQL\Schema\Resolver\DefaultResolverStrategy::getResolerMethod`
+to discover resolver functions. The logic works like this:
+
+* Does `resolve<TypeName><FieldName>` exist?
+  * Yes? Invoke
+  * No? Continue
+* Does `resolve<TypeName>` exist?
+  * Yes? Invoke
+  * No? Continue
+* Does `resolve<FieldName>` exist?
+  * Yes? Invoke
+  * No? Continue
+* Does `resolve` exist?
+  * Yes? Invoke
+  * No? Return null. This resolver cannot be discovered
+
 
 Let's look at our query again:
 
@@ -48,31 +69,33 @@ query {
 }
 ```
 
-An example implementation of this method for our example might be:
+Imagine we have two classes registered under `resolvers` -- `ClassA` and `ClassB`
 
-* Does `resolveCountryName` exist?
-  * Yes? Invoke
-  * No? Continue
-* Does `resolveCountry` exist?
-  * Yes? Invoke
-  * No? Continue
-* Does `resolveName` exist?
-  * Yes? Invoke
-  * No? Continue
-* Return null. Maybe someone else knows how to deal with this.
+The logic will go like this:
 
-You can implement whatever logic you like to help the resolver provider discover which of its methods
-it appropriate for the given type/field combination, but since the above pattern seems like a pretty common
-implementation, the module ships an abstract `DefaultResolverProvider` that applies this logic. You can just
-write the resolver methods!
+* `ClassA::resolveCountryName`
+* `ClassA::resolveCountry`
+* `ClassA::resolveName`
+* `ClassA::resolve`
+* `ClassB::resolveCountryName`
+* `ClassB::resolveCountry`
+* `ClassB::resolveName`
+* `ClassB::resolve`
+* Return null.
+
+You can implement whatever strategy you like in your schema. Just register it to `resolverStrategy` in the config.
+
+**app/_graphql/config.yml**
+```yaml
+resolverStrategy: [ 'MyApp\Resolvers\Strategy', 'getResolverMethod' ]
+```
 
 Let's add a resolver method to our resolver provider:
 
 **app/src/Resolvers/MyResolvers.php**
 ```php
-use SilverStripe\GraphQL\Schema\Resolver\DefaultResolverProvider;
 
-class MyResolvers extends DefaultResolverProvider
+class MyResolvers
 {
     public static function resolveReadCountries()
     {
@@ -89,14 +112,6 @@ class MyResolvers extends DefaultResolverProvider
     }
 }
 ```
-
-To recap, the `DefaultResolverProvider` will follow this workflow to locate a resolver
-for this query:
-
-* `resolveQueryReadCountries()` (<typeName><fieldName>)
-* `resolveQuery()` (<typeName>)
-* `resolveReadCountries()` (<fieldName>)
-* `resolve` (catch-all)
 
 
 Now that we're using logic to discover our resolver, we can clean up the config a bit.

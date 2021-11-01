@@ -63,7 +63,7 @@ class Page extends SiteTree
         'MyShortCodeMethod' => 'HTMLText'
     ];
 
-    public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName) 
+    public static function MyShortCodeMethod($arguments, $content = null, $parser = null, $tagName = null) 
     {
         return "<em>" . $tagName . "</em> " . $content . "; " . count($arguments) . " arguments.";
     }
@@ -95,7 +95,7 @@ ShortcodeParser::get('default')->register('my_shortcode', ['Page', 'MyShortCodeM
 
 ## Built-in Shortcodes
 
-SilverStripe comes with several shortcode parsers already.
+Silverstripe CMS comes with several shortcode parsers already.
 
 ### Links
 

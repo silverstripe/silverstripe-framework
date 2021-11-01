@@ -6,7 +6,7 @@ icon: envelope
 
 # Testing Email within Unit Tests
 
-SilverStripe's test system has built-in support for testing emails sent using the [Email](api:SilverStripe\Control\Email\Email) class. If you are 
+Silverstripe CMS's test system has built-in support for testing emails sent using the [Email](api:SilverStripe\Control\Email\Email) class. If you are 
 running a [SapphireTest](api:SilverStripe\Dev\SapphireTest) test, then it holds off actually sending the email, and instead lets you assert that an 
 email was sent using this method.
 

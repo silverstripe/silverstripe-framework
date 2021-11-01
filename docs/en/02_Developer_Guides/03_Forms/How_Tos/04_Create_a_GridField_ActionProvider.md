@@ -134,7 +134,7 @@ First thing to note is that our new class implements two interfaces,
 Each interface allows our class to define particular behaviors and is a core
 concept of the modular `GridFieldConfig` system.
 
-The `GridField_ColumnProvider` implementation tells SilverStripe that this class
+The `GridField_ColumnProvider` implementation tells Silverstripe CMS that this class
 will provide the `GridField` with an additional column of information. By
 implementing this interface we're required to define several methods to explain
 where we want the column to exist and how we need it to be formatted. This is

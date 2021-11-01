@@ -14,7 +14,7 @@ use LogicException;
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.
  */
-class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
     use Configurable;
 
@@ -140,13 +140,15 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
      */
     protected function getGridPagerState(GridField $gridField)
     {
-        $state = $gridField->State->GridFieldPaginator;
+        return $gridField->State->GridFieldPaginator;
+    }
 
-        // Force the state to the initial page if none is set
-        $state->currentPage(1);
-        $state->itemsPerPage($this->getItemsPerPage());
-
-        return $state;
+    public function initDefaultState(GridState_Data $data): void
+    {
+        $data->GridFieldPaginator->initDefaults([
+            'currentPage' => 1,
+            'itemsPerPage' => $this->getItemsPerPage()
+        ]);
     }
 
     /**

@@ -259,7 +259,7 @@ class DatetimeField extends TextField
      * This can be set explicitly. If not, this will be generated from the current locale
      * with the current date length.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
     public function getDatetimeFormat()
     {
@@ -275,7 +275,7 @@ class DatetimeField extends TextField
      * Set date format in CLDR standard format.
      * Only applicable with {@link setHTML5(false)}.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      * @param string $format
      * @return $this
      */
@@ -288,7 +288,7 @@ class DatetimeField extends TextField
     /**
      * Get a date formatter for the ISO 8601 format
      *
-     * @param String $timezone Optional timezone identifier (defaults to server timezone)
+     * @param string $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
     protected function getInternalFormatter($timezone = null)

@@ -31,7 +31,7 @@ class MarkedSetTest extends SapphireTest
         return [];
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -382,9 +382,9 @@ EOT;
 
 
     /**
-     * @param String $html    [description]
+     * @param string $html    [description]
      * @param array  $nodes   Breadcrumb path as array
-     * @param String $message
+     * @param string $message
      */
     protected function assertTreeContains($html, $nodes, $message = null)
     {
@@ -398,9 +398,9 @@ EOT;
     }
 
     /**
-     * @param String $html    [description]
+     * @param string $html    [description]
      * @param array  $nodes   Breadcrumb path as array
-     * @param String $message
+     * @param string $message
      */
     protected function assertTreeNotContains($html, $nodes, $message = null)
     {

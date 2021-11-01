@@ -10,7 +10,7 @@ use SilverStripe\Security\Member;
 
 class DBTimeTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -48,12 +48,12 @@ class DBTimeTest extends SapphireTest
     public function testNice()
     {
         $time = DBTime::create_field('Time', '17:15:55');
-        $this->assertRegexp('#5:15:55 PM#i', $time->Nice());
+        $this->assertMatchesRegularExpression('#5:15:55 PM#i', $time->Nice());
     }
 
     public function testShort()
     {
         $time = DBTime::create_field('Time', '17:15:55');
-        $this->assertRegexp('#5:15 PM#i', $time->Short());
+        $this->assertMatchesRegularExpression('#5:15 PM#i', $time->Short());
     }
 }

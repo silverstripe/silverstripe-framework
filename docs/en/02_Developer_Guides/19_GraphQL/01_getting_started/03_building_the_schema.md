@@ -35,11 +35,11 @@ The task that generates the schema code is `build-schema`. It takes a parameter 
 
 Keep in mind that many of your changes will be in YAML, which also requires a flush.
 
-`$ vendor/bin/sake dev/graphql/build schema=default flush=1
+`$ vendor/bin/sake dev/graphql/build schema=default flush=1`
 
 [info]
 If you do not provide a `schema` parameter, the task will build all schemas.
-[/info]`
+[/info]
 
 ### Building on dev/build
 
@@ -60,7 +60,7 @@ for initial builds and deployments, but during incremental development this can 
 slow things down.
 
 To mitigate this, the generated code for each type is cached against a signature.
-If the type hasn't changed, it doesn't re-render. This reduces build times to **under one second** for incremental changes.
+If the type hasn't changed, it doesn't re-render. This reduces build times to **under one second** for incremental changes. 
 
 #### Clearing the cache
 
@@ -81,10 +81,22 @@ tangential changes such as:
 * Adding a new resolver for a type that uses [resolver discovery](../working_with_generic_types/resolver_discovery)
 * Adding an extension to a DataObject
 * Adding a new subclass to a DataObject that is already exposed
+* If you are using Silverstripe CMS **without the [silverstripe/assets](https://github.com/silverstripe/silverstripe-assets) module installed, the build task will leave a `.graphql` file artefact in your public directory for CMS reference.
+Though it doesn't contain any highly sensitive data, we recommend you block this file from being viewed by outside
+  traffic.
+  
+
 
 ### Viewing the generated code
 
-TODO, once we figure out where it will go
+By default, the generated code is placed in the `.graphql/` directory in the root of your project.
+It is not meant to be accessible through your webserver (which is ensured by dot-prefixing)
+and keeping it outside of the `public/` webroot. 
+
+Additional files are generated for CMS operation in `public/_graphql/`, and
+those are meant to be accessible through your webserver.
+See [Tips and Tricks: Schema Introspection](tips_and_tricks#schema-introspection)
+to find out how to generate these files for your own schema.
 
 
 ### Further reading

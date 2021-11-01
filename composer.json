@@ -30,17 +30,16 @@
         "monolog/monolog": "~1.16",
         "nikic/php-parser": "^3 || ^4",
         "psr/container": "1.0.0",
-        "psr/container-implementation": "1.0.0",
         "silverstripe/config": "^1@dev",
         "silverstripe/assets": "^1@dev",
         "silverstripe/vendor-plugin": "^1.4",
         "sminnee/callbacklist": "^0.1",
-        "swiftmailer/swiftmailer": "~5.4",
+        "swiftmailer/swiftmailer": "^6.2",
         "symfony/cache": "^3.3 || ^4",
         "symfony/config": "^3.2 || ^4",
         "symfony/translation": "^2.8 || ^3 || ^4",
         "symfony/yaml": "^3.2 || ^4",
-        "php": "^7.1 || ^8",
+        "php": "^7.3 || ^8",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-hash": "*",
@@ -53,10 +52,13 @@
         "ext-xml": "*"
     },
     "require-dev": {
-        "sminnee/phpunit": "^5.7.29",
-        "sminnee/phpunit-mock-objects": "^3.4.9",
+        "phpunit/phpunit": "^9.5",
+        "dms/phpunit-arraysubset-asserts": "^0.3.0",
         "silverstripe/versioned": "^1",
         "squizlabs/php_codesniffer": "^3.5"
+    },
+    "conflict": {
+        "phpunit/phpunit": "^6 || ^7 || ^8"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
@@ -91,6 +93,9 @@
         },
         "files": [
             "src/includes/constants.php"
+        ],
+        "classmap": [
+            "thirdparty/swiftmailer"
         ]
     },
     "include-path": [

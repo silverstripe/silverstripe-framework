@@ -3,8 +3,11 @@
 namespace SilverStripe\Forms\GridField;
 
 use Closure;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extensible;
@@ -12,6 +15,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 
@@ -69,6 +73,12 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $itemRequestClass;
 
     /**
+     * If true, will redirect to missing records if they are found elsewhere
+     * @var bool
+     */
+    protected $redirectMissingRecords = false;
+
+    /**
      * @var callable With two parameters: $form and $component
      */
     protected $itemEditFormCallback;
@@ -113,6 +123,17 @@ class GridFieldDetailForm implements GridField_URLHandler
         $requestHandler = $gridField->getForm()->getController();
         $record = $this->getRecordFromRequest($gridField, $request);
         if (!$record) {
+            // Look for the record elsewhere in the CMS
+            $redirectDest = $this->getLostRecordRedirection($gridField, $request);
+            // Don't allow infinite redirections
+            if ($redirectDest) {
+                // Mark the remainder of the URL as parsed to trigger an immediate redirection
+                while (!$request->allParsed()) {
+                    $request->shift();
+                }
+                return (new HTTPResponse())->redirect($redirectDest);
+            }
+
             return $requestHandler->httpError(404, 'That record was not found');
         }
         $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
@@ -146,6 +167,50 @@ class GridFieldDetailForm implements GridField_URLHandler
         }
 
         return $record;
+    }
+
+    /**
+     * Try and find another URL at which the given record can be edited.
+     * If redirectMissingRecords is true and the record has a CMSEditLink method, that value will be returned.
+     * This only works when the list passed to the GridField is a {@link DataList}.
+     *
+     * @param $gridField The current GridField
+     * @param $id The ID of the DataObject to open
+     */
+    public function getLostRecordRedirection(GridField $gridField, HTTPRequest $request, ?int $id = null): ?string
+    {
+
+        if (!$this->redirectMissingRecords) {
+            return null;
+        }
+
+        // If not supplied, look up the ID from the request
+        if ($id === null && is_numeric($request->param('ID'))) {
+            $id = (int)$request->param('ID');
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        $list = $gridField->getList();
+        if (!$list instanceof DataList) {
+            throw new \LogicException('List is not of type DataList, cannot determine redirection target');
+        }
+
+        $existing = DataObject::get($list->dataClass())->byID($id);
+        if ($existing && $existing->hasMethod('CMSEditLink')) {
+            $link = $existing->CMSEditLink();
+        }
+
+        if ($link && $link == $request->getURL()) {
+            throw new \LogicException(sprintf(
+                'Infinite redirection to "%s" detected in GridFieldDetailForm->getLostRecordRedirection()',
+                $link
+            ));
+        }
+
+        return $link;
     }
 
     /**
@@ -207,6 +272,28 @@ class GridFieldDetailForm implements GridField_URLHandler
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Enable redirection to missing records.
+     *
+     * If a GridField shows a filtered list, and the DataObject is not in the list but exists in the
+     * database, and the DataObject has a CMSEditLink method, then the system will redirect to the
+     * URL returned by that method.
+     */
+    public function setRedirectMissingRecords(bool $redirectMissingRecords): self
+    {
+        $this->redirectMissingRecords = $redirectMissingRecords;
+        return $this;
+    }
+
+    /**
+     * Return the status of redirection to missing records.
+     * @see setRedirectMissingRecordssetRedirectMissingRecords
+     */
+    public function getRedirectMissingRecords(): bool
+    {
+        return $this->redirectMissingRecords;
     }
 
     /**

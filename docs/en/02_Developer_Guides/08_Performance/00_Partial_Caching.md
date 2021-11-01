@@ -1,6 +1,6 @@
 ---
 title: Partial Caching
-summary: Cache SilverStripe templates to reduce database queries.
+summary: Cache Silverstripe CMS templates to reduce database queries.
 icon: tachometer-alt
 ---
 

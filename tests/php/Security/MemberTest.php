@@ -27,6 +27,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
+use SilverStripe\SessionManager\Models\LoginSession;
 
 class MemberTest extends FunctionalTest
 {
@@ -38,7 +39,7 @@ class MemberTest extends FunctionalTest
         Member::class => '*',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -62,7 +63,7 @@ class MemberTest extends FunctionalTest
     /**
      * @skipUpgrade
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -103,11 +104,10 @@ class MemberTest extends FunctionalTest
         $m2->write();
     }
 
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWriteDoesntMergeExistingMemberOnIdentifierChange()
     {
+        $this->expectException(ValidationException::class);
+
         $m1 = new Member();
         $m1->Email = 'member@test.com';
         $m1->write();
@@ -255,7 +255,7 @@ class MemberTest extends FunctionalTest
         $this->assertEquals($response->getStatusCode(), 302);
 
         // We should get redirected to Security/passwordsent
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Security/lostpassword/passwordsent',
             urldecode($response->getHeader('Location'))
         );
@@ -1010,7 +1010,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         $this->logOut();
 
@@ -1024,7 +1024,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
 
         $response = $this->get(
             'Security/login',
@@ -1035,7 +1035,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => str_rot13($firstHash->DeviceID)
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
 
         // Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option
         // should remove all previous hashes for this device
@@ -1053,7 +1053,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
         $this->assertEquals(RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(), 0);
     }
 
@@ -1090,7 +1090,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         $this->logOut();
 
@@ -1111,7 +1111,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
         $this->logOut();
         DBDatetime::clear_mock_now();
     }
@@ -1166,7 +1166,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         // Test that removing session but not cookie keeps user
         /** @var SessionAuthenticationHandler $sessionHandler */
@@ -1184,7 +1184,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $secondHash->DeviceID
             ]
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         // Logging out from the second device - only one device being logged out
         RememberLoginHash::config()->update('logout_across_devices', false);
@@ -1198,18 +1198,21 @@ class MemberTest extends FunctionalTest
             ]
         );
         $this->assertEquals(
-            RememberLoginHash::get()->filter(['MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID])->count(),
-            1
+            1,
+            RememberLoginHash::get()->filter(['MemberID'=>$m1->ID, 'DeviceID'=>$firstHash->DeviceID])->count()
         );
 
-        // Logging out from any device when all login hashes should be removed
-        RememberLoginHash::config()->update('logout_across_devices', true);
-        Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
-        $this->get('Security/logout', $this->session());
-        $this->assertEquals(
-            RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(),
-            0
-        );
+        // If session-manager module is installed then logout_across_devices is modified so skip
+        if (!class_exists(LoginSession::class)) {
+            // Logging out from any device when all login hashes should be removed
+            RememberLoginHash::config()->update('logout_across_devices', true);
+            Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
+            $this->get('Security/logout', $this->session());
+            $this->assertEquals(
+                0,
+                RememberLoginHash::get()->filter('MemberID', $m1->ID)->count()
+            );
+        }
     }
 
     public function testCanDelete()
@@ -1592,5 +1595,24 @@ class MemberTest extends FunctionalTest
         $member->Surname = 'Johnson';
 
         $this->assertSame('Johnson', $member->getLastName(), 'getLastName should proxy to Surname');
+    }
+
+    public function testEmailIsTrimmed()
+    {
+        $member = new Member();
+        $member->Email = " trimmed@test.com\r\n";
+        $member->write();
+        $this->assertNotNull(Member::get()->find('Email', 'trimmed@test.com'));
+    }
+
+    public function testChangePasswordToBlankIsValidated()
+    {
+        Member::set_password_validator(new PasswordValidator());
+        // override setup() function which setMinLength(0)
+        PasswordValidator::singleton()->setMinLength(8);
+        // 'test' member has a password defined in yml
+        $member = $this->objFromFixture(Member::class, 'test');
+        $result = $member->changePassword('');
+        $this->assertFalse($result->isValid());
     }
 }

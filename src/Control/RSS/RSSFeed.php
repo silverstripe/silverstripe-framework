@@ -244,7 +244,7 @@ class RSSFeed extends ViewableData
      * Set the name of the template to use. Actual template will be resolved
      * via the standard template inclusion process.
      *
-     * @param string
+     * @param string $template
      */
     public function setTemplate($template)
     {

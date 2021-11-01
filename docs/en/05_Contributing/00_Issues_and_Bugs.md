@@ -73,7 +73,7 @@ from the [wider module ecosystem](https://addons.silverstripe.org).
 In order to only show issues and pull requests relevant to your project,
 we've written a little [composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util)
 which inspects your own `composer.lock` file dependencies,
-and searches across all Silverstripe modules in there.
+and searches across all Silverstripe CMS modules in there.
 
 After [installing the composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util),
 use this command to pass through a lock file, and get a URL to open in your favourite browser.

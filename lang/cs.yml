@@ -134,7 +134,6 @@ cs:
     ERRORWRONGCRED: 'Poskytnuté detaily vypadají být nesprávné. Prosím zkuste to znovu.'
     FIRSTNAME: 'Křestní jméno'
     INTERFACELANG: 'Jazyk rozhraní'
-    KEEPMESIGNEDIN: 'Drž mě přihlášeného'
     LOGGEDINAS: 'Jste přihlášen/a jako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo

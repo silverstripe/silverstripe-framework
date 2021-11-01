@@ -6,7 +6,7 @@ icon: text-width
 
 # WYSIWYG Styles
 
-SilverStripe lets you customise the style of content in the CMS. This is done by setting up a CSS file called
+Silverstripe CMS lets you customise the style of content in the CMS. This is done by setting up a CSS file called
 `editor.css` in either your theme or in your `app/` folder. This is set through yaml config:
 
 ```yaml

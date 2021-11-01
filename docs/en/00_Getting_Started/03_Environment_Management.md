@@ -12,8 +12,8 @@ server.
 For each of these environments we may require slightly different configurations for our servers. This could be our debug
 level, caching backends, or - of course - sensitive information such as database credentials.
 
-To manage environment variables, as well as other server globals, the [api:SilverStripe\Core\Environment] class
-provides a set of APIs and helpers.
+To manage environment variables, as well as other server globals, the [api:SilverStripe\Core\Environment] class provides
+a set of APIs and helpers.
 
 ## Security considerations
 
@@ -24,22 +24,25 @@ environment variables.
 If you do use a `.env` file on your servers, you must ensure that external access to `.env` files is blocked by the
 webserver.
 
-## Managing environment variables with `.env` files
+## Managing environment variables with .env files
 
-By default a file named `.env` must be placed in your project root (ie: the same folder as your `composer.json`) or the parent
-directory. If this file exists, it will be automatically loaded by the framework and the environment variables will be
-set. An example `.env` file is included in the default installer named `.env.example`.
+By default a file named `.env` must be placed in your project root (ie: the same folder as your `composer.json`) or the
+parent directory. If this file exists, it will be automatically loaded by the framework and the environment variables
+will be set. An example `.env` file is included in the default installer named `.env.example`.
 
-**Note:** The file must be named exactly `.env` and not any variation (such as `mysite.env` or `.env.mysite`) or it will not be detected automatically. If you wish to load environment variables from a file with a different name, you will need to do so manually. See the [Including an extra `.env` file](#including-an-extra-env-file) section below for more information.
+**Note:** The file must be named exactly `.env` and not any variation (such as `mysite.env` or `.env.mysite`) or it will
+not be detected automatically. If you wish to load environment variables from a file with a different name, you will
+need to do so manually. See the [Including an extra `.env` file](#including-an-extra-env-file) section below for more
+information.
 
 ## Managing environment variables with Apache
 
 You can set "real" environment variables using Apache. Please
-[see the Apache docs for more information](https://httpd.apache.org/docs/current/env.html)
+[see the Apache docs for more information](https://httpd.apache.org/docs/current/env.html).
 
 ## How to access the environment variables
 
-Accessing the environment varaibles should be done via the `Environment::getEnv()` method
+Accessing the environment variables should be done via the `Environment::getEnv()` method.
 
 ```php
 use SilverStripe\Core\Environment;
@@ -59,23 +62,22 @@ To use environment variables in `.yaml` configs you can reference them using bac
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  MyServiceClass:
-    properties:
-      MyProperty: '`ENV_VAR_HERE`'
+    MyServiceClass:
+        properties:
+            MyProperty: '`ENV_VAR_HERE`'
 ```
 
 [info]
 Environment variables cannot be used outside of Injector config as of version 4.2.
 [/info]
 
-
-## Including an extra `.env` file
+## Including an extra .env file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
 database credentials could be the same. To do this, you can add this snippet to your `app/_config.php` file:
 
-Note that by default variables cannot be overloaded from this file; Existing values will be preferred
-over values in this file.
+Note that by default variables cannot be overloaded from this file; Existing values will be preferred over values in
+this file.
 
 ```php
 use SilverStripe\Core\EnvironmentLoader;
@@ -86,7 +88,7 @@ $loader->loadFile($env);
 
 ## Core environment variables
 
-SilverStripe core environment variables are listed here, though you're free to define any you need for your application.
+Silverstripe core environment variables are listed here, though you're free to define any you need for your application.
 
 | Name  | Description |
 | ----  | ----------- |
@@ -99,12 +101,12 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_PREFIX`|   A prefix to add to the database name.|
 | `SS_DATABASE_TIMEZONE`| Set the database timezone to something other than the system timezone.
 | `SS_DATABASE_NAME` | Set the database name. Assumes the `$database` global variable in your config is missing or empty. |
-| `SS_DATABASE_CHOOSE_NAME`| Boolean/Int.  If defined, then the system will choose a default database name for you if one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to alter any files.  This helps prevent accidental changes to the environment. If `SS_DATABASE_CHOOSE_NAME` is an integer greater than one, then an ancestor folder will be used for the  database name.  This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build. If it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.|
+| `SS_DATABASE_CHOOSE_NAME`| Boolean/Int. If defined, then the system will choose a default database name for you if one isn't give in the $database variable. The database name will be "SS_" followed by the name of the folder into which you have installed Silverstripe. If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to alter any files. This helps prevent accidental changes to the environment. If `SS_DATABASE_CHOOSE_NAME` is an integer greater than one, then an ancestor folder will be used for the  database name. This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build. If it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.|
 | `SS_DEPRECATION_ENABLED` | Enable deprecation notices for this environment.|
 | `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
 | `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin. This is a user with administrative privileges.|
 | `SS_DEFAULT_ADMIN_PASSWORD`| The password of the default admin. This will not be stored in the database.|
-| `SS_USE_BASIC_AUTH`| Baseline protection for requests handled by SilverStripe. Usually requires additional security measures for comprehensive protection. See [Environment Types](/developer_guides/debugging/environment_types) for caveats.|
+| `SS_USE_BASIC_AUTH`| Baseline protection for requests handled by Silverstripe. Usually requires additional security measures for comprehensive protection. See [Environment Types](/developer_guides/debugging/environment_types) for caveats.|
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you define this constant, all emails will be sent from this address.|
 | `SS_ERROR_LOG` | Relative path to the log file. |
@@ -120,3 +122,6 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
 | `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |
 | `SS_FLUSH_ON_DEPLOY` | Try to detect deployments through file system modifications and flush on the first request after every deploy. Does not run "dev/build", but only "flush". Possible values are `true` (check for a framework PHP file modification time), `false` (no checks, skip deploy detection) or a path to a specific file or folder to be checked. See [DeployFlushDiscoverer](api:SilverStripe\Core\Startup\DeployFlushDiscoverer) for more details.<br /><br />False by default. |
+
+Note: A few additional PHP constants can be configured through a custom `index.php` rather than environment variables - see [constants.php](https://github.com/silverstripe/silverstripe-framework/blob/4/src/includes/constants.php) for details.
+Most notably, `TEMP_PATH` can be set as file storage used for the default cache adapters in [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching) and [Partial Template Caching](/developer_guides/templates/partial_template_caching). It defaults to PHP's built-in `sys_get_temp_dir()`.

@@ -6,7 +6,7 @@ icon: code
 
 # Modules
 
-SilverStripe is designed to be a modular application system - even the CMS is simply a module that plugs into the core
+Silverstripe CMS is designed to be a modular application system - even the CMS is simply a module that plugs into the core
 framework.
 
 A module is a collection of classes, templates, and other resources that is loaded into a directory.
@@ -30,7 +30,7 @@ vendor/my_vendor/my_module/
 
 Like with any Composer package, we recommend declaring your PHP classes through
 [PSR autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading).
-SilverStripe will automatically discover templates and configuration settings
+Silverstripe CMS will automatically discover templates and configuration settings
 within your module when you next flush your cache.
 
 
@@ -44,7 +44,7 @@ within your module when you next flush your cache.
 
 Modules are installed through the [Composer](http://getcomposer.org) package manager. It
 enables you to install modules from specific versions, checking for compatibilities between modules and even allowing
-to track development branches of them. To install modules using this method, you will first need to setup SilverStripe
+to track development branches of them. To install modules using this method, you will first need to setup Silverstripe CMS
 with [Composer](../../getting_started/composer).
 
 Each module has a unique identifier, consisting of a vendor prefix and name. For example, the "blog" module has the
@@ -73,7 +73,7 @@ After you add or remove modules, make sure you rebuild the database, class and c
 ## Creating a Module {#create}
 
 Creating a module is a good way to re-use code and templates across multiple projects,
-or share your code with the community. SilverStripe already
+or share your code with the community. Silverstripe CMS already
 has certain modules included, for example the `cms` module and core functionality such as commenting and spam protection
 are also abstracted into modules allowing developers the freedom to choose what they want.
 
@@ -83,10 +83,10 @@ read more about [publishing a module](how_tos/publish_a_module).
 
 ## Module Standard
 
-The SilverStripe module standard defines a set of conventions that high-quality SilverStripe modules should follow. It’s a bit like PSR for SilverStripe CMS. Suggested improvements can be raised as pull requests.
+The Silverstripe CMS module standard defines a set of conventions that high-quality Silverstripe CMS modules should follow. It’s a bit like PSR for Silverstripe CMS. Suggested improvements can be raised as pull requests.
 This standard is also part of the more highlevel
 [Supported Modules Definition](https://www.silverstripe.org/software/addons/supported-modules-definition/)
-which the SilverStripe project applies to the modules it creates and maintains directly.
+which the Silverstripe CMS project applies to the modules it creates and maintains directly.
 
 ### Coding Guidelines
 
@@ -119,7 +119,7 @@ Documentation will use the following format:
    * Security, license, links to more detailed docs.
  * CONTRIBUTING.md explaining terms of contribution.
  * A changelog: CHANGELOG.md (may link to other more detailed docs or GitHub releases if you want). You could [use a changelog generator](https://github.com/skywinder/Github-Changelog-Generator) to help create this.
- * Has a licence (`LICENSE` file) - for SilverStripe supported this needs to be BSD.
+ * Has a licence (`LICENSE` file) - for Silverstripe CMS supported this needs to be BSD.
  * Detailed documentation in `/docs/en` as a nested set of GitHub-compatible Markdown files.
  * It is suggested to use a documentation page named `userguide.md` in `docs/en/` that includes documentation of module features that have CMS user functionality (if applicable). For modules with large userguides, this should be in a directory named `userguide` with an `index.md` linking to any other userguide pages.
  * Links and image references are relative, and are able to be followed in viewers such as GitHub.

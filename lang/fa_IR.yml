@@ -123,7 +123,6 @@ fa_IR:
     ERRORPASSWORDNOTMATCH: 'گذرواژه کنونی همانند نیست، لطفاً مجدداً تلاش نمایید'
     FIRSTNAME: نام
     INTERFACELANG: 'زبان برنامه'
-    KEEPMESIGNEDIN: 'مرا واردشده نگه‌دار'
     LOGGEDINAS: 'شما به {name} عنوان وارد شده‌اید.'
     NEWPASSWORD: 'گذرواژه تازه'
     PASSWORD: گذرواژه

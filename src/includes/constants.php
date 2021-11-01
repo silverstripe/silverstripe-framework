@@ -28,7 +28,7 @@ use SilverStripe\Core\TempFolder;
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
- * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_ressources"
+ * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_resources"
  */
 
 require_once __DIR__ . '/functions.php';
@@ -58,9 +58,10 @@ if (!defined('BASE_PATH')) {
             }
         }
 
-        // Determine BASE_PATH by assuming that this file is framework/src/Core/Constants.php
-        //  we can then determine the base path
-        $candidateBasePath = rtrim(dirname(dirname(dirname(__DIR__))), DIRECTORY_SEPARATOR);
+        // Determine BASE_PATH by assuming that this file is vendor/silverstripe/framework/src/includes/constants.php
+        // we can then determine the base path
+        $candidateBasePath = rtrim(dirname(__DIR__, 5), DIRECTORY_SEPARATOR);
+
         // We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
         // This likely only happens on chrooted environemnts
         return $candidateBasePath ?: DIRECTORY_SEPARATOR;

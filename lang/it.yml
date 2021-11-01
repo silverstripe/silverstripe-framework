@@ -13,14 +13,23 @@ it:
     HELLO: Salve
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Salve
-    TEXT1: 'Questa è la tua'
+    TEXT1: 'Questo è il tuo'
     TEXT2: 'link per l''azzeramento della password'
     TEXT3: per
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" parametro GET'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'L''URL è: "{url}"'
+    CONFIRMATION_NAME: 'L''URL è protetto'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'L''URL completo è: "{url}"'
+    CONFIRMATION_NAME: 'L''URL comincia con "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Richiesta non valida'
     REQUEST_ABORTED: 'Richiesta annullata'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Sconosciuto
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Confermare l''operazione potenzialmente pericolosa'
+    INFO_TITLE: 'Conferma di Sicurezza'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sì
@@ -35,6 +44,8 @@ it:
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
   SilverStripe\Forms\DateField:
+    NOTSET: 'non impostato'
+    TODAY: oggi
     VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
     VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
     VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
@@ -44,6 +55,7 @@ it:
     VALIDDATETIMEMINDATE: 'La tua data deve essere più recente o uguale alla data e ora minima consentita ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Scegli)
+    SEARCH_OR_CHOOSE_MODEL: '(Cercare o scegliere {name})'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -53,6 +65,7 @@ it:
     BAD_METHOD: 'Questa form deve essere inviata in {method}'
     CSRF_EXPIRED_MESSAGE: 'La tua sessione è scaduta. Per favore ritrasmettere la form.'
     CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore cliccare sul pulsante "indietro", ricaricare la pagina e riprovare.'
+    FIELDISREQUIRED: '{name} è richiesto'
     VALIDATIONPASSWORDSDONTMATCH: 'Le password non corrispondono'
     VALIDATIONPASSWORDSNOTEMPTY: 'Le password non possono essere vuote'
     VALIDATIONSTRONGPASSWORD: 'Le password devono avere almeno un numero e un carattere alfanumerico.'
@@ -73,6 +86,7 @@ it:
     LinkExisting: 'Collega esistente'
     NewRecord: 'Nuovo {type}'
     NoItemsFound: 'Nessun elemento trovato'
+    OpenFilter: 'Apri ricerca e filtro'
     PRINTEDAT: 'Stampato alle'
     PRINTEDBY: 'Stampato da'
     PlaceHolder: 'Trova {type}'
@@ -92,14 +106,30 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato {type} {name}'
     Save: Salva
+    Saved: 'Salvato {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'Pare tu non abbia i privilegi necessari per modificare "{ObjectTitle}"'
+    NEW: 'Aggiungi un nuovo record'
+    NEXT: 'Vai al prossimo record'
+    PREVIOUS: 'Vai al record precedente'
+    ViewPermissionsFailure: 'Pare tu non abbia i privilegi necessari per visualizzare "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Modifica
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Cerca "{name}"'
+    SearchFormFaliure: 'Nessun modulo di ricerca può essere generato'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Non è possibile rimuovere te stesso da questo gruppo, perderesti i diritti di admin'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: di
     Page: Pagina
     View: Visualizza
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Visualizza
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: Adatta
+    ORIGINAL: Originale
+    PIXEL_WIDTH: '{width} pixel'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
@@ -110,6 +140,8 @@ it:
     IsNullLabel: 'è nullo.'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Il valore di {name} non deve superare i {maxLength} caratteri di lunghezza'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
   SilverStripe\ORM\DataObject:
@@ -148,6 +180,8 @@ it:
     ANY: Qualsiasi
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Troppi oggetti correlati; campo di fallback in uso'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Troppi figli ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -168,6 +202,12 @@ it:
     SUCCESS: Successo
     SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
     SUCCESS_TITLE: 'Login completato'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Esegui l''azione'
+    EMPTY_TITLE: 'Nulla da confermare'
+    REFUSE: Annulla
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Annullare azione potenzialmente pericolosa'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Amministratore Predefinito'
   SilverStripe\Security\Group:
@@ -226,7 +266,8 @@ it:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
-    KEEPMESIGNEDIN: 'Resta autenticato'
+    KEEP_ME_SIGNED_IN: 'Lasciami autenticato per {count} giorni'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Rimarrai autenticato su questo dispositivo per {count} giorni. Usa questa funzionalità solo se il dispositivo che stai usando è sicuro.'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
     PASSWORD: Password
@@ -235,13 +276,14 @@ it:
     PLURALS:
       one: 'Un Utente'
       other: '{count} Utenti'
-    REMEMBERME: 'Ricordati di me la prossima volta? (per {count} giorni su questo dispositivo)'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
     VALIDATIONADMINLOSTACCESS: 'Non è possibile rimuovere tutti i gruppi admin dal tuo profilo'
+    VALIDATIONMEMBEREXISTS: 'Esiste già un utente con lo stesso {identifier}'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
+    WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
     belongs_many_many_Groups: Gruppi
     db_Locale: 'Localizzazione interfaccia'
@@ -323,3 +365,5 @@ it:
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
     PASSWORDRESETSENTHEADER: 'Link per la reimpostazione della password inviato'
     PASSWORDRESETSENTTEXT: 'Grazie. È stato inviato un link di ripristino, a condizione che esista un account per questo indirizzo email.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Problema durante il caricamento del media.'

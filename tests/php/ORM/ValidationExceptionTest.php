@@ -8,6 +8,16 @@ use SilverStripe\Dev\SapphireTest;
 
 class ValidationExceptionTest extends SapphireTest
 {
+    private function arrayContainsArray($expectedSubArray, $array)
+    {
+        foreach ($array as $subArray) {
+            if ($subArray == $expectedSubArray) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Test that ValidationResult object can correctly populate a ValidationException
      */
@@ -21,15 +31,13 @@ class ValidationExceptionTest extends SapphireTest
         $this->assertEquals(0, $exception->getCode());
         $this->assertEquals('Not a valid result', $exception->getMessage());
         $this->assertFalse($exception->getResult()->isValid());
-        $this->assertContains(
-            [
+        $b = $this->arrayContainsArray([
             'message' => 'Not a valid result',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
     }
 
     /**
@@ -47,24 +55,22 @@ class ValidationExceptionTest extends SapphireTest
         $this->assertEquals(0, $exception->getCode());
         $this->assertEquals('Invalid type', $exception->getMessage());
         $this->assertEquals(false, $exception->getResult()->isValid());
-        $this->assertContains(
-            [
+
+        $b = $this->arrayContainsArray([
             'message' => 'Invalid type',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
-        $this->assertContains(
-            [
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
+
+        $b = $this->arrayContainsArray([
             'message' => 'Out of kiwis',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
     }
 
     /**
@@ -78,15 +84,14 @@ class ValidationExceptionTest extends SapphireTest
         $this->assertEquals(E_USER_ERROR, $exception->getCode());
         $this->assertEquals('Error inferred from message', $exception->getMessage());
         $this->assertFalse($exception->getResult()->isValid());
-        $this->assertContains(
-            [
+
+        $b = $this->arrayContainsArray([
             'message' => 'Error inferred from message',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
     }
 
     /**
@@ -103,24 +108,22 @@ class ValidationExceptionTest extends SapphireTest
         $this->assertEquals(E_USER_WARNING, $exception->getCode());
         $this->assertEquals('A spork is not a knife', $exception->getMessage());
         $this->assertEquals(false, $exception->getResult()->isValid());
-        $this->assertContains(
-            [
+
+        $b = $this->arrayContainsArray([
             'message' => 'A spork is not a knife',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
-        $this->assertContains(
-            [
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
+
+        $b = $this->arrayContainsArray([
             'message' => 'A knife is not a back scratcher',
             'messageCast' => ValidationResult::CAST_TEXT,
             'messageType' => ValidationResult::TYPE_ERROR,
             'fieldName' => null,
-            ],
-            $exception->getResult()->getMessages()
-        );
+        ], $exception->getResult()->getMessages());
+        $this->assertTrue($b, 'Messages array should contain expected messaged');
     }
 
     /**
@@ -175,30 +178,30 @@ class ValidationExceptionTest extends SapphireTest
 
         $this->assertEquals(
             [
-            [
-                'fieldName' => null,
-                'message' => 'A spork is not a knife',
-                'messageType' => 'bad',
-                'messageCast' => ValidationResult::CAST_TEXT,
-            ],
-            [
-                'fieldName' => null,
-                'message' => 'A knife is not a back scratcher',
-                'messageType' => 'error',
-                'messageCast' => ValidationResult::CAST_TEXT,
-            ],
-            [
-                'fieldName' => 'Title',
-                'message' => 'Title is good',
-                'messageType' => 'good',
-                'messageCast' => ValidationResult::CAST_TEXT,
-            ],
-            [
-                'fieldName' => 'Content',
-                'message' => 'Content is bad',
-                'messageType' => 'bad',
-                'messageCast' => ValidationResult::CAST_TEXT,
-            ]
+                [
+                    'fieldName' => null,
+                    'message' => 'A spork is not a knife',
+                    'messageType' => 'bad',
+                    'messageCast' => ValidationResult::CAST_TEXT,
+                ],
+                [
+                    'fieldName' => null,
+                    'message' => 'A knife is not a back scratcher',
+                    'messageType' => 'error',
+                    'messageCast' => ValidationResult::CAST_TEXT,
+                ],
+                [
+                    'fieldName' => 'Title',
+                    'message' => 'Title is good',
+                    'messageType' => 'good',
+                    'messageCast' => ValidationResult::CAST_TEXT,
+                ],
+                [
+                    'fieldName' => 'Content',
+                    'message' => 'Content is bad',
+                    'messageType' => 'bad',
+                    'messageCast' => ValidationResult::CAST_TEXT,
+                ]
             ],
             $result->getMessages()
         );

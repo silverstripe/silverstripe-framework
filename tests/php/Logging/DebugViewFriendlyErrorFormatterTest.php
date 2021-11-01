@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Logging\Tests;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
@@ -11,7 +11,7 @@ use SilverStripe\Logging\DebugViewFriendlyErrorFormatter;
 
 class DebugViewFriendlyErrorFormatterTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Email::config()->set('admin_email', 'testy@mctest.face');
@@ -19,7 +19,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
 
     public function testFormatPassesRecordCodeToOutput()
     {
-        /** @var DebugViewFriendlyErrorFormatter|PHPUnit_Framework_MockObject_MockObject $mock */
+        /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
             ->setMethods(['output'])
             ->getMock();
@@ -30,7 +30,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
 
     public function testFormatPassesInstanceStatusCodeToOutputWhenNotProvidedByRecord()
     {
-        /** @var DebugViewFriendlyErrorFormatter|PHPUnit_Framework_MockObject_MockObject $mock */
+        /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
             ->setMethods(['output'])
             ->getMock();
@@ -49,7 +49,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
             ['horse' => 'caballo'],
         ];
 
-        /** @var DebugViewFriendlyErrorFormatter|PHPUnit_Framework_MockObject_MockObject $mock */
+        /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
             ->setMethods(['format'])
             ->getMock();

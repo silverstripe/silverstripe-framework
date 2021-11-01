@@ -25,6 +25,11 @@ executing the action is limited to the following cases when performed via a web 
  * A user is logged in with ADMIN permissions
  * An error occurs during startup
 
+Caution: Not all caches are cleared through `flush=1`.
+While cache objects can expire, when using filesystem caching the files are not actively pruned.
+For long-lived server instances, this can become a capacity issue over time - see
+[workaround](https://github.com/silverstripe/silverstripe-framework/issues/6678).
+
 ## Configuration
 
 We are using the [PSR-16](http://www.php-fig.org/psr/psr-16/) standard ("SimpleCache")
@@ -33,7 +38,7 @@ Note that this library describes usage of [PSR-6](http://www.php-fig.org/psr/psr
 but also exposes caches following the PSR-16 interface. 
 
 Cache objects are configured via YAML
-and SilverStripe's [dependency injection](/developer-guides/extending/injector) system. 
+and Silverstripe CMS's [dependency injection](/developer_guides/extending/injector) system. 
 
 
 ```yml
@@ -179,17 +184,17 @@ interface. Use this interface to trigger `clear()` on your caches.
 
 ## Adapters
 
-SilverStripe tries to identify the most performant cache available on your system
+Silverstripe CMS tries to identify the most performant cache available on your system
 through the [DefaultCacheFactory](api:SilverStripe\Core\Cache\DefaultCacheFactory) implementation:
 
- * - `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).
+ * `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).
      This cache has relatively low [memory defaults](http://php.net/manual/en/opcache.configuration.php#ini.opcache.memory-consumption).
      We recommend increasing it for large applications, or enabling the
      [file_cache fallback](http://php.net/manual/en/opcache.configuration.php#ini.opcache.file-cache)
- * - `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
- * - `FilesystemCache` if none of the above is available
+ * `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
+ * `FilesystemCache` if none of the above is available
  
-The library supports various [cache adapters](https://github.com/symfony/cache/tree/master/Simple)
+The library supports various [cache adapters](https://github.com/symfony/cache/tree/5.x/Adapter)
 which can provide better performance, particularly in multi-server environments with shared caches like Memcached.
 
 Since we're using dependency injection to create caches, 
@@ -206,8 +211,7 @@ and takes a `MemcachedClient` instance as a constructor argument.
 
 ```yml
 ---
-After:
-  - '#corecache'
+After: '#versionedcache'
 ---
 SilverStripe\Core\Injector\Injector:
   MemcachedClient:

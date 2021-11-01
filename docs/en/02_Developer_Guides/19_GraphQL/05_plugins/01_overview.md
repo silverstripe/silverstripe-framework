@@ -30,7 +30,7 @@ Plugins are used to distribute reusable functionality across your schema. Some e
 By default, all schemas ship with some plugins installed that will benefit most use cases:
 
 * The `DataObject` model (i.e. any dataobject based type) has:
-    * An `inheritance` plugin that builds the `__extends` field, and merges ancestral fields.
+    * An `inheritance` plugin that builds the interfaces, unions, and merges ancestral fields.
     * An `inheritedPlugins` plugin (a bit meta!) that merges plugins from ancestral types into descendants.
  installed).
 * The `read` and `readOne` operations have:
@@ -126,7 +126,7 @@ Plugins have to be registered with Injector.
 SilverStripe\Core\Injector\Injector:
   SilverStripe\GraphQL\Schema\Registry\PluginRegistry:
     constructor:
-      myPlugin: '%$MyProject\Plugins\MyPlugin'
+      - 'MyProject\Plugins\MyPlugin'
 ```
 
 [info]

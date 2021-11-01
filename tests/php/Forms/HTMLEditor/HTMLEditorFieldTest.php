@@ -25,7 +25,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         TestObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         TestAssetStore::reset();
         parent::tearDown();
@@ -73,12 +73,12 @@ class HTMLEditorFieldTest extends FunctionalTest
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
         // Test shortcodes
         $inputText = "Shortcode: [file_link id=4]";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+        $this->assertStringContainsString('Shortcode: [file_link id=4]', $field->Field());
     }
 
     public function testBasicSaving()
@@ -180,7 +180,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
 </span>
 
 
@@ -197,7 +197,7 @@ EOS
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
 </span>
 
 	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />

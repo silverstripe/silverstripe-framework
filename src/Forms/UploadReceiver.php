@@ -97,7 +97,7 @@ trait UploadReceiver
      * for each of these categories
      *
      * @param string $category Category name
-     * @param string,... $categories Additional category names
+     * @param string ...$categories Additional category names
      * @return $this
      */
     public function setAllowedFileCategories($category)

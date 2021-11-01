@@ -1,10 +1,10 @@
 ---
 title: Lessons
-introduction: The lessons take a step by step look at how to build a SilverStripe application.
+introduction: The lessons take a step by step look at how to build a Silverstripe CMS application.
 icon: graduation-cap
 ---
 
-* [How to set up a local development environment in SilverStripe](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
+* [How to set up a local development environment in Silverstripe CMS](https://www.silverstripe.org/learn/lessons/v4/up-and-running-setting-up-a-local-silverstripe-dev-environment-1)
 * [Lesson 1: Creating your first project](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-project)
 * [Lesson 2: Migrating static templates into your theme](https://www.silverstripe.org/learn/lessons/v4/migrating-static-templates-into-your-theme-1)
 * [Lesson 3: Adding dynamic content](https://www.silverstripe.org/learn/lessons/v4/adding-dynamic-content-1)
@@ -29,5 +29,6 @@ icon: graduation-cap
 
 ## Help: If you get stuck
 
- * [The Tips & Tricks forum](https://forum.silverstripe.org/c/tips): Review some existing solutions to common problems.
- * [SilverStripe Community](http://www.silverstripe.org/community/): Join our community chat via Slack, or ask a question on Stack Overflow.
+* [The Tips & Tricks forum](https://forum.silverstripe.org/c/tips): Review some existing solutions to common problems.
+* [Silverstripe CMS Community](http://www.silverstripe.org/community/): Join our community chat via Slack, or ask a question
+  on Stack Overflow.

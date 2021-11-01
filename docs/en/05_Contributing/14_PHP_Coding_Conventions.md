@@ -188,5 +188,7 @@ See [security](/developer_guides/security) for conventions related to handing se
 
 ## Related
 
+ * [PHPCS Coding Standard](https://github.com/silverstripe/silverstripe-framework/blob/4/phpcs.xml.dist)
  * [JavaScript Coding Conventions](/contributing/javascript_coding_conventions)
  * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)
+ 

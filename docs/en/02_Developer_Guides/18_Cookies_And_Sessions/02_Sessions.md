@@ -95,7 +95,7 @@ to specifically remove it.
 $session->clear('MyValue');
 ```
 
-Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
+Or you can clear every single value in the session at once. Note Silverstripe CMS stores some of its own session data
 including form and page comment information. None of this is vital but `clear_all` will clear everything.
 ```php
 $session->clearAll();
@@ -115,7 +115,7 @@ This uses the session_name `SECSESSID` for `https` connections instead of the de
 
 ## Relaxing checks around user agent strings
 
-Out of the box, SilverStripe will invalidate a user's session if the `User-Agent` header changes. This provides some supplemental protection against session high-jacking attacks.
+Out of the box, Silverstripe CMS will invalidate a user's session if the `User-Agent` header changes. This provides some supplemental protection against session high-jacking attacks.
 
 It is possible to disable the user agent header session validation. However, it is not recommended.
 

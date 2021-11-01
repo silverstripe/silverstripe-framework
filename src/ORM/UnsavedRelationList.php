@@ -176,7 +176,6 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Remove the items from this list with the given IDs
      *
      * @param array $items
-     * @param array $items
      * @return $this
      */
     public function removeMany($items)

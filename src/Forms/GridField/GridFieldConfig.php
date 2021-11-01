@@ -68,7 +68,7 @@ class GridFieldConfig
     }
 
     /**
-     * @param GridFieldComponent|GridFieldComponent[] $component,... One or more components, or an array of components
+     * @param GridFieldComponent|GridFieldComponent[] ...$component One or more components, or an array of components
      * @return $this
      */
     public function addComponents($component = null)

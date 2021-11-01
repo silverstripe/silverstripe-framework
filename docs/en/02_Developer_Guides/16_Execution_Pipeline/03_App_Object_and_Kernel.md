@@ -1,12 +1,12 @@
 ---
 title: App Object and Kernel
-summary: Provides bootstrapping and entrypoint to the SilverStripe application
+summary: Provides bootstrapping and entrypoint to the Silverstripe CMS application
 ---
 
 # Kernel
 
 The [Kernel](api:SilverStripe\Core\Kernel) object provides a container for the various manifests, services, and components
-which a SilverStripe application must have available in order for requests to be executed.
+which a Silverstripe CMS application must have available in order for requests to be executed.
 
 This can be accessed in user code via Injector
 
@@ -96,11 +96,11 @@ $response->output();
 
 ## Custom application actions
 
-If it's necessary to boot a SilverStripe kernel and application, but not do any
+If it's necessary to boot a Silverstripe CMS kernel and application, but not do any
 request processing, you can use the Application::execute() method to invoke a custom
 application entry point.
 
-This may be necessary if using SilverStripe code within the context of a non-SilverStripe
+This may be necessary if using Silverstripe CMS code within the context of a non-Silverstripe CMS
 application.
 
 For example, the below will setup a request, session, and current controller,

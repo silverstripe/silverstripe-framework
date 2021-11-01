@@ -40,7 +40,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
     }
 
     /**
-     * @param \Swift_Mime_Message $message
+     * @param \Swift_Message $message
      * @param array|string $to
      */
     protected function setTo($message, $to)
@@ -62,7 +62,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
     }
 
     /**
-     * @param \Swift_Mime_Message $message
+     * @param \Swift_Message $message
      * @param array|string $from
      */
     protected function setFrom($message, $from)

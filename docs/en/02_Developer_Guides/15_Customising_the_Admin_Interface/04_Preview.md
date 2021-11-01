@@ -10,7 +10,7 @@ summary: How content previews work in the CMS
 __Deprecated:__
 The following documentation regarding JavaScript layouts and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS in Silverstripe CMS](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
 
 With the addition of side-by-side editing, the preview has the ability to appear
 within the CMS window when editing content in the _Pages_ section of the CMS.

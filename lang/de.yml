@@ -27,8 +27,6 @@ de:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ungültige Anfrage'
     REQUEST_ABORTED: 'Anfrage abgebrochen'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Unbekannt
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bestätige potenziell gefährliche Aktion'
     INFO_TITLE: Sicherheitsbestätigung
@@ -67,6 +65,7 @@ de:
     BAD_METHOD: 'Dieses Formular erfordert eine {method} Anfrage'
     CSRF_EXPIRED_MESSAGE: 'Ihre Sitzung ist abgelaufen. Bitte schicken Sie das Formular erneut ab.'
     CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
+    FIELDISREQUIRED: '{name} muss ausgefüllt werden'
     VALIDATIONPASSWORDSDONTMATCH: 'Die Passwörter stimmen nicht überein'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwortfelder dürfen nicht leer sein'
     VALIDATIONSTRONGPASSWORD: 'Passwörter müssen mindestens eine Zahl und ein alphanumerisches Zeichen enthalten'
@@ -107,10 +106,13 @@ de:
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht {type} {name}'
     Save: Speichern
+    Saved: '{name} {link} gespeichert'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'Sie haben nicht die nötigen Berechtigungen um {ObjectTitle} zu einer Kampagne hinzuzufügen'
     NEW: 'Neuen Eintrag hinzufügen'
     NEXT: 'Gehe zu nächstem Eintrag'
     PREVIOUS: 'Gehe zu vorherigem Eintrag'
+    ViewPermissionsFailure: 'Sie haben nicht die nötigen Berechtigungen um {ObjectTitle} aufzurufen.'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Bearbeiten
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -138,6 +140,8 @@ de:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   SilverStripe\ORM\DataObject:
@@ -176,6 +180,8 @@ de:
     ANY: alle
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Zu viele Objekte; Standardfeld verwendet'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: ...
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Zu viele Kindelemente ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -260,7 +266,6 @@ de:
     ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
     FIRSTNAME: Vorname
     INTERFACELANG: CMS-Sprache
-    KEEPMESIGNEDIN: 'Eingeloggt bleiben'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
@@ -269,13 +274,14 @@ de:
     PLURALS:
       one: 'Ein Mitglied'
       other: '{count}  Mitglieder'
-    REMEMBERME: 'Für das nächste Mal merken? (für {count} Tage auf diesem Gerät)'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
     VALIDATIONADMINLOSTACCESS: 'Sie können nicht alle Admin Gruppen von Ihrem Profil entfernen'
+    VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dem/der selben {identifier}'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
+    WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Gruppe
     db_Locale: 'Interface Sprachumgebung'
@@ -357,3 +363,5 @@ de:
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'
     PASSWORDRESETSENTHEADER: 'Der Link zum Zurücksetzen des Passworts wurde gesendet'
     PASSWORDRESETSENTTEXT: 'Vielen Dank! Wenn ein Account zu der E-Mail Adresse existiert, wurde eine E-Mail mit dem Link zum Zurücksetzen des Passworts verschickt.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Es gab ein Problem beim Laden von Media-Ressourcen.'

@@ -60,21 +60,21 @@ class ContentNegotiatorTest extends SapphireTest
         ////////////////////////
         // XHTML select options
         ////////////////////////
-        $this->assertRegExp('/<option>aa<\/option>/', $response->getBody());
-        $this->assertRegExp('/<option selected = "selected">bb<\/option>/', $response->getBody());
-        $this->assertRegExp('/<option selected="selected">cc<\/option>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<option>aa<\/option>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<option selected = "selected">bb<\/option>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<option selected="selected">cc<\/option>/', $response->getBody());
         // Just transform this
-        $this->assertRegExp('/<option class="foo" selected="selected">dd<\/option>/', $response->getBody());
-        $this->assertRegExp('/<option selected="selected" value="">ll<\/option>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<option class="foo" selected="selected">dd<\/option>/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<option selected="selected" value="">ll<\/option>/', $response->getBody());
 
         ////////////////////////////////////////////////
         // XHTML checkbox options + XHTML input closure
         ////////////////////////////////////////////////
-        $this->assertRegExp('/<input type="checkbox"\/>ff/', $response->getBody());
-        $this->assertRegExp('/<input type="checkbox" checked = "checked"\/>g/', $response->getBody());
-        $this->assertRegExp('/<input type="checkbox" checked="checked"\/>hh/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<input type="checkbox"\/>ff/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<input type="checkbox" checked = "checked"\/>g/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<input type="checkbox" checked="checked"\/>hh/', $response->getBody());
         // Just transform this
-        $this->assertRegExp('/<input class="bar" type="checkbox" checked="checked"\/>ii/', $response->getBody());
-        $this->assertRegExp('/<input type="checkbox" checked="checked" class="foo"\/>jj/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<input class="bar" type="checkbox" checked="checked"\/>ii/', $response->getBody());
+        $this->assertMatchesRegularExpression('/<input type="checkbox" checked="checked" class="foo"\/>jj/', $response->getBody());
     }
 }

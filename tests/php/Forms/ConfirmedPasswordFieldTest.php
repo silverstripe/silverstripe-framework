@@ -16,7 +16,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,12 +67,12 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         //hide by default and display show/hide toggle button
         $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, true);
         $fieldHTML = $field->Field();
-        $this->assertContains(
+        $this->assertStringContainsString(
             "showOnClickContainer",
             $fieldHTML,
             "Test class for hiding/showing the form contents is set"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "showOnClick",
             $fieldHTML,
             "Test class for hiding/showing the form contents is set"
@@ -81,12 +81,12 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         //show all by default
         $field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, false);
         $fieldHTML = $field->Field();
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             "showOnClickContainer",
             $fieldHTML,
             "Test class for hiding/showing the form contents is set"
         );
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             "showOnClick",
             $fieldHTML,
             "Test class for hiding/showing the form contents is set"
@@ -200,7 +200,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertSame($expectValid, $result, 'Validate method should return its result');
         $this->assertSame($expectValid, $validator->getResult()->isValid());
         if ($expectedMessage) {
-            $this->assertContains($expectedMessage, $validator->getResult()->serialize());
+            $this->assertStringContainsString($expectedMessage, $validator->getResult()->serialize());
         }
     }
 
@@ -233,7 +233,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $this->assertFalse($result, 'Validate method should return its result');
         $this->assertFalse($validator->getResult()->isValid());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Passwords must have at least one digit and one alphanumeric character',
             $validator->getResult()->serialize()
         );
@@ -252,7 +252,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $this->assertFalse($result, 'Validate method should return its result');
         $this->assertFalse($validator->getResult()->isValid());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'You must enter your current password',
             $validator->getResult()->serialize()
         );
@@ -274,7 +274,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $this->assertFalse($result, 'Validate method should return its result');
         $this->assertFalse($validator->getResult()->isValid());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'You must be logged in to change your password',
             $validator->getResult()->serialize()
         );
@@ -300,7 +300,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $this->assertFalse($result, 'Validate method should return its result');
         $this->assertFalse($validator->getResult()->isValid());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'The current password you have entered is not correct',
             $validator->getResult()->serialize()
         );
@@ -357,7 +357,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $this->assertInstanceOf(ReadonlyField::class, $result);
         $this->assertSame('Change it', $result->Title());
-        $this->assertContains('***', $result->Value());
+        $this->assertStringContainsString('***', $result->Value());
     }
 
     public function testPerformDisabledTransformation()

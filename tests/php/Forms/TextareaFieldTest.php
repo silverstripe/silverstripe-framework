@@ -14,12 +14,12 @@ class TextareaFieldTest extends SapphireTest
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new TextareaField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
         // Test shortcodes
         $inputText = "Shortcode: [file_link id=4]";
         $field = new TextareaField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+        $this->assertStringContainsString('Shortcode: [file_link id=4]', $field->Field());
     }
 
     /**
@@ -31,7 +31,7 @@ class TextareaFieldTest extends SapphireTest
         $field = new TextareaField("Test", "Test");
         $field->setValue($inputText);
         $field = $field->performReadonlyTransformation();
-        $this->assertContains('These are some unicodes: äöü', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: äöü', $field->Field());
     }
 
     /**
@@ -43,7 +43,7 @@ class TextareaFieldTest extends SapphireTest
         $field = new TextareaField("Test", "Test");
         $field = $field->performReadonlyTransformation();
         $field->setValue($inputText);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'These are some special &lt;html&gt; chars including &#039;single&#039; &amp;'
             . ' &quot;double&quot; quotations',
             $field->Field()

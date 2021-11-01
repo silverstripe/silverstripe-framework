@@ -530,7 +530,7 @@ class DB
     /**
      * Create a new table.
      * @param string $table The name of the table
-     * @param array$fields A map of field names to field types
+     * @param array $fields A map of field names to field types
      * @param array $indexes A map of indexes
      * @param array $options An map of additional options.  The available keys are as follows:
      *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine"

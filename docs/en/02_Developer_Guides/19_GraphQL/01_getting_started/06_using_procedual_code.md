@@ -33,16 +33,17 @@ on the fly as closures. Resolvers must be static methods on a class, and are eva
 the schema build.
 [/notice]
 
-### Adding a schema builder
+### Adding executable code
 
-We can use the `builders` section of the config to add an implementation of `SchemaUpdater`.
+We can use the `execute` section of the config to add an implementation of `SchemaUpdater`.
 
 ```yaml
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
-      builders:
-        - 'MyProject\MySchema'
+      config:
+        execute:
+          - 'MyProject\MySchema'
 ```
 
 Now just implement the `SilverStripe\GraphQL\Schema\Interfaces\SchemaUpdater` interface.
@@ -86,7 +87,7 @@ need, but the key methods map directly to their configuration counterparts:
         $myQuery = Query::create('readCountries', '[Country]')
             ->addArg('limit', 'Int');
 
-        $myModel = ModelType::create(MyDataObject::class)
+        $myModel = $schema->createModel(MyDataObject::class)
             ->addAllFields()
             ->addAllOperations();
         $schema->addModel($myModel);

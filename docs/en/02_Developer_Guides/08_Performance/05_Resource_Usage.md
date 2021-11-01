@@ -1,12 +1,12 @@
 ---
 title: Resource Usage
-summary: Manage SilverStripe's memory footprint and CPU usage.
+summary: Manage Silverstripe CMS's memory footprint and CPU usage.
 icon: tachometer-alt
 ---
 
 # Resource Usage
 
-SilverStripe tries to keep its resource usage within the documented limits 
+Silverstripe CMS tries to keep its resource usage within the documented limits 
 (see the [server requirements](../../getting_started/server_requirements)).
 
 These limits are defined through `memory_limit` and `max_execution_time` in the PHP configuration. They can be 
@@ -22,7 +22,7 @@ resources are required temporarily. In general, we recommend running resource in
 [command line](../cli), where configuration defaults for these settings are higher or even unlimited.
 
 [info]
-SilverStripe can request more resources through `Environment::increaseMemoryLimitTo()` and
+Silverstripe CMS can request more resources through `Environment::increaseMemoryLimitTo()` and
 `Environment::increaseTimeLimitTo()` functions.
 [/info]
 

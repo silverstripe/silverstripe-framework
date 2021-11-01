@@ -61,14 +61,17 @@ class FormTemplateHelper
      */
     public function generateFieldID($field)
     {
+        // Don't include '.'s in IDs, they confused JavaScript
+        $name = str_replace('.', '_', $field->getName());
+
         if ($form = $field->getForm()) {
             return sprintf(
                 "%s_%s",
                 $this->generateFormID($form),
-                Convert::raw2htmlid($field->getName())
+                Convert::raw2htmlid($name)
             );
         }
 
-        return Convert::raw2htmlid($field->getName());
+        return Convert::raw2htmlid($name);
     }
 }

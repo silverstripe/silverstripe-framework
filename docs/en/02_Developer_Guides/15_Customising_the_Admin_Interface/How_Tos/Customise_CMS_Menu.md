@@ -7,7 +7,7 @@ summary: Make custom changes to the left hand menu in the CMS
 ## Adding an administration panel
 
 Every time you add a new extension of the [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) class to the CMS,
-SilverStripe will automatically create a new [CMSMenuItem](api:SilverStripe\Admin\CMSMenuItem) for it
+Silverstripe CMS will automatically create a new [CMSMenuItem](api:SilverStripe\Admin\CMSMenuItem) for it
 
 The most popular extension of LeftAndMain is a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) class, so
 for a more detailed introduction to creating new `ModelAdmin` interfaces, read
@@ -20,7 +20,7 @@ provide a custom title and icon.
 
 ### Defining a Custom Icon
 
-First we'll need a custom icon. For this purpose SilverStripe uses 16x16
+First we'll need a custom icon. For this purpose Silverstripe CMS uses 16x16
 black-and-transparent PNG graphics. In this case we'll place the icon in
 `app/images`, but you are free to use any location.
 

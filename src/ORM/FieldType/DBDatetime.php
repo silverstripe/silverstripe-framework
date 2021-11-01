@@ -173,7 +173,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         /** @var DBDatetime $now */
         $now = null;
         if (self::$mock_now) {
-            $now = self::$mock_now;
+            $now = DBField::create_field('Datetime', self::$mock_now->Value);
         } else {
             $now = DBField::create_field('Datetime', time());
         }

@@ -484,8 +484,8 @@ abstract class Database
     /**
      * Generate a WHERE clause for text matching.
      *
-     * @param String $field Quoted field name
-     * @param String $value Escaped search. Can include percentage wildcards.
+     * @param string $field Quoted field name
+     * @param string $value Escaped search. Can include percentage wildcards.
      * Ignored if $parameterised is true.
      * @param boolean $exact Exact matches or wildcard support.
      * @param boolean $negate Negate the clause.
@@ -526,7 +526,7 @@ abstract class Database
      * function to return an SQL datetime expression that can be used with the adapter in use
      * used for querying a datetime addition
      *
-     * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
+     * @param string $date can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
      *                      e.g. '"SiteTree"."Created"'
      * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes,
      *                         +1 YEAR
@@ -547,7 +547,7 @@ abstract class Database
      * function to return an SQL datetime expression that can be used with the adapter in use
      * used for querying a datetime substraction
      *
-     * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
+     * @param string $date1 can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
      *                       e.g. '"SiteTree"."Created"'
      * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime
      *                      like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'

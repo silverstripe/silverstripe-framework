@@ -1,6 +1,6 @@
 ---
 title: Rendering data to a template
-summary: Call and render SilverStripe templates manually.
+summary: Call and render Silverstripe CMS templates manually.
 icon: code
 ---
 
@@ -35,9 +35,22 @@ echo $arrayData->renderWith('Coach_Message');
 // returns "<strong>John</strong> is the Head Coach on our team."
 
 ```
+If your template is a Layout template that needs to be rendered into the main Page template (to include a header and footer, for example), you need to render your Layout template into a string, and pass that as the Layout parameter to the Page template.
+
+```php
+$data = [
+    'Title' => 'Message from the Head Coach'
+];
+
+return $this->customise([
+    'Layout' => $this
+                ->customise($data)
+                ->renderWith(['Template\Path\From\templates\Layout\Coach_Message'])
+])->renderWith(['Page']);
+```
 
 [info]
-Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
+Most classes in Silverstripe CMS you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
 includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:SilverStripe\Forms\FormField) and [DataObject](api:SilverStripe\ORM\DataObject) instances.
 [/info]
 

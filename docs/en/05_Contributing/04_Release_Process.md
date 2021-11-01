@@ -211,7 +211,7 @@ A security release is a [Silverstripe CMS Core Release](making_a_silverstripe_co
 ### Reporting an issue
 
 Report security issues in our [commercially supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
-to [security@silverstripe.com](mailto:security@silverstripe.org). 
+to [security@silverstripe.org](mailto:security@silverstripe.org). 
 Please don't file security issues in our [bugtracker](issues_and_bugs). 
 
 ### Acknowledgment and disclosure

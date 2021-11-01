@@ -16,9 +16,9 @@ class SelectionGroup_Item extends CompositeField
     protected $title;
 
     /**
-     * @param String $value Form field identifier
+     * @param string $value Form field identifier
      * @param FormField|array $fields Contents of the option
-     * @param String $title Title to show for the radio button option
+     * @param string $title Title to show for the radio button option
      */
     function __construct($value, $fields = null, $title = null)
     {

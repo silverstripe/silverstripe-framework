@@ -19,7 +19,9 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
 use stdClass;
@@ -63,7 +65,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\TreeNode::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -209,6 +211,31 @@ class DataObjectTest extends SapphireTest
         // Note that automatic conversion of IDs to integer no longer happens as the DB layer does that for us now
         $player = new DataObjectTest\Player(['ID' => 5]);
         $this->assertSame(5, $player->ID);
+    }
+
+    /**
+     * @see SilverStripe\ORM\Tests\DataObjectTest\Team_Extension
+     */
+    public function testConstructHydratesAugmentedValues()
+    {
+        // When creating a DataObject from singleton, DataObject::hydrate() isn't called
+        $team = new Team([], DataObject::CREATE_SINGLETON);
+        $this->assertNull($team->CustomHydratedField);
+
+        // Similarly, when hydrating by creating a DataObject from nothing, hydrate() isn't called
+        $team2 = new Team([]);
+        $id = $team2->write();
+        $this->assertNull($team2->CustomHydratedField);
+
+        // However when rebuilding an object from the database, it is and we can expect our extension to execute
+        /** @var Team $team3 */
+        $team3 = Team::get()->byID($id);
+        $this->assertTrue($team3->CustomHydratedField);
+
+        // Also when rebuilding an object in memory, hydrate() is called and our extension should execute
+        /** @var Team $team4 */
+        $team4 = $team->newClassInstance(Team::class);
+        $this->assertTrue($team4->CustomHydratedField);
     }
 
     public function testValidObjectsForBaseFields()
@@ -1457,12 +1484,9 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
     }
 
-
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWritingInvalidDataObjectThrowsException()
     {
+        $this->expectException(ValidationException::class);
         $validatedObject = new DataObjectTest\ValidatedObject();
         $validatedObject->write();
     }
@@ -1612,29 +1636,23 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Staff', $ceoObj->EmploymentType);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->merge(DataObjectTest\Team::class, 'has_one', ['NotValid' => ['NoArraysAllowed']]);
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->set(DataObjectTest\Team::class, 'has_many', [0 => DataObjectTest\Player::class]);
         DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Config::modify()->merge(DataObjectTest\Team::class, 'many_many', ['Players' => 12]);
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
@@ -1661,12 +1679,37 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
 
         // Test invalid classes fail
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
         /**
          * @skipUpgrade
          */
         $dataObject->newClassInstance('Controller');
+    }
+
+    public function testNewClassInstanceFromUnsavedDataObject()
+    {
+        $dataObject = new DataObjectTest\Team([
+            'Title' => 'Team 1'
+        ]);
+        $changedDO = $dataObject->newClassInstance(DataObjectTest\SubTeam::class);
+        $changedFields = $changedDO->getChangedFields();
+
+        // Don't write the record, it will reset changed fields
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
+        $this->assertContains('ClassName', array_keys($changedFields));
+        $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['RecordClassName']['after'], DataObjectTest\SubTeam::class);
+
+        $changedDO->write();
+
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertNotEmpty($changedDO->ID, 'New class instance got an ID generated on write');
     }
 
     public function testMultipleManyManyWithSameClass()
@@ -1956,7 +1999,7 @@ class DataObjectTest extends SapphireTest
         $obj = new DataObjectTest\Fixture();
         $obj->write();
 
-        $this->assertInternalType("int", $obj->ID);
+        $this->assertIsInt($obj->ID);
     }
 
     /**
@@ -2236,11 +2279,9 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException LogicException
-     */
     public function testInvalidate()
     {
+        $this->expectException(\LogicException::class);
         $do = new DataObjectTest\Fixture();
         $do->write();
 
@@ -2331,7 +2372,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals("PHIL IS A UNIQUE GUY, AND COMMENTS ON TEAM2", $comment->relField('Comment.UpperCase'));
 
         // relField throws exception on invalid properties
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\TeamComment::class);
         $comment->relField('Not.A.Field');
     }
@@ -2359,7 +2400,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
 
         // relObject throws exception on invalid properties
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\Player::class);
         $player->relObject('Not.A.Field');
     }
@@ -2371,16 +2412,14 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\Player::class, DataObjectTest\Player::get()->first());
 
         // You can't pass arguments to LSB syntax - use the DataList methods instead.
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testBrokenLateStaticBindingStyle()
     {
+        $this->expectException(\InvalidArgumentException::class);
         // If you call DataObject::get() you have to pass a first argument
         DataObject::get();
     }
@@ -2405,7 +2444,7 @@ class DataObjectTest extends SapphireTest
 
     public function testSetFieldWithArrayOnScalarOnlyField()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $do = Company::singleton();
         $do->FoundationYear = '1984';
         $do->FoundationYear = ['Amount' => 123, 'Currency' => 'CAD'];
@@ -2437,7 +2476,7 @@ class DataObjectTest extends SapphireTest
 
     public function testWriteManipulationWithNonScalarValuesDisallowed()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
         $do->write();
@@ -2561,7 +2600,21 @@ class DataObjectTest extends SapphireTest
             'Salary' => 50,
         ], DataObject::CREATE_HYDRATED);
         $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
         $this->assertEquals([], $staff->getChangedFields());
+
+        // Test hydration (DataObject::CREATE_HYDRATED)
+        // Defaults are not used, changes are not tracked
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_MEMORY_HYDRATED);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals([], $staff->getChangedFields());
+        $this->assertFalse(
+            $staff->isInDB(),
+            'DataObject hydrated from memory without an ID are assumed to not be in the Database.'
+        );
 
         // Test singleton (DataObject::CREATE_SINGLETON)
         // Values are ingored
@@ -2571,5 +2624,27 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals(null, $staff->EmploymentType);
         $this->assertEquals(null, $staff->Salary);
         $this->assertEquals([], $staff->getChangedFields());
+    }
+
+    public function testDataObjectCreationHydrateWithoutID()
+    {
+        $this->expectExceptionMessage(
+            "Hydrated records must be passed a record array including an ID."
+        );
+        // Hydrating a record without an ID should throw an exception
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_HYDRATED);
+    }
+
+    public function testDBObjectEnum()
+    {
+        $obj = new DataObjectTest\Fixture();
+        // enums are parsed correctly
+        $vals = ['25', '50', '75', '100'];
+        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnum')->enumValues());
+        // enum with dots in their values are also parsed correctly
+        $vals = ['25.25', '50.00', '75.00', '100.50'];
+        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnumWithDots')->enumValues());
     }
 }

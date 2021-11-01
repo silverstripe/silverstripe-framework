@@ -359,7 +359,7 @@ class Storage
      *
      * @param string $url Success URL
      *
-     * @return $this;
+     * @return $this
      */
     public function setSuccessUrl($url)
     {
@@ -382,7 +382,7 @@ class Storage
      *
      * @param string $url Failure URL
      *
-     * @return $this;
+     * @return $this
      */
     public function setFailureUrl($url)
     {

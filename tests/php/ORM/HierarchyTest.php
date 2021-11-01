@@ -14,6 +14,8 @@ class HierarchyTest extends SapphireTest
         HierarchyTest\TestObject::class,
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
+        HierarchyTest\HierarchyOnSubclassTestObject::class,
+        HierarchyTest\HierarchyOnSubclassTestSubObject::class,
     ];
 
     public static function getExtraDataObjects()
@@ -25,7 +27,7 @@ class HierarchyTest extends SapphireTest
         return [];
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -145,6 +147,43 @@ class HierarchyTest extends SapphireTest
         );
     }
 
+    public function testNumChildrenHierarchyOnSubclass()
+    {
+        /** @var HierarchyTest\HierarchyOnSubclassTestObject $obj5 */
+        $obj5 = $this->objFromFixture(HierarchyTest\HierarchyOnSubclassTestObject::class, 'obj5');
+
+        $this->assertFalse(
+            $obj5->hasMethod('numChildren'),
+            'numChildren() cannot be called on object without Hierarchy extension'
+        );
+
+        /** @var HierarchyTest\HierarchyOnSubclassTestSubObject $obj5a */
+        $obj5a = $this->objFromFixture(HierarchyTest\HierarchyOnSubclassTestSubObject::class, 'obj5a');
+        /** @var HierarchyTest\HierarchyOnSubclassTestSubObject $obj5b */
+        $obj5b = $this->objFromFixture(HierarchyTest\HierarchyOnSubclassTestSubObject::class, 'obj5b');
+
+        $this->assertEquals(2, $obj5a->numChildren());
+        $this->assertEquals(1, $obj5b->numChildren());
+
+        $obj5bChild2 = new HierarchyTest\HierarchyOnSubclassTestSubObject();
+        $obj5bChild2->ParentID = $obj5b->ID;
+        $obj5bChild2->write();
+        $this->assertEquals(
+            $obj5b->numChildren(false),
+            2,
+            'numChildren() caching can be disabled through method parameter'
+        );
+        $obj5bChild3 = new HierarchyTest\HierarchyOnSubclassTestSubObject();
+        $obj5bChild3->ParentID = $obj5b->ID;
+        $obj5bChild3->write();
+        $obj5b->flushCache();
+        $this->assertEquals(
+            $obj5b->numChildren(),
+            3,
+            'numChildren() caching can be disabled by flushCache()'
+        );
+    }
+
     public function testLoadDescendantIDListIntoArray()
     {
         /** @var HierarchyTest\TestObject $obj2 */
@@ -219,7 +258,7 @@ class HierarchyTest extends SapphireTest
         $this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
     }
 
-    public function testNoHideFromHeirarchy()
+    public function testNoHideFromHierarchy()
     {
         /** @var HierarchyTest\HideTestObject $obj4 */
         $obj4 = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
@@ -232,7 +271,7 @@ class HierarchyTest extends SapphireTest
         $this->assertEquals($obj4->liveChildren()->Count(), 2);
     }
 
-    public function testHideFromHeirarchy()
+    public function testHideFromHierarchy()
     {
         HierarchyTest\HideTestObject::config()->update(
             'hide_from_hierarchy',

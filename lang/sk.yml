@@ -19,8 +19,6 @@ sk:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neplatná požiadavka'
     REQUEST_ABORTED: 'Požiadavka prerušená'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Neznáma
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
@@ -168,7 +166,6 @@ sk:
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
     FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
-    KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo

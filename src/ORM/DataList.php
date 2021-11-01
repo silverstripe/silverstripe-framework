@@ -309,7 +309,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
      *
-     * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+     * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
      * @return static
      */
     public function sort()
@@ -512,7 +512,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      *
      * @param string $field Name of field or relation to apply
-     * @param string &$columnName Quoted column name
+     * @param string $columnName Quoted column name (by reference)
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return $this DataList with this relation applied
@@ -1285,5 +1285,45 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function offsetUnset($key)
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
+    }
+
+    /**
+     * Iterate over this DataList in "chunks". This will break the query in smaller subsets and avoid loading the entire
+     * result set in memory at once. Beware not to perform any operations on the results that might alter the return
+     * order. Otherwise, you might break subsequent chunks.
+     *
+     * You also can not define a custom limit or offset when using the chunk method.
+     *
+     * @param int $chunkSize
+     * @throws InvalidArgumentException If `$chunkSize` has an invalid size.
+     * @return Generator|DataObject[]
+     */
+    public function chunkedFetch(int $chunkSize = 1000): iterable
+    {
+        if ($chunkSize < 1) {
+            throw new InvalidArgumentException(sprintf(
+                '%s::%s: chunkSize must be greater than or equal to 1',
+                __CLASS__,
+                __METHOD__
+            ));
+        }
+
+        $currentChunk = 0;
+
+        // Keep looping until we run out of chunks
+        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)->getIterator()) {
+            // Loop over all the item in our chunk
+            foreach ($chunk as $item) {
+                yield $item;
+            }
+
+
+            if ($chunk->count() < $chunkSize) {
+                // If our last chunk had less item than our chunkSize, we've reach the end.
+                break;
+            }
+
+            $currentChunk++;
+        }
     }
 }

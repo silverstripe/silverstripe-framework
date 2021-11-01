@@ -1,6 +1,4 @@
 en:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: unknown
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
@@ -27,8 +25,6 @@ en:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Unknown
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
     INFO_TITLE: 'Security Confirmation'
@@ -182,6 +178,8 @@ en:
     ANY: Any
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Too many related objects; fallback field in use'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -266,7 +264,8 @@ en:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
-    KEEPMESIGNEDIN: 'Keep me signed in'
+    KEEP_ME_SIGNED_IN: 'Keep me signed in for {count} days'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
@@ -275,7 +274,6 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
-    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
@@ -365,3 +363,5 @@ en:
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDRESETSENTHEADER: 'Password reset link sent'
     PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'There was a problem loading the media.'

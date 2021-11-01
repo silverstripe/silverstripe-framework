@@ -21,7 +21,7 @@ The assets module is composed of these major storage classes:
 * [api:SilverStripe\Assets\Storage\DBFile]: This is the DB field used by the File dataobject internally for
   storing references to physical files in the asset backend.
 * [api:SilverStripe\Assets\Flysystem\FlysystemAssetStore]: The default backend, provided by
-  [Flysystem](https://flysystem.thephpleague.com/), which SilverStripe uses as an asset persistence layer.
+  [Flysystem](https://flysystem.thephpleague.com/), which Silverstripe CMS uses as an asset persistence layer.
 * [api:SilverStripe\Assets\InterventionBackend]: Default image resizing mechanism, provided by
   [intervention image](http://image.intervention.io/).
 
@@ -118,11 +118,12 @@ This corresponds to a file with the following properties:
 - Variant: FitWzYwLDYwXQ (corresponds to `Fit[60,60]`)
 
 The URL for this file will not match the physical location on disk.
-It leaves out the `.protected/` folder, and leaves that to SilverStripe's integrated routing:
+It leaves out the `.protected/` folder, and leaves that to Silverstripe CMS's integrated routing:
 `http://www.example.com/assets/my-protected-folder/b63923d8d4/my-protected-file.jpg`.
 
 For more information on how protected files are stored see the [file security](/developer_guides/files/file_security)
-section.
+section. We recommend moving this folder outside of the webroot,
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
 
 ## Versioned file paths
 

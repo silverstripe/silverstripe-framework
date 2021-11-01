@@ -2,7 +2,8 @@
 
 namespace SilverStripe\Control\Tests\Email;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use DateTime;
+use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Email\SwiftMailer;
@@ -135,7 +136,7 @@ class EmailTest extends SapphireTest
 
     public function testSend()
     {
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        /** @var Email|MockObject $email */
         $email = $this->makeEmailMock('Test send HTML');
 
         // email should not call render if a body is supplied
@@ -165,7 +166,7 @@ class EmailTest extends SapphireTest
 
     public function testRenderedSend()
     {
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        /** @var Email|MockObject $email */
         $email = $this->getMockBuilder(Email::class)
             ->enableProxyingToOriginalMethods()
             ->getMock();
@@ -192,7 +193,7 @@ class EmailTest extends SapphireTest
             '$default',
         ]);
 
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        /** @var Email|MockObject $email */
         $email = $this->getMockBuilder(EmailSubClass::class)
             ->enableProxyingToOriginalMethods()
             ->getMock();
@@ -206,7 +207,7 @@ class EmailTest extends SapphireTest
         $email->send();
         $this->assertTrue($email->hasPlainPart());
         $this->assertNotEmpty($email->getBody());
-        $this->assertContains('<h1>Email Sub-class</h1>', $email->getBody());
+        $this->assertStringContainsString('<h1>Email Sub-class</h1>', $email->getBody());
     }
 
     public function testConsturctor()
@@ -269,9 +270,12 @@ class EmailTest extends SapphireTest
         $email = new Email();
         $swiftMessage = new Swift_Message();
         $email->setSwiftMessage($swiftMessage);
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
+        $email->getSwiftMessage()->setDate($dateTime);
         $this->assertCount(1, $email->getFrom());
         $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom()));
-        $this->assertEquals(strtotime('2017-01-01 07:00:00'), $swiftMessage->getDate());
+        $this->assertEquals(strtotime('2017-01-01 07:00:00'), $swiftMessage->getDate()->getTimestamp());
         $this->assertEquals($swiftMessage, $email->getSwiftMessage());
 
         // check from field is retained
@@ -523,7 +527,7 @@ class EmailTest extends SapphireTest
     public function testGetFailedRecipients()
     {
         $mailer = new SwiftMailer();
-        /** @var Swift_NullTransport|PHPUnit_Framework_MockObject_MockObject $transport */
+        /** @var Swift_NullTransport|MockObject $transport */
         $transport = $this->getMockBuilder(Swift_NullTransport::class)->getMock();
         $transport->expects($this->once())
             ->method('send')
@@ -548,7 +552,7 @@ class EmailTest extends SapphireTest
             'EmailContent' => 'my content',
         ]);
         $email->render();
-        $this->assertContains('my content', $email->getBody());
+        $this->assertStringContainsString('my content', $email->getBody());
         $children = $email->getSwiftMessage()->getChildren();
         $this->assertCount(1, $children);
         $plainPart = reset($children);
@@ -557,6 +561,39 @@ class EmailTest extends SapphireTest
         // ensure repeat renders don't add multiple plain parts
         $email->render();
         $this->assertCount(1, $email->getSwiftMessage()->getChildren());
+    }
+
+    public function testRerender()
+    {
+        $email = new Email();
+        $email->setData([
+            'EmailContent' => 'my content',
+        ]);
+        $email->render();
+        $this->assertStringContainsString('my content', $email->getBody());
+        $children = $email->getSwiftMessage()->getChildren();
+        $this->assertCount(1, $children);
+        $plainPart = reset($children);
+        $this->assertEquals('my content', $plainPart->getBody());
+
+        // Ensure setting data causes a rerender
+        $email->setData([
+            'EmailContent' => 'your content'
+        ]);
+        $email->render();
+        $this->assertStringContainsString('your content', $email->getBody());
+
+        // Ensure removing data causes a rerender
+        $email->removeData('EmailContent');
+        $email->render();
+        $this->assertStringNotContainsString('your content', $email->getBody());
+
+        // Ensure adding data causes a rerender
+        $email->addData([
+            'EmailContent' => 'their content'
+        ]);
+        $email->render();
+        $this->assertStringContainsString('their content', $email->getBody());
     }
 
     public function testRenderPlainOnly()
@@ -594,8 +631,8 @@ class EmailTest extends SapphireTest
         $children = $email->getSwiftMessage()->getChildren();
         $this->assertCount(1, $children);
         $plainPart = reset($children);
-        $this->assertContains('Test', $plainPart->getBody());
-        $this->assertNotContains('<h1>Test</h1>', $plainPart->getBody());
+        $this->assertStringContainsString('Test', $plainPart->getBody());
+        $this->assertStringNotContainsString('<h1>Test</h1>', $plainPart->getBody());
     }
 
     public function testMultipleEmailSends()
@@ -607,30 +644,30 @@ class EmailTest extends SapphireTest
         $this->assertEmpty($email->getBody());
         $this->assertEmpty($email->getSwiftMessage()->getChildren());
         $email->send();
-        $this->assertContains('Test', $email->getBody());
+        $this->assertStringContainsString('Test', $email->getBody());
         $this->assertCount(1, $email->getSwiftMessage()->getChildren());
         $children = $email->getSwiftMessage()->getChildren();
         /** @var \Swift_MimePart $plainPart */
         $plainPart = reset($children);
-        $this->assertContains('Test', $plainPart->getBody());
+        $this->assertStringContainsString('Test', $plainPart->getBody());
 
 
         //send again
         $email->send();
-        $this->assertContains('Test', $email->getBody());
+        $this->assertStringContainsString('Test', $email->getBody());
         $this->assertCount(1, $email->getSwiftMessage()->getChildren());
         $children = $email->getSwiftMessage()->getChildren();
         /** @var \Swift_MimePart $plainPart */
         $plainPart = reset($children);
-        $this->assertContains('Test', $plainPart->getBody());
+        $this->assertStringContainsString('Test', $plainPart->getBody());
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|Email
+     * @return MockObject|Email
      */
     protected function makeEmailMock($subject)
     {
-        /** @var Email|PHPUnit_Framework_MockObject_MockObject $email */
+        /** @var Email|MockObject $email */
         $email = $this->getMockBuilder(Email::class)
             ->enableProxyingToOriginalMethods()
             ->getMock();

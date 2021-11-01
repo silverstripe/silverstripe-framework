@@ -5071,6 +5071,7 @@ EOC;
 
     /**
      * @param string $code
+     * @param string $templateName
      * @return string $code
      */
     protected function includeDebuggingComments($code, $templateName)

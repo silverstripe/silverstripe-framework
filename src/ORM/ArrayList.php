@@ -249,7 +249,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param array|object $item
      * @param array|object $with
-     * @return void;
+     * @return void
      */
     public function replace($item, $with)
     {
@@ -844,7 +844,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function offsetSet($offset, $value)
     {
-        if ($offset == null) {
+        if ($offset === null) {
             $this->items[] = $value;
         } else {
             $this->items[$offset] = $value;

@@ -9,7 +9,7 @@ icon: cookie-bite
 
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 
 
-SilverStripe uses cookies for remembering users preferences. Application code can modify a users cookies through
+Silverstripe CMS uses cookies for remembering users preferences. Application code can modify a users cookies through
 the [Cookie](api:SilverStripe\Control\Cookie) class. This class mostly follows the PHP API.
 
 ### set

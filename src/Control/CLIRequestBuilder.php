@@ -72,6 +72,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
     /**
      * @param array $variables
      * @param string $input
+     * @param string|null $url
      * @return HTTPRequest
      */
     public static function createFromVariables(array $variables, $input, $url = null)

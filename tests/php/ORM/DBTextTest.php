@@ -14,14 +14,14 @@ class DBTextTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // clear the previous locale setting
         $this->previousLocaleSetting = null;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // If a test sets the locale, reset it on teardown
@@ -114,7 +114,7 @@ class DBTextTest extends SapphireTest
             ['The little brown fox jumped over the lazy cow.', 3, 'The little brown…'],
             [' This text has white space around the ends ', 3, 'This text has…'],
 
-            // Words less than the limt word count don't get truncated, ellipsis not added
+            // Words less than the limit word count don't get truncated, ellipsis not added
             ['Two words', 3, 'Two words'],  // Two words shouldn't have an ellipsis
             ['These three words', 3, 'These three words'], // Three words shouldn't have an ellipsis
             ['One', 3, 'One'],  // Neither should one word
@@ -216,7 +216,7 @@ class DBTextTest extends SapphireTest
     }
 
     /**
-     * each test is in the format input, charactere limit, highlight, expected output
+     * each test is in the format input, character limit, highlight, expected output
      *
      * @return array
      */
@@ -268,18 +268,53 @@ class DBTextTest extends SapphireTest
                 'both schön and können have umlauts',
                 21,
                 '',
-                // check non existant search term
+                // check non-existent search term
                 'both schön and können…',
             ]
+        ];
+    }
 
-
+    /**
+     * each test is in the format input, word limit, add ellipsis (false or string), expected output
+     *
+     * @return array
+     */
+    public function providerSummary()
+    {
+        return [
+            [
+                'This is some text. It is a test',
+                3,
+                false,
+                'This is some…',
+            ],
+            [
+                // check custom ellipsis
+                'This is a test text in a longer sentence and a custom ellipsis.',
+                8,
+                '...', // regular dots instead of the ellipsis character
+                'This is a test text in a longer...',
+            ],
+            [
+                'both schön and können have umlauts',
+                5,
+                false,
+                'both schön and können have…',
+            ],
+            [
+                // check invalid UTF8 handling — input is an invalid UTF sequence, output should be empty string
+                "\xf0\x28\x8c\xbc",
+                50,
+                false,
+                '',
+            ],
         ];
     }
 
     /**
      * @dataProvider providerContextSummary
      * @param string $originalValue Input
-     * @param int    $limit         Numer of characters
+     * @param int    $limit         Number of characters
      * @param string $keywords      Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */
@@ -351,5 +386,19 @@ class DBTextTest extends SapphireTest
     {
         $textObj = new DBText('Test');
         $this->assertEquals('…', $textObj->defaultEllipsis());
+    }
+
+    /**
+     * @dataProvider providerSummary
+     * @param string $originalValue Input
+     * @param int    $words         Number of words
+     * @param mixed  $add           Ellipsis (false for default or string for custom text)
+     * @param string $expectedValue Expected output (XML encoded safely)
+     */
+    public function testSummary($originalValue, $words, $add, $expectedValue)
+    {
+        $text = DBField::create_field(DBText::class, $originalValue);
+        $result = $text->obj('Summary', [$words, $add])->forTemplate();
+        $this->assertEquals($expectedValue, $result);
     }
 }

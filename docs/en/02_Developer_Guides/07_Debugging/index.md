@@ -5,7 +5,7 @@ icon: bug
 ---
 # Debugging
 
-SilverStripe can be a large and complex framework to debug, but there are ways to make debugging less painful. In this
+Silverstripe CMS can be a large and complex framework to debug, but there are ways to make debugging less painful. In this
 guide we show the basics on defining the correct [Environment Type](environment_types) for your application and other
 built-in helpers for dealing with application errors.
 
@@ -13,7 +13,7 @@ built-in helpers for dealing with application errors.
 
 ## Performance
 
-See the [Profiling](../performance/profiling) documentation for more information on profiling SilverStripe to track down
+See the [Profiling](../performance/profiling) documentation for more information on profiling Silverstripe CMS to track down
 bottle-necks and identify slow moving parts of your application chain.
 
 ## Debugging Utilities

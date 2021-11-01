@@ -77,9 +77,28 @@ query {
   readPages {
     nodes {
       title
+      content
+      ... on BlogPage {
+        date(format: NICE)
+        comments {
+          nodes {
+            comment
+            author {
+              firstName
+            }
+          }
+        }
+      }
     }
 }
 ```
+
+[info]
+Note the use of the default arguments on `date`. Fields created from `DBFields`
+generate their own default sets of arguments. For more information, see the
+[DBFieldArgs](query_plugins#dbfieldargs) for more information.
+[/info]
+
 
 A mutation:
 ```graphql
@@ -125,8 +144,8 @@ Page:
 
 #### Customising the input types
 
-The input types, specifically in `create` and `update` can be customised with a whitelist 
-and/or blacklist of fields.
+The input types, specifically in `create` and `update` can be customised with a
+list of fields, which can include explicitly _disallowed_ fields.
 
 **app/_graphql/models.yml**
 ```
@@ -138,8 +157,9 @@ Page:
         title: true
         content: true
     update:
-      exclude:
-        sensitiveField: true
+      fields:
+        '*': true
+        sensitiveField: false
 ```
 
 ### Adding more fields
@@ -220,12 +240,32 @@ Page:
         paginateList: false # don't paginate the read operation
 ```
 
+### Blacklisted fields {#blacklisted-fields}
+
+While selecting all fields via `*` is usedful, there are some fields that you
+don't want to accidentally expose, especially if you're a module author
+and expect models within this code to be used through custom GraphQL endpoints.
+For example, a module might add a secret "preview token" to each `SiteTree`.
+A custom GraphQL endpoint might have used `fields: '*'` on `SiteTree` to list pages
+on the public site, which now includes a sensitive field.
+
+The `graphql_blacklisted_fields` property on `DataObject` allows you to
+blacklist fields globally for all GraphQL schemas.
+This blacklist applies for all operations (read, update, etc).  
+
+**app/_config/graphql.yml**
+```yaml
+SilverStripe\CMS\Model\SiteTree:
+    graphql_blacklisted_fields:
+      myPreviewTokenField: true
+```
+
 ### Model configuration
 
 There are several settings you can apply to your model class (typically `DataObjectModel`),
 but because they can have distinct values _per schema_, the standard `_config` layer is not
-an option. Model configuration has to be done within the schema definition in the `modelConfig`
-section.
+an option. Model configuration has to be done within the schema config in the `modelConfig`
+subsection.
 
 ### Customising the type name
 
@@ -245,10 +285,11 @@ the `$className` as a parameter.
 
 Let's turn `MyProject\Models\Product` into the more specific `MyProjectProduct`
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject: 
-  type_formatter: ['MyProject\Formatters', 'formatType' ]
+modelConfig:
+  DataObject: 
+    type_formatter: ['MyProject\Formatters', 'formatType' ]
 ```
 
 [info]
@@ -277,10 +318,11 @@ public static function formatType(string $className): string
 You can also add prefixes to all your DataObject types. This can be a scalar value or a callable,
 using the same signature as `type_formatter`.
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject
-  type_prefix: 'MyProject'
+modelConfig:
+  DataObject
+    type_prefix: 'MyProject'
 ```
 
 ### Further reading

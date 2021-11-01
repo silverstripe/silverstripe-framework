@@ -168,7 +168,6 @@ es:
     ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
     FIRSTNAME: Nombre(s)
     INTERFACELANG: 'Idioma de la Interfaz'
-    KEEPMESIGNEDIN: 'Manténme conectado'
     LOGGEDINAS: 'Estás conectado como {name}.'
     NEWPASSWORD: 'Nueva Contraseña'
     PASSWORD: Contraseña

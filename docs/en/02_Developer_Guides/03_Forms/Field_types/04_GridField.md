@@ -6,7 +6,7 @@ icon: table
 
 # GridField
 
-[GridField](api:SilverStripe\Forms\GridField\GridField) is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 
+[GridField](api:SilverStripe\Forms\GridField\GridField) is Silverstripe CMS's implementation of data grids. The main purpose of the `FormField` is to display 
 tabular data in a format that is easy to view and modify. It can be thought of as a HTML table with some tricks.
 
 

@@ -49,7 +49,7 @@ class ManyManyList extends RelationList
      *
      * Generation of the appropriate record set is left up to the caller, using
      * the normal {@link DataList} methods. Addition arguments are used to
-     * support {@@link add()} and {@link remove()} methods.
+     * support {@link add()} and {@link remove()} methods.
      *
      * @param string $dataClass The class of the DataObjects that this will list.
      * @param string $joinTable The name of the table whose entries define the content of this many_many relation.

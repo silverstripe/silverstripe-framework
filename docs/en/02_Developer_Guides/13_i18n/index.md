@@ -5,7 +5,7 @@ summary: Display templates and PHP code in different languages based on the pref
 
 # i18n
 
-The i18n class (short for "internationalization") in SilverStripe enables you to display templates and PHP code in
+The i18n class (short for "internationalization") in Silverstripe CMS enables you to display templates and PHP code in
 different languages based on your global settings and the preferences of your website users. This process is also known
 as l10n (short for "localization").
 
@@ -43,9 +43,9 @@ these translations are available. See [unicode.org](http://unicode.org/cldr/data
 for a complete listing of available locales.
 
 The `i18n` logic doesn't set the PHP locale via [setlocale()](http://php.net/setlocale).
-Localisation methods in SilverStripe rely on explicit locale settings as documented below.
+Localisation methods in Silverstripe CMS rely on explicit locale settings as documented below.
 If you rely on PHP's built-in localisation such as [strftime()](http://php.net/strftime),
-please only change locale information selectively. Setting `LC_ALL` or `LC_NUMERIC` will cause issues with SilverStripe
+please only change locale information selectively. Setting `LC_ALL` or `LC_NUMERIC` will cause issues with Silverstripe CMS
 operations such as decimal separators in database queries.
 
 ### Getting the locale
@@ -92,7 +92,7 @@ i18n::config()
     ->set('time_format', 'HH:mm');
 ```
 
-Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
+Localization in Silverstripe CMS uses PHP's [intl extension](http://php.net/intl).
 Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
 are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
@@ -103,35 +103,24 @@ that gets presented to them. Currently this is a mix of PHP defaults (for readon
 browser defaults (for `DateField` on browsers supporting HTML5), and [Moment.JS](http://momentjs.com/)
 client-side logic (for `DateField` polyfills and other readonly dates and times).
 
-### Language Names
+### Adding locales
 
-SilverStripe comes with a built-in list of common languages, listed by locale and region.
-They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [config setting](/developer_guides/configuration).
+Silverstripe CMS now uses the php-intl extension.  Before adding an extra locale, make sure the ICU library on your server supports it (see https://www.php.net/manual/en/resourcebundle.locales.php for more info).
+
+They can be accessed via the `SilverStripe\i18n\Data\Intl\IntlLocales.locales`  [config setting](/developer_guides/configuration).
 
 In order to add a value, add the following to your `config.yml`:
 
-
 ```yml
-SilverStripe\i18n\i18n:
-  common_locales:
-    de_CGN:
-      name: German (Cologne)
-      native: Kölsch
+SilverStripe\i18n\Data\Intl\IntlLocales:
+  locales:
+    fr_LU: French (Luxembourg)   
 ```
 
-Similarly, to change an existing language label, you can overwrite one of these keys:
-
-
-```yml
-SilverStripe\i18n\i18n:
-  common_locales:
-    en_NZ:
-      native: Niu Zillund
-```
 
 ### i18n in URLs
 
-By default, URLs for pages in SilverStripe (the `SiteTree->URLSegment` property)
+By default, URLs for pages in Silverstripe CMS (the `SiteTree->URLSegment` property)
 are automatically reduced to the allowed allowed subset of ASCII characters.
 If characters outside this subset are added, they are either removed or (if possible) "transliterated".
 This describes the process of converting from one character set to another
@@ -168,7 +157,7 @@ $field->setDateFormat('d.M.y'); // set a more specific date format (single digit
 
 ## Translating text
 
-Adapting a module to make it localizable is easy with SilverStripe. You just need to avoid hardcoding strings that are
+Adapting a module to make it localizable is easy with Silverstripe CMS. You just need to avoid hardcoding strings that are
 language-dependent and use a translator function call instead.
 
 
@@ -236,7 +225,7 @@ class MyObject extends DataObject implements i18nEntityProvider
 ```
 
 In YML format this will be expressed as the below. This follows the
-[ruby i18n convention](guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
+[ruby i18n convention](https://guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
 
 ```yaml
 en:
@@ -365,7 +354,7 @@ Each module can have one language table per locale, stored by convention in the 
 The translation is powered by [Zend_Translate](http://framework.zend.com/manual/current/en/modules/zend.i18n.translating.html),
 which supports different translation adapters, dealing with different storage formats.
 
-By default, SilverStripe uses a YAML format which is loaded via the
+By default, Silverstripe CMS uses a YAML format which is loaded via the
 [symfony/translate](http://symfony.com/doc/current/translation.html)  library.
 
 Example: framework/lang/en.yml (extract)

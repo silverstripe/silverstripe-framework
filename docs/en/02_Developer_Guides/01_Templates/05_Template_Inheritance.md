@@ -8,7 +8,7 @@ icon: sitemap
 
 ## Theme types
 
-Templates in SilverStripe are bundled into one of two groups:
+Templates in Silverstripe CMS are bundled into one of two groups:
  - Default Templates, such as those provided in `mymodule/templates` folder.
  - Theme templates, such as those provided in `themes/mytheme/templates` folders.
 
@@ -32,10 +32,10 @@ by the full path (from the `templates` folder onwards).
 
 ### Nested Layouts through `$Layout` type
 
-SilverStripe has basic support for nested layouts through a fixed template variable named `$Layout`. It's used for 
+Silverstripe CMS has basic support for nested layouts through a fixed template variable named `$Layout`. It's used for 
 storing top level template information separate to individual page layouts.
 
-When `$Layout` is found within a root template file (one in `templates`), SilverStripe will attempt to fetch a child 
+When `$Layout` is found within a root template file (one in `templates`), Silverstripe CMS will attempt to fetch a child 
 template from the `templates/<namespace>/Layout/<class>.ss` path, where `<namespace>` and `<class>` represent
 the class being rendered. It will do a full sweep of your modules, core and custom code as it 
 would if it was looking for a new root template, as well as looking down the class hierarchy until
@@ -98,7 +98,7 @@ to determine resolution priority. This search is based on the following three co
  - `SilverStripe\View\SSViewer.themes` - The list of all themes in order of priority (highest first).
    This includes the default set via `$default` as a theme set. This config is normally set by the web
    developer.
- - `SilverStripe\Core\Manifest\ModuleManifest.module_priority` - The list of modules within which $default
+ - `SilverStripe\Core\Manifest\ModuleManifest.module_priority` - The list of modules within which `$default`
    theme templates should be sorted, in order of priority (highest first). This config is normally set by
    the module author, and does not normally need to be customised. This includes the `$project` and
    `$other_modules` placeholder values.
@@ -166,7 +166,7 @@ will only defer to our modules templates folder if not found elsewhere.
 
 The default project structure contains an `app/` folder,
 which also acts as as a module in terms of template priorities.
-See [/getting_started/directory_structure](Directory Structure)
+See [Directory Structure](/../getting_started/directory_structure)
 to find out how to rename this folder.
 
 ### About module "names"

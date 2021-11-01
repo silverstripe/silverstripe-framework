@@ -114,6 +114,58 @@ don't apply in this context. Most importantly, this means you need to
 implement your own `canView()` checks.
 [/notice]
 
+## Resolver Method Arguments
+
+A resolver is executed in a particular query context,
+which is passed into the method as arguments.
+
+ * `$value`: An optional `mixed` value of the parent in your data graph.
+   Defaults to `null` on the root level, but can be useful to retrieve the object
+   when writing field-specific resolvers (see [Resolver Discovery](resolver_discovery))
+ * `$args`: An array of optional arguments for this field (which is different from the [Query Variables](https://graphql.org/learn/queries/#variables))
+ * `$context`: An arbitrary array which holds information shared between resolvers.
+   Use implementors of `SilverStripe\GraphQL\Schema\Interfaces\ContextProvider` to get and set
+   data, rather than relying on the array keys directly.
+ * `$info`: Data structure containing useful information for the resolving process (e.g. the field name).
+   See [Fetching Data](http://webonyx.github.io/graphql-php/data-fetching/) in the underlying PHP library for details.
+
+## Using Context Providers
+
+The `$context` array can be useful to get access to the HTTP request,
+retrieve the current member, or find out details about the schema.
+You can use it through implementors of the `SilverStripe\GraphQL\Schema\Interfaces\ContextProvider` interface.
+In the example below, we'll demonstrate how you could limit viewing the country code to
+users with ADMIN permissions.
+
+
+**app/src/Resolvers/MyResolver.php**
+```php
+use GraphQL\Type\Definition\ResolveInfo;
+use SilverStripe\GraphQL\QueryHandler\UserContextProvider;
+use SilverStripe\Security\Permission;
+
+class MyResolver
+{
+    public static function resolveCountries($value = null, array $args = [], array $context = [], ?ResolveInfo $info = null): array
+    {
+        $member = UserContextProvider::get($context);
+        $canViewCode = ($member && Permission::checkMember($member, 'ADMIN'));
+        $results = [];
+        $countries = Injector::inst()->get(Locales::class)->getCountries();
+        foreach ($countries as $code => $name) {
+            $results[] = [
+                'code' => $canViewCode ? $code : '',
+                'name' => $name
+            ];
+        }
+
+        return $results;
+    }
+}
+```
+
+## Resolver Discovery
+
 This is great, but as we write more and more queries for types with more and more fields,
 it's going to get awfully laborious mapping all these resolvers. Let's clean this up a bit by
 adding a bit of convention over configuration, and save ourselves a lot of time to boot. We can do

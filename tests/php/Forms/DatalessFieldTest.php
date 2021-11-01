@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Dev\SapphireTest;
 
 class DatalessFieldTest extends SapphireTest
@@ -16,7 +16,7 @@ class DatalessFieldTest extends SapphireTest
 
     public function testFieldHolderAndSmallFieldHolderReturnField()
     {
-        /** @var DatalessField|PHPUnit_Framework_MockObject_MockObject $mock */
+        /** @var DatalessField|MockObject $mock */
         $mock = $this->getMockBuilder(DatalessField::class)
             ->disableOriginalConstructor()
             ->setMethods(['Field'])

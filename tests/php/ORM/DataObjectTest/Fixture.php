@@ -25,6 +25,10 @@ class Fixture extends DataObject implements TestOnly
         'MyInt' => 'Int',
         'MyCurrency' => 'Currency',
         'MyDecimal'=> 'Decimal',
+
+        // Enums
+        'MyEnum' => 'Enum("25,50,75,100", "50")',
+        'MyEnumWithDots' => 'Enum("25.25,50.00,75.00,100.50", "50.00")',
     ];
 
     private static $defaults = [

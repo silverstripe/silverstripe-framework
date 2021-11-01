@@ -82,7 +82,7 @@ abstract class DBString extends DBField
 
     /**
      * (non-PHPdoc)
-     * @see core/model/fieldtypes/DBField#exists()
+     * @see DBField::exists()
      */
     public function exists()
     {

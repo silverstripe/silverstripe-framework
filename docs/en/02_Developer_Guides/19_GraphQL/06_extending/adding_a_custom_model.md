@@ -105,11 +105,10 @@ class ModelCreator implements SchemaModelCreatorInterface
 
 Just add it to the registry:
 
+**app/_graphql/config.yml
 ```yaml
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\GraphQL\Schema\Registry\SchemaModelCreatorRegistry:
-    constructor:
-      dataobject: '%$SilverStripe\GraphQL\Schema\DataObject\ModelCreator'
+modelCreators:
+  - 'SilverStripe\GraphQL\Schema\DataObject\ModelCreator'
 ```
 
 ### Further reading

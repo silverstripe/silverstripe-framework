@@ -23,6 +23,7 @@ plugins to include, and for DataObject queries, these include:
 
 * filter
 * sort
+* dbFieldArgs
 * paginateList
 * inheritance
 * canView (read, readOne)
@@ -283,36 +284,135 @@ MyProject\Models\ProductCategory:
 
 To disable sort globally, use `modelConfig`:
 
-*app/_graphql/modelConfig.yml*
+*app/_graphql/config.yml*
 ```yaml
-DataObject:
-  operations:
-    read:
-      plugins:
-        sort: false
+modelConfig:
+  DataObject:
+    operations:
+      read:
+        plugins:
+          sort: false
+```
+
+### The DBFieldArgs plugin  {#dbfieldargs}
+
+When fields are introspected from a model and reference a `DBField` instance,
+they get populated with a default set of arguments that map to methods on that
+`DBField` class, for instance `->Nice()` or `->LimitSentences(4)`.
+
+Let's have a look at this query:
+
+```graphql
+query {
+  readPages {
+    nodes {
+      content(format: LIMIT_SENTENCES, limit: 4)
+      created(format: NICE)
+      
+      ... on BlogPage {
+        introText(format: FIRST_PARAGRAPH)
+        publishDate(format: CUSTOM, customFormat: "dd/MM/yyyy")
+      }
+    }
+  }
+}
+```
+
+The primary field types that are affected by this include:
+
+* `DBText` (including `DBHTMLText`)
+* `DBDate` (including `DBDatetime`)
+* `DBTime`
+* `DBDecimal`
+* `DBFloat`
+
+#### All available arguments
+
+##### DBText
+
+* `format: CONTEXT_SUMMARY` (optional "limit" arg)
+* `format: FIRST_PARAGRAPH`
+* `format: LIMIT_SENTENCES` (optional "limit" arg)
+* `format: SUMMARY` (optional "limit" arg)
+* `parseShortcodes: Boolean` (DBHTMLText only)
+
+##### DBDate
+
+* `format: TIMESTAMP`
+* `format: NICE`
+* `format: DAY_OF_WEEK`
+* `format: MONTH`
+* `format: YEAR`
+* `format: SHORT_MONTH`
+* `format: DAY_OF_MONTH`
+* `format: SHORT`
+* `format: LONG`
+* `format: FULL`
+* `format: CUSTOM` (requires `customFormat: String` arg)
+
+##### DBTime
+
+* `format: TIMESTAMP`
+* `format: NICE`
+* `format: SHORT`
+* `format: CUSTOM` (requires `customFormat: String` arg)
+
+##### DBDecimal
+
+* `format: INT`
+
+##### DBFloat
+
+* `format: NICE`
+* `format: ROUND`
+* `format: NICE_ROUND`
+
+
+#### Enum naming strategy and deduplication
+
+By default, auto-generated Enum types will use as generic name as possible, which is `<FieldName>Enum`, e.g.
+`OrderStatusEnum`. On occasion, this may collide with other types, e.g. `OptionsEnum`. In this case, the
+second enum generated will use `<TypeName><FieldName>Enum`.
+
+If an enum already exists with the same fields and name, it will be reused. For instance, if `OptionsEnum`
+is found and has exactly the same defined values (in the same order) as the Enum being generated,
+it will be reused rather than proceding to the deduplication strategy.
+
+#### Custom enum names
+
+You can specify custom enum names in the plugin config:
+
+```
+modelConfig:
+  DataObject:
+    plugins:
+      dbFieldTypes:
+        enumTypeMapping:
+          MyType:
+            myEnumField: SomeCustomTypeName
+             
+```
+
+You can also specify enums to be ignored. (`ClassName` does this on all DataObjects to prevent inheritance
+issues)
+
+```
+modelConfig:
+  DataObject:
+    plugins:
+      dbFieldTypes:
+        ignore:
+          MyType:
+            myEnumField: true
+             
 ```
 
 ### The getByLink plugin
 
 When the `silverstripe/cms` module is installed (it is in most cases), a plugin called `getByLink`
-will ensure that queries that return a single DataObject model (e.g. readOne) get a new filter argument
+will ensure that queries that return a single DataObject model (e.g. readOne) get a new query argument
 called `link` (configurable on the `field_name` property of `LinkablePlugin`).
 
-When the `filter` plugin is also activated for the query (it is by default for readOne), the `link` field will be added to the filter
-input type. Note that all other filters won't apply in this case, as `link`, like `id`, is exclusive 
-by definition.
-
-If the `filter` plugin is not activated for the query, a new `link` argument will be added to the query
-on its own.
-
-With the standard `filter` plugin applied:
-```graphql
-readOneSiteTree(filter: { link: "/about-us" }) {
-  title
-}
-```
-
-When the `filter` plugin is disabled:
 ```graphql
 readOneSiteTree(link: "/about-us" ) {
   title

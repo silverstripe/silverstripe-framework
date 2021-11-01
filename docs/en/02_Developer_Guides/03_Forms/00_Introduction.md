@@ -6,7 +6,7 @@ iconBrand: wpforms
 
 # Forms
 
-The HTML `Form` is the most used way to interact with a user. SilverStripe provides classes to generate forms through 
+The HTML `Form` is the most used way to interact with a user. Silverstripe CMS provides classes to generate forms through 
 the [Form](api:SilverStripe\Forms\Form) class, [FormField](api:SilverStripe\Forms\FormField) instances to capture data and submissions through [FormAction](api:SilverStripe\Forms\FormAction).
 
 [notice]
@@ -33,7 +33,7 @@ $form = new Form(
 
 In practice, this looks like:
 
-**app/code/PageController.php**
+**app/src/PageController.php**
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -89,7 +89,7 @@ variable.
 [/info]
 
 When constructing the `Form` instance (`new Form($controller, $name)`) both controller and name are required. The
-`$controller` and `$name` are used to allow SilverStripe to calculate the origin of the `Form object`. When a user 
+`$controller` and `$name` are used to allow Silverstripe CMS to calculate the origin of the `Form object`. When a user 
 submits the `HelloForm` from your `contact-us` page the form submission will go to `contact-us/HelloForm` before any of
 the [FormAction](api:SilverStripe\Forms\FormAction). The URL is known as the `$controller` instance will know the 'contact-us' link and we provide 
 `HelloForm` as the `$name` of the form. `$name` **needs** to match the method name.
@@ -331,6 +331,8 @@ class PageController extends ContentController
 }
 
 ```
+
+See [how_tos/handle_nested_data](How to: Handle nested form data) for more advanced use cases.
 
 ## Validation
 

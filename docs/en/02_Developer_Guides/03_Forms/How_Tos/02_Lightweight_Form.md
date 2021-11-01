@@ -6,7 +6,7 @@ iconBrand: wpforms
 
 # How to Create Lightweight Form
 
-Out of the box, SilverStripe provides a robust and reusable set of HTML markup for [FormField](api:SilverStripe\Forms\FormField), however this can 
+Out of the box, Silverstripe CMS provides a robust and reusable set of HTML markup for [FormField](api:SilverStripe\Forms\FormField), however this can 
 sometimes produce markup which is unnecessarily bloated.
 
 For example, a basic search form. We want to use the [Form](api:SilverStripe\Forms\Form) API to handle the form but we may want to provide a 

@@ -13,6 +13,20 @@ Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
 
+## Getting the type name for a model class
+
+Often times, you'll need to know the name of the type given a class name. There's a bit of context to this.
+
+
+### Getting the type name from within your app
+
+If you need the type name during normal execution of your app, e.g. to display in your UI, you can rely
+on the cached typenames, which are persisted alongside your generated schema code.
+
+```php
+SchemaBuilder::singleton()->read('default')->getTypeNameForClass($className);
+```
+
 ## Persisting queries
 
 A common pattern in GraphQL APIs is to store queries on the server by an identifier. This helps save
@@ -128,15 +142,16 @@ This feature is experimental, and has not been thoroughly evaluated for security
 [/warning]
 
 
-## Schema introspection
+## Schema introspection {#schema-introspection}
 
 Some GraphQL clients such as [Apollo](http://apollographql.com) require some level of introspection
-into the schema. While introspection is [part of the GraphQL spec](http://graphql.org/learn/introspection/),
-this module provides a limited API for fetching it via non-graphql endpoints. By default, the `graphql/`
-controller provides a `types` action that will return the type schema (serialised as JSON) dynamically.
+into the schema. The `SchemaTranscriber` class will persist this data to a static file in an event 
+that is fired on completion of the schema build. This file can then be consumed by a client side library
+like Apollo. The `silverstripe/admin` module is built to consume this data and expects it to be in a
+web-accessible location.
 
-*GET http://example.com/graphql/types*
-```js
+
+```json
 {
    "data":{
       "__schema":{
@@ -152,19 +167,18 @@ controller provides a `types` action that will return the type schema (serialise
    }
 
 ```
+By default, the file will be stored in `public/_graphql`. Files are only generated for the `silverstripe/admin` module.
 
-As your schema grows, introspecting it dynamically may have a performance hit. Alternatively,
-if you have the `silverstripe/assets` module installed (as it is in the default SilverStripe installation),
-GraphQL can cache your schema as a flat file in the `assets/` directory. To enable this, simply
-set the `cache_types_in_filesystem` setting to `true` on `SilverStripe\GraphQL\Controller`. Once enabled,
-a `types.graphql` file will be written to your `assets/` directory on `flush`.
+If you need these types for your own uses, add a new handler:
 
-When `cache_types_in_filesystem` is enabled, it is recommended that you remove the extension that
-provides the dynamic introspection endpoint.
-
-```php
-use SilverStripe\GraphQL\Controller;
-use SilverStripe\GraphQL\Extensions\IntrospectionProvider;
-
-Controller::remove_extension(IntrospectionProvider::class);
+```yml
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\EventDispatcher\Dispatch\Dispatcher:
+    properties:
+      handlers:
+        graphqlTranscribe:
+          on: [ graphqlSchemaBuild.mySchema ]
+          handler: '%$SilverStripe\GraphQL\Schema\Services\SchemaTranscribeHandler'
 ```
+
+This handler will only apply to events fired in the `mySchema` context.

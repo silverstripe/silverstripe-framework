@@ -149,11 +149,15 @@ class TreeMultiselectField extends TreeDropdownField
 
         // Parse ids from value string / array
         $ids = [];
+
         if (is_string($value)) {
             $ids = preg_split("#\s*,\s*#", trim($value));
         } elseif (is_array($value)) {
             $ids = array_values($value);
         }
+
+        // Filter out empty strings
+        $ids = array_filter($ids);
 
         // No value
         if (empty($ids)) {

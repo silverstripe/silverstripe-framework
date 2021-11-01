@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Tests;
 
 use DateTime;
+use Exception;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
@@ -42,7 +43,7 @@ class ClassInfoTest extends SapphireTest
         ExtendTest3::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ClassInfo::reset_db_cache();
@@ -106,8 +107,8 @@ class ClassInfoTest extends SapphireTest
 
     public function testNonClassName()
     {
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessageRegExp('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
         $this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
     }
 

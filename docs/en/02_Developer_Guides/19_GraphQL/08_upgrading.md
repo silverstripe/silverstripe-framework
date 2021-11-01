@@ -8,7 +8,7 @@ summary: A high-level view of what you'll need to change when upgrading to Graph
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
 Help us improve it by joining #graphql on the [Community Slack](https://www.silverstripe.org/blog/community-slack-channel/),
-and report any issues at [github.com/silverstripe/silverstripe-graphql](https://github.com/silverstripe/silverstripe-graphql). 
+and report any issues at [github.com/silverstripe/silverstripe-graphql](https://github.com/silverstripe/silverstripe-graphql).
 Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
@@ -42,7 +42,7 @@ Most of the time, the name of your schema is `default`. If you're editing DataOb
 with GraphQL in the CMS, you may have to build the `admin` schema as well.
 [/info]
 
-This build process is a larger topic with a few more things to be aware of. 
+This build process is a larger topic with a few more things to be aware of.
 Check the [building the schema](getting_started/building_the_schema) documentation to learn more.
 
 
@@ -53,7 +53,8 @@ registration of types, execution of scaffolding, running queries and middleware,
 class has been broken up into separate concerns:
 
 * `Schema` <- register your stuff here
-* `QueryHandlerInterface` <- Handles GraphQL queries. You'll probably never have to touch it.
+* `QueryHandlerInterface` <- Handles GraphQL queries, applies middlewares and context.
+  You'll probably never have to touch it.
 
 ### Upgrading
 
@@ -72,7 +73,8 @@ SilverStripe\GraphQL\Manager:
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
-      src: app/_graphql # A directory of your choice
+      src:
+        - app/_graphql # A directory of your choice
 ```
 
 Add the appropriate yaml files to the directory. For more information on this pattern, see
@@ -142,7 +144,7 @@ and moved into a class.
 
 ### Upgrading
 
-Move your resolvers into one or many `ResolverProvider` implementations, register them.
+Move your resolvers into one or many classes, and register them.
 
 **before**
 ```php
@@ -156,15 +158,16 @@ class LatestPostResolver implements OperationResolver
 ```
 
 **after**
+
+**app/_graphql/config.yml**
 ```yaml
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\GraphQL\Schema\Registry\ResolverRegistry:
-    constructor:
-      myResolver: '%$MyProject\Resolvers\MyResolvers'
+resolvers:
+  - MyProject\Resolvers\MyResolverA
+  - MyProject\Resolvers\MyResolverB
 ```
 
 ```php
-class MyResolvers extends DefaultResolverProvider
+class MyResolverA
 {
     public static function resolveLatestPost($object, array $args, $context, ResolveInfo $info)
     {
@@ -218,7 +221,7 @@ class MyProvider implements ScaffoldingProvider
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
-      builders:
+      execute:
         - 'MyProject\MyProvider'
 ```
 
@@ -246,7 +249,7 @@ A model type is just a type that is backed by a class that express awareness of 
 At a high-level, it needs to answer questions like:
 
 * Do you have field X?
-What type is field Y?
+  What type is field Y?
 * What are all the fields you offer?
 * What operations do you provide?
 * Do you require any extra types to be added to the schema?
@@ -304,14 +307,33 @@ Change the casing in your queries.
 **before**
 ```graphql
 query readPages {
-  nodes {
-    Title
-    ShowInMenus
+  edges {
+    nodes {
+     Title
+     ShowInMenus
+    }
   }
 }
 ```
 
 **after**
+```graphql
+query readPages {
+  edges {
+    node {
+      title
+      showInMenus
+    }
+  }
+}
+```
+
+### `edges` no longer required
+
+We don't have [cursor-based pagination](https://graphql.org/learn/pagination/) in Silverstripe CMS, so
+the use of `edges` is merely for convention. You can eliminate a layer here and just use `nodes`, but `edges`
+still exists for backward compatibility.
+
 ```graphql
 query readPages {
   nodes {
@@ -320,6 +342,7 @@ query readPages {
   }
 }
 ```
+
 
 ## DataObject type names are simpler
 
@@ -398,10 +421,3 @@ Status:
   CANCELLED: Cancelled
   PENDING: Pending
 ```
-
-## Middleware signature is more loosely typed
-
-In the 3.x release, `QueryMiddleware` was a very specific implementation that took parameters that were unique
-to queries. The middleware pattern is now more generic and accepts a loosely-typed `params` array that can consist
-of anything -- more like an `event` parameter for an event handler. If you've defined custom middleware, you'll
-need to update it. Check out the [adding middleware](extending/adding_middleware) section for more information.

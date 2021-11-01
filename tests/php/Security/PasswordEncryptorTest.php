@@ -7,12 +7,13 @@ use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\PasswordEncryptor_LegacyPHPHash;
+use SilverStripe\Security\PasswordEncryptor_NotFoundException;
 use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Tests\PasswordEncryptorTest\TestEncryptor;
 
 class PasswordEncryptorTest extends SapphireTest
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         PasswordEncryptor_Blowfish::set_cost(10);
@@ -29,11 +30,9 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertInstanceOf(TestEncryptor::class, $e);
     }
 
-    /**
-     * @expectedException \SilverStripe\Security\PasswordEncryptor_NotFoundException
-     */
     public function testCreateForCodeNotFound()
     {
+        $this->expectException(PasswordEncryptor_NotFoundException::class);
         PasswordEncryptor::create_for_algorithm('unknown');
     }
 
@@ -47,7 +46,7 @@ class PasswordEncryptorTest extends SapphireTest
         $encryptors = PasswordEncryptor::get_encryptors();
         $this->assertContains('test', array_keys($encryptors));
         $encryptor = $encryptors['test'];
-        $this->assertContains(TestEncryptor::class, key($encryptor));
+        $this->assertStringContainsString(TestEncryptor::class, key($encryptor));
     }
 
     public function testEncryptorPHPHashWithArguments()
