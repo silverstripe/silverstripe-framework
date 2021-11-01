@@ -1395,6 +1395,10 @@ MESSAGE
                             throw new InvalidArgumentException("Combined file {$file} does not exist");
                         }
                         $fileContent = file_get_contents($filePath ?? '');
+                        if ($type == 'css') {
+                            // resolve relative paths for css files
+                            $fileContent = $this->resolveCSSReferences($fileContent, $file);
+                        }
                         // Use configured minifier
                         if ($minify) {
                             $fileContent = $this->minifier->minify($fileContent, $type, $file);
@@ -1419,6 +1423,34 @@ MESSAGE
         }
 
         return $combinedURL;
+    }
+
+    /**
+     * Resolves relative paths in CSS files which are lost when combining them
+     *
+     * @param string $content
+     * @param string $filePath
+     * @return string New content with paths resolved
+     */
+    protected function resolveCSSReferences($content, $filePath)
+    {
+        $fileUrl = Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($filePath);
+        $fileUrlDir = dirname($fileUrl);
+        $content = preg_replace_callback('#([\.]{1,2}/)+#', function ($a) use ($fileUrlDir) {
+            $full = $fileUrlDir . '/' . $a[0];
+            $full = preg_replace('#/{2,}#', '/', $full); // ensure there's no repeated slashes
+            while (strpos($full, './') > 0) {
+                $post = $full;
+                $post = preg_replace('#([^/\.]+)/\.\./#', '', $post); // erase 'something/../' with the predecessor
+                $post = preg_replace('#([^/\.]+)/\./#', '\\1/', $post); // erase './'
+                if ($post == $full) {
+                    break; // nothing changed
+                }
+                $full = $post;
+            }
+            return $full;
+        }, $content);
+        return $content;
     }
 
     /**
