@@ -2434,9 +2434,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $member = $this->cache_generatedMembers[$permCode];
         } else {
             // Generate group with these permissions
-            $group = Group::create();
-            $group->Title = "$permCode group";
-            $group->write();
+            $group = Group::get()->filterAny([
+                'Code' => "$permCode-group",
+                'Title' => "$permCode group",
+            ])->first();
+            if (!$group || !$group->exists()) {
+                $group = Group::create();
+                $group->Title = "$permCode group";
+                $group->write();
+            }
 
             // Create each individual permission
             foreach ($permArray as $permArrayItem) {
