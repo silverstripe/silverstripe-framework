@@ -54,27 +54,27 @@ class NullDatabase extends Database
 
     public function query($sql, $errorLevel = E_USER_ERROR)
     {
-        throw new \LogicException(sprintf($this->queryErrorMessage, $sql));
+        throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
     }
 
     public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
     {
-        throw new \LogicException(sprintf($this->queryErrorMessage, $sql));
+        throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
     }
 
     public function getConnector()
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function getSchemaManager()
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function getQueryBuilder()
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function getGeneratedID($table)
@@ -109,17 +109,17 @@ class NullDatabase extends Database
 
     public function manipulate($manipulation)
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function clearAllData()
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function clearTable($table)
     {
-        throw new \LogicException($this->errorMessage);
+        throw new NullDatabaseException($this->errorMessage);
     }
 
     public function nullCheckClause($field, $isNull)
