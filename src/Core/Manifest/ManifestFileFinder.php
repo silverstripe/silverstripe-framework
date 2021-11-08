@@ -251,4 +251,13 @@ class ManifestFileFinder extends FileFinder
 
         return false;
     }
+
+    protected function acceptFile($basename, $pathname, $depth)
+    {
+        if (preg_match('/^.+Test\.php$/', $basename) && preg_match('/^.+\/tests/', $pathname)) {
+            return false;
+        }
+
+        return parent::acceptFile($basename, $pathname, $depth);
+    }
 }

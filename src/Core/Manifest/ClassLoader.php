@@ -112,6 +112,13 @@ class ClassLoader
                 break;
             }
         }
+
+        try {
+            $reflector = new \ReflectionClass($class);
+            return $reflector->getFileName();
+        } catch (\ReflectionException $ex) {
+        }
+
         return false;
     }
 
