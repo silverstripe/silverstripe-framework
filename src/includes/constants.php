@@ -15,9 +15,9 @@ use SilverStripe\Core\TempFolder;
  * - BASE_URL: Full URL to the webroot, e.g. "http://my-host.com/my-webroot" (no trailing slash).
  * - BASE_PATH: Absolute path to the webroot, e.g. "/var/www/my-webroot" (no trailing slash).
  *   See Director::baseFolder(). Can be overwritten by Config::modify()->set(Director::class, 'alternate_base_folder', ).
- * - TEMP_PATH: Absolute path to temporary folder, used as base for $TEMP_FOLDER. Example: "/var/tmp"
- * - TEMP_FOLDER: folder name for manifest and template caches. Example: "silverstripe-cache-php7.2"
- *   See getTempFolder(). No trailing slash.
+ * - TEMP_PATH: Path to temporary folder for manifest and template caches. May be relative to project root or an
+ *   absolute path. No trailing slash. Can be set with the SS_TEMP_PATH environment variable.
+ * - TEMP_FOLDER: DEPRECATED. Same as TEMP_PATH.
  * - ASSETS_DIR: Dir for assets folder. e.g. "assets"
  * - ASSETS_PATH: Full path to assets folder. e.g. "/var/www/my-webroot/assets"
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
@@ -199,6 +199,13 @@ if (defined('CUSTOM_INCLUDE_PATH')) {
 if (!defined('TEMP_PATH')) {
     if (defined('TEMP_FOLDER')) {
         define('TEMP_PATH', TEMP_FOLDER);
+    } elseif ($path = Environment::getEnv('SS_TEMP_PATH')) {
+        // If path is relative, rewrite it to be relative to BASE_PATH - as web requests are relative to
+        // public/index.php, and we don't want the TEMP_PATH to be inside the public/ directory by default
+        if (ltrim($path, DIRECTORY_SEPARATOR) === $path) {
+            $path = BASE_PATH . DIRECTORY_SEPARATOR . $path;
+        }
+        define('TEMP_PATH', $path);
     } else {
         define('TEMP_PATH', TempFolder::getTempFolder(BASE_PATH));
     }
