@@ -1,0 +1,5 @@
+.p0 { background: url(./zero.gif); }
+.p1 { background: url(../one.gif); }
+.p2 { background: url(../../two.gif); }
+.p3 { background: url(../../../three.gif); }
+.p4 { background: url(../../../../four.gif); }

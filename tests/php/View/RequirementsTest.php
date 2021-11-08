@@ -77,6 +77,76 @@ class RequirementsTest extends SapphireTest
         $this->assertStringContainsString('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
     }
 
+    public function testResolveCSSReferences()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        $backend->setCombinedFilesFolder('_combinedfiles');
+
+        $backend->combineFiles(
+            'RequirementsTest_pc.css',
+            [
+                'css/RequirementsTest_d.css',
+                'css/deep/deeper/RequirementsTest_p.css'
+            ]
+        );
+
+        $backend->includeInHTML(self::$html_template);
+
+        // we get the file path here
+        $allCSS = $backend->getCSS();
+        $this->assertTrue(count($allCSS) == 1, 'only one combined file');
+        $files = array_keys($allCSS);
+        $combinedFileName = $files[0];
+        $combinedFileName = str_replace('/' . ASSETS_DIR . '/', '/', $combinedFileName);
+
+        $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
+
+        /* COMBINED JAVASCRIPT FILE EXISTS */
+        $this->assertTrue(
+            file_exists($combinedFilePath),
+            'combined css file exists'
+        );
+
+        $content = file_get_contents($combinedFilePath);
+
+        /* COMBINED CSS DECODED ONE DOT OKAY */
+        $this->assertStringContainsString(
+            ".p0 { background: url(/css/deep/deeper/zero.gif); }",
+            $content,
+            'combined css decoded one dot okay'
+        );
+
+        /* COMBINED CSS DECODED ONE DOUBLE-DOT OKAY */
+        $this->assertStringContainsString(
+            ".p1 { background: url(/css/deep/one.gif); }",
+            $content,
+            'combined css decoded 1 double-dot okay'
+        );
+
+        /* COMBINED CSS DECODED 2 DOUBLE-DOT OKAY */
+        $this->assertStringContainsString(
+            ".p2 { background: url(/css/two.gif); }",
+            $content,
+            'combined css decoded 2 double-dot okay'
+        );
+
+        /* COMBINED CSS DECODED 3 DOUBLE-DOT OKAY */
+        $this->assertStringContainsString(
+            ".p3 { background: url(/three.gif); }",
+            $content,
+            'combined css decoded 3 double-dot okay'
+        );
+
+        /* COMBINED CSS DECODED 4 DOUBLE-DOT OKAY */
+        $this->assertStringContainsString(
+            ".p4 { background: url(/../four.gif); }",
+            $content,
+            'combined css decoded 4 double-dot okay'
+        );
+    }
+
     /**
      * Setup new backend
      *
