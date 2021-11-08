@@ -22,6 +22,12 @@ jobs:
         - COMPOSER_INSTALL_ARG="--prefer-lowest"
     - php: 7.4
       env:
+        - DB=PGSQL
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+    - php: 7.4
+      env:
         - DB=MYSQL
         - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
         - PHPUNIT_TEST=1
