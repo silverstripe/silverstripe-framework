@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use SilverStripe\Assets\File;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\Form;
@@ -13,8 +12,6 @@ use SilverStripe\View\SSViewer;
 
 class TreeMultiselectFieldTest extends SapphireTest
 {
-    use ArraySubsetAsserts;
-
     protected static $fixture_file = 'TreeDropdownFieldTest.yml';
 
     protected static $extra_dataobjects = [
@@ -136,38 +133,24 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertEquals($fieldId, sprintf('%s_%s', $this->formId, $this->fieldName));
 
         $schemaStateDefaults = $field->getSchemaStateDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $fieldId,
-                'name' => $this->fieldName,
-                'value' => 'unchanged'
-            ],
-            $schemaStateDefaults,
-            true
-        );
+        $this->assertSame($fieldId, $schemaStateDefaults['id']);
+        $this->assertSame($this->fieldName, $schemaStateDefaults['name']);
+        $this->assertSame('unchanged', $schemaStateDefaults['value']);
 
         $schemaDataDefaults = $field->getSchemaDataDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $fieldId,
-                'name' => $this->fieldName,
-                'type' => 'text',
-                'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $fieldId),
-                'title' => 'Test tree',
-                'extraClass' => 'treemultiselect multiple searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
-                    'hasEmptyDefault' => false,
-                    'multiple' => true
-                ]
-            ],
-            $schemaDataDefaults,
-            true
-        );
+        $this->assertSame($fieldId, $schemaDataDefaults['id']);
+        $this->assertSame($this->fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame('TreeDropdownField', $schemaDataDefaults['component']);
+        $this->assertSame(sprintf('%s_Holder', $fieldId), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test tree', $schemaDataDefaults['title']);
+        $this->assertSame('treemultiselect multiple searchable', $schemaDataDefaults['extraClass']);
+        $this->assertSame('field/TestTree/tree', $schemaDataDefaults['data']['urlTree']);
+        $this->assertSame(true, $schemaDataDefaults['data']['showSearch']);
+        $this->assertSame('(Search or choose File)', $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(false, $schemaDataDefaults['data']['hasEmptyDefault']);
+        $this->assertSame(true, $schemaDataDefaults['data']['multiple']);
 
         $items = $field->getItems();
         $this->assertCount(0, $items, 'there must be no items selected');
@@ -188,15 +171,9 @@ class TreeMultiselectFieldTest extends SapphireTest
         $field->setValue($this->fieldValue);
 
         $schemaStateDefaults = $field->getSchemaStateDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
-                'value' => $this->folderIds
-            ],
-            $schemaStateDefaults,
-            true
-        );
+        $this->assertSame($field->ID(), $schemaStateDefaults['id']);
+        $this->assertSame('TestTree', $schemaStateDefaults['name']);
+        $this->assertSame($this->folderIds, $schemaStateDefaults['value']);
 
         $items = $field->getItems();
         $this->assertCount(2, $items, 'there must be exactly 2 items selected');
@@ -214,38 +191,24 @@ class TreeMultiselectFieldTest extends SapphireTest
         $field = $this->field->performReadonlyTransformation();
 
         $schemaStateDefaults = $field->getSchemaStateDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
-                'value' => 'unchanged'
-            ],
-            $schemaStateDefaults,
-            true
-        );
+        $this->assertSame($field->ID(), $schemaStateDefaults['id']);
+        $this->assertSame('TestTree', $schemaStateDefaults['name']);
+        $this->assertSame('unchanged', $schemaStateDefaults['value']);
 
         $schemaDataDefaults = $field->getSchemaDataDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $field->ID(),
-                'name' => $this->fieldName,
-                'type' => 'text',
-                'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $field->ID()),
-                'title' => 'Test tree',
-                'extraClass' => 'treemultiselectfield_readonly multiple  searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
-                    'hasEmptyDefault' => false,
-                    'multiple' => true
-                ]
-            ],
-            $schemaDataDefaults,
-            true
-        );
+        $this->assertSame($field->ID(), $schemaDataDefaults['id']);
+        $this->assertSame($this->fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame('TreeDropdownField', $schemaDataDefaults['component']);
+        $this->assertSame(sprintf('%s_Holder', $field->ID()), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test tree', $schemaDataDefaults['title']);
+        $this->assertSame('treemultiselectfield_readonly multiple  searchable', $schemaDataDefaults['extraClass']);
+        $this->assertSame('field/TestTree/tree', $schemaDataDefaults['data']['urlTree']);
+        $this->assertSame(true, $schemaDataDefaults['data']['showSearch']);
+        $this->assertSame('(Search or choose File)', $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(false, $schemaDataDefaults['data']['hasEmptyDefault']);
+        $this->assertSame(true, $schemaDataDefaults['data']['multiple']);
 
         $items = $field->getItems();
         $this->assertCount(0, $items, 'there must be 0 selected items');
@@ -264,38 +227,24 @@ class TreeMultiselectFieldTest extends SapphireTest
         $field = $field->performReadonlyTransformation();
 
         $schemaStateDefaults = $field->getSchemaStateDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $field->ID(),
-                'name' => 'TestTree',
-                'value' => $this->folderIds
-            ],
-            $schemaStateDefaults,
-            true
-        );
+        $this->assertSame($field->ID(), $schemaStateDefaults['id']);
+        $this->assertSame('TestTree', $schemaStateDefaults['name']);
+        $this->assertSame($this->folderIds, $schemaStateDefaults['value']);
 
         $schemaDataDefaults = $field->getSchemaDataDefaults();
-        $this->assertArraySubset(
-            [
-                'id' => $field->ID(),
-                'name' => $this->fieldName,
-                'type' => 'text',
-                'schemaType' => 'SingleSelect',
-                'component' => 'TreeDropdownField',
-                'holderId' => sprintf('%s_Holder', $field->ID()),
-                'title' => 'Test tree',
-                'extraClass' => 'treemultiselectfield_readonly multiple  searchable',
-                'data' => [
-                    'urlTree' => 'field/TestTree/tree',
-                    'showSearch' => true,
-                    'emptyString' => '(Search or choose File)',
-                    'hasEmptyDefault' => false,
-                    'multiple' => true
-                ]
-            ],
-            $schemaDataDefaults,
-            true
-        );
+        $this->assertSame($field->ID(), $schemaDataDefaults['id']);
+        $this->assertSame($this->fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame('TreeDropdownField', $schemaDataDefaults['component']);
+        $this->assertSame(sprintf('%s_Holder', $field->ID()), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test tree', $schemaDataDefaults['title']);
+        $this->assertSame('treemultiselectfield_readonly multiple  searchable', $schemaDataDefaults['extraClass']);
+        $this->assertSame('field/TestTree/tree', $schemaDataDefaults['data']['urlTree']);
+        $this->assertSame(true, $schemaDataDefaults['data']['showSearch']);
+        $this->assertSame('(Search or choose File)', $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(false, $schemaDataDefaults['data']['hasEmptyDefault']);
+        $this->assertSame(true, $schemaDataDefaults['data']['multiple']);
 
         $items = $field->getItems();
         $this->assertCount(2, $items, 'there must be exactly 2 selected items');
