@@ -365,9 +365,9 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * Remove an existing HTTP header
+     * Returns a HTTP Header by name if found in the request
      *
-     * @param string $header
+     * @param string $header Name of the header (Insensitive to case as per <rfc2616 section 4.2 "Message Headers">)
      * @return mixed
      */
     public function getHeader($header)
@@ -393,7 +393,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * Returns the URL used to generate the page
      *
-     * @param bool $includeGetVars whether or not to include the get parameters\
+     * @param bool $includeGetVars whether or not to include the get parameters
      * @return string
      */
     public function getURL($includeGetVars = false)
