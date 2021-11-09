@@ -55,8 +55,8 @@ class Requirements_Backend
     /**
      * Determine if relative urls in the combined files should be converted to absolute.
      *
-     * By default combined files will be parsed for relative urls to image/font assets and those
-     * utls will be changed to absolute to accomodate to the fact that the combined css is placed
+     * By default combined files will be parsed for relative URLs to image/font assets and those
+     * URLs will be changed to absolute to accomodate the fact that the combined css is placed
      * in a totally different folder than the source css files.
      *
      * Turn this off if you see some unexpected results.
