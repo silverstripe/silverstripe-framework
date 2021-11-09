@@ -53,6 +53,20 @@ class Requirements_Backend
     private static $combine_in_dev = false;
 
     /**
+     * Determine if relative urls in the combined files should be converted to absolute.
+     *
+     * By default combined files will be parsed for relative urls to image/font assets and those
+     * utls will be changed to absolute to accomodate to the fact that the combined css is placed
+     * in a totally different folder than the source css files.
+     *
+     * Turn this off if you see some unexpected results.
+     *
+     * @config
+     * @var bool
+     */
+    private static $resolve_relative_css_refs = true;
+
+    /**
      * Paths to all required JavaScript files relative to docroot
      *
      * @var array
@@ -1434,10 +1448,15 @@ MESSAGE
      */
     protected function resolveCSSReferences($content, $filePath)
     {
+        $doResolving = Config::inst()->get(__CLASS__, 'resolve_relative_css_refs');
+        if (!$doResolving) {
+            return $content;
+        }
         $fileUrl = Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($filePath);
         $fileUrlDir = dirname($fileUrl);
-        $content = preg_replace_callback('#([\.]{1,2}/)+#', function ($a) use ($fileUrlDir) {
-            $full = $fileUrlDir . '/' . $a[0];
+        $content = preg_replace_callback('#([\s\'"\(])((:?[\.]{1,2}/)+)#', function ($a) use ($fileUrlDir) {
+            [ $_, $prefix, $match ] = $a;
+            $full = $fileUrlDir . '/' . $match;
             $full = preg_replace('#/{2,}#', '/', $full); // ensure there's no repeated slashes
             while (strpos($full, './') > 0) {
                 $post = $full;
@@ -1448,7 +1467,7 @@ MESSAGE
                 }
                 $full = $post;
             }
-            return $full;
+            return $prefix . $full;
         }, $content);
         return $content;
     }
