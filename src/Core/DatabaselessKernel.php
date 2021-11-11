@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core;
 
+use Exception;
+
 /**
  * Boot a kernel without requiring a database connection.
  * This is a workaround for the lack of composition in the boot stages
@@ -10,9 +12,17 @@ namespace SilverStripe\Core;
  *
  * @internal
  */
-class DatabaselessKernel extends CoreKernel
+class DatabaselessKernel extends BaseKernel
 {
     protected $queryErrorMessage = 'Booted with DatabaseLessKernel, cannot execute query: %s';
+
+    /**
+     * Indicates whether the Kernel has been flushed on boot
+     * Uninitialised before boot
+     *
+     * @var bool
+     */
+    private $flush;
 
     /**
      * Allows disabling of the configured error handling.
@@ -29,19 +39,27 @@ class DatabaselessKernel extends CoreKernel
         return $this;
     }
 
+    /**
+     * @param false $flush
+     * @throws Exception
+     */
     public function boot($flush = false)
     {
         $this->flush = $flush;
 
         $this->bootPHP();
         $this->bootManifests($flush);
-
-        if ($this->bootErrorHandling) {
-            $this->bootErrorHandling();
-        }
-
+        $this->bootErrorHandling();
         $this->bootConfigs();
 
-        $this->booted = true;
+        $this->setBooted(true);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFlushed()
+    {
+        return $this->flush;
     }
 }
