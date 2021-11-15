@@ -9,7 +9,7 @@ use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 
 /**
- * Abstraction of a PHP Package. Can be used to retrieve information about SilverStripe modules, and other packages
+ * Abstraction of a PHP Package. Can be used to retrieve information about Silverstripe CMS modules, and other packages
  * managed via composer, by reading their `composer.json` file.
  */
 class Module implements Serializable
@@ -64,7 +64,7 @@ class Module implements Serializable
      * Gets name of this module. Used as unique key and identifier for this module.
      *
      * If installed by composer, this will be the full composer name (vendor/name).
-     * If not insalled by composer this will default to the basedir()
+     * If not installed by composer this will default to the `basedir()`
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class Module implements Serializable
     }
 
     /**
-     * Get full composer name. Will be null if no composer.json is available
+     * Get full composer name. Will be `null` if no composer.json is available
      *
      * @return string|null
      */
@@ -130,7 +130,7 @@ class Module implements Serializable
 
     /**
      * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resources-dir`
-     * key in the composer file. A blank string will will be returned if the key is undefined.
+     * key in the composer file. A blank string will be returned if the key is undefined.
      *
      * Only applicable when reading the composer file for the main project.
      * @return string
