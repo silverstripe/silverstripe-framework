@@ -59,7 +59,7 @@ see `MySQLDatabase::$sql_mode` for more details.) This setting is only available
  ### MySQL/MariaDB Int width in schema
 
 MySQL 8.0.17 stopped reporting the width attribute for integers while MariaDB did not change its behaviour.
-This results in constant rebuilding the schema when MySQLSchemaManager expects a field to look like i.e.
+This results in constant rebuilding of the schema when MySQLSchemaManager expects a field to look like e.g.
 `INT(8)` and MySQL server reports it simply as `INT`. MySQLSchemaManager has been updated to detect the MySQL
 server implementation and act accordingly. In cases when auto-detection fails, you can force the desired behaviour like this:
 ```yml
