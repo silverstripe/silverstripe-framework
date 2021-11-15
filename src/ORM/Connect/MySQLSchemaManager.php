@@ -241,7 +241,7 @@ class MySQLSchemaManager extends DBSchemaManager
 
     protected static $_cache_collation_info = [];
 
-    public function shouldUseIntegerWidth()
+    private function shouldUseIntegerWidth()
     {
         // MySQL 8.0.17 stopped reporting the width attribute for integers
         // https://github.com/silverstripe/silverstripe-framework/issues/9453
