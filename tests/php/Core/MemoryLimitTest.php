@@ -44,28 +44,29 @@ class MemoryLimitTest extends SapphireTest
     {
         // ini_set('memory_limit', '64M');
         // current memory usage in travis is 197M, can't ini_set this down to 64M
+        // for recipe-kitchen-sink, it's 284M
         // Using a higher memory limit instead
-        ini_set('memory_limit', '230M');
-        Environment::setMemoryLimitMax('256M');
+        ini_set('memory_limit', '330M');
+        Environment::setMemoryLimitMax('512M');
 
         // It can go up
-        Environment::increaseMemoryLimitTo('240M');
-        $this->assertEquals('240M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo('340M');
+        $this->assertEquals('340M', ini_get('memory_limit'));
 
         // But not down
-        Environment::increaseMemoryLimitTo('220M');
-        $this->assertEquals('240M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo('320M');
+        $this->assertEquals('340M', ini_get('memory_limit'));
 
         // Test the different kinds of syntaxes
-        Environment::increaseMemoryLimitTo(1024*1024*250);
-        $this->assertEquals('250M', ini_get('memory_limit'));
+        Environment::increaseMemoryLimitTo(1024*1024*350);
+        $this->assertEquals('350M', ini_get('memory_limit'));
 
         Environment::increaseMemoryLimitTo('109600K');
-        $this->assertEquals('250M', ini_get('memory_limit'));
+        $this->assertEquals('350M', ini_get('memory_limit'));
 
         // Attempting to increase past max size only sets to max
         Environment::increaseMemoryLimitTo('1G');
-        $this->assertEquals('256M', ini_get('memory_limit'));
+        $this->assertEquals('512M', ini_get('memory_limit'));
 
         // No argument means unlimited (but only if originally allowed)
         if (is_numeric($this->origMemLimitMax) && $this->origMemLimitMax < 0) {
