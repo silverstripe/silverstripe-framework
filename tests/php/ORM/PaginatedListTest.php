@@ -282,12 +282,30 @@ class PaginatedListTest extends SapphireTest
         $this->assertFalse($list->MoreThanOnePage());
     }
 
+    public function testFirstPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $this->assertTrue($list->FirstPage());
+        $list->setCurrentPage(2);
+        $this->assertFalse($list->FirstPage());
+    }
+
     public function testNotFirstPage()
     {
         $list = new PaginatedList(new ArrayList());
         $this->assertFalse($list->NotFirstPage());
         $list->setCurrentPage(2);
         $this->assertTrue($list->NotFirstPage());
+    }
+
+    public function testLastPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $list->setTotalItems(50);
+
+        $this->assertFalse($list->LastPage());
+        $list->setCurrentPage(5);
+        $this->assertTrue($list->LastPage());
     }
 
     public function testNotLastPage()

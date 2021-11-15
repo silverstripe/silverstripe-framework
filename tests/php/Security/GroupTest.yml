@@ -1,12 +1,16 @@
 'SilverStripe\Security\Group':
   admingroup:
+    Title: Admin Group
     Code: admingroup
   parentgroup:
+    Title: Parent Group
     Code: parentgroup
   childgroup:
+    Title: Child Group
     Code: childgroup
     Parent: '=>SilverStripe\Security\Group.parentgroup'
   grandchildgroup:
+    Title: Grandchild Group
     Code: grandchildgroup
     Parent: '=>SilverStripe\Security\Group.childgroup'
   group1:

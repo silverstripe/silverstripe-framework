@@ -5,6 +5,7 @@ namespace SilverStripe\Security\Tests;
 use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
@@ -33,7 +34,7 @@ class GroupTest extends FunctionalTest
         $this->assertEquals('my-title', $g1->Code, 'Custom title gets converted to code if none exists already');
 
         $g2 = new Group();
-        $g2->Title = "My Title";
+        $g2->Title = "My Title and Code";
         $g2->Code = "my-code";
         $g2->write();
         $this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
@@ -101,6 +102,7 @@ class GroupTest extends FunctionalTest
     {
         $member = $this->objFromFixture(TestMember::class, 'admin');
         $group = new Group();
+        $group->Title = 'Title';
 
         // Can save user to unsaved group
         $group->Members()->add($member);
@@ -121,6 +123,7 @@ class GroupTest extends FunctionalTest
         /** @var Group $childGroup */
         $childGroup = $this->objFromFixture(Group::class, 'childgroup');
         $orphanGroup = new Group();
+        $orphanGroup->Title = 'Title';
         $orphanGroup->ParentID = 99999;
         $orphanGroup->write();
 
@@ -279,5 +282,60 @@ class GroupTest extends FunctionalTest
             $result->isValid(),
             'Members with only APPLY_ROLES can\'t assign parent groups with inherited ADMIN permission'
         );
+    }
+
+    public function testGroupTitleValidation()
+    {
+        $group1 = $this->objFromFixture(Group::class, 'group1');
+
+        $newGroup = new Group();
+
+        $validators = $newGroup->getCMSCompositeValidator()->getValidators();
+        $this->assertCount(1, $validators);
+        $this->assertInstanceOf(RequiredFields::class, $validators[0]);
+        $this->assertTrue(in_array('Title', $validators[0]->getRequired()));
+
+        $newGroup->Title = $group1->Title;
+        $result = $newGroup->validate();
+        $this->assertFalse(
+            $result->isValid(),
+            'Group names cannot be duplicated'
+        );
+
+        $newGroup->Title = 'Title';
+        $result = $newGroup->validate();
+        $this->assertTrue($result->isValid());
+    }
+
+    public function testGroupTitleDuplication()
+    {
+        $group = $this->objFromFixture(Group::class, 'group1');
+        $group->Title = 'Group title modified';
+        $group->write();
+        $this->assertEquals('group-1', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Group 1';
+        $group->write();
+        $this->assertEquals('group-1-2', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $group->Title = 'Duplicate renamed';
+        $group->write();
+        $this->assertEquals('duplicate', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $group->Title = 'More renaming';
+        $group->write();
+        $this->assertEquals('duplicate-2', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $this->assertEquals('duplicate-3', $group->Code);
     }
 }

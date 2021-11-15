@@ -397,9 +397,25 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
+    public function FirstPage()
+    {
+        return $this->CurrentPage() == 1;
+    }
+
+    /**
+     * @return bool
+     */
     public function NotFirstPage()
     {
-        return $this->CurrentPage() != 1;
+        return !$this->FirstPage();
+    }
+
+    /**
+     * @return bool
+     */
+    public function LastPage()
+    {
+        return $this->CurrentPage() == $this->TotalPages();
     }
 
     /**
@@ -407,7 +423,7 @@ class PaginatedList extends ListDecorator
      */
     public function NotLastPage()
     {
-        return $this->CurrentPage() < $this->TotalPages();
+        return !$this->LastPage();
     }
 
     /**

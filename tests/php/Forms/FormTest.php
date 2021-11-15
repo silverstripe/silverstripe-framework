@@ -726,6 +726,19 @@ class FormTest extends FunctionalTest
         $this->assertStringEndsWith('class1 class2', $form->extraClass());
     }
 
+    public function testHasExtraClass()
+    {
+        $form = $this->getStubForm();
+        $form->addExtraClass('class1');
+        $form->addExtraClass('class2');
+        $this->assertTrue($form->hasExtraClass('class1'));
+        $this->assertTrue($form->hasExtraClass('class2'));
+        $this->assertTrue($form->hasExtraClass('class1 class2'));
+        $this->assertTrue($form->hasExtraClass('class2 class1'));
+        $this->assertFalse($form->hasExtraClass('class3'));
+        $this->assertFalse($form->hasExtraClass('class2 class3'));
+    }
+
     public function testRemoveExtraClass()
     {
         $form = $this->getStubForm();
