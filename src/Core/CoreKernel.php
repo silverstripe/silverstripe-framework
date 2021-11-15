@@ -497,7 +497,7 @@ class CoreKernel implements Kernel
     {
         return new ManifestCacheFactory([
             'namespace' => 'manifestcache',
-            'directory' => TempFolder::getTempFolder($this->basePath),
+            'directory' => TEMP_PATH,
         ]);
     }
 
