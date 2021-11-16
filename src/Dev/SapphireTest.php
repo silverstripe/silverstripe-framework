@@ -29,6 +29,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
@@ -1009,6 +1010,9 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
             // Test application
             $kernel = new TestKernel(BASE_PATH);
+
+            // PHPUnit 9 only logic to exclude old test still targeting PHPUNit 5.7
+            $kernel->setIgnoreCILibraries([Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
 
             if (class_exists(HTTPApplication::class)) {
                 // Mock request

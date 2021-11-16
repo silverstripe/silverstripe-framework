@@ -33,7 +33,7 @@ class Module implements Serializable
     /**
      * Return value of getCILibrary() when module does not use any CI
      */
-    const CI_PHPUNIT_UNKNOWN = 'NoPHPUnit';
+    const CI_UNKNOWN = 'NoPHPUnit';
 
 
 
@@ -302,12 +302,12 @@ class Module implements Serializable
     {
         // We don't have any composer data at all
         if (empty($this->composerData)) {
-            return self::CI_PHPUNIT_UNKNOWN;
+            return self::CI_UNKNOWN;
         }
 
         // We don't have any dev dependencies
         if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
-            return self::CI_PHPUNIT_UNKNOWN;
+            return self::CI_UNKNOWN;
         }
 
         // We are assuming a typical setup where the CI lib is defined in require-dev rather than require
@@ -335,7 +335,7 @@ class Module implements Serializable
             }
         }
 
-        return self::CI_PHPUNIT_UNKNOWN;
+        return self::CI_UNKNOWN;
     }
 
     /**

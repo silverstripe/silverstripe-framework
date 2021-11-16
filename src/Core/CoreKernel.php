@@ -510,6 +510,18 @@ class CoreKernel implements Kernel
     }
 
     /**
+     * When manifests are discovering files, tests files in modules using the following CI library type will be ignored.
+     *
+     * The purpose of this method is to avoid loading PHPUnit test files with incompatible definitions.
+     *
+     * @return string[] List of CI types to ignore as defined by `Module`.
+     */
+    protected function getIgnoreCILibraries(): array
+    {
+        return [];
+    }
+
+    /**
      * Boot all manifests
      *
      * @param bool $flush
@@ -517,10 +529,18 @@ class CoreKernel implements Kernel
     protected function bootManifests($flush)
     {
         // Setup autoloader
-        $this->getClassLoader()->init($this->getIncludeTests(), $flush);
+        $this->getClassLoader()->init(
+            $this->getIncludeTests(),
+            $flush,
+            $this->getIgnoreCILibraries()
+        );
 
         // Find modules
-        $this->getModuleLoader()->init($this->getIncludeTests(), $flush);
+        $this->getModuleLoader()->init(
+            $this->getIncludeTests(),
+            $flush,
+            $this->getIgnoreCILibraries()
+        );
 
         // Flush config
         if ($flush) {
@@ -538,7 +558,11 @@ class CoreKernel implements Kernel
             $defaultSet->setProject(
                 ModuleManifest::config()->get('project')
             );
-            $defaultSet->init($this->getIncludeTests(), $flush);
+            $defaultSet->init(
+                $this->getIncludeTests(),
+                $flush,
+                $this->getIgnoreCILibraries()
+            );
         }
     }
 

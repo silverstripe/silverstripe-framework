@@ -35,11 +35,11 @@ class ModuleTest extends SapphireTest
     public function ciLibraryProvider()
     {
         return [
-            'empty require-dev' => ['empty-require-dev', Module::CI_PHPUNIT_UNKNOWN],
-            'no require-dev' => ['no-require-dev', Module::CI_PHPUNIT_UNKNOWN],
-            'older version of phpunit' => ['old-phpunit', Module::CI_PHPUNIT_UNKNOWN],
-            'phpunit between 5 and 9' => ['inbetween-phpunit', Module::CI_PHPUNIT_UNKNOWN],
-            'phpunit beyond 9' => ['future-phpunit', Module::CI_PHPUNIT_UNKNOWN],
+            'empty require-dev' => ['empty-require-dev', Module::CI_UNKNOWN],
+            'no require-dev' => ['no-require-dev', Module::CI_UNKNOWN],
+            'older version of phpunit' => ['old-phpunit', Module::CI_UNKNOWN],
+            'phpunit between 5 and 9' => ['inbetween-phpunit', Module::CI_UNKNOWN],
+            'phpunit beyond 9' => ['future-phpunit', Module::CI_UNKNOWN],
 
             'phpunit 5.0' => ['phpunit-five-zero', Module::CI_PHPUNIT_FIVE],
             'phpunit 5.7' => ['phpunit-five-seven', Module::CI_PHPUNIT_FIVE],

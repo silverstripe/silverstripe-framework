@@ -91,7 +91,7 @@ class ManifestFileFinderTest extends SapphireTest
         $finder = new ManifestFileFinder();
         $finder->setOption('name_regex', '/\.txt$/');
         $finder->setOption('ignore_tests', false);
-        $finder->setOption('ignore_ci_library', [Module::CI_PHPUNIT_FIVE]);
+        $finder->setOption('ignore_ci_libraries', [Module::CI_PHPUNIT_FIVE]);
 
         $this->assertFinderFinds(
             $finder,
@@ -115,7 +115,7 @@ class ManifestFileFinderTest extends SapphireTest
         $finder = new ManifestFileFinder();
         $finder->setOption('name_regex', '/\.txt$/');
         $finder->setOption('ignore_tests', false);
-        $finder->setOption('ignore_ci_library', [Module::CI_PHPUNIT_FIVE, Module::CI_PHPUNIT_UNKNOWN]);
+        $finder->setOption('ignore_ci_libraries', [Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
 
         $this->assertFinderFinds(
             $finder,

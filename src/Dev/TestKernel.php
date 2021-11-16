@@ -9,6 +9,11 @@ use SilverStripe\Core\CoreKernel;
  */
 class TestKernel extends CoreKernel
 {
+
+    /** @var string[] $ciLibs */
+    private $ciLibs = [];
+
+
     public function __construct($basePath)
     {
         $this->setEnvironment(self::DEV);
@@ -39,6 +44,21 @@ class TestKernel extends CoreKernel
     protected function getIncludeTests()
     {
         return true;
+    }
+
+
+    /**
+     * @param string[] $ciLibs
+     */
+    public function setIgnoreCILibraries(array $ciLibs): self
+    {
+        $this->ciLibs = $ciLibs;
+        return $this;
+    }
+
+    protected function getIgnoreCILibraries(): array
+    {
+        return $this->ciLibs;
     }
 
     protected function bootErrorHandling()
