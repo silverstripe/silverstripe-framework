@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use Composer\Semver\Semver;
 use Exception;
 use InvalidArgumentException;
+use RuntimeException;
 use Serializable;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
@@ -18,6 +20,23 @@ class Module implements Serializable
      * @deprecated 4.1.0:5.0.0 Use Path::normalise() instead
      */
     const TRIM_CHARS = ' /\\';
+
+    /**
+     * Return value of getCILibrary() when module uses PHPUNit 9
+     */
+    const CI_PHPUNIT_NINE = 'PHPUnit9';
+
+    /**
+     * Return value of getCILibrary() when module uses PHPUNit 5
+     */
+    const CI_PHPUNIT_FIVE = 'PHPUnit5';
+
+    /**
+     * Return value of getCILibrary() when module does not use any CI
+     */
+    const CI_PHPUNIT_UNKNOWN = 'NoPHPUnit';
+
+
 
     /**
      * Full directory path to this module with no trailing slash
@@ -274,6 +293,78 @@ class Module implements Serializable
         return $this
             ->getResource($path)
             ->exists();
+    }
+
+    /**
+     * Determine what CI library the module is using.
+     * @internal
+     */
+    public function getCILibrary(): string
+    {
+        if (empty($this->composerData)) {
+            throw new RuntimeException('No composer data at all');
+        }
+
+        // We don't have any dev dependencies
+        if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
+            return self::CI_PHPUNIT_UNKNOWN;
+        }
+
+        // We are assuming a typical setup where the CI lib is defined in require-dev rather than require
+        $requireDev = $this->composerData['require-dev'];
+
+        // Try to pick which CI we are using based on phpunit constraint
+        $phpUnitConstraint = $this->requireDevConstraint(['sminnee/phpunit', 'phpunit/phpunit']);
+        if ($phpUnitConstraint) {
+            if ($this->satisfiesAtLeastOne(['5.7.0', '5.0.0', '5.x-dev', '5.7.x-dev'], $phpUnitConstraint)) {
+                return self::CI_PHPUNIT_FIVE;
+            }
+            if ($this->satisfiesAtLeastOne(['9.0.0', '9.5.0', '9.x-dev', '9.5.x-dev'], $phpUnitConstraint)) {
+                return self::CI_PHPUNIT_NINE;
+            }
+        }
+
+        // Try to pick which CI we are using based on recipe-testing constraint
+        $recipeTestingConstraint = $this->requireDevConstraint(['silverstripe/recipe-testing']);
+        if ($recipeTestingConstraint) {
+            if ($this->satisfiesAtLeastOne(['1.0.0', '1.1.0', '1.2.0', '1.1.x-dev', '1.2.x-dev', '1.x-dev'], $recipeTestingConstraint)) {
+                return self::CI_PHPUNIT_FIVE;
+            }
+            if ($this->satisfiesAtLeastOne(['2.0.0', '2.0.x-dev', '2.x-dev'], $recipeTestingConstraint)) {
+                return self::CI_PHPUNIT_NINE;
+            }
+        }
+
+        return self::CI_PHPUNIT_UNKNOWN;
+    }
+
+    /**
+     * Retrieve the constraint for the first module that is found in the require-dev section
+     * @param string[] $modules
+     * @return false|string
+     */
+    private function requireDevConstraint(array $modules)
+    {
+        if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
+            return false;
+        }
+
+        $requireDev = $this->composerData['require-dev'];
+        foreach ($modules as $module) {
+            if (isset($requireDev[$module])) {
+                return $requireDev[$module];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines if the provided constraint allows at least one of the version provided
+     */
+    private function satisfiesAtLeastOne(array $versions, string $constraint): bool
+    {
+        return !empty(Semver::satisfiedBy($versions, $constraint));
     }
 }
 
