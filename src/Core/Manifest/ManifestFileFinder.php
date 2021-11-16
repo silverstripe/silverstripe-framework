@@ -32,7 +32,8 @@ class ManifestFileFinder extends FileFinder
         'include_themes' => false,
         'ignore_tests' => true,
         'min_depth' => 1,
-        'ignore_dirs' => ['node_modules']
+        'ignore_dirs' => ['node_modules'],
+        'ignore_ci_library' => []
     ];
 
     public function acceptDir($basename, $pathname, $depth)
@@ -71,6 +72,14 @@ class ManifestFileFinder extends FileFinder
         // Skip if not in module
         if (!$this->isInsideModule($basename, $pathname, $depth)) {
             return false;
+        }
+
+        // Skip if test dir inside vendor module with unexpected CI library
+        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoreCILib = $this->getOption('ignore_ci_library')) {
+            $ciLib = $this->findModuleCILib($basename, $pathname, $depth);
+            if (in_array($ciLib, $ignoreCILib)) {
+                return false;
+            }
         }
 
         return parent::acceptDir($basename, $pathname, $depth);
@@ -250,5 +259,23 @@ class ManifestFileFinder extends FileFinder
         }
 
         return false;
+    }
+
+    private function findModuleCILib(string $basename, string $pathname, int $depth): string
+    {
+        if ($depth < 1) {
+            return Module::CI_PHPUNIT_UNKNOWN;
+        }
+
+        $newBasename = basename($pathname);
+        $newPathname = dirname($pathname);
+        $newDepth = $depth - 1;
+
+        if ($this->isDirectoryModule($newBasename, $newPathname, $newDepth)) {
+            $module = new Module($newPathname, $this->upLevels($newPathname, $newDepth));
+            return $module->getCILibrary();
+        }
+
+        return $this->findModuleCILib($newBasename, $newPathname, $newDepth);
     }
 }

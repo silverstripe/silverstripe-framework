@@ -5,7 +5,6 @@ namespace SilverStripe\Core\Manifest;
 use Composer\Semver\Semver;
 use Exception;
 use InvalidArgumentException;
-use RuntimeException;
 use Serializable;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
@@ -301,8 +300,9 @@ class Module implements Serializable
      */
     public function getCILibrary(): string
     {
+        // We don't have any composer data at all
         if (empty($this->composerData)) {
-            throw new RuntimeException('No composer data at all');
+            return self::CI_PHPUNIT_UNKNOWN;
         }
 
         // We don't have any dev dependencies
