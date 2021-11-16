@@ -23,7 +23,7 @@ class DetailedErrorFormatterTest extends SapphireTest
         $this->assertStringContainsString("Line 32 in $base/DetailedErrorFormatterTest/ErrorGenerator.php", $output);
         $this->assertStringContainsString('* 32:                  throw new Exception(\'Error\');', $output);
         $this->assertStringContainsString(
-            'SilverStripe\\Logging\\Tests\\DetailedErrorFormatterTest\\ErrorGenerator->mockException(4)',
+            'SilverStripe\\Logging\\Tests\\DetailedErrorFormatterTest\\ErrorGenerator->mockException',
             $output
         );
     }
