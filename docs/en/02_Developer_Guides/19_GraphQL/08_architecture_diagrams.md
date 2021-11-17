@@ -83,7 +83,7 @@ All model types eventually become plain GraphQL types when the `Schema` class cr
 
 ## Plugins
 
-![](../../_images/graphql/models.png)
+![](../../_images/graphql/plugins.png)
 
 The plugin layer is likely to be refactored before stablisation, but the current architecture is presented above.
 
