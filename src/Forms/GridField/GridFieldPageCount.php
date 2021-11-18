@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * GridFieldPage displays a simple current page count summary.
@@ -14,7 +15,7 @@ use LogicException;
  */
 class GridFieldPageCount implements GridField_HTMLProvider
 {
-    use Configurable;
+    use Configurable, Injectable;
 
     /**
      * @var string placement indicator for this control

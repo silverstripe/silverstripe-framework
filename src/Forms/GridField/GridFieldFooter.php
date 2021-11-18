@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -20,6 +21,7 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldFooter implements GridField_HTMLProvider
 {
+    use Injectable;
 
     /**
      * A message to display in the footer

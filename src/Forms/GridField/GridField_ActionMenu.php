@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -10,6 +11,8 @@ use SilverStripe\View\SSViewer;
  */
 class GridField_ActionMenu implements GridField_ColumnProvider, GridField_ActionProvider
 {
+    use Injectable;
+
     public function augmentColumns($gridField, &$columns)
     {
         if (!in_array('Actions', $columns)) {

@@ -15,6 +15,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -34,6 +35,7 @@ use LogicException;
  */
 class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
 {
+    use Injectable;
 
     /**
      * The HTML fragment to write this component into

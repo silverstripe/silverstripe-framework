@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Creates a unique key for the gridfield, and uses that to write to and retrieve
@@ -12,6 +13,8 @@ use SilverStripe\Control\HTTPRequest;
  */
 class GridFieldStateManager implements GridFieldStateManagerInterface
 {
+    use Injectable;
+
     /**
      * @param GridField $gridField
      * @return string

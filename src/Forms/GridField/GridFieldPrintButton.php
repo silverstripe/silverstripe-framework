@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -18,7 +19,7 @@ use SilverStripe\View\Requirements;
  */
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-    use Extensible;
+    use Extensible, Injectable;
 
     /**
      * @var array Map of a property name on the printed objects, with values

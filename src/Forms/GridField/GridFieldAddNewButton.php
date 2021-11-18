@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\RelationList;
 use SilverStripe\View\ArrayData;
@@ -17,6 +18,7 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldAddNewButton implements GridField_HTMLProvider
 {
+    use Injectable;
 
     protected $targetFragment;
 

@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -13,6 +14,8 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionMenuLink
 {
+    use Injectable;
+
     /**
      * @inheritdoc
      */

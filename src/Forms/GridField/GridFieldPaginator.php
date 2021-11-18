@@ -9,6 +9,7 @@ use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
@@ -16,7 +17,7 @@ use LogicException;
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
-    use Configurable;
+    use Configurable, Injectable;
 
     /**
      * Specifies default items per page

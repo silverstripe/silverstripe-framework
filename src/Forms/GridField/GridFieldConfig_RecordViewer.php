@@ -12,8 +12,8 @@ class GridFieldConfig_RecordViewer extends GridFieldConfig_Base
     {
         parent::__construct($itemsPerPage);
 
-        $this->addComponent(new GridFieldViewButton());
-        $this->addComponent(new GridFieldDetailForm());
+        $this->addComponent(GridFieldViewButton::create());
+        $this->addComponent(GridFieldDetailForm::create());
         $this->removeComponentsByType(GridFieldFilterHeader::class);
 
         $this->extend('updateConfig');

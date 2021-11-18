@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -16,6 +17,7 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldButtonRow implements GridField_HTMLProvider
 {
+    use Injectable;
 
     protected $targetFragment;
 

@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -11,6 +12,7 @@ use SilverStripe\ORM\DataObject;
  */
 class GridFieldDataColumns implements GridField_ColumnProvider
 {
+    use Injectable;
 
     /**
      * @var array

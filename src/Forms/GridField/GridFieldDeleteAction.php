@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 
@@ -16,14 +17,15 @@ use SilverStripe\ORM\ValidationException;
  * Use the {@link $removeRelation} property set in the constructor.
  *
  * <code>
- * $action = new GridFieldDeleteAction(); // delete objects permanently
+ * $action = GridFieldDeleteAction::create(); // delete objects permanently
  *
  * // removes the relation to object instead of deleting
- * $action = new GridFieldDeleteAction(true);
+ * $action = GridFieldDeleteAction::create(true);
  * </code>
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
 {
+    use Injectable;
 
     /**
      * If this is set to true, this {@link GridField_ActionProvider} will

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -12,6 +13,7 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldToolbarHeader implements GridField_HTMLProvider
 {
+    use Injectable;
 
     /**
      * @param GridField $gridField

@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * GridFieldSortableHeader adds column headers to a {@link GridField} that can
@@ -20,6 +21,7 @@ use LogicException;
  */
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
+    use Injectable;
 
     /**
      * See {@link setThrowExceptionOnBadDataType()}

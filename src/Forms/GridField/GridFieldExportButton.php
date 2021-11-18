@@ -6,6 +6,7 @@ use League\Csv\Writer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -13,6 +14,8 @@ use SilverStripe\ORM\DataObject;
  */
 class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
+    use Injectable;
+
     /**
      * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
      * Note that titles are only used when {@link $csvHasHeader} is set to TRUE.

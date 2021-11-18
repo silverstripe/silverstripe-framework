@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\ORM\ArrayList;
@@ -16,6 +17,7 @@ use SilverStripe\ORM\SS_List;
  */
 class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLProvider
 {
+    use Injectable;
 
     /**
      * Empty $datalist if the current request should be lazy loadable.
