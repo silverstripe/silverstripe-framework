@@ -20,6 +20,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
@@ -66,10 +67,10 @@ use SilverStripe\View\ViewableData;
  */
 class Form extends ViewableData implements HasRequestHandler
 {
+    use AttributesHTML;
     use FormMessage;
 
     /**
-     * Default form Name property
      */
     const DEFAULT_NAME = 'Form';
 
@@ -816,33 +817,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     * @return $this
-     */
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getAttribute($name)
-    {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
+    protected function getDefaultAttributes(): array
     {
         $attrs = [
             'id' => $this->FormName(),
@@ -860,51 +835,7 @@ class Form extends ViewableData implements HasRequestHandler
             $attrs['class'] .= ' validationerror';
         }
 
-        $attrs = array_merge($attrs, $this->attributes);
-
         return $attrs;
-    }
-
-    /**
-     * Return the attributes of the form tag - used by the templates.
-     *
-     * @param array $attrs Custom attributes to process. Falls back to {@link getAttributes()}.
-     * If at least one argument is passed as a string, all arguments act as excludes by name.
-     *
-     * @return string HTML attributes, ready for insertion into an HTML tag
-     */
-    public function getAttributesHTML($attrs = null)
-    {
-        $exclude = (is_string($attrs)) ? func_get_args() : null;
-
-        $attrs = $this->getAttributes();
-
-        // Remove empty
-        $attrs = array_filter((array)$attrs, function ($value) {
-            return ($value || $value === 0);
-        });
-
-        // Remove excluded
-        if ($exclude) {
-            $attrs = array_diff_key($attrs, array_flip($exclude));
-        }
-
-        // Prepare HTML-friendly 'method' attribute (lower-case)
-        if (isset($attrs['method'])) {
-            $attrs['method'] = strtolower($attrs['method']);
-        }
-
-        // Create markup
-        $parts = [];
-        foreach ($attrs as $name => $value) {
-            if ($value === true) {
-                $value = $name;
-            }
-
-            $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
-        }
-
-        return implode(' ', $parts);
     }
 
     public function FormAttributes()

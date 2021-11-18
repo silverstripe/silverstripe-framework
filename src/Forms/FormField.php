@@ -13,6 +13,7 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -41,6 +42,7 @@ use SilverStripe\View\SSViewer;
  */
 class FormField extends RequestHandler
 {
+    use AttributesHTML;
     use FormMessage;
 
     /** @see $schemaDataType */
@@ -213,17 +215,6 @@ class FormField extends RequestHandler
      * @var string
      */
     protected $smallFieldHolderTemplate;
-
-    /**
-     * All attributes on the form field (not the field holder).
-     *
-     * Partially determined based on other instance properties.
-     *
-     * @see getAttributes()
-     *
-     * @var array
-     */
-    protected $attributes = [];
 
     /**
      * The data type backing the field. Represents the type of value the
@@ -659,59 +650,7 @@ class FormField extends RequestHandler
         return $this;
     }
 
-    /**
-     * Set an HTML attribute on the field element, mostly an input tag.
-     *
-     * Some attributes are best set through more specialized methods, to avoid interfering with
-     * built-in behaviour:
-     *
-     * - 'class': {@link addExtraClass()}
-     * - 'title': {@link setDescription()}
-     * - 'value': {@link setValue}
-     * - 'name': {@link setName}
-     *
-     * Caution: this doesn't work on most fields which are composed of more than one HTML form
-     * field.
-     *
-     * @param string $name
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get an HTML attribute defined by the field, or added through {@link setAttribute()}.
-     *
-     * Caution: this doesn't work on all fields, see {@link setAttribute()}.
-     *
-     * @param string $name
-     * @return string
-     */
-    public function getAttribute($name)
-    {
-        $attributes = $this->getAttributes();
-
-        if (isset($attributes[$name])) {
-            return $attributes[$name];
-        }
-
-        return null;
-    }
-
-    /**
-     * Allows customization through an 'updateAttributes' hook on the base class.
-     * Existing attributes are passed in as the first argument and can be manipulated,
-     * but any attributes added through a subclass implementation won't be included.
-     *
-     * @return array
-     */
-    public function getAttributes()
+    protected function getDefaultAttributes(): array
     {
         $attributes = [
             'type' => $this->getInputType(),
@@ -729,65 +668,7 @@ class FormField extends RequestHandler
             $attributes['aria-required'] = 'true';
         }
 
-        $attributes = array_merge($attributes, $this->attributes);
-
-        $this->extend('updateAttributes', $attributes);
-
         return $attributes;
-    }
-
-    /**
-     * Custom attributes to process. Falls back to {@link getAttributes()}.
-     *
-     * If at least one argument is passed as a string, all arguments act as excludes, by name.
-     *
-     * @param array $attributes
-     *
-     * @return string
-     */
-    public function getAttributesHTML($attributes = null)
-    {
-        $exclude = null;
-
-        if (is_string($attributes)) {
-            $exclude = func_get_args();
-        }
-
-        if (!$attributes || is_string($attributes)) {
-            $attributes = $this->getAttributes();
-        }
-
-        $attributes = (array) $attributes;
-
-        $attributes = array_filter($attributes, function ($v) {
-            return ($v || $v === 0 || $v === '0');
-        });
-
-        if ($exclude) {
-            $attributes = array_diff_key(
-                $attributes,
-                array_flip($exclude)
-            );
-        }
-
-        // Create markup
-        $parts = [];
-
-        foreach ($attributes as $name => $value) {
-            if ($value === true) {
-                $value = $name;
-            } else {
-                if (is_scalar($value)) {
-                    $value = (string) $value;
-                } else {
-                    $value = json_encode($value);
-                }
-            }
-
-            $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
-        }
-
-        return implode(' ', $parts);
     }
 
     /**
