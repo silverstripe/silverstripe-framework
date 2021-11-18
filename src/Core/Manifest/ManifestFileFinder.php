@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use RuntimeException;
 use SilverStripe\Assets\FileFinder;
 
 /**
@@ -33,7 +34,7 @@ class ManifestFileFinder extends FileFinder
         'ignore_tests' => true,
         'min_depth' => 1,
         'ignore_dirs' => ['node_modules'],
-        'ignore_ci_libraries' => []
+        'ignore_ci_configs' => []
     ];
 
     public function acceptDir($basename, $pathname, $depth)
@@ -74,10 +75,10 @@ class ManifestFileFinder extends FileFinder
             return false;
         }
 
-        // Skip if test dir inside vendor module with unexpected CI library
-        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoreCILib = $this->getOption('ignore_ci_libraries')) {
-            $ciLib = $this->findModuleCILib($basename, $pathname, $depth);
-            if (in_array($ciLib, $ignoreCILib)) {
+        // Skip if test dir inside vendor module with unexpected CI Configuration
+        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoreCIConfig = $this->getOption('ignore_ci_configs')) {
+            $ciLib = $this->findModuleCIPhpConfiguration($basename, $pathname, $depth);
+            if (in_array($ciLib, $ignoreCIConfig)) {
                 return false;
             }
         }
@@ -261,21 +262,39 @@ class ManifestFileFinder extends FileFinder
         return false;
     }
 
-    private function findModuleCILib(string $basename, string $pathname, int $depth): string
+    /**
+     * Find out the root of the current module and read the PHP CI configuration from tho composer file
+     *
+     * @param string $basename Name of the current folder
+     * @param string $pathname Full path the parent folder
+     * @param string $depth Depth of the current folder
+     */
+    private function findModuleCIPhpConfiguration(string $basename, string $pathname, int $depth): string
     {
         if ($depth < 1) {
+            // We went all the way back to the root of the project
             return Module::CI_UNKNOWN;
         }
 
+        // We pop the current folder and use the next entry the pathname
         $newBasename = basename($pathname);
         $newPathname = dirname($pathname);
         $newDepth = $depth - 1;
 
         if ($this->isDirectoryModule($newBasename, $newPathname, $newDepth)) {
+            // We've reached the root of the module folder, we can read the PHP CI config now
             $module = new Module($newPathname, $this->upLevels($newPathname, $newDepth));
-            return $module->getCILibrary();
+            $config = $module->getCIConfig();
+
+            if (empty($config['PHP'])) {
+                // This should never happen
+                throw new RuntimeException('Module::getCIConfig() did not return a PHP CI value');
+            }
+
+            return $config['PHP'];
         }
 
-        return $this->findModuleCILib($newBasename, $newPathname, $newDepth);
+        // We haven't reach our module root yet ... let's look up one more level
+        return $this->findModuleCIPhpConfiguration($newBasename, $newPathname, $newDepth);
     }
 }

@@ -516,7 +516,7 @@ class CoreKernel implements Kernel
      *
      * @return string[] List of CI types to ignore as defined by `Module`.
      */
-    protected function getIgnoreCILibraries(): array
+    protected function getIgnoreCIConfigs(): array
     {
         return [];
     }
@@ -532,14 +532,14 @@ class CoreKernel implements Kernel
         $this->getClassLoader()->init(
             $this->getIncludeTests(),
             $flush,
-            $this->getIgnoreCILibraries()
+            $this->getIgnoreCIConfigs()
         );
 
         // Find modules
         $this->getModuleLoader()->init(
             $this->getIncludeTests(),
             $flush,
-            $this->getIgnoreCILibraries()
+            $this->getIgnoreCIConfigs()
         );
 
         // Flush config
@@ -561,7 +561,7 @@ class CoreKernel implements Kernel
             $defaultSet->init(
                 $this->getIncludeTests(),
                 $flush,
-                $this->getIgnoreCILibraries()
+                $this->getIgnoreCIConfigs()
             );
         }
     }

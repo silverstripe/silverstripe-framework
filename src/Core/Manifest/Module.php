@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use Composer\Semver\Semver;
 use Exception;
 use InvalidArgumentException;
+use RuntimeException;
 use Serializable;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
@@ -21,19 +22,19 @@ class Module implements Serializable
     const TRIM_CHARS = ' /\\';
 
     /**
-     * Return value of getCILibrary() when module uses PHPUNit 9
+     * Return value of getCIConfig() when module uses PHPUNit 9
      */
-    const CI_PHPUNIT_NINE = 'PHPUnit9';
+    const CI_PHPUNIT_NINE = 'CI_PHPUNIT_NINE';
 
     /**
-     * Return value of getCILibrary() when module uses PHPUNit 5
+     * Return value of getCIConfig() when module uses PHPUNit 5
      */
-    const CI_PHPUNIT_FIVE = 'PHPUnit5';
+    const CI_PHPUNIT_FIVE = 'CI_PHPUNIT_FIVE';
 
     /**
-     * Return value of getCILibrary() when module does not use any CI
+     * Return value of getCIConfig() when module does not use any CI
      */
-    const CI_UNKNOWN = 'NoPHPUnit';
+    const CI_UNKNOWN = 'CI_UNKNOWN';
 
 
 
@@ -295,10 +296,22 @@ class Module implements Serializable
     }
 
     /**
-     * Determine what CI library the module is using.
+     * Determine what configurations the module is using to run various aspects of its CI. THe only aspect
+     * that is observed is `PHP`
+     * @return array List of configuration aspects e.g.: `['PHP' => 'CI_PHPUNIT_NINE']`
      * @internal
      */
-    public function getCILibrary(): string
+    public function getCIConfig(): array
+    {
+        return [
+            'PHP' => $this->getPhpCiConfig()
+        ];
+    }
+
+    /**
+     * Determine what CI Configuration the module uses to test its PHP code.
+     */
+    private function getPhpCiConfig(): string
     {
         // We don't have any composer data at all
         if (empty($this->composerData)) {
@@ -316,10 +329,18 @@ class Module implements Serializable
         // Try to pick which CI we are using based on phpunit constraint
         $phpUnitConstraint = $this->requireDevConstraint(['sminnee/phpunit', 'phpunit/phpunit']);
         if ($phpUnitConstraint) {
-            if ($this->satisfiesAtLeastOne(['5.7.0', '5.0.0', '5.x-dev', '5.7.x-dev'], $phpUnitConstraint)) {
+            if ($this->constraintSatisfies(
+                $phpUnitConstraint,
+                ['5.7.0', '5.0.0', '5.x-dev', '5.7.x-dev'],
+                5
+            )) {
                 return self::CI_PHPUNIT_FIVE;
             }
-            if ($this->satisfiesAtLeastOne(['9.0.0', '9.5.0', '9.x-dev', '9.5.x-dev'], $phpUnitConstraint)) {
+            if ($this->constraintSatisfies(
+                $phpUnitConstraint,
+                ['9.0.0', '9.5.0', '9.x-dev', '9.5.x-dev'],
+                9
+            )) {
                 return self::CI_PHPUNIT_NINE;
             }
         }
@@ -327,10 +348,18 @@ class Module implements Serializable
         // Try to pick which CI we are using based on recipe-testing constraint
         $recipeTestingConstraint = $this->requireDevConstraint(['silverstripe/recipe-testing']);
         if ($recipeTestingConstraint) {
-            if ($this->satisfiesAtLeastOne(['1.0.0', '1.1.0', '1.2.0', '1.1.x-dev', '1.2.x-dev', '1.x-dev'], $recipeTestingConstraint)) {
+            if ($this->constraintSatisfies(
+                $recipeTestingConstraint,
+                ['1.0.0', '1.1.0', '1.2.0', '1.1.x-dev', '1.2.x-dev', '1.x-dev'],
+                1
+            )) {
                 return self::CI_PHPUNIT_FIVE;
             }
-            if ($this->satisfiesAtLeastOne(['2.0.0', '2.0.x-dev', '2.x-dev'], $recipeTestingConstraint)) {
+            if ($this->constraintSatisfies(
+                $recipeTestingConstraint,
+                ['2.0.0', '2.0.x-dev', '2.x-dev'],
+                2
+            )) {
                 return self::CI_PHPUNIT_NINE;
             }
         }
@@ -362,9 +391,22 @@ class Module implements Serializable
     /**
      * Determines if the provided constraint allows at least one of the version provided
      */
-    private function satisfiesAtLeastOne(array $versions, string $constraint): bool
-    {
-        return !empty(Semver::satisfiedBy($versions, $constraint));
+    private function constraintSatisfies(
+        string $constraint,
+        array $possibleVersions,
+        int $majorVersionFallback
+    ): bool {
+        // Let's see of any of our possible versions is allowed by the constraint
+        if (!empty(Semver::satisfiedBy($possibleVersions, $constraint))) {
+            return true;
+        }
+
+        // Let's see if we are using an exact version constraint. e.g. ~1.2.3 or 1.2.3 or ~1.2 or 1.2.*
+        if (preg_match("/^~?$majorVersionFallback(\.(\d+)|\*){0,2}/", $constraint)) {
+            return true;
+        }
+
+        return false;
     }
 }
 

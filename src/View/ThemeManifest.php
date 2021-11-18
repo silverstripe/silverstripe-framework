@@ -73,9 +73,9 @@ class ThemeManifest implements ThemeList
     /**
      * @param bool $includeTests Include tests in the manifest
      * @param bool $forceRegen Force the manifest to be regenerated.
-     * @param string[] $ignoredCILibs
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCILibs = [])
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         // build cache from factory
         if ($this->cacheFactory) {
@@ -88,7 +88,7 @@ class ThemeManifest implements ThemeList
         if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
             $this->themes = $data;
         } else {
-            $this->regenerate($includeTests, $ignoredCILibs);
+            $this->regenerate($includeTests, $ignoredCIConfigs);
         }
     }
 
@@ -130,16 +130,16 @@ class ThemeManifest implements ThemeList
      * Regenerates the manifest by scanning the base path.
      *
      * @param bool $includeTests
-     * @param string[] $ignoredCILibs
+     * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests = false, array $ignoredCILibs = [])
+    public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
     {
         $finder = new ManifestFileFinder();
         $finder->setOptions([
             'include_themes' => false,
             'ignore_dirs' => ['node_modules', THEMES_DIR],
             'ignore_tests'  => !$includeTests,
-            'ignore_ci_libraries' => $ignoredCILibs,
+            'ignore_ci_configs' => $ignoredCIConfigs,
             'dir_callback'  => [$this, 'handleDirectory']
         ]);
 
