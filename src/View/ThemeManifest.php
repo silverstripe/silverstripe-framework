@@ -139,7 +139,7 @@ class ThemeManifest implements ThemeList
             'include_themes' => false,
             'ignore_dirs' => ['node_modules', THEMES_DIR],
             'ignore_tests'  => !$includeTests,
-            'ignore_ci_configs' => $ignoredCIConfigs,
+            'ignored_ci_configs' => $ignoredCIConfigs,
             'dir_callback'  => [$this, 'handleDirectory']
         ]);
 

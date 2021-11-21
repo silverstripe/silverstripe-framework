@@ -51,15 +51,15 @@ class TestKernel extends CoreKernel
      * Set a list of CI configurations that should cause a module's test not to be added to a manifest
      * @param string[] $ciConfigs
      */
-    public function setIgnoreCIConfigs(array $ciLibs): self
+    public function setIgnoredCIConfigs(array $ciConfigs): self
     {
-        $this->ciLibs = $ciLibs;
+        $this->ciConfigs = $ciConfigs;
         return $this;
     }
 
-    protected function getIgnoreCIConfigs(): array
+    protected function getIgnoredCIConfigs(): array
     {
-        return $this->ciLibs;
+        return $this->ciConfigs;
     }
 
     protected function bootErrorHandling()

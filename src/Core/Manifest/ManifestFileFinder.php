@@ -6,13 +6,14 @@ use RuntimeException;
 use SilverStripe\Assets\FileFinder;
 
 /**
- * An extension to the default file finder with some extra filters to faciliate
+ * An extension to the default file finder with some extra filters to facilitate
  * autoload and template manifest generation:
  *   - Only modules with _config.php files are scanned.
  *   - If a _manifest_exclude file is present inside a directory it is ignored.
  *   - Assets and module language directories are ignored.
- *   - Module tests directories are skipped if the ignore_tests option is not
- *     set to false.
+ *   - Module tests directories are skipped if either of these conditions is meant:
+ *     - the `ignore_tests` option is not set to false.
+ *     - the module PHP CI configuration matches one of the `ignored_ci_configs`
  */
 class ManifestFileFinder extends FileFinder
 {
@@ -34,7 +35,7 @@ class ManifestFileFinder extends FileFinder
         'ignore_tests' => true,
         'min_depth' => 1,
         'ignore_dirs' => ['node_modules'],
-        'ignore_ci_configs' => []
+        'ignored_ci_configs' => []
     ];
 
     public function acceptDir($basename, $pathname, $depth)
@@ -76,9 +77,9 @@ class ManifestFileFinder extends FileFinder
         }
 
         // Skip if test dir inside vendor module with unexpected CI Configuration
-        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoreCIConfig = $this->getOption('ignore_ci_configs')) {
+        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoredCIConfig = $this->getOption('ignored_ci_configs')) {
             $ciLib = $this->findModuleCIPhpConfiguration($basename, $pathname, $depth);
-            if (in_array($ciLib, $ignoreCIConfig)) {
+            if (in_array($ciLib, $ignoredCIConfig)) {
                 return false;
             }
         }

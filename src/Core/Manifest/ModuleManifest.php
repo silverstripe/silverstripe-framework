@@ -173,7 +173,7 @@ class ModuleManifest
         $finder->setOptions([
             'min_depth' => 0,
             'ignore_tests' => !$includeTests,
-            'ignore_ci_configs' => $ignoredCIConfigs,
+            'ignored_ci_configs' => $ignoredCIConfigs,
             'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);

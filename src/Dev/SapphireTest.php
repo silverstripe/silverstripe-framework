@@ -1012,7 +1012,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             $kernel = new TestKernel(BASE_PATH);
 
             // PHPUnit 9 only logic to exclude old test still targeting PHPUNit 5.7
-            $kernel->setIgnoreCIConfigs([Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
+            $kernel->setIgnoredCIConfigs([Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
 
             if (class_exists(HTTPApplication::class)) {
                 // Mock request
