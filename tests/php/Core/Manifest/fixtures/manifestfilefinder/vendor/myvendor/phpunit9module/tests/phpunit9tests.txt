@@ -1,0 +1,1 @@
+This file should not be discovered when running PHPUnit 9 tests
