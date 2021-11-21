@@ -556,8 +556,17 @@ class Director implements TemplateGlobalProvider
             return $_SERVER['HTTP_HOST'];
         }
 
-        // Check base url
+        // Check default_base_url
         if ($baseURL = self::config()->uninherited('default_base_url')) {
+            $baseURL = Injector::inst()->convertServiceProperty($baseURL);
+            $host = static::parseHost($baseURL);
+            if ($host) {
+                return $host;
+            }
+        }
+
+        // Check BASE_URL environment variable
+        if ($baseURL = BASE_URL) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
             $host = static::parseHost($baseURL);
             if ($host) {
