@@ -6,7 +6,7 @@ icon: users
 
 # Core Committers
 
-The Core Committers team is reviewed approximately annually, new members are added based on quality contributions to Silverstipe CMS code and outstanding community participation.
+The Core Committers team is reviewed approximately annually, new members are added based on quality contributions to Silverstripe CMS code and outstanding community participation.
 
 This page outlines those who are part of the Core Committer team and outlines the process for onboarding new members.
 
