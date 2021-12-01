@@ -81,11 +81,11 @@ use stdClass;
  *   static $api_access = true;
  *
  *   function canView($member = false) {
- *     if(!$member) $member = Security::getCurrentUser();
+ *     if (!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Subscribers');
  *   }
  *   function canEdit($member = false) {
- *     if(!$member) $member = Security::getCurrentUser();
+ *     if (!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Editors');
  *   }
  *
@@ -3051,7 +3051,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * <code>
      * $extended = $this->extendedCan('canDoSomething', $member);
-     * if($extended !== null) return $extended;
+     * if ($extended !== null) return $extended;
      * else return $normalValue;
      * </code>
      *
@@ -3481,14 +3481,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param int|bool $idOrCache The id of the element, or cache if called on target class
      * @param boolean $cache See {@link get_one()}
      *
-     * @return static The element
+     * @return static|null The element
      */
     public static function get_by_id($classOrID, $idOrCache = null, $cache = true)
     {
         // Shift arguments if passing id in first or second argument
         list ($class, $id, $cached) = is_numeric($classOrID)
-            ? [get_called_class(), $classOrID, isset($idOrCache) ? $idOrCache : $cache]
-            : [$classOrID, $idOrCache, $cache];
+            ? [get_called_class(), (int) $classOrID, isset($idOrCache) ? $idOrCache : $cache]
+            : [$classOrID, (int) $idOrCache, $cache];
+        if ($id < 1) {
+            return null;
+        }
 
         // Validate class
         if ($class === self::class) {
