@@ -19,7 +19,7 @@ You can inline silverstripe/recipe-cms by running this command:
 composer update-recipe silverstripe/recipe-cms
 ```
 
-Alternatively, you can remove `silverstripe/recipe-cms` from your root `composer.json` and replace it with the the contents of the `composer.json` in `silverstripe/recipe-cms`.
+Alternatively, you can remove `silverstripe/recipe-cms` from your root `composer.json` and replace it with the contents of the `composer.json` in `silverstripe/recipe-cms`.
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
