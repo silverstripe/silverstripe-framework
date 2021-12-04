@@ -38,6 +38,11 @@ class DBText extends DBString
     ];
 
     /**
+     * Punctuation that marks an end of a sentence for the Summary() method
+     */
+    private static array $summary_sentence_separators = ['.', '?', '!'];
+
+    /**
      * (non-PHPdoc)
      * @see DBField::requireField()
      */
@@ -130,10 +135,18 @@ class DBText extends DBString
             $add = $this->defaultEllipsis();
         }
 
-        // Split on sentences (don't remove period)
-        $sentences = array_filter(array_map(function ($str) {
-            return trim($str ?? '');
-        }, preg_split('@(?<=\.)@', $value ?? '') ?: []));
+        // Split on sentences (don't remove punctuation)
+        $summarySentenceSeparators = preg_quote(implode(static::config()->get('summary_sentence_separators')), '@');
+        $possibleSentences = preg_split('@(?<=[' . $summarySentenceSeparators . '])@', $value ?? '') ?: [];
+        $sentences = [];
+
+        foreach ($possibleSentences as $sentence) {
+            $sentence = trim($sentence);
+            if ($sentence) {
+                $sentences[] = $sentence;
+            }
+        }
+
         $wordCount = count(preg_split('#\s+#u', $sentences[0] ?? '') ?: []);
 
         // if the first sentence is too long, show only the first $maxWords words
