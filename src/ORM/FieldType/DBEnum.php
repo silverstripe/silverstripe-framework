@@ -140,7 +140,7 @@ class DBEnum extends DBString
             $name = $this->getName();
         }
 
-        $field = new DropdownField($name, $title, $this->enumValues(false), $value);
+        $field = DropdownField::create($name, $title, $this->enumValues(false), $value);
         if ($hasEmpty) {
             $field->setEmptyString($emptyString);
         }
