@@ -395,7 +395,12 @@ class DataQuery
                     // format internally; then this check can be part of selectField()
                     $selects = $query->getSelect();
                     if (!isset($selects[$col]) && !in_array($qualCol, $selects)) {
-                        $query->selectField($qualCol);
+                        // Use the original select if possible.
+                        if (array_key_exists($col, $originalSelect)) {
+                            $query->selectField($originalSelect[$col], $col);
+                        } else {
+                            $query->selectField($qualCol);
+                        }
                     }
                 } else {
                     $qualCol = '"' . implode('"."', $parts) . '"';
