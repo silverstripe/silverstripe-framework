@@ -176,7 +176,7 @@ class FormTest extends FunctionalTest
                 'key1' => 'save',
                 'key2' => null,
             ],
-            'loadDataFrom() doesn't save a field if a matching "<fieldname>_unchanged" flag is set'
+            'loadDataFrom() doesnt save a field if a matching "<fieldname>_unchanged" flag is set'
         );
     }
 
@@ -221,7 +221,7 @@ class FormTest extends FunctionalTest
                 'BirthdayYear' => 0,
                 'FavouriteTeam.Name' => null,
             ],
-            'LoadNonBlankDataFrom() loads only fields with values, and doesn't overwrite existing values'
+            'LoadNonBlankDataFrom() loads only fields with values, and doesnt overwrite existing values'
         );
     }
 
@@ -256,7 +256,7 @@ class FormTest extends FunctionalTest
                 'FavouriteTeam.Name' => 'Team 1',
                 'UnrelatedFormField' => 'random value',
             ],
-            'LoadDataFrom() doesn't overwrite fields not found in the object'
+            'LoadDataFrom() doesnt overwrite fields not found in the object'
         );
 
         $captainWithDetails = $this->objFromFixture(Player::class, 'captainNoDetails');
@@ -373,7 +373,7 @@ class FormTest extends FunctionalTest
         $this->assertEquals(
             $form->getData(),
             ['Biography' => 'Bio 1'],
-            'LoadDataFrom() does overwrite fields when MERGE_IGNORE_FALSEISH set and values aren't false-ish'
+            'LoadDataFrom() does overwrite fields when MERGE_IGNORE_FALSEISH set and values arent false-ish'
         );
     }
 
