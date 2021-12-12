@@ -56,6 +56,17 @@ setting. It is generally recommended to leave this setting as-is because it resu
 some advanced cases, the sql_mode can be configured on the database connection via the configuration API (
 see `MySQLDatabase::$sql_mode` for more details.) This setting is only available in Silverstripe CMS 4.7 and later.
 
+ ### MySQL/MariaDB Int width in schema
+
+MySQL 8.0.17 stopped reporting the width attribute for integers while MariaDB did not change its behaviour.
+This results in constant rebuilding of the schema when MySQLSchemaManager expects a field to look like e.g.
+`INT(8)` and MySQL server reports it simply as `INT`. MySQLSchemaManager has been updated to detect the MySQL
+server implementation and act accordingly. In cases when auto-detection fails, you can force the desired behaviour like this:
+```yml
+SilverStripe\ORM\Connect\MySQLSchemaManager:
+    schema_use_int_width: true # or false when INT widths should be ignored
+```
+
 ## Webserver Configuration
 
 ### Overview
