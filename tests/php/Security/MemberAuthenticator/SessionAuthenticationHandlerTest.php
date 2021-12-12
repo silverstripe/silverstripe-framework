@@ -4,13 +4,15 @@ namespace SilverStripe\Security\Tests\MemberAuthenticator;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 
 class SessionAuthenticationHandlerTest extends SapphireTest
 {
+    protected static $fixture_file = 'SessionAuthenticationHandlerTest.yml';
+
     protected $usesDatabase = true;
 
     /**
@@ -57,5 +59,21 @@ class SessionAuthenticationHandlerTest extends SapphireTest
         $matchedMember = $handler->authenticateRequest($req);
         $this->assertNotNull($matchedMember);
         $this->assertEquals($matchedMember->Email, $member->Email);
+    }
+
+    public function testLoginMarkerCookie()
+    {
+        Config::modify()->set(Member::class, 'login_marker_cookie', 'sslogin');
+
+        /** @var Member $member */
+        $member = $this->objFromFixture(Member::class, 'test');
+
+        $this->logInAs($member);
+
+        $this->assertNotNull(Cookie::get('sslogin'), 'Login marker cookie is set after logging in');
+
+        $this->logOut();
+
+        $this->assertNull(Cookie::get('sslogin'), 'Login marker cookie is deleted after logging out');
     }
 }
