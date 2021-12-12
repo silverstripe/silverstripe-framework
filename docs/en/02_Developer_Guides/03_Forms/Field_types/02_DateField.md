@@ -55,7 +55,7 @@ DateField::create('MyDate')
 ```
 
 [info]
-The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
+The formats are based on [ICU format](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#simpledateformat).
 [/info]
  
 
