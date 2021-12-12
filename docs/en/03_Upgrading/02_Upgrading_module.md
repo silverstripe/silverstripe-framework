@@ -20,7 +20,7 @@ Your Silverstripe CMS 4 module should ship with a `.upgrade.yml` file. This file
 You'll want to run your module upgrade on a dedicated development branch. While it's possible to upgrade a module from within a Silverstripe CMS project, it's usually cleaner and easier to clone your module and work directly on it.
 
 ```bash
-# We're assumming that the default branch of you module is the latest SS3 compatible branch 
+# We're assuming that the default branch of you module is the latest SS3 compatible branch 
 git clone git@github.com:example-user/silverstripe-example-module.git
 cd silverstripe-example-module
 
@@ -117,7 +117,7 @@ upgrade add-namespace --root-dir vendor/example-user/silverstripe-example-module
   "ExampleUser\\SilverstripeExampleModule" \
   vendor/example-user/silverstripe-example-module/code/
   
-# If you are working directly from the module, you can ommit `--root-dir` parameter
+# If you are working directly from the module, you can omit `--root-dir` parameter
 upgrade add-namespace "ExampleUser\\SilverstripeExampleModule" code/
 ```
 

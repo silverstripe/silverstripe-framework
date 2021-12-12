@@ -43,7 +43,7 @@ MyProject\Pages\Blog:
     title: true
     author: true
     categories: true
-SilverStripe\Securty\Member:
+SilverStripe\Security\Member:
   fields
     firstName: true
     surname: true

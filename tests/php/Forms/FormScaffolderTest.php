@@ -124,11 +124,11 @@ class FormScaffolderTest extends SapphireTest
 
         $this->assertNotNull(
             $fields->dataFieldByName('Title'),
-            'scaffoldCMSFields() includes explitly defined "restrictFields"'
+            'scaffoldCMSFields() includes explicitly defined "restrictFields"'
         );
         $this->assertNull(
             $fields->dataFieldByName('Content'),
-            'getCMSFields() doesnt include fields left out in a "restrictFields" definition'
+            'getCMSFields() doesn't include fields left out in a "restrictFields" definition'
         );
     }
 
@@ -150,7 +150,7 @@ class FormScaffolderTest extends SapphireTest
         $this->assertInstanceOf(
             HTMLEditorField::class,
             $fields->dataFieldByName('Title'),
-            'getCMSFields() doesnt include fields left out in a "restrictFields" definition'
+            'getCMSFields() doesn't include fields left out in a "restrictFields" definition'
         );
     }
 
@@ -160,6 +160,6 @@ class FormScaffolderTest extends SapphireTest
         $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom(singleton(Article::class));
 
-        $this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesnt produce a TabSet by default');
+        $this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesn't produce a TabSet by default');
     }
 }

@@ -122,7 +122,7 @@ class ConfigContext implements Context
         $mysite = ModuleLoader::getModule($project);
         Assert::assertNotNull($mysite, 'Project exists');
         $destPath = $mysite->getResource("_config/{$filename}")->getPath();
-        Assert::assertFileDoesNotExist($destPath, "Config file {$filename} hasn't aleady been loaded");
+        Assert::assertFileDoesNotExist($destPath, "Config file {$filename} hasn't already been loaded");
 
         // Load
         $this->activatedConfigFiles[] = $destPath;

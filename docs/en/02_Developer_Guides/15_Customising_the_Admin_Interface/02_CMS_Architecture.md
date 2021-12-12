@@ -128,7 +128,7 @@ When writing templates use:
 $AdminURL
 ```
 
-And in JavaScript, this is avaible through the `ss` namespace
+And in JavaScript, this is available through the `ss` namespace
 
 
 ```js

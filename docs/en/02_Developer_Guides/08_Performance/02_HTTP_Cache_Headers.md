@@ -49,7 +49,7 @@ It comes with methods which let developers safely interact with the `Cache-Contr
 
 Simple way to set cache control header to a non-cacheable state.
 Use this method over `privateCache()` if you are unsure about caching details.
-Takes precendence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
+Takes precedence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
 
 Removes all state and replaces it with `no-cache, no-store, must-revalidate`. Although `no-store` is sufficient
 the others are added under [recommendation from Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#Examples)

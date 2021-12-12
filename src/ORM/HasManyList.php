@@ -85,7 +85,7 @@ class HasManyList extends RelationList
             return;
         }
         if (is_array($foreignID)) {
-            user_error("HasManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
+            user_error("HasManyList::add() can't be called on a list linked to multiple foreign IDs", E_USER_WARNING);
             return;
         }
 

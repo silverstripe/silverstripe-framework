@@ -29,7 +29,7 @@ class CookieJarTest extends SapphireTest
 
         $cookieJar = new CookieJar($defaultCookies);
 
-        //make sure all the "recieved" cookies are as expected
+        //make sure all the "received" cookies are as expected
         $this->assertEquals($defaultCookies, $cookieJar->getAll(false));
 
         //make sure there are no "phantom" cookies

@@ -106,7 +106,7 @@ Items can be added to a changeset in two ways -- *implicitly* and *explicitly*.
 
 An *implicit* inclusion occurs when a record is added to a changeset by virtue of another object declaring ownership of it via the `$owns` setting. Implicit inclusion of owned objects ensures that when a changeset is published, the action cascades through not only all of the items explicitly added to the changeset, but also all of the records that each of those items owns.
 
-An *explicit* inclusion is much more direct, occurring only when a user has opted to include a record in a changeset either through the UI or programatically.
+An *explicit* inclusion is much more direct, occurring only when a user has opted to include a record in a changeset either through the UI or programmatically.
 
 It is possible for an item to be included both implicitly and explicitly in a changeset. For instance, if a page owns a file, and the page gets added to a changeset, the file is implicitly added. That same file, however, can still be added to the changeset explicitly through the file editor. In this case, the file is considered to be *explicitly* added. If the file is later removed from the changeset, it is then considered *implicitly* added, due to its owner page still being in the changeset.
 
@@ -367,7 +367,7 @@ To write your changes without creating new version, call [writeWithoutVersion()]
 ```php
 <?php
 
-$record = MyRecord::get()->byID(99); // This wil retrieve the latest draft version of record ID 99.
+$record = MyRecord::get()->byID(99); // This will retrieve the latest draft version of record ID 99.
 echo $record->Version; // This will output the version ID. Let's assume it's 13.
 
 
@@ -386,7 +386,7 @@ Similarly, an "unpublish" operation does the reverse, and removes a record from 
 
 There's two main methods used to publish a versioned DataObject:
 * `publishSingle()` publishes this record to live from the draft
-* `publishRecursive()` publishes this record, and any dependant objects this record may refer to.
+* `publishRecursive()` publishes this record, and any dependent objects this record may refer to.
 
 In most regular cases, you'll want to use `publishRecursive`.
 
@@ -425,7 +425,7 @@ $record->delete();
 Note that `doUnpublish()` and `doArchive()` do not work recursively. If you wish to unpublish or archive dependants records, you have to do it manually.
 
 ### Rolling back to an older version
-Rolling back allows you to return a DataObject to a previous state. You can rollback a single DataObject using the `rollbackSingle()` method. You can also rollback all dependant records using the `rollbackRecursive()` method.
+Rolling back allows you to return a DataObject to a previous state. You can rollback a single DataObject using the `rollbackSingle()` method. You can also rollback all dependent records using the `rollbackRecursive()` method.
 
 Both `rollbackSingle()` and `rollbackRecursive()` expect a single argument, which may be a specific version ID or a stage name.
 
@@ -596,11 +596,11 @@ Any links presented on the view produced with `?stage=Stage` need to have the sa
 to retain the stage. If you are using the `SiteTree->Link()` and `Controller->Link()` methods,
 this is automatically the case for `DataObject` links, controller links and form actions.
 Note that this behaviour applies for unversioned objects as well, since the views
-these are presented in might still contain dependant objects that are versioned.
+these are presented in might still contain dependent objects that are versioned.
 
 You can opt for a session base stage setting through the `Versioned.use_session` setting.
 Warning: This can lead to leaking of unpublished information, if a live URL is viewed in draft mode,
-and the result is cached due to agressive cache settings (not varying on cookie values).
+and the result is cached due to aggressive cache settings (not varying on cookie values).
 
 *app/src/MyObject.php*
 

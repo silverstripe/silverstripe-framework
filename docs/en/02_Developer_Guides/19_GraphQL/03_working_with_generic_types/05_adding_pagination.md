@@ -92,7 +92,7 @@ A couple of things are going on here:
 parameter, we need to get this information to the function that is ultimately used in the schema. Therefore,
 we create a dynamic function in a static method by wrapping it with context. It's kind of like a decorator.
 
-* As long as we can do the work of counting and limiting the array, the `PaginationPlugin` can handle the rest. It will reutrn an array including `edges`, `nodes`, and `pageInfo`.
+* As long as we can do the work of counting and limiting the array, the `PaginationPlugin` can handle the rest. It will return an array including `edges`, `nodes`, and `pageInfo`.
 
 Rebuild the schema, and test it out:
 

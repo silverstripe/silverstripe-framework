@@ -15,7 +15,7 @@ interface GridField_StateProvider extends GridFieldComponent
      *
      * We recommend that you call $data->initDefaults() to do this.
      *
-     * @param $data The top-level sate object
+     * @param $data The top-level state object
      */
     public function initDefaultState(GridState_Data $data): void;
 }

@@ -118,7 +118,7 @@ $config->addComponent(new GridFieldCustomAction());
 
 $gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
 
-// option 2: adding the CustomAction to an exisitng GridField
+// option 2: adding the CustomAction to an existing GridField
 $gridField->getConfig()->addComponent(new GridFieldCustomAction());
 ```
 

@@ -65,14 +65,14 @@ class HTTPRequest implements ArrayAccess
     protected $ip;
 
     /**
-     * Contains alls HTTP GET parameters passed into this request.
+     * Contains all HTTP GET parameters passed into this request.
      *
      * @var array
      */
     protected $getVars = [];
 
     /**
-     * Contains alls HTTP POST parameters passed into this request.
+     * Contains all HTTP POST parameters passed into this request.
      *
      * @var array
      */
@@ -165,7 +165,7 @@ class HTTPRequest implements ArrayAccess
      * Allow the setting of a URL
      *
      * This is here so that RootURLController can change the URL of the request
-     * without us loosing all the other info attached (like headers)
+     * without us losing all the other info attached (like headers)
      *
      * @param string $url The new URL
      * @return HTTPRequest The updated request

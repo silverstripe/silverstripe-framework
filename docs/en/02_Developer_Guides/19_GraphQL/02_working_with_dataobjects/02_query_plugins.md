@@ -376,7 +376,7 @@ second enum generated will use `<TypeName><FieldName>Enum`.
 
 If an enum already exists with the same fields and name, it will be reused. For instance, if `OptionsEnum`
 is found and has exactly the same defined values (in the same order) as the Enum being generated,
-it will be reused rather than proceding to the deduplication strategy.
+it will be reused rather than proceeding to the deduplication strategy.
 
 #### Custom enum names
 

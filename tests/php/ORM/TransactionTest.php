@@ -48,7 +48,7 @@ class TransactionTest extends SapphireTest
             return;
         }
 
-        // Test that successful transactions are comitted
+        // Test that successful transactions are committed
         $obj = new TestObject();
         $failed = false;
         $conn->withTransaction(

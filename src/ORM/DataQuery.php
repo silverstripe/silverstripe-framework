@@ -170,7 +170,7 @@ class DataQuery
             throw new InvalidArgumentException("DataQuery::create() Can't find data classes for '{$this->dataClass}'");
         }
 
-        // Build our intial query
+        // Build our initial query
         $this->query = new SQLSelect([]);
         $this->query->setDistinct(true);
 

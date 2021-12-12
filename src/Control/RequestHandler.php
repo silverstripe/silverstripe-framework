@@ -84,7 +84,7 @@ class RequestHandler extends ViewableData
      * available.
      *
      * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
-     * the named parameter of the parsed URL wil be used to determine the method name.
+     * the named parameter of the parsed URL will be used to determine the method name.
      * @config
      */
     private static $url_handlers = [
@@ -143,7 +143,7 @@ class RequestHandler extends ViewableData
      * action will return an array of data with which to
      * customise the controller.
      *
-     * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
+     * @param HTTPRequest $request The object that is responsible for distributing URL parsing
      * @return HTTPResponse|RequestHandler|string|array
      */
     public function handleRequest(HTTPRequest $request)

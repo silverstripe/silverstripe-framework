@@ -43,7 +43,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $form = new Form(null, 'Form', new FieldList(), new FieldList());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $gridField->setForm($form);
-        $compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
+        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
         $htmlFragment = $compontent->getHTMLFragments($gridField);
 
         // Check that the output shows name and hat as sortable fields, but not city
@@ -77,7 +77,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $state->SortColumn = 'City';
         $state->SortDirection = 'asc';
 
-        $compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
+        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
         $listA = $compontent->getManipulatedData($gridField, $list);
 
         $state->SortDirection = 'desc';

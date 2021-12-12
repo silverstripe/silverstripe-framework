@@ -190,7 +190,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 <% if $Results %>
     <ul>
         <% loop $Results %>
-            <li>$Title, $Autor</li>
+            <li>$Title, $Author</li>
         <% end_loop %>
     </ul>
 <% else %>

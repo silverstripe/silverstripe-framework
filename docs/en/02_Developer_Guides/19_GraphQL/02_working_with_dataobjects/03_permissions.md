@@ -46,7 +46,7 @@ assumed to have permission to view a record.
 [/notice]
 
 
-For `read` and `readOne` a plugin called `canView` will filter the result set by the `canView($memeber)` check.
+For `read` and `readOne` a plugin called `canView` will filter the result set by the `canView($member)` check.
 
 [notice]
 When paginated items fail a `canView()` check, the `pageInfo` field is not affected.

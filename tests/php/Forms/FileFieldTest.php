@@ -120,7 +120,7 @@ class FileFieldTest extends FunctionalTest
     }
 
     /**
-     * Test different scenarii for a failed upload : an error occured, no files where provided
+     * Test different scenarii for a failed upload : an error occurred, no files where provided
      * @skipUpgrade
      */
     public function testUploadMissingRequiredFile()
@@ -134,7 +134,7 @@ class FileFieldTest extends FunctionalTest
             new FieldList(),
             new RequiredFields('cv')
         );
-        // All fields are filled but for some reason an error occured when uploading the file => fails
+        // All fields are filled but for some reason an error occurred when uploading the file => fails
         $fileFieldValue = [
             'name' => 'aCV.txt',
             'type' => 'application/octet-stream',
@@ -146,7 +146,7 @@ class FileFieldTest extends FunctionalTest
 
         $this->assertFalse(
             $form->validationResult()->isValid(),
-            'An error occured when uploading a file, but the validator returned true'
+            'An error occurred when uploading a file, but the validator returned true'
         );
 
         // We pass an empty set of parameters for the uploaded file => fails

@@ -72,7 +72,7 @@ Caches are namespaced, which might allow granular clearing of a particular cache
 In our example, the namespace is "myCache", expressed in the service name as
 `Psr\SimpleCache\CacheInterface.myCache`. We recommend the `::class` short-hand to compose the full service name.
  
-Clearing caches by namespace is dependant on the used adapter: While the `FilesystemCache` adapter clears only the namespaced cache,
+Clearing caches by namespace is dependent on the used adapter: While the `FilesystemCache` adapter clears only the namespaced cache,
 a `MemcachedCache` adapter will clear all caches regardless of namespace, since the underlying memcached
 service doesn't support this. See "Invalidation" for alternative strategies.
 

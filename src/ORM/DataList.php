@@ -1030,7 +1030,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Returns a unque array of a single field value for all items in the list.
+     * Returns a unique array of a single field value for all items in the list.
      *
      * @param string $colName
      * @return array
@@ -1208,7 +1208,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param DataObject $item
      * @todo Allow for amendment of this behaviour - for example, we can remove an item from
-     * an "ActiveItems" DataList by chaning the status to inactive.
+     * an "ActiveItems" DataList by changing the status to inactive.
      */
     public function remove($item)
     {

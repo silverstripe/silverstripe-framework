@@ -213,7 +213,7 @@ class HTTPTest extends FunctionalTest
 
         $result = HTTP::getLinksIn($content);
 
-        // Results don't neccesarily come out in the order they are in the $content param.
+        // Results don't necessarily come out in the order they are in the $content param.
         sort($result);
         sort($expected);
 
@@ -258,7 +258,7 @@ class HTTPTest extends FunctionalTest
         $this->assertEquals(
             'http://test.com/?foo=new&buz=baz',
             HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=old&buz=baz'),
-            'Absolute URL without path and multipe existing query params, overwriting an existing parameter'
+            'Absolute URL without path and multiple existing query params, overwriting an existing parameter'
         );
 
         $this->assertStringContainsString(

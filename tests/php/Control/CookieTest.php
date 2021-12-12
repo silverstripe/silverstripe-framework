@@ -50,7 +50,7 @@ class CookieTest extends SapphireTest
     /**
      * Check we don't mess with super globals when manipulating cookies
      *
-     * State should be managed sperately to the super global
+     * State should be managed separately to the super global
      */
     public function testCheckSuperglobalsArentTouched()
     {
@@ -190,7 +190,7 @@ class CookieTest extends SapphireTest
         //check we can add a new cookie and remove it and it doesn't leave any phantom values
         Cookie::set('newCookie', 'i am new');
 
-        //check it's set by not recieved
+        //check it's set by not received
         $this->assertEquals('i am new', Cookie::get('newCookie'));
         $this->assertEmpty(Cookie::get('newCookie', false));
 

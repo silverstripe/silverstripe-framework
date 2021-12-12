@@ -12,7 +12,7 @@ interface Cookie_Backend
 
     /**
      * When creating the backend we want to store the existing cookies in our
-     * "existing" array. This allows us to distinguish between cookies we recieved
+     * "existing" array. This allows us to distinguish between cookies we received
      * or we set ourselves (and didn't get from the browser)
      *
      * @param array $cookies The existing cookies to load into the cookie jar

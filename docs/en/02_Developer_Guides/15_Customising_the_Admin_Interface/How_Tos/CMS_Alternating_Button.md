@@ -17,7 +17,7 @@ frontend.
 This how-to will walk you through creation of a "Clean-up" button with two appearances:
 
 * active: "Clean-up now" green constructive button if the actions can be performed
-* netural: "Cleaned" default button if the action does not need to be done
+* neutral: "Cleaned" default button if the action does not need to be done
 
 The controller code that goes with this example is listed in [Extend CMS Interface](extend_cms_interface).
 

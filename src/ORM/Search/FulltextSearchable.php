@@ -27,7 +27,7 @@ class FulltextSearchable extends DataExtension
 
     /**
      * Comma-separated list of database column names
-     * that can be searched on. Used for generation of the database index defintions.
+     * that can be searched on. Used for generation of the database index definitions.
      *
      * @var string
      */
@@ -84,7 +84,7 @@ class FulltextSearchable extends DataExtension
 
     /**
      * @param array|string $searchFields Comma-separated list (or array) of database column names
-     *  that can be searched on. Used for generation of the database index defintions.
+     *  that can be searched on. Used for generation of the database index definitions.
      */
     public function __construct($searchFields = [])
     {

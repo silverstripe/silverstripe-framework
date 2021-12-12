@@ -48,7 +48,7 @@ class CoreKernel implements Kernel
     /**
      * @var string
      */
-    protected $enviroment = null;
+    protected $environment = null;
 
     /**
      * @var ClassLoader
@@ -86,7 +86,7 @@ class CoreKernel implements Kernel
 
     /**
      * Indicates whether the Kernel has been flushed on boot
-     * Unitialized before boot
+     * Uninitialized before boot
      *
      * @var bool
      */
@@ -151,8 +151,8 @@ class CoreKernel implements Kernel
     public function getEnvironment()
     {
         // Check set
-        if ($this->enviroment) {
-            return $this->enviroment;
+        if ($this->environment) {
+            return $this->environment;
         }
 
         // Check saved session
@@ -179,7 +179,7 @@ class CoreKernel implements Kernel
     protected function sessionEnvironment()
     {
         if (!$this->booted) {
-            // session is not initialyzed yet, neither is manifest
+            // session is not initialized yet, neither is manifest
             return null;
         }
 
@@ -666,7 +666,7 @@ class CoreKernel implements Kernel
                 "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );
         }
-        $this->enviroment = $environment;
+        $this->environment = $environment;
         return $this;
     }
 

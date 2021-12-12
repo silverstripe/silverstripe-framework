@@ -100,7 +100,7 @@ abstract class DBSchemaManager
     protected $schemaUpdateTransaction;
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
      *
      * @param bool $quiet
      */

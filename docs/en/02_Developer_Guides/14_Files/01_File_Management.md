@@ -68,7 +68,7 @@ In order to ensure that assets are made public you should check the following:
 
 ## File shortcodes
 
-Shortcodes represent an embeded asset within a block of HTML text. For instance, this is the content
+Shortcodes represent an embedded asset within a block of HTML text. For instance, this is the content
 of a page with a shortcode image:
 
 ```html
@@ -275,7 +275,7 @@ or embed those images.
 By default files which do not exist on either the live or draft stage (but do have a version history)
 are removed from the filesystem.
 
-In order to permanantly keep a record of all past physical files you can set the `File.keep_archived_assets`
+In order to permanently keep a record of all past physical files you can set the `File.keep_archived_assets`
 config option to true. This will ensure that historic files can always be restored, albeit at a cost to disk
 storage.
 

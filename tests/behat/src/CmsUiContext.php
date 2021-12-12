@@ -352,7 +352,7 @@ class CmsUiContext implements Context
      */
     public function iExpandTheCmsPanel()
     {
-        //Tries to find the first visiable toggle in the page
+        //Tries to find the first visible toggle in the page
         $page = $this->getSession()->getPage();
         $toggle_elements = $page->findAll('css', '.toggle-expand');
         Assert::assertNotNull($toggle_elements, 'Panel toggle not found');
@@ -419,7 +419,7 @@ SCRIPT
      */
     public function iExpandInTheTree($action, $nodeText)
     {
-        //Tries to find the first visiable matched Node in the page
+        //Tries to find the first visible matched Node in the page
         $treeEl = $this->getCmsTreeElement();
         $treeNode = $treeEl->findLink($nodeText);
         Assert::assertNotNull($treeNode, sprintf('%s link not found', $nodeText));

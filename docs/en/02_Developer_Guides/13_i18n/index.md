@@ -124,7 +124,7 @@ By default, URLs for pages in Silverstripe CMS (the `SiteTree->URLSegment` prope
 are automatically reduced to the allowed allowed subset of ASCII characters.
 If characters outside this subset are added, they are either removed or (if possible) "transliterated".
 This describes the process of converting from one character set to another
-while keeping characters recognizeable. For example, vowels with french accents
+while keeping characters recognizable. For example, vowels with french accents
 are replaced with their base characters, `pâté` becomes `pate`.
 
 It is advisable to set the `SS_Transliterator.use_iconv` setting to true via config for systems

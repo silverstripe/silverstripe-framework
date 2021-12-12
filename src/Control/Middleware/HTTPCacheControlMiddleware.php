@@ -589,7 +589,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Simple way to set cache control header to a non-cacheable state.
      * Use this method over `privateCache()` if you are unsure about caching details.
-     * Takes precendence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
+     * Takes precedence over unforced `enableCache()`, `privateCache()` or `publicCache()` calls.
      *
      * The resulting cache-control headers will be chosen from the 'disabled' set of directives.
      *
@@ -600,7 +600,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * See https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#public_vs_private
      *
      * @see https://docs.silverstripe.org/en/developer_guides/performance/http_cache_headers/
-     * @param bool $force Force the cache to diabled even if it's forced private or public
+     * @param bool $force Force the cache to disabled even if it's forced private or public
      * @return $this
      */
     public function disableCache($force = false)

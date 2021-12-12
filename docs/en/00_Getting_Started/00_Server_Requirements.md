@@ -263,7 +263,7 @@ $email->send();
 
 Using the code snippet above also tests that the ability to set the "from" address is working correctly.
 
-See the [email section](/developer_guides/email) for futher details, including how to set the administrator "from" email address, change the `sendmail` binary location and how to use SMTP or other mail transports instead of sendmail.
+See the [email section](/developer_guides/email) for further details, including how to set the administrator "from" email address, change the `sendmail` binary location and how to use SMTP or other mail transports instead of sendmail.
 
 
 ## PHP Requirements for older Silverstripe CMS releases {#php-support}

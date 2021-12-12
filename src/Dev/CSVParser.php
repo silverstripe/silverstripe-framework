@@ -110,7 +110,7 @@ class CSVParser implements Iterator
      * You can use the object returned in a foreach loop to extract the data.
      *
      * @param string $filename The name of the file.  If relative, it will be relative to the site's base dir
-     * @param string $delimiter The character for seperating columns
+     * @param string $delimiter The character for separating columns
      * @param string $enclosure The character for quoting or enclosing columns
      */
     public function __construct($filename, $delimiter = ",", $enclosure = '"')

@@ -134,7 +134,7 @@ class MemberLoginForm extends BaseLoginForm
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
-            // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
+            // Regardless of what the unique identifier field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
             $emailField = TextField::create("Email", $label, null, null, $this),

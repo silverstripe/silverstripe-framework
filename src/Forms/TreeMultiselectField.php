@@ -244,7 +244,7 @@ class TreeMultiselectField extends TreeDropdownField
 
     /**
      * Save the results into the form
-     * Calls function $record->onChange($items) before saving to the assummed
+     * Calls function $record->onChange($items) before saving to the assumed
      * Component set.
      *
      * @param DataObjectInterface $record

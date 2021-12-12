@@ -22,7 +22,7 @@ with other middlewares in sequence and not have to worry about the order
 of execution.
 
 In `silverstripe-graphql`, middleware is used for query execution,
-but could ostensibly be used elsewhere too if the API ever accomodates
+but could ostensibly be used elsewhere too if the API ever accommodates
 such an expansion.
 
 [notice]

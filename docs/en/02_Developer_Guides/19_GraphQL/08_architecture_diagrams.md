@@ -91,7 +91,7 @@ The plugin layer is likely to be refactored before stablisation, but the current
 
 ![](../../_images/graphql/resolver_composition.png)
 
-Injecting behvaiour into resolvers is one of the main ways the schema can be customised. For instance, if you add a new argument to a query, the standard dataobject resolver will not know about it, so you'll want to write your own code to handle that argument. You could overwrite the entire resolver, but then you would lose key functionality from other plugins, like pagination, sort, and filtering.
+Injecting behaviour into resolvers is one of the main ways the schema can be customised. For instance, if you add a new argument to a query, the standard dataobject resolver will not know about it, so you'll want to write your own code to handle that argument. You could overwrite the entire resolver, but then you would lose key functionality from other plugins, like pagination, sort, and filtering.
 
 To this end, resolvers are a product of composition. Each bit of functionality is just another resolver in the "stack." The stack passes the result of the previous resolver to the next resolver, while the other three parameters, `$args, $context, $info` are immutable.
 

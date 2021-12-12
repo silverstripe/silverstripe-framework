@@ -692,7 +692,7 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Check if using a seperate public dir, and if so return this directory
+     * Check if using a separate public dir, and if so return this directory
      * name.
      *
      * This will be removed in 5.0 and fixed to 'public'

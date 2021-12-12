@@ -22,7 +22,7 @@ extensions.
 [/notice]
 
 Outputting these variables is only the start, if you want to format or manipulate them before adding them to the template
-have a read of the [Formating, Modifying and Casting Variables](casting) documentation.
+have a read of the [Formatting, Modifying and Casting Variables](casting) documentation.
 
 [alert]
 Some of the following only apply when you have the `CMS` module installed. If you're using the `Framework` alone, this
@@ -391,7 +391,7 @@ Placing it just below `$Content` is a good default.
 
 ## Related Documentation
 
- * [Casting and Formating Variables](casting)
+ * [Casting and Formatting Variables](casting)
  * [Template Inheritance](template_inheritance)
 
 ## API Documentation

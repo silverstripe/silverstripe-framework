@@ -235,7 +235,7 @@ class Group extends DataObject
                         '<a href="%s" class="add-role">%s</a>',
                         SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
                         // TODO This should include #Root_Roles to switch directly to the tab,
-                        // but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
+                        // but tabstrip.js doesn't display tabs when directly addressed through a URL pragma
                         _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"

@@ -53,7 +53,7 @@ class HTML4ValueTest extends SapphireTest
             $this->assertEquals(
                 'test-link',
                 $value->getElementsByTagName('a')->item(0)->getAttribute('href'),
-                'Link data can be extraced from malformed HTML'
+                'Link data can be extracted from malformed HTML'
             );
         }
     }
