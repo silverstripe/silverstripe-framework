@@ -94,7 +94,7 @@ i18n::config()
 
 Localization in Silverstripe CMS uses PHP's [intl extension](http://php.net/intl).
 Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
-are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
+are defined in [ICU format](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#simpledateformat),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
 
 These settings are not used for CMS presentation.
