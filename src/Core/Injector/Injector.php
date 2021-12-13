@@ -201,7 +201,7 @@ class Injector implements ContainerInterface
     const SINGLETON = 'singleton';
 
     /**
-     * Specify ya service type prototype
+     * Specify a service type prototype
      */
     const PROTOTYPE = 'prototype';
 

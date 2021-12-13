@@ -44,7 +44,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $gridField->setForm($form);
         $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
-        $htmlFragment = $compontent->getHTMLFragments($gridField);
+        $htmlFragment = $component->getHTMLFragments($gridField);
 
         // Check that the output shows name and hat as sortable fields, but not city
         $this->assertStringContainsString('<span class="non-sortable">City</span>', $htmlFragment['header']);
@@ -78,10 +78,10 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $state->SortDirection = 'asc';
 
         $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
-        $listA = $compontent->getManipulatedData($gridField, $list);
+        $listA = $component->getManipulatedData($gridField, $list);
 
         $state->SortDirection = 'desc';
-        $listB = $compontent->getManipulatedData($gridField, $list);
+        $listB = $component->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
             ['Auckland', 'Cologne', 'Melbourne', 'Wellington'],
@@ -95,10 +95,10 @@ class GridFieldSortableHeaderTest extends SapphireTest
         // Test one relation 'deep'
         $state->SortColumn = 'Cheerleader.Name';
         $state->SortDirection = 'asc';
-        $relationListA = $compontent->getManipulatedData($gridField, $list);
+        $relationListA = $component->getManipulatedData($gridField, $list);
 
         $state->SortDirection = 'desc';
-        $relationListB = $compontent->getManipulatedData($gridField, $list);
+        $relationListB = $component->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
             ['Wellington', 'Melbourne', 'Cologne', 'Auckland'],
@@ -112,10 +112,10 @@ class GridFieldSortableHeaderTest extends SapphireTest
         // Test two relations 'deep'
         $state->SortColumn = 'Cheerleader.Hat.Colour';
         $state->SortDirection = 'asc';
-        $relationListC = $compontent->getManipulatedData($gridField, $list);
+        $relationListC = $component->getManipulatedData($gridField, $list);
 
         $state->SortDirection = 'desc';
-        $relationListD = $compontent->getManipulatedData($gridField, $list);
+        $relationListD = $component->getManipulatedData($gridField, $list);
 
         $this->assertEquals(
             ['Cologne', 'Auckland', 'Wellington', 'Melbourne'],
