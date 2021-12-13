@@ -125,7 +125,7 @@ $player = Player::create();
 ```
 
 [notice]
-Using the `create()` method provides chainability, which can add elegance and brevity to your code, e.g. `Player::create()->write()`. More importantly, however, it will look up the class in the [Injector](../extending/injector) so that the class can be overriden by [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection).
+Using the `create()` method provides chainability, which can add elegance and brevity to your code, e.g. `Player::create()->write()`. More importantly, however, it will look up the class in the [Injector](../extending/injector) so that the class can be overridden by [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection).
 [/notice]
 
 

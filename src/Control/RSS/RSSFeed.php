@@ -263,7 +263,7 @@ class RSSFeed extends ViewableData
 
     /**
      * Returns the ordered list of preferred templates for rendering this object.
-     * Will prioritise any custom template first, and then templates based on class hiearchy next.
+     * Will prioritise any custom template first, and then templates based on class hierarchy next.
      *
      * @return array
      */

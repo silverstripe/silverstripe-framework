@@ -28,7 +28,7 @@ use SilverStripe\View\ArrayData;
  *
  * <b>Populate with Array</b>
  *
- * Example model defintion:
+ * Example model definition:
  * <code>
  * class MyObject extends DataObject {
  *   static $db = array(

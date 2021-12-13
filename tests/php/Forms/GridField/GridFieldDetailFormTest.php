@@ -411,7 +411,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $origAutoFollow = $this->autoFollowRedirection;
         $this->autoFollowRedirection = false;
 
-        // GridField is filtered people in "My Group", which does't include "jack"
+        // GridField is filtered people in "My Group", which doesn't include "jack"
         $included = $this->objFromFixture(Person::class, 'joe');
         $excluded = $this->objFromFixture(Person::class, 'jack');
 

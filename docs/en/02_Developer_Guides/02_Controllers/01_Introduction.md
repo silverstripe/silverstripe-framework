@@ -181,7 +181,7 @@ public function Link($action = null)
 ``` 
 
 ## Connecting Pages to Controllers
-By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to overide SiteTree::getControllerName().
+By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to override SiteTree::getControllerName().
 
 Example controller:
 ```php

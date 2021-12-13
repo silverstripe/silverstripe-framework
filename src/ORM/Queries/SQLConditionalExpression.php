@@ -578,7 +578,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     }
 
     /**
-     * Given a key / value pair, extract the predicate and any potential paramaters
+     * Given a key / value pair, extract the predicate and any potential parameters
      * in a format suitable for storing internally as a list of parameterized conditions.
      *
      * @param string|integer $key The left hand (key index) of this condition.
@@ -620,7 +620,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             if (count($value) !== 1) {
                 throw new \InvalidArgumentException(
                     'Nested predicates should be given as a single item array in '
-                        . 'array($predicate => array($prameters)) format)'
+                        . 'array($predicate => array($parameters)) format)'
                 );
             }
             foreach ($value as $key => $pairValue) {

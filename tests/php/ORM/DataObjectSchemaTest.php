@@ -66,7 +66,7 @@ class DataObjectSchemaTest extends SapphireTest
     }
 
     /**
-     * Test that the class name is convertable from the table
+     * Test that the class name is convertible from the table
      */
     public function testClassNameForTable()
     {
@@ -140,7 +140,7 @@ class DataObjectSchemaTest extends SapphireTest
             $schema->classForField(WithCustomTable::class, 'NotAField')
         );
 
-        // Non-existant fields shouldn't match any table
+        // Non-existent fields shouldn't match any table
         $this->assertNull(
             $schema->tableForField(BaseClass::class, 'Nonexist')
         );

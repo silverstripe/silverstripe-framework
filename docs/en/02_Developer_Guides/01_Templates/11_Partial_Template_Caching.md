@@ -84,7 +84,7 @@ Here is how it works in detail:
    All keys of `$CacheKey` are processed, concatenated and the final value is hashed.  
    If there are no values defined, this step is skipped.
 
-4. Make the final key vaule
+4. Make the final key value
 
    A string produced by concatenation of all the values mentioned above is used as the final value.
 

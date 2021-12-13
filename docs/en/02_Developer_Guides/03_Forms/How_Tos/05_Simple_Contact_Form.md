@@ -43,7 +43,7 @@ class ContactPageController extends PageController
 
 ```
 
-To create a form, we instanciate a `Form` object on a function on our page controller. We'll call this function `Form()`. You're free to choose this name, but it's standard practice to name the function `Form()` if there's only a single form on the page.
+To create a form, we instantiate a `Form` object on a function on our page controller. We'll call this function `Form()`. You're free to choose this name, but it's standard practice to name the function `Form()` if there's only a single form on the page.
 
 There's quite a bit in this function, so we'll step through one piece at a time.
 

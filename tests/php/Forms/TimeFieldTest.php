@@ -59,7 +59,7 @@ class TimeFieldTest extends SapphireTest
         $f = new TimeField('Time', 'Time');
         $f->setHTML5(false);
         $f->setLocale('fr_FR');
-        // TODO Find a hour format thats actually different
+        // TODO Find an hour format that's actually different
         $f->setValue('23:59');
         $this->assertEquals($f->dataValue(), '23:59:00');
     }

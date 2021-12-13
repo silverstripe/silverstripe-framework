@@ -7,7 +7,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 
 /**
- * A basic HTML wrapper for stylish rendering of a developement info view.
+ * A basic HTML wrapper for stylish rendering of a development info view.
  * Used to output error messages, and test results.
  *
  * @todo Perhaps DebugView should be an interface / ABC, implemented by HTMLDebugView and CliDebugView?

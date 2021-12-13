@@ -12,7 +12,7 @@ a list of our best practices for contributing and modifying the core javascript 
 ## ES6 and build tools
 The remainder of this tutorial is written in [ECMAScript 6](http://es6-features.org/#Constants), or _ES6_
 for short. This is the new spec for Javascript (currently ES5) that is as of this writing
-only partially implmented in modern browsers. Because it doesn't yet enjoy vast native support,
+only partially implemented in modern browsers. Because it doesn't yet enjoy vast native support,
 it has to be [transpiled](https://www.stevefenton.co.uk/2012/11/compiling-vs-transpiling/) in order to work
 in a browser. This transpiling can be done using a variety of toolchains, but the basic
  principle is that a browser-ready, ES5 version of your code is generated in your dev
@@ -80,9 +80,9 @@ Example: A plugin to highlight a collection of elements with a configurable fore
 // create closure
 (function($) {
   // plugin definition
-  $.fn.hilight = function(options) {
+  $.fn.highlight = function(options) {
     // build main options before element iteration
-    var opts = $.extend({}, $.fn.hilight.defaults, options);
+    var opts = $.extend({}, $.fn.highlight.defaults, options);
     // iterate and reformat each matched element
     return this.each(function() {
       $this = $(this);
@@ -96,7 +96,7 @@ Example: A plugin to highlight a collection of elements with a configurable fore
     });
   };
   // plugin defaults
-  $.fn.hilight.defaults = {
+  $.fn.highlight.defaults = {
     foreground: "red",
     background: "yellow"
   };
@@ -116,7 +116,7 @@ Usage:
   jQuery(':button').highlight({background: "green"});
 
   // Set all further highlight() calls to have a green background
-  $.fn.hilight.defaults.background = "green";
+  $.fn.highlight.defaults.background = "green";
 })(jQuery);
 ```
 

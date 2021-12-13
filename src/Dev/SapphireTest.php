@@ -57,7 +57,7 @@ use SilverStripe\View\SSViewer;
  *
  * Why there are two versions of SapphireTest:
  * - PHPUnit 5 is not compatible with PHP 8
- * - a mimimum versin of PHP 7.3 is required for PHPUnit 9
+ * - a minimum version of PHP 7.3 is required for PHPUnit 9
  *
  * The PHPUnit-5 compatibility layer will be preserved until support for PHP7 is dropped in early 2023.
  *
@@ -1364,7 +1364,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 /* -------------------------------------------------
  *
  * This version of SapphireTest is for phpunit 5
- * The phpunit 9 verison is at the top of this file
+ * The phpunit 9 version is at the top of this file
  *
  * PHPUnit_Extensions_GroupTestSuite is a class that only exists in phpunit 5
  *

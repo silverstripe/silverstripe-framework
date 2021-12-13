@@ -85,7 +85,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
         /**
          * If this is true, then 30x Location headers will be automatically followed.
-         * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.
+         * If not, then you will have to manually call $this->mainSession->followRedirection() to follow them.
          * However, this will let you inspect the intermediary headers
          *
          * @var bool
@@ -527,7 +527,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
 
     /**
      * If this is true, then 30x Location headers will be automatically followed.
-     * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.
+     * If not, then you will have to manually call $this->mainSession->followRedirection() to follow them.
      * However, this will let you inspect the intermediary headers
      *
      * @var bool

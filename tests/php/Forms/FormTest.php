@@ -658,7 +658,7 @@ class FormTest extends FunctionalTest
                 'SecurityID' => $token
             ]
         );
-        $this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
+        $this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with security token');
     }
 
     public function testStrictFormMethodChecking()

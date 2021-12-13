@@ -8,7 +8,7 @@ icon: globe
 
 We are always looking for new translators. Even if a specific language already is translated and has an official 
 maintainer, we can use helping hands in reviewing and updating translations. Important: It is perfectly fine if you 
-only have time for a partial translation or quick review work - our system accomodates many people collaborating on the 
+only have time for a partial translation or quick review work - our system accommodates many people collaborating on the 
 same language.
 
 The content for UI elements (button labels, field titles) and instruction texts shown in the CMS and elsewhere is 

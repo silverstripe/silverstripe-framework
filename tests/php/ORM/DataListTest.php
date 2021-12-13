@@ -1955,7 +1955,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * Loop over a chunck list and make sure it matches our expected results
+     * Loop over a chunk list and make sure it matches our expected results
      * @param int[] $expectedIDs
      * @param iterable $chunkList
      */

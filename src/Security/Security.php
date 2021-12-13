@@ -280,7 +280,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Check if a given authenticator is registered
      *
-     * @param string $authenticator The configured identifier of the authenicator
+     * @param string $authenticator The configured identifier of the authenticator
      * @return bool Returns TRUE if the authenticator is registered, FALSE
      *              otherwise.
      */

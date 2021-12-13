@@ -13,7 +13,7 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 /**
- * A basic HTML wrapper for stylish rendering of a developement info view.
+ * A basic HTML wrapper for stylish rendering of a development info view.
  * Used to output error messages, and test results.
  */
 class DebugView
@@ -270,8 +270,8 @@ class DebugView
      * @param string $httpRequest the kind of request
      * @param int $errno Codenumber of the error
      * @param string $errstr The error message
-     * @param string $errfile The name of the soruce code file where the error occurred
-     * @param int $errline The line number on which the error occured
+     * @param string $errfile The name of the source code file where the error occurred
+     * @param int $errline The line number on which the error occurred
      * @return string
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)

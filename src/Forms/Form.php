@@ -356,7 +356,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Flush persistant form state details
+     * Flush persistent form state details
      *
      * @return $this
      */
@@ -923,7 +923,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Returs the ordered list of preferred templates for rendering this form
+     * Returns the ordered list of preferred templates for rendering this form
      * If the template isn't set, then default to the
      * form class name e.g "Form".
      *

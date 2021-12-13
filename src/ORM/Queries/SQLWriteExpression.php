@@ -37,7 +37,7 @@ interface SQLWriteExpression
      * ]);
      *
      * // Assignment of literal SQL for a field. The empty array is
-     * // important to denote the zero-number paramater list
+     * // important to denote the zero-number parameter list
      * $query->addAssignments([
      *      '"Object"."Score"' => ['NOW()' => []]
      * ]);

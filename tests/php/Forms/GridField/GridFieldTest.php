@@ -187,7 +187,7 @@ class GridFieldTest extends SapphireTest
         // for each reference from left to right along an isset() invocation.
         // See https://bugs.php.net/bug.php?id=62059
 
-        // Check value persistance
+        // Check value persistence
         $this->assertEquals(15, $obj->State->NoValue(15));
         $this->assertEquals(15, $obj->State->NoValue(-1));
         $obj->State->NoValue = 10;
@@ -407,8 +407,8 @@ class GridFieldTest extends SapphireTest
     public function testGetCastedValue()
     {
         $obj = new GridField('testfield', 'testfield');
-        $value = $obj->getCastedValue('This is a sentance. This ia another.', ['Text->FirstSentence']);
-        $this->assertEquals('This is a sentance.', $value);
+        $value = $obj->getCastedValue('This is a sentence. This ia another.', ['Text->FirstSentence']);
+        $this->assertEquals('This is a sentence.', $value);
     }
 
     /**

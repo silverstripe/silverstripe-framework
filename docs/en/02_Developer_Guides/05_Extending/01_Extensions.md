@@ -359,7 +359,7 @@ populated.
 
 * [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
 
-## Related Documentaion
+## Related Documentation
 
 * [Injector](injector/)
 

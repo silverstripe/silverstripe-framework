@@ -109,7 +109,7 @@ class DataObjectTest extends SapphireTest
 
     public function provideSingletons()
     {
-        // because PHPUnit evalutes test providers *before* setUp methods
+        // because PHPUnit evaluates test providers *before* setUp methods
         // any extensions added in the setUp methods won't be available
         // we must return closures to generate the arguments at run time
         return [
@@ -2617,7 +2617,7 @@ class DataObjectTest extends SapphireTest
         );
 
         // Test singleton (DataObject::CREATE_SINGLETON)
-        // Values are ingored
+        // Values are ignored
         $staff = new DataObjectTest\Staff([
             'Salary' => 50,
         ], DataObject::CREATE_SINGLETON);

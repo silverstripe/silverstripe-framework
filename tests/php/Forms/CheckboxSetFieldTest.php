@@ -153,7 +153,7 @@ class CheckboxSetFieldTest extends SapphireTest
 				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = ?",
                 [$article->ID]
             )->column(),
-            'Data shold be saved into CheckboxSetField manymany relation table on the "right end"'
+            'Data should be saved into CheckboxSetField manymany relation table on the "right end"'
         );
         $this->assertEquals(
             [$articleWithTags->ID,$article->ID],
@@ -163,7 +163,7 @@ class CheckboxSetFieldTest extends SapphireTest
 				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_TagID\" = $tag1->ID
 			"
             )->column(),
-            'Data shold be saved into CheckboxSetField manymany relation table on the "left end"'
+            'Data should be saved into CheckboxSetField manymany relation table on the "left end"'
         );
     }
 

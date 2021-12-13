@@ -562,7 +562,7 @@ class FieldList extends ArrayList
 
     /**
      * Inserts a field before a particular field in a FieldList.
-     * Will traverse CompositeFields depth-first to find the maching $name, and insert before the first match
+     * Will traverse CompositeFields depth-first to find the matching $name, and insert before the first match
      *
      * @param string $name Name of the field to insert before
      * @param FormField $item The form field to insert
@@ -604,7 +604,7 @@ class FieldList extends ArrayList
 
     /**
      * Inserts a field after a particular field in a FieldList.
-     * Will traverse CompositeFields depth-first to find the maching $name, and insert after the first match
+     * Will traverse CompositeFields depth-first to find the matching $name, and insert after the first match
      *
      * @param string $name Name of the field to insert after
      * @param FormField $item The form field to insert
@@ -758,7 +758,7 @@ class FieldList extends ArrayList
     }
 
     /**
-     * Transform this FieldList with a given tranform method,
+     * Transform this FieldList with a given transform method,
      * e.g. $this->transform(new ReadonlyTransformation())
      *
      * @param FormTransformation $trans

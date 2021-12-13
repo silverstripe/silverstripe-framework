@@ -11,7 +11,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * There can be multiple HTMLEditorConfig's, which should always be created / accessed using HTMLEditorConfig::get.
  * You can then set the currently active config using set_active.
- * The order of precendence for which config is used is (lowest to highest):
+ * The order of precedence for which config is used is (lowest to highest):
  *
  * - default_config config setting
  * - Active config assigned

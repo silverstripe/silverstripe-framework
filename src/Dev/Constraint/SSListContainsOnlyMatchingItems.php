@@ -109,7 +109,7 @@ if (!class_exists(PHPUnit_Framework_Constraint::class)) {
 /* -------------------------------------------------
  *
  * This version of SSListContainsOnlyMatchingItems is for phpunit 5
- * The phpunit 9 verison is at the top of this file
+ * The phpunit 9 version is at the top of this file
  *
  * -------------------------------------------------
  */

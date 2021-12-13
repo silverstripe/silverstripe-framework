@@ -260,7 +260,7 @@ class MemberTest extends FunctionalTest
             urldecode($response->getHeader('Location'))
         );
 
-        // Check existance of reset link
+        // Check existence of reset link
         $this->assertEmailSent(
             "testuser@example.com",
             null,
@@ -327,7 +327,7 @@ class MemberTest extends FunctionalTest
         $result = $member->changePassword('withSym###Ls7');
         $this->assertTrue($result->isValid());
 
-        // CAN'T USE PASSWORDS 2-7, but I can use pasword 1
+        // CAN'T USE PASSWORDS 2-7, but I can use password 1
 
         $result = $member->changePassword('withSym###Ls2');
         $this->assertFalse($result->isValid());
@@ -710,7 +710,7 @@ class MemberTest extends FunctionalTest
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
 
-        // Construct admin and non-admin gruops
+        // Construct admin and non-admin groups
         $newAdminGroup = new Group(['Title' => 'newadmin']);
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');

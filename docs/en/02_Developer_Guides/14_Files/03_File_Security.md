@@ -77,7 +77,7 @@ Custom implementations (e.g. APIs or custom file viewers) can have
 further restrictions in your project.
 
 [warning]
-When implenting your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
+When implementing your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
 existing unprotected files are not retroactively moved to the protected asset store.
 While those new permissions are honoured in the CMS, protected files through custom `canView()`
 can still be downloaded through a public URL until a `write()` operation is triggered on them.
@@ -406,7 +406,7 @@ SilverStripe\Assets\Flysystem\FlysystemAssetStore:
 By default, the default extension `AssetControlExtension` will control the disposal of assets
 attached to objects when those objects are archived or replaced. For example, unpublished versioned objects
 will automatically have their attached assets moved to the protected store. The archive of
-draft or (or deletion of unversioned objects) will have those assets permanantly deleted
+draft or (or deletion of unversioned objects) will have those assets permanently deleted
 (along with all variants).
 
 Note that regardless of this setting, the database record will still be archived in the
@@ -469,7 +469,7 @@ bypasses PHP requests for files that do exist. The default template
 (declared by `PublicAssetAdapter_HTAccess.ss`) has the following section, which may be customised in your project:
 
 ```
-# Non existant files passed to requesthandler
+# Non existent files passed to requesthandler
 RewriteCond %{REQUEST_URI} ^(.*)$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* ../index.php [QSA]

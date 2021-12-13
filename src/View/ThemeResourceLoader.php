@@ -173,7 +173,7 @@ class ThemeResourceLoader implements Flushable
      *
      * @param string|array $template Template name, or template spec in array format with the keys
      * 'type' (type string) and 'templates' (template hierarchy in order of precedence).
-     * If 'templates' is ommitted then any other item in the array will be treated as the template
+     * If 'templates' is omitted then any other item in the array will be treated as the template
      * list, or list of templates each in the array spec given.
      * Templates with an .ss extension will be treated as file paths, and will bypass
      * theme-coupled resolution.
@@ -340,7 +340,7 @@ class ThemeResourceLoader implements Flushable
      * Resolve all themes to the list of root folders relative to site root
      *
      * @param array $themes List of themes to resolve. Supports named theme sets. Defaults to {@see SSViewer::get_themes()}.
-     * @return array List of root-relative folders in order of precendence.
+     * @return array List of root-relative folders in order of precedence.
      */
     public function getThemePaths($themes = null)
     {

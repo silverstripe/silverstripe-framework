@@ -19,7 +19,7 @@ class HTTPRequestTest extends SapphireTest
         /* When a rule matches, but has no variables, array("_matched" => true) is returned. */
         $this->assertEquals(["_matched" => true], $request->match('admin/crm', true));
 
-        /* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
+        /* Because we shifted admin/crm off the stack, just "add" should be remaining */
         $this->assertEquals("add", $request->remaining());
 
         $this->assertEquals(["_matched" => true], $request->match('add', true));

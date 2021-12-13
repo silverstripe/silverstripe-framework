@@ -96,8 +96,8 @@ class RequestHandlingTest extends FunctionalTest
         $response = Director::test("testGoodBase1/method/1/2");
         $this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
 
-        /* In addition, these values are availalbe in $controller->urlParams.  This is mainly for backward
-        * compatability. */
+        /* In addition, these values are available in $controller->urlParams.  This is mainly for backward
+        * compatibility. */
         $response = Director::test("testGoodBase1/legacymethod/3/4");
         $this->assertEquals(
             "\$this->urlParams can be used, for backward compatibility: 3, 4",

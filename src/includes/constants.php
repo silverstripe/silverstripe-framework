@@ -63,7 +63,7 @@ if (!defined('BASE_PATH')) {
         $candidateBasePath = rtrim(dirname(__DIR__, 5), DIRECTORY_SEPARATOR);
 
         // We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
-        // This likely only happens on chrooted environemnts
+        // This likely only happens on chrooted environments
         return $candidateBasePath ?: DIRECTORY_SEPARATOR;
     }));
 }
@@ -216,7 +216,7 @@ if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', TEMP_PATH);
 }
 
-// Define the Ressource Dir constant that will be use to exposed vendor assets
+// Define the resource dir constant that will be use to exposed vendor assets
 if (!defined('RESOURCES_DIR')) {
     $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
     $resourcesDir = $project->getResourcesDir() ?: 'resources';

@@ -143,17 +143,17 @@ class DatabaseTest extends SapphireTest
 
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'Can aquire lock'
+            'Can acquire lock'
         );
-        // $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly aquire the same lock');
+        // $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly acquire the same lock');
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'The same lock can be aquired multiple times in the same connection'
+            'The same lock can be acquired multiple times in the same connection'
         );
 
         $this->assertTrue(
             $db->getLock('DatabaseTestOtherLock'),
-            'Can aquire different lock'
+            'Can acquire different lock'
         );
         $db->releaseLock('DatabaseTestOtherLock');
 
@@ -163,7 +163,7 @@ class DatabaseTest extends SapphireTest
 
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'Can aquire lock after releasing it'
+            'Can acquire lock after releasing it'
         );
         $db->releaseLock('DatabaseTest');
     }
@@ -180,9 +180,9 @@ class DatabaseTest extends SapphireTest
             return $this->markTestSkipped('MSSQLDatabase doesn\'t support inspecting locks');
         }
 
-        $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock before first aquiring one');
+        $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock before first acquiring one');
         $db->getLock('DatabaseTest');
-        $this->assertFalse($db->canLock('DatabaseTest'), 'Can\'t lock after aquiring one');
+        $this->assertFalse($db->canLock('DatabaseTest'), 'Can\'t lock after acquiring one');
         $db->releaseLock('DatabaseTest');
         $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock again after releasing it');
     }

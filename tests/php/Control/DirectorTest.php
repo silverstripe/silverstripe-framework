@@ -131,7 +131,7 @@ class DirectorTest extends SapphireTest
         $this->assertEquals("http://www.mysite.com:9090/mysite/test", Director::absoluteURL("test", Director::BASE));
         $this->assertEquals("http://www.mysite.com:9090/mysite/test/url", Director::absoluteURL("test/url", Director::BASE));
 
-        // Test evaluting relative urls relative to root
+        // Test evaluating relative urls relative to root
         $this->assertEquals("http://www.mysite.com:9090/test", Director::absoluteURL("test", Director::ROOT));
         $this->assertEquals("http://www.mysite.com:9090/test/url", Director::absoluteURL("test/url", Director::ROOT));
 

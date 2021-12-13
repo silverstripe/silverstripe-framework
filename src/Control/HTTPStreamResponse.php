@@ -144,7 +144,7 @@ class HTTPStreamResponse extends HTTPResponse
      */
     protected function outputBody()
     {
-        // If the output has been overwritten, or the stream is irreversable and has
+        // If the output has been overwritten, or the stream is irreversible and has
         // already been consumed, return the cached body.
         $body = $this->getSavedBody();
         if ($body) {

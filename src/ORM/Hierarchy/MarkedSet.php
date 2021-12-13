@@ -90,7 +90,7 @@ class MarkedSet
      * Create an empty set with the given class
      *
      * @param DataObject $rootNode Root node for this set. To collect the entire tree,
-     * pass in a singelton object.
+     * pass in a singleton object.
      * @param string $childrenMethod Override children method
      * @param string $numChildrenMethod Override children counting method
      * @param int $nodeCountThreshold Minimum threshold for number nodes to mark

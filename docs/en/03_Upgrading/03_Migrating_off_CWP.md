@@ -20,7 +20,7 @@ Before you begin this process you must identify which version of Silverstripe CM
 3. If your current composer file contains `cwp/cwp-recipe-core`, replace it with `silverstripe/recipe-ccl`.
 4. If your current composer file contains `cwp/cwp-recipe-search`, replace it with `silverstripe/recipe-solr-search`.
 5. Review all your composer requirements and update the constraints so the module versions documented in the changelog for you desired Silverstripe CMS Recipe release are installable.
-6. Run a `composer update` to get the lastest tag of each module.
+6. Run a `composer update` to get the latest tag of each module.
 
 The `silverstripe/recipe-solr-search` and `silverstripe/recipe-ccl` release versions follow the same numbering scheme as the recipes they superseded:
 - the last release version of `cwp/cwp-recipe-search` and `cwp/cwp-recipe-core` is 2.8.0

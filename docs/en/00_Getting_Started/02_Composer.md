@@ -13,7 +13,7 @@ for [installing modules with Composer](/developer_guides/extending/modules).
 
 Before installing Composer you should ensure your system has the version control
 system, [Git installed](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Composer uses Git to check out
-the code dependancies you need to run your Silverstripe CMS website from the code repositories maintained on GitHub.
+the code dependencies you need to run your Silverstripe CMS website from the code repositories maintained on GitHub.
 
 Next, [install composer](https://getcomposer.org/download/). For our documentation we assume the `composer` command is
 installed globally. You should now be able to run the command:
