@@ -203,7 +203,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertSame('TreeDropdownField', $schemaDataDefaults['component']);
         $this->assertSame(sprintf('%s_Holder', $field->ID()), $schemaDataDefaults['holderId']);
         $this->assertSame('Test tree', $schemaDataDefaults['title']);
-        $this->assertSame('treemultiselectfield_readonly multiple  searchable', $schemaDataDefaults['extraClass']);
+        $this->assertSame('treemultiselectfield_readonly multiple searchable', $schemaDataDefaults['extraClass']);
         $this->assertSame('field/TestTree/tree', $schemaDataDefaults['data']['urlTree']);
         $this->assertSame(true, $schemaDataDefaults['data']['showSearch']);
         $this->assertSame('(Search or choose File)', $schemaDataDefaults['data']['emptyString']);
@@ -239,7 +239,7 @@ class TreeMultiselectFieldTest extends SapphireTest
         $this->assertSame('TreeDropdownField', $schemaDataDefaults['component']);
         $this->assertSame(sprintf('%s_Holder', $field->ID()), $schemaDataDefaults['holderId']);
         $this->assertSame('Test tree', $schemaDataDefaults['title']);
-        $this->assertSame('treemultiselectfield_readonly multiple  searchable', $schemaDataDefaults['extraClass']);
+        $this->assertSame('treemultiselectfield_readonly multiple searchable', $schemaDataDefaults['extraClass']);
         $this->assertSame('field/TestTree/tree', $schemaDataDefaults['data']['urlTree']);
         $this->assertSame(true, $schemaDataDefaults['data']['showSearch']);
         $this->assertSame('(Search or choose File)', $schemaDataDefaults['data']['emptyString']);

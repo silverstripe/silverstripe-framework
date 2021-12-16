@@ -259,6 +259,14 @@ class FormFieldTest extends SapphireTest
         $this->assertStringNotContainsString('readonly="readonly"', $field->getAttributesHTML());
     }
 
+    public function testReadonlyPreservesExtraClass()
+    {
+        $field = new FormField('MyField');
+        $field->addExtraClass('myextraclass1')->addExtraClass('myextraclass2');
+        $field->setReadonly(true);
+        $this->assertStringContainsString('myextraclass1 myextraclass2', $field->getAttributesHTML());
+    }
+
     public function testDisabled()
     {
         $field = new FormField('MyField');
