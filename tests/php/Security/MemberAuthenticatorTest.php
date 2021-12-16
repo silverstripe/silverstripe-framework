@@ -32,7 +32,7 @@ class MemberAuthenticatorTest extends SapphireTest
     protected $defaultUsername = null;
     protected $defaultPassword = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -46,12 +46,13 @@ class MemberAuthenticatorTest extends SapphireTest
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
 
+        // Enforce dummy validation (this can otherwise be influenced by recipe config)
         PasswordValidator::singleton()
             ->setMinLength(0)
             ->setTestNames([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DefaultAdminService::clearDefaultAdmin();
         if ($this->defaultUsername) {

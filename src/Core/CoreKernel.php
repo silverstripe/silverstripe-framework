@@ -48,7 +48,7 @@ class CoreKernel implements Kernel
     /**
      * @var string
      */
-    protected $enviroment = null;
+    protected $environment = null;
 
     /**
      * @var ClassLoader
@@ -86,7 +86,7 @@ class CoreKernel implements Kernel
 
     /**
      * Indicates whether the Kernel has been flushed on boot
-     * Unitialized before boot
+     * Uninitialized before boot
      *
      * @var bool
      */
@@ -151,8 +151,8 @@ class CoreKernel implements Kernel
     public function getEnvironment()
     {
         // Check set
-        if ($this->enviroment) {
-            return $this->enviroment;
+        if ($this->environment) {
+            return $this->environment;
         }
 
         // Check saved session
@@ -179,7 +179,7 @@ class CoreKernel implements Kernel
     protected function sessionEnvironment()
     {
         if (!$this->booted) {
-            // session is not initialyzed yet, neither is manifest
+            // session is not initialized yet, neither is manifest
             return null;
         }
 
@@ -270,8 +270,10 @@ class CoreKernel implements Kernel
         $databaseConfig = DB::getConfig();
         // Gracefully fail if no DB is configured
         if (empty($databaseConfig['database'])) {
+            $msg = 'Silverstripe Framework requires a "database" key in DB::getConfig(). ' .
+                'Did you forget to set SS_DATABASE_NAME or SS_DATABASE_CHOOSE_NAME in your environment?';
             $this->detectLegacyEnvironment();
-            $this->redirectToInstaller();
+            $this->redirectToInstaller($msg);
         }
     }
 
@@ -311,14 +313,17 @@ class CoreKernel implements Kernel
     }
 
     /**
-     * If missing configuration, redirect to install.php
+     * If missing configuration, redirect to install.php if it exists.
+     * Otherwise show a server error to the user.
+     *
+     * @param string $msg Optional message to show to the user on an installed project (install.php missing).
      */
-    protected function redirectToInstaller()
+    protected function redirectToInstaller($msg = '')
     {
         // Error if installer not available
         if (!file_exists(Director::publicFolder() . '/install.php')) {
             throw new HTTPResponse_Exception(
-                'SilverStripe Framework requires database configuration defined via .env',
+                $msg,
                 500
             );
         }
@@ -492,7 +497,7 @@ class CoreKernel implements Kernel
     {
         return new ManifestCacheFactory([
             'namespace' => 'manifestcache',
-            'directory' => TempFolder::getTempFolder($this->basePath),
+            'directory' => TEMP_PATH,
         ]);
     }
 
@@ -505,6 +510,18 @@ class CoreKernel implements Kernel
     }
 
     /**
+     * When manifests are discovering files, tests files in modules using the following CI library type will be ignored.
+     *
+     * The purpose of this method is to avoid loading PHPUnit test files with incompatible definitions.
+     *
+     * @return string[] List of CI types to ignore as defined by `Module`.
+     */
+    protected function getIgnoredCIConfigs(): array
+    {
+        return [];
+    }
+
+    /**
      * Boot all manifests
      *
      * @param bool $flush
@@ -512,10 +529,18 @@ class CoreKernel implements Kernel
     protected function bootManifests($flush)
     {
         // Setup autoloader
-        $this->getClassLoader()->init($this->getIncludeTests(), $flush);
+        $this->getClassLoader()->init(
+            $this->getIncludeTests(),
+            $flush,
+            $this->getIgnoredCIConfigs()
+        );
 
         // Find modules
-        $this->getModuleLoader()->init($this->getIncludeTests(), $flush);
+        $this->getModuleLoader()->init(
+            $this->getIncludeTests(),
+            $flush,
+            $this->getIgnoredCIConfigs()
+        );
 
         // Flush config
         if ($flush) {
@@ -533,7 +558,11 @@ class CoreKernel implements Kernel
             $defaultSet->setProject(
                 ModuleManifest::config()->get('project')
             );
-            $defaultSet->init($this->getIncludeTests(), $flush);
+            $defaultSet->init(
+                $this->getIncludeTests(),
+                $flush,
+                $this->getIgnoredCIConfigs()
+            );
         }
     }
 
@@ -637,7 +666,7 @@ class CoreKernel implements Kernel
                 "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );
         }
-        $this->enviroment = $environment;
+        $this->environment = $environment;
         return $this;
     }
 

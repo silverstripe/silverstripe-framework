@@ -871,6 +871,11 @@ class Member extends DataObject
      */
     public function onBeforeWrite()
     {
+        // Remove any line-break or space characters accidentally added during a copy-paste operation
+        if ($this->Email) {
+            $this->Email = trim($this->Email);
+        }
+
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
@@ -905,6 +910,7 @@ class Member extends DataObject
         if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
+            && $this->Email
             && static::config()->get('notify_password_change')
             && $this->isInDB()
         ) {
@@ -1103,7 +1109,7 @@ class Member extends DataObject
 
     /**
      * @param array $columns Column names on the Member record to show in {@link getTitle()}.
-     * @param String $sep Separator
+     * @param string $sep Separator
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
@@ -1700,8 +1706,8 @@ class Member extends DataObject
         $valid = parent::validate();
         $validator = static::password_validator();
 
-        if (!$this->ID || $this->isChanged('Password')) {
-            if ($this->Password && $validator) {
+        if ($validator) {
+            if ((!$this->ID && $this->Password) || $this->isChanged('Password')) {
                 $userValid = $validator->validate($this->Password, $this);
                 $valid->combineAnd($userValid);
             }

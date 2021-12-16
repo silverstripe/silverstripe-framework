@@ -306,7 +306,7 @@ class Requirements_Backend
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public function setSuffixRequirements($var)
     {
@@ -327,7 +327,7 @@ class Requirements_Backend
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setWriteJavascriptToBody($var)
@@ -350,7 +350,7 @@ class Requirements_Backend
     /**
      * Forces the JavaScript requirements to the end of the body, right before the closing tag
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setForceJSToBottom($var)

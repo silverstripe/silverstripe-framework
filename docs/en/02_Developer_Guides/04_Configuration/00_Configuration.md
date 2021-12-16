@@ -6,12 +6,12 @@ icon: laptop-code
 
 # Configuration API
 
-SilverStripe comes with a comprehensive code based configuration system through the [Config](api:SilverStripe\Core\Config\Config) class. It primarily 
+Silverstripe CMS comes with a comprehensive code based configuration system through the [Config](api:SilverStripe\Core\Config\Config) class. It primarily 
 relies on declarative [YAML](http://en.wikipedia.org/wiki/YAML) files, and falls back to procedural PHP code, as well 
 as PHP static variables. This is provided by the [silverstripe/config](https://github.com/silverstripe/silverstripe-config)
 library.
 
-The Configuration API can be seen as separate from other forms of variables in the SilverStripe system due to three 
+The Configuration API can be seen as separate from other forms of variables in the Silverstripe CMS system due to three 
 properties API:
 
   - Configuration is **per class**, not per instance.
@@ -24,7 +24,7 @@ For providing content editors or CMS users a place to manage configuration see t
 
 ## Configuration Properties
 
-Configuration values are static properties on any SilverStripe class. These should be at the top of the class and 
+Configuration values are static properties on any Silverstripe CMS class. These should be at the top of the class and 
 marked with a `@config` docblock. The API documentation will also list the static properties for the class. They should
 be marked `private static` and follow the `lower_case_with_underscores` structure.
 
@@ -322,7 +322,7 @@ before A. In this case you will get an error when accessing your site.
 ## Exclusionary rules
 
 Some value sections might only make sense under certain environmental conditions - a class exists, a module is 
-installed, an environment variable or constant is set, or SilverStripe is running in a certain environment mode (live, 
+installed, an environment variable or constant is set, or Silverstripe CMS is running in a certain environment mode (live, 
 dev, etc).
 
 To accommodate this, value sections can be filtered to only be used when either a rule matches or doesn't match the
@@ -337,7 +337,7 @@ You then list any of the following rules as sub-keys, with informational values 
   - 'classexists', in which case the value(s) should be classes that must exist
   - 'moduleexists', in which case the value(s) should be modules that must exist. This supports either folder
     name or composer `vendor/name` format.
-  - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe
+  - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the Silverstripe CMS
     mode the site must be in
   - 'envvarset', in which case the value(s) should be environment variables that must be set
   - 'constantdefined', in which case the value(s) should be constants that must be defined

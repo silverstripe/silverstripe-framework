@@ -6,7 +6,7 @@ icon: globe
 
 # Translations
 
-Translations are easy to use with a template, and give access to SilverStripe's translation facilities. Here is an 
+Translations are easy to use with a template, and give access to Silverstripe CMS's translation facilities. Here is an 
 example:
 
 ```ss

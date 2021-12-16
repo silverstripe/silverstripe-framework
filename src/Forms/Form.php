@@ -20,6 +20,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
@@ -66,10 +67,10 @@ use SilverStripe\View\ViewableData;
  */
 class Form extends ViewableData implements HasRequestHandler
 {
+    use AttributesHTML;
     use FormMessage;
 
     /**
-     * Default form Name property
      */
     const DEFAULT_NAME = 'Form';
 
@@ -170,9 +171,9 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * The SS template to render this form HTML into.
      * Default is "Form", but this can be changed to
-     * another template for customisation.
+     * another template for customization.
      *
-     * @see Form->setTemplate()
+     * @see Form::setTemplate()
      * @var string|array|null
      */
     protected $template;
@@ -326,7 +327,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * @param bool
+     * @param bool $flag
      */
     public function setNotifyUnsavedChanges($flag)
     {
@@ -355,7 +356,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Flush persistant form state details
+     * Flush persistent form state details
      *
      * @return $this
      */
@@ -664,7 +665,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Set actions that are exempt from validation
      *
-     * @param array
+     * @param array $actions
      * @return $this
      */
     public function setValidationExemptActions($actions)
@@ -816,33 +817,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     * @return $this
-     */
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getAttribute($name)
-    {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
+    protected function getDefaultAttributes(): array
     {
         $attrs = [
             'id' => $this->FormName(),
@@ -860,51 +835,7 @@ class Form extends ViewableData implements HasRequestHandler
             $attrs['class'] .= ' validationerror';
         }
 
-        $attrs = array_merge($attrs, $this->attributes);
-
         return $attrs;
-    }
-
-    /**
-     * Return the attributes of the form tag - used by the templates.
-     *
-     * @param array $attrs Custom attributes to process. Falls back to {@link getAttributes()}.
-     * If at least one argument is passed as a string, all arguments act as excludes by name.
-     *
-     * @return string HTML attributes, ready for insertion into an HTML tag
-     */
-    public function getAttributesHTML($attrs = null)
-    {
-        $exclude = (is_string($attrs)) ? func_get_args() : null;
-
-        $attrs = $this->getAttributes();
-
-        // Remove empty
-        $attrs = array_filter((array)$attrs, function ($value) {
-            return ($value || $value === 0);
-        });
-
-        // Remove excluded
-        if ($exclude) {
-            $attrs = array_diff_key($attrs, array_flip($exclude));
-        }
-
-        // Prepare HTML-friendly 'method' attribute (lower-case)
-        if (isset($attrs['method'])) {
-            $attrs['method'] = strtolower($attrs['method']);
-        }
-
-        // Create markup
-        $parts = [];
-        foreach ($attrs as $name => $value) {
-            if ($value === true) {
-                $value = $name;
-            }
-
-            $parts[] = sprintf('%s="%s"', Convert::raw2att($name), Convert::raw2att($value));
-        }
-
-        return implode(' ', $parts);
     }
 
     public function FormAttributes()
@@ -916,7 +847,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
      * another frame
     *
-     * @param string|FormTemplateHelper
+     * @param string|FormTemplateHelper $helper
     */
     public function setTemplateHelper($helper)
     {
@@ -992,7 +923,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Returs the ordered list of preferred templates for rendering this form
+     * Returns the ordered list of preferred templates for rendering this form
      * If the template isn't set, then default to the
      * form class name e.g "Form".
      *
@@ -1371,9 +1302,9 @@ class Form extends ViewableData implements HasRequestHandler
      * Escaping happens automatically on saving the data through
      * {@link saveInto()}.
      *
-     * @uses FieldList->dataFields()
-     * @uses FormField->setSubmittedValue()
-     * @uses FormField->setValue()
+     * @uses FieldList::dataFields()
+     * @uses FormField::setSubmittedValue()
+     * @uses FormField::setValue()
      *
      * @param array|DataObject $data
      * @param int $mergeStrategy
@@ -1462,19 +1393,39 @@ class Form extends ViewableData implements HasRequestHandler
             $val = null;
 
             if (is_object($data)) {
-                $exists = (
-                    isset($data->$name) ||
-                    $data->hasMethod($name) ||
-                    ($data->hasMethod('hasField') && $data->hasField($name))
-                );
+                // Allow dot-syntax traversal of has-one relations fields
+                if (strpos($name, '.') !== false) {
+                    $exists = (
+                        $data->hasMethod('relField')
+                    );
+                    try {
+                        $val = $data->relField($name);
+                    } catch (\LogicException $e) {
+                        // There's no other way to tell whether the relation actually exists
+                        $exists = false;
+                    }
+                // Regular ViewableData access
+                } else {
+                    $exists = (
+                        isset($data->$name) ||
+                        $data->hasMethod($name) ||
+                        ($data->hasMethod('hasField') && $data->hasField($name))
+                    );
 
-                if ($exists) {
-                    $val = $data->__get($name);
+                    if ($exists) {
+                        $val = $data->__get($name);
+                    }
                 }
+
+            // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
+                // PHP turns the '.'s in POST vars into '_'s
+                } elseif (array_key_exists($altName = str_replace('.', '_', $name), $data)) {
+                    $exists = true;
+                    $val = $data[$altName];
                 } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
                     // If field is in array-notation we need to access nested data
                     //discard first match which is just the whole string
@@ -1757,6 +1708,25 @@ class Form extends ViewableData implements HasRequestHandler
     public function extraClass()
     {
         return implode(' ', array_unique($this->extraClasses));
+    }
+
+    /**
+     * Check if a CSS-class has been added to the form container.
+     *
+     * @param string $class A string containing a classname or several class
+     * names delimited by a single space.
+     * @return boolean True if all of the classnames passed in have been added.
+     */
+    public function hasExtraClass($class)
+    {
+        //split at white space
+        $classes = preg_split('/\s+/', $class);
+        foreach ($classes as $class) {
+            if (!isset($this->extraClasses[$class])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

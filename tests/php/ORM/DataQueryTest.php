@@ -79,12 +79,12 @@ class DataQueryTest extends SapphireTest
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestC');
         $this->assertTrue($dq->query()->isJoinedTo('testc_DataQueryTest_C'));
-        $this->assertContains('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
+        $this->assertStringContainsString('"testc_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
 
         $dq = new DataQuery(DataQueryTest\ObjectB::class);
         $dq->applyRelation('TestCTwo');
         $this->assertTrue($dq->query()->isJoinedTo('testctwo_DataQueryTest_C'));
-        $this->assertContains('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+        $this->assertStringContainsString('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
     }
 
     public function testApplyRelationDeepInheritance()
@@ -94,7 +94,7 @@ class DataQueryTest extends SapphireTest
         //apply a relation to a relation from an ancestor class
         $newDQ->applyRelation('TestA');
         $this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
-        $this->assertContains('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
+        $this->assertStringContainsString('"testa_DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 
         //test many_many relation
 
@@ -105,7 +105,7 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql());
+        $this->assertStringContainsString("FROM \"$baseDBTable\"", $newDQ->sql());
 
         //test many_many with shared inheritance
         $newDQ = new DataQuery(DataQueryTest\ObjectE::class);
@@ -113,12 +113,12 @@ class DataQueryTest extends SapphireTest
         //check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //check we are explicitly selecting "FROM" the DO's table
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
+        $this->assertStringContainsString("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
         $newDQ->applyRelation('ManyTestGs');
         //confirm we are still joined to the base table
         $this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
         //double check it is the "FROM" clause
-        $this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
+        $this->assertStringContainsString("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
         //another (potentially less crude check) for checking "FROM" clause
         $fromTables = $newDQ->query()->getFrom();
         $this->assertEquals('"' . $baseDBTable . '"', $fromTables[$baseDBTable]);
@@ -171,6 +171,7 @@ class DataQueryTest extends SapphireTest
         $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
         $dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
         $dataQuery->execute();
+        $this->assertTrue(true);
     }
 
     public function testDisjunctiveGroup()
@@ -256,7 +257,7 @@ class DataQueryTest extends SapphireTest
     {
         $dq = new DataQuery(SQLSelectTest\TestObject::class);
         $dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'ORDER BY "SQLSelectTest_DO"."Name" ASC, "_SortColumn0" DESC',
             $dq->sql($parameters)
         );
@@ -272,13 +273,13 @@ class DataQueryTest extends SapphireTest
     public function testDistinct()
     {
         $query = new DataQuery(DataQueryTest\ObjectE::class);
-        $this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
+        $this->assertStringContainsString('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
 
         $query = $query->distinct(false);
-        $this->assertNotContains('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
+        $this->assertStringNotContainsString('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
 
         $query = $query->distinct(true);
-        $this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
+        $this->assertStringContainsString('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
     }
 
     public function testComparisonClauseInt()
@@ -321,6 +322,21 @@ class DataQueryTest extends SapphireTest
         );
         $this->assertEquals(
             $query->execute()->column('Title'),
+            $query->column('Title')
+        );
+    }
+
+    public function testCustomFieldWithAliasSort()
+    {
+        $query = new DataQuery(DataQueryTest\ObjectE::class);
+        $query->selectField(sprintf(
+            '(case when "Title" = %s then 1 else 0 end)',
+            DB::get_conn()->quoteString('Second')
+        ), 'CustomColumn');
+        $query->sort('CustomColumn', 'DESC', true);
+        $query->sort('SortOrder', 'ASC', false);
+        $this->assertEquals(
+            ['Second', 'First', 'Last'],
             $query->column('Title')
         );
     }
@@ -466,8 +482,50 @@ class DataQueryTest extends SapphireTest
 
     public function testExistsCreatesFunctionalQueries()
     {
-        $this->assertTrue(ObjectE::get()->exists());
-        $this->assertFalse(ObjectE::get()->where(['"Title" = ?' => 'Foo'])->exists());
-        $this->assertTrue(ObjectE::get()->dataQuery()->groupby('"SortOrder"')->exists());
+        $this->assertTrue(
+            ObjectE::get()->exists(),
+            'Query for ObjectE exists because there\'s more than 1 record'
+        );
+        $this->assertFalse(
+            ObjectE::get()->where(['"Title" = ?' => 'Foo'])->exists(),
+            'Query for ObjectE with Title Foo does NOT exists because there\'s no matching record'
+        );
+        $this->assertTrue(
+            ObjectE::get()->dataQuery()->groupby('"SortOrder"')->exists(),
+            'Existence of query for ObjectE is not affected by group by'
+        );
+        $this->assertTrue(
+            ObjectE::get()->limit(1)->exists(),
+            'Existence of query for ObjectE is not affected by limit if records are returned'
+        );
+        $this->assertFalse(
+            ObjectE::get()->limit(4, 9999)->exists(),
+            'Existence of query for ObjectE is affected by limit if no records are returned'
+        );
+
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->exists(),
+            'exist returns true if query return results'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertFalse(
+            $query->where(['"Title" = ?' => 'Foo'])->exists(),
+            'exist returns false if there\'s no results'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->groupby('"SortOrder"')->exists(),
+            'exist is unaffected by group by'
+        );
+        $query = new DataQuery(ObjectE::class);
+        $this->assertTrue(
+            $query->limit(1)->exists(),
+            'exist is unaffected by limit as long as one recard is returned'
+        );
+        $this->assertFalse(
+            $query->limit(1, 9999)->exists(),
+            'exist is false when a limit returns no results'
+        );
     }
 }

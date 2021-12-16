@@ -134,7 +134,7 @@ class MemberLoginForm extends BaseLoginForm
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
         $fields = FieldList::create(
             HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
-            // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
+            // Regardless of what the unique identifier field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
             $emailField = TextField::create("Email", $label, null, null, $this),
@@ -153,15 +153,20 @@ class MemberLoginForm extends BaseLoginForm
             $fields->push(
                 CheckboxField::create(
                     "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
-                )->setAttribute(
-                    'title',
                     _t(
-                        'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
+                        'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN',
+                        'Keep me signed in for {count} days',
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
+                    ->setAttribute(
+                        'title',
+                        _t(
+                            'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN_TOOLTIP',
+                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.',
+                            ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
+                        )
+                    )
             );
         }
 

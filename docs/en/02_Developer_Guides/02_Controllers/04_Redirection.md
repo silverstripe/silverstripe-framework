@@ -47,7 +47,7 @@ private static $url_handlers = [
 ];
 ```
 
-For more information on `$url_handlers` see the [Routing](routing) documenation.
+For more information on `$url_handlers` see the [Routing](routing) documentation.
 
 ## API Documentation
 

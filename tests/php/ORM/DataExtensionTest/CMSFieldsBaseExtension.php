@@ -29,5 +29,9 @@ class CMSFieldsBaseExtension extends DataExtension implements TestOnly
         if ($grandchildField = $fields->dataFieldByName('GrandchildFieldBeforeExtension')) {
             $grandchildField->setTitle('GrandchildFieldBeforeExtension: Modified Title');
         }
+
+        if ($grandchildPostField = $fields->dataFieldByName('GrandchildFieldAfterExtension')) {
+            $grandchildPostField->setTitle('GrandchildFieldAfterExtension: Modified Title');
+        }
     }
 }

@@ -215,7 +215,7 @@ public function players()
 ```
 
 [warning]
-As we've added a new template (PlayersRss.ss) make sure you clear your SilverStripe cache.
+As we've added a new template (PlayersRss.ss) make sure you clear your Silverstripe CMS cache.
 [/warning]
 
 

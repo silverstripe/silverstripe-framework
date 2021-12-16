@@ -3,7 +3,6 @@
 namespace SilverStripe\View\Shortcodes;
 
 use Embed\Http\DispatcherInterface;
-use League\Flysystem\Exception;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SilverStripe\Core\Convert;
@@ -62,9 +61,13 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             return '';
         }
 
+        $class = $arguments['class'] ?? '';
+        $width = $arguments['width'] ?? '';
+        $height = $arguments['height'] ?? '';
+
         // Try to use cached result
         $cache = static::getCache();
-        $key = static::deriveCacheKey($serviceURL);
+        $key = static::deriveCacheKey($serviceURL, $class, $width, $height);
         try {
             if ($cache->has($key)) {
                 return $cache->get($key);
@@ -274,11 +277,14 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             if (!isset($tag['open']) || $tag['open'] != 'embed') {
                 continue;
             }
-            $url = $tag['content'] ?? $tag['attrs']['url'] ?? null;
+            $url = $tag['content'] ?? $tag['attrs']['url'] ?? '';
+            $class = $tag['attrs']['class'] ?? '';
+            $width = $tag['attrs']['width'] ?? '';
+            $height = $tag['attrs']['height'] ?? '';
             if (!$url) {
                 continue;
             }
-            $key = static::deriveCacheKey($url);
+            $key = static::deriveCacheKey($url, $class, $width, $height);
             try {
                 if (!$cache->has($key)) {
                     continue;
@@ -302,9 +308,23 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      * @param string $url
      * @return string
      */
-    private static function deriveCacheKey(string $url): string
+    private static function deriveCacheKey(string $url, string $class, string $width, string $height): string
     {
-        $key = 'embed-shortcode-' . preg_replace('/[^a-zA-Z0-9\-]/', '', $url);
-        return $key;
+        return implode('-', array_filter([
+            'embed-shortcode',
+            self::cleanKeySegment($url),
+            self::cleanKeySegment($class),
+            self::cleanKeySegment($width),
+            self::cleanKeySegment($height)
+        ]));
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    private static function cleanKeySegment(string $str): string
+    {
+        return preg_replace('/[^a-zA-Z0-9\-]/', '', $str);
     }
 }

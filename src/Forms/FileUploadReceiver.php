@@ -272,7 +272,7 @@ trait FileUploadReceiver
             $id = $idList ? reset($idList) : 0;
             $record->{"{$fieldname}ID"} = $id;
 
-            // Polymorphic asignment
+            // Polymorphic assignment
             if ($class === DataObject::class) {
                 $file = $id ? File::get()->byID($id) : null;
                 $fileClass = $file ? get_class($file) : File::class;

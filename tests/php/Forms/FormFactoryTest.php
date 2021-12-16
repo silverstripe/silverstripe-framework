@@ -28,7 +28,7 @@ class FormFactoryTest extends SapphireTest
         return [];
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

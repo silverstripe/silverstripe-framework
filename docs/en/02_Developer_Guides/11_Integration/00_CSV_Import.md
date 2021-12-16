@@ -1,6 +1,6 @@
 ---
 title: CSV Import
-summary: Load data into your Silverstripe database in bulk
+summary: Load data into your Silverstripe CMS database in bulk
 icon: upload
 ---
 # Import CSV data
@@ -8,7 +8,7 @@ icon: upload
 ## Introduction
 
 CSV import can be easily achieved through PHP's built-in `fgetcsv()` method,
-but this method doesn't know anything about your datamodel. In SilverStripe,
+but this method doesn't know anything about your datamodel. In Silverstripe CMS,
 this can be handled through the a specialized CSV importer class that can
 be customised to fit your data.
 
@@ -80,7 +80,7 @@ below the search form on the left.
 You can have more customised logic and interface feedback through a custom controller. 
 Let's create a simple upload form (which is used for `MyDataObject` instances). 
 You'll need to add a route to your controller to make it accessible via URL 
-(see [director](/reference/director)).
+(see [Routing](../../controllers/routing/)).
 
 
 ```php

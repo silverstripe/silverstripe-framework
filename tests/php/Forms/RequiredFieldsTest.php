@@ -108,7 +108,7 @@ class RequiredFieldsTest extends SapphireTest
                 'AnotherField'
             ],
             $requiredFields->getRequired(),
-            "Removing a non-existant field from required list altered the list of required fields"
+            "Removing a non-existent field from required list altered the list of required fields"
         );
     }
 
@@ -284,10 +284,10 @@ class RequiredFieldsTest extends SapphireTest
             $requiredFields->fieldIsRequired('ExtraField1'),
             "Failed to find 'ExtraField1' field in required list after adding it to the list"
         );
-        //check a non-existant field returns false
+        //check a non-existent field returns false
         $this->assertFalse(
             $requiredFields->fieldIsRequired('DoesntExist'),
-            "Unexpectedly returned true for a non-existant field"
+            "Unexpectedly returned true for a non-existent field"
         );
     }
 }

@@ -280,7 +280,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Check if a given authenticator is registered
      *
-     * @param string $authenticator The configured identifier of the authenicator
+     * @param string $authenticator The configured identifier of the authenticator
      * @return bool Returns TRUE if the authenticator is registered, FALSE
      *              otherwise.
      */
@@ -438,6 +438,14 @@ class Security extends Controller implements TemplateGlobalProvider
     }
 
     /**
+     * The intended uses of this function is to temporarily change the current user for things such as
+     * canView() checks or unit tests.  It is stateless and will not persist between requests.  Importantly
+     * it also will not call any logic that may be present in the current IdentityStore logIn() or logout() methods
+     *
+     * If you are unit testing and calling FunctionalTest::get() or FunctionalTest::post() and you need to change
+     * the current user, you should instead use SapphireTest::logInAs() / logOut() which itself will call
+     * Injector::inst()->get(IdentityStore::class)->logIn($member) / logout()
+     *
      * @param null|Member $currentUser
      */
     public static function setCurrentUser($currentUser = null)
@@ -611,7 +619,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the HTML Content for the $Content area during login
      *
-     * @param string &$messageType Type of message, if available, passed back to caller
+     * @param string $messageType Type of message, if available, passed back to caller (by reference)
      * @return string Message in HTML format
      */
     protected function getSessionMessage(&$messageType = null)

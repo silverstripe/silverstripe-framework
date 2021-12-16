@@ -23,7 +23,7 @@ but in the CMS usually is a [SiteTree](api:SilverStripe\CMS\Model\SiteTree) obje
 A tree node in CMS could be rendered with lot of extra information but a node title, such as a
 link that wraps around the node title, a node's id which is given as id attribute of the node
 &lt;li&gt; tag, a extra checkbox beside the tree title, tree icon class or extra &lt;span&gt;
-tags showing the node status, etc. SilverStripe tree node will be typically rendered into html
+tags showing the node status, etc. Silverstripe CMS tree node will be typically rendered into html
 code like this:
 
 
@@ -107,7 +107,7 @@ class HomePage extends Page
 }
 ```
 
-The CMS uses an icon set from [Fontastic](http://fontastic.me/). New icons may be [requested](https://github.com/silverstripe/silverstripe-admin/issues/new) and added to the [core icon set](https://silverstripe.github.io/silverstripe-admin/?selectedKind=Admin%2FIcons&selectedStory=Icon%20reference&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel). The benefit of having icons added to the core set is that you can use icons more consistently across different modules allowing every module to use a different icon with the same style.
+The CMS uses an icon set from [Fontastic](http://fontastic.me/). New icons may be [requested](https://github.com/silverstripe/silverstripe-admin/issues/new) and added to the [core icon set](https://silverstripe.github.io/silverstripe-pattern-lib/?selectedKind=Admin%2FIcons&selectedStory=Icon%20reference&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%2Factions%2Factions-panel). The benefit of having icons added to the core set is that you can use icons more consistently across different modules allowing every module to use a different icon with the same style.
 
 You can also add your own icon by specifying an image path to override the Fontastic icon set:
 

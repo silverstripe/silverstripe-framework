@@ -7,12 +7,12 @@ icon: sitemap
 
 ## Introduction
 
-A lot can be achieved in SilverStripe by adding properties and form fields
+A lot can be achieved in Silverstripe CMS by adding properties and form fields
 to your own page types (via [SiteTree::getCMSFields()](api:SilverStripe\CMS\Model\SiteTree::getCMSFields())), as well as creating
 your own data management interfaces through [ModelAdmin](api:SilverStripe\Admin\ModelAdmin). But sometimes
 you'll want to go deeper and tailor the underlying interface to your needs as well.
 For example, to build a personalized CMS dashboard, or content "slots" where authors
-can drag their content into. At its core, SilverStripe is a web application
+can drag their content into. At its core, Silverstripe CMS is a web application
 built on open standards and common libraries, so lots of the techniques should
 feel familiar to you. This is just a quick run down to get you started
 with some special conventions.
@@ -60,13 +60,13 @@ coding conventions.
 
 A pattern library is a collection of user interface design elements, this helps developers and designers collaborate and to provide a quick preview of elements as they were intended without the need to build an entire interface to see it.
 Components built in React and used by the CMS are actively being added to the pattern library.
-The pattern library can be used to preview React components without including them in the SilverStripe CMS.
+The pattern library can be used to preview React components without including them in the Silverstripe CMS.
 
 ### Viewing the latest pattern library
 
-The easiest way to access the pattern library is to view it online. The pattern library for the latest SilverStripe 4 development branch is automatically built and deployed. Note that this may include new components that are not yet available in a stable release.
+The easiest way to access the pattern library is to view it online. The pattern library for the latest Silverstripe CMS 4 development branch is automatically built and deployed. Note that this may include new components that are not yet available in a stable release.
 
-[Browse the SilverStripe pattern library online](https://silverstripe.github.io/silverstripe-admin).
+[Browse the Silverstripe CMS pattern library online](https://silverstripe.github.io/silverstripe-pattern-lib/).
 
 ### Running the pattern library
 
@@ -74,7 +74,7 @@ If you're developing a new React component, running the pattern library locally 
 
 The pattern library is built from the `silverstripe/admin` module, but it also requires `silverstripe/asset-admin`, `silversrtipe/cms` and `silverstripe/campaign-admin`.
 
-To run the pattern library locally, you'll need a SilverStripe project based on `silverstripe/recipe-cms` and `yarn` installed locally. The pattern library requires the JS source files so you'll need to use the `--prefer-source` flag when installing your dependencies with Composer.
+To run the pattern library locally, you'll need a Silverstripe CMS project based on `silverstripe/recipe-cms` and `yarn` installed locally. The pattern library requires the JS source files so you'll need to use the `--prefer-source` flag when installing your dependencies with Composer.
 
 ```bash
 composer install --prefer-source
@@ -88,7 +88,7 @@ The pattern library will be available at [http://localhost:6006](http://localhos
 
 If you want to build a static version of the pattern library, you can replace `yarn pattern-lib` with `yarn build-storybook`. This will output the pattern library files to a `storybook-static` folder.
 
-The SilverStripe pattern library is built using the [StoryBook JS library](https://storybook.js.org/). You can read the StoryBook documentation to learn about more advanced features and customisation options. 
+The Silverstripe CMS pattern library is built using the [StoryBook JS library](https://storybook.js.org/). You can read the StoryBook documentation to learn about more advanced features and customisation options. 
 
 ## The Admin URL
 
@@ -128,7 +128,7 @@ When writing templates use:
 $AdminURL
 ```
 
-And in JavaScript, this is avaible through the `ss` namespace
+And in JavaScript, this is available through the `ss` namespace
 
 
 ```js
@@ -183,7 +183,7 @@ Refer to [Layout reference](/developer_guides/customising_the_admin_interface/cm
 
 ## Forms
 
-SilverStripe constructs forms and its fields within PHP,
+Silverstripe CMS constructs forms and its fields within PHP,
 mainly through the [getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method.
 This in turn means that the CMS loads these forms as HTML via Ajax calls,
 e.g. after saving a record (which requires a form refresh), or switching the section in the CMS.
@@ -253,7 +253,7 @@ correctly configured form.
 __Deprecated:__
 The following documentation regarding Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS in Silverstripe CMS](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
 
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
@@ -302,10 +302,10 @@ so as a developer just declare your dependencies through the [Requirements](api:
 
 ## Client-side routing
 
-SilverStripe uses the HTML5 browser history to modify the URL without a complete
+Silverstripe CMS uses the HTML5 browser history to modify the URL without a complete
 window refresh. We us the below systems in combination to achieve this:
   * [Page.js](https://github.com/visionmedia/page.js) routing library is used for most
-    cms sections, which provides additional SilverStripe specific functionality via the
+    cms sections, which provides additional Silverstripe CMS specific functionality via the
     `vendor/silverstripe/admin/client/src/lib/Router.js` wrapper.
 	The router is available on `window.ss.router` and provides the same API as
 	described in the
@@ -591,7 +591,7 @@ To avoid repetition, we've written some helpers for various use cases:
 
 ## Buttons
 
-SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
+Silverstripe CMS automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
 These icon identifiers relate to icon files in `vendor/silverstripe/framework/admin/images/sprites/src/btn-icons`,

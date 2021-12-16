@@ -489,8 +489,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @see SQLSelect::addWhere() for syntax examples
      *
-     * @param mixed $having Predicate(s) to set, as escaped SQL statements or parameterised queries
-     * @param mixed $having,... Unlimited additional predicates
+     * @param mixed ...$having Predicate(s) to set, as escaped SQL statements or parameterised queries
      * @return $this Self reference
      */
     public function setHaving($having)
@@ -505,8 +504,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @see SQLSelect::addWhere() for syntax examples
      *
-     * @param mixed $having Predicate(s) to set, as escaped SQL statements or parameterised queries
-     * @param mixed $having,... Unlimited additional predicates
+     * @param mixed ...$having Predicate(s) to set, as escaped SQL statements or parameterised queries
      * @return $this Self reference
      */
     public function addHaving($having)

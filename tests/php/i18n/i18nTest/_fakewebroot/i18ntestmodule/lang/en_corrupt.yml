@@ -1,0 +1,5 @@
+en:
+  NONAMESPACE: Include Entity without Namespace
+  Invalid: Foo
+    About: 'About us'
+    - Invalid # this should throw "A colon cannot be used in an unquoted mapping value at line 5"

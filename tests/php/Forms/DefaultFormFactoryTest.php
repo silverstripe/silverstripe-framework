@@ -9,12 +9,10 @@ use SilverStripe\ORM\DataObject;
 
 class DefaultFormFactoryTest extends SapphireTest
 {
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Missing required context/
-     */
     public function testGetFormThrowsExceptionOnMissingContext()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Missing required context/');
         $factory = new DefaultFormFactory();
         $factory->getForm();
     }

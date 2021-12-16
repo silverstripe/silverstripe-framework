@@ -120,13 +120,14 @@ class ClassLoader
      *
      * @param bool $includeTests
      * @param bool $forceRegen
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false)
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         foreach ($this->manifests as $manifest) {
             /** @var ClassManifest $instance */
             $instance = $manifest['instance'];
-            $instance->init($includeTests, $forceRegen);
+            $instance->init($includeTests, $forceRegen, $ignoredCIConfigs);
         }
 
         $this->registerAutoloader();

@@ -11,7 +11,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
  * Apply this interface to any {@link DBField} that doesn't have a 1-1 mapping with a database field.
  * This includes multi-value fields and transformed fields
  *
- * @todo Unittests for loading and saving composite values (see GIS module for existing similiar unittests)
+ * @todo Unittests for loading and saving composite values (see GIS module for existing similar unittests)
  *
  * Example with a combined street name and number:
  * <code>
@@ -26,7 +26,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
 abstract class DBComposite extends DBField
 {
     /**
-     * Similiar to {@link DataObject::$db},
+     * Similar to {@link DataObject::$db},
      * holds an array of composite field names.
      * Don't include the fields "main name",
      * it will be prefixed in {@link requireField()}.
@@ -331,7 +331,7 @@ abstract class DBComposite extends DBField
         if ($type = $this->getIndexType()) {
             $columns = array_map(function ($name) {
                 return $this->getName() . $name;
-            }, array_keys((array) static::config()->get('composite_db')));
+            }, array_keys((array) $this->compositeDatabaseFields()));
 
             return [
                 'type' => $type,

@@ -245,7 +245,7 @@ class Session
      */
     public function restart(HTTPRequest $request)
     {
-        $this->destroy();
+        $this->destroy(true, $request);
         $this->start($request);
     }
 
@@ -358,14 +358,18 @@ class Session
      * Destroy this session
      *
      * @param bool $removeCookie
+     * @param HTTPRequest $request The request for which to destroy a session
      */
-    public function destroy($removeCookie = true)
+    public function destroy($removeCookie = true, HTTPRequest $request = null)
     {
         if (session_id()) {
             if ($removeCookie) {
+                if (!$request) {
+                    $request = Controller::curr()->getRequest();
+                }
                 $path = $this->config()->get('cookie_path') ?: Director::baseURL();
                 $domain = $this->config()->get('cookie_domain');
-                $secure = $this->config()->get('cookie_secure');
+                $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
                 Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
             }
             session_destroy();

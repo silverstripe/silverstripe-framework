@@ -4,7 +4,7 @@ namespace SilverStripe\Framework\Tests;
 
 //whitespace here is important for tests, please don't change it
 /** @skipUpgrade */
-use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\ORM\DataQuery;
 /** @skipUpgrade */
 use SilverStripe\Control\Controller  as  Cont ;
 /** @skipUpgrade */
@@ -15,5 +15,5 @@ use silverstripe\test\ClassA;
 use \SilverStripe\Core\ClassInfo;
 
 /** @skipUpgrade */
-class ClassI extends ModelAdmin implements P {
+class ClassI extends DataQuery implements P {
 }

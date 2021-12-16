@@ -77,7 +77,7 @@ class ErrorControlChainMiddleware implements HTTPMiddleware
                 if ($confirmationTokenChain->suppressionRequired()) {
                     $confirmationTokenChain->suppressTokens();
                 } else {
-                    // If no redirection is necessary then we can disable error supression
+                    // If no redirection is necessary then we can disable error suppression
                     $errorControlChain->setSuppression(false);
                 }
 

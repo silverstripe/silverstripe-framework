@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -155,8 +156,6 @@ class GridField extends FormField
         }
 
         $this->setConfig($config);
-
-        $this->state = new GridState($this);
 
         $this->addExtraClass('grid-field');
     }
@@ -407,11 +406,29 @@ class GridField extends FormField
      */
     public function getState($getData = true)
     {
+        // Initialise state on first call. This ensures it's evaluated after components have been added
+        if (!$this->state) {
+            $this->initState();
+        }
+
         if ($getData) {
             return $this->state->getData();
         }
 
         return $this->state;
+    }
+
+    private function initState(): void
+    {
+        $this->state = new GridState($this);
+
+        $data = $this->state->getData();
+
+        foreach ($this->getComponents() as $item) {
+            if ($item instanceof GridField_StateProvider) {
+                $item->initDefaultState($data);
+            }
+        }
     }
 
     /**
@@ -422,6 +439,8 @@ class GridField extends FormField
      */
     public function FieldHolder($properties = [])
     {
+        $this->extend('onBeforeRenderHolder', $this, $properties);
+        
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
@@ -636,6 +655,18 @@ class GridField extends FormField
             $tableAttributes,
             $header . "\n" . $footer . "\n" . $body
         );
+        
+        $message = Convert::raw2xml($this->getMessage());
+        if (is_array($message)) {
+            $message = $message['message'];
+        }
+        if ($message) {
+            $content['after'] .= HTML::createTag(
+                'p',
+                ['class' => 'message ' . $this->getMessageType()],
+                $message
+            );
+        }
 
         return HTML::createTag(
             'fieldset',

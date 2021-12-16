@@ -167,7 +167,7 @@ class SSViewer implements Flushable
      *
      * @var array
      */
-    protected $subTemplates = null;
+    protected $subTemplates = [];
 
     /**
      * @var bool
@@ -561,7 +561,7 @@ class SSViewer implements Flushable
     /**
      * Flag whether to include the requirements in this response.
      *
-     * @param bool
+     * @param bool $incl
      */
     public function includeRequirements($incl = true)
     {

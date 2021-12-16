@@ -36,16 +36,19 @@ class TempFolder
      */
     public static function getTempFolderUsername()
     {
-        $user = Environment::getEnv('APACHE_RUN_USER');
+        $user = '';
+        if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
+            $userDetails = posix_getpwuid(posix_getuid());
+            $user = $userDetails['name'];
+        }
+        if (!$user) {
+            $user = Environment::getEnv('APACHE_RUN_USER');
+        }
         if (!$user) {
             $user = Environment::getEnv('USER');
         }
         if (!$user) {
             $user = Environment::getEnv('USERNAME');
-        }
-        if (!$user && function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
-            $userDetails = posix_getpwuid(posix_getuid());
-            $user = $userDetails['name'];
         }
         if (!$user) {
             $user = 'unknown';

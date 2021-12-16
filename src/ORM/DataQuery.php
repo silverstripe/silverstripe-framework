@@ -170,7 +170,7 @@ class DataQuery
             throw new InvalidArgumentException("DataQuery::create() Can't find data classes for '{$this->dataClass}'");
         }
 
-        // Build our intial query
+        // Build our initial query
         $this->query = new SQLSelect([]);
         $this->query->setDistinct(true);
 
@@ -395,7 +395,12 @@ class DataQuery
                     // format internally; then this check can be part of selectField()
                     $selects = $query->getSelect();
                     if (!isset($selects[$col]) && !in_array($qualCol, $selects)) {
-                        $query->selectField($qualCol);
+                        // Use the original select if possible.
+                        if (array_key_exists($col, $originalSelect)) {
+                            $query->selectField($originalSelect[$col], $col);
+                        } else {
+                            $query->selectField($qualCol);
+                        }
                     }
                 } else {
                     $qualCol = '"' . implode('"."', $parts) . '"';
@@ -465,10 +470,9 @@ class DataQuery
         // statement anyway
         $statement = $this->getFinalisedQuery();
 
-        // Clear limit, distinct, and order as it's not relevant for an exists query
+        // Clear distinct, and order as it's not relevant for an exists query
         $statement->setDistinct(false);
         $statement->setOrderBy(null);
-        $statement->setLimit(null);
 
         // We can remove grouping if there's no "having" that might be relying on an aggregate
         // Additionally, the columns being selected no longer matter
@@ -479,13 +483,13 @@ class DataQuery
         }
 
         // Wrap the whole thing in an "EXISTS"
-        $sql = 'SELECT EXISTS(' . $statement->sql($params) . ')';
+        $sql = 'SELECT CASE WHEN EXISTS(' . $statement->sql($params) . ') THEN 1 ELSE 0 END';
         $result = DB::prepared_query($sql, $params);
         $row = $result->first();
         $result = reset($row);
 
         // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2
-        return $result === true || $result === 1 || $result === 't';
+        return $result === true || $result === 1 || $result === '1' || $result === 't';
     }
 
     /**

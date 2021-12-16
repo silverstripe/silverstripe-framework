@@ -57,7 +57,7 @@ class HTMLTest extends SapphireTest
 
     public function testVoidContentError()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Void element \"link\" cannot have content");
 
         HTML::createTag('link', [

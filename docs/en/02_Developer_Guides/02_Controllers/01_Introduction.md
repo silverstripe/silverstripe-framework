@@ -5,7 +5,7 @@ summary: A brief look at the definition of a Controller, creating actions and ho
 
 # Introduction to Controllers
 
-The following example is for a simple [Controller](api:SilverStripe\Control\Controller) class. When building off the SilverStripe Framework you will
+The following example is for a simple [Controller](api:SilverStripe\Control\Controller) class. When building off the Silverstripe CMS you will
 subclass the base `Controller` class.
 
 **app/code/controllers/TeamController.php**
@@ -46,7 +46,7 @@ routing.
 [/info]
 
 [alert]
-Make sure that after you have modified the `routes.yml` file, that you clear your SilverStripe caches using `?flush=1`.
+Make sure that after you have modified the `routes.yml` file, that you clear your Silverstripe CMS caches using `?flush=1`.
 [/alert]
 
 **app/_config/routes.yml**
@@ -69,13 +69,13 @@ Controllers respond by default to an `index` method. You don't need to define th
 can override the `index()` response to provide custom data back to the [Template and Views](../templates). 
 
 [notice]
-It is standard in SilverStripe for your controller actions to be `lowercasewithnospaces`
+It is standard in Silverstripe CMS for your controller actions to be `lowercasewithnospaces`
 [/notice]
 
 Action methods can return one of four main things:
 
 * an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [HTTPResponse](api:SilverStripe\Control\HTTPResponse) with the body set to the current template.
-* `HTML`. SilverStripe will wrap the `HTML` into a `HTTPResponse` and set the status code to 200.
+* `HTML`. Silverstripe CMS will wrap the `HTML` into a `HTTPResponse` and set the status code to 200.
 * an [HTTPResponse](api:SilverStripe\Control\HTTPResponse) containing a manually defined `status code` and `body`.
 * an [HTTPResponse_Exception](api:SilverStripe\Control\HTTPResponse_Exception). A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
@@ -116,7 +116,7 @@ public function anotheraction(HTTPRequest $request)
 }
 
 /**
- * We can render HTML and leave SilverStripe to set the response code and body.
+ * We can render HTML and leave Silverstripe CMS to set the response code and body.
  */
 public function htmlaction() 
 {
@@ -151,7 +151,7 @@ See the [Access Controller](access_control) documentation.
 Controllers are automatically rendered with a template that makes their name. Our `TeamsController` would be rendered
 with a `TeamsController.ss` template. Individual actions are rendered in `TeamsController_{actionname}.ss`. 
 
-If a template of that name does not exist, then SilverStripe will fall back to the `TeamsController.ss` then to 
+If a template of that name does not exist, then Silverstripe CMS will fall back to the `TeamsController.ss` then to 
 `Controller.ss`.
 
 Controller actions can use `renderWith` to override this template selection process as in the previous example with 
@@ -163,7 +163,7 @@ For more information about templates, inheritance and how to render into views, 
 ## Link
 
 Each controller should define a `Link()` method. This should be used to avoid hard coding your routing in views,
-as well as give other features in SilverStripe the ability to influence link behaviour.
+as well as give other features in Silverstripe CMS the ability to influence link behaviour.
 
 **app/code/controllers/TeamController.php**
 
@@ -181,7 +181,7 @@ public function Link($action = null)
 ``` 
 
 ## Connecting Pages to Controllers
-By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to overide SiteTree::getControllerName().
+By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to override SiteTree::getControllerName().
 
 Example controller:
 ```php

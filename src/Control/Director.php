@@ -692,7 +692,7 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Check if using a seperate public dir, and if so return this directory
+     * Check if using a separate public dir, and if so return this directory
      * name.
      *
      * This will be removed in 5.0 and fixed to 'public'
@@ -854,6 +854,9 @@ class Director implements TemplateGlobalProvider
      * Useful to check before redirecting based on a URL from user submissions through $_GET or $_POST,
      * and avoid phishing attacks by redirecting to an attackers server.
      *
+     * Provides an extension point to allow extra checks on the URL to allow some external URLs,
+     * e.g. links on secondary domains that point to the same CMS, or subsite domains.
+     *
      * @param string $url
      *
      * @return bool
@@ -868,6 +871,13 @@ class Director implements TemplateGlobalProvider
         // Validate host[:port]
         $urlHost = static::parseHost($url);
         if ($urlHost && $urlHost === static::host()) {
+            return true;
+        }
+
+        // Allow extensions to weigh in
+        $isSiteUrl = false;
+        static::singleton()->extend('updateIsSiteUrl', $isSiteUrl, $url);
+        if ($isSiteUrl) {
             return true;
         }
 
@@ -938,12 +948,13 @@ class Director implements TemplateGlobalProvider
     public static function absoluteBaseURLWithAuth(HTTPRequest $request = null)
     {
         // Detect basic auth
-        $user = $request->getHeader('PHP_AUTH_USER');
-        if ($user) {
-            $password = $request->getHeader('PHP_AUTH_PW');
-            $login = sprintf("%s:%s@", $user, $password) ;
-        } else {
-            $login = '';
+        $login = '';
+        if ($request) {
+            $user = $request->getHeader('PHP_AUTH_USER');
+            if ($user) {
+                $password = $request->getHeader('PHP_AUTH_PW');
+                $login = sprintf("%s:%s@", $user, $password);
+            }
         }
 
         return Director::protocol($request) . $login . static::host($request) . Director::baseURL();
@@ -1134,6 +1145,9 @@ class Director implements TemplateGlobalProvider
         return [
             'absoluteBaseURL',
             'baseURL',
+            'isDev',
+            'isTest',
+            'isLive',
             'is_ajax',
             'isAjax' => 'is_ajax',
             'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0

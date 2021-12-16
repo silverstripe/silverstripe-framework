@@ -17,7 +17,7 @@ class ClassManifestErrorHandler implements ErrorHandler
     protected $pathname;
 
     /**
-     * @param String $pathname
+     * @param string $pathname
      */
     public function __construct($pathname)
     {

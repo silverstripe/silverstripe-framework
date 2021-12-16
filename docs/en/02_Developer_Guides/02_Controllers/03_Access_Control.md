@@ -43,7 +43,7 @@ class MyController extends Controller
 ```
 
 [info]
-If the permission check fails, SilverStripe will return a `403` Forbidden HTTP status.
+If the permission check fails, Silverstripe CMS will return a `403` Forbidden HTTP status.
 [/info]
 
 An action named "index" is white listed by default, unless `allowed_actions` is defined as an empty array, or the action 

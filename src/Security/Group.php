@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -21,6 +22,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
@@ -233,7 +235,7 @@ class Group extends DataObject
                         '<a href="%s" class="add-role">%s</a>',
                         SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
                         // TODO This should include #Root_Roles to switch directly to the tab,
-                        // but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
+                        // but tabstrip.js doesn't display tabs when directly addressed through a URL pragma
                         _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"
@@ -476,11 +478,20 @@ class Group extends DataObject
     /**
      * Overloaded to ensure the code is always descent.
      *
-     * @param string
+     * @param string $val
      */
     public function setCode($val)
     {
-        $this->setField("Code", Convert::raw2url($val));
+        $currentGroups = Group::get()
+            ->map('Code', 'Title')
+            ->toArray();
+        $code = Convert::raw2url($val);
+        $count = 2;
+        while (isset($currentGroups[$code])) {
+            $code = Convert::raw2url($val . '-' . $count);
+            $count++;
+        }
+        $this->setField("Code", $code);
     }
 
     public function validate()
@@ -506,7 +517,43 @@ class Group extends DataObject
             }
         }
 
+        $currentGroups = Group::get()
+            ->filter('ID:not', $this->ID)
+            ->map('Code', 'Title')
+            ->toArray();
+
+        if (isset($currentGroups[$this->Code])) {
+            $result->addError(
+                _t(
+                    'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
+                    'A Group ({group}) already exists with the same {identifier}',
+                    ['group' => $this->Code, 'identifier' => 'Code']
+                )
+            );
+        }
+
+        if (in_array($this->Title, $currentGroups)) {
+            $result->addError(
+                _t(
+                    'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
+                    'A Group ({group}) already exists with the same {identifier}',
+                    ['group' => $this->Title, 'identifier' => 'Title']
+                )
+            );
+        }
+
         return $result;
+    }
+
+    public function getCMSCompositeValidator(): CompositeValidator
+    {
+        $validator = parent::getCMSCompositeValidator();
+
+        $validator->addValidator(RequiredFields::create([
+            'Title'
+        ]));
+
+        return $validator;
     }
 
     public function onBeforeWrite()

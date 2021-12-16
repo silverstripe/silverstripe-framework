@@ -1,20 +1,17 @@
----
-title: GraphQL
-summary: Learn how to create and customise GraphQL services on your Silverstripe CMS project.
-introduction: Learn how to create and customise GraphQL services on your Silverstripe CMS project.
-icon: cookie
----
+# Silverstripe CMS GraphQL server
 
-[CHILDREN]
+GraphQL is the content API layer for Silverstripe CMS. It is the
+recommended way of getting data in and out of the content management
+system.
 
-## Additional documentation
+For more information on GraphQL, visit its [documentation site](https://graphql.org).
 
-A substantial part of the GraphQL documentation for Silverstripe CMS still 
-reside on the GraphQL module's _Readme_ file. We are in the process of folding
-this information back into the main Silverstripe CMS documentation.
+[CHILDREN includeFolders]
 
-* [silverstripe/graphql](https://github.com/silverstripe/silverstripe-graphql/)
-
-## API Documentation
-
-* [GraphQL](api:SilverStripe\GraphQL)
+[alert]
+You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
+Help us improve it by joining #graphql on the [Community Slack](https://www.silverstripe.org/blog/community-slack-channel/),
+and report any issues at [github.com/silverstripe/silverstripe-graphql](https://github.com/silverstripe/silverstripe-graphql). 
+Docs for the current stable version (3.x) can be found
+[here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
+[/alert]

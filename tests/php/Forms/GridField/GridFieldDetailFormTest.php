@@ -207,7 +207,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
         $this->assertFalse($response->isError());
 
-        $person = Person::get()->sort('FirstName')->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
         $favouriteGroup = $person->FavouriteGroups()->first();
 
         $this->assertInstanceOf(PeopleGroup::class, $favouriteGroup);
@@ -248,7 +248,7 @@ class GridFieldDetailFormTest extends FunctionalTest
             ]
         );
         $this->assertFalse($response->isError());
-        $person = Person::get()->sort('FirstName')->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
         $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
             [
@@ -271,7 +271,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
         $this->assertFalse($response->isError());
 
-        $person = Person::get()->sort('FirstName')->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
         $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
             [
@@ -404,5 +404,35 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $this->assertEquals($group->Name, (string) $title[0]);
         $this->assertEquals($group->ID, (string) $id[0]['value']);
+    }
+
+    public function testRedirectMissingRecords()
+    {
+        $origAutoFollow = $this->autoFollowRedirection;
+        $this->autoFollowRedirection = false;
+
+        // GridField is filtered people in "My Group", which doesn't include "jack"
+        $included = $this->objFromFixture(Person::class, 'joe');
+        $excluded = $this->objFromFixture(Person::class, 'jack');
+
+        $response = $this->get(sprintf(
+            'GridFieldDetailFormTest_Controller/Form/field/testfield/item/%d/edit',
+            $included->ID
+        ));
+        $this->assertFalse(
+            $response->isRedirect(),
+            'Existing records are not redirected'
+        );
+
+        $response = $this->get(sprintf(
+            'GridFieldDetailFormTest_Controller/Form/field/testfield/item/%d/edit',
+            $excluded->ID
+        ));
+        $this->assertTrue(
+            $response->isRedirect(),
+            'Non-existing records are redirected'
+        );
+
+        $this->autoFollowRedirection = $origAutoFollow;
     }
 }

@@ -52,7 +52,7 @@ class GridFieldEditButtonTest extends SapphireTest
         Permissions::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);
@@ -100,7 +100,7 @@ class GridFieldEditButtonTest extends SapphireTest
         $result = $button->getExtraClass();
 
         foreach ($expected as $className) {
-            $this->assertContains($className, $result);
+            $this->assertStringContainsString($className, $result);
         }
     }
 
@@ -109,15 +109,15 @@ class GridFieldEditButtonTest extends SapphireTest
         $button = new GridFieldEditButton;
 
         $button->addExtraClass('foobar');
-        $this->assertContains('foobar', $button->getExtraClass());
+        $this->assertStringContainsString('foobar', $button->getExtraClass());
 
         $button->removeExtraClass('foobar');
-        $this->assertNotContains('foobar', $button->getExtraClass());
+        $this->assertStringNotContainsString('foobar', $button->getExtraClass());
 
         // Check that duplicates are removed
         $button->addExtraClass('foobar');
         $button->addExtraClass('foobar');
         $button->removeExtraClass('foobar');
-        $this->assertNotContains('foobar', $button->getExtraClass());
+        $this->assertStringNotContainsString('foobar', $button->getExtraClass());
     }
 }

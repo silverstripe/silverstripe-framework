@@ -17,7 +17,7 @@ class PageTest extends SapphireTest
 {
     /** 
      * Defines the fixture file to use for this test class
-     * @var string
+     * @var string $fixture_file
      */
     protected static $fixture_file = 'SiteTreeTest.yml';
 
@@ -47,6 +47,40 @@ class PageTest extends SapphireTest
 }
 ```
 
+**app/tests/SiteTreeTest.yml**
+
+```yaml
+Page:
+    home:
+      Title: Home
+    staff:
+      Title: My Staff
+    about:
+      Title: About Us
+    staffduplicate:
+      Title: My Staff
+```
+
+**phpunit.xml**
+
+```xml
+<phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Default">
+            <directory>app/tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">app/src</directory>
+            <exclude>
+                <directory suffix=".php">app/tests/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
+```
+
 Firstly we define a static `$fixture_file`, this should point to a file that represents the data we want to test,
 represented as a YAML [Fixture](../fixtures). When our test is run, the data from this file will be loaded into a test 
 database and discarded at the end of the test.
@@ -71,6 +105,16 @@ database. This means that you can use it to test the functions responsible for l
 The final part of our test is an assertion command, `assertEquals`. An assertion command allows us to test for something
 in our test methods (in this case we are testing if two values are equal). A test method can have more than one 
 assertion command, and if any one of these assertions fail, so will the test method.
+
+The example **phpunit.xml** file should be placed in the root folder of your project. PHPUnit 5.7 should be included by default, as a dev dependency, in the **composer.json** file.
+
+## Caching
+
+Just like on web requests, Silverstripe CMS caches metadata about the execution context. This cache can get stale, e.g. when you change YAML configuration or add certain types of PHP code. In order to flush the cache, the **first time** this test is run use the `flush=1` CLI parameter:
+
+```sh
+vendor/bin/phpunit app/tests/PageTest.php '' flush=1
+```
 
 [info]
 For more information on PHPUnit's assertions see the [PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.assert).

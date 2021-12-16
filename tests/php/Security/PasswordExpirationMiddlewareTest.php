@@ -14,7 +14,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 {
     use HttpRequestMockBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

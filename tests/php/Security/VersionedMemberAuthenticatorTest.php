@@ -36,7 +36,7 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
         ]
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -44,9 +44,14 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
             $this->markTestSkipped("Versioned is required");
             return;
         }
+
+        // Enforce dummy validation (this can otherwise be influenced by recipe config)
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->logOut();
         parent::tearDown();

@@ -1,22 +1,22 @@
 ---
 title: Authentication
-summary: Explains SilverStripe's Authentication options and custom authenticators. 
+summary: Explains Silverstripe CMS's Authentication options and custom authenticators. 
 icon: users-cog
 ---
 
 # Authentication
 
-By default, SilverStripe provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
+By default, Silverstripe CMS provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
 authentication system.
 
 ## User Interface
 
-SilverStripe comes with a default login form interface,
+Silverstripe CMS comes with a default login form interface,
 that's embedded into your page templates through the `$Form` placeholder.
 Since it's embedded into your own site styling and behaviour,
 it can require adjustments to your particular context. 
 
-Starting with SilverStripe 4.5, the view logic may be handled through the
+Starting with Silverstripe CMS 4.5, the view logic may be handled through the
 [silverstripe/login-forms](https://github.com/silverstripe/silverstripe-login-forms) module (if present).
 
 ## Controllers
@@ -48,8 +48,8 @@ following base classes:
 
 ## Default Admin
 
-When a new SilverStripe site is created for the first time, it may be necessary to create a default admin to provide
-CMS access for the first time. SilverStripe provides a default admin configuration system, which allows a username
+When a new Silverstripe CMS site is created for the first time, it may be necessary to create a default admin to provide
+CMS access for the first time. Silverstripe CMS provides a default admin configuration system, which allows a username
 and password to be configured for a single special user outside of the normal membership system.
 
 It is advisable to configure this user in your `.env` file inside of the web root, as below:

@@ -17,7 +17,7 @@ class DBHTMLTextTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class DBHTMLTextTest extends SapphireTest
         ShortcodeParser::set_active('htmltest');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
 
         // If a test sets the locale, reset it on teardown
@@ -360,7 +360,7 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * @dataProvider providerContextSummary
      * @param string $originalValue Input
-     * @param int    $limit         Numer of characters
+     * @param int    $limit         Number of characters
      * @param string $keywords      Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */

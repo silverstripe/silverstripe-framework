@@ -160,7 +160,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Check that the given member has the given permission.
      *
-     * @param int|Member memberID The ID of the member to check. Leave blank for the current member.
+     * @param int|Member $member The ID of the member to check. Leave blank for the current member.
      *  Alternatively you can use a member object.
      * @param string|array $code Code of the permission to check (case-sensitive)
      * @param string $arg Optional argument (e.g. a permissions for a specific page)
@@ -224,7 +224,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         $adminClause = $adminImpliesAll ?  ", ?" : '';
 
         // The following code should only be used if you're not using the "any" arg.  This is kind
-        // of obselete functionality and could possibly be deprecated.
+        // of obsolete functionality and could possibly be deprecated.
         $groupParams = self::groupList($memberID);
         if (empty($groupParams)) {
             return false;
@@ -359,7 +359,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         if ($member) {
             // Build a list of the IDs of the groups.  Most of the heavy lifting
             // is done by Member::Groups
-            // NOTE: This isn't effecient; but it's called once per session so
+            // NOTE: This isn't efficient; but it's called once per session so
             // it's a low priority to fix.
             $groups = $member->Groups();
             $groupList = [];
@@ -519,7 +519,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param bool $grouped Group results into an array of permission groups.
      * @return array Returns an array of all available permission codes. The
-     *  array indicies are the permission codes as used in
+     *  array indices are the permission codes as used in
      *  {@link Permission::check()}. The value is a description
      *  suitable for using in an interface.
      */

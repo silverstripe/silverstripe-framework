@@ -2,7 +2,7 @@ name: Build Docs
 on:
   push:
     branches:
-      - '3.7'
+      - '3'
       - '4'
     paths:
       - 'docs/**'

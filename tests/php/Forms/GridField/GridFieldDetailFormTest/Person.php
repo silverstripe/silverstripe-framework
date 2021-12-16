@@ -69,4 +69,9 @@ class Person extends DataObject implements TestOnly
             ]
         );
     }
+
+    public function CMSEditLink()
+    {
+        return sprintf('my-admin/%d', $this->ID);
+    }
 }

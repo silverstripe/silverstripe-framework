@@ -7,7 +7,7 @@ summary: Populate test databases with fake seed data.
 
 To test functionality correctly, we must use consistent data. If we are testing our code with the same data each
 time, we can trust our tests to yield reliable results and to identify when the logic changes. Each test run in
-SilverStripe starts with a fresh database containing no records. `Fixtures` provide a way to describe the initial data
+Silverstripe CMS starts with a fresh database containing no records. `Fixtures` provide a way to describe the initial data
 to load into the database. The [SapphireTest](api:SilverStripe\Dev\SapphireTest) class takes care of populating a test database with data from
 fixtures - all we have to do is define them.
 
@@ -189,7 +189,7 @@ test.
 
 ### Fixtures for namespaced classes
 
-As of SilverStripe 4 you will need to use fully qualfied class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
+As of Silverstripe CMS 4 you will need to use fully qualified class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
 
 
 ```yml
@@ -204,7 +204,7 @@ MyProject\Model\Team:
 ```
 
 [notice]
-If your tests are failing and your database has table names that follow the fully qualified class names, you've probably forgotten to implement `private static $table_name = 'Player';` on your namespaced class. This property was introduced in SilverStripe 4 to reduce data migration work. See [DataObject](api:SilverStripe\ORM\DataObject) for an example.
+If your tests are failing and your database has table names that follow the fully qualified class names, you've probably forgotten to implement `private static $table_name = 'Player';` on your namespaced class. This property was introduced in Silverstripe CMS 4 to reduce data migration work. See [DataObject](api:SilverStripe\ORM\DataObject) for an example.
 [/notice]
 
 ### Defining many_many_extraFields

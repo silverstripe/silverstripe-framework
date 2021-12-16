@@ -6,7 +6,7 @@ title: Customise the CMS pages list
 The pages "list" view in the CMS is a powerful alternative to visualizing
 your site's content, and can be better suited than a tree for large flat
 hierarchies. A good example would be a collection of news articles,
-all contained under a "holder" page type, a quite common pattern in SilverStripe.
+all contained under a "holder" page type, a quite common pattern in Silverstripe CMS.
 
 The "list" view allows you to paginate through a large number of records,
 as well as sort and filter them in a way that would be hard to achieve in a tree structure.

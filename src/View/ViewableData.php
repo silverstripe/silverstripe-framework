@@ -273,7 +273,7 @@ class ViewableData implements IteratorAggregate
     /**
      * Return true if this object "exists" i.e. has a sensible value
      *
-     * This method should be overriden in subclasses to provide more context about the classes state. For example, a
+     * This method should be overridden in subclasses to provide more context about the classes state. For example, a
      * {@link DataObject} class could return false when it is deleted from the database
      *
      * @return bool

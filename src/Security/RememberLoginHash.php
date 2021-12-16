@@ -60,7 +60,7 @@ class RememberLoginHash extends DataObject
      * @config
      * @var int
      */
-    private static $token_expiry_days = 90;
+    private static $token_expiry_days = 30;
 
     /**
      * Number of days the device ID will be valid for
@@ -83,6 +83,42 @@ class RememberLoginHash extends DataObject
      * The token used for the hash
      */
     private $token = null;
+
+    /**
+     * Used to override the config value of logout_across_devices
+     * Tri-state where null denotes an unset override value
+     *
+     * @internal
+     * @var bool|null
+     */
+    protected static $logoutAcrossDevices = null;
+
+    /**
+     * @internal
+     * @return bool
+     */
+    public static function getLogoutAcrossDevices(): bool
+    {
+        if (is_bool(static::$logoutAcrossDevices)) {
+            return static::$logoutAcrossDevices;
+        }
+        return static::config()->get('logout_across_devices');
+    }
+
+    /**
+     * Override the config value of logout_across_devices for the duration of the request
+     * Useful if an authenticator is causing the wrong number of devices to loose their tokens
+     * A value of false will prevent all devices from having their token removed when a single device logs out
+     * A value of true will remove all devices tokens when a single device logs out
+     * Use this public API instead of modifying the config value directly
+     *
+     * @internal
+     * @param bool $value
+     */
+    public static function setLogoutAcrossDevices(bool $value): void
+    {
+        static::$logoutAcrossDevices = $value;
+    }
 
     public function getToken()
     {
@@ -172,19 +208,22 @@ class RememberLoginHash extends DataObject
      * only the token for the provided device ID will be removed
      *
      * @param Member $member
-     * @param string $alcDevice
+     * @param string|null $alcDevice Null when logging out of non-persi-tien session
      */
     public static function clear(Member $member, $alcDevice = null)
     {
         if (!$member->exists()) {
+            // If we don't have a valid user, we can't clear any "Remember me" tokens
             return;
         }
-        $filter = ['MemberID'=>$member->ID];
-        if (!static::config()->logout_across_devices && $alcDevice) {
-            $filter['DeviceID'] = $alcDevice;
+
+        if (static::getLogoutAcrossDevices()) {
+            self::get()->filter(['MemberID' => $member->ID])->removeAll();
+        } elseif ($alcDevice) {
+            self::get()->filter([
+                'MemberID' => $member->ID,
+                'DeviceID' => $alcDevice
+            ])->removeAll();
         }
-        RememberLoginHash::get()
-            ->filter($filter)
-            ->removeAll();
     }
 }

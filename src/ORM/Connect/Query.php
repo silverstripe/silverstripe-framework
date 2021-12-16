@@ -31,14 +31,14 @@ abstract class Query implements Iterator
 {
 
     /**
-     * The current record in the interator.
+     * The current record in the iterator.
      *
      * @var array
      */
     protected $currentRecord = null;
 
     /**
-     * The number of the current row in the interator.
+     * The number of the current row in the iterator.
      *
      * @var int
      */

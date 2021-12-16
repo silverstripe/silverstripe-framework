@@ -1,7 +1,7 @@
 ---
 title: Controllers
-summary: Controllers form the backbone of your SilverStripe application. They handle routing URLs to your templates.
-introduction: In this guide you will learn how to define a Controller class and how they fit into the SilverStripe response and request cycle.
+summary: Controllers form the backbone of your Silverstripe CMS application. They handle routing URLs to your templates.
+introduction: In this guide you will learn how to define a Controller class and how they fit into the Silverstripe CMS response and request cycle.
 ---
 
 The [Controller](api:SilverStripe\Control\Controller) class handles the responsibility of delivering the correct outgoing [HTTPResponse](api:SilverStripe\Control\HTTPResponse) for a 

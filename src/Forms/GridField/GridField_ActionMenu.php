@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 

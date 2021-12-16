@@ -32,7 +32,7 @@ abstract class PasswordEncryptor
     }
 
     /**
-     * @param String $algorithm
+     * @param string $algorithm
      * @return PasswordEncryptor
      * @throws PasswordEncryptor_NotFoundException
      */
@@ -65,8 +65,8 @@ abstract class PasswordEncryptor
      * Return a string value stored in the {@link Member->Password} property.
      * The password should be hashed with {@link salt()} if applicable.
      *
-     * @param String $password Cleartext password to be hashed
-     * @param String $salt (Optional)
+     * @param string $password Cleartext password to be hashed
+     * @param string $salt (Optional)
      * @param Member $member (Optional)
      * @return String Maximum of 512 characters.
      */

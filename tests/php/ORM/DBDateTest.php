@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -15,7 +17,7 @@ class DBDateTest extends SapphireTest
 {
     protected $oldError = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->oldError = error_reporting();
@@ -24,7 +26,7 @@ class DBDateTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->restoreNotices();
         parent::tearDown();
@@ -36,7 +38,6 @@ class DBDateTest extends SapphireTest
     protected function suppressNotices()
     {
         error_reporting(error_reporting() & ~E_USER_NOTICE);
-        \PHPUnit_Framework_Error_Notice::$enabled = false;
     }
 
     /**
@@ -45,7 +46,6 @@ class DBDateTest extends SapphireTest
     protected function restoreNotices()
     {
         error_reporting($this->oldError);
-        \PHPUnit_Framework_Error_Notice::$enabled = true;
     }
 
     public function testNiceDate()
@@ -92,21 +92,17 @@ class DBDateTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.
-     */
     public function testMDYConversion()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.");
         DBField::create_field('Date', '3/16/2003');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.
-     */
     public function testY2kCorrection()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.");
         DBField::create_field('Date', '03-03-04');
     }
 

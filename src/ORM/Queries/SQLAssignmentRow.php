@@ -21,8 +21,8 @@ class SQLAssignmentRow
      *
      * <code>$assignments['ID'] = ['?' => [1]];</code>
      *
-     * This allows for complex, parameterised updates, or explict field values set
-     * without any prameters
+     * This allows for complex, parameterised updates, or explicit field values set
+     * without any parameters
      *
      * @var array
      */
@@ -40,7 +40,7 @@ class SQLAssignmentRow
 
 
     /**
-     * Given a key / value pair, extract the predicate and any potential paramaters
+     * Given a key / value pair, extract the predicate and any potential parameters
      * in a format suitable for storing internally as a list of paramaterised conditions.
      *
      * @param mixed $value Either a literal field value, or an array with
@@ -124,7 +124,7 @@ class SQLAssignmentRow
      * ]);
      *
      * // Assignment of literal SQL for a field. The empty array is
-     * // important to denote the zero-number paramater list
+     * // important to denote the zero-number parameter list
      * $query->addAssignments([
      *      '"Object"."Score"' => ['NOW()' => []]
      * ]);

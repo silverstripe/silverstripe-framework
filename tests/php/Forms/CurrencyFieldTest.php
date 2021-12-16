@@ -307,6 +307,6 @@ class CurrencyFieldTest extends SapphireTest
 
         $this->assertFalse($result, 'Validation should fail since wrong currency was used');
         $this->assertFalse($validator->getResult()->isValid(), 'Validator should receive failed state');
-        $this->assertContains('Please enter a valid currency', $validator->getResult()->serialize());
+        $this->assertStringContainsString('Please enter a valid currency', $validator->getResult()->serialize());
     }
 }

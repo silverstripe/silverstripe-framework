@@ -69,8 +69,10 @@ class CsvBulkLoader extends BulkLoader
     protected function processAll($filepath, $preview = false)
     {
         $previousDetectLE = ini_get('auto_detect_line_endings');
-
         ini_set('auto_detect_line_endings', true);
+
+        $this->extend('onBeforeProcessAll', $filepath, $preview);
+
         $result = BulkLoader_Result::create();
 
         try {
@@ -145,6 +147,9 @@ class CsvBulkLoader extends BulkLoader
         } finally {
             ini_set('auto_detect_line_endings', $previousDetectLE);
         }
+
+        $this->extend('onAfterProcessAll', $result, $preview);
+
         return $result;
     }
 
@@ -382,6 +387,8 @@ class CsvBulkLoader extends BulkLoader
             }
         }
 
+        $isChanged = $obj->isChanged();
+
         // write record
         if (!$preview) {
             $obj->write();
@@ -392,10 +399,14 @@ class CsvBulkLoader extends BulkLoader
 
         // save to results
         if ($existingObj) {
+            // We mark as updated regardless of isChanged, since custom formatters and importers
+            // might have affected relationships and other records.
             $results->addUpdated($obj, $message);
         } else {
             $results->addCreated($obj, $message);
         }
+
+        $this->extend('onAfterProcessRecord', $obj, $preview, $isChanged);
 
         $objID = $obj->ID;
 

@@ -18,7 +18,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 class HTMLEditorConfigTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -140,7 +140,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $this->assertNotContains('plugin1', array_keys($plugins));
         $this->assertNotContains('plugin2', array_keys($plugins));
     }
-    
+
     public function testRequireJSIncludesAllConfigs()
     {
         $a = HTMLEditorConfig::get('configA');
@@ -161,7 +161,7 @@ class HTMLEditorConfigTest extends SapphireTest
         try {
             $config = new TinyMCEConfig();
             $this->expectException(Exception::class);
-            $this->expectExceptionMessageRegExp('/module is not installed/');
+            $this->expectExceptionMessageMatches('/module is not installed/');
             $config->getScriptURL();
         } finally {
             ModuleLoader::inst()->popManifest();

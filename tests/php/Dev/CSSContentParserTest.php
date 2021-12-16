@@ -50,4 +50,14 @@ HTML
         $result = $parser->getBySelector('#A .other');
         $this->assertEquals("result", $result[0] . '');
     }
+
+    public function testXmlEntitiesDisabled()
+    {
+        // CSSContentParser uses simplexml to parse html
+        // Ensure XML entities are not substituted in to prevent XXE attacks
+        $xml = '<!DOCTYPE html [<!ENTITY myentity "World">]><html><div>Hello &myentity;</div></html>';
+        $parser = new CSSContentParser($xml);
+        $div = $parser->getBySelector('div')[0]->asXML();
+        $this->assertEquals('<div>Hello &amp;myentity;</div>', $div);
+    }
 }

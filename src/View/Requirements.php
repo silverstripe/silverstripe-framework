@@ -72,7 +72,7 @@ class Requirements implements Flushable
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_suffix_requirements($var)
     {
@@ -449,7 +449,7 @@ class Requirements implements Flushable
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_write_js_to_body($var)
     {

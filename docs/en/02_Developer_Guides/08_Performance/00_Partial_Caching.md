@@ -1,6 +1,6 @@
 ---
 title: Partial Caching
-summary: Cache SilverStripe templates to reduce database queries.
+summary: Cache Silverstripe CMS templates to reduce database queries.
 icon: tachometer-alt
 ---
 
@@ -105,6 +105,13 @@ Parent title is: $Me.Parent.Title
 template render.  
 `Version 2` always generates a single and more performant SQL query fetching the record by its Primary Key.
 
+[/warning]
+
+[warning]
+If you use the same aggregate in a template more than once, it will be recalculated every time
+unless you move it out into a separate
+[controller method](../templates/partial_template_caching/#cache-key-calculated-in-controller).
+[Object Caching](../templates/caching/#object-caching) only works for single variables and not for chained expressions.
 [/warning]
 
 

@@ -18,8 +18,8 @@ class LookupFieldTest extends SapphireTest
         $field->setValue(null);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test"><i>(none)</i></span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test"><i>(none)</i></span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="" />', $result);
     }
 
     public function testStringValueWithNumericArraySource()
@@ -28,8 +28,8 @@ class LookupFieldTest extends SapphireTest
         $field = new LookupField('test', 'test', $source);
         $field->setValue(1);
         $result = trim($field->Field()->getValue());
-        $this->assertContains('<span class="readonly" id="test">one</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="1" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">one</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="1" />', $result);
     }
 
     public function testUnknownStringValueWithNumericArraySource()
@@ -39,8 +39,8 @@ class LookupFieldTest extends SapphireTest
         $field->setValue('w00t');
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">w00t</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">w00t</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="" />', $result);
     }
 
     public function testArrayValueWithAssociativeArraySource()
@@ -51,8 +51,8 @@ class LookupFieldTest extends SapphireTest
         $field->setValue(['one','two']);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">one val, two val</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="one, two" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">one val, two val</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="one, two" />', $result);
     }
 
     public function testArrayValueWithNumericArraySource()
@@ -63,8 +63,8 @@ class LookupFieldTest extends SapphireTest
         $field->setValue([1,2]);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">one, two</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="1, 2" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">one, two</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="1, 2" />', $result);
     }
 
     public function testArrayValueWithSqlMapSource()
@@ -78,8 +78,8 @@ class LookupFieldTest extends SapphireTest
         $field->setValue([$member1->ID, $member2->ID]);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">member1, member2</span>', $result);
-        $this->assertContains(sprintf(
+        $this->assertStringContainsString('<span class="readonly" id="test">member1, member2</span>', $result);
+        $this->assertStringContainsString(sprintf(
             '<input type="hidden" name="test" value="%s, %s" />',
             $member1->ID,
             $member2->ID
@@ -104,13 +104,13 @@ class LookupFieldTest extends SapphireTest
         $field->setValue(3);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">Carrots</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="3" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">Carrots</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="3" />', $result);
 
         $field->setValue([3, 9]);
         $result = trim($field->Field()->getValue());
 
-        $this->assertContains('<span class="readonly" id="test">Carrots, Vegan</span>', $result);
-        $this->assertContains('<input type="hidden" name="test" value="3, 9" />', $result);
+        $this->assertStringContainsString('<span class="readonly" id="test">Carrots, Vegan</span>', $result);
+        $this->assertStringContainsString('<input type="hidden" name="test" value="3, 9" />', $result);
     }
 }

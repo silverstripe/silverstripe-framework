@@ -623,6 +623,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             // to the same URL (it assumes that its content is already current, and doesn't reload)
             return $this->edit($controller->getRequest());
         } else {
+            // We might be able to redirect to open the record in a different view
+            if ($redirectDest = $this->component->getLostRecordRedirection($this->gridField, $controller->getRequest(), $this->record->ID)) {
+                return $controller->redirect($redirectDest, 302);
+            }
+
             // Changes to the record properties might've excluded the record from
             // a filtered list, so return back to the main view if it can't be found
             $url = $controller->getRequest()->getURL();

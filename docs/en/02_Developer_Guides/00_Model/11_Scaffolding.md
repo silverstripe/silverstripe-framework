@@ -7,13 +7,13 @@ icon: hammer
 # Scaffolding
 
 The ORM already has a lot of information about the data represented by a `DataObject` through its `$db` property, so 
-SilverStripe will use that information to provide scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
+Silverstripe CMS will use that information to scaffold some interfaces. This is done though [FormScaffolder](api:SilverStripe\Forms\FormScaffolder)
 to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans). You can then further 
 customise those fields as required.
 
 ## Form Fields
 
-An example is `DataObject`, SilverStripe will automatically create your CMS interface so you can modify what you need.
+An example is `DataObject`, Silverstripe CMS will automatically create your CMS interface so you can modify what you need.
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -79,7 +79,7 @@ class MyDataObject extends DataObject
 }
 ```
 
-Searchable fields will be appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
+Searchable fields will appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
 default search filter assigned (usually an [ExactMatchFilter](api:SilverStripe\ORM\Filters\ExactMatchFilter)). To override these defaults, you can specify 
 additional information on `$searchable_fields`:
 
@@ -232,7 +232,7 @@ class MyDataObject extends DataObject
 
 ```
 
-In order to re-label any summary fields, you can use the $field_labels static.
+In order to re-label any summary fields, you can use the `$field_labels` static.
 
 ```php
 use SilverStripe\ORM\DataObject;

@@ -17,7 +17,7 @@ frontend.
 This how-to will walk you through creation of a "Clean-up" button with two appearances:
 
 * active: "Clean-up now" green constructive button if the actions can be performed
-* netural: "Cleaned" default button if the action does not need to be done
+* neutral: "Cleaned" default button if the action does not need to be done
 
 The controller code that goes with this example is listed in [Extend CMS Interface](extend_cms_interface).
 
@@ -76,7 +76,7 @@ public function getCMSActions()
 __Deprecated:__
 The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./extend_cms_interface.md#reactjs-in-silverstripe).
+[ReactJS in Silverstripe CMS](./extend_cms_interface.md#reactjs-in-silverstripe).
 
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
 frontend. You can affect the state of the button through the jQuery UI calls.

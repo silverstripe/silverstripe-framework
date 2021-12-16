@@ -5,7 +5,7 @@ summary: Create admin UI's for managing your data records.
 
 # ModelAdmin
 
-[ModelAdmin](api:SilverStripe\Admin\ModelAdmin) provides a simple way to utilize the SilverStripe Admin UI with your own data models. It can create
+[ModelAdmin](api:SilverStripe\Admin\ModelAdmin) provides a simple way to utilize the Silverstripe CMS UI with your own data models. It can create
 searchables list and edit views of [DataObject](api:SilverStripe\ORM\DataObject) subclasses, and even provides import and export of your data.
 
 It uses the framework's knowledge about the model to provide sensible defaults, allowing you to get started in a couple
@@ -35,7 +35,7 @@ class Product extends DataObject
     ];
 
     private static $has_one = [
-        'Category' => 'Category'
+        'Category' => Category::class
     ];
 }
 ```
@@ -54,7 +54,7 @@ class Category extends DataObject
     ];
 
     private static $has_many = [
-        'Products' => 'Product'
+        'Products' => Product::class
     ];
 }
 ```
@@ -74,8 +74,8 @@ class MyAdmin extends ModelAdmin
 {
 
     private static $managed_models = [
-        'Product',
-        'Category'
+        Product::class,
+        Category::class
     ];
 
     private static $url_segment = 'products';
@@ -84,12 +84,62 @@ class MyAdmin extends ModelAdmin
 }
 ```
 
-This will automatically add a new menu entry to the SilverStripe Admin UI entitled `My Product Admin` and logged in
+This will automatically add a new menu entry to the Silverstripe CMS UI entitled `My Product Admin` and logged in
 users will be able to upload and manage `Product` and `Category` instances through http://yoursite.com/admin/products.
 
 [alert]
-After defining these classes, make sure you have rebuilt your SilverStripe database and flushed your cache.
+After defining these classes, make sure you have rebuilt your Silverstripe CMS database and flushed your cache.
 [/alert]
+
+## Defining the ModelAdmin models
+
+The `$managed_models` configuration supports additional formats allowing you to customise
+the URL and tab label used to access a specific model. This can also be used to display
+the same model more than once with different filtering or display options.
+
+```php
+use SilverStripe\Admin\ModelAdmin;
+
+class MyAdmin extends ModelAdmin 
+{
+
+    private static $managed_models = [
+        // This is the most basic format. URL for this Model will use the fully
+        // qualified namespace of `Product`. The label for this tab will be determined
+        // by the `i18n_plural_name` on the `Product` class.
+        Product::class,
+        
+        // This format can be used to customise the tab title.
+        Category::class => [
+            'title' => 'All categories'
+        ],
+        
+        // This format can be used to customise the URL segment for this Model. This can
+        // be useful if you do not want the fully qualified class name of the Model to
+        // appear in the URL. It can also be used to have the same Model appear more than
+        // once, allowing you to create custom views. (Only available in SS4.7+)
+        'product-category' => [
+            'dataClass' => Category::class,
+            'title' => 'Product categories'
+        ]
+    ];
+
+    private static $url_segment = 'products';
+
+    private static $menu_title = 'My Product Admin';
+    
+    public function getList()
+    {
+        $list =  parent::getList();
+        // Only show Categories specific to Products When viewing the product-category tab
+        if ($this->modelTab === 'product-category') {
+            $list = $list->filter('IsProductCategory', true);
+        }
+        return $list;
+    }
+}
+
+```
 
 ## Permissions
 
@@ -146,7 +196,7 @@ class NewsAdmin extends ModelAdmin
     private static $menu_icon_class = 'font-icon-news';
 }
 ```
-A complete list of supported font icons is available to view in the [SilverStripe Design System Manager](https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6)
+A complete list of supported font icons is available to view in the [Silverstripe CMS Design System Manager](https://projects.invisionapp.com/dsm/silver-stripe/silver-stripe/section/icons/5a8b972d656c91001150f8b6)
 
 ## Searching Records
 
@@ -431,7 +481,7 @@ class MyAdmin extends ModelAdmin
 
 The `ModelAdmin` class provides import of CSV files through the [CsvBulkLoader](api:SilverStripe\Dev\CsvBulkLoader) API. which has support for column
 mapping, updating existing records, and identifying relationships - so its a powerful tool to get your data into a
-SilverStripe database.
+Silverstripe CMS database.
 
 By default, each model management interface allows uploading a CSV file with all columns auto detected. To override
 with a more specific importer implementation, use the [ModelAdmin::$model_importers](api:SilverStripe\Admin\ModelAdmin::$model_importers) static.

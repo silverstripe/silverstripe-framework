@@ -26,6 +26,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
+use SilverStripe\ORM\RelatedData\RelatedDataService;
 use SilverStripe\ORM\UniqueKey\UniqueKeyInterface;
 use SilverStripe\ORM\UniqueKey\UniqueKeyService;
 use SilverStripe\Security\Member;
@@ -198,9 +199,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Value for 2nd argument to constructor, indicating that a record is being hydrated from the database
-     * Neither setters and nor default population will be called
+     * Setter methods are not called, and population via private static $defaults will not occur.
      */
     const CREATE_HYDRATED = 2;
+
+    /**
+     * Value for 2nd argument to constructor, indicating that a record is being hydrated from memory. This can be used
+     * to initialised a record that doesn't yet have an ID. Setter methods are not called, and population via private
+     * static $defaults will not occur.
+     */
+    const CREATE_MEMORY_HYDRATED = 3;
 
     /**
      * An array indexed by fieldname, true if the field has been changed.
@@ -338,7 +346,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Construct a new DataObject.
      *
      * @param array $record Initial record content, or rehydrated record content, depending on $creationType
-     * @param int|boolean $creationType Set to DataObject::CREATE_OBJECT, DataObject::CREATE_HYDRATED, or DataObject::CREATE_SINGLETON. Used by SilverStripe internals as best left as the default by regular users.
+     * @param int|boolean $creationType Set to DataObject::CREATE_OBJECT, DataObject::CREATE_HYDRATED,
+     *   DataObject::CREATE_MEMORY_HYDRATED or DataObject::CREATE_SINGLETON. Used by Silverstripe internals and best
+     *   left as the default by regular users.
      * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
      */
     public function __construct($record = [], $creationType = self::CREATE_OBJECT, $queryParams = [])
@@ -365,31 +375,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->record = [];
 
         switch ($creationType) {
-            // Hydrate a record from the database
+            // Hydrate a record
             case self::CREATE_HYDRATED:
-                if (!is_array($record) || empty($record['ID'])) {
-                    throw new \InvalidArgumentException("Hydrated records must be passed a record array including an ID");
-                }
-
-                $this->record = $record;
-
-                // Identify fields that should be lazy loaded, but only on existing records
-                // Get all field specs scoped to class for later lazy loading
-                $fields = static::getSchema()->fieldSpecs(
-                    static::class,
-                    DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
-                );
-                foreach ($fields as $field => $fieldSpec) {
-                    $fieldClass = strtok($fieldSpec, ".");
-                    if (!array_key_exists($field, $record)) {
-                        $this->record[$field . '_Lazy'] = $fieldClass;
-                    }
-                }
-
-                $this->original = $this->record;
-                $this->changed = [];
-                $this->changeForced = false;
-
+            case self::CREATE_MEMORY_HYDRATED:
+                $this->hydrate($record, $creationType === self::CREATE_HYDRATED);
                 break;
 
             // Create a new object, using the constructor argument as the initial content
@@ -449,7 +438,60 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Destroy all of this objects dependant objects and local caches.
+     * Constructor hydration logic for CREATE_HYDRATED and CREATE_MEMORY_HYDRATED.
+     * @param array $record
+     * @param bool $mustHaveID If true, an exception will be thrown if $record doesn't have an ID.
+     */
+    private function hydrate(array $record, bool $mustHaveID)
+    {
+        if ($mustHaveID && empty($record['ID'])) {
+            // CREATE_HYDRATED requires an ID to be included in the record
+            throw new \InvalidArgumentException(
+                "Hydrated records must be passed a record array including an ID."
+            );
+        } elseif (empty($record['ID'])) {
+            // CREATE_MEMORY_HYDRATED implicitly set the record ID to 0 if not provided
+            $record['ID'] = 0;
+        }
+
+        $this->record = $record;
+
+        // Identify fields that should be lazy loaded, but only on existing records
+        // Get all field specs scoped to class for later lazy loading
+        $fields = static::getSchema()->fieldSpecs(
+            static::class,
+            DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
+        );
+
+        foreach ($fields as $field => $fieldSpec) {
+            $fieldClass = strtok($fieldSpec, ".");
+            if (!array_key_exists($field, $record)) {
+                $this->record[$field . '_Lazy'] = $fieldClass;
+            }
+        }
+
+        // Extension point to hydrate additional fields into this object during construction.
+        // Return an array of field names => raw values from your augmentHydrateFields extension method.
+        $extendedAdditionalFields = $this->extend('augmentHydrateFields');
+        foreach ($extendedAdditionalFields as $additionalFields) {
+            foreach ($additionalFields as $field => $value) {
+                $this->record[$field] = $value;
+
+                // If a corresponding lazy-load field exists, remove it as the value has been provided
+                $lazyName = $field . '_Lazy';
+                if (array_key_exists($lazyName, $this->record)) {
+                    unset($this->record[$lazyName]);
+                }
+            }
+        }
+
+        $this->original = $this->record;
+        $this->changed = [];
+        $this->changeForced = false;
+    }
+
+    /**
+     * Destroy all of this objects dependent objects and local caches.
      * You'll need to call this to get the memory of an object that has components or extensions freed.
      */
     public function destroy()
@@ -749,7 +791,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $originalClass = $this->ClassName;
 
         /** @var DataObject $newInstance */
-        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_HYDRATED);
+        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_MEMORY_HYDRATED);
 
         // Modify ClassName
         if ($newClassName != $originalClass) {
@@ -1103,7 +1145,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $leftObj = $this;
 
         if ($leftObj->ClassName != $rightObj->ClassName) {
-            // we can't merge similiar subclasses because they might have additional relations
+            // we can't merge similar subclasses because they might have additional relations
             user_error("DataObject->merge(): Invalid object class '{$rightObj->ClassName}'
 			(expected '{$leftObj->ClassName}').", E_USER_WARNING);
             return false;
@@ -1173,7 +1215,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Forces the record to think that all its data has changed.
-     * Doesn't write to the database. Force-change preseved until
+     * Doesn't write to the database. Force-change preserved until
      * next write. Existing CHANGE_VALUE or CHANGE_STRICT values
      * are preserved.
      *
@@ -1236,7 +1278,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * This called after {@link $this->validate()}, so you can be sure that your data is valid.
      *
-     * @uses DataExtension->onBeforeWrite()
+     * @uses DataExtension::onBeforeWrite()
      */
     protected function onBeforeWrite()
     {
@@ -1252,7 +1294,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * $this->changed will have a record
      * database.  Don't forget to call parent::onAfterWrite(), though!
      *
-     * @uses DataExtension->onAfterWrite()
+     * @uses DataExtension::onAfterWrite()
      */
     protected function onAfterWrite()
     {
@@ -1282,7 +1324,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * You can overload this to clean up or otherwise process data before delete this
      * record.  Don't forget to call parent::onBeforeDelete(), though!
      *
-     * @uses DataExtension->onBeforeDelete()
+     * @uses DataExtension::onBeforeDelete()
      */
     protected function onBeforeDelete()
     {
@@ -1308,7 +1350,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Will traverse the defaults of the current class and all its parent classes.
      * Called by the constructor when creating new records.
      *
-     * @uses DataExtension->populateDefaults()
+     * @uses DataExtension::populateDefaults()
      * @return DataObject $this
      */
     public function populateDefaults()
@@ -1557,9 +1599,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  - It will insert a record whenever ID isn't set, otherwise update.
      *  - All relevant tables will be updated.
      *  - $this->onBeforeWrite() gets called beforehand.
-     *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
+     *  - Extensions such as Versioned will amend the database-write to ensure that a version is saved.
      *
-     * @uses DataExtension->augmentWrite()
+     * @uses DataExtension::augmentWrite()
      *
      * @param boolean       $showDebug Show debugging information
      * @param boolean       $forceInsert Run INSERT command rather than UPDATE, even if record already exists
@@ -1732,7 +1774,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Delete this data object.
      * $this->onBeforeDelete() gets called.
      * Note that in Versioned objects, both Stage and Live will be deleted.
-     * @uses DataExtension->augmentSQL()
+     * @uses DataExtension::augmentSQL()
      */
     public function delete()
     {
@@ -1816,6 +1858,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         if (isset($this->components[$componentName])) {
             return $this->components[$componentName];
+        }
+
+        // The join object can be returned as a component, named for its alias
+        if (isset($this->record[$componentName]) && $this->record[$componentName] === $this->joinRecord) {
+            return $this->record[$componentName];
         }
 
         $schema = static::getSchema();
@@ -2454,6 +2501,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Allows user code to hook into DataObject::getCMSFields after updateCMSFields
+     * being called on extensions
+     *
+     * @param callable $callback The callback to execute
+     */
+    protected function afterUpdateCMSFields(callable $callback)
+    {
+        $this->afterExtending('updateCMSFields', $callback);
+    }
+
+    /**
      * Centerpiece of every data administration interface in Silverstripe,
      * which returns a {@link FieldList} suitable for a {@link Form} object.
      * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
@@ -2516,7 +2574,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getCMSCompositeValidator(): CompositeValidator
     {
-        $compositeValidator = new CompositeValidator();
+        $compositeValidator = CompositeValidator::create();
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
@@ -3124,7 +3182,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             return $value;
         }
 
-        list($class, $spec) = explode('.', $helper);
+        $pos = strpos($helper, '.');
+        $class = substr($helper, 0, $pos);
+        $spec = substr($helper, $pos + 1);
+
         /** @var DBField $obj */
         $table = $schema->tableName($class);
         $obj = Injector::inst()->create($spec, $fieldName);
@@ -3489,7 +3550,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * @see $sourceQueryParams
-     * @param array
+     * @param array $array
      */
     public function setSourceQueryParams($array)
     {
@@ -3524,7 +3585,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Check the database schema and update it as necessary.
      *
-     * @uses DataExtension->augmentDatabase()
+     * @uses DataExtension::augmentDatabase()
      */
     public function requireTable()
     {
@@ -3596,7 +3657,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database fields
+        // Let any extensions make their own database fields
         $this->extend('augmentDatabase', $dummy);
     }
 
@@ -3606,7 +3667,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * this to add default records when the database is built, but make sure you
      * call parent::requireDefaultRecords().
      *
-     * @uses DataExtension->requireDefaultRecords()
+     * @uses DataExtension::requireDefaultRecords()
      */
     public function requireDefaultRecords()
     {
@@ -3624,7 +3685,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database default data
+        // Let any extensions make their own database default data
         $this->extend('requireDefaultRecords', $dummy);
     }
 
@@ -3685,34 +3746,34 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // rewrite array, if it is using shorthand syntax
         $rewrite = [];
         foreach ($fields as $name => $specOrName) {
-            $identifer = (is_int($name)) ? $specOrName : $name;
+            $identifier = (is_int($name)) ? $specOrName : $name;
 
             if (is_int($name)) {
                 // Format: array('MyFieldName')
-                $rewrite[$identifer] = [];
-            } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifer))) {
+                $rewrite[$identifier] = [];
+            } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifier))) {
                 // Format: array('MyFieldName' => array(
                 //   'filter => 'ExactMatchFilter',
                 //   'field' => 'NumericField', // optional
                 //   'title' => 'My Title', // optional
                 // ))
-                $rewrite[$identifer] = array_merge(
+                $rewrite[$identifier] = array_merge(
                     ['filter' => $relObject->config()->get('default_search_filter_class')],
                     (array)$specOrName
                 );
             } else {
                 // Format: array('MyFieldName' => 'ExactMatchFilter')
-                $rewrite[$identifer] = [
+                $rewrite[$identifier] = [
                     'filter' => $specOrName,
                 ];
             }
-            if (!isset($rewrite[$identifer]['title'])) {
-                $rewrite[$identifer]['title'] = (isset($labels[$identifer]))
-                    ? $labels[$identifer] : FormField::name_to_label($identifer);
+            if (!isset($rewrite[$identifier]['title'])) {
+                $rewrite[$identifier]['title'] = (isset($labels[$identifier]))
+                    ? $labels[$identifier] : FormField::name_to_label($identifier);
             }
-            if (!isset($rewrite[$identifer]['filter'])) {
+            if (!isset($rewrite[$identifier]['filter'])) {
                 /** @skipUpgrade */
-                $rewrite[$identifer]['filter'] = 'PartialMatchFilter';
+                $rewrite[$identifier]['filter'] = 'PartialMatchFilter';
             }
         }
 
@@ -4013,7 +4074,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_records = null;
 
     /**
-     * One-to-zero relationship defintion. This is a map of component name to data type. In order to turn this into a
+     * One-to-zero relationship definition. This is a map of component name to data type. In order to turn this into a
      * true one-to-one relationship you can add a {@link DataObject::$belongs_to} relationship on the child class.
      *
      * Note that you cannot have a has_one and belongs_to relationship with the same name.
@@ -4351,5 +4412,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private function getUniqueKeyComponents(): array
     {
         return $this->extend('cacheKeyComponent');
+    }
+
+    /**
+     * Find all other DataObject instances that are related to this DataObject in the database
+     * through has_one and many_many relationships. For example:
+     * This method is called on a File.  The MyPage model $has_one File.  There is a Page record that has
+     * a FileID = $this->ID. This SS_List returned by this method will include that Page instance.
+     *
+     * @param string[] $excludedClasses
+     * @return SS_List
+     * @internal
+     */
+    public function findAllRelatedData(array $excludedClasses = []): SS_List
+    {
+        $service = Injector::inst()->get(RelatedDataService::class);
+        return $service->findAll($this, $excludedClasses);
     }
 }

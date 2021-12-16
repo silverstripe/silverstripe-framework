@@ -33,7 +33,7 @@ class PjaxResponseNegotiator
     protected $response = null;
 
     /**
-     * Overriden fragments (if any). Otherwise uses fragments from the request.
+     * Overridden fragments (if any). Otherwise uses fragments from the request.
      */
     protected $fragmentOverride = null;
 

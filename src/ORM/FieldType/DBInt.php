@@ -21,6 +21,15 @@ class DBInt extends DBField
     }
 
     /**
+     * Ensure int values are always returned.
+     * This is for mis-configured databases that return strings.
+     */
+    public function getValue()
+    {
+        return (int) $this->value;
+    }
+
+    /**
      * Returns the number, with commas added as appropriate, eg “1,000”.
      */
     public function Formatted()

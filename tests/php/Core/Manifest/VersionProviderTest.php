@@ -81,9 +81,9 @@ class VersionProviderTest extends SapphireTest
             'silverstripe/framework' => 'Framework'
         ]);
         $result = $this->getMockProvider()->getVersion();
-        $this->assertNotContains('SiteConfig: ', $result);
-        $this->assertContains('Framework: ', $result);
-        $this->assertNotContains(', ', $result);
+        $this->assertStringNotContainsString('SiteConfig: ', $result);
+        $this->assertStringContainsString('Framework: ', $result);
+        $this->assertStringNotContainsString(', ', $result);
     }
 
     public function testGetVersionNoRecipe()
@@ -93,7 +93,7 @@ class VersionProviderTest extends SapphireTest
 
         Config::modify()->set(VersionProvider::class, 'modules', []);
         $result = $provider->getVersion();
-        $this->assertContains('Framework: 1.2.3', $result);
+        $this->assertStringContainsString('Framework: 1.2.3', $result);
 
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
@@ -102,10 +102,10 @@ class VersionProviderTest extends SapphireTest
             'silverstripe/recipe-cms' => 'CMS Recipe',
         ]);
         $result = $provider->getVersion();
-        $this->assertNotContains('Framework: 1.2.3', $result);
-        $this->assertContains('CMS: 4.5.6', $result);
-        $this->assertNotContains('Core Recipe: 7.7.7', $result);
-        $this->assertNotContains('CMS Recipe: 8.8.8', $result);
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+        $this->assertStringContainsString('CMS: 4.5.6', $result);
+        $this->assertStringNotContainsString('Core Recipe: 7.7.7', $result);
+        $this->assertStringNotContainsString('CMS Recipe: 8.8.8', $result);
     }
 
     public function testGetVersionRecipeCore()
@@ -119,10 +119,10 @@ class VersionProviderTest extends SapphireTest
             'silverstripe/recipe-cms' => 'CMS Recipe',
         ]);
         $result = $provider->getVersion();
-        $this->assertNotContains('Framework: 1.2.3', $result);
-        $this->assertNotContains('Core Recipe: 7.7.7', $result);
-        $this->assertContains('CMS: 4.5.6', $result);
-        $this->assertNotContains('CMS Recipe: 8.8.8', $result);
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+        $this->assertStringNotContainsString('Core Recipe: 7.7.7', $result);
+        $this->assertStringContainsString('CMS: 4.5.6', $result);
+        $this->assertStringNotContainsString('CMS Recipe: 8.8.8', $result);
     }
 
     public function testGetVersionRecipeCmsCore()
@@ -139,11 +139,11 @@ class VersionProviderTest extends SapphireTest
         ]);
         $result = $provider->getVersion();
 
-        $this->assertNotContains('Framework: 1.2.3', $result);
-        $this->assertNotContains('CMS: 4.5.6', $result);
-        $this->assertNotContains('Core Recipe: 7.7.7', $result);
-        $this->assertContains('CMS Recipe: 8.8.8', $result);
-        $this->assertNotContains('CWP: 9.9.9', $result);
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+        $this->assertStringNotContainsString('CMS: 4.5.6', $result);
+        $this->assertStringNotContainsString('Core Recipe: 7.7.7', $result);
+        $this->assertStringContainsString('CMS Recipe: 8.8.8', $result);
+        $this->assertStringNotContainsString('CWP: 9.9.9', $result);
 
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
@@ -153,11 +153,11 @@ class VersionProviderTest extends SapphireTest
             'cwp/cwp-core' => 'CWP',
         ]);
         $result = $provider->getVersion();
-        $this->assertNotContains('Framework: 1.2.3', $result);
-        $this->assertNotContains('CMS: 4.5.6', $result);
-        $this->assertNotContains('Core Recipe: 7.7.7', $result);
-        $this->assertContains('CMS Recipe:', $result);
-        $this->assertContains('CWP: 9.9.9', $result);
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+        $this->assertStringNotContainsString('CMS: 4.5.6', $result);
+        $this->assertStringNotContainsString('Core Recipe: 7.7.7', $result);
+        $this->assertStringContainsString('CMS Recipe:', $result);
+        $this->assertStringContainsString('CWP: 9.9.9', $result);
     }
 
     public function testGetModulesFromComposerLock()
@@ -186,6 +186,6 @@ class VersionProviderTest extends SapphireTest
         ]);
 
         $result = $mock->getVersion();
-        $this->assertContains('Some Package: 1.2.3', $result);
+        $this->assertStringContainsString('Some Package: 1.2.3', $result);
     }
 }

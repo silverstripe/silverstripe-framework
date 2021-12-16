@@ -13,9 +13,9 @@ class CurrencyFieldDisabledTest extends SapphireTest
         $field = new CurrencyField_Disabled('Test', '', '$5.00');
         $result = $field->Field();
 
-        $this->assertContains('<input', $result, 'An input should be rendered');
-        $this->assertContains('disabled', $result, 'The input should be disabled');
-        $this->assertContains('$5.00', $result, 'The value should be rendered');
+        $this->assertStringContainsString('<input', $result, 'An input should be rendered');
+        $this->assertStringContainsString('disabled', $result, 'The input should be disabled');
+        $this->assertStringContainsString('$5.00', $result, 'The value should be rendered');
     }
 
     /**
@@ -27,8 +27,8 @@ class CurrencyFieldDisabledTest extends SapphireTest
         $field = new CurrencyField_Disabled('Test', '', '€5.00');
         $result = $field->Field();
 
-        $this->assertContains('<input', $result, 'An input should be rendered');
-        $this->assertContains('disabled', $result, 'The input should be disabled');
-        $this->assertContains('€5.00', $result, 'The value should be rendered');
+        $this->assertStringContainsString('<input', $result, 'An input should be rendered');
+        $this->assertStringContainsString('disabled', $result, 'The input should be disabled');
+        $this->assertStringContainsString('€5.00', $result, 'The value should be rendered');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Core\Tests\Injector;
 
-use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
@@ -44,14 +43,14 @@ class InjectorTest extends SapphireTest
 
     protected $nestingLevel = 0;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->nestingLevel = 0;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
 
         while ($this->nestingLevel > 0) {
@@ -910,11 +909,9 @@ class InjectorTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNonExistentMethods()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $injector = new Injector();
         $config = [
             'TestService' => [
@@ -929,11 +926,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testProtectedMethods()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $injector = new Injector();
         $config = [
             'TestService' => [
@@ -948,11 +943,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testTooManyArrayValues()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $injector = new Injector();
         $config = [
             'TestService' => [
@@ -967,11 +960,9 @@ class InjectorTest extends SapphireTest
         $item = $injector->get('TestService');
     }
 
-    /**
-     * @expectedException \SilverStripe\Core\Injector\InjectorNotFoundException
-     */
     public function testGetThrowsOnNotFound()
     {
+        $this->expectException(InjectorNotFoundException::class);
         $injector = new Injector();
         $injector->get('UnknownService');
     }

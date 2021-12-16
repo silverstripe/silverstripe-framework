@@ -6,7 +6,7 @@ icon: file-code
 
 # Form Templates
 
-Most markup generated in SilverStripe can be replaced by custom templates. Both [Form](api:SilverStripe\Forms\Form) and [FormField](api:SilverStripe\Forms\FormField) instances
+Most markup generated in Silverstripe CMS can be replaced by custom templates. Both [Form](api:SilverStripe\Forms\Form) and [FormField](api:SilverStripe\Forms\FormField) instances
 can be rendered out using custom templates using `setTemplate`.
 
 
@@ -29,7 +29,7 @@ modify as you need.
 *The default Form.ss can be found in `/vendor/silverstripe/framework/templates/SilverStripe/Forms/Includes/`*
 [/notice]
 
-By default, Form and Fields follow the SilverStripe Template convention and are rendered into templates of the same 
+By default, Form and Fields follow the Silverstripe CMS Template convention and are rendered into templates of the same 
 class name (i.e EmailField will attempt to render into `EmailField.ss` and if that isn't found, `TextField.ss` or 
 finally `FormField.ss`).
 

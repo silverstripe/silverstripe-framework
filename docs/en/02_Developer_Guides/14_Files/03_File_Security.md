@@ -34,7 +34,7 @@ Access restrictions:
 
 ## Permission Model
 
-Like all other objects in SilverStripe, permissions are generally controlled via `can*()` methods,
+Like all other objects in Silverstripe CMS, permissions are generally controlled via `can*()` methods,
 for example `canView()` (see [permissions](/developer_guides/security/permissions)).
 
 The permission model defines the following actions:
@@ -49,7 +49,7 @@ The permission model defines the following actions:
 There's a few rules guiding their access, in descending order of priority:
 
  * Published and unprotected files can be downloaded by anyone knowing the URL.
-   They bypass any SilverStripe permission checks (served directly by the webserver).
+   They bypass any Silverstripe CMS permission checks (served directly by the webserver).
  * Access can be restricted by custom `can*()` method implementations on `File`
    (through [extensions](/developer_guides/extending/extensions)).
    This logic can overrule any further restrictions below.
@@ -77,7 +77,7 @@ Custom implementations (e.g. APIs or custom file viewers) can have
 further restrictions in your project.
 
 [warning]
-When implenting your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
+When implementing your own `canView()` logic through [extensions](/developer_guides/extending/extensions),
 existing unprotected files are not retroactively moved to the protected asset store.
 While those new permissions are honoured in the CMS, protected files through custom `canView()`
 can still be downloaded through a public URL until a `write()` operation is triggered on them.
@@ -85,7 +85,7 @@ can still be downloaded through a public URL until a `write()` operation is trig
 
 ## Asset stores
 
-Out of the box, SilverStripe comes with two asset stores: a public and a protected one.
+Out of the box, Silverstripe CMS comes with two asset stores: a public and a protected one.
 Most operations which act on assets work independently of this mechanism,
 without having to consider whether any specific file is protected or public, but can normally be
 instructed to favour private or protected stores in some cases.
@@ -226,7 +226,7 @@ a single entity for access control, so specific variants cannot be individually 
 ## How file access is protected
 
 Filesystem paths can change depending if the file is protected or public,
-but its public URL stays the same. You just need to use SilverStripe's APIs to generate URLs to those files.
+but its public URL stays the same. You just need to use Silverstripe CMS's APIs to generate URLs to those files.
 Similarly, operations which modify files do not normally need to be told whether the file is protected or public
 either. This provides a consistent method for interacting with files.
 
@@ -311,7 +311,7 @@ implementation of the `AssetStore` is `FlysystemAssetStore`.
 
 ### Configuring: Protected folder location
 
-In the default SilverStripe configuration, protected assets are placed within the web root into the
+In the default Silverstripe CMS configuration, protected assets are placed within the web root into the
 `assets/.protected` folder, into which is also generated a `.htaccess` or `web.config` configured
 to deny any and all direct web requests.
 
@@ -396,7 +396,7 @@ class AssetStoreExtension extends Extension
 Enable the extension with YML configuration:
 
 ```yml
-SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
+SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   extensions:
     - App\MySite\AssetStoreExtension
 ```
@@ -406,7 +406,7 @@ SilverStripe\Filesystem\Flysystem\FlysystemAssetStore:
 By default, the default extension `AssetControlExtension` will control the disposal of assets
 attached to objects when those objects are archived or replaced. For example, unpublished versioned objects
 will automatically have their attached assets moved to the protected store. The archive of
-draft or (or deletion of unversioned objects) will have those assets permanantly deleted
+draft or (or deletion of unversioned objects) will have those assets permanently deleted
 (along with all variants).
 
 Note that regardless of this setting, the database record will still be archived in the
@@ -439,27 +439,37 @@ SilverStripe\ORM\DataObject:
   AssetControl: null
 ```
 
-### Configuring: Web server settings
+## Webserver Configuration
+
+### Protected files location
+
+Protected files are stored in `public/assets/.protected` by default
+(assuming you're using the [public/ subfolder](/getting_started/directory_structure)).
+While default configuration is in place to avoid the webserver serving these files,
+we recommend moving them out of the webroot altogether -
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
+
+### Config templates
 
 If the default server configuration is not appropriate for your specific environment, then you can
-further customise the .htaccess or web.config by editing one or more of the below:
+further customise the `.htaccess` or `web.config` by editing one or more of the below:
 
 * `PublicAssetAdapter_HTAccess.ss`: Template for public permissions on the Apache server.
 * `PublicAssetAdapter_WebConfig.ss`: Template for public permissions on the IIS server.
 * `ProtectedAssetAdapter_HTAccess.ss`: Template for the protected store on the Apache server (should deny all requests).
 * `ProtectedAssetAdapter_WebConfig.ss`: Template for the protected store on the IIS server (should deny all requests).
 
-Each of these files will be regenerated on ?flush, so it is important to ensure that these files are
+Each of these files will be regenerated on `?flush`, so it is important to ensure that these files are
 overridden at the template level, not via manually generated configuration files.
 
-#### Configuring Web Server: Apache server
+#### Apache
 
 In order to ensure that public files are served correctly, you should check that your `assets/.htaccess`
 bypasses PHP requests for files that do exist. The default template
 (declared by `PublicAssetAdapter_HTAccess.ss`) has the following section, which may be customised in your project:
 
 ```
-# Non existant files passed to requesthandler
+# Non existent files passed to requesthandler
 RewriteCond %{REQUEST_URI} ^(.*)$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* ../index.php [QSA]
@@ -486,7 +496,7 @@ For instance your server configuration should look similar to the below:
 The `php_admin_flag` will protect against uploaded `.htaccess` files accidentally re-enabling script
 execution within the assets directory.
 
-#### Configuring Web Server: Windows IIS 7.5+
+#### Windows IIS 7.5+
 
 Configuring via IIS requires the Rewrite extension to be installed and configured properly.
 Any rules declared for the assets folder should be able to dynamically serve up existing files,
@@ -508,7 +518,7 @@ The default rule for IIS is as below (only partial configuration displayed):
 You will need to make sure that the `allowOverride` property of your root web.config is not set
 to false, to allow these to take effect.
 
-#### Configuring Web Server: Other server types
+#### Other server types
 
 If using a server configuration which must be configured outside of the web or asset root, you
 will need to make sure you manually configure these rules.

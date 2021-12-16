@@ -1,0 +1,6 @@
+---
+Name: relateddata
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\ORM\RelatedData\RelatedDataService:
+    class: SilverStripe\ORM\RelatedData\StandardRelatedDataService

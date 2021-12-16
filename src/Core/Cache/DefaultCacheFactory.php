@@ -69,7 +69,7 @@ class DefaultCacheFactory implements CacheFactory
             return $this->createCache(PhpFilesCache::class, [$namespace, $defaultLifetime, $directory]);
         }
 
-        // Create filessytem cache
+        // Create filesystem cache
         $fs = $this->createCache(FilesystemCache::class, [$namespace, $defaultLifetime, $directory]);
         if (!$apcuSupported) {
             return $fs;

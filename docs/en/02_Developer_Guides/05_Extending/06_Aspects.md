@@ -1,6 +1,6 @@
 ---
 title: Aspects
-summary: Introduction to using aspect-oriented programming with SilverStripe.
+summary: Introduction to using aspect-oriented programming with Silverstripe CMS.
 icon: code
 ---
 
@@ -17,7 +17,7 @@ Aspect oriented programming is the idea that some logic abstractions can be appl
 [Wikipedia](http://en.wikipedia.org/wiki/Aspect-oriented_programming) provides a much more in-depth explanation.
 [/notice]
 
-In the context of the SilverStripe [Dependency Injector](injector), Aspects are achieved thanks to PHP's `__call` magic 
+In the context of the Silverstripe CMS [Dependency Injector](injector), Aspects are achieved thanks to PHP's `__call` magic 
 method combined with the `Proxy` Design Pattern.
 
 Assume an existing service declaration exists called `MyService`. An `AopProxyService` class instance is created, and 
@@ -42,7 +42,7 @@ specific database server, whereas all read queries can be handled by slave serve
 A simplified implementation might look like the following.
 
 [notice]
-This doesn't cover all cases used by SilverStripe so is not a complete solution, more just a guide to how it would be 
+This doesn't cover all cases used by Silverstripe CMS so is not a complete solution, more just a guide to how it would be 
 used. 
 [/notice]
 

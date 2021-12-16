@@ -65,7 +65,7 @@ class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionM
             return null;
         }
         $data = new ArrayData([
-            'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
+            'Link' => $this->getURL($field, $record, $col),
         ]);
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return $data->renderWith($template);

@@ -52,12 +52,14 @@ abstract class DBSchemaManager
     protected $supressOutput = false;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     protected static $table_name_warnings = [];
 
     /**
-     * @param string
+     * @param string $table
+     * @param string $class
+     *
      * @deprecated 4.0.0:5.0.0
      */
     public static function showTableNameWarning($table, $class)
@@ -98,7 +100,7 @@ abstract class DBSchemaManager
     protected $schemaUpdateTransaction;
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
      *
      * @param bool $quiet
      */
@@ -958,7 +960,7 @@ MESSAGE
      * Return the list of indexes in a table.
      *
      * @param string $table The table name.
-     * @return array[array] List of current indexes in the table, each in standard
+     * @return array[] List of current indexes in the table, each in standard
      * array form. The key for this array should be predictable using the indexKey
      * method
      */

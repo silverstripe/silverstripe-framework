@@ -224,7 +224,7 @@ abstract class SearchFilter
     }
 
     /**
-     * @param String
+     * @param string $name
      */
     public function setName($name)
     {
@@ -243,7 +243,7 @@ abstract class SearchFilter
     }
 
     /**
-     * @param String
+     * @param string $name
      */
     public function setFullName($name)
     {

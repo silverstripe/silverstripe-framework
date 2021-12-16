@@ -31,13 +31,15 @@ use SilverStripe\ORM\Hierarchy\MarkedSet;
  * <b>Usage</b>.
  *
  * <code>
+ * use SilverStripe\CMS\Model\SiteTree;
+ * ...
  * static $has_one = array(
- *   'RightContent' => 'SiteTree'
+ *   'RightContent' => SiteTree::class
  * );
  *
  * function getCMSFields() {
  * ...
- * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", "SiteTree");
+ * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", SiteTree::class);
  * ..
  * }
  * </code>
@@ -499,7 +501,7 @@ class TreeDropdownField extends FormField
         // Begin marking
         $markingSet->markPartialTree();
 
-        // Explicitely mark our search results if necessary
+        // Explicitly mark our search results if necessary
         foreach ($this->searchIds as $id => $marked) {
             if ($marked) {
                 $object = $this->objectForKey($id);
@@ -812,10 +814,13 @@ class TreeDropdownField extends FormField
      * Get the object where the $keyField is equal to a certain value
      *
      * @param string|int $key
-     * @return DataObject
+     * @return DataObject|null
      */
     protected function objectForKey($key)
     {
+        if (!is_string($key) && !is_int($key)) {
+            return null;
+        }
         return DataObject::get($this->getSourceObject())
             ->filter($this->getKeyField(), $key)
             ->first();
@@ -901,6 +906,7 @@ class TreeDropdownField extends FormField
         $data['data'] = array_merge($data['data'], [
             'urlTree' => $this->Link('tree'),
             'showSearch' => $this->getShowSearch(),
+            'treeBaseId' => $this->getTreeBaseID(),
             'emptyString' => $this->getEmptyString(),
             'hasEmptyDefault' => $this->getHasEmptyDefault(),
             'multiple' => false,

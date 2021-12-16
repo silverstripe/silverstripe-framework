@@ -13,16 +13,23 @@ class NumericFieldTest extends SapphireTest
 
     /**
      * In some cases and locales, validation expects non-breaking spaces.
+     * This homogenises narrow and regular NBSPs to a regular space character
      *
      * Duplicates non-public NumericField::clean method
      *
      * @param  string $input
-     * @return string The input value, with all spaces replaced with non-breaking spaces
+     * @return string The input value, with all non-breaking spaces replaced with spaces
      */
     protected function clean($input)
     {
-        $nbsp = html_entity_decode('&nbsp;', null, 'UTF-8');
-        return str_replace(' ', $nbsp, trim($input));
+        return str_replace(
+            [
+                html_entity_decode('&nbsp;', null, 'UTF-8'),
+                html_entity_decode('&#8239;', null, 'UTF-8'), // narrow non-breaking space
+            ],
+            ' ',
+            trim($input)
+        );
     }
 
     /**
@@ -112,8 +119,8 @@ class NumericFieldTest extends SapphireTest
         $field->setScale(2);
         $field->setValue(1001.3);
         $html = $field->performReadonlyTransformation()->Field()->forTemplate();
-        $this->assertContains('value="1.001,30"', $html);
-        $this->assertContains('readonly="readonly"', $html);
+        $this->assertStringContainsString('value="1.001,30"', $html);
+        $this->assertStringContainsString('readonly="readonly"', $html);
     }
 
     public function testNumberTypeOnInputHtml()
@@ -124,7 +131,7 @@ class NumericFieldTest extends SapphireTest
 
         // @todo - Revert to number one day when html5 number supports proper localisation
         // See https://github.com/silverstripe/silverstripe-framework/pull/4565
-        $this->assertContains('type="text"', $html, 'number type not set');
+        $this->assertStringContainsString('type="text"', $html, 'number type not set');
     }
 
     public function testNullSet()

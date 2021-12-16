@@ -233,7 +233,6 @@ ru:
     ERRORWRONGCRED: 'Похоже, что указанные данные не верны. Пожалуйста, повторите попытку позже.'
     FIRSTNAME: Имя
     INTERFACELANG: 'Язык интерфейса'
-    KEEPMESIGNEDIN: 'Запомните меня'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
     PASSWORD: Пароль
@@ -244,7 +243,6 @@ ru:
       few: '{count} участника'
       many: '{count} участников'
       other: '{count} участников'
-    REMEMBERME: 'Запомнить меня? (на {count} дней на этом устройстве)'
     SINGULARNAME: Пользователь
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'

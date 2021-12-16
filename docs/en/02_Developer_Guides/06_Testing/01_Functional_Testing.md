@@ -27,8 +27,8 @@ Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStrip
 of the response.
 
 <div class="notice" markdown="1">
-**Compatibility Notice:** Previous versions of SilverStripe would send a GET request if `post()` was called with no POST variables supplied in the second argument.
-SilverStripe 4.6 and later always sends a POST request for consistency.
+**Compatibility Notice:** Previous versions of Silverstripe CMS would send a GET request if `post()` was called with no POST variables supplied in the second argument.
+Silverstripe CMS 4.6 and later always sends a POST request for consistency.
 </div>
 
 ## Other Requests
@@ -54,11 +54,16 @@ Submits the given form (`#ContactForm`) on the current page and returns the [HTT
 $this->logInAs($member);
 ```
 
-Logs a given user in, sets the current session. To log all users out pass `null` to the method.
+Logs a given user in, sets the current session.
 
+When doing a functional testing it's important to use `$this->logInAs($member);` rather than simply `Security::setCurrentUser($member);` or `$this->session()->set('loggedInAs', $member->ID);` as the latter two will not run any logic contained inside login authenticators.
+
+## LogOut
+
+Log out the current user, destroys the current session.
 
 ```php
-$this->logInAs(null);
+$this->logOut();
 ```
 
 ## Assertions

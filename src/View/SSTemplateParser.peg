@@ -55,7 +55,7 @@ if (defined('THIRDPARTY_PATH')) {
   *
   * Terms used:
   *
-  * Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with
+  * Marked: A string or lookup in the template that has been explicitly marked as such - lookups by prepending with
   * "$" (like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
   *
   * Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
@@ -216,7 +216,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     # Any new template elements need to be included in this list, if they are to work.
 
     Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
-        OpenBlock | MalformedBlock | Injection | Text)+
+        OpenBlock | MalformedBlock | MalformedBracketInjection | Injection | Text)+
     */
     function Template_STR(&$res, $sub)
     {
@@ -230,7 +230,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     Number: / [0-9]+ /
     Value: / [A-Za-z0-9_]+ /
 
-    # CallArguments is a list of one or more comma seperated "arguments" (lookups or strings, either bare or marked)
+    # CallArguments is a list of one or more comma separated "arguments" (lookups or strings, either bare or marked)
     # as passed to a Call within brackets
 
     CallArguments: :Argument ( < "," < :Argument )*
@@ -257,7 +257,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     Call: Method:Word ( "(" < :CallArguments? > ")" )?
 
-    # A lookup is a lookup of a value on the current scope object. It's a sequence of calls seperated by "."
+    # A lookup is a lookup of a value on the current scope object. It's a sequence of calls separated by "."
     # characters. This final call in the sequence needs handling specially, as different structures need different
     # sorts of values, which require a different final method to be called to get the right return value
 
@@ -367,6 +367,18 @@ class SSTemplateParser extends Parser implements TemplateParser
         $res['php'] .= ']';
     }
 
+    /*!*
+
+    # This is used to detect a malformed bracket injection - where the closing '}' is missing
+
+    MalformedBracketInjection: "{$" :Lookup !( "}" )
+    */
+    function MalformedBracketInjection__finalise(&$res)
+    {
+        $lookup = $res['text'];
+        throw new SSTemplateParseException("Malformed bracket injection $lookup. Perhaps you have forgotten the " .
+            "closing bracket (})?", $this);
+    }
 
     /*!*
 
@@ -397,7 +409,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # Inside a block's arguments you can explictly mark a string by surrounding it with quotes (single or double,
+    # Inside a block's arguments you can explicitly mark a string by surrounding it with quotes (single or double,
     # but they must be matching). If you do, inside the quote you can escape any character, but the only character
     # that _needs_ escaping is the matching closing quote
 
@@ -411,7 +423,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     FreeString: /[^,)%!=><|&]+/
 
-    # An argument - either a marked value, or a bare value, prefering lookup matching on the bare value over
+    # An argument - either a marked value, or a bare value, preferring lookup matching on the bare value over
     # freestring matching as long as that would give a successful parse
 
     Argument:
@@ -518,7 +530,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # if and else_if arguments are a series of presence checks and comparisons, optionally seperated by boolean
+    # if and else_if arguments are a series of presence checks and comparisons, optionally separated by boolean
     # operators
 
     IfArgumentPortion: Comparison | PresenceCheck
@@ -530,7 +542,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # if and else_if arguments can be combined via these two boolean operators. No precendence overriding is
+    # if and else_if arguments can be combined via these two boolean operators. No precedence overriding is
     # supported
 
     BooleanOperator: "||" | "&&"
@@ -551,7 +563,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # ifs are handled seperately from other closed block tags, because (A) their structure is different - they
+    # ifs are handled separately from other closed block tags, because (A) their structure is different - they
     # can have else_if and else tags in between the if tag and the end_if tag, and (B) they have a different
     # argument structure to every other block
 
@@ -587,7 +599,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # The require block is handled seperately to the other open blocks as the argument syntax is different
+    # The require block is handled separately to the other open blocks as the argument syntax is different
     # - must have one call style argument, must pass arguments to that call style argument
 
     Require: '<%' < 'require' [ Call:(Method:Word "(" < :CallArguments  > ")") > '%>'
@@ -645,7 +657,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     }
 
     /*!*
-    # CacheBlockTemplate is the same as Template, but doesn't include cache blocks (because they're handled seperately)
+    # CacheBlockTemplate is the same as Template, but doesn't include cache blocks (because they're handled separately)
 
     CacheBlockTemplate extends Template (TemplateMatcher = CacheRestrictedTemplate); CacheBlock | UncachedBlock | => ''
     */
@@ -1105,7 +1117,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /*!*
 
-    # This is used to detect when we have a mismatched closing tag (i.e., one with no equivilent opening tag)
+    # This is used to detect when we have a mismatched closing tag (i.e., one with no equivalent opening tag)
     # Because of parser limitations, this can only be used at the top nesting level of a template. Other mismatched
     # closing tags are detected as an invalid open tag
 
@@ -1156,7 +1168,9 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     # This is used to remove template comments
 
-    Comment: "<%--" (!"--%>" /(?s)./)+ "--%>"
+    CommentWithContent: '<%--' ( !"--%>" /(?s)./ )+ '--%>'
+    EmptyComment: '<%----%>'
+    Comment: :EmptyComment | :CommentWithContent
     */
     function Comment__construct(&$res)
     {
@@ -1250,7 +1264,7 @@ EOC;
 
             $this->includeDebuggingComments = $includeDebuggingComments;
 
-            // Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
+            // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
             // (and other encodings) properly
             if (substr($string, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;
@@ -1280,6 +1294,7 @@ EOC;
 
     /**
      * @param string $code
+     * @param string $templateName
      * @return string $code
      */
     protected function includeDebuggingComments($code, $templateName)

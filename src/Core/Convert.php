@@ -336,7 +336,7 @@ class Convert
      * Convert a XML string to a PHP array recursively. Do not
      * call this function directly, Please use {@link Convert::xml2array()}
      *
-     * @param SimpleXMLElement
+     * @param SimpleXMLElement $xml
      *
      * @return mixed
      */
@@ -491,7 +491,7 @@ class Convert
      * Convert a string (normally a title) to a string suitable for using in
      * urls and other html attributes. Uses {@link URLSegmentFilter}.
      *
-     * @param string
+     * @param string $title
      * @return string
      */
     public static function raw2url($title)
@@ -627,7 +627,7 @@ class Convert
     }
 
     /**
-     * Convert slashes in relative or asolute filesystem path. Defaults to DIRECTORY_SEPARATOR
+     * Convert slashes in relative or absolute filesystem path. Defaults to DIRECTORY_SEPARATOR
      *
      * @param string $path
      * @param string $separator

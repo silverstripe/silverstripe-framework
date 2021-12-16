@@ -68,7 +68,7 @@ class PathTest extends SapphireTest
      */
     public function testJoinPathsErrors($args, $error)
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($error);
         Path::join($args);
     }

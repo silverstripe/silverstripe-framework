@@ -7,6 +7,7 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\Security\Member;
 use Exception;
 
 /**
@@ -135,7 +136,6 @@ abstract class DataExtension extends Extension
      * See {@link DataObject::can()} and {@link DataObject::extendedCan()} for context.
      *
      * @param Member $member
-     * @param array $context
      * @return bool|null
      */
     public function can($member)
@@ -150,7 +150,6 @@ abstract class DataExtension extends Extension
      * See {@link DataObject::canEdit()} and {@link DataObject::extendedCan()} for context.
      *
      * @param Member $member
-     * @param array $context
      * @return bool|null
      */
     public function canEdit($member)
@@ -165,7 +164,6 @@ abstract class DataExtension extends Extension
      * See {@link DataObject::canDelete()} and {@link DataObject::extendedCan()} for context.
      *
      * @param Member $member
-     * @param array $context
      * @return bool|null
      */
     public function canDelete($member)
@@ -180,7 +178,6 @@ abstract class DataExtension extends Extension
      * See {@link DataObject::canCreate()} and {@link DataObject::extendedCan()} for context.
      *
      * @param Member $member
-     * @param array $context
      * @return bool|null
      */
     public function canCreate($member)

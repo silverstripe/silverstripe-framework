@@ -8,7 +8,9 @@ namespace SilverStripe\ORM;
  * All methods in this interface are immutable - they should return new instances with the filter
  * applied, rather than applying the filter in place
  *
- * @see SS_List, Sortable, Limitable
+ * @see SS_List
+ * @see Sortable
+ * @see Limitable
  */
 interface Filterable extends SS_List
 {

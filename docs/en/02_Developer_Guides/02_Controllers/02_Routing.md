@@ -111,7 +111,7 @@ A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable 
 
  | Pattern     | Description | 
  | ----------- | --------------- | 
- | `$`         | **Param Variable** - Starts the name of a paramater variable, it is optional to match this unless ! is used | 
+ | `$`         | **Param Variable** - Starts the name of a parameter variable, it is optional to match this unless ! is used | 
  | `!`         | **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
  | `//`        | **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
 
@@ -144,7 +144,7 @@ start parsing variables and the appropriate controller action AFTER the `//`).
 
 ### Wildcard URL Patterns
 
-As of SilverStripe 4.6 there are two wildcard patterns that can be used. `$@` and `$*`. These parameters can only be used
+As of Silverstripe CMS 4.6 there are two wildcard patterns that can be used. `$@` and `$*`. These parameters can only be used
 at the end of a URL pattern, any further rules are ignored.
 
 Inspired by bash variadic variable syntax there are two ways to capture all URL parameters without having to explicitly
@@ -282,7 +282,7 @@ class BreadAPIController extends Controller
 ```
 
 <div class="alert" markdown="1">
-In SilverStripe Framework versions prior to 4.6, an empty key (`''`) must be used in place of the `'/'` key. When specifying an HTTP method, the empty string must be separated from the method (e.g. `'GET '`). The empty key and slash key are also equivalent in Director rules.
+In Silverstripe CMS versions prior to 4.6, an empty key (`''`) must be used in place of the `'/'` key. When specifying an HTTP method, the empty string must be separated from the method (e.g. `'GET '`). The empty key and slash key are also equivalent in Director rules.
 </div>
 
 ## Related Lessons

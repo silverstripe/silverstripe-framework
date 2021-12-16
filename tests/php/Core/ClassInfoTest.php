@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core\Tests;
 
+use DateTime;
+use Exception;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
@@ -15,6 +17,7 @@ use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest1;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest2;
 use SilverStripe\Core\Tests\ClassInfoTest\GrandChildClass;
 use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
+use SilverStripe\Core\Tests\ClassInfoTest\HasMethod;
 use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
 use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
 use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
@@ -40,7 +43,7 @@ class ClassInfoTest extends SapphireTest
         ExtendTest3::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ClassInfo::reset_db_cache();
@@ -104,8 +107,8 @@ class ClassInfoTest extends SapphireTest
 
     public function testNonClassName()
     {
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessageRegExp('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
         $this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
     }
 
@@ -266,9 +269,57 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    /**
-     * @dataProvider provideClassSpecCases
-     */
+    /** @dataProvider provideHasMethodCases */
+    public function testHasMethod($object, $method, $output)
+    {
+        $this->assertEquals(
+            $output,
+            ClassInfo::hasMethod($object, $method)
+        );
+    }
+
+    public function provideHasMethodCases()
+    {
+        return [
+            'Basic object' => [
+                new DateTime(),
+                'format',
+                true,
+            ],
+            'CustomMethod object' => [
+                new HasMethod(),
+                'example',
+                true,
+            ],
+            'Class Name' => [
+                'DateTime',
+                'format',
+                true,
+            ],
+            'FQCN' => [
+                '\DateTime',
+                'format',
+                true,
+            ],
+            'Invalid FQCN' => [
+                '--GreatTime',
+                'format',
+                false,
+            ],
+            'Integer' => [
+                1,
+                'format',
+                false,
+            ],
+            'Array' => [
+                ['\DateTime'],
+                'format',
+                false,
+            ],
+        ];
+    }
+
+    /** @dataProvider provideClassSpecCases */
     public function testParseClassSpec($input, $output)
     {
         $this->assertEquals(

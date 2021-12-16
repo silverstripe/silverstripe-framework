@@ -26,7 +26,7 @@ use SilverStripe\View\SSViewer;
  *
  * @see GridField
  */
-class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider
+class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
     /**
      * See {@link setThrowExceptionOnBadDataType()}
@@ -165,6 +165,8 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
      * If the GridField has a filterable datalist, return an array of actions
      *
      * @param GridField $gridField
+     * @param string $actionName
+     * @param array $data
      * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
@@ -173,8 +175,9 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
             return;
         }
 
-        $state = $gridField->State->GridFieldFilterHeader;
-        $state->Columns = null;
+        $state = $this->getState($gridField);
+        $state->Columns = [];
+
         if ($actionName === 'filter') {
             if (isset($data['filter'][$gridField->getName()])) {
                 foreach ($data['filter'][$gridField->getName()] as $key => $filter) {
@@ -184,6 +187,20 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
     }
 
+    /**
+     * Extract state data from the parent gridfield
+     * @param GridField $gridField
+     * @return GridState_Data
+     */
+    private function getState(GridField $gridField): GridState_Data
+    {
+        return $gridField->State->GridFieldFilterHeader;
+    }
+
+    public function initDefaultState(GridState_Data $data): void
+    {
+        $data->GridFieldFilterHeader->initDefaults(['Columns' => []]);
+    }
 
     /**
      * @inheritDoc
@@ -195,13 +212,12 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         /** @var Filterable $dataList */
-        /** @var GridState_Data $columns */
-        $columns = $gridField->State->GridFieldFilterHeader->Columns(null);
-        if (empty($columns)) {
+        /** @var array $filterArguments */
+        $filterArguments = $this->getState($gridField)->Columns->toArray();
+        if (empty($filterArguments)) {
             return $dataList;
         }
 
-        $filterArguments = $columns->toArray();
         $dataListClone = clone($dataList);
         $results = $this->getSearchContext($gridField)
             ->getQuery($filterArguments, false, false, $dataListClone);
@@ -413,7 +429,7 @@ class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvi
         }
 
         $columns = $gridField->getColumns();
-        $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
+        $filterArguments = $this->getState($gridField)->Columns->toArray();
         $currentColumn = 0;
         $canFilter = false;
         $fieldsList = new ArrayList();

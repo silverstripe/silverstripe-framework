@@ -6,10 +6,10 @@ icon: code
 
 # Data Types and Casting
 
-Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
+Each model in a Silverstripe CMS [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
+A Data Type is represented in Silverstripe CMS by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
@@ -77,7 +77,7 @@ class Car extends DataObject
 When adding a new `$db` field to a DataObject you can specify a default value
 to be applied to all existing records when the column is added in the database
 for the first time. This will also be applied to any newly created objects
-going forward. You do this be passing an argument for the default value in your 
+going forward. You do this by passing an argument for the default value in your 
 `$db` items. 
 
 For integer values, the default is the first parameter in the field specification.
@@ -104,7 +104,7 @@ class Car extends DataObject
 The Data Type does more than setup the correct database schema. They can also define methods and formatting helpers for
 output. You can manually create instances of a Data Type and pass it through to the template. 
 
-If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
+In this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
 **app/code/Player.php**
@@ -134,7 +134,7 @@ echo $player->getName();
 // returns "Sam Minnée";
 
 echo $player->getName()->LimitCharacters(2);
-// returns "Sa.."
+// returns "Sa…"
 ```
 
 ## Casting
@@ -157,7 +157,7 @@ class Player extends DataObject
 }
 ```
 
-The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
+The properties on any Silverstripe CMS object can be type casted automatically, by transforming its scalar value into an 
 instance of the [DBField](api:SilverStripe\ORM\FieldType\DBField) class, providing additional helpers. For example, a string can be cast as a [DBText](api:SilverStripe\ORM\FieldType\DBText) 
 type, which has a `FirstSentence()` method to retrieve the first sentence in a longer piece of text.
 
@@ -179,7 +179,7 @@ DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
+Most objects in Silverstripe CMS extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php

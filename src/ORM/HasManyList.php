@@ -18,7 +18,7 @@ class HasManyList extends RelationList
     /**
      * Create a new HasManyList object.
      * Generation of the appropriate record set is left up to the caller, using the normal
-     * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
+     * {@link DataList} methods.  Addition arguments are used to support {@link add()}
      * and {@link remove()} methods.
      *
      * @param string $dataClass The class of the DataObjects that this will list.
@@ -85,7 +85,7 @@ class HasManyList extends RelationList
             return;
         }
         if (is_array($foreignID)) {
-            user_error("HasManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
+            user_error("HasManyList::add() can't be called on a list linked to multiple foreign IDs", E_USER_WARNING);
             return;
         }
 

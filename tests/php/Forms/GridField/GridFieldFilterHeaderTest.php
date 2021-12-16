@@ -50,7 +50,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
         Mom::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);
@@ -70,8 +70,8 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $htmlFragment = $this->component->getHTMLFragments($this->gridField);
 
         // Check that the output is the new search field
-        $this->assertContains('<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden"', $htmlFragment['before']);
-        $this->assertContains('Open search and filter', $htmlFragment['buttons-before-right']);
+        $this->assertStringContainsString('<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden"', $htmlFragment['before']);
+        $this->assertStringContainsString('Open search and filter', $htmlFragment['buttons-before-right']);
 
         $this->gridField->getConfig()->removeComponentsByType(GridFieldFilterHeader::class);
         $this->gridField->getConfig()->addComponent(new GridFieldFilterHeader(true));
@@ -79,7 +79,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $htmlFragment = $this->component->getHTMLFragments($this->gridField);
 
         // Check that the output is the legacy filter header
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<tr class="grid-field__filter-header grid-field__search-holder--hidden">',
             $htmlFragment['header']
         );
@@ -117,5 +117,26 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('test', $searchSchema->filters->Search__Name);
         $this->assertEquals('place', $searchSchema->filters->Search__City);
         $this->assertEquals('testfield', $searchSchema->gridfield);
+    }
+
+    public function testHandleActionReset()
+    {
+        // Init Grid state with some pre-existing filters
+        $state = $this->gridField->State;
+        $state->GridFieldFilterHeader = [];
+        $state->GridFieldFilterHeader->Columns = [];
+        $state->GridFieldFilterHeader->Columns->Name = 'test';
+
+        $this->component->handleAction(
+            $this->gridField,
+            'reset',
+            [],
+            '{"GridFieldFilterHeader":{"Columns":{"Name":"test"}}}'
+        );
+
+        $this->assertEmpty(
+            $state->GridFieldFilterHeader->Columns->toArray(),
+            'GridFieldFilterHeader::handleAction resets the gridstate filter when the user resets the search.'
+        );
     }
 }

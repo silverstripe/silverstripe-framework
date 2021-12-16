@@ -139,10 +139,13 @@ EOS
         $cache = $method->invokeArgs($provider, []);
         $method = $reflector->getMethod('deriveCacheKey');
         $method->setAccessible(true);
-        $key = $method->invokeArgs($provider, [$url]);
+        $class = 'leftAlone ss-htmleditorfield-file embed';
+        $width = '480';
+        $height = '270';
+        $key = $method->invokeArgs($provider, [$url, $class, $width, $height]);
 
         // assertions
-        $this->assertEquals('embed-shortcode-httpwwwtest-servicecomabc123', $key);
+        $this->assertEquals('embed-shortcode-httpwwwtest-servicecomabc123-leftAloness-htmleditorfield-fileembed-480-270', $key);
         $cache->set($key, $embedHtml);
         $this->assertTrue($cache->has($key));
         EmbedShortcodeProvider::flushCachedShortcodes($parser, $content);

@@ -11,10 +11,11 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
+use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
+use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Bracket;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
-use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Sortable;
 use SilverStripe\ORM\Tests\DataObjectTest\Staff;
@@ -91,11 +92,9 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSubtractBadDataclassThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $teamsComments = TeamComment::get();
         $teams = Team::get();
         $teamsComments->subtract($teams);
@@ -154,13 +153,13 @@ class DataListTest extends SapphireTest
     public function testDistinct()
     {
         $list = TeamComment::get();
-        $this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is set as distinct by default');
+        $this->assertStringContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is set as distinct by default');
 
         $list = $list->distinct(false);
-        $this->assertNotContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query does not contain distinct');
+        $this->assertStringNotContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query does not contain distinct');
 
         $list = $list->distinct(true);
-        $this->assertContains('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query contains distinct');
+        $this->assertStringContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query contains distinct');
     }
 
     public function testDataClass()
@@ -431,8 +430,8 @@ class DataListTest extends SapphireTest
 
         // Assert that filtering on ID searches by the base table, not the child table field
         $query = SubTeam::get()->filter('ID', 4)->sql($parameters);
-        $this->assertContains('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
-        $this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
+        $this->assertStringContainsString('WHERE ("DataObjectTest_Team"."ID" = ?)', $query);
+        $this->assertStringNotContainsString('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
     }
 
     public function testByIDs()
@@ -584,12 +583,10 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Phil', $list->last()->Name);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player
-     */
     public function testSortInvalidParameters()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectDeprecationMessage('Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player');
         $list = Team::get();
         $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
     }
@@ -755,7 +752,7 @@ class DataListTest extends SapphireTest
     public function testSimpleFilterWithNonExistingComparisator()
     {
         $this->expectException(InjectorNotFoundException::class);
-        $this->expectExceptionMessageRegExp('/Class "?DataListFilter.Bogus"? does not exist/');
+        $this->expectExceptionMessageMatches('/Class "?DataListFilter.Bogus"? does not exist/');
 
         $list = TeamComment::get();
         $list->filter('Comment:Bogus', 'team comment');
@@ -767,7 +764,7 @@ class DataListTest extends SapphireTest
     public function testInvalidModifier()
     {
         $this->expectException(InjectorNotFoundException::class);
-        $this->expectExceptionMessageRegExp('/Class "?DataListFilter.invalidmodifier"? does not exist/');
+        $this->expectExceptionMessageMatches('/Class "?DataListFilter.invalidmodifier"? does not exist/');
 
         $list = TeamComment::get();
         $list->filter('Comment:invalidmodifier', 'team comment');
@@ -1092,12 +1089,10 @@ class DataListTest extends SapphireTest
         $this->assertEquals('007', $list->first()->ShirtNumber);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage MascotAnimal is not a relation on model SilverStripe\ORM\Tests\DataObjectTest\Team
-     */
     public function testFilterOnInvalidRelation()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('MascotAnimal is not a relation on model SilverStripe\ORM\Tests\DataObjectTest\Team');
         // Filter on missing relation 'MascotAnimal'
         Team::get()
             ->filter('MascotAnimal.Name', 'Richard')
@@ -1350,7 +1345,7 @@ class DataListTest extends SapphireTest
             $ex = $e;
         }
         $this->assertInstanceOf(\InvalidArgumentException::class, $ex);
-        $this->assertRegExp('/Malformed/', $ex->getMessage());
+        $this->assertMatchesRegularExpression('/Malformed/', $ex->getMessage());
 
 
         $filter = new ExactMatchFilter('Comments.Max(NonExistentColumn)');
@@ -1362,7 +1357,7 @@ class DataListTest extends SapphireTest
             $ex = $e;
         }
         $this->assertInstanceOf(\InvalidArgumentException::class, $ex);
-        $this->assertRegExp('/Invalid column/', $ex->getMessage());
+        $this->assertMatchesRegularExpression('/Invalid column/', $ex->getMessage());
     }
 
     public function testAggregateFilters()
@@ -1698,14 +1693,10 @@ class DataListTest extends SapphireTest
         $this->assertListEquals([['Name' => 'Joe']], $list);
     }
 
-    /**
-     * Test exact match filter with empty array items
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set
-     */
     public function testEmptyFilter()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot filter "DataObjectTest_TeamComment"."Name" against an empty set');
         $list = TeamComment::get();
         $list->exclude('Name', []);
     }
@@ -1874,5 +1865,123 @@ class DataListTest extends SapphireTest
             'Product A',
             'Product B',
         ], $productTitles);
+    }
+
+    public function testChunkedFetch()
+    {
+        $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
+        $expectedSize = sizeof($expectedIDs);
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch(1),
+            $dataQuery,
+            $expectedSize+1
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize-1),
+            $dataQuery,
+            2
+        );
+
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            $expectedIDs,
+            Team::get()->setDataQuery($dataQuery)->chunkedFetch($expectedSize+1),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testFilteredChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            Team::get()->filter('ClassName', Team::class)->map('ID', 'ID')->toArray(),
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', Team::class)->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testSortedChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            Team::get()->sort('ID', 'Desc')->map('ID', 'ID')->toArray(),
+            Team::get()->setDataQuery($dataQuery)->sort('ID', 'Desc')->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testEmptyChunk()
+    {
+        $dataQuery = new DataListQueryCounter(Team::class);
+        $this->chunkTester(
+            [],
+            Team::get()->setDataQuery($dataQuery)->filter('ClassName', 'non-sense')->chunkedFetch(),
+            $dataQuery,
+            1
+        );
+    }
+
+    public function testInvalidChunkSize()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        foreach (Team::get()->chunkedFetch(0) as $item) {
+            // You don't get the error until you iterate over the list
+        };
+    }
+
+    /**
+     * Loop over a chunk list and make sure it matches our expected results
+     * @param int[] $expectedIDs
+     * @param iterable $chunkList
+     */
+    private function chunkTester(
+        array $expectedIDs,
+        iterable $chunkList,
+        DataListQueryCounter $dataQuery,
+        int $expectedQueryCount
+    ) {
+        foreach ($chunkList as $chunkedTeam) {
+            $this->assertInstanceOf(
+                Team::class,
+                $chunkedTeam,
+                'Chunk return the correct type of data object'
+            );
+
+            $expectedID = array_shift($expectedIDs);
+
+            $this->assertEquals(
+                $expectedID,
+                $chunkedTeam->ID,
+                'chunk returns the same results in the same order as the regular iterator'
+            );
+        }
+
+        $this->assertEmpty($expectedIDs, 'chunk returns all the results that the regular iterator does');
+        $this->assertEquals($expectedQueryCount, $dataQuery->getCount());
     }
 }

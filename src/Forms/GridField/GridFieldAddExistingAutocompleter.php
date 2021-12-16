@@ -223,8 +223,8 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
      */
     public function doSearch($gridField, $request)
     {
+        $searchStr = $request->getVar('gridfield_relationsearch');
         $dataClass = $gridField->getModelClass();
-        $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 
         $searchFields = ($this->getSearchFields())
             ? $this->getSearchFields()
@@ -241,12 +241,22 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $params = [];
         foreach ($searchFields as $searchField) {
             $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:StartsWith";
-            $params[$name] = $request->getVar('gridfield_relationsearch');
+            $params[$name] = $searchStr;
         }
-        $results = $allList
+
+        $results = null;
+        if ($this->searchList) {
+            // Assume custom sorting, don't apply default sorting
+            $results = $this->searchList;
+        } else {
+            $results = DataList::create($dataClass)
+                ->sort(strtok($searchFields[0], ':'), 'ASC');
+        }
+
+        // Apply baseline filtering and limits which should hold regardless of any customisations
+        $results = $results
             ->subtract($gridField->getList())
             ->filterAny($params)
-            ->sort(strtok($searchFields[0], ':'), 'ASC')
             ->limit($this->getResultsLimit());
 
         $json = [];

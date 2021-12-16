@@ -178,13 +178,17 @@ class TabSet extends CompositeField
 
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             $this->attributes,
             [
                 'id' => $this->ID(),
                 'class' => $this->extraClass()
             ]
         );
+
+        $this->extend('updateAttributes', $attributes);
+
+        return $attributes;
     }
 
     /**
@@ -218,6 +222,7 @@ class TabSet extends CompositeField
      *
      * @param string $insertBefore Name of the field to insert before
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
     public function insertBefore($insertBefore, $field, $appendIfMissing = true)
@@ -233,6 +238,7 @@ class TabSet extends CompositeField
      *
      * @param string $insertAfter Name of the field to insert after
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
     public function insertAfter($insertAfter, $field, $appendIfMissing = true)

@@ -110,7 +110,7 @@ class CSVParser implements Iterator
      * You can use the object returned in a foreach loop to extract the data.
      *
      * @param string $filename The name of the file.  If relative, it will be relative to the site's base dir
-     * @param string $delimiter The character for seperating columns
+     * @param string $delimiter The character for separating columns
      * @param string $enclosure The character for quoting or enclosing columns
      */
     public function __construct($filename, $delimiter = ",", $enclosure = '"')
@@ -134,7 +134,7 @@ class CSVParser implements Iterator
      * ));
      * </code>
      *
-     * @param array
+     * @param array $columnMap
      */
     public function mapColumns($columnMap)
     {
@@ -156,7 +156,7 @@ class CSVParser implements Iterator
      * If you call this function, then the first row of the CSV will be
      * included in the data returned.
      *
-     * @param array
+     * @param array $headerRow
      */
     public function provideHeaderRow($headerRow)
     {
@@ -210,7 +210,7 @@ class CSVParser implements Iterator
     /**
      * Map the contents of a header array using $this->mappedColumns.
      *
-     * @param array
+     * @param array $header
      *
      * @return array
      */
