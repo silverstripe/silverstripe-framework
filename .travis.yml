@@ -3,11 +3,7 @@ version: ~> 1.0
 import:
   - silverstripe/silverstripe-travis-shared:config/provision/standard.yml
 
-env:
-  global:
-    - REQUIRE_RECIPE="4.x-dev"
-
-# Using a manual matrix to exclude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
+# Using a manual matrix to exlude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
 # e.g. https://travis-ci.com/github/silverstripe/silverstripe-framework/jobs/457096837
 jobs:
   fast_finish: true
