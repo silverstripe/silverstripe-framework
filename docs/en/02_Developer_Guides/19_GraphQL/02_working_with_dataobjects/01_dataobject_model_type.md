@@ -196,6 +196,7 @@ onSale:
 
 * The mapping of our field names to the DataObject property is case-insensitive. It is a
 convention in GraphQL APIs to use lowerCamelCase fields, so this is given by default.
+
 [/notice]
 
 ### Customising model fields
