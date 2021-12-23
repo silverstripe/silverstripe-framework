@@ -13,6 +13,28 @@ Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
 
+
+## Debugging the generated code
+
+By default, the generated PHP code is put into obfuscated classnames and filenames to prevent poisoning the search
+tools within IDEs. Without this, you can search for something like "Page" in your IDE and get both a generated GraphQL type (probably not what you want) and a DataObject (more likely what you want) in the results and have no easy way of differentiating between the two.
+
+When debugging, however, it's much easier if these classnames are human-readable. To turn on debug mode, add `DEBUG_SCHEMA=1` to your environment file and the classnames and filenames in the generated code directory will match their type names.
+
+[warning]
+Take care not to use `DEBUG_SCHEMA=1` as an inline environment variable to your build command, e.g. `DEBUG_SCHEMA=1 vendor/bin/sake dev/graphql/build` because any activity that happens at run time, e.g. querying the schema will fail, since the environment variable is no longer set.
+[/warning]
+
+In live mode, full obfuscation kicks in and the filenames become unreadable. You can only determine the type they map
+to by looking at the generated classes and finding the `// @type:<typename>` inline comment, e.g. `// @type:Page`.
+
+This obfuscation is handled by the `NameObfuscator` interface. See the `config.yml` file in the GraphQL module for
+the various implementations, which include:
+
+* `NaiveNameObfuscator`: Filename/Classname === Type name
+* `HybridNameObfuscator`: Filename/Classname is a mix of the typename and a hash (default).
+* `HashNameObfuscator`: Filename/Classname is a md5 hash of the type name (non-dev only).
+
 ## Getting the type name for a model class
 
 Often times, you'll need to know the name of the type given a class name. There's a bit of context to this.
