@@ -41,6 +41,13 @@ Keep in mind that many of your changes will be in YAML, which also requires a fl
 If you do not provide a `schema` parameter, the task will build all schemas.
 [/info]
 
+#### Controlling verbosity
+
+You can set the verbosity of the output by using `verbosity=<value>`.
+Available values are the constants found in `SilverStripe\GraphQL\Schema\Logger`, e.g. `INFO`, `DEBUG`, `WARNING`.
+By default, the verbosity is set to `INFO`.
+
+
 ### Building on dev/build
 
 By default, all schemas will be built as a side-effect of `dev/build`. To disable this, change

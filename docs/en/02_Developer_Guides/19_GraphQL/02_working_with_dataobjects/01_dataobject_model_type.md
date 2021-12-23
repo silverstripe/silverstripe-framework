@@ -279,6 +279,25 @@ Given the brevity of these type names, it's not inconceivable that you could run
 collisions, particularly if you use feature-based namespacing. Fortunately, there are
 hooks you have available to help influence the typename.
 
+#### Explicit type mapping
+
+You can explicitly provide type name for a given class using the `typeMapping` setting in your schema config.
+
+**app/_graphql/config.yml**
+```yaml
+typeMapping:
+  MyProject\MyApp\Page: SpecialPage
+```
+
+It may be necessary to use `typeMapping` in projects that have a lot of similar class names in different namespaces, which will cause a collision
+when the type name is derived from the class name. The most case for this
+is the `Page` class, which is both at the root namespace and often in your
+app namespace, e.g. `MyApp\Models\Page`.
+
+
+
+
+
 #### The type formatter
 
 The `type_formatter` is a callable that can be set on the `DataObjectModel` config. It takes
