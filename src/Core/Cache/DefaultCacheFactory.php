@@ -7,18 +7,16 @@ use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
-use Symfony\Component\Cache\Simple\FilesystemCache;
-use Symfony\Component\Cache\Simple\ApcuCache;
-use Symfony\Component\Cache\Simple\ChainCache;
-use Symfony\Component\Cache\Simple\PhpFilesCache;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 
 /**
  * Returns the most performant combination of caches available on the system:
- * - `PhpFilesCache` (PHP 7 with opcache enabled)
- * - `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
- * - `FilesystemCache` if none of the above is available
+ * - `PhpFilesAdapter` (PHP 7 with opcache enabled)
+ * - `ApcuAdapter` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
+ * - `FilesystemAdapter` if none of the above is available
  *
  * Modelled after `Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache()`
  */
@@ -66,11 +64,11 @@ class DefaultCacheFactory implements CacheFactory
 
         // If apcu isn't supported, phpfiles is the next best preference
         if (!$apcuSupported && $phpFilesSupported) {
-            return $this->createCache(PhpFilesCache::class, [$namespace, $defaultLifetime, $directory]);
+            return $this->createCache(PhpFilesAdapter::class, [$namespace, $defaultLifetime, $directory]);
         }
 
-        // Create filesystem cache
-        $fs = $this->createCache(FilesystemCache::class, [$namespace, $defaultLifetime, $directory]);
+        // Create filessytem cache
+        $fs = $this->createCache(FilesystemAdapter::class, [$namespace, $defaultLifetime, $directory]);
         if (!$apcuSupported) {
             return $fs;
         }
@@ -79,9 +77,9 @@ class DefaultCacheFactory implements CacheFactory
         // Note that the cache lifetime will be shorter there by default, to ensure there's enough
         // resources for "hot cache" items in APCu as a resource constrained in memory cache.
         $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
-        $apcu = $this->createCache(ApcuCache::class, [$apcuNamespace, (int) $defaultLifetime / 5, $version]);
+        $apcu = $this->createCache(ApcuAdapter::class, [$apcuNamespace, (int) $defaultLifetime / 5, $version]);
 
-        return $this->createCache(ChainCache::class, [[$apcu, $fs]]);
+        return $this->createCache(ChainAdapter::class, [[$apcu, $fs]]);
     }
 
     /**
@@ -121,7 +119,13 @@ class DefaultCacheFactory implements CacheFactory
     protected function createCache($class, $args)
     {
         /** @var CacheInterface $cache */
-        $cache = Injector::inst()->createWithArgs($class, $args);
+        $obj = Injector::inst()->createWithArgs($class, $args);
+
+        if (is_a($obj, AbstractAdapter::class)) {
+            $cache = new SymfonyAdapterToPsr6Cache($obj);
+        } else {
+            $cache = $obj;
+        }
 
         // Assign cache logger
         if ($this->logger && $cache instanceof LoggerAwareInterface) {
