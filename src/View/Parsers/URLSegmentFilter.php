@@ -39,7 +39,8 @@ class URLSegmentFilter implements FilterInterface
         '/[\/\?=#:]+/u' => '-', // remove forward slashes, question marks, equal signs, hashes and colons in case multibyte is allowed (and non-ASCII chars aren't removed)
         '/[\-]{2,}/u' => '-', // remove duplicate dashes
         '/^[\-]+/u' => '', // Remove all leading dashes
-        '/[\-]+$/u' => '' // Remove all trailing dashes
+        '/[\-]+$/u' => '', // Remove all trailing dashes
+        '/’/' => '',    // Removes apostrophe as it gets encoded as `%E2%80%99`
     ];
 
     /**
