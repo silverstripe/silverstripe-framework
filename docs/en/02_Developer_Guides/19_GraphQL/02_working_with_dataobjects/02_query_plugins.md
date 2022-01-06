@@ -189,6 +189,82 @@ MyProject\Models\ProductCategory:
             title: true
 ```
 
+[info]
+You can add all fields with `'*': true`, just like with standard model definitions.
+[/info]
+
+##### Adding non-native filter fields
+
+Sometimes you may want to add a filter field that may stem from a custom getter, or a complex computation that 
+isn't easily addressed by simple field comparisons. For cases like this, you can add the custom field as long
+as you provide instructions on how to resolve it.
+
+*app/_graphql/models.yml*
+```yaml
+MyProject\Models\Product:
+  fields:
+      title: true
+      price: true
+  operations:
+    read:
+      plugins:
+        filter:
+          fields:
+            title: true
+            hasReviews: true
+          resolve:
+            hasReviews:
+              type: Boolean
+              resolver: ['MyApp\Resolvers\Resolver', 'resolveHasReviewsFilter']
+```
+
+We've added the custom field `hasReviews` as a custom field in the `fields` section of the plugin config. A custom field
+like this that does not exist on the `Product` dataobject will cause the plugin to throw unless you've provided 
+a `resolve` directive for it.
+
+In the `resolve` section, we need to provide two vital pieces of information:
+
+* What data type will the filter value be? (boolean in this case)
+* Where is the code that will apply this filter? (A static function in our `Resolver` class)
+
+The code to resolve the filter will get two relevant pieces of information in its `$context` parameter:
+
+* `filterComparator`: e.g. "eq", "ne", "gt", etc.
+* `filterValue`: What value we're comparing (true or false, in this case, since it's a boolean)
+
+Here's how we can resolve this custom filter:
+
+*app/src/Resolvers/Resolver.php*
+```php
+namespace MyApp\Resolvers;
+
+class Resolver
+{
+    public static function resolveHasReviewsFilter($list, $args, $context)
+    {
+        $onlyWithReviews = $context['filterValue'];
+        $comparator = $context['filterComparator'];
+        
+        if (!in_array($comparator, ['eq','ne'])) {
+            throw new \Exception('Invalid comparator for hasReviews: ' . $comparator);
+        }
+        if ($comparator === 'ne') {
+            $onlyWithReviews = !$onlyWithReviews;
+        }
+        
+        return $onlyWithReviews
+            ? $list->filter('Reviews.Count():GreaterThan', 0)
+            : $list->filter('Reviews.Count()', 0);        
+    }
+}
+```
+
+[info]
+Custom filter fields are also a good opportunity to implement something like `filterByCallback` on your list for 
+particularly complex computations that cannot be done at the database level.
+[/info]
+
+
 #### Disabling the filter plugin
 
 Just set it to `false` in the configuration.
