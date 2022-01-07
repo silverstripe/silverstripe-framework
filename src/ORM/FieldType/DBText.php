@@ -139,12 +139,17 @@ class DBText extends DBString
             $add = $this->defaultEllipsis();
         }
 
-        $summarySentenceSeparators = implode($this->config()->summarySentenceSeparators);
+        $summarySentenceSeparatorsConfig = $this->config()->summarySentenceSeparators;
+        $summarySentenceSeparatorsArr = [];
+        foreach ($summarySentenceSeparatorsConfig as $separator) {
+            array_push($summarySentenceSeparatorsArr, '\\' . $separator[0]);
+        }
+        $summarySentenceSeparators = implode('|', $summarySentenceSeparatorsArr);
 
         // Split on sentences (don't remove period)
         $sentences = array_filter(array_map(function ($str) {
             return trim($str);
-        }, preg_split('@(?<=[' . $summarySentenceSeparators . '])@', $value) ?: []));
+        }, preg_split('@(?<=[(' . $summarySentenceSeparators . ')])@', $value) ?: []));
         $wordCount = count(preg_split('#\s+#u', $sentences[0]) ?: []);
 
         // if the first sentence is too long, show only the first $maxWords words
