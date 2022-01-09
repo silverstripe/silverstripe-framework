@@ -48,7 +48,8 @@ class TestMailer implements Mailer
             'From' => implode(';', array_keys($email->getFrom() ?: [])),
             'Subject' => $email->getSubject(),
             'Content' => $email->getBody(),
-            'AttachedFiles' => $attachedFiles
+            'AttachedFiles' => $attachedFiles,
+            'Headers' => $email->getSwiftMessage()->getHeaders(),
         ];
         if ($plainContent) {
             $serialised['PlainContent'] = $plainContent;
