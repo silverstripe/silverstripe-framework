@@ -6,6 +6,7 @@ use League\Csv\Writer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -220,8 +221,15 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
             : [];
 
+        // Remove limit as the list may be paginated, we want the full list for the export
+        $items = $items->limit(null);
+        // Use Generator in applicable cases to reduce memory consumption
+        $items = $items instanceof DataList
+            ? $items->getGenerator()
+            : $items;
+
         /** @var DataObject $item */
-        foreach ($items->limit(null) as $item) {
+        foreach ($items as $item) {
             if (!$item->hasMethod('canView') || $item->canView()) {
                 $columnData = [];
 
