@@ -293,7 +293,7 @@ Images that don't have dimensions should not be lazy loaded as that might alter 
 page after the initial page load.
 
 ```ss
-<img src="$Logo.URL" width="$Logo.Width" width="$Logo.Height" loading="lazy" alt="Company Logo" />
+<img src="$Logo.URL" width="$Logo.Width" height="$Logo.Height" loading="lazy" alt="Company Logo" />
 
 <!-- The size of this image is controlled by a CSS class so it can be lazy loaded -->
 <img src="$resourceURL('themes/example/images/footer.png')" class="64x64square" loading="lazy" alt="" />
