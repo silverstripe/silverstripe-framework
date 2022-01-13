@@ -937,6 +937,11 @@ class Member extends DataObject
             $this->Locale = i18n::config()->get('default_locale');
         }
 
+        // Ensure FailedLoginCount is non-negative
+        if ($this->FailedLoginCount < 0) {
+            $this->FailedLoginCount = 0;
+        }
+
         parent::onBeforeWrite();
     }
 
