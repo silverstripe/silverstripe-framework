@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Search;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
@@ -179,7 +180,53 @@ class SearchContext
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery([$filter, 'apply']);
+                    $modelObj = Injector::inst()->create($this->modelClass);
+                    /*
+                        If using a method to search. e.g.
+
+                        private static $searchable_fields = [
+                            'getSearchableFirstName' => [
+                                'title' => 'First Name',
+                                'filter' => 'PartialMatchFilter',
+                                'field' => TextField::class,
+                            ]
+                        ]
+
+                        public function getSearchableFirstName($queryName = '')
+                        {
+                            return [
+                                'Customer.FirstName' => $queryName,
+                                'ShippingAddress.FirstName' => $queryName,
+                            ];
+                        }
+                    */
+                    if($modelObj->hasMethod($key)){
+                        $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
+                            $searchFields = $modelObj->$key($value);
+                            $sqlSearchFields = [];
+                            foreach(array_keys($searchFields) as $dottedRelation){
+                                $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
+                                $relations = explode('.', $dottedRelation);
+                                $fieldName = array_pop($relations);
+
+                                // Apply join
+                                $relationModelName = $dataQuery->applyRelation($relation);
+
+                                // Get prefixed column
+                                $relationPrefix = $dataQuery->applyRelationPrefix($relation);
+
+                                // Find the db field the relation belongs to
+                                $columnName = $modelObj->getSchema()
+                                    ->sqlColumnForField($relationModelName, $fieldName, $relationPrefix);
+
+                                // Update filters to used the sqlColumnForField
+                                $sqlSearchFields[$columnName] = $value;
+                            }
+                            $dataQuery = $dataQuery->whereAny($sqlSearchFields);
+                        });
+                    } else {
+                        $query = $query->alterDataQuery([$filter, 'apply']);
+                    }
                 }
             }
         }

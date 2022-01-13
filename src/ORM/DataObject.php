@@ -3751,6 +3751,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (is_int($name)) {
                 // Format: array('MyFieldName')
                 $rewrite[$identifier] = [];
+            } elseif ($this->hasMethod($identifier)) {
+                $rewrite[$identifier] = $fields[$identifier];
             } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifier))) {
                 // Format: array('MyFieldName' => array(
                 //   'filter => 'ExactMatchFilter',
