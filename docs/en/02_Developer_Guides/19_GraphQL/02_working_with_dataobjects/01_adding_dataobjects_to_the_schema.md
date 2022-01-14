@@ -217,15 +217,75 @@ You can create logic like this using the `bulkLoad` configuration file, which al
 that load a bundle of classes and apply the same set of configuration to all of them.
 
 
+**_graphql/bulkLoad.yml**
+```yaml
+elemental: # An arbitrary key to define what these directives are doing
+  # Load all content blocks
+  load:
+    inheritanceLoader:
+      include:
+          - DNADesign\Elemental\Models\BaseElement
+      exclude:
+          - MyApp\Elements\MySecretElement
+  # Add all fields and read operations
+  apply:
+    fields:
+      '*': true
+    operations:
+      read: true
+      readOne: true      
+app:
+  # Load everything in our app that has the Versioned extension
+  load:
+    namespaceLoader:
+      include:
+        - MyApp\Models\*
+    extensionLoader:
+      include:
+        - SilverStripe\Versioned\Versioned
+    filepathLoader:
+      exclude:
+        - app/src/Models/*.secret.php
+  apply:
+    fields:
+      '*': true
+    operations:
+      '*': true
+```
+
 By default, four loaders are provided to you to help gather specific classnames:
 
-* `namespaceLoader`: Fuzzy match the namespace of the model
-* `inheritanceLoader`: Get everything that matches or extends a given base class
-* `extensionLoader`: Get any class that has a given extension applied
-* `filepathLoader`: Get any classes in files matching a given glob expression.
+#### By namespace
+* **Identifier**: `namespaceLoader`
+* **Description**: Include or exclude classes based on their namespace  
+* **Example**: `include: [MyApp\Models\*]`
+  
+#### By inheritance
+
+* **Identifier**: `inheritanceLoader`
+* **Description**: Include or exclude everything that matches or extends a given base class
+* **Example**: `include: [DNADesign\Elemental\Models\BaseElement]`
+
+#### By applied extension
+
+* **Identifier**: `extensionLoader`
+* **Description**: Include or exclude any class that has a given extension applied
+* **Example**: `include: [SilverStripe\Versioned\Versioned]`
+  
+#### By filepath
+
+* **Identifier**: `filepathLoader`
+* **Description**: Include or exclude any classes in files matching a given glob expression, relative to the base path. Module syntax is allowed. 
+* **Examples**:
+  - `include: [ 'src/models/*.model.php' ]`
+  - `include: [ 'somevendor/somemodule: src/Models/*.php' ]`    
 
 Each block starts with a collection of all classes that gets filtered as each loader runs. The primary job
 of a loader is to _remove_ classes from the entire collection, not add them in.
+
+[info]
+`exclude` directives will always supersede `include` directives.
+[/info]
 
 [info]
 If you find that this paints with too big a brush, you can always override individual models explicitly in `models.yml`.
