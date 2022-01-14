@@ -21,7 +21,6 @@ This page outlines those who are part of the Core Committer team and outlines th
 * [Loz Calver](https://github.com/kinglozzer)
 * [Maxime Rainville](https://github.com/maxime-rainville)
 * [Michal Kleiner](https://github.com/michalkleiner)
-* [Paul Clarke](https://github.com/clarkepaul)
 * [Sam Minnée](https://github.com/sminnee)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
 * [Will Rossiter](https://github.com/wilr/)
