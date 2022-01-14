@@ -23,6 +23,10 @@ class PermissionRoleCode extends DataObject
     ];
 
     private static $table_name = "PermissionRoleCode";
+    
+    private static $indexes = [
+        "Code" => true,
+    ];
 
     public function validate()
     {
