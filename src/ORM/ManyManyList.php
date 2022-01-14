@@ -404,6 +404,7 @@ class ManyManyList extends RelationList
         unset($from[$this->joinTable]);
         $selectQuery->setFrom($from);
         $selectQuery->setOrderBy(); // ORDER BY in subselects breaks MS SQL Server and is not necessary here
+        $selectQuery->setLimit(null); // LIMIT in subselects breaks MariaDB (https://mariadb.com/kb/en/subquery-limitations/#limit) and is not necessary here
         $selectQuery->setDistinct(false);
 
         // Use a sub-query as SQLite does not support setting delete targets in
