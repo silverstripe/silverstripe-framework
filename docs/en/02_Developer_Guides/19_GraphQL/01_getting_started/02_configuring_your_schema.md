@@ -118,6 +118,8 @@ types:
   # your generic types here
 models:
   # your dataobjects here
+bulkLoad:
+  # your bulk loader directives here
 queries:
   # your queries here
 mutations:
@@ -154,6 +156,11 @@ be implicitly placed in the corresponding section of the schema.
 # my type definitions here
 ```
 
+**app/_graphql/bulkLoad/bulkLoad.yml**
+```yaml
+# my bulk loader directives here
+```
+
 ##### Namespacing by filename
 
 If the filename is named one of the four keywords above, it will be implicitly placed 
@@ -168,6 +175,12 @@ in the corresponding section of the schema. **This only works in the root source
 ```yaml
 # my models here
 ```
+
+**app/_graphql/bulkLoad.yml**
+```yaml
+# my bulk loader directives here
+```
+
 #### Going even more granular
 
 These special directories can contain multiple files that will all merge together, so you can even

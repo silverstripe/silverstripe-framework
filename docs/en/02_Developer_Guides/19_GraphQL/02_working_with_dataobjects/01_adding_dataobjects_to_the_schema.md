@@ -1,5 +1,5 @@
 ---
-title: The DataObject model type
+title: Adding DataObjects to the schema
 summary: An overview of how the DataObject model can influence the creation of types, queries, and mutations
 ---
 
@@ -199,6 +199,72 @@ convention in GraphQL APIs to use lowerCamelCase fields, so this is given by def
 
 [/notice]
 
+### Bulk loading models
+
+It's likely that in your application, you have a whole collection of classes you want exposed to the API, with roughly
+the same fields and operations exposed on them. It can be really tedious to write a new declaration for every single
+dataobject in your project, and as you add new ones, there's a bit of overhead in remembering to add it to the
+GraphQL schema.
+
+Common use cases might be:
+
+* Add everything in `App\Models`
+* Add every implementation of `BaseElement`
+* Add anything with the `Versioned` extension
+* Add everything that matches `src/*Model.php`
+
+You can create logic like this using the `bulkLoad` configuration file, which allows you to specify groups of directives
+that load a bundle of classes and apply the same set of configuration to all of them.
+
+
+By default, four loaders are provided to you to help gather specific classnames:
+
+* `namespaceLoader`: Fuzzy match the namespace of the model
+* `inheritanceLoader`: Get everything that matches or extends a given base class
+* `extensionLoader`: Get any class that has a given extension applied
+* `filepathLoader`: Get any classes in files matching a given glob expression.
+
+Each block starts with a collection of all classes that gets filtered as each loader runs. The primary job
+of a loader is to _remove_ classes from the entire collection, not add them in.
+
+[info]
+If you find that this paints with too big a brush, you can always override individual models explicitly in `models.yml`.
+The bulk loaders run _before_ the models.yml config is loaded.
+[/info]
+
+#### DataObjects subclasses are the default starting point
+
+Because this is Silverstripe CMS, and it's likely that you're using dataobject models only, the bulk loaders start with an
+initial filter, which is defined as follows:
+
+```yaml
+inheritanceLoader:
+  include:
+    - SilverStripe\ORM\DataObject
+```
+
+This ensures that at a bare minimum, you're always filtering by dataobject classes only. If, for some reason, you
+have a non-dataobject class in `App\Models\*`, it will automatically be filtered out due to this default setting.
+
+This default is configured in the `defaultBulkLoad` setting in your schema config. Should you ever want to disable
+that, just set it to `false`.
+
+**_graphql/config.yml**
+```
+defaultBulkLoad: false
+```
+
+#### Creating your own bulk loader
+
+Bulk loaders must extend `SilverStripe\GraphQL\Schema\BulkLoader\AbstractBulkLoader`.  They need to declare an
+identifier (e.g. `namespaceLoader`) to be referenced in the config, and they must provide a
+`collect(Collection $collection): Collection` which returns a new `Collection` instance once the loader has done its
+work parsing through the `include` and `exclude` directives.
+
+Bulk loaders are automatically registered. Just creating the class is all you need to do to have it available for use
+in your `bulkLoad.yml` file.
+
+
 ### Customising model fields
 
 You don't have to rely on the model to tell you how fields should resolve. Just like
@@ -241,9 +307,9 @@ Page:
         paginateList: false # don't paginate the read operation
 ```
 
-### Blacklisted fields {#blacklisted-fields}
+### Disallowed fields {#disallowed-fields}
 
-While selecting all fields via `*` is usedful, there are some fields that you
+While selecting all fields via `*` is useful, there are some fields that you
 don't want to accidentally expose, especially if you're a module author
 and expect models within this code to be used through custom GraphQL endpoints.
 For example, a module might add a secret "preview token" to each `SiteTree`.
@@ -251,8 +317,8 @@ A custom GraphQL endpoint might have used `fields: '*'` on `SiteTree` to list pa
 on the public site, which now includes a sensitive field.
 
 The `graphql_blacklisted_fields` property on `DataObject` allows you to
-blacklist fields globally for all GraphQL schemas.
-This blacklist applies for all operations (read, update, etc).  
+disallow fields globally for all GraphQL schemas.
+This block list applies for all operations (read, update, etc).  
 
 **app/_config/graphql.yml**
 ```yaml
