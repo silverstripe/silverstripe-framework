@@ -205,7 +205,7 @@ you can specify these in your Controller class via the **$url_handlers** static 
 This is useful when you want to provide custom actions for the mapping of `teams/*`. Say for instance we want to respond
 `coaches`, and `staff` to the one controller action `payroll`.
 
-**app/code/controllers/TeamController.php**
+**app/src/controllers/TeamController.php**
 
 ```php
 use SilverStripe\Control\Controller;

@@ -8,7 +8,7 @@ summary: Test models, database logic and your object methods.
 A Unit Test is an automated piece of code that invokes a unit of work in the application and then checks the behavior 
 to ensure that it works as it should. A simple example would be to test the result of a PHP method.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php

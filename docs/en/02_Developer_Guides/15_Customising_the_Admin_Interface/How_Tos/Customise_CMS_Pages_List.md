@@ -21,7 +21,7 @@ Here's a brief example on how to add sorting and a new column for a
 hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 
 
-**app/code/NewsPageHolder.php**
+**app/src/NewsPageHolder.php**
 
 ```php
 class NewsPageHolder extends Page 
@@ -30,7 +30,7 @@ class NewsPageHolder extends Page
 }
 ```
 
-**app/code/NewsPage.php**
+**app/src/NewsPage.php**
 
 ```php
 class NewsPage extends Page 
@@ -47,7 +47,7 @@ before its rendered. In this case, we limit our logic to the desired page type,
 although it's just as easy to implement changes which apply to all page types,
 or across page types with common characteristics.
 
-**app/code/NewsPageHolderCMSMainExtension.php**
+**app/src/NewsPageHolderCMSMainExtension.php**
 
 ```php
 use SilverStripe\Core\Extension;

@@ -14,7 +14,7 @@ Browsers without support receive an `<input type=text>` based polyfill.
 
 The following example will add a simple DateField to your Page, allowing you to enter a date manually. 
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php

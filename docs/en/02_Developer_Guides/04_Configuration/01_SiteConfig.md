@@ -40,7 +40,7 @@ echo $config->Title;
 
 To extend the options available in the panel, define your own fields via a [DataExtension](api:SilverStripe\ORM\DataExtension).
 
-**app/code/extensions/CustomSiteConfig.php**
+**app/src/extensions/CustomSiteConfig.php**
 
 
 ```php

@@ -831,7 +831,7 @@ In templates, you don't need to worry about this distinction. The `$Content` var
 default, and previews draft content only if explicitly requested (e.g. by the "preview" feature in the CMS, or by adding ?stage=Stage to the URL). If you want
 to force a specific stage, we recommend the `Controller->init()` method for this purpose, for example:
 
-**app/code/MyController.php**
+**app/src/MyController.php**
 ```php
 public function init()
 {

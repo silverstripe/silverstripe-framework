@@ -105,7 +105,7 @@ For more detail around how variables are inserted and formatted into a template 
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 public function UsersIpAddress()
@@ -114,7 +114,7 @@ public function UsersIpAddress()
 }
 ```
 
-**app/code/Page.ss**
+**app/src/Page.ss**
 
 ```html
 <p>You are coming from $UsersIpAddress.</p>
@@ -129,7 +129,7 @@ object the methods get called on. For the standard `Page.ss` template the scope 
 class. This object gives you access to all the database fields on [PageController](api:SilverStripe\CMS\Model\SiteTree\PageController), its corresponding [Page](api:SilverStripe\CMS\Model\SiteTree\Page)
 record and any subclasses of those two.
 
-**app/code/Layout/Page.ss**
+**app/src/Layout/Page.ss**
 
 ```ss
 $Title
