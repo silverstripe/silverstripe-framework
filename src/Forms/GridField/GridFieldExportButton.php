@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
@@ -219,6 +220,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         $columnsHandled = ($gridFieldColumnsComponent)
             ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
             : [];
+        $fieldFormatting = ($gridFieldColumnsComponent) ? $gridFieldColumnsComponent->getFieldFormatting() : [];
 
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
@@ -243,6 +245,18 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
                         if ($value === null) {
                             $value = $gridField->getDataFieldValue($item, $columnHeader);
+                        }
+                    }
+
+                    // @see GridFieldDataColumns::formatValue()
+                    $spec = $fieldFormatting[$columnSource] ?? null;
+                    // anonymous function: 'formatting' => function ($value, $record) { ... }
+                    if ($spec instanceof \Closure) {
+                        $value = $spec($value, $item);
+                    } else {
+                        // class method: 'formatting' => [$this, 'formatMyColumn']
+                        if (is_callable($spec)) {
+                            $value = call_user_func($spec, $value, $item);
                         }
                     }
 

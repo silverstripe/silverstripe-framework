@@ -10,6 +10,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
@@ -202,5 +203,37 @@ class GridFieldExportButtonTest extends SapphireTest
         }
 
         return $reader;
+    }
+
+    public function testFormatting()
+    {
+        $list = new DataList(Team::class);
+        $config = new GridFieldConfig();
+        $button = new GridFieldExportButton();
+        $button->setExportColumns([
+            'Name' => 'Name',
+            'City' => 'City',
+            'RugbyTeamNumber' => 'Rugby team number'
+        ]);
+        $columns = new GridFieldDataColumns();
+        $columns->setFieldFormatting([
+            // anonymous function
+            'City' => function ($value, $item) {
+                return 'CITY: ' . $value . ' - ' . $item->Name;
+            },
+            // class method
+            'RugbyTeamNumber' => [$this, 'formatRugbyTeamNumber']
+        ]);
+        $config->addComponent($button);
+        $config->addComponent($columns);
+        $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $export = $button->generateExportFileData($gridField);
+        $str = 'Test2,"CITY: Quoted ""City"" 2 - Test2","RUGBY_TEAM_NUMBER: 0 - Test2"';
+        $this->assertNotFalse(strpos($export, $str));
+    }
+
+    public function formatRugbyTeamNumber($value, $item)
+    {
+        return 'RUGBY_TEAM_NUMBER: ' . $value . ' - ' . $item->Name;
     }
 }
