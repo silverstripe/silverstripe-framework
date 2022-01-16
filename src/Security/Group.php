@@ -84,6 +84,12 @@ class Group extends DataObject
     ];
 
     private static $table_name = "Group";
+    
+    private static $indexes = [
+        'Title' => true,
+        'Code' => true,
+        'Sort' => true,
+    ];
 
     public function getAllChildren()
     {
