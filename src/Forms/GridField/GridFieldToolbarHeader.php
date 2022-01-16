@@ -10,7 +10,7 @@ use SilverStripe\View\SSViewer;
  *
  * The header serves to display the name of the data the GridField is showing.
  */
-class GridFieldToolbarHeader implements GridField_HTMLProvider
+class GridFieldToolbarHeader extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     /**

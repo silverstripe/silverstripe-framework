@@ -16,7 +16,7 @@ use SilverStripe\View\Requirements;
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  */
-class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+class GridFieldPrintButton extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     use Extensible;
 

@@ -26,7 +26,7 @@ use SilverStripe\View\SSViewer;
  *
  * @see GridField
  */
-class GridFieldFilterHeader implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
+class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridField_URLHandler, GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
     /**
      * See {@link setThrowExceptionOnBadDataType()}

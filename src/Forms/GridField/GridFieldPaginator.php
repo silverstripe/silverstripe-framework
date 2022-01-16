@@ -14,7 +14,7 @@ use LogicException;
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.
  */
-class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
+class GridFieldPaginator extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
     use Configurable;
 

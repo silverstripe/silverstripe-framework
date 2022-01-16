@@ -84,7 +84,7 @@ class Group extends DataObject
     ];
 
     private static $table_name = "Group";
-    
+
     private static $indexes = [
         'Title' => true,
         'Code' => true,
@@ -159,11 +159,11 @@ class Group extends DataObject
         if ($this->ID) {
             $group = $this;
             $config = GridFieldConfig_RelationEditor::create();
-            $config->addComponent(new GridFieldButtonRow('after'));
-            $config->addComponents(new GridFieldExportButton('buttons-after-left'));
-            $config->addComponents(new GridFieldPrintButton('buttons-after-left'));
+            $config->addComponent(GridFieldButtonRow::create('after'));
+            $config->addComponents(GridFieldExportButton::create('buttons-after-left'));
+            $config->addComponents(GridFieldPrintButton::create('buttons-after-left'));
             $config->removeComponentsByType(GridFieldDeleteAction::class);
-            $config->addComponent(new GridFieldGroupDeleteAction($this->ID), GridFieldPageCount::class);
+            $config->addComponent(GridFieldGroupDeleteAction::create($this->ID), GridFieldPageCount::class);
 
             /** @var GridFieldAddExistingAutocompleter $autocompleter */
             $autocompleter = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);

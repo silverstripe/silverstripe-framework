@@ -12,7 +12,7 @@ use LogicException;
  *
  * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
  */
-class GridFieldPageCount implements GridField_HTMLProvider
+class GridFieldPageCount extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
     use Configurable;
 

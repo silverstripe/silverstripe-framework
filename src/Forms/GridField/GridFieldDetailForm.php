@@ -11,7 +11,6 @@ use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
@@ -32,10 +31,10 @@ use SilverStripe\ORM\Filterable;
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  */
-class GridFieldDetailForm implements GridField_URLHandler
+class GridFieldDetailForm extends AbstractGridFieldComponent implements GridField_URLHandler
 {
 
-    use Extensible, Injectable, GridFieldStateAware;
+    use Extensible, GridFieldStateAware;
 
     /**
      * @var string
