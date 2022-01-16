@@ -142,7 +142,7 @@ SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
 You can also override this for a specific `GridField` instance when using the `GridFieldConfig_RecordEditor` constructor:
 
 ```php
-$grid = new GridField(
+$grid = GridField::create(
     "pages", 
     "All Pages", 
     SiteTree::get(), 

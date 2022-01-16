@@ -299,7 +299,7 @@ class MyAdmin extends ModelAdmin
         $context = parent::getSearchContext();
 
         if($this->modelClass == 'Product') {
-            $context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
+            $context->getFields()->push(CheckboxField::create('q[ExpensiveOnly]', 'Only expensive stuff'));
         }
 
         return $context;
@@ -362,7 +362,7 @@ class MyAdmin extends ModelAdmin
     {
         $config = parent::getGridFieldConfig();
 
-        $config->addComponent(new GridFieldFilterHeader());
+        $config->addComponent(GridFieldFilterHeader::create());
 
         return $config;
     }
@@ -397,7 +397,7 @@ class MyAdmin extends ModelAdmin
 
         // modify the list view.
         if ($this->modelClass === Product::class) {
-            $config->addComponent(new GridFieldFilterHeader());
+            $config->addComponent(GridFieldFilterHeader::create());
         }
 
         return $config;
@@ -425,7 +425,7 @@ class ModelAdminExtension extends Extension
 {
     public function updateGridFieldConfig(GridFieldConfig &$config)
     {
-        $config->addComponent(new GridFieldFilterHeader());
+        $config->addComponent(GridFieldFilterHeader::create());
     }
 }
 ```
@@ -470,7 +470,7 @@ class MyAdmin extends ModelAdmin
         $gridField = $form->Fields()->fieldByName($gridFieldName);
 
         // modify the list view.
-        $gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+        $gridField->getConfig()->addComponent(GridFieldFilterHeader::create());
 
         return $form;
     }

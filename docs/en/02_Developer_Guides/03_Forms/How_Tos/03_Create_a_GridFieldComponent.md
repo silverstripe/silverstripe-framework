@@ -3,7 +3,9 @@ title: Create a GridField Component
 summary: Customise your GridField with a variety of add-ons.
 icon: table
 ---
-A single component often uses a number of interfaces.
+A single component often uses a number of interfaces. It is good practice for your custom
+components to subclass the `AbstractGridFieldComponent` class to ensure they behave the same
+way as built-in components (e.g. are `Injectable`).
 
 ### GridField_HTMLProvider
 

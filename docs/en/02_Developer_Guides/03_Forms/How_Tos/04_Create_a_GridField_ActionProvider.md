@@ -32,13 +32,14 @@ below:
 
 
 ```php
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Control\Controller;
 
-class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider 
+class GridFieldCustomAction extends AbstractGridFieldComponent implements GridField_ColumnProvider, GridField_ActionProvider 
 {
 
     public function augmentColumns($gridField, &$columns) 
@@ -114,12 +115,12 @@ manipulating the `GridFieldConfig` instance if required.
 ```php
 // option 1: creating a new GridField with the CustomAction
 $config = GridFieldConfig::create();
-$config->addComponent(new GridFieldCustomAction());
+$config->addComponent(GridFieldCustomAction::create());
 
-$gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
+$gridField = GridField::create('Teams', 'Teams', $this->Teams(), $config);
 
 // option 2: adding the CustomAction to an existing GridField
-$gridField->getConfig()->addComponent(new GridFieldCustomAction());
+$gridField->getConfig()->addComponent(GridFieldCustomAction::create());
 ```
 
 For documentation on adding a Component to a `GridField` created by `ModelAdmin`
@@ -177,13 +178,14 @@ For an action to be included in the action menu dropdown, which appears on each 
 ## Basic GridFieldCustomAction boilerplate implementing GridField_ActionMenuItem
 
 ```php
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Control\Controller;
 
-class GridFieldCustomAction implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
+class GridFieldCustomAction extends AbstractGridFieldComponent implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuItem
 {
 
     public function getTitle($gridField, $record, $columnName)
