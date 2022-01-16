@@ -372,7 +372,8 @@ class i18nTextCollector
         // For each module do a simple merge of the default yml with these strings
         foreach ($entitiesByModule as $module => $messages) {
             // Load existing localisations
-            $masterFile = "{$this->basePath}/vendor/{$module}/lang/{$this->defaultLocale}.yml";
+            $masterFile = ModuleLoader::inst()->getManifest()->getModule($module)->getPath() .
+                DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $this->defaultLocale . '.yml';
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
