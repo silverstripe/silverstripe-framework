@@ -215,8 +215,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         /** @var DBDatetime $now */
         $now = DBField::create_field('Datetime', $time);
 
-        // Make this field immutable, so future modifications don't apply to any other object references
-        return $now->setImmutable(true);
+        return $now;
     }
 
     /**

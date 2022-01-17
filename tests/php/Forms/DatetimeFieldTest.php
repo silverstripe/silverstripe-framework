@@ -507,7 +507,8 @@ class DatetimeFieldTest extends SapphireTest
         DBDatetime::set_mock_now($globalStateNow);
 
         // Suppose we need to know the current time in our feature, we store it in a variable
-        $now = DBDatetime::now();
+        // Make this field immutable, so future modifications don't apply to any other object references
+        $now = DBDatetime::now()->setImmutable(true);
 
         // Later in the code we want to know the time value for 10 days later, we can reuse our $now variable
         $later = $now->modify('+ 10 days')->Rfc2822();
