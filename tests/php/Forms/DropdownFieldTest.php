@@ -8,6 +8,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
@@ -148,10 +149,103 @@ class DropdownFieldTest extends SapphireTest
             ]
         );
 
+        // Test that an empty option does not comes through in the markup however
+        $options = $this->findOptionElements($FieldWithoutEmpty->Field());
+
         $this->assertEquals(
             1,
             count($options),
             'As hasEmptyDefault is not provided, then no default option.'
+        );
+    }
+
+    public function testEmpty()
+    {
+        $fieldName = 'TestField';
+        $formName = 'testForm';
+        // Create mock form
+        $form = $this->createMock(Form::class);
+        $form->method('getTemplateHelper')
+            ->willReturn(FormTemplateHelper::singleton());
+
+        $form->method('getHTMLID')
+            ->willReturn($formName);
+        
+        $source = [
+            'first' => 'value',
+            0 => 'otherValue'
+        ];
+        $field = new DropdownField($fieldName, 'Test Field', $source);
+        $field->setForm($form);
+
+        $fieldId = $field->ID();
+        $this->assertEquals($fieldId, sprintf('%s_%s', $formName, $fieldName));
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertArraySubset(
+            [
+                'id' => $fieldId,
+                'name' => $fieldName,
+                'value' => 'first'
+            ],
+            $schemaStateDefaults,
+            true
+        );
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertArraySubset(
+            [
+                'id' => $fieldId,
+                'name' => $fieldName,
+                'type' => 'text',
+                'schemaType' => 'SingleSelect',
+                'holderId' => sprintf('%s_Holder', $fieldId),
+                'title' => 'Test Field',
+                'extraClass' => 'dropdown',
+                'data' => [
+                    'emptyString' => null,
+                    'hasEmptyDefault' => false
+                ]
+            ],
+            $schemaDataDefaults,
+            true
+        );
+
+        // Set an empty string of field
+        $field->setEmptyString('(Any)');
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertArraySubset(
+            [
+                'id' => $fieldId,
+                'name' => $fieldName,
+                'value' => ''
+            ],
+            $schemaStateDefaults,
+            true
+        );
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertArraySubset(
+            [
+                'id' => $fieldId,
+                'name' => $fieldName,
+                'type' => 'text',
+                'schemaType' => 'SingleSelect',
+                'holderId' => sprintf('%s_Holder', $fieldId),
+                'title' => 'Test Field',
+                'extraClass' => 'dropdown',
+                'data' => [
+                    'emptyString' => '(Any)',
+                    'hasEmptyDefault' => true
+                ]
+            ],
+            $schemaDataDefaults,
+            true
         );
     }
 
