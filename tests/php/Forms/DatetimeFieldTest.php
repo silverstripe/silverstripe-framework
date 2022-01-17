@@ -499,6 +499,24 @@ class DatetimeFieldTest extends SapphireTest
         $field->setTimezone('Pacific/Auckland');
     }
 
+    public function testModifyReturnNewField(): void
+    {
+        $globalStateNow = '2020-01-01 00:00:00';
+        DBDatetime::set_mock_now($globalStateNow);
+
+        // Suppose we need to know the current time in our feature, we store it in a variable
+        // Make this field immutable, so future modifications don't apply to any other object references
+        $now = DBDatetime::now()->setImmutable(true);
+
+        // Later in the code we want to know the time value for 10 days later, we can reuse our $now variable
+        $later = $now->modify('+ 10 days')->Rfc2822();
+
+        // Our expectation is that this code should not apply the change to our
+        // $now variable declared earlier in the code
+        $this->assertSame('2020-01-11 00:00:00', $later, 'We expect to get a future datetime');
+        $this->assertSame($globalStateNow, $now->Rfc2822(), 'We expect to get the current datetime');
+    }
+
     protected function getMockForm()
     {
         /** @skipUpgrade */
