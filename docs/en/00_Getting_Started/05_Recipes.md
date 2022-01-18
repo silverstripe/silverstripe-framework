@@ -14,7 +14,7 @@ Recipes are used to implement common broad feature sets by shipping a collection
 
 Before each version of a supported CMS recipe is released, it is comprehensively regression tested and passed to a third party for a security-focused audit, making sure that projects have a secure starting point or a safe and secure upgrade with each recipe release.
 
-## What's the difference between a *recipe* and a *module*?
+## What's the difference between a recipe and a module?
 
 Silverstripe CMS is powered by a system of components in the form of Composer packages. It consists of two types of package:
 
