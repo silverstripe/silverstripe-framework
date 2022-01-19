@@ -1,4 +1,4 @@
-## SilverStripe Framework
+## Silverstripe Framework
 
 [![Build Status](https://api.travis-ci.com/silverstripe/silverstripe-framework.svg?branch=4)](https://travis-ci.com/silverstripe/silverstripe-framework)
 [![Build Docs](https://github.com/silverstripe/silverstripe-framework/workflows/Build%20Docs/badge.svg)](https://docs.silverstripe.org/)
@@ -9,7 +9,7 @@
 [![Total Downloads](https://poser.pugx.org/silverstripe/framework/downloads.svg)](https://packagist.org/packages/silverstripe/framework)
 [![License](https://poser.pugx.org/silverstripe/framework/license.svg)](https://github.com/silverstripe/silverstripe-framework#license)
 
-PHP framework forming the base for the SilverStripe CMS ([https://silverstripe.org](https://silverstripe.org)). 
+PHP framework forming the base for the Silverstripe CMS ([https://silverstripe.org](https://silverstripe.org)). 
 Requires a [`silverstripe-installer`](https://github.com/silverstripe/silverstripe-installer) base project. Typically used alongside the [`cms`](https://github.com/silverstripe/silverstripe-cms) module.
 
 ## Installation ##
@@ -24,7 +24,7 @@ Please read our [issue reporting guidelines](https://docs.silverstripe.org/en/co
 
 ## Development and Contribution ##
 
-If you would like to make changes to the SilverStripe core codebase, we have an extensive [guide to contributing code](https://docs.silverstripe.org/en/contributing/code/).
+If you would like to make changes to the Silverstripe core codebase, we have an extensive [guide to contributing code](https://docs.silverstripe.org/en/contributing/code/).
 
 ## Links ##
 
