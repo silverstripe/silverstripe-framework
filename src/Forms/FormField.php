@@ -1355,13 +1355,14 @@ class FormField extends RequestHandler
             $field = $classOrCopy::create($this->name);
         }
 
+        $extraClasses = $this->extraClasses ? array_values($this->extraClasses) : [];
         $field
             ->setValue($this->value)
             ->setForm($this->form)
             ->setTitle($this->Title())
             ->setLeftTitle($this->LeftTitle())
             ->setRightTitle($this->RightTitle())
-            ->addExtraClass($this->extraClass) // Don't use extraClass(), since this merges calculated values
+            ->addExtraClass(implode(' ', $extraClasses)) // Don't use extraClass(), since this merges calculated values
             ->setDescription($this->getDescription());
 
         // Only include built-in attributes, ignore anything set through getAttributes().

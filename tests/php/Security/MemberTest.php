@@ -1270,6 +1270,15 @@ class MemberTest extends FunctionalTest
         }
     }
 
+    public function testFailedLoginCountNegative()
+    {
+        /** @var Member $member */
+        $member = $this->objFromFixture(Member::class, 'test');
+        $member->FailedLoginCount = -1;
+        $member->write();
+        $this->assertSame(0, $member->FailedLoginCount);
+    }
+
     public function testMemberValidator()
     {
         // clear custom requirements for this test
