@@ -12,24 +12,29 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 
 /**
- * Class RelationValidationService
- *
- * Basic validation of relationship setup, this tool makes sure your relationships are setup correctly in both directions
+ * Basic validation of relationship setup, this tool makes sure your relationships are set up correctly in both directions
  * The validation is configurable and inspection can be narrowed down by namespace, class and relation name
  *
- * This tool runs automatically via flush and outputs notices
+ * This tool is opt-in and runs via flush and outputs notices
  * For strict validation it is recommended to hook this up to your unit test suite
  */
 class RelationValidationService implements Flushable, Resettable
 {
-
     use Configurable;
     use Injectable;
 
     /**
+     * Enable / disable validation output during flush
+     * This is disabled by default (opt-in)
+     *
+     * @var bool
+     */
+    private static $flush_output_enabled = true;
+
+    /**
      * Only inspect classes with the following namespaces/class prefixes
      * Empty string is a special value which represents classes without namespaces
-     * Set value to null to disable the rule (useful when overriding configuration)
+     * Set the value to null to disable the rule (useful when overriding configuration)
      *
      * @var array
      */
@@ -42,7 +47,7 @@ class RelationValidationService implements Flushable, Resettable
      * Any classes with the following namespaces/class prefixes will not be inspected
      * This config is intended to be used together with @see $allow_rules to narrow down the inspected classes
      * Empty string is a special value which represents classes without namespaces
-     * Set value to null to disable the rule (useful when overriding configuration)
+     * Set the value to null to disable the rule (useful when overriding configuration)
      *
      * @var array
      */
@@ -111,6 +116,10 @@ class RelationValidationService implements Flushable, Resettable
      */
     public function executeValidation(): void
     {
+        if (!$this->config()->get('flush_output_enabled')) {
+            return;
+        }
+
         $errors = $this->validateRelations();
         $count = count($errors);
 
@@ -124,11 +133,11 @@ class RelationValidationService implements Flushable, Resettable
                 ClassInfo::shortName(static::class),
                 $count
             ),
-            'notice'
+            'error'
         );
 
         foreach ($errors as $message) {
-            DB::alteration_message($message, 'notice');
+            DB::alteration_message($message, 'error');
         }
     }
 
