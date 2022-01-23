@@ -78,13 +78,17 @@ relative to the project root.
 SilverStripe\GraphQL\Schema\Schema:
   schemas:
     default:
-      src: app/_graphql
+      src: 
+        - app/_graphql
 ```
 
+Your `src` must be an array. This allows further source files to be merged into your schema. 
+This feature can be use to extend the schema of third party modules.
+
 [info]
-It is recommended that you define your sources as an array so that further source files are merged.
- Otherwise, another config file could completely override part of your schema definition.
+Your directory can also be a module reference, e.g. `somevendor/somemodule: _graphql`
 [/info]
+
 
 **app/_config/graphql.yml**
 ```yml
@@ -94,11 +98,11 @@ SilverStripe\GraphQL\Schema\Schema:
       src:
         - app/_graphql
         - module/_graphql
+        # The next line would map to an exposed folder e.g.: vendor/somevendor/somemodule/_graphql
+        - somevendor/somemodule: _graphql
 ```
 
-[info]
-Your directory can also be a module reference, e.g. `somevendor/somemodule: _graphql`
-[/info]
+
 
 Now, in our `app/_graphql` file, we can create YAML file definitions.
 
