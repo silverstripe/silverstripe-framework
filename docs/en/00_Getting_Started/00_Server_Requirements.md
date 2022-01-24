@@ -286,7 +286,6 @@ table may be of use:
 Silverstripe CMS supports the following web browsers:
 
 * Google Chrome
-* Internet Explorer 11
 * Microsoft Edge
 * Mozilla Firefox
 
