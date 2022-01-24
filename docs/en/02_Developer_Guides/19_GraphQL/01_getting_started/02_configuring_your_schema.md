@@ -98,8 +98,8 @@ SilverStripe\GraphQL\Schema\Schema:
       src:
         - app/_graphql
         - module/_graphql
-        # The next line would map to an exposed folder e.g.: vendor/somevendor/somemodule/_graphql
-        - somevendor/somemodule: _graphql
+        # The next line would map to `vendor/somevendor/somemodule/_graphql`
+        - 'somevendor/somemodule: _graphql'
 ```
 
 
