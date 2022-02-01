@@ -18,7 +18,7 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
+class GridFieldSortableHeader extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
 
     /**

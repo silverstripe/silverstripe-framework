@@ -14,7 +14,7 @@ use SilverStripe\ORM\SS_List;
  *
  * @see GridField
  */
-class GridFieldLazyLoader implements GridField_DataManipulator, GridField_HTMLProvider
+class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridField_DataManipulator, GridField_HTMLProvider
 {
 
     /**

@@ -33,7 +33,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
  * For easier setup, have a look at a sample configuration in
  * {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
+class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
 {
 
     /**

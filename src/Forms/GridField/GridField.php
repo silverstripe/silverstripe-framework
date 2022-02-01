@@ -259,7 +259,7 @@ class GridField extends FormField
 
         // If the edit button has been removed, replace it with a view button
         if ($hadEditButton && !$copyConfig->getComponentByType(GridFieldViewButton::class)) {
-            $copyConfig->addComponent(new GridFieldViewButton);
+            $copyConfig->addComponent(GridFieldViewButton::create());
         }
 
         return $copy;
@@ -295,7 +295,7 @@ class GridField extends FormField
         $this->config = $config;
 
         if (!$this->config->getComponentByType(GridState_Component::class)) {
-            $this->config->addComponent(new GridState_Component());
+            $this->config->addComponent(GridState_Component::create());
         }
 
         return $this;
@@ -440,7 +440,7 @@ class GridField extends FormField
     public function FieldHolder($properties = [])
     {
         $this->extend('onBeforeRenderHolder', $this, $properties);
-        
+
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
@@ -655,7 +655,7 @@ class GridField extends FormField
             $tableAttributes,
             $header . "\n" . $footer . "\n" . $body
         );
-        
+
         $message = Convert::raw2xml($this->getMessage());
         if (is_array($message)) {
             $message = $message['message'];

@@ -14,7 +14,7 @@ use SilverStripe\View\SSViewer;
  * This row provides two new HTML fragment spaces: 'toolbar-header-left' and
  * 'toolbar-header-right'.
  */
-class GridFieldButtonRow implements GridField_HTMLProvider
+class GridFieldButtonRow extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     protected $targetFragment;

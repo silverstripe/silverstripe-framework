@@ -15,7 +15,7 @@ use SilverStripe\View\SSViewer;
  * Only returns a button if {@link DataObject->canCreate()} for this record
  * returns true.
  */
-class GridFieldAddNewButton implements GridField_HTMLProvider
+class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     protected $targetFragment;

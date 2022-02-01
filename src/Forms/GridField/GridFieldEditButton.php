@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -18,9 +17,9 @@ use SilverStripe\View\SSViewer;
  * The default routing applies to the {@link GridFieldDetailForm} component,
  * which has to be added separately to the {@link GridField} configuration.
  */
-class GridFieldEditButton implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuLink
+class GridFieldEditButton extends AbstractGridFieldComponent implements GridField_ColumnProvider, GridField_ActionProvider, GridField_ActionMenuLink
 {
-    use Injectable, GridFieldStateAware;
+    use GridFieldStateAware;
 
     /**
      * HTML classes to be added to GridField edit buttons
