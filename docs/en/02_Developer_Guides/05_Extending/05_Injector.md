@@ -141,7 +141,6 @@ SilverStripe\Core\Injector\Injector:
       - [ pushHandler, [ %$DefaultHandler ] ]
 ```
 
-[info]
 ### Special YML Syntax
 
 You can use the special `%$` prefix in the configuration yml to fetch items via the Injector. For example:
@@ -165,7 +164,6 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       FilesystemAdapter: '%$SilverStripe\Assets\Flysystem\ProtectedAdapter'
 ```
-[/info]
 
 ## Using constants and environment variables
 
