@@ -5,7 +5,6 @@ namespace SilverStripe\Dev\Validation;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\DataObject;
@@ -18,7 +17,7 @@ use SilverStripe\ORM\DB;
  * This tool is opt-in and runs via flush and outputs notices
  * For strict validation it is recommended to hook this up to your unit test suite
  */
-class RelationValidationService implements Flushable, Resettable
+class RelationValidationService implements Resettable
 {
     use Configurable;
     use Injectable;
@@ -29,7 +28,7 @@ class RelationValidationService implements Flushable, Resettable
      *
      * @var bool
      */
-    private static $flush_output_enabled = true;
+    private static $output_enabled = false;
 
     /**
      * Only inspect classes with the following namespaces/class prefixes
@@ -74,7 +73,7 @@ class RelationValidationService implements Flushable, Resettable
      */
     protected $errors = [];
 
-    public function flushErrors(): void
+    public function clearErrors(): void
     {
         $this->errors = [];
     }
@@ -82,16 +81,8 @@ class RelationValidationService implements Flushable, Resettable
     public static function reset(): void
     {
         $service = self::singleton();
-        $service->flushErrors();
+        $service->clearErrors();
         $service->ignoreConfig = false;
-    }
-
-    /**
-     * @throws ReflectionException
-     */
-    public static function flush(): void
-    {
-        self::singleton()->executeValidation();
     }
 
     /**
@@ -116,10 +107,6 @@ class RelationValidationService implements Flushable, Resettable
      */
     public function executeValidation(): void
     {
-        if (!$this->config()->get('flush_output_enabled')) {
-            return;
-        }
-
         $errors = $this->validateRelations();
         $count = count($errors);
 

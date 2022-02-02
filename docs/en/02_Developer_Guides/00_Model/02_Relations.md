@@ -256,6 +256,14 @@ how the developer wishes to manage this join table.
 [warning]
 Please specify a $belongs_many_many-relationship on the related class as well, in order
 to have the necessary accessors available on both ends. You can use `RelationValidationService` for validation of relationships. This tool will point out the relationships which may need a review.
+
+Example configuration:
+
+```yaml
+SilverStripe\Dev\Validation\RelationValidationService:
+  output_enabled: true
+```
+
 [/warning]
 
 Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well.
