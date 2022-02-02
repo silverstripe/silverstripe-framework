@@ -31,8 +31,9 @@ It's very easy to add enum types to your schema. Just use the `enums` section of
 ```yaml
   enums:
     SortDirection:
-      DESC: Descending order
-      ASC: Ascending order
+      values:    
+        DESC: Descending order
+        ASC: Ascending order
 ```
 
 
