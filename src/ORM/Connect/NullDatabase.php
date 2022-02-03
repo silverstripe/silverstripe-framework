@@ -21,22 +21,20 @@ use Exception;
  */
 class NullDatabase extends Database
 {
+    /**
+     * @var string
+     */
+    private $errorMessage = 'Using NullDatabase, cannot interact with database';
 
     /**
      * @var string
      */
-    protected $errorMessage = 'Using NullDatabase, cannot interact with database';
-
-    /**
-     * @var string
-     */
-    protected $queryErrorMessage = 'Using NullDatabase, cannot execute query: %s';
+    private $queryErrorMessage = 'Using NullDatabase, cannot execute query: %s';
 
     /**
      * @param string $msg
-     * @return self
      */
-    public function setErrorMessage(string $msg)
+    public function setErrorMessage(string $msg): self
     {
         $this->errorMessage = $msg;
         return $this;
@@ -44,38 +42,53 @@ class NullDatabase extends Database
 
     /**
      * @param string $msg
-     * @return self
      */
-    public function setQueryErrorMessage(string $msg)
+    public function setQueryErrorMessage(string $msg): self
     {
         $this->queryErrorMessage = $msg;
         return $this;
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function query($sql, $errorLevel = E_USER_ERROR)
     {
         throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
     {
         throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function getConnector()
     {
         throw new NullDatabaseException($this->errorMessage);
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function getSchemaManager()
     {
         throw new NullDatabaseException($this->errorMessage);
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function getQueryBuilder()
     {
         throw new NullDatabaseException($this->errorMessage);
     }
+
 
     public function getGeneratedID($table)
     {
@@ -107,16 +120,25 @@ class NullDatabase extends Database
         return $fieldValues;
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function manipulate($manipulation)
     {
         throw new NullDatabaseException($this->errorMessage);
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function clearAllData()
     {
         throw new NullDatabaseException($this->errorMessage);
     }
 
+    /**
+     * @throws NullDatabaseException
+     */
     public function clearTable($table)
     {
         throw new NullDatabaseException($this->errorMessage);

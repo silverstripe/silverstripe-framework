@@ -255,8 +255,6 @@ abstract class BaseKernel implements Kernel
         }
     }
 
-
-
     /**
      * Get the environment type
      *
@@ -385,7 +383,6 @@ abstract class BaseKernel implements Kernel
     {
         return [];
     }
-
 
     /**
      * @return bool

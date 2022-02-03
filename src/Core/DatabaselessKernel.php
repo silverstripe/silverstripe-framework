@@ -14,8 +14,6 @@ use Exception;
  */
 class DatabaselessKernel extends BaseKernel
 {
-    protected $queryErrorMessage = 'Booted with DatabaseLessKernel, cannot execute query: %s';
-
     /**
      * Indicates whether the Kernel has been flushed on boot
      * Uninitialised before boot
