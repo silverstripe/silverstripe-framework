@@ -200,11 +200,11 @@ class SearchContext
                             ];
                         }
                     */
-                    if($modelObj->hasMethod($key)){
+                    if(isset($modelObj->searchableFields()[$key]['match_any'])) {
                         $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
-                            $searchFields = $modelObj->$key($value);
+                            $searchFields = $modelObj->searchableFields()[$key]['match_any'];
                             $sqlSearchFields = [];
-                            foreach(array_keys($searchFields) as $dottedRelation){
+                            foreach($searchFields as $dottedRelation){
                                 $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
                                 $relations = explode('.', $dottedRelation);
                                 $fieldName = array_pop($relations);
