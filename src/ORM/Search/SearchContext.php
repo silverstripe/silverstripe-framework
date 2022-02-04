@@ -181,25 +181,6 @@ class SearchContext
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
                     $modelObj = Injector::inst()->create($this->modelClass);
-                    /*
-                        If using a method to search. e.g.
-
-                        private static $searchable_fields = [
-                            'getSearchableFirstName' => [
-                                'title' => 'First Name',
-                                'filter' => 'PartialMatchFilter',
-                                'field' => TextField::class,
-                            ]
-                        ]
-
-                        public function getSearchableFirstName($queryName = '')
-                        {
-                            return [
-                                'Customer.FirstName' => $queryName,
-                                'ShippingAddress.FirstName' => $queryName,
-                            ];
-                        }
-                    */
                     if(isset($modelObj->searchableFields()[$key]['match_any'])) {
                         $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
                             $searchFields = $modelObj->searchableFields()[$key]['match_any'];
