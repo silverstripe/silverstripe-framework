@@ -227,6 +227,8 @@ class DatabaseAdmin extends Controller
      */
     public function doBuild($quiet = false, $populate = true, $testMode = false)
     {
+        $this->extend('onBeforeBuild', $quiet, $populate, $testMode);
+
         if ($quiet) {
             DB::quiet();
         } else {
@@ -400,6 +402,8 @@ class DatabaseAdmin extends Controller
         }
 
         ClassInfo::reset_db_cache();
+
+        $this->extend('onAfterBuild', $quiet, $populate, $testMode);
     }
 
     /**
