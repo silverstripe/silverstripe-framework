@@ -154,7 +154,7 @@ class Player extends DataObject
 
 ```
 
-Use a single search field that matchs on multiple database fields with `'match_any'`
+Use a single search field that matches on multiple database fields with `'match_any'`
 
 ```php
 class Order extends DataObject
