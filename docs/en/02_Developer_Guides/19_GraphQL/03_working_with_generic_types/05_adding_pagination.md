@@ -102,7 +102,7 @@ query {
     nodes {
       name
     }
-    }
+  }
 } 
 ```
 
