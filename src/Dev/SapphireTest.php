@@ -2,6 +2,7 @@
 namespace SilverStripe\Dev;
 
 use Exception;
+use InvalidArgumentException;
 use LogicException;
 use PHPUnit_Framework_Constraint_Not;
 use PHPUnit_Extensions_GroupTestSuite;
@@ -1814,7 +1815,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $id = $state->getFixtureFactory(static::class)->getId($className, $identifier);
 
         if (!$id) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Couldn't find object '%s' (class: %s)",
                 $identifier,
                 $className
@@ -1853,7 +1854,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         $obj = $state->getFixtureFactory(static::class)->get($className, $identifier);
 
         if (!$obj) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Couldn't find object '%s' (class: %s)",
                 $identifier,
                 $className
