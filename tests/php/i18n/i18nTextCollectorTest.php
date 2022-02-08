@@ -300,9 +300,14 @@ PHP;
 <?php
 namespace SilverStripe\Framework\Core;
 
+use SilverStripe\ORM\DataObject;
+
 class MyClass extends Base implements SomeService {
     public function getNewLines(\$class) {
-        if (!is_subclass_of(\$class, DataObject::class) || !Object::has_extension(\$class, Versioned::class)) {
+        if (
+            !is_subclass_of(\$class, DataObject::class)
+            || !Object::has_extension(\$class, \SilverStripe\Versioned\Versioned::class)
+        ) {
             return null;
         }
         return _t(
@@ -331,6 +336,7 @@ class MyClass extends Base implements SomeService {
     }
 }
 PHP;
+
         $this->assertEquals(
             [
                 'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines",
