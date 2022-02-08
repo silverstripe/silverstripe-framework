@@ -111,6 +111,7 @@ Silverstripe CMS public APIs explicitly exclude:
 
 Other entities might be considered to be included or excluded from the public APIs on case-by-case basis.
 
+Any updates to third party dependencies in composer.json should aim to target the default branch for a minor release if possible. Targeting a patch release branch is acceptable if updating dependencies is required to fix a bug.
 
 ### The Pull Request Process
 
