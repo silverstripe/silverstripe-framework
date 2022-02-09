@@ -181,26 +181,18 @@ class SearchContext
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
                     $modelObj = Injector::inst()->create($this->modelClass);
-                    if(isset($modelObj->searchableFields()[$key]['match_any'])) {
+                    if (isset($modelObj->searchableFields()[$key]['match_any'])) {
                         $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
                             $searchFields = $modelObj->searchableFields()[$key]['match_any'];
                             $sqlSearchFields = [];
-                            foreach ($searchFields as $dottedRelation){
+                            foreach ($searchFields as $dottedRelation) {
                                 $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
                                 $relations = explode('.', $dottedRelation);
                                 $fieldName = array_pop($relations);
-
-                                // Apply join
                                 $relationModelName = $dataQuery->applyRelation($relation);
-
-                                // Get prefixed column
                                 $relationPrefix = $dataQuery->applyRelationPrefix($relation);
-
-                                // Find the db field the relation belongs to
                                 $columnName = $modelObj->getSchema()
                                     ->sqlColumnForField($relationModelName, $fieldName, $relationPrefix);
-
-                                // Update filters to used the sqlColumnForField
                                 $sqlSearchFields[$columnName] = $value;
                             }
                             $dataQuery = $dataQuery->whereAny($sqlSearchFields);
