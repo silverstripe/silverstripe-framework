@@ -185,7 +185,7 @@ class SearchContext
                         $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
                             $searchFields = $modelObj->searchableFields()[$key]['match_any'];
                             $sqlSearchFields = [];
-                            foreach($searchFields as $dottedRelation){
+                            foreach ($searchFields as $dottedRelation){
                                 $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
                                 $relations = explode('.', $dottedRelation);
                                 $fieldName = array_pop($relations);
