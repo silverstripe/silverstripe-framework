@@ -170,7 +170,7 @@ class Order extends DataObject
             'field' => TextField::class,
             'filter' => 'PartialMatchFilter',
             'match_any' => [
-                // Searching with "First Name" will show Orders with matching Customer or Address names
+                // Searching with the "First Name" field will show Orders matching either Customer.FirstName or ShippingAddress.FirstName
                 'Customer.FirstName',
                 'ShippingAddress.FirstName',
             ]
