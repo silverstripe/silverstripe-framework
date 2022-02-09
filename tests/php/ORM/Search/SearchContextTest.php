@@ -26,6 +26,9 @@ class SearchContextTest extends SapphireTest
         SearchContextTest\Deadline::class,
         SearchContextTest\Action::class,
         SearchContextTest\AllFilterTypes::class,
+        SearchContextTest\Customer::class,
+        SearchContextTest\Address::class,
+        SearchContextTest\Order::class,
     ];
 
     public function testResultSetFilterReturnsExpectedCount()
@@ -250,5 +253,19 @@ class SearchContextTest extends SapphireTest
         // "Nothing" should come back null since there's no field for it
         $nothing = $list->find('Field', 'Nothing');
         $this->assertNull($nothing);
+    }
+
+    public function testMatchAnySearch()
+    {
+        $order1 = $this->objFromFixture(SearchContextTest\Order::class, 'order1');
+        $context = $order1->getDefaultSearchContext();
+
+        // Search should match Order's customer FirstName
+        $results = $context->getResults(['CustomFirstName' => 'Bill']);
+        $this->assertEquals(1, $results->Count());
+
+        // Search should match Order's shipping address FirstName
+        $results = $context->getResults(['CustomFirstName' => 'Bob']);
+        $this->assertEquals(1, $results->Count());
     }
 }

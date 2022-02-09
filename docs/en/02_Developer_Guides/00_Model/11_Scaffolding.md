@@ -154,6 +154,31 @@ class Player extends DataObject
 
 ```
 
+Use a single search field that matches on multiple database fields with `'match_any'`
+
+```php
+class Order extends DataObject
+{
+    private static $has_one = [
+        'Customer' => Customer::class,
+        'ShippingAddress' => Address::class,
+    ];
+
+    private static $searchable_fields = [
+        'CustomFirstName' => [
+            'title' => 'First Name',
+            'field' => TextField::class,
+            'filter' => 'PartialMatchFilter',
+            'match_any' => [
+                // Searching with the "First Name" field will show Orders matching either Customer.FirstName or ShippingAddress.FirstName
+                'Customer.FirstName',
+                'ShippingAddress.FirstName',
+            ]
+        ]
+    ];
+}
+```
+
 ### Summary Fields
 
 Summary fields can be used to show a quick overview of the data for a specific [DataObject](api:SilverStripe\ORM\DataObject) record. The most common use 

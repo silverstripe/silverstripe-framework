@@ -70,3 +70,16 @@ SilverStripe\ORM\Tests\Search\SearchContextTest\AllFilterTypes:
     StartsWith: 12345-6789 CamelCase
     EndsWith: abcd-efgh-ijkl
     FulltextField: one two three
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Customer:
+  customer1:
+    FirstName: Bill
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Address:
+  address1:
+    FirstName: Bob
+
+SilverStripe\ORM\Tests\Search\SearchContextTest\Order:
+  order1:
+    Customer: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Customer.customer1
+    ShippingAddress: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Address.address1
