@@ -185,11 +185,42 @@ class Module implements Serializable
         return substr($this->path, strlen($this->basePath) + 1);
     }
 
+    public function __serialize(): array
+    {
+        return [
+            'path' => $this->path,
+            'basePath' => $this->basePath,
+            'composerData' => $this->composerData
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+            $this->path = $data['path'];
+            $this->basePath = $data['basePath'];
+            $this->composerData = $data['composerData'];
+            $this->resources = [];
+    }
+
+    /**
+     * The __serialize() magic method will be automatically used instead of this
+     *
+     * @return string
+     * @deprecated will be removed in 5.0
+     */
     public function serialize()
     {
         return json_encode([$this->path, $this->basePath, $this->composerData]);
     }
 
+    /**
+     * The __unserialize() magic method will be automatically used instead of this almost all the time
+     * This method will be automatically used if existing serialized data was not saved as an associative array
+     * and the PHP version used in less than PHP 9.0
+     *
+     * @param string $serialized
+     * @deprecated will be removed in 5.0
+     */
     public function unserialize($serialized)
     {
         list($this->path, $this->basePath, $this->composerData) = json_decode($serialized, true);

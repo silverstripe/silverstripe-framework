@@ -8,7 +8,7 @@ import:
 jobs:
   fast_finish: true
   include:
-    - php: 7.3
+    - php: 7.4
       env:
         - DB=MYSQL
         - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
@@ -28,15 +28,17 @@ jobs:
         - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
         - PHPUNIT_TEST=1
         - PHPUNIT_SUITE="cms"
-    - php: 7.4
-      env:
-        - DB=MYSQL
-        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
-        - PHPUNIT_TEST=1
-        - PHPUNIT_SUITE="framework"
     - php: 8.0
       env:
         - DB=MYSQL
         - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
         - PHPUNIT_TEST=1
         - PHPUNIT_SUITE="framework"
+    - php: 8.1.0
+      env:
+        - DB=MYSQL
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+  allow_failures:
+    - php: 8.1.0

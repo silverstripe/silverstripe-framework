@@ -40,11 +40,35 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
         return false;
     }
 
+    public function __serialize(): array
+    {
+        return [];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        // no-op
+    }
+
+    /**
+     * The __serialize() magic method will be automatically used instead of this
+     *
+     * @return string
+     * @deprecated will be removed in 5.0
+     */
     public function serialize()
     {
         return '';
     }
 
+    /**
+     * The __unserialize() magic method will be automatically used instead of this almost all the time
+     * This method will be automatically used if existing serialized data was not saved as an associative array
+     * and the PHP version used in less than PHP 9.0
+     *
+     * @param string $serialized
+     * @deprecated will be removed in 5.0
+     */
     public function unserialize($serialized)
     {
         // no-op
