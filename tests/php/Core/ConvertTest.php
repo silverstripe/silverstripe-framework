@@ -403,55 +403,86 @@ PHP
      */
     public function testXML2Array()
     {
-        // Ensure an XML file at risk of entity expansion can be avoided safely
+
         $inputXML = <<<XML
 <?xml version="1.0"?>
-<!DOCTYPE results [<!ENTITY long "SOME_SUPER_LONG_STRING">]>
+<!DOCTYPE results [
+  <!ENTITY long "SOME_SUPER_LONG_STRING">
+]>
 <results>
-    <result>Now include &long; lots of times to expand the in-memory size of this XML structure</result>
-    <result>&long;&long;&long;</result>
+    <result>My para</result>
+    <result>Ampersand &amp; is retained and not double encoded</result>
 </results>
 XML
-         ;
-        try {
-            Convert::xml2array($inputXML, true);
-        } catch (Exception $ex) {
-        }
-        $this->assertTrue(
-            isset($ex)
-            && $ex instanceof InvalidArgumentException
-            && $ex->getMessage() === 'XML Doctype parsing disabled'
-        );
-
-        // Test without doctype validation
+        ;
         $expected = [
-         'result' => [
-             'Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure',
-          [
-        'long' => [
-         [
-          'long' => 'SOME_SUPER_LONG_STRING'
-         ],
-         [
-          'long' => 'SOME_SUPER_LONG_STRING'
-         ],
-         [
-          'long' => 'SOME_SUPER_LONG_STRING'
-         ]
-           ]
-             ]
-         ]
+            'result' => [
+                'My para',
+                'Ampersand & is retained and not double encoded'
+            ]
         ];
-        $result = Convert::xml2array($inputXML, false, true);
-        $this->assertEquals(
-            $expected,
-            $result
-        );
-        $result = Convert::xml2array($inputXML, false, false);
-        $this->assertEquals(
-            $expected,
-            $result
-        );
+        $actual = Convert::xml2array($inputXML, false);
+        $this->assertEquals($expected, $actual);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('XML Doctype parsing disabled');
+        Convert::xml2array($inputXML, true);
+    }
+
+    /**
+     * Tests {@link Convert::xml2array()} if an exception the contains a reference to a removed <!ENTITY />
+     */
+    public function testXML2ArrayEntityException()
+    {
+        $inputXML = <<<XML
+        <?xml version="1.0"?>
+        <!DOCTYPE results [
+            <!ENTITY long "SOME_SUPER_LONG_STRING">
+        ]>
+        <results>
+            <result>Now include &long; lots of times to expand the in-memory size of this XML structure</result>
+            <result>&long;&long;&long;</result>
+        </results>
+        XML;
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('String could not be parsed as XML');
+        Convert::xml2array($inputXML);
+    }
+
+    /**
+     * Tests {@link Convert::xml2array()} if an exception the contains a reference to a multiple removed <!ENTITY />
+     */
+    public function testXML2ArrayMultipleEntitiesException()
+    {
+        $inputXML = <<<XML
+        <?xml version="1.0"?>
+        <!DOCTYPE results [<!ENTITY long "SOME_SUPER_LONG_STRING"><!ENTITY short "SHORT_STRING">]>
+        <results>
+            <result>Now include &long; and &short; lots of times</result>
+            <result>&long;&long;&long;&short;&short;&short;</result>
+        </results>
+        XML;
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('String could not be parsed as XML');
+        Convert::xml2array($inputXML);
+    }
+
+    /**
+     * Tests {@link Convert::xml2array()} if there is a malicious <!ENTITY /> present
+     */
+    public function testXML2ArrayMaliciousEntityException()
+    {
+        $inputXML = <<<XML
+        <?xml version="1.0"?>
+        <!DOCTYPE results [
+            <!ENTITY><!<!ENTITY>ENTITY ext SYSTEM "http://evil.com">
+        ]>
+        <results>
+            <result>Evil document</result>
+        </results>
+        XML;
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Malicious XML entity detected');
+        Convert::xml2array($inputXML);
     }
 
     /**
