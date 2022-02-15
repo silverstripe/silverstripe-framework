@@ -40,7 +40,7 @@ class HTMLEditorField extends TextareaField
      * @config
      * @var bool
      */
-    private static $sanitise_server_side = false;
+    private static $sanitise_server_side = true;
 
     /**
      * Number of rows
