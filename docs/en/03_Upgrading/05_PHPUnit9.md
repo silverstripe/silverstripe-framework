@@ -32,7 +32,7 @@ These are some common adjustments that need to be made to unit tests so they're 
 - `setUp()` and `tearDown()` now require the `:void` return type e.g. `setUp(): void`
 - `assertContains()` and `assertNotContains()` no longer accept strings so update to  `assertStringContainsString()` and `assertStringNotContainsString()`
 - `assertInternalType('%Type%')` needs to be changed to `assertIs%Type%()` e.g. `assertIsInt()` - [full list](https://github.com/sebastianbergmann/PHPUnit/issues/3368)
-- `@expectedException` style annotations are changed to [php functions](https://phpunit.readthedocs.io/en/latest/writing-tests-for-PHPUnit.html#testing-exceptions)
+- `@expectedException` style annotations are changed to [php functions](https://phpunit.readthedocs.io/en/latest/writing-tests-for-phpunit.html#testing-exceptions)
 - Wrapping &lt;testsuite&gt; elements with a &lt;testsuites&gt; element in phpunit.xml / phpunit.xml.dist
 
 You see the full list of PHPUnit changes in the [announcements](https://PHPUnit.de/announcements/) section of the PHPUnit.de website.
