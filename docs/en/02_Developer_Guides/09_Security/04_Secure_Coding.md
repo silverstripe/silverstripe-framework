@@ -214,39 +214,34 @@ or [sanitize](http://htmlpurifier.org/) it correctly.
 See [http://shiflett.org/articles/foiling-cross-site-attacks](http://shiflett.org/articles/foiling-cross-site-attacks)
 for in-depth information about "Cross-Site-Scripting".
 
-### What if I can't trust my editors?
-
-The default configuration of Silverstripe CMS assumes some level of trust is given to your editors who have access
-to the CMS. Though the HTML WYSIWYG editor is configured to provide some control over the HTML an editor provides,
-this is not enforced server side, and so can be bypassed by a malicious editor. A editor that does so can use an
-XSS attack against an admin to perform any administrative action.
-
-If you can't trust your editors, Silverstripe CMS must be configured to filter the content so that any javascript is
-stripped out
-
-To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
-true, e.g.
-
-```
-HtmlEditorField::config()->sanitise_server_side = true
-```
-
-The built in sanitiser enforces the TinyMCE whitelist rules on the server side, and is sufficient to eliminate the
-most common XSS vectors.
-
-However some subtle XSS attacks that exploit HTML parsing bugs need heavier filtering. For greater protection
-you can install the [htmlpurifier](https://github.com/silverstripe-labs/silverstripe-htmlpurifier) module which
-will replace the built in sanitiser with one that uses the [HTML Purifier](http://htmlpurifier.org/) library.
-In both cases, you must ensure that you have not configured TinyMCE to explicitly allow script elements or other
-javascript-specific attributes.
+### Additional options
 
 For `HTMLText` database fields which aren't edited through `HtmlEditorField`, you also
 have the option to explicitly whitelist allowed tags in the field definition, e.g. `"MyField" => "HTMLText('meta','link')"`.
 The `SiteTree.ExtraMeta` property uses this to limit allowed input.
 
-##### But I also need my editors to provide javascript
+### What if I need to allow script or style tags?
 
-It is not currently possible to allow editors to provide javascript content and yet still protect other users
+The default configuration of Silverstripe CMS uses a santiser to enforce TinyMCE whitelist rules on the server side,
+and is sufficient to eliminate the most common XSS vectors. Notably, this will remove script and style tags.
+
+If your site requires script or style tags to be added via TinyMCE, Silverstripe CMS can be configured to disable the
+server side santisation. You will also need to update the TinyMCE whitelist [settings](/developer_guides/forms/field_types/htmleditorfield/#setting-options) to remove the frontend sanitisation.
+
+However, it's strongly discouraged as it opens up the possibility of malicious code being added to your site through the CMS.
+
+To disable filtering, set the `HtmlEditorField::$sanitise_server_side` [configuration](/developer_guides/configuration/configuration) property to `false`, i.e.
+
+```yml
+---
+Name: project-htmleditor
+After: htmleditor
+---
+SilverStripe\Forms\HTMLEditor\HTMLEditorField:
+  sanitise_server_side: false
+```
+
+Note it is not currently possible to allow editors to provide javascript content and yet still protect other users
 from any malicious code within that javascript.
 
 We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) that can be used by editors in place of using javascript directly.
@@ -434,16 +429,6 @@ Some rules of thumb:
 
 *  Don't concatenate URLs in a template.  It only works in extremely simple cases that usually contain bugs.
 *  Use *Controller::join_links()* to concatenate URLs.  It deals with query strings and other such edge cases.
-
-### Filtering incoming HTML from TinyMCE
-
-In some cases you may be particularly concerned about which HTML elements are addable to Content via the CMS.
-By default, although TinyMCE is configured to restrict some dangerous tags (such as `script` tags), this restriction
-is not enforced server-side. A malicious user with write access to the CMS might create a specific request to avoid
-these restrictions.
-
-To enable server side filtering using the same whitelisting controls as TinyMCE, set the
-HtmlEditorField::$sanitise_server_side config property to true.
 
 ## Cross-Site Request Forgery (CSRF)
 
