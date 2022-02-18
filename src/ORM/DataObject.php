@@ -3736,10 +3736,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                         $fields[] = $name;
                     } elseif ($this->relObject($spec)) {
                         // Field does not always exist as a real db field (e.g. "Member.Title")
-                        $parts = explode(".", $spec);
-                        if (count($parts) == 2 && !$this->relObject($parts[0])->hasDatabaseField($parts[1])) {
-                            continue;
+                        $parts = explode('.', $spec);
+                        if (count($parts) === 2) {
+                            $relObject = $this->relObject($parts[0]);
+                            if (!$relObject || !$relObject->hasDatabaseField($parts[1])) {
+                                continue;
+                            }
                         }
+
                         $fields[] = $spec;
                     }
                 }
