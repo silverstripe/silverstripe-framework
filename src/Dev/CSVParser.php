@@ -295,7 +295,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->closeFile();
         $this->fetchCSVRow();
@@ -304,6 +304,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->currentRow;
@@ -312,6 +313,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->rowNum;
@@ -320,7 +322,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
-    public function next()
+    public function next(): void
     {
         $this->fetchCSVRow();
 
@@ -330,7 +332,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->currentRow ? true : false;
     }

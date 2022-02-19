@@ -62,7 +62,7 @@ class BulkLoader_Result implements \Countable
      *
      * @return int
      */
-    public function Count()
+    public function Count(): int
     {
         return count($this->created) + count($this->updated);
     }
