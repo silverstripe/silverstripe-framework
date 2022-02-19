@@ -21,6 +21,7 @@ use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\SSViewer;
+use Traversable;
 use UnexpectedValueException;
 
 /**
@@ -576,7 +577,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator([$this]);
     }

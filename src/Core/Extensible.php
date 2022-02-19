@@ -380,7 +380,8 @@ trait Extensible
         }
 
         $requiredExtension = Extension::get_classname_without_arguments($requiredExtension);
-        $extensions = self::get_extensions($class);
+
+        $extensions = $class::get_extensions();
         foreach ($extensions as $extension) {
             if (strcasecmp($extension, $requiredExtension) === 0) {
                 return true;
@@ -388,6 +389,7 @@ trait Extensible
             if (!$strict && is_subclass_of($extension, $requiredExtension)) {
                 return true;
             }
+            /** @var Extension $inst */
             $inst = Injector::inst()->get($extension);
             if ($inst instanceof $requiredExtension) {
                 return $strict ? strcasecmp(get_class($inst), $requiredExtension) === 0 : true;

@@ -178,7 +178,7 @@ class RequestHandler extends ViewableData
 
         // Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
         if ($action[0] == '$') {
-            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)));
+            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)) ?: '' );
         }
 
         if (!$action) {

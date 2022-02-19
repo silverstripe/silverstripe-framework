@@ -678,6 +678,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $fragmentIdentifier = null;
 
         foreach ($args as $arg) {
+            $arg = $arg === null ? '' : $arg;
+
             // Find fragment identifier - keep the last one
             if (strpos($arg, '#') !== false) {
                 list($arg, $fragmentIdentifier) = explode('#', $arg, 2);

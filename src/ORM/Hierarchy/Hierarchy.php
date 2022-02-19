@@ -418,7 +418,7 @@ class Hierarchy extends DataExtension
     {
         $ancestry = ClassInfo::ancestry($this->owner);
         $ancestorClass = array_shift($ancestry);
-        while ($ancestorClass && !Extensible::has_extension($ancestorClass, self::class)) {
+        while ($ancestorClass && !$ancestorClass::has_extension(self::class)) {
             $ancestorClass = array_shift($ancestry);
         }
 

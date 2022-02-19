@@ -389,7 +389,7 @@ class Injector implements ContainerInterface
                 $spec = ['class' => $spec];
             }
 
-            $file = isset($spec['src']) ? $spec['src'] : null;
+            $file = isset($spec['src']) ? $spec['src'] : '';
 
             // class is whatever's explicitly set,
             $class = isset($spec['class']) ? $spec['class'] : null;
@@ -524,7 +524,7 @@ class Injector implements ContainerInterface
         }
 
         // Evaluate constants surrounded by back ticks
-        if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
+        if (is_string($value) && preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
             $envValue = Environment::getEnv($matches['name']);
             if ($envValue !== false) {
                 $value = $envValue;

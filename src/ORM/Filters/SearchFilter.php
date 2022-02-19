@@ -104,6 +104,7 @@ abstract class SearchFilter
      */
     protected function addRelation($name)
     {
+        $name = $name ?: '';
         if (strstr($name, '.')) {
             $parts = explode('.', $name);
             $this->name = array_pop($parts);

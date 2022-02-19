@@ -153,7 +153,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function __construct($httpMethod, $url, $getVars = [], $postVars = [], $body = null)
     {
-        $this->httpMethod = strtoupper($httpMethod);
+        $this->httpMethod = strtoupper($httpMethod ?: '');
         $this->setUrl($url);
         $this->getVars = (array) $getVars;
         $this->postVars = (array) $postVars;
@@ -172,6 +172,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function setUrl($url)
     {
+        $url = $url ?: '';
         $this->url = $url;
 
         // Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -434,7 +435,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->postVars[$offset]) || isset($this->getVars[$offset]);
     }
@@ -445,17 +446,18 @@ class HTTPRequest implements ArrayAccess
      * @param string $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->requestVar($offset);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->getVars[$offset] = $value;
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->getVars[$offset]);
         unset($this->postVars[$offset]);

@@ -49,7 +49,7 @@ class HTTPResponse_Exception extends Exception
             $this->setResponse($response);
         }
 
-        parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
+        parent::__construct($this->getResponse()->getBody() ?: '', $this->getResponse()->getStatusCode());
     }
 
     /**

@@ -819,6 +819,8 @@ class Director implements TemplateGlobalProvider
         }
         $colonPosition = strpos($url, ':');
         $slashPosition = strpos($url, '/');
+
+        $url = $url ?: '';
         return (
             // Base check for existence of a host on a compliant URL
             parse_url($url, PHP_URL_HOST)

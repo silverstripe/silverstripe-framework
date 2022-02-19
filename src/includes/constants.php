@@ -111,7 +111,7 @@ if (!defined('BASE_URL')) {
         $base = Environment::getEnv('SS_BASE_URL');
         if ($base) {
             // Strip relative path from SS_BASE_URL
-            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+            return rtrim(parse_url($base, PHP_URL_PATH) ?: '', '/');
         }
 
         // Unless specified, use empty string for base in CLI

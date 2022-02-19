@@ -11,6 +11,7 @@ use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use Traversable;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -866,7 +867,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->toArray());
     }
@@ -876,7 +877,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->dataQuery->count();
     }
@@ -1248,7 +1249,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return ($this->limit(1, $key)->first() != null);
     }
@@ -1261,6 +1262,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @return DataObject
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->limit(1, $key)->first();
@@ -1272,7 +1274,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @param mixed $value
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }
@@ -1282,7 +1284,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param mixed $key
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }

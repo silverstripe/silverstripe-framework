@@ -97,7 +97,7 @@ class ManifestFileFinder extends FileFinder
      */
     public function isInsideVendor($basename, $pathname, $depth)
     {
-        $base = basename($this->upLevels($pathname, $depth - 1));
+        $base = basename($this->upLevels($pathname, $depth - 1) ?: '');
         return $base === self::VENDOR_DIR;
     }
 

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
@@ -150,7 +151,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return boolean
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         if (isset($this->firstItems[$key])) {
             return true;
@@ -170,6 +171,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -202,7 +204,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (isset($this->firstItems[$key])) {
             $this->firstItems[$key] = $value;
@@ -226,7 +228,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         if (isset($this->firstItems[$key])) {
             unset($this->firstItems[$key]);
@@ -253,7 +255,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return Map_Iterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new Map_Iterator(
             $this->list->getIterator(),
@@ -270,7 +272,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->list->count() +
             count($this->firstItems) +

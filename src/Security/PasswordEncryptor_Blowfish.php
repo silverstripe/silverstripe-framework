@@ -90,6 +90,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
 
     public function encryptY($password, $salt)
     {
+        $password = $password ?: '';
         $methodAndSalt = '$2y$' . $salt;
         $encryptedPassword = crypt($password, $methodAndSalt);
 

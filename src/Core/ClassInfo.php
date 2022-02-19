@@ -597,7 +597,7 @@ class ClassInfo
 
         // only keep classes with the Extension applied
         $classes = array_filter($classes, function ($class) use ($extensionClass) {
-            return Extensible::has_extension($class, $extensionClass);
+            return $class::has_extension($extensionClass);
         });
 
         return $classes;

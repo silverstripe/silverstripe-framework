@@ -131,7 +131,7 @@ class Convert
             return $val;
         }
 
-        return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($val ?: '', ENT_QUOTES, 'UTF-8');
     }
 
     /**

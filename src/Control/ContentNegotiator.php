@@ -88,7 +88,7 @@ class ContentNegotiator
         if (ContentNegotiator::getEnabled()) {
             return true;
         } else {
-            return (substr($response->getBody(), 0, 5) == '<' . '?xml');
+            return (substr($response->getBody() ?: '', 0, 5) == '<' . '?xml');
         }
     }
 

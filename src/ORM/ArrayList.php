@@ -9,6 +9,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
+use Traversable;
 
 /**
  * A list object that wraps around an array of objects or arrays.
@@ -84,7 +85,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }
@@ -105,7 +106,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $items = array_map(
             function ($item) {
@@ -817,7 +818,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->items);
     }
@@ -828,6 +829,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $offset
      * @return DataObject
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
@@ -842,7 +844,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             $this->items[] = $value;
@@ -856,7 +858,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->items[$offset]);
     }

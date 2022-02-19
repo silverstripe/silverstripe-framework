@@ -236,7 +236,7 @@ class ValidationResult implements Serializable
      */
     public function serialize()
     {
-        return json_encode([$this->messages, $this->isValid]);
+        return json_encode($this->__serialize());
     }
 
     /**
@@ -249,6 +249,6 @@ class ValidationResult implements Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->messages, $this->isValid) = json_decode($serialized, true);
+        $this->__unserialize(json_decode($serialized, true));
     }
 }

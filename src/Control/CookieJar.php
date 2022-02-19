@@ -170,7 +170,7 @@ class CookieJar implements Cookie_Backend
     ) {
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
-            return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+            return setcookie($name, $value, $expiry, $path, $domain ?: '', $secure, $httpOnly);
         }
 
         if (Cookie::config()->uninherited('report_errors')) {

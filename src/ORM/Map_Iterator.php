@@ -60,6 +60,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->firstItemIdx = 0;
@@ -87,6 +88,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
@@ -126,6 +128,7 @@ class Map_Iterator implements Iterator
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
@@ -144,6 +147,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->firstItemIdx++;
@@ -184,7 +188,7 @@ class Map_Iterator implements Iterator
      *
      * @return boolean
      */
-    public function valid()
+    public function valid(): bool
     {
         return (
             (isset($this->firstItems[$this->firstItemIdx])) ||

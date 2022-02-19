@@ -227,7 +227,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         foreach ($filters as $filter) {
             // Find best IP
             foreach ($ips as $ip) {
-                if (filter_var($ip, FILTER_VALIDATE_IP, $filter)) {
+                if (filter_var($ip, FILTER_VALIDATE_IP, $filter === null ? [] : $filter)) {
                     return $ip;
                 }
             }

@@ -210,7 +210,7 @@ class Module implements Serializable
      */
     public function serialize()
     {
-        return json_encode([$this->path, $this->basePath, $this->composerData]);
+        return json_encode($this->__serialize());
     }
 
     /**
@@ -223,8 +223,7 @@ class Module implements Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->path, $this->basePath, $this->composerData) = json_decode($serialized, true);
-        $this->resources = [];
+        $this->__unserialize(json_decode($serialized, true));
     }
 
     /**

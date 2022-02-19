@@ -170,7 +170,7 @@ abstract class Query implements Iterator
      *
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->queryHasBegun && $this->numRecords() > 0) {
             $this->queryHasBegun = false;
@@ -184,6 +184,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if (!$this->currentRecord) {
@@ -209,6 +210,7 @@ abstract class Query implements Iterator
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->rowNum;
@@ -220,6 +222,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->queryHasBegun = true;
@@ -233,7 +236,7 @@ abstract class Query implements Iterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         if (!$this->queryHasBegun) {
             $this->next();
