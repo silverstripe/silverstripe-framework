@@ -117,7 +117,7 @@ class RequiredFields extends Validator
                 }
             } else {
                 // assume a string or integer
-                $error = (strlen($value)) ? false : true;
+                $error = (strlen($value ?: '')) ? false : true;
             }
 
             if ($formField && $error) {
