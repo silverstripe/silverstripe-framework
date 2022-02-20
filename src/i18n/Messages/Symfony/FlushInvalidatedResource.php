@@ -71,7 +71,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      */
     public function unserialize($serialized)
     {
-        $this->__unserialize($serialized);;
+        // no-op
     }
 
     public static function flush()

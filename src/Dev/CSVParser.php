@@ -322,7 +322,8 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
-    public function next(): void
+    #[\ReturnTypeWillChange]
+    public function next()
     {
         $this->fetchCSVRow();
 
