@@ -694,4 +694,22 @@ class ConfirmedPasswordField extends FormField
     {
         return $this->requireStrongPassword;
     }
+    
+    /**
+     * Set the container form.
+     *
+     * This is called automatically when fields are added to forms.
+     *
+     * @param Form $form
+     *
+     * @return $this
+     */
+    public function setForm($form)
+    {
+        $this->form = $form;
+        $this->getPasswordField()->form = $form;
+        $this->getConfirmPasswordField()->form = $form;
+
+        return $this;
+    }
 }
