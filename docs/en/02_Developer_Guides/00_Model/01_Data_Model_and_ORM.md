@@ -1,12 +1,12 @@
 ---
 title: Introduction to the Data Model and ORM
-summary: Introduction to creating and querying a database records through the ORM (object-relational model)
+summary: Introduction to creating and querying a database records through the ORM (object-relational mapping)
 icon: database
 ---
 
 # Introduction to the Data Model and ORM
 
-Silverstripe uses an [object-relational model](http://en.wikipedia.org/wiki/Object-relational_model) to represent its
+Silverstripe uses an [object-relational mapping](http://en.wikipedia.org/wiki/Object-relational_mapping) to represent its
 information.
 
 *  Each database table maps to a PHP class.
