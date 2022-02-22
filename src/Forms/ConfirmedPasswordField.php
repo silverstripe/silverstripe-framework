@@ -706,10 +706,10 @@ class ConfirmedPasswordField extends FormField
      */
     public function setForm($form)
     {
-        $this->form = $form;
-        $this->getPasswordField()->form = $form;
-        $this->getConfirmPasswordField()->form = $form;
-
+        $this->getPasswordField()->setForm($form);
+        $this->getConfirmPasswordField()->setForm($form);
+        
+        parent::setForm($form);
         return $this;
     }
 }
