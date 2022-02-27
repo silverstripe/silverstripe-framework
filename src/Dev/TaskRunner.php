@@ -52,15 +52,15 @@ class TaskRunner extends Controller
         $baseUrl = Director::absoluteBaseURL();
         $tasks = $this->getTasks();
         $filter = (string) trim($request->requestVar('q'));
-        if($filter) {
+        if ($filter) {
             $tasks = array_filter(
                 $tasks,
-                function ($v) use ($filter) {
-                    $t = $v['title'] ?? '';
-                    $d = $v['description'] ?? '';
+                function ($arrayItem) use ($filter) {
+                    $title = $arrayItem['title'] ?? '';
+                    $description = $arrayItem['description'] ?? '';
                     return
-                        stripos((string) $t, $filter) !== false &&
-                        stripos((string) $d, $filter) !== false;
+                        stripos((string) $title, $filter) !== false &&
+                        stripos((string) $description, $filter) !== false;
                 }
             );
         }
@@ -73,6 +73,7 @@ class TaskRunner extends Controller
             $base = Director::absoluteBaseURL();
 
             echo "<div class=\"options\">";
+            echo "<p>use /dev/tasks/?q=anyfilter in the url to filter this list.</p>";
             echo "<ul>";
             foreach ($tasks as $task) {
                 echo "<li><p>";
@@ -86,6 +87,7 @@ class TaskRunner extends Controller
         // CLI mode
         } else {
             echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
+            echo "- use vendor/bin/sake dev/tasks q=anyfilter to filter this list.\n\n";
             foreach ($tasks as $task) {
                 echo " * $task[title]: sake dev/tasks/" . $task['segment'] . "\n";
             }
