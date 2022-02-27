@@ -60,7 +60,19 @@ class TaskRunner extends Controller
     {
         $baseUrl = Director::absoluteBaseURL();
         $tasks = $this->getTasks();
-
+        $filter = (string) trim($request->requestVar('q'));
+        if($filter) {
+            $tasks = array_filter(
+                $tasks,
+                function ($v) use ($filter) {
+                    $t = $v['title'] ?? '';
+                    $d = $v['description'] ?? '';
+                    return 
+                        stripos((string) $t, $filter) !== false &&
+                        stripos((string) $d, $filter) !== false;
+                }
+            );
+        }
         if (Director::is_cli()) {
             // CLI mode
             $output = 'SILVERSTRIPE DEVELOPMENT TOOLS: Tasks' . PHP_EOL . '--------------------------' . PHP_EOL . PHP_EOL;
