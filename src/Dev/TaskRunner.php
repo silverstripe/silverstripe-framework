@@ -42,9 +42,28 @@ class TaskRunner extends Controller
         }
     }
 
-    public function index()
+    /**
+     * list of options - can be filtered by adding the `q` request variable (e.g. `/dev/tasks/?q=test` OR `vendor/bin/sake dev/tasks q=test`)
+     * @param  HTTPRequest $index
+     * @return DBHTMLText|string - depends on whether it is `Director::is_cli()` request (returns string) or not (returns DBHTMLText)
+     */
+    public function index($request = null)
     {
+        $baseUrl = Director::absoluteBaseURL();
         $tasks = $this->getTasks();
+        $filter = (string) trim($request->requestVar('q'));
+        if($filter) {
+            $tasks = array_filter(
+                $tasks,
+                function ($v) use ($filter) {
+                    $t = $v['title'] ?? '';
+                    $d = $v['description'] ?? '';
+                    return
+                        stripos((string) $t, $filter) !== false &&
+                        stripos((string) $d, $filter) !== false;
+                }
+            );
+        }
 
         // Web mode
         if (!Director::is_cli()) {
