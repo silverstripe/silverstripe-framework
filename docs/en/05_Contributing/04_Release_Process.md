@@ -214,6 +214,8 @@ Report security issues in our [commercially supported modules](https://www.silve
 to [security@silverstripe.org](mailto:security@silverstripe.org). 
 Please don't file security issues in our [bugtracker](issues_and_bugs). 
 
+Silverstripe CMS does not operate a *bug bounty* program.
+
 ### Acknowledgment and disclosure
 
 In the event of a confirmed vulnerability in our
