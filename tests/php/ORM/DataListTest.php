@@ -1480,6 +1480,34 @@ class DataListTest extends SapphireTest
         $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
     }
 
+    public function testFilterByCallbackWithLimits()
+    {
+        // Limit 0 contains 0 items.
+        $team1ID = $this->idFromFixture(DataObjectTest\Team::class, 'team1');
+        $list = TeamComment::get();
+        $list = $list->limit(0);
+        $list = $list->filterByCallback(
+            function ($item) use ($team1ID) {
+                return $item->TeamID == $team1ID;
+            }
+        );
+        $this->assertEquals(0, $list->count());
+
+        // Limit 1 contains 1 item.
+        $team1ID = $this->idFromFixture(DataObjectTest\Team::class, 'team1');
+        $list = TeamComment::get();
+        $list = $list->limit(1);
+        $list = $list->filterByCallback(
+            function ($item) use ($team1ID) {
+                return $item->TeamID == $team1ID;
+            }
+        );
+        $result = $list->column('Name');
+        $expected = array_intersect($result, ['Bob']);
+        $this->assertEquals(1, $list->count());
+        $this->assertEquals($expected, $result, 'List should only contain one comment from Team 1 (Bob)');
+    }
+
     /**
      * $list->exclude('Name', 'bob'); // exclude bob from list
      */

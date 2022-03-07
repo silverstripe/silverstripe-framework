@@ -487,9 +487,17 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
         /** @var ArrayList $output */
         $output = ArrayList::create();
+        $limit = $this->dataQuery->query()->getLimit();
+        $count = 0;
         foreach ($this as $item) {
+            // Respect the limit.
+            if ($count >= $limit) {
+                break;
+            }
+            // Perform the actual callback filtering.
             if (call_user_func($callback, $item, $this)) {
                 $output->push($item);
+                $count++;
             }
         }
         return $output;
