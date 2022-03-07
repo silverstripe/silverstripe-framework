@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Email;
 
 use DateTime;
+use RuntimeException;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use SilverStripe\Control\Director;
@@ -25,7 +26,6 @@ use Swift_MimePart;
  */
 class Email extends ViewableData
 {
-
     /**
      * @var array
      * @config
@@ -276,12 +276,28 @@ class Email extends ViewableData
         $dateTime = new DateTime();
         $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
         $swiftMessage->setDate($dateTime);
-        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
-            $swiftMessage->setFrom($defaultFrom);
+        if (!$swiftMessage->getFrom()) {
+            $swiftMessage->setFrom($this->getDefaultFrom());
         }
         $this->swiftMessage = $swiftMessage;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultFrom(): string
+    {
+        $defaultFrom = $this->config()->get('admin_email');
+        if (!$defaultFrom) {
+            $host = Director::host();
+            if (empty($host)) {
+                throw new RuntimeException('Host not defined');
+            }
+            $defaultFrom = sprintf('no-reply@%s', $host);
+        }
+        return $defaultFrom;
     }
 
     /**

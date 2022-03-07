@@ -4,6 +4,7 @@ namespace SilverStripe\Control\Tests\Email;
 
 use DateTime;
 use PHPUnit\Framework\MockObject\MockObject;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Email\SwiftMailer;
@@ -23,6 +24,12 @@ use Swift_RfcComplianceException;
 
 class EmailTest extends SapphireTest
 {
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Director::config()->set('alternate_base_url', 'http://www.mysite.com/');
+    }
 
     public function testAddAttachment()
     {
@@ -660,6 +667,21 @@ class EmailTest extends SapphireTest
         /** @var \Swift_MimePart $plainPart */
         $plainPart = reset($children);
         $this->assertStringContainsString('Test', $plainPart->getBody());
+    }
+
+    public function testGetDefaultFrom()
+    {
+        $email = new Email();
+        $class = new \ReflectionClass(Email::class);
+        $method = $class->getMethod('getDefaultFrom');
+        $method->setAccessible(true);
+
+        // default to no-reply@mydomain.com if admin_email config not set
+        $this->assertSame('no-reply@www.mysite.com', $method->invokeArgs($email, []));
+
+        // use admin_email config
+        Email::config()->set('admin_email', 'myadmin@somewhere.com');
+        $this->assertSame('myadmin@somewhere.com', $method->invokeArgs($email, []));
     }
 
     /**
