@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -25,8 +26,8 @@ use SilverStripe\Core\Injector\Injector;
  */
 class VersionProvider
 {
-
     use Configurable;
+    use Injectable;
 
     /**
      * @var array
@@ -43,6 +44,11 @@ class VersionProvider
      */
     public function getVersion()
     {
+        $key = sprintf('%s-%s', $this->getComposerLockPath(), 'all');
+        $version = $this->getCachedValue($key);
+        if ($version) {
+            return $version;
+        }
         $modules = $this->getModules();
         $lockModules = $this->getModuleVersionFromComposer(array_keys($modules));
         $moduleVersions = [];
@@ -59,7 +65,69 @@ class VersionProvider
             list($title, $version) = $value;
             $ret[] = "$title: $version";
         }
-        return implode(', ', $ret);
+        $version = implode(', ', $ret);
+        if ($version) {
+            $this->setCacheValue($key, $version);
+        }
+        return $version;
+    }
+
+    /**
+     * Get the version of a specific module
+     *
+     * @param string $module - e.g. silverstripe/framework
+     * @return string - e.g. 4.11
+     */
+    public function getModuleVersion(string $module): string
+    {
+        $key = sprintf('%s-%s', $this->getComposerLockPath(), $module);
+        $version = $this->getCachedValue($key);
+        if ($version) {
+            return $version;
+        }
+        $version = $this->getModuleVersionFromComposer([$module])[$module] ?? '';
+        if ($version) {
+            $this->setCacheValue($key, $version);
+        }
+        return $version;
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    private function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.VersionProvider');
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    private function getCachedValue(string $key): string
+    {
+        $cache = $this->getCache();
+        try {
+            if ($cache->has($key)) {
+                return $cache->get($key);
+            }
+        } catch (InvalidArgumentException $e) {
+        }
+        return '';
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    private function setCacheValue(string $key, string $value): void
+    {
+        $cache = $this->getCache();
+        try {
+            $cache->set($key, $value);
+        } catch (InvalidArgumentException $e) {
+        }
     }
 
     /**
