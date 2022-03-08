@@ -297,6 +297,7 @@ class Email extends ViewableData
             }
             $defaultFrom = sprintf('no-reply@%s', $host);
         }
+        $this->extend('updateDefaultFrom', $defaultFrom);
         return $defaultFrom;
     }
 
