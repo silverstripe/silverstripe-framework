@@ -26,6 +26,7 @@
         "composer/installers": "^1 || ^2",
         "composer/semver": "^1 || ^3",
         "embed/embed": "^3",
+        "guzzlehttp/psr7": "^2",
         "league/csv": "^8 || ^9",
         "m1/env": "^2.1",
         "monolog/monolog": "^1.16",
