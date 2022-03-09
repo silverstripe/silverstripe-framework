@@ -676,11 +676,22 @@ class EmailTest extends SapphireTest
         $method->setAccessible(true);
 
         // default to no-reply@mydomain.com if admin_email config not set
+        Email::config()->set('admin_email', null);
         $this->assertSame('no-reply@www.mysite.com', $method->invokeArgs($email, []));
 
-        // use admin_email config
+        // default to no-reply@mydomain.com if admin_email config is misconfigured
+        Email::config()->set('admin_email', 123);
+        $this->assertSame('no-reply@www.mysite.com', $method->invokeArgs($email, []));
+
+        // use admin_email config string syntax
         Email::config()->set('admin_email', 'myadmin@somewhere.com');
         $this->assertSame('myadmin@somewhere.com', $method->invokeArgs($email, []));
+        $this->assertTrue(true);
+
+        // use admin_email config array syntax
+        Email::config()->set('admin_email', ['anotheradmin@somewhere.com' => 'Admin-email']);
+        $this->assertSame('anotheradmin@somewhere.com', $method->invokeArgs($email, []));
+        $this->assertTrue(true);
     }
 
     /**
