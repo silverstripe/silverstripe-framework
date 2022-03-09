@@ -188,4 +188,18 @@ class VersionProviderTest extends SapphireTest
         $result = $mock->getVersion();
         $this->assertStringContainsString('Some Package: 1.2.3', $result);
     }
+
+    public function testGetModuleVersion()
+    {
+        $provider = $this->getMockProvider(__DIR__ . '/fixtures/VersionProviderTest/composer.recipe-core.testlock');
+        Config::modify()->set(VersionProvider::class, 'modules', [
+            'silverstripe/framework' => 'Framework',
+            'silverstripe/recipe-core' => 'Core Recipe'
+        ]);
+        $this->assertSame('1.2.3', $provider->getModuleVersion('silverstripe/framework'));
+        // assert that the temporary config changes in getModuleVersion() had no side-effects
+        $result = $provider->getVersion();
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+        $this->assertStringContainsString('Core Recipe: 7.7.7', $result);
+    }
 }

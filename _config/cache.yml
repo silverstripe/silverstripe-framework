@@ -42,3 +42,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       namespace: 'EmbedShortcodeProvider'
       defaultLifetime: 86400
+  Psr\SimpleCache\CacheInterface.VersionProvider:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'VersionProvider'
