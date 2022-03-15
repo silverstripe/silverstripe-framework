@@ -34,6 +34,7 @@ class Backtrace
         ['SilverStripe\\ORM\\DB', 'createDatabase'],
         ['SilverStripe\\Security\\Member', 'checkPassword'],
         ['SilverStripe\\Security\\Member', 'changePassword'],
+        ['SilverStripe\\Security\\MemberAuthenticator\\MemberAuthenticator', 'checkPassword'],
         ['SilverStripe\\Security\\MemberPassword', 'checkPassword'],
         ['SilverStripe\\Security\\PasswordValidator', 'validate'],
         ['SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'encrypt'],
