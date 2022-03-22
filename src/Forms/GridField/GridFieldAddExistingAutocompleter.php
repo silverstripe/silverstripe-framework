@@ -12,10 +12,10 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
-use SilverStripe\ORM\Filters\SearchFilter;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -347,7 +347,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
                     // so we need to check the original setting.
                     // If the field is defined $searchable_fields = array('MyField'),
                     // then default to StartsWith filter, which makes more sense in this context.
-                    if (!$customSearchableFields || array_search($name, $customSearchableFields)) {
+                    if (!$customSearchableFields || array_search($name, $customSearchableFields) !== false) {
                         $filter = 'StartsWith';
                     } else {
                         $filterName = $spec['filter'];
