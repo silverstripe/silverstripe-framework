@@ -19,6 +19,7 @@ This page outlines those who are part of the Core Committer team and outlines th
 * [Guy Marriott](https://github.com/ScopeyNZ)
 * [Ingo Schommer](https://github.com/chillu)
 * [Loz Calver](https://github.com/kinglozzer)
+* [Matt Peel](https://github.com/madmatt)
 * [Maxime Rainville](https://github.com/maxime-rainville)
 * [Michal Kleiner](https://github.com/michalkleiner)
 * [Sam Minnée](https://github.com/sminnee)
