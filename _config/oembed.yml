@@ -3,4 +3,7 @@ Name: coreoembed
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\View\Embed\Embeddable:
-    class: SilverStripe\View\Embed\EmbedResource
+    class: SilverStripe\View\Embed\EmbedContainer
+  Embed\Embed:
+    constructor:
+      - '%$Embed\Http\Crawler'

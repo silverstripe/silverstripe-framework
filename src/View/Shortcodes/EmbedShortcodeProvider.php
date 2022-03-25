@@ -2,23 +2,22 @@
 
 namespace SilverStripe\View\Shortcodes;
 
-use Embed\Http\DispatcherInterface;
+use Embed\Http\NetworkException;
+use Embed\Http\RequestException;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Embed\Embeddable;
-use SilverStripe\View\Embed\EmbedResource;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
-use Embed\Adapters\Adapter;
-use Embed\Exceptions\InvalidUrlException;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\Control\Director;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\View\Embed\EmbedContainer;
 
 /**
  * Provider for the [embed] shortcode tag used by the embedding service
@@ -84,32 +83,23 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $serviceArguments['min_image_height'] = $arguments['height'];
         }
 
-        /** @var EmbedResource $embed */
-        $embed = Injector::inst()->create(Embeddable::class, $serviceURL);
+        /** @var EmbedContainer $embeddable */
+        $embeddable = Injector::inst()->create(Embeddable::class, $serviceURL);
+
+        // Only EmbedContainer is currently supported
+        if (!($embeddable instanceof EmbedContainer)) {
+            throw new \RuntimeException('Emeddable must extend EmbedContainer');
+        }
+
         if (!empty($serviceArguments)) {
-            $embed->setOptions(array_merge($serviceArguments, (array) $embed->getOptions()));
-        }
-
-        // Allow resolver to be mocked
-        $dispatcher = null;
-        if (isset($extra['resolver'])) {
-            $dispatcher = Injector::inst()->create(
-                $extra['resolver']['class'],
-                $serviceURL,
-                $extra['resolver']['config']
-            );
-        } elseif (Injector::inst()->has(DispatcherInterface::class)) {
-            $dispatcher = Injector::inst()->get(DispatcherInterface::class);
-        }
-
-        if ($dispatcher) {
-            $embed->setDispatcher($dispatcher);
+            $embeddable->setOptions(array_merge($serviceArguments, (array) $embeddable->getOptions()));
         }
 
         // Process embed
         try {
-            $embed = $embed->getEmbed();
-        } catch (InvalidUrlException $e) {
+            // this will trigger a request/response which will then be cached within $embeddable
+            $embeddable->getExtractor();
+        } catch (NetworkException | RequestException $e) {
             $message = (Director::isDev())
                 ? $e->getMessage()
                 : _t(__CLASS__ . '.INVALID_URL', 'There was a problem loading the media.');
@@ -127,30 +117,54 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         }
 
         // Convert embed object into HTML
-        if ($embed && $embed instanceof Adapter) {
-            $result = static::embedForTemplate($embed, $arguments);
-        }
+        $html = static::embeddableToHtml($embeddable, $arguments);
         // Fallback to link to service
-        if (!$result) {
+        if (!$html) {
             $result = static::linkEmbed($arguments, $serviceURL, $serviceURL);
         }
         // Cache result
-        if ($result) {
+        if ($html) {
             try {
-                $cache->set($key, $result);
+                $cache->set($key, $html);
             } catch (InvalidArgumentException $e) {
             }
         }
-        return $result;
+        return $html;
+    }
+
+    public static function embeddableToHtml(Embeddable $embeddable, array $arguments): string
+    {
+        // Only EmbedContainer is supported
+        if (!($embeddable instanceof EmbedContainer)) {
+            return '';
+        }
+        $extractor = $embeddable->getExtractor();
+        $type = $embeddable->getType();
+        if ($type === 'video' || $type === 'rich') {
+            // Attempt to inherit width (but leave height auto)
+            if (empty($arguments['width']) && $embeddable->getWidth()) {
+                $arguments['width'] = $embeddable->getWidth();
+            }
+            return static::videoEmbed($arguments, $extractor->code->html);
+        }
+        if ($type === 'photo') {
+            return static::photoEmbed($arguments, (string) $extractor->url);
+        }
+        if ($type === 'link') {
+            return static::linkEmbed($arguments, (string) $extractor->url, $extractor->title);
+        }
+        return '';
     }
 
     /**
      * @param Adapter $embed
      * @param array $arguments Additional shortcode params
      * @return string
+     * @deprecated 4.11..5.0 Use embeddableToHtml instead
      */
     public static function embedForTemplate($embed, $arguments)
     {
+        Deprecation::notice('4.11', 'Use embeddableToHtml() instead');
         switch ($embed->getType()) {
             case 'video':
             case 'rich':
