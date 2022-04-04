@@ -221,7 +221,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         // Search public folder first, and unless `public/` is prefixed, also private base path
         $publicPath = Path::join(Director::publicFolder(), $relativePath);
         if (file_exists($publicPath)) {
-            // String is a literal url comitted directly to public folder
+            // String is a literal url committed directly to public folder
             return [true, $publicPath, $relativePath];
         }
 

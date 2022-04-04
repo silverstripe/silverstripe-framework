@@ -11,7 +11,7 @@ use SilverStripe\View\SSViewer;
  * disabled by default and intended for use in readonly {@link GridField}
  * instances.
  */
-class GridFieldViewButton implements GridField_ColumnProvider, GridField_ActionMenuLink
+class GridFieldViewButton extends AbstractGridFieldComponent implements GridField_ColumnProvider, GridField_ActionMenuLink
 {
     /**
      * @inheritdoc

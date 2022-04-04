@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
@@ -23,13 +24,13 @@ class SQLSelectTest extends SapphireTest
 
     protected $oldDeprecation = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->oldDeprecation = Deprecation::dump_settings();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Deprecation::restore_settings($this->oldDeprecation);
         parent::tearDown();
@@ -43,7 +44,7 @@ class SQLSelectTest extends SapphireTest
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $count = $qry->count('"SQLSelectTest_DO"."ID"');
         $this->assertEquals(count($ids), $count);
-        $this->assertInternalType("int", $count);
+        $this->assertIsInt($count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
             $qry->setSelect([
@@ -54,7 +55,7 @@ class SQLSelectTest extends SapphireTest
             $qry->setHaving('"Date" > 2012-02-01');
             $count = $qry->count('"SQLSelectTest_DO"."ID"');
             $this->assertEquals(1, $count);
-            $this->assertInternalType("int", $count);
+            $this->assertIsInt($count);
         }
     }
     public function testUnlimitedRowCount()
@@ -65,17 +66,17 @@ class SQLSelectTest extends SapphireTest
         $qry->setLimit(1);
         $count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
         $this->assertEquals(count($ids), $count);
-        $this->assertInternalType("int", $count);
+        $this->assertIsInt($count);
         // Test without column - SQLSelect has different logic for this
         $count = $qry->unlimitedRowCount();
         $this->assertEquals(2, $count);
-        $this->assertInternalType("int", $count);
+        $this->assertIsInt($count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
             $qry->setHaving('"Date" > 2012-02-01');
             $count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
             $this->assertEquals(1, $count);
-            $this->assertInternalType("int", $count);
+            $this->assertIsInt($count);
         }
     }
 
@@ -267,57 +268,23 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testZeroLimit()
-    {
-        Deprecation::notification_version('4.3.0');
-        $query = new SQLSelect();
-        $query->setFrom("MyTable");
-        $query->setLimit(0);
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testZeroLimitWithOffset()
-    {
-        Deprecation::notification_version('4.3.0');
-        if (!(DB::get_conn() instanceof MySQLDatabase || DB::get_conn() instanceof SQLite3Database
-            || DB::get_conn() instanceof PostgreSQLDatabase)
-        ) {
-            $this->markTestIncomplete();
-        }
-
-        $query = new SQLSelect();
-        $query->setFrom("MyTable");
-        $query->setLimit(0, 99);
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeLimit()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(-10);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeOffset()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(1, -10);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeOffsetAndLimit()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(-10, -10);
     }

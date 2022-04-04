@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use LogicException;
 use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
@@ -40,7 +40,7 @@ class FormFieldTest extends SapphireTest
 
         $field = new FormField('MyField');
 
-        $this->assertContains('class1', $field->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class1', $field->extraClass(), 'Class list does not contain expected class');
 
         FormField::config()->update(
             'default_classes',
@@ -52,7 +52,7 @@ class FormFieldTest extends SapphireTest
 
         $field = new FormField('MyField');
 
-        $this->assertContains('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
 
         FormField::config()->update(
             'default_classes',
@@ -63,11 +63,11 @@ class FormFieldTest extends SapphireTest
 
         $field = new FormField('MyField');
 
-        $this->assertContains('class3', $field->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class3', $field->extraClass(), 'Class list does not contain expected class');
 
         $field->removeExtraClass('class3');
 
-        $this->assertNotContains('class3', $field->extraClass(), 'Class list contains unexpected class');
+        $this->assertStringNotContainsString('class3', $field->extraClass(), 'Class list contains unexpected class');
 
         TextField::config()->update(
             'default_classes',
@@ -79,8 +79,8 @@ class FormFieldTest extends SapphireTest
         $field = new TextField('MyField');
 
         //check default classes inherit
-        $this->assertContains('class3', $field->extraClass(), 'Class list does not contain inherited class');
-        $this->assertContains('textfield-class', $field->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class3', $field->extraClass(), 'Class list does not contain inherited class');
+        $this->assertStringContainsString('textfield-class', $field->extraClass(), 'Class list does not contain expected class');
 
         Config::unnest();
     }
@@ -91,6 +91,19 @@ class FormFieldTest extends SapphireTest
         $field->addExtraClass('class1');
         $field->addExtraClass('class2');
         $this->assertStringEndsWith('class1 class2', $field->extraClass());
+    }
+
+    public function testHasExtraClass()
+    {
+        $field = new FormField('MyField');
+        $field->addExtraClass('class1');
+        $field->addExtraClass('class2');
+        $this->assertTrue($field->hasExtraClass('class1'));
+        $this->assertTrue($field->hasExtraClass('class2'));
+        $this->assertTrue($field->hasExtraClass('class1 class2'));
+        $this->assertTrue($field->hasExtraClass('class2 class1'));
+        $this->assertFalse($field->hasExtraClass('class3'));
+        $this->assertFalse($field->hasExtraClass('class2 class3'));
     }
 
     public function testRemoveExtraClass()
@@ -159,35 +172,35 @@ class FormFieldTest extends SapphireTest
         $field = new FormField('MyField');
 
         $field->setAttribute('foo', 'bar');
-        $this->assertContains('foo="bar"', $field->getAttributesHTML());
+        $this->assertStringContainsString('foo="bar"', $field->getAttributesHTML());
 
         $field->setAttribute('foo', null);
-        $this->assertNotContains('foo=', $field->getAttributesHTML());
+        $this->assertStringNotContainsString('foo=', $field->getAttributesHTML());
 
         $field->setAttribute('foo', '');
-        $this->assertNotContains('foo=', $field->getAttributesHTML());
+        $this->assertStringNotContainsString('foo=', $field->getAttributesHTML());
 
         $field->setAttribute('foo', false);
-        $this->assertNotContains('foo=', $field->getAttributesHTML());
+        $this->assertStringNotContainsString('foo=', $field->getAttributesHTML());
 
         $field->setAttribute('foo', true);
-        $this->assertContains('foo="foo"', $field->getAttributesHTML());
+        $this->assertStringContainsString('foo="foo"', $field->getAttributesHTML());
 
         $field->setAttribute('foo', 'false');
-        $this->assertContains('foo="false"', $field->getAttributesHTML());
+        $this->assertStringContainsString('foo="false"', $field->getAttributesHTML());
 
         $field->setAttribute('foo', 'true');
-        $this->assertContains('foo="true"', $field->getAttributesHTML());
+        $this->assertStringContainsString('foo="true"', $field->getAttributesHTML());
 
         $field->setAttribute('foo', 0);
-        $this->assertContains('foo="0"', $field->getAttributesHTML());
+        $this->assertStringContainsString('foo="0"', $field->getAttributesHTML());
 
         $field->setAttribute('one', 1);
         $field->setAttribute('two', 2);
         $field->setAttribute('three', 3);
-        $this->assertNotContains('one="1"', $field->getAttributesHTML('one', 'two'));
-        $this->assertNotContains('two="2"', $field->getAttributesHTML('one', 'two'));
-        $this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
+        $this->assertStringNotContainsString('one="1"', $field->getAttributesHTML('one', 'two'));
+        $this->assertStringNotContainsString('two="2"', $field->getAttributesHTML('one', 'two'));
+        $this->assertStringContainsString('three="3"', $field->getAttributesHTML('one', 'two'));
     }
 
     /**
@@ -241,18 +254,26 @@ class FormFieldTest extends SapphireTest
     {
         $field = new FormField('MyField');
         $field->setReadonly(true);
-        $this->assertContains('readonly="readonly"', $field->getAttributesHTML());
+        $this->assertStringContainsString('readonly="readonly"', $field->getAttributesHTML());
         $field->setReadonly(false);
-        $this->assertNotContains('readonly="readonly"', $field->getAttributesHTML());
+        $this->assertStringNotContainsString('readonly="readonly"', $field->getAttributesHTML());
+    }
+
+    public function testReadonlyPreservesExtraClass()
+    {
+        $field = new FormField('MyField');
+        $field->addExtraClass('myextraclass1')->addExtraClass('myextraclass2');
+        $field->setReadonly(true);
+        $this->assertStringContainsString('myextraclass1 myextraclass2', $field->getAttributesHTML());
     }
 
     public function testDisabled()
     {
         $field = new FormField('MyField');
         $field->setDisabled(true);
-        $this->assertContains('disabled="disabled"', $field->getAttributesHTML());
+        $this->assertStringContainsString('disabled="disabled"', $field->getAttributesHTML());
         $field->setDisabled(false);
-        $this->assertNotContains('disabled="disabled"', $field->getAttributesHTML());
+        $this->assertStringNotContainsString('disabled="disabled"', $field->getAttributesHTML());
     }
 
     public function testEveryFieldTransformsReadonlyAsClone()
@@ -358,7 +379,7 @@ class FormFieldTest extends SapphireTest
     {
         $field = new FormField('MyField');
         $schema = $field->getSchemaDataDefaults();
-        $this->assertInternalType('array', $schema);
+        $this->assertIsArray($schema);
     }
 
     public function testGetSchemaDataDefaultsTitleTip()
@@ -454,11 +475,9 @@ class FormFieldTest extends SapphireTest
         $this->assertSame('foo/field/Test/bar', $field->Link('bar'));
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testLinkWithoutForm()
     {
+        $this->expectException(LogicException::class);
         $field = new FormField('Test');
         $field->Link('bar');
     }

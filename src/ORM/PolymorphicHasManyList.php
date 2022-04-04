@@ -84,7 +84,7 @@ class PolymorphicHasManyList extends HasManyList
         }
         if (is_array($foreignID)) {
             user_error(
-                "PolymorphicHasManyList::add() can't be called on a list linked to mulitple foreign IDs",
+                "PolymorphicHasManyList::add() can't be called on a list linked to multiple foreign IDs",
                 E_USER_WARNING
             );
             return;

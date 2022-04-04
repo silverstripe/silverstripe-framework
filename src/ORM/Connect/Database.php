@@ -190,7 +190,7 @@ abstract class Database
 
     /**
      * Determines if the query should be previewed, and thus interrupted silently.
-     * If so, this function also displays the query via the debuging system.
+     * If so, this function also displays the query via the debugging system.
      * Subclasess should respect the results of this call for each query, and not
      * execute any queries that generate a true response.
      *
@@ -438,7 +438,7 @@ abstract class Database
     }
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
      */
     public function quiet()
     {
@@ -508,7 +508,7 @@ abstract class Database
      * function to return an SQL datetime expression that can be used with the adapter in use
      * used for querying a datetime in a certain format
      *
-     * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
+     * @param string $date to be formatted, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
      *                     field name, e.g. '"SiteTree"."Created"'
      * @param string $format to be used, supported specifiers:
      * %Y = Year (four digits)
@@ -545,14 +545,14 @@ abstract class Database
 
     /**
      * function to return an SQL datetime expression that can be used with the adapter in use
-     * used for querying a datetime substraction
+     * used for querying a datetime subtraction
      *
      * @param string $date1 can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
      *                       e.g. '"SiteTree"."Created"'
-     * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime
+     * @param string $date2 to be subtracted of $date1, can be either 'now', literal datetime
      *                      like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
      * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which
-     *                is the result of the substraction
+     *                is the result of the subtraction
      */
     abstract public function datetimeDifferenceClause($date1, $date2);
 
@@ -903,7 +903,7 @@ abstract class Database
             return $this->connector->selectDatabase($name);
         }
 
-        // Check DB creation permisson
+        // Check DB creation permission
         if (!$create) {
             if ($errorLevel !== false) {
                 user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);

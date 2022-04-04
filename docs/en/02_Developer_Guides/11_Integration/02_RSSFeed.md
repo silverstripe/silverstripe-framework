@@ -58,7 +58,7 @@ RSSFeed::linkToFeed($link, $title);
 You can use [RSSFeed](api:SilverStripe\Control\RSS\RSSFeed) to easily create a feed showing your latest Page updates. The following example adds a page
 `/home/rss/` which displays an XML file the latest updated pages.
 
-**app/code/PageController.php**
+**app/src/PageController.php**
 
 ```php
 use SilverStripe\Control\RSS\RSSFeed;
@@ -195,7 +195,7 @@ Say from that last example we want to include the Players Team in the XML feed w
 
 `setTemplate` can then be used to tell RSSFeed to use that new template. 
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 use SilverStripe\Control\RSS\RSSFeed;

@@ -119,8 +119,8 @@ class NumericFieldTest extends SapphireTest
         $field->setScale(2);
         $field->setValue(1001.3);
         $html = $field->performReadonlyTransformation()->Field()->forTemplate();
-        $this->assertContains('value="1.001,30"', $html);
-        $this->assertContains('readonly="readonly"', $html);
+        $this->assertStringContainsString('value="1.001,30"', $html);
+        $this->assertStringContainsString('readonly="readonly"', $html);
     }
 
     public function testNumberTypeOnInputHtml()
@@ -131,7 +131,7 @@ class NumericFieldTest extends SapphireTest
 
         // @todo - Revert to number one day when html5 number supports proper localisation
         // See https://github.com/silverstripe/silverstripe-framework/pull/4565
-        $this->assertContains('type="text"', $html, 'number type not set');
+        $this->assertStringContainsString('type="text"', $html, 'number type not set');
     }
 
     public function testNullSet()

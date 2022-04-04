@@ -6,7 +6,7 @@ icon: users
 
 # Core Committers
 
-The Core Committers team is reviewed approximately annually, new members are added based on quality contributions to Silverstipe CMS code and outstanding community participation.
+The Core Committers team is reviewed approximately annually, new members are added based on quality contributions to Silverstripe CMS code and outstanding community participation.
 
 This page outlines those who are part of the Core Committer team and outlines the process for onboarding new members.
 
@@ -19,10 +19,11 @@ This page outlines those who are part of the Core Committer team and outlines th
 * [Guy Marriott](https://github.com/ScopeyNZ)
 * [Ingo Schommer](https://github.com/chillu)
 * [Loz Calver](https://github.com/kinglozzer)
+* [Matt Peel](https://github.com/madmatt)
 * [Maxime Rainville](https://github.com/maxime-rainville)
 * [Michal Kleiner](https://github.com/michalkleiner)
-* [Paul Clarke](https://github.com/clarkepaul)
 * [Sam Minnée](https://github.com/sminnee)
+* [Steve Boyd](https://github.com/emteknetnz)
 * [Stevie Mayhew](https://github.com/stevie-mayhew/)
 * [Will Rossiter](https://github.com/wilr/)
 

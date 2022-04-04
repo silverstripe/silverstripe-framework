@@ -1,0 +1,13 @@
+{
+    "name": "silverstripe/empty-require-dev",
+    "type": "silverstripe-vendor-module",
+    "description": "This fake module uses an exact version of recipe testing 2",
+    "homepage": "https://www.silverstripe.org",
+    "license": "BSD-3-Clause",
+    "require": {
+        "silverstripe/recipe-cms": "4.4.x-dev as 4.4.0"
+    },
+    "require-dev": {
+        "silverstripe/recipe-testing": "2.34.56"
+    }
+}

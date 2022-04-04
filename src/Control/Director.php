@@ -470,6 +470,7 @@ class Director implements TemplateGlobalProvider
             // Default to respecting site base_url
             $parent = self::absoluteBaseURL();
         }
+        static::singleton()->extend('updateAbsoluteURLParent', $parent);
 
         // Map empty urls to relative slash and join to base
         if (empty($url) || $url === '.' || $url === './') {
@@ -692,7 +693,7 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Check if using a seperate public dir, and if so return this directory
+     * Check if using a separate public dir, and if so return this directory
      * name.
      *
      * This will be removed in 5.0 and fixed to 'public'

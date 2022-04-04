@@ -10,15 +10,17 @@ Silverstripe CMS needs to be installed on a web server. Content authors and webs
 to access a web-based GUI to do their day-to-day work. Website designers and developers require access to the files on
 the server to update templates, website logic, and perform upgrades or maintenance.
 
-## PHP
+## PHP {php}
 
-* PHP >=7.1
+* PHP >=7.3
 * PHP extensions: `ctype`, `dom`, `fileinfo`, `hash`, `intl`, `mbstring`, `session`, `simplexml`, `tokenizer`, `xml`
 * PHP configuration: `memory_limit` with at least `48M`
 * PHP extension for image manipulation: Either `gd` or `imagick`
 * PHP extension for a database connector (e.g. `pdo` or `mysqli`)
 
 Use [phpinfo()](http://php.net/manual/en/function.phpinfo.php) to inspect your configuration.
+
+Silverstripe CMS tracks the official [PHP release support timeline](https://www.php.net/supported-versions.php). When a PHP version reaches end-of-life, Silverstripe CMS drops support for it in the next minor release. 
 
 ## Database
 
@@ -53,6 +55,17 @@ In MySQL versions >=5.7.5, the `ANSI` sql_mode setting behaves differently and i
 setting. It is generally recommended to leave this setting as-is because it results in deterministic SQL. However, for
 some advanced cases, the sql_mode can be configured on the database connection via the configuration API (
 see `MySQLDatabase::$sql_mode` for more details.) This setting is only available in Silverstripe CMS 4.7 and later.
+
+ ### MySQL/MariaDB Int width in schema
+
+MySQL 8.0.17 stopped reporting the width attribute for integers while MariaDB did not change its behaviour.
+This results in constant rebuilding of the schema when MySQLSchemaManager expects a field to look like e.g.
+`INT(8)` and MySQL server reports it simply as `INT`. MySQLSchemaManager has been updated to detect the MySQL
+server implementation and act accordingly. In cases when auto-detection fails, you can force the desired behaviour like this:
+```yml
+SilverStripe\ORM\Connect\MySQLSchemaManager:
+    schema_use_int_width: true # or false when INT widths should be ignored
+```
 
 ## Webserver Configuration
 
@@ -261,7 +274,7 @@ $email->send();
 
 Using the code snippet above also tests that the ability to set the "from" address is working correctly.
 
-See the [email section](/developer_guides/email) for futher details, including how to set the administrator "from" email address, change the `sendmail` binary location and how to use SMTP or other mail transports instead of sendmail.
+See the [email section](/developer_guides/email) for further details, including how to set the administrator "from" email address, change the `sendmail` binary location and how to use SMTP or other mail transports instead of sendmail.
 
 
 ## PHP Requirements for older Silverstripe CMS releases {#php-support}
@@ -271,15 +284,21 @@ table may be of use:
 
 | Silverstripe CMS Version | PHP Version | More information |
 | -------------------- | ----------- | ---------------- |
-| 3.0 - 3.5            | 5.3 - 5.6   | [requirements docs](https://docs.silverstripe.org/en/3.4/getting_started/server_requirements/)
+| 3.0 - 3.5            | 5.3 - 5.6   | |
 | 3.6                  | 5.3 - 7.1   | |
 | 3.7                  | 5.3 - 7.4   | [changelog](https://docs.silverstripe.org/en/3/changelogs/3.7.4/) |
 | 4.0 - 4.4            | 5.6+        | |
-| 4.5+                 | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
+| 4.5 - 4.9            | 7.1+        | [blog post](https://www.silverstripe.org/blog/our-plan-for-ending-php-5-6-support-in-silverstripe-4/) |
+| 4.10                 | 7.3+        | [changelog](/Changelogs/4.10.0#phpeol/) |
+| 4.11 +               | 7.4+        | [changelog](/Changelogs/4.11.0#phpeol) |
 
 ## CMS browser requirements
 
 Silverstripe CMS supports the following web browsers:
+
+* Google Chrome
+* Microsoft Edge
+* Mozilla Firefox
 
 We aim to provide satisfactory experiences in Apple Safari. Silverstripe CMS works well across Windows, Linux, and Mac
 operating systems.

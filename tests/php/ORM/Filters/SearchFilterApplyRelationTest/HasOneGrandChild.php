@@ -8,7 +8,7 @@ class HasOneGrandChild extends HasOneChild implements TestOnly
 {
     private static $table_name = 'SearchFilterApplyRelationTest_HasOneGrantChild';
 
-    // This is to create an seperate Table only.
+    // This is to create a separate Table only.
     private static $db = [
         "GrantChildField" => "Varchar",
     ];

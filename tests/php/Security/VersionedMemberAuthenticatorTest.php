@@ -36,7 +36,7 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
         ]
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
             ->setTestNames([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->logOut();
         parent::tearDown();

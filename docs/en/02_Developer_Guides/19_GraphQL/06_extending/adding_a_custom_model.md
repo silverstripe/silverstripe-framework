@@ -45,7 +45,7 @@ Get the generic resolver that should be used for types that are built
 with this model. 
 * `getSourceClass(): string`: Get the name of the class that builds
 the type, e.g. `MyDataObject`
-* `getAllFields(): array`: Get all availble fields on the object
+* `getAllFields(): array`: Get all available fields on the object
 * `getModelField(string $fieldName): ?ModelType`: For nested fields.
 If a field resolves to another model (e.g. has_one), return that
 model type.

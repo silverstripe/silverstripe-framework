@@ -12,7 +12,7 @@ use DOMDocument;
  * This class handles the converting of HTML fragments between a string and a DOMDocument based
  * representation.
  *
- * It's designed to allow dependancy injection to replace the standard HTML4 version with one that
+ * It's designed to allow dependency injection to replace the standard HTML4 version with one that
  * handles XHTML or HTML5 instead
  *
  * @mixin DOMDocument

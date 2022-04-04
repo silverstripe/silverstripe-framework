@@ -282,12 +282,30 @@ class PaginatedListTest extends SapphireTest
         $this->assertFalse($list->MoreThanOnePage());
     }
 
+    public function testFirstPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $this->assertTrue($list->FirstPage());
+        $list->setCurrentPage(2);
+        $this->assertFalse($list->FirstPage());
+    }
+
     public function testNotFirstPage()
     {
         $list = new PaginatedList(new ArrayList());
         $this->assertFalse($list->NotFirstPage());
         $list->setCurrentPage(2);
         $this->assertTrue($list->NotFirstPage());
+    }
+
+    public function testLastPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $list->setTotalItems(50);
+
+        $this->assertFalse($list->LastPage());
+        $list->setCurrentPage(5);
+        $this->assertTrue($list->LastPage());
     }
 
     public function testNotLastPage()
@@ -329,7 +347,7 @@ class PaginatedListTest extends SapphireTest
     public function testFirstLink()
     {
         $list = new PaginatedList(new ArrayList());
-        $this->assertContains('start=0', $list->FirstLink());
+        $this->assertStringContainsString('start=0', $list->FirstLink());
     }
 
     public function testFirstLinkContainsCurrentGetParameters()
@@ -358,11 +376,11 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList(new ArrayList());
         $list->setPageLength(10);
         $list->setTotalItems(100);
-        $this->assertContains('start=90', $list->LastLink());
+        $this->assertStringContainsString('start=90', $list->LastLink());
 
         // Disable paging
         $list->setPageLength(0);
-        $this->assertContains('start=0', $list->LastLink());
+        $this->assertStringContainsString('start=0', $list->LastLink());
     }
 
     public function testLastLinkContainsCurrentGetParameters()
@@ -391,13 +409,13 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList(new ArrayList());
         $list->setTotalItems(50);
 
-        $this->assertContains('start=10', $list->NextLink());
+        $this->assertStringContainsString('start=10', $list->NextLink());
         $list->setCurrentPage(2);
-        $this->assertContains('start=20', $list->NextLink());
+        $this->assertStringContainsString('start=20', $list->NextLink());
         $list->setCurrentPage(3);
-        $this->assertContains('start=30', $list->NextLink());
+        $this->assertStringContainsString('start=30', $list->NextLink());
         $list->setCurrentPage(4);
-        $this->assertContains('start=40', $list->NextLink());
+        $this->assertStringContainsString('start=40', $list->NextLink());
         $list->setCurrentPage(5);
         $this->assertNull($list->NextLink());
 
@@ -435,11 +453,11 @@ class PaginatedListTest extends SapphireTest
 
         $this->assertNull($list->PrevLink());
         $list->setCurrentPage(2);
-        $this->assertContains('start=0', $list->PrevLink());
+        $this->assertStringContainsString('start=0', $list->PrevLink());
         $list->setCurrentPage(3);
-        $this->assertContains('start=10', $list->PrevLink());
+        $this->assertStringContainsString('start=10', $list->PrevLink());
         $list->setCurrentPage(5);
-        $this->assertContains('start=30', $list->PrevLink());
+        $this->assertStringContainsString('start=30', $list->PrevLink());
 
         // Disable paging
         $list->setPageLength(0);

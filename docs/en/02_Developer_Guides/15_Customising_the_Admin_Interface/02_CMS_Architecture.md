@@ -128,7 +128,7 @@ When writing templates use:
 $AdminURL
 ```
 
-And in JavaScript, this is avaible through the `ss` namespace
+And in JavaScript, this is available through the `ss` namespace
 
 
 ```js
@@ -418,7 +418,7 @@ in a single Ajax request.
 ```php
 use SilverStripe\Admin\LeftAndMain;
 
-// app/code/MyAdmin.php
+// app/src/MyAdmin.php
 class MyAdmin extends LeftAndMain 
 {
     private static $url_segment = 'myadmin';

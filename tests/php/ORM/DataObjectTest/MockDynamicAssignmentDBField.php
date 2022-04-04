@@ -8,8 +8,8 @@ use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * This is a fake DB field specifically design to test dynamic value assignment. You can set `scalarValueOnly` in
- * the constructor. You can control whetever the field will try to do a dynamic assignment by specifing
- * `$dynamicAssignment` in nthe consturctor.
+ * the constructor. You can control whatever the field will try to do a dynamic assignment by specifying
+ * `$dynamicAssignment` in nthe constructor.
  *
  * If the field is set to false, it will try to do a plain assignment. This is so you can save the initial value no
  * matter what. If the field is set to true, it will try to do a dynamic assignment.

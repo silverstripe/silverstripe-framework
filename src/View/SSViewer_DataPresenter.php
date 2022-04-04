@@ -175,7 +175,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             $res['value'] = $source['value'];
         } else {
             throw new InvalidArgumentException(
-                "Injected property $property does't have a value or callable value source provided"
+                "Injected property $property doesn't have a value or callable value source provided"
             );
         }
 

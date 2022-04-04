@@ -23,7 +23,7 @@ class RequiredFields extends Validator
     protected $required;
 
     /**
-     * Pass each field to be validated as a seperate argument to the constructor
+     * Pass each field to be validated as a separate argument to the constructor
      * of this object. (an array of elements are ok).
      */
     public function __construct()

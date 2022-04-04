@@ -56,7 +56,7 @@ class FormTest extends FunctionalTest
 
     protected static $disable_themes = true;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -140,16 +140,16 @@ class FormTest extends FunctionalTest
         );
 
         // Number field updates its value
-        $this->assertContains('<input type="text" name="Number" value="888"', $response->getBody());
+        $this->assertStringContainsString('<input type="text" name="Number" value="888"', $response->getBody());
 
 
         // Readonly field remains
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="text" name="ReadonlyField" value="This value is readonly"',
             $response->getBody()
         );
 
-        $this->assertNotContains('hacxzored', $response->getBody());
+        $this->assertStringNotContainsString('hacxzored', $response->getBody());
     }
 
     public function testLoadDataFromUnchangedHandling()
@@ -502,12 +502,12 @@ class FormTest extends FunctionalTest
             'Required fields show a notification on field when left blank'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
             $response->getBody(),
             "Validation messages are safely XML encoded"
         );
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             '<a href="http://mysite.com">link</a>',
             $response->getBody(),
             "Unsafe content is not emitted directly inside the response body"
@@ -658,7 +658,7 @@ class FormTest extends FunctionalTest
                 'SecurityID' => $token
             ]
         );
-        $this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
+        $this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with security token');
     }
 
     public function testStrictFormMethodChecking()
@@ -726,6 +726,19 @@ class FormTest extends FunctionalTest
         $this->assertStringEndsWith('class1 class2', $form->extraClass());
     }
 
+    public function testHasExtraClass()
+    {
+        $form = $this->getStubForm();
+        $form->addExtraClass('class1');
+        $form->addExtraClass('class2');
+        $this->assertTrue($form->hasExtraClass('class1'));
+        $this->assertTrue($form->hasExtraClass('class2'));
+        $this->assertTrue($form->hasExtraClass('class1 class2'));
+        $this->assertTrue($form->hasExtraClass('class2 class1'));
+        $this->assertFalse($form->hasExtraClass('class3'));
+        $this->assertFalse($form->hasExtraClass('class2 class3'));
+    }
+
     public function testRemoveExtraClass()
     {
         $form = $this->getStubForm();
@@ -788,7 +801,7 @@ class FormTest extends FunctionalTest
 
         $form = $this->getStubForm();
 
-        $this->assertContains('class1', $form->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class1', $form->extraClass(), 'Class list does not contain expected class');
 
         Form::config()->update(
             'default_classes',
@@ -800,7 +813,7 @@ class FormTest extends FunctionalTest
 
         $form = $this->getStubForm();
 
-        $this->assertContains('class1 class2', $form->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class1 class2', $form->extraClass(), 'Class list does not contain expected class');
 
         Form::config()->update(
             'default_classes',
@@ -811,11 +824,11 @@ class FormTest extends FunctionalTest
 
         $form = $this->getStubForm();
 
-        $this->assertContains('class3', $form->extraClass(), 'Class list does not contain expected class');
+        $this->assertStringContainsString('class3', $form->extraClass(), 'Class list does not contain expected class');
 
         $form->removeExtraClass('class3');
 
-        $this->assertNotContains('class3', $form->extraClass(), 'Class list contains unexpected class');
+        $this->assertStringNotContainsString('class3', $form->extraClass(), 'Class list contains unexpected class');
     }
 
     public function testAttributes()
@@ -903,22 +916,22 @@ class FormTest extends FunctionalTest
         $form = $this->getStubForm();
 
         $form->setAttribute('foo', 'bar');
-        $this->assertContains('foo="bar"', $form->getAttributesHTML());
+        $this->assertStringContainsString('foo="bar"', $form->getAttributesHTML());
 
         $form->setAttribute('foo', null);
-        $this->assertNotContains('foo="bar"', $form->getAttributesHTML());
+        $this->assertStringNotContainsString('foo="bar"', $form->getAttributesHTML());
 
         $form->setAttribute('foo', true);
-        $this->assertContains('foo="foo"', $form->getAttributesHTML());
+        $this->assertStringContainsString('foo="foo"', $form->getAttributesHTML());
 
         $form->setAttribute('one', 1);
         $form->setAttribute('two', 2);
         $form->setAttribute('three', 3);
         $form->setAttribute('<html>', '<html>');
-        $this->assertNotContains('one="1"', $form->getAttributesHTML('one', 'two'));
-        $this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
-        $this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
-        $this->assertNotContains('<html>', $form->getAttributesHTML());
+        $this->assertStringNotContainsString('one="1"', $form->getAttributesHTML('one', 'two'));
+        $this->assertStringNotContainsString('two="2"', $form->getAttributesHTML('one', 'two'));
+        $this->assertStringContainsString('three="3"', $form->getAttributesHTML('one', 'two'));
+        $this->assertStringNotContainsString('<html>', $form->getAttributesHTML());
     }
 
     function testMessageEscapeHtml()
@@ -927,7 +940,7 @@ class FormTest extends FunctionalTest
         $form->setMessage('<em>Escaped HTML</em>', 'good', ValidationResult::CAST_TEXT);
         $parser = new CSSContentParser($form->forTemplate());
         $messageEls = $parser->getBySelector('.message');
-        $this->assertContains(
+        $this->assertStringContainsString(
             '&lt;em&gt;Escaped HTML&lt;/em&gt;',
             $messageEls[0]->asXML()
         );
@@ -936,7 +949,7 @@ class FormTest extends FunctionalTest
         $form->setMessage('<em>Unescaped HTML</em>', 'good', ValidationResult::CAST_HTML);
         $parser = new CSSContentParser($form->forTemplate());
         $messageEls = $parser->getBySelector('.message');
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<em>Unescaped HTML</em>',
             $messageEls[0]->asXML()
         );
@@ -948,7 +961,7 @@ class FormTest extends FunctionalTest
         $form->Fields()->dataFieldByName('key1')->setMessage('<em>Escaped HTML</em>', 'good');
         $parser = new CSSContentParser($result = $form->forTemplate());
         $messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
-        $this->assertContains(
+        $this->assertStringContainsString(
             '&lt;em&gt;Escaped HTML&lt;/em&gt;',
             $messageEls[0]->asXML()
         );
@@ -961,7 +974,7 @@ class FormTest extends FunctionalTest
             ->setMessage('<em>Unescaped HTML</em>', 'good', ValidationResult::CAST_HTML);
         $parser = new CSSContentParser($form->forTemplate());
         $messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<em>Unescaped HTML</em>',
             $messageEls[0]->asXML()
         );
@@ -1055,25 +1068,25 @@ class FormTest extends FunctionalTest
 
         // Test our reloaded form field
         $body = $response->getBody();
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="text" name="SomeDateField" value="15/06/2018"',
             $body,
             'Our reloaded form should contain a SomeDateField with the value "15/06/2018"'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="text" name="SomeFrenchNumericField" value="9 876,5432" ',
             $this->clean($body),
             'Our reloaded form should contain a SomeFrenchNumericField with the value "9 876,5432"'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="text" name="SomeFrenchMoneyField[Currency]" value="NZD"',
             $body,
             'Our reloaded form should contain a SomeFrenchMoneyField[Currency] with the value "NZD"'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<input type="text" name="SomeFrenchMoneyField[Amount]" value="9 876,54" ',
             $this->clean($body),
             'Our reloaded form should contain a SomeFrenchMoneyField[Amount] with the value "9 876,54"'

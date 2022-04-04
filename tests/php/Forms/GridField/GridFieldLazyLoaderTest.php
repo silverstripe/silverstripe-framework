@@ -44,7 +44,7 @@ class GridFieldLazyLoaderTest extends SapphireTest
         Team::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = DataList::create(Team::class);
@@ -89,8 +89,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getHeaderlessGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loadable', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loaded', $gridField->extraClass());
     }
 
     public function testGetHTMLFragmentsWithoutTabSet()
@@ -98,8 +98,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getOutOfTabSetGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     public function testGetHTMLFragmentsNonLazy()
@@ -107,8 +107,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->getNonLazyGridField();
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
 
@@ -150,8 +150,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getHeaderlessGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loadable', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loaded', $gridField->extraClass());
     }
 
     public function testReadOnlyGetHTMLFragmentsWithoutTabSet()
@@ -159,8 +159,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getOutOfTabSetGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     public function testReadOnlyGetHTMLFragmentsNonLazy()
@@ -168,8 +168,8 @@ class GridFieldLazyLoaderTest extends SapphireTest
         $gridField = $this->makeGridFieldReadonly($this->getNonLazyGridField());
         $actual = $this->component->getHTMLFragments($gridField);
         $this->assertEmpty($actual, 'getHTMLFragments should always return an array');
-        $this->assertContains('grid-field--lazy-loaded', $gridField->extraClass());
-        $this->assertNotContains('grid-field--lazy-loadable', $gridField->extraClass());
+        $this->assertStringContainsString('grid-field--lazy-loaded', $gridField->extraClass());
+        $this->assertStringNotContainsString('grid-field--lazy-loadable', $gridField->extraClass());
     }
 
     /**

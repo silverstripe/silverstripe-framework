@@ -170,7 +170,7 @@ class DataQuery
             throw new InvalidArgumentException("DataQuery::create() Can't find data classes for '{$this->dataClass}'");
         }
 
-        // Build our intial query
+        // Build our initial query
         $this->query = new SQLSelect([]);
         $this->query->setDistinct(true);
 
@@ -395,7 +395,12 @@ class DataQuery
                     // format internally; then this check can be part of selectField()
                     $selects = $query->getSelect();
                     if (!isset($selects[$col]) && !in_array($qualCol, $selects)) {
-                        $query->selectField($qualCol);
+                        // Use the original select if possible.
+                        if (array_key_exists($col, $originalSelect)) {
+                            $query->selectField($originalSelect[$col], $col);
+                        } else {
+                            $query->selectField($qualCol);
+                        }
                     }
                 } else {
                     $qualCol = '"' . implode('"."', $parts) . '"';

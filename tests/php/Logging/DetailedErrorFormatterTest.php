@@ -19,11 +19,11 @@ class DetailedErrorFormatterTest extends SapphireTest
         ]]);
 
         $base = __DIR__;
-        $this->assertContains('ERROR [Emergency]: Uncaught Exception: Error', $output);
-        $this->assertContains("Line 32 in $base/DetailedErrorFormatterTest/ErrorGenerator.php", $output);
-        $this->assertContains('* 32:                  throw new Exception(\'Error\');', $output);
-        $this->assertContains(
-            'SilverStripe\\Logging\\Tests\\DetailedErrorFormatterTest\\ErrorGenerator->mockException(4)',
+        $this->assertStringContainsString('ERROR [Emergency]: Uncaught Exception: Error', $output);
+        $this->assertStringContainsString("Line 32 in $base/DetailedErrorFormatterTest/ErrorGenerator.php", $output);
+        $this->assertStringContainsString('* 32:                  throw new Exception(\'Error\');', $output);
+        $this->assertStringContainsString(
+            'SilverStripe\\Logging\\Tests\\DetailedErrorFormatterTest\\ErrorGenerator->mockException',
             $output
         );
     }
@@ -40,10 +40,10 @@ class DetailedErrorFormatterTest extends SapphireTest
         $formatter = new DetailedErrorFormatter();
         $result = $formatter->format($record);
 
-        $this->assertContains('ERRNO 401', $result, 'Status code was not found in trace');
-        $this->assertContains('Denied', $result, 'Message was not found in trace');
-        $this->assertContains('Line 4 in index.php', $result, 'Line or filename were not found in trace');
-        $this->assertContains(self::class, $result, 'Backtrace doesn\'t show current test class');
+        $this->assertStringContainsString('ERRNO 401', $result, 'Status code was not found in trace');
+        $this->assertStringContainsString('Denied', $result, 'Message was not found in trace');
+        $this->assertStringContainsString('Line 4 in index.php', $result, 'Line or filename were not found in trace');
+        $this->assertStringContainsString(self::class, $result, 'Backtrace doesn\'t show current test class');
     }
 
     public function testFormatBatch()
@@ -66,9 +66,9 @@ class DetailedErrorFormatterTest extends SapphireTest
         $formatter = new DetailedErrorFormatter();
         $result = $formatter->formatBatch($records);
 
-        $this->assertContains('ERRNO 401', $result, 'First status code was not found in trace');
-        $this->assertContains('ERRNO 404', $result, 'Second status code was not found in trace');
-        $this->assertContains('Denied', $result, 'First message was not found in trace');
-        $this->assertContains('Not found', $result, 'Second message was not found in trace');
+        $this->assertStringContainsString('ERRNO 401', $result, 'First status code was not found in trace');
+        $this->assertStringContainsString('ERRNO 404', $result, 'Second status code was not found in trace');
+        $this->assertStringContainsString('Denied', $result, 'First message was not found in trace');
+        $this->assertStringContainsString('Not found', $result, 'Second message was not found in trace');
     }
 }

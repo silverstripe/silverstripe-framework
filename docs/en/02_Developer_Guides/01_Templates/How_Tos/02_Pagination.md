@@ -11,7 +11,7 @@ all your record, then wraps it in a [PaginatedList](api:SilverStripe\ORM\Paginat
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 use SilverStripe\ORM\PaginatedList;
@@ -102,7 +102,7 @@ $pages->setPageLength(25);
 If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page
 list.
 
-## Template Variables
+## Template Variables {#variables}
 
 | Variable | Description |
 | -------- | -------- |
@@ -116,6 +116,8 @@ list.
 | `$Pages` | Total number of pages. |
 | `$PageNum` | Page number, starting at 1 (within `$Pages`) |
 | `$Link` | Links to the current controller URL, setting this page as current via a GET parameter |
+| `$FirstPage` | Returns true if you're currently on the first page |
+| `$LastPage` | Returns true if you're currently on the last page |
 | `$CurrentBool` | Returns true if you're currently on that page |
 
 ## Related Lessons

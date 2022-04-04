@@ -2,14 +2,16 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use Composer\Semver\Semver;
 use Exception;
 use InvalidArgumentException;
+use RuntimeException;
 use Serializable;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Deprecation;
 
 /**
- * Abstraction of a PHP Package. Can be used to retrieve information about SilverStripe modules, and other packages
+ * Abstraction of a PHP Package. Can be used to retrieve information about Silverstripe CMS modules, and other packages
  * managed via composer, by reading their `composer.json` file.
  */
 class Module implements Serializable
@@ -18,6 +20,23 @@ class Module implements Serializable
      * @deprecated 4.1.0:5.0.0 Use Path::normalise() instead
      */
     const TRIM_CHARS = ' /\\';
+
+    /**
+     * Return value of getCIConfig() when module uses PHPUNit 9
+     */
+    const CI_PHPUNIT_NINE = 'CI_PHPUNIT_NINE';
+
+    /**
+     * Return value of getCIConfig() when module uses PHPUNit 5
+     */
+    const CI_PHPUNIT_FIVE = 'CI_PHPUNIT_FIVE';
+
+    /**
+     * Return value of getCIConfig() when module does not use any CI
+     */
+    const CI_UNKNOWN = 'CI_UNKNOWN';
+
+
 
     /**
      * Full directory path to this module with no trailing slash
@@ -64,7 +83,7 @@ class Module implements Serializable
      * Gets name of this module. Used as unique key and identifier for this module.
      *
      * If installed by composer, this will be the full composer name (vendor/name).
-     * If not insalled by composer this will default to the basedir()
+     * If not installed by composer this will default to the `basedir()`
      *
      * @return string
      */
@@ -74,7 +93,7 @@ class Module implements Serializable
     }
 
     /**
-     * Get full composer name. Will be null if no composer.json is available
+     * Get full composer name. Will be `null` if no composer.json is available
      *
      * @return string|null
      */
@@ -130,7 +149,7 @@ class Module implements Serializable
 
     /**
      * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resources-dir`
-     * key in the composer file. A blank string will will be returned if the key is undefined.
+     * key in the composer file. A blank string will be returned if the key is undefined.
      *
      * Only applicable when reading the composer file for the main project.
      * @return string
@@ -166,11 +185,42 @@ class Module implements Serializable
         return substr($this->path, strlen($this->basePath) + 1);
     }
 
+    public function __serialize(): array
+    {
+        return [
+            'path' => $this->path,
+            'basePath' => $this->basePath,
+            'composerData' => $this->composerData
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+            $this->path = $data['path'];
+            $this->basePath = $data['basePath'];
+            $this->composerData = $data['composerData'];
+            $this->resources = [];
+    }
+
+    /**
+     * The __serialize() magic method will be automatically used instead of this
+     *
+     * @return string
+     * @deprecated will be removed in 5.0
+     */
     public function serialize()
     {
         return json_encode([$this->path, $this->basePath, $this->composerData]);
     }
 
+    /**
+     * The __unserialize() magic method will be automatically used instead of this almost all the time
+     * This method will be automatically used if existing serialized data was not saved as an associative array
+     * and the PHP version used in less than PHP 9.0
+     *
+     * @param string $serialized
+     * @deprecated will be removed in 5.0
+     */
     public function unserialize($serialized)
     {
         list($this->path, $this->basePath, $this->composerData) = json_decode($serialized, true);
@@ -274,6 +324,120 @@ class Module implements Serializable
         return $this
             ->getResource($path)
             ->exists();
+    }
+
+    /**
+     * Determine what configurations the module is using to run various aspects of its CI. THe only aspect
+     * that is observed is `PHP`
+     * @return array List of configuration aspects e.g.: `['PHP' => 'CI_PHPUNIT_NINE']`
+     * @internal
+     */
+    public function getCIConfig(): array
+    {
+        return [
+            'PHP' => $this->getPhpCiConfig()
+        ];
+    }
+
+    /**
+     * Determine what CI Configuration the module uses to test its PHP code.
+     */
+    private function getPhpCiConfig(): string
+    {
+        // We don't have any composer data at all
+        if (empty($this->composerData)) {
+            return self::CI_UNKNOWN;
+        }
+
+        // We don't have any dev dependencies
+        if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
+            return self::CI_UNKNOWN;
+        }
+
+        // We are assuming a typical setup where the CI lib is defined in require-dev rather than require
+        $requireDev = $this->composerData['require-dev'];
+
+        // Try to pick which CI we are using based on phpunit constraint
+        $phpUnitConstraint = $this->requireDevConstraint(['sminnee/phpunit', 'phpunit/phpunit']);
+        if ($phpUnitConstraint) {
+            if ($this->constraintSatisfies(
+                $phpUnitConstraint,
+                ['5.7.0', '5.0.0', '5.x-dev', '5.7.x-dev'],
+                5
+            )) {
+                return self::CI_PHPUNIT_FIVE;
+            }
+            if ($this->constraintSatisfies(
+                $phpUnitConstraint,
+                ['9.0.0', '9.5.0', '9.x-dev', '9.5.x-dev'],
+                9
+            )) {
+                return self::CI_PHPUNIT_NINE;
+            }
+        }
+
+        // Try to pick which CI we are using based on recipe-testing constraint
+        $recipeTestingConstraint = $this->requireDevConstraint(['silverstripe/recipe-testing']);
+        if ($recipeTestingConstraint) {
+            if ($this->constraintSatisfies(
+                $recipeTestingConstraint,
+                ['1.0.0', '1.1.0', '1.2.0', '1.1.x-dev', '1.2.x-dev', '1.x-dev'],
+                1
+            )) {
+                return self::CI_PHPUNIT_FIVE;
+            }
+            if ($this->constraintSatisfies(
+                $recipeTestingConstraint,
+                ['2.0.0', '2.0.x-dev', '2.x-dev'],
+                2
+            )) {
+                return self::CI_PHPUNIT_NINE;
+            }
+        }
+
+        return self::CI_UNKNOWN;
+    }
+
+    /**
+     * Retrieve the constraint for the first module that is found in the require-dev section
+     * @param string[] $modules
+     * @return false|string
+     */
+    private function requireDevConstraint(array $modules)
+    {
+        if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
+            return false;
+        }
+
+        $requireDev = $this->composerData['require-dev'];
+        foreach ($modules as $module) {
+            if (isset($requireDev[$module])) {
+                return $requireDev[$module];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines if the provided constraint allows at least one of the version provided
+     */
+    private function constraintSatisfies(
+        string $constraint,
+        array $possibleVersions,
+        int $majorVersionFallback
+    ): bool {
+        // Let's see of any of our possible versions is allowed by the constraint
+        if (!empty(Semver::satisfiedBy($possibleVersions, $constraint))) {
+            return true;
+        }
+
+        // Let's see if we are using an exact version constraint. e.g. ~1.2.3 or 1.2.3 or ~1.2 or 1.2.*
+        if (preg_match("/^~?$majorVersionFallback(\.(\d+)|\*){0,2}/", $constraint)) {
+            return true;
+        }
+
+        return false;
     }
 }
 

@@ -10,7 +10,7 @@ use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\Member;
 
 /**
- * Authenticate a member pased on a session cookie
+ * Authenticate a member passed on a session cookie
  */
 class SessionAuthenticationHandler implements AuthenticationHandler
 {
@@ -99,7 +99,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $line = '';
 
         // TODO: deprecate and use Session::regenerateSessionId
-        // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+        // @ is to suppress win32 warnings/notices when session wasn't cleaned up properly
         // There's nothing we can do about this, because it's an operating system function!
         if (!headers_sent($file, $line)) {
             @session_regenerate_id(true);
@@ -113,5 +113,9 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     {
         $request = $request ?: Controller::curr()->getRequest();
         $request->getSession()->destroy(true, $request);
+
+        if (Member::config()->get('login_marker_cookie')) {
+            Cookie::force_expiry(Member::config()->get('login_marker_cookie'));
+        }
     }
 }

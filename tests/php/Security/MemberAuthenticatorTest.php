@@ -32,7 +32,7 @@ class MemberAuthenticatorTest extends SapphireTest
     protected $defaultUsername = null;
     protected $defaultPassword = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -52,7 +52,7 @@ class MemberAuthenticatorTest extends SapphireTest
             ->setTestNames([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DefaultAdminService::clearDefaultAdmin();
         if ($this->defaultUsername) {

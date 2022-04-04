@@ -39,7 +39,7 @@ class MemberTest extends FunctionalTest
         Member::class => '*',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -63,7 +63,7 @@ class MemberTest extends FunctionalTest
     /**
      * @skipUpgrade
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -104,11 +104,10 @@ class MemberTest extends FunctionalTest
         $m2->write();
     }
 
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWriteDoesntMergeExistingMemberOnIdentifierChange()
     {
+        $this->expectException(ValidationException::class);
+
         $m1 = new Member();
         $m1->Email = 'member@test.com';
         $m1->write();
@@ -256,12 +255,12 @@ class MemberTest extends FunctionalTest
         $this->assertEquals($response->getStatusCode(), 302);
 
         // We should get redirected to Security/passwordsent
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Security/lostpassword/passwordsent',
             urldecode($response->getHeader('Location'))
         );
 
-        // Check existance of reset link
+        // Check existence of reset link
         $this->assertEmailSent(
             "testuser@example.com",
             null,
@@ -328,7 +327,7 @@ class MemberTest extends FunctionalTest
         $result = $member->changePassword('withSym###Ls7');
         $this->assertTrue($result->isValid());
 
-        // CAN'T USE PASSWORDS 2-7, but I can use pasword 1
+        // CAN'T USE PASSWORDS 2-7, but I can use password 1
 
         $result = $member->changePassword('withSym###Ls2');
         $this->assertFalse($result->isValid());
@@ -711,7 +710,7 @@ class MemberTest extends FunctionalTest
         /** @var Member $adminMember */
         $adminMember = $this->objFromFixture(Member::class, 'admin');
 
-        // Construct admin and non-admin gruops
+        // Construct admin and non-admin groups
         $newAdminGroup = new Group(['Title' => 'newadmin']);
         $newAdminGroup->write();
         Permission::grant($newAdminGroup->ID, 'ADMIN');
@@ -1011,7 +1010,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         $this->logOut();
 
@@ -1025,7 +1024,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
 
         $response = $this->get(
             'Security/login',
@@ -1036,7 +1035,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => str_rot13($firstHash->DeviceID)
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
 
         // Re-logging (ie 'alc_enc' has expired), and not checking the "Remember Me" option
         // should remove all previous hashes for this device
@@ -1054,7 +1053,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
         $this->assertEquals(RememberLoginHash::get()->filter('MemberID', $m1->ID)->count(), 0);
     }
 
@@ -1091,7 +1090,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         $this->logOut();
 
@@ -1112,7 +1111,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $firstHash->DeviceID
             ]
         );
-        $this->assertNotContains($message, $response->getBody());
+        $this->assertStringNotContainsString($message, $response->getBody());
         $this->logOut();
         DBDatetime::clear_mock_now();
     }
@@ -1167,7 +1166,7 @@ class MemberTest extends FunctionalTest
                 ['name' => $m1->FirstName]
             )
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         // Test that removing session but not cookie keeps user
         /** @var SessionAuthenticationHandler $sessionHandler */
@@ -1185,7 +1184,7 @@ class MemberTest extends FunctionalTest
                 'alc_device' => $secondHash->DeviceID
             ]
         );
-        $this->assertContains($message, $response->getBody());
+        $this->assertStringContainsString($message, $response->getBody());
 
         // Logging out from the second device - only one device being logged out
         RememberLoginHash::config()->update('logout_across_devices', false);
@@ -1269,6 +1268,15 @@ class MemberTest extends FunctionalTest
                 "Member has been locked out too early"
             );
         }
+    }
+
+    public function testFailedLoginCountNegative()
+    {
+        /** @var Member $member */
+        $member = $this->objFromFixture(Member::class, 'test');
+        $member->FailedLoginCount = -1;
+        $member->write();
+        $this->assertSame(0, $member->FailedLoginCount);
     }
 
     public function testMemberValidator()
@@ -1608,6 +1616,7 @@ class MemberTest extends FunctionalTest
 
     public function testChangePasswordToBlankIsValidated()
     {
+        Member::set_password_validator(new PasswordValidator());
         // override setup() function which setMinLength(0)
         PasswordValidator::singleton()->setMinLength(8);
         // 'test' member has a password defined in yml

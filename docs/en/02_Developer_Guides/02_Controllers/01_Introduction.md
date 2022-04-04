@@ -8,7 +8,7 @@ summary: A brief look at the definition of a Controller, creating actions and ho
 The following example is for a simple [Controller](api:SilverStripe\Control\Controller) class. When building off the Silverstripe CMS you will
 subclass the base `Controller` class.
 
-**app/code/controllers/TeamController.php**
+**app/src/controllers/TeamController.php**
 
 ```php
 use SilverStripe\Control\Controller;
@@ -79,7 +79,7 @@ Action methods can return one of four main things:
 * an [HTTPResponse](api:SilverStripe\Control\HTTPResponse) containing a manually defined `status code` and `body`.
 * an [HTTPResponse_Exception](api:SilverStripe\Control\HTTPResponse_Exception). A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
-**app/code/controllers/TeamController.php**
+**app/src/controllers/TeamController.php**
 
 ```php
 /**
@@ -165,7 +165,7 @@ For more information about templates, inheritance and how to render into views, 
 Each controller should define a `Link()` method. This should be used to avoid hard coding your routing in views,
 as well as give other features in Silverstripe CMS the ability to influence link behaviour.
 
-**app/code/controllers/TeamController.php**
+**app/src/controllers/TeamController.php**
 
 ```php
 public function Link($action = null) 
@@ -181,7 +181,7 @@ public function Link($action = null)
 ``` 
 
 ## Connecting Pages to Controllers
-By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to overide SiteTree::getControllerName().
+By default, a controller for a page type must reside in the same namespace as its page. If you find that your controllers are in a different namespace then you'll need to override SiteTree::getControllerName().
 
 Example controller:
 ```php

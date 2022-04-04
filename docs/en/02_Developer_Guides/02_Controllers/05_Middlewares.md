@@ -21,7 +21,7 @@ In addition, you should return an `HTTPResponse` object. In normal cases, this s
 `$response` object returned by `$delegate`, perhaps with some modification. However, sometimes you
 will deliberately return a different response, e.g. an error response or a redirection.
 
-**app/code/CustomMiddleware.php**
+**app/src/CustomMiddleware.php**
 
 ```php
 use SilverStripe\Control\Middleware\HTTPMiddleware;

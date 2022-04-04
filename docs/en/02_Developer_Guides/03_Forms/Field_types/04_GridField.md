@@ -13,7 +13,7 @@ tabular data in a format that is easy to view and modify. It can be thought of a
 ```php
 use SilverStripe\Forms\GridField\GridField;
 
-$field = new GridField($name, $title, $list);
+$field = GridField::create($name, $title, $list);
 ```
 
 [hint]
@@ -30,7 +30,7 @@ a `GridField` has almost no functionality. The `GridFieldConfig` instance and th
 responsible for all the user interactions including formatting data to be readable, modifying data and performing any 
 actions such as deleting records.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
@@ -45,7 +45,7 @@ class Page extends SiteTree
         $fields = parent::getCMSFields();
 
         $fields->addFieldToTab('Root.Pages', 
-            new GridField('Pages', 'All pages', SiteTree::get())
+            GridField::create('Pages', 'All pages', SiteTree::get())
         ); 
 
         return $fields;
@@ -66,7 +66,7 @@ This will display a bare bones `GridField` instance under `Pages` tab in the CMS
 The configuration of those `GridFieldComponent` instances and the addition or subtraction of components is done through 
 the `getConfig()` method on `GridField`.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
@@ -81,7 +81,7 @@ class Page extends SiteTree
         $fields = parent::getCMSFields();
 
         $fields->addFieldToTab('Root.Pages', 
-            $grid = new GridField('Pages', 'All pages', SiteTree::get())
+            $grid = GridField::create('Pages', 'All pages', SiteTree::get())
         );
 
         // GridField configuration
@@ -115,7 +115,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
 $config = GridFieldConfig::create();
 
 // add a component
-$config->addComponent(new GridFieldDataColumns());
+$config->addComponent(GridFieldDataColumns::create());
 
 // Update the GridField with our custom configuration
 $gridField->setConfig($config);
@@ -128,7 +128,7 @@ before another component by passing the second parameter.
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
-$config->addComponent(new GridFieldFilterHeader(), GridFieldDataColumns::class);
+$config->addComponent(GridFieldFilterHeader::create(), GridFieldDataColumns::class);
 ```
 
 We can add multiple components in one call.
@@ -136,8 +136,8 @@ We can add multiple components in one call.
 
 ```php
 $config->addComponents(
-    new GridFieldDataColumns(), 
-    new GridFieldToolbarHeader()
+    GridFieldDataColumns::create(), 
+    GridFieldToolbarHeader::create()
 );
 ```
 
@@ -191,12 +191,12 @@ $config = GridFieldConfig_Base::create();
 $gridField->setConfig($config);
 
 // Is the same as adding the following components..
-// .. new GridFieldToolbarHeader()
-// .. new GridFieldSortableHeader()
-// .. new GridFieldFilterHeader()
-// .. new GridFieldDataColumns()
-// .. new GridFieldPageCount('toolbar-header-right')
-// .. new GridFieldPaginator($itemsPerPage)
+// .. GridFieldToolbarHeader::create()
+// .. GridFieldSortableHeader::create()
+// .. GridFieldFilterHeader::create()
+// .. GridFieldDataColumns::create()
+// .. GridFieldPageCount::create('toolbar-header-right')
+// .. GridFieldPaginator::create($itemsPerPage)
 ```
 
 ### GridFieldConfig_RecordViewer
@@ -223,8 +223,8 @@ $config = GridFieldConfig_RecordViewer::create();
 $gridField->setConfig($config);
 
 // Same as GridFieldConfig_Base with the addition of
-// .. new GridFieldViewButton(),
-// .. new GridFieldDetailForm()
+// .. GridFieldViewButton::create(),
+// .. GridFieldDetailForm::create()
 ```
 
 ### GridFieldConfig_RecordEditor
@@ -248,9 +248,9 @@ $config = GridFieldConfig_RecordEditor::create();
 $gridField->setConfig($config);
 
 // Same as GridFieldConfig_RecordViewer with the addition of
-// .. new GridFieldAddNewButton(),
-// .. new GridFieldEditButton(),
-// .. new GridFieldDeleteAction()
+// .. GridFieldAddNewButton::create(),
+// .. GridFieldEditButton::create(),
+// .. GridFieldDeleteAction::create()
 ```
 
 ### GridFieldConfig_RelationEditor
@@ -287,9 +287,9 @@ $config = GridFieldConfig::create();
 $config->addComponent();
 
 $config->addComponents(
-    new GridFieldDataColumns(),
-    new GridFieldEditButton(), 
-    new GridField_ActionMenu()
+    GridFieldDataColumns::create(),
+    GridFieldEditButton::create(), 
+    GridField_ActionMenu::create()
 );
 
 // Update the GridField with our custom configuration
@@ -308,8 +308,8 @@ The `GridFieldDetailForm` component drives the record viewing and editing form. 
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 
 $form = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
-$form->setFields(new FieldList(
-    new TextField('Title')
+$form->setFields(FieldList::create(
+    TextField::create('Title')
 ));
 ```
 
@@ -369,13 +369,13 @@ class Player extends DataObject
             $teamFields->addFieldToTab(
                 'Root.Main',
                 // The "ManyMany[<extradata-name>]" convention
-                new TextField('ManyMany[Position]', 'Current Position')
+                TextField::create('ManyMany[Position]', 'Current Position')
             );
 
             $config = GridFieldConfig_RelationEditor::create();
             $config->getComponentByType(GridFieldDetailForm::class)->setFields($teamFields);
 
-            $gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
+            $gridField = GridField::create('Teams', 'Teams', $this->Teams(), $config);
             $fields->findOrMakeTab('Root.Teams')->replaceField('Teams', $gridField);
         }
 
@@ -405,8 +405,8 @@ bottom right of the table.
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 
-$config->addComponent(new GridFieldButtonRow('after'));
-$config->addComponent(new GridFieldPrintButton('buttons-after-right'));
+$config->addComponent(GridFieldButtonRow::create('after'));
+$config->addComponent(GridFieldPrintButton::create('buttons-after-right'));
 ```
 
 ### Creating your own Fragments
@@ -417,12 +417,13 @@ create an area rendered before the table wrapped in a simple `<div>`.
 
 
 ```php
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
-class MyAreaComponent implements GridField_HTMLProvider 
+class MyAreaComponent extends AbstractGridFieldComponent implements GridField_HTMLProvider 
 {
 
-    public function getHTMLFragments( $gridField) 
+    public function getHTMLFragments($gridField) 
     {
         return [
             'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
@@ -442,12 +443,13 @@ Now you can add other components into this area by returning them as an array fr
 
 
 ```php
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
-class MyShareLinkComponent implements GridField_HTMLProvider 
+class MyShareLinkComponent extends AbstractGridFieldComponent implements GridField_HTMLProvider 
 {
 
-    public function getHTMLFragments( $gridField) 
+    public function getHTMLFragments($gridField) 
     {        
         return [
             'my-area' => '<a href>...</a>'
@@ -461,7 +463,7 @@ Your new area can also be used by existing components, e.g. the [GridFieldPrintB
 
 
 ```php
-new GridFieldPrintButton('my-area');
+GridFieldPrintButton::create('my-area');
 ```
 
 ## Creating a Custom GridFieldComponent

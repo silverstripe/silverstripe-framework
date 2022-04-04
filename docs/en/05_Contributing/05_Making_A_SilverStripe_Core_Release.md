@@ -69,7 +69,7 @@ As a core contributor it is necessary to have installed the following set of too
 Example `.env`:
 
 ```
-# Environent
+# Environment
 SS_TRUSTED_PROXY_IPS="*"
 SS_ENVIRONMENT_TYPE="dev"
 
@@ -338,7 +338,7 @@ and needs to be manually advanced):
 * `release:test` Will run all unit tests on this release. Make sure that you
   setup your `.env` correctly (as above) so that this will work.
 * `release:changelog` Will compare the current branch head with `--from` parameter
-  version in order to generate a changelog file. This wil be placed into the
+  version in order to generate a changelog file. This will be placed into the
   `./framework/docs/en/04_Changelogs/` folder. If an existing file named after
   this version is already in that location, then the changes will be automatically
   regenerated beneath the automatically added line:

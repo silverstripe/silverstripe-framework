@@ -22,7 +22,7 @@ extensions.
 [/notice]
 
 Outputting these variables is only the start, if you want to format or manipulate them before adding them to the template
-have a read of the [Formating, Modifying and Casting Variables](casting) documentation.
+have a read of the [Formatting, Modifying and Casting Variables](casting) documentation.
 
 [alert]
 Some of the following only apply when you have the `CMS` module installed. If you're using the `Framework` alone, this
@@ -123,18 +123,18 @@ on a per-page basis.
 If you don’t want to include the title tag use `$MetaTags(false)`.
 [/notice]
 
-By default `$MetaTags` renders:
+By default `$MetaTags` renders (assuming 4.11.0 is the current version of silverstripe/framework):
 
 ```ss
 <title>Title of the Page</title>
-<meta name="generator" content="SilverStripe - https://www.silverstripe.org">
+<meta name="generator" content="Silverstripe CMS 4.11">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
 `$MetaTags(false)` will render
 
 ```ss
-<meta name="generator" content="SilverStripe - https://www.silverstripe.org">
+<meta name="generator" content="Silverstripe CMS 4.11">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 ```
 
@@ -143,6 +143,26 @@ If using `$MetaTags(false)` we can provide a more custom `title`.
 ```ss
 $MetaTags(false)
 <title>$Title - Bob's Fantasy Football</title>
+```
+
+### Disabling the meta generator tag
+
+The meta generator tag includes the current version of `silverstripe/framework`. This version number
+provides aggregate installation numbers to the product team who maintain Silverstripe CMS which is
+used to make informed product decisions.
+
+If you dislike this behaviour, the entire meta generator tag can be disabled via:
+
+```yml
+SilverStripe\CMS\Model\SiteTree:
+  meta_generator: ''
+```
+
+The version portion of the metagenerator tag can be disabled via:
+
+```yml
+SilverStripe\CMS\Model\SiteTree:
+  show_meta_generator_version: false
 ```
 
 ### Modifying Meta Tags
@@ -391,7 +411,7 @@ Placing it just below `$Content` is a good default.
 
 ## Related Documentation
 
- * [Casting and Formating Variables](casting)
+ * [Casting and Formatting Variables](casting)
  * [Template Inheritance](template_inheritance)
 
 ## API Documentation

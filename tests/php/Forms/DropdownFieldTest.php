@@ -8,6 +8,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
@@ -148,11 +149,76 @@ class DropdownFieldTest extends SapphireTest
             ]
         );
 
+        // Test that an empty option does not comes through in the markup however
+        $options = $this->findOptionElements($FieldWithoutEmpty->Field());
+
         $this->assertEquals(
             1,
             count($options),
             'As hasEmptyDefault is not provided, then no default option.'
         );
+    }
+
+    public function testEmpty()
+    {
+        $fieldName = 'TestField';
+        $formName = 'testForm';
+        // Create mock form
+        $form = $this->createMock(Form::class);
+        $form->method('getTemplateHelper')
+            ->willReturn(FormTemplateHelper::singleton());
+
+        $form->method('getHTMLID')
+            ->willReturn($formName);
+        
+        $source = [
+            'first' => 'value',
+            0 => 'otherValue'
+        ];
+        $field = new DropdownField($fieldName, 'Test Field', $source);
+        $field->setForm($form);
+
+        $fieldId = $field->ID();
+        $this->assertEquals($fieldId, sprintf('%s_%s', $formName, $fieldName));
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertSame($fieldId, $schemaStateDefaults['id']);
+        $this->assertSame($fieldName, $schemaStateDefaults['name']);
+        $this->assertSame('first', $schemaStateDefaults['value']);
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertSame($fieldId, $schemaDataDefaults['id']);
+        $this->assertSame($fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame(sprintf('%s_Holder', $fieldId), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test Field', $schemaDataDefaults['title']);
+        $this->assertSame('dropdown', $schemaDataDefaults['extraClass']);
+        $this->assertSame(null, $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(false, $schemaDataDefaults['data']['hasEmptyDefault']);
+
+        // Set an empty string of field
+        $field->setEmptyString('(Any)');
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertSame($fieldId, $schemaStateDefaults['id']);
+        $this->assertSame($fieldName, $schemaStateDefaults['name']);
+        $this->assertSame('', $schemaStateDefaults['value']);
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertSame($fieldId, $schemaDataDefaults['id']);
+        $this->assertSame($fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame(sprintf('%s_Holder', $fieldId), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test Field', $schemaDataDefaults['title']);
+        $this->assertSame('dropdown', $schemaDataDefaults['extraClass']);
+        $this->assertSame('(Any)', $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(true, $schemaDataDefaults['data']['hasEmptyDefault']);
     }
 
     public function testZeroArraySourceNotOverwrittenByEmptyString()

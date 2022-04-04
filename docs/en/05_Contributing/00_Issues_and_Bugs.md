@@ -58,6 +58,8 @@ Report security issues to [security@silverstripe.org](mailto:security@silverstri
 See our "[Release Process](/contributing/release_process/#security-releases)" documentation for more info, and 
 read our guide on [how to write secure code](/developer_guides/security/secure_coding/).
 
+Silverstripe CMS does not operate a *bug bounty* program.
+
 ## Sharing your Opinion
 
 * [forum.silverstripe.org](http://forum.silverstripe.org): Forums on silverstripe.org

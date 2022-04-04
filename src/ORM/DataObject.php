@@ -81,11 +81,11 @@ use stdClass;
  *   static $api_access = true;
  *
  *   function canView($member = false) {
- *     if(!$member) $member = Security::getCurrentUser();
+ *     if (!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Subscribers');
  *   }
  *   function canEdit($member = false) {
- *     if(!$member) $member = Security::getCurrentUser();
+ *     if (!$member) $member = Security::getCurrentUser();
  *     return $member->inGroup('Editors');
  *   }
  *
@@ -450,7 +450,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 "Hydrated records must be passed a record array including an ID."
             );
         } elseif (empty($record['ID'])) {
-            // CREATE_MEMORY_HYDRATED implicitely set the record ID to 0 if not provided
+            // CREATE_MEMORY_HYDRATED implicitly set the record ID to 0 if not provided
             $record['ID'] = 0;
         }
 
@@ -491,7 +491,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Destroy all of this objects dependant objects and local caches.
+     * Destroy all of this objects dependent objects and local caches.
      * You'll need to call this to get the memory of an object that has components or extensions freed.
      */
     public function destroy()
@@ -1145,7 +1145,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $leftObj = $this;
 
         if ($leftObj->ClassName != $rightObj->ClassName) {
-            // we can't merge similiar subclasses because they might have additional relations
+            // we can't merge similar subclasses because they might have additional relations
             user_error("DataObject->merge(): Invalid object class '{$rightObj->ClassName}'
 			(expected '{$leftObj->ClassName}').", E_USER_WARNING);
             return false;
@@ -1215,7 +1215,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Forces the record to think that all its data has changed.
-     * Doesn't write to the database. Force-change preseved until
+     * Doesn't write to the database. Force-change preserved until
      * next write. Existing CHANGE_VALUE or CHANGE_STRICT values
      * are preserved.
      *
@@ -1599,7 +1599,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  - It will insert a record whenever ID isn't set, otherwise update.
      *  - All relevant tables will be updated.
      *  - $this->onBeforeWrite() gets called beforehand.
-     *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
+     *  - Extensions such as Versioned will amend the database-write to ensure that a version is saved.
      *
      * @uses DataExtension::augmentWrite()
      *
@@ -2501,6 +2501,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Allows user code to hook into DataObject::getCMSFields after updateCMSFields
+     * being called on extensions
+     *
+     * @param callable $callback The callback to execute
+     */
+    protected function afterUpdateCMSFields(callable $callback)
+    {
+        $this->afterExtending('updateCMSFields', $callback);
+    }
+
+    /**
      * Centerpiece of every data administration interface in Silverstripe,
      * which returns a {@link FieldList} suitable for a {@link Form} object.
      * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
@@ -3040,7 +3051,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * <code>
      * $extended = $this->extendedCan('canDoSomething', $member);
-     * if($extended !== null) return $extended;
+     * if ($extended !== null) return $extended;
      * else return $normalValue;
      * </code>
      *
@@ -3470,14 +3481,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param int|bool $idOrCache The id of the element, or cache if called on target class
      * @param boolean $cache See {@link get_one()}
      *
-     * @return static The element
+     * @return static|null The element
      */
     public static function get_by_id($classOrID, $idOrCache = null, $cache = true)
     {
         // Shift arguments if passing id in first or second argument
         list ($class, $id, $cached) = is_numeric($classOrID)
-            ? [get_called_class(), $classOrID, isset($idOrCache) ? $idOrCache : $cache]
-            : [$classOrID, $idOrCache, $cache];
+            ? [get_called_class(), (int) $classOrID, isset($idOrCache) ? $idOrCache : $cache]
+            : [$classOrID, (int) $idOrCache, $cache];
+        if ($id < 1) {
+            return null;
+        }
 
         // Validate class
         if ($class === self::class) {
@@ -3646,7 +3660,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database fields
+        // Let any extensions make their own database fields
         $this->extend('augmentDatabase', $dummy);
     }
 
@@ -3674,7 +3688,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        // Let any extentions make their own database default data
+        // Let any extensions make their own database default data
         $this->extend('requireDefaultRecords', $dummy);
     }
 
@@ -3735,34 +3749,37 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // rewrite array, if it is using shorthand syntax
         $rewrite = [];
         foreach ($fields as $name => $specOrName) {
-            $identifer = (is_int($name)) ? $specOrName : $name;
+            $identifier = (is_int($name)) ? $specOrName : $name;
 
             if (is_int($name)) {
                 // Format: array('MyFieldName')
-                $rewrite[$identifer] = [];
-            } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifer))) {
+                $rewrite[$identifier] = [];
+            } elseif (is_array($specOrName) && (isset($specOrName['match_any']))) {
+                $rewrite[$identifier] = $fields[$identifier];
+                $rewrite[$identifier]['match_any'] = $specOrName['match_any'];
+            } elseif (is_array($specOrName) && ($relObject = $this->relObject($identifier))) {
                 // Format: array('MyFieldName' => array(
                 //   'filter => 'ExactMatchFilter',
                 //   'field' => 'NumericField', // optional
                 //   'title' => 'My Title', // optional
                 // ))
-                $rewrite[$identifer] = array_merge(
+                $rewrite[$identifier] = array_merge(
                     ['filter' => $relObject->config()->get('default_search_filter_class')],
                     (array)$specOrName
                 );
             } else {
                 // Format: array('MyFieldName' => 'ExactMatchFilter')
-                $rewrite[$identifer] = [
+                $rewrite[$identifier] = [
                     'filter' => $specOrName,
                 ];
             }
-            if (!isset($rewrite[$identifer]['title'])) {
-                $rewrite[$identifer]['title'] = (isset($labels[$identifer]))
-                    ? $labels[$identifer] : FormField::name_to_label($identifer);
+            if (!isset($rewrite[$identifier]['title'])) {
+                $rewrite[$identifier]['title'] = (isset($labels[$identifier]))
+                    ? $labels[$identifier] : FormField::name_to_label($identifier);
             }
-            if (!isset($rewrite[$identifer]['filter'])) {
+            if (!isset($rewrite[$identifier]['filter'])) {
                 /** @skipUpgrade */
-                $rewrite[$identifer]['filter'] = 'PartialMatchFilter';
+                $rewrite[$identifier]['filter'] = 'PartialMatchFilter';
             }
         }
 
@@ -4063,7 +4080,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $default_records = null;
 
     /**
-     * One-to-zero relationship defintion. This is a map of component name to data type. In order to turn this into a
+     * One-to-zero relationship definition. This is a map of component name to data type. In order to turn this into a
      * true one-to-one relationship you can add a {@link DataObject::$belongs_to} relationship on the child class.
      *
      * Note that you cannot have a has_one and belongs_to relationship with the same name.

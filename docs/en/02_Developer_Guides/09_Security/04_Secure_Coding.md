@@ -468,7 +468,7 @@ given variable is done safely, with the assumption that it's an integer.
 
 To cast the variable as an integer, place `(int)` or `(integer)` before the variable.
 
-For example: a page with the URL paramaters *example.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
+For example: a page with the URL parameters *example.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
 integer. We cast it by adding `(int)` - ''(int)Director::urlParams['ID']''. If a value other than an integer is
 passed, such as *example.com/home/add/dfsdfdsfd*, then it returns 0.
 

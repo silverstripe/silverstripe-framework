@@ -95,7 +95,7 @@ two ways to go about this:
 A custom `FormField` which handles the validation. This means the `FormField` can be reused throughout the site and have
 the same validation logic applied to it throughout.
 
-**app/code/CustomNumberField.php**
+**app/src/CustomNumberField.php**
 
 ```php
 use SilverStripe\Forms\TextField;

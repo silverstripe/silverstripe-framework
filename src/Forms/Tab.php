@@ -137,12 +137,16 @@ class Tab extends CompositeField
 
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             $this->attributes,
             [
                 'id' => $this->ID(),
                 'class' => 'tab ' . $this->extraClass()
             ]
         );
+
+        $this->extend('updateAttributes', $attributes);
+
+        return $attributes;
     }
 }

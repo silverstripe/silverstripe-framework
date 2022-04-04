@@ -18,7 +18,7 @@ class SSListExporterTest extends SapphireTest
      */
     private $exporter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->exporter = new SSListExporter();

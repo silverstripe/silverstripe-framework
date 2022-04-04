@@ -344,7 +344,7 @@ class DataObjectSchema
      * @param string $class Class name to query from
      * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
      *
-     * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
+     * @return array Map of fieldname to specification, similar to {@link DataObject::$db}.
      */
     public function databaseFields($class, $aggregated = true)
     {

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Search;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
@@ -179,7 +180,26 @@ class SearchContext
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery([$filter, 'apply']);
+                    $modelObj = Injector::inst()->create($this->modelClass);
+                    if (isset($modelObj->searchableFields()[$key]['match_any'])) {
+                        $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
+                            $searchFields = $modelObj->searchableFields()[$key]['match_any'];
+                            $sqlSearchFields = [];
+                            foreach ($searchFields as $dottedRelation) {
+                                $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
+                                $relations = explode('.', $dottedRelation);
+                                $fieldName = array_pop($relations);
+                                $relationModelName = $dataQuery->applyRelation($relation);
+                                $relationPrefix = $dataQuery->applyRelationPrefix($relation);
+                                $columnName = $modelObj->getSchema()
+                                    ->sqlColumnForField($relationModelName, $fieldName, $relationPrefix);
+                                $sqlSearchFields[$columnName] = $value;
+                            }
+                            $dataQuery = $dataQuery->whereAny($sqlSearchFields);
+                        });
+                    } else {
+                        $query = $query->alterDataQuery([$filter, 'apply']);
+                    }
                 }
             }
         }

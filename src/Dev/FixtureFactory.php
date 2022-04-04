@@ -29,7 +29,7 @@ use InvalidArgumentException;
  *  array('MyRelationName' => '=>MyRelatedClass.relation1')
  * );
  * </code>
- * Relation loading is order dependant.
+ * Relation loading is order dependent.
  */
 class FixtureFactory
 {

@@ -47,7 +47,7 @@ class PaginatedList extends ListDecorator
      * Returns the GET var that is used to set the page start. This defaults
      * to "start".
      *
-     * If there is more than one paginated list on a page, it is neccesary to
+     * If there is more than one paginated list on a page, it is necessary to
      * set a different get var for each using {@link setPaginationGetVar()}.
      *
      * @return string
@@ -397,9 +397,25 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
+    public function FirstPage()
+    {
+        return $this->CurrentPage() == 1;
+    }
+
+    /**
+     * @return bool
+     */
     public function NotFirstPage()
     {
-        return $this->CurrentPage() != 1;
+        return !$this->FirstPage();
+    }
+
+    /**
+     * @return bool
+     */
+    public function LastPage()
+    {
+        return $this->CurrentPage() == $this->TotalPages();
     }
 
     /**
@@ -407,7 +423,7 @@ class PaginatedList extends ListDecorator
      */
     public function NotLastPage()
     {
-        return $this->CurrentPage() < $this->TotalPages();
+        return !$this->LastPage();
     }
 
     /**

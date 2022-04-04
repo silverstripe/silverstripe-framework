@@ -202,7 +202,7 @@ import addLoggingMiddleware from './addLoggingMiddleware';
 const MyNewLogger = addLoggingMiddleware(LoggingService);
 ```
 
-We haven't overriden any functionality. `LoggingService(error)` will still invoke `console.error`, once all the middleware has run. But what if we did want to kill the original functionality?
+We haven't overridden any functionality. `LoggingService(error)` will still invoke `console.error`, once all the middleware has run. But what if we did want to kill the original functionality?
 
 ```js
 import LoggingService from './LoggingService';
@@ -447,7 +447,7 @@ inject([dependencies], mapDependenciesToProps, getContext)(Component)
 is expected to return a map of props to dependencies. If this parameter is not specified,
 the prop names and the service names will mirror each other.
 * **getContext**: A callback function with params `(props, currentContext)` that will calculate the context to
-use for determining which tranformations apply to the dependencies. This defaults to the current context. This
+use for determining which transformations apply to the dependencies. This defaults to the current context. This
 could help when any customisations that may calls for a change (or tweak) to the current context.
 
 The result is a function that is ready to apply to a component.

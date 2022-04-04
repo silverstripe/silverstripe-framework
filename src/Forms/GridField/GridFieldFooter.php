@@ -18,7 +18,7 @@ use SilverStripe\View\SSViewer;
  * The purpose of this class is to have a footer that can round off
  * {@link GridField} without having to use pagination.
  */
-class GridFieldFooter implements GridField_HTMLProvider
+class GridFieldFooter extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     /**

@@ -627,7 +627,7 @@ class Convert
     }
 
     /**
-     * Convert slashes in relative or asolute filesystem path. Defaults to DIRECTORY_SEPARATOR
+     * Convert slashes in relative or absolute filesystem path. Defaults to DIRECTORY_SEPARATOR
      *
      * @param string $path
      * @param string $separator

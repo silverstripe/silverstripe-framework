@@ -63,7 +63,7 @@ class DatabaseAdmin extends Controller
         parent::init();
 
         // We allow access to this controller regardless of live-status or ADMIN permission only
-        // if on CLI or with the database not ready. The latter makes it less errorprone to do an
+        // if on CLI or with the database not ready. The latter makes it less error-prone to do an
         // initial schema build without requiring a default-admin login.
         // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
         $allowAllCLI = DevelopmentAdmin::config()->get('allow_all_cli');
@@ -227,6 +227,8 @@ class DatabaseAdmin extends Controller
      */
     public function doBuild($quiet = false, $populate = true, $testMode = false)
     {
+        $this->extend('onBeforeBuild', $quiet, $populate, $testMode);
+
         if ($quiet) {
             DB::quiet();
         } else {
@@ -400,6 +402,8 @@ class DatabaseAdmin extends Controller
         }
 
         ClassInfo::reset_db_cache();
+
+        $this->extend('onAfterBuild', $quiet, $populate, $testMode);
     }
 
     /**

@@ -15,6 +15,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\ORM\Filters\SearchFilter;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -32,7 +33,7 @@ use LogicException;
  * For easier setup, have a look at a sample configuration in
  * {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
+class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
 {
 
     /**
@@ -349,7 +350,18 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
                     if (!$customSearchableFields || array_search($name, $customSearchableFields)) {
                         $filter = 'StartsWith';
                     } else {
-                        $filter = preg_replace('/Filter$/', '', $spec['filter']);
+                        $filterName = $spec['filter'];
+                        // It can be an instance
+                        if ($filterName instanceof SearchFilter) {
+                            $filterName = get_class($filterName);
+                        }
+                        // It can be a fully qualified class name
+                        if (strpos($filterName, '\\') !== false) {
+                            $filterNameParts = explode("\\", $filterName);
+                            // We expect an alias matching the class name without namespace, see #coresearchaliases
+                            $filterName = array_pop($filterNameParts);
+                        }
+                        $filter = preg_replace('/Filter$/', '', $filterName);
                     }
                     $fields[] = "{$name}:{$filter}";
                 } else {

@@ -34,7 +34,7 @@ if (defined('THIRDPARTY_PATH')) {
   *
   * Terms used:
   *
-  * Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with
+  * Marked: A string or lookup in the template that has been explicitly marked as such - lookups by prepending with
   * "$" (like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
   *
   * Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
@@ -5041,7 +5041,7 @@ EOC;
 
             $this->includeDebuggingComments = $includeDebuggingComments;
 
-            // Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
+            // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
             // (and other encodings) properly
             if (substr($string, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;

@@ -24,7 +24,7 @@ environment variables.
 If you do use a `.env` file on your servers, you must ensure that external access to `.env` files is blocked by the
 webserver.
 
-## Managing environment variables with `.env` files
+## Managing environment variables with .env files
 
 By default a file named `.env` must be placed in your project root (ie: the same folder as your `composer.json`) or the
 parent directory. If this file exists, it will be automatically loaded by the framework and the environment variables
@@ -71,7 +71,7 @@ SilverStripe\Core\Injector\Injector:
 Environment variables cannot be used outside of Injector config as of version 4.2.
 [/info]
 
-## Including an extra `.env` file
+## Including an extra .env file
 
 Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
 database credentials could be the same. To do this, you can add this snippet to your `app/_config.php` file:
@@ -122,5 +122,4 @@ Silverstripe core environment variables are listed here, though you're free to d
 | `SS_DATABASE_SSL_CA` | Absolute path to SSL Certificate Authority bundle file |
 | `SS_DATABASE_SSL_CIPHER` | Optional setting for custom SSL cipher |
 | `SS_FLUSH_ON_DEPLOY` | Try to detect deployments through file system modifications and flush on the first request after every deploy. Does not run "dev/build", but only "flush". Possible values are `true` (check for a framework PHP file modification time), `false` (no checks, skip deploy detection) or a path to a specific file or folder to be checked. See [DeployFlushDiscoverer](api:SilverStripe\Core\Startup\DeployFlushDiscoverer) for more details.<br /><br />False by default. |
-| `TEMP_PATH`: Temporary file storage used for the default cache adapters in [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching)
-and [Partial Template Caching](/developer_guides/templates/partial_template_caching)|
+| `SS_TEMP_PATH` | File storage used for the default cache adapters in [Manifests](/developer_guides/execution_pipeline/manifests), [Object Caching](/developer_guides/performance/caching) and [Partial Template Caching](/developer_guides/templates/partial_template_caching). It defaults to creating a sub-directory of PHP's built-in `sys_get_temp_dir()`. Can be an absolute path (with a leading `/`), or a path relative to the project root. |

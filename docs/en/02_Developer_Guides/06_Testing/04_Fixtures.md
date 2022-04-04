@@ -189,7 +189,7 @@ test.
 
 ### Fixtures for namespaced classes
 
-As of Silverstripe CMS 4 you will need to use fully qualfied class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
+As of Silverstripe CMS 4 you will need to use fully qualified class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
 
 
 ```yml

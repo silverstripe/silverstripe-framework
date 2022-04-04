@@ -20,7 +20,7 @@ Before you begin this process you must identify which version of Silverstripe CM
 3. If your current composer file contains `cwp/cwp-recipe-core`, replace it with `silverstripe/recipe-ccl`.
 4. If your current composer file contains `cwp/cwp-recipe-search`, replace it with `silverstripe/recipe-solr-search`.
 5. Review all your composer requirements and update the constraints so the module versions documented in the changelog for you desired Silverstripe CMS Recipe release are installable.
-6. Run a `composer update` to get the lastest tag of each module.
+6. Run a `composer update` to get the latest tag of each module.
 
 The `silverstripe/recipe-solr-search` and `silverstripe/recipe-ccl` release versions follow the same numbering scheme as the recipes they superseded:
 - the last release version of `cwp/cwp-recipe-search` and `cwp/cwp-recipe-core` is 2.8.0
@@ -70,9 +70,9 @@ Your project will still work, but will not receive any bug fixes, security fixes
 
 ### What if my project is still using CWP 1?
 
-Read the [Upgrading to Silverstripe CMS 4](Upgrading_project.md) guide first.
+CWP version 1 (based on Silverstripe CMS version 3) support has [reached end of life](https://www.cwp.govt.nz/working-with-cwp/releases/) and will no longer be receiving security updates. Projects still on CWP 1 are at risk of security vulnerabilies and should get in touch with their development team, or the [Silverstripe Service Desk](https://servicedesk.silverstripe.cloud/), and make a plan for upgrading their project to CMS version 4.
 
-Once you've completed the _Upgrade your dependencies_ step, follow the directions in this guide to remove all the legacy CWP CMS recipes.
+Projects will need to have upgraded to CMS 4 before following the directions in this guide to remove all the legacy CWP CMS recipes.
 
 ### Is there a way to create a new project that would require all the modules a CWP project would have?
 

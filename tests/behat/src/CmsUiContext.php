@@ -8,6 +8,7 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Behat\Mink\Session;
+use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 
@@ -72,7 +73,7 @@ class CmsUiContext implements Context
     {
         $page = $this->getSession()->getPage();
         $cms_element = $page->find('css', '.cms');
-        assertNotNull($cms_element, 'CMS not found');
+        Assert::assertNotNull($cms_element, 'CMS not found');
     }
 
     /**
@@ -116,9 +117,9 @@ class CmsUiContext implements Context
     {
         $page = $this->getMainContext()->getSession()->getPage();
         $toasts = $page->find('css', '.toasts');
-        assertNotNull($toasts, "We have a toast container");
+        Assert::assertNotNull($toasts, "We have a toast container");
         $toastAction = $toasts->find('named', ['link_or_button', "'{$action}'"]);
-        assertNotNull($toastAction, "We have a $action toast action");
+        Assert::assertNotNull($toastAction, "We have a $action toast action");
         $toastAction->click();
     }
 
@@ -145,7 +146,7 @@ class CmsUiContext implements Context
 
         $page = $this->getSession()->getPage();
         $cms_content_header_tabs = $page->find('css', '.cms-content-header-tabs');
-        assertNotNull($cms_content_header_tabs, 'CMS tabs not found');
+        Assert::assertNotNull($cms_content_header_tabs, 'CMS tabs not found');
 
         return $cms_content_header_tabs;
     }
@@ -160,7 +161,7 @@ class CmsUiContext implements Context
 
         $page = $this->getSession()->getPage();
         $cms_content_toolbar_element = $page->find('css', '.cms-content-toolbar');
-        assertNotNull($cms_content_toolbar_element, 'CMS content toolbar not found');
+        Assert::assertNotNull($cms_content_toolbar_element, 'CMS content toolbar not found');
 
         return $cms_content_toolbar_element;
     }
@@ -174,7 +175,7 @@ class CmsUiContext implements Context
 
         $page = $this->getSession()->getPage();
         $cms_tree_element = $page->find('css', '.cms-tree');
-        assertNotNull($cms_tree_element, 'CMS tree not found');
+        Assert::assertNotNull($cms_tree_element, 'CMS tree not found');
 
         return $cms_tree_element;
     }
@@ -187,7 +188,7 @@ class CmsUiContext implements Context
         $cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
         $element = $cms_content_toolbar_element->find('named', ['link_or_button', "'$text'"]);
-        assertNotNull($element, sprintf('%s button not found', $text));
+        Assert::assertNotNull($element, sprintf('%s button not found', $text));
     }
 
     /**
@@ -198,7 +199,7 @@ class CmsUiContext implements Context
         // Wait until visible
         $cmsTreeElement = $this->getCmsTreeElement();
         $element = $cmsTreeElement->find('named', ['content', "'$text'"]);
-        assertNotNull($element, sprintf('%s not found', $text));
+        Assert::assertNotNull($element, sprintf('%s not found', $text));
     }
 
     /**
@@ -209,7 +210,7 @@ class CmsUiContext implements Context
         // Wait until not visible
         $cmsTreeElement = $this->getCmsTreeElement();
         $element = $cmsTreeElement->find('named', ['content', "'$text'"]);
-        assertNull($element, sprintf('%s found', $text));
+        Assert::assertNull($element, sprintf('%s found', $text));
     }
 
     /**
@@ -224,14 +225,14 @@ class CmsUiContext implements Context
         );
         $page = $this->getSession()->getPage();
         $cmsListElement = $page->find('css', '.cms-list');
-        assertNotNull($cmsListElement, 'CMS list not found');
+        Assert::assertNotNull($cmsListElement, 'CMS list not found');
 
         // Check text within this element
         $element = $cmsListElement->find('named', ['content', "'$text'"]);
         if (strstr($negate, 'not')) {
-            assertNull($element, sprintf('Unexpected %s found in cms list', $text));
+            Assert::assertNull($element, sprintf('Unexpected %s found in cms list', $text));
         } else {
-            assertNotNull($element, sprintf('Expected %s not found in cms list', $text));
+            Assert::assertNotNull($element, sprintf('Expected %s not found in cms list', $text));
         }
     }
 
@@ -241,7 +242,7 @@ class CmsUiContext implements Context
     public function stepIShouldSeeInCMSContentTabs($text)
     {
         // Wait until visible
-        assertNotNull($this->getCmsTabElement($text), sprintf('%s content tab not found', $text));
+        Assert::assertNotNull($this->getCmsTabElement($text), sprintf('%s content tab not found', $text));
     }
 
     /**
@@ -283,7 +284,7 @@ class CmsUiContext implements Context
             "window.jQuery && window.jQuery('.jstree-apple-context').size() > 0"
         );
         $regionObj = $context->getRegionObj('.jstree-apple-context');
-        assertNotNull($regionObj, "Context menu could not be found");
+        Assert::assertNotNull($regionObj, "Context menu could not be found");
 
         $linkObj = $regionObj->findLink($link);
         if (empty($linkObj)) {
@@ -304,7 +305,7 @@ class CmsUiContext implements Context
     {
         $treeEl = $this->getCmsTreeElement();
         $treeNode = $treeEl->findLink($text);
-        assertNotNull($treeNode, sprintf('%s not found', $text));
+        Assert::assertNotNull($treeNode, sprintf('%s not found', $text));
         $this->interactWithElement($treeNode, $method);
     }
 
@@ -314,7 +315,7 @@ class CmsUiContext implements Context
     public function stepIClickOnElementInTheHeaderTabs($method, $text)
     {
         $tabsNode = $this->getCmsTabElement($text);
-        assertNotNull($tabsNode, sprintf('%s not found', $text));
+        Assert::assertNotNull($tabsNode, sprintf('%s not found', $text));
         $this->interactWithElement($tabsNode, $method);
     }
 
@@ -324,8 +325,8 @@ class CmsUiContext implements Context
     public function theHeaderTabShouldBeActive($text)
     {
         $element = $this->getCmsTabElement($text);
-        assertNotNull($element);
-        assertTrue($element->hasClass('active'));
+        Assert::assertNotNull($element);
+        Assert::assertTrue($element->hasClass('active'));
     }
 
     /**
@@ -334,8 +335,8 @@ class CmsUiContext implements Context
     public function theHeaderTabShouldNotBeActive($text)
     {
         $element = $this->getCmsTabElement($text);
-        assertNotNull($element);
-        assertFalse($element->hasClass('active'));
+        Assert::assertNotNull($element);
+        Assert::assertFalse($element->hasClass('active'));
     }
 
     /**
@@ -351,10 +352,10 @@ class CmsUiContext implements Context
      */
     public function iExpandTheCmsPanel()
     {
-        //Tries to find the first visiable toggle in the page
+        //Tries to find the first visible toggle in the page
         $page = $this->getSession()->getPage();
         $toggle_elements = $page->findAll('css', '.toggle-expand');
-        assertNotNull($toggle_elements, 'Panel toggle not found');
+        Assert::assertNotNull($toggle_elements, 'Panel toggle not found');
         /** @var NodeElement $toggle */
         foreach ($toggle_elements as $toggle) {
             if ($toggle->isVisible()) {
@@ -370,7 +371,7 @@ class CmsUiContext implements Context
     {
         $page = $this->getSession()->getPage();
         $filterButton = $page->find('css', '.search-box__filter-trigger');
-        assertNotNull($filterButton, sprintf('Filter button link not found'));
+        Assert::assertNotNull($filterButton, sprintf('Filter button link not found'));
 
         $filterButtonExpanded = $filterButton->getAttribute('aria-expanded');
 
@@ -418,23 +419,23 @@ SCRIPT
      */
     public function iExpandInTheTree($action, $nodeText)
     {
-        //Tries to find the first visiable matched Node in the page
+        //Tries to find the first visible matched Node in the page
         $treeEl = $this->getCmsTreeElement();
         $treeNode = $treeEl->findLink($nodeText);
-        assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
+        Assert::assertNotNull($treeNode, sprintf('%s link not found', $nodeText));
         $cssIcon = $treeNode->getParent()->getAttribute("class");
         if ($action == "expand") {
             //ensure it is collapsed
             if (false === strpos($cssIcon, 'jstree-open')) {
                 $nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
-                assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+                Assert::assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
                 $nodeIcon->click();
             }
         } else {
             //ensure it is expanded
             if (false === strpos($cssIcon, 'jstree-closed')) {
                 $nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
-                assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
+                Assert::assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
                 $nodeIcon->click();
             }
         }
@@ -452,7 +453,7 @@ SCRIPT
 
         $page = $this->getSession()->getPage();
         $tabsets = $page->findAll('css', '.ui-tabs-nav');
-        assertNotNull($tabsets, 'CMS tabs not found');
+        Assert::assertNotNull($tabsets, 'CMS tabs not found');
 
         $tab_element = null;
         /** @var NodeElement $tabset */
@@ -463,9 +464,9 @@ SCRIPT
             }
         }
         if ($negate) {
-            assertNull($tab_element, sprintf('%s tab found', $tab));
+            Assert::assertNull($tab_element, sprintf('%s tab found', $tab));
         } else {
-            assertNotNull($tab_element, sprintf('%s tab not found', $tab));
+            Assert::assertNotNull($tab_element, sprintf('%s tab not found', $tab));
         }
     }
 
@@ -481,7 +482,7 @@ SCRIPT
 
         $page = $this->getSession()->getPage();
         $tabsets = $page->findAll('css', '.ui-tabs-nav');
-        assertNotNull($tabsets, 'CMS tabs not found');
+        Assert::assertNotNull($tabsets, 'CMS tabs not found');
 
         $tab_element = null;
         /** @var NodeElement $tabset */
@@ -491,7 +492,7 @@ SCRIPT
             }
             $tab_element = $tabset->find('named', ['link_or_button', "'$tab'"]);
         }
-        assertNotNull($tab_element, sprintf('%s tab not found', $tab));
+        Assert::assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
         $tab_element->click();
     }
@@ -544,13 +545,13 @@ SCRIPT
     public function iSwitchThePreviewToMode($mode)
     {
         $controls = $this->getSession()->getPage()->find('css', '.cms-preview-controls');
-        assertNotNull($controls, 'Preview controls not found');
+        Assert::assertNotNull($controls, 'Preview controls not found');
 
         $label = $controls->find('xpath', sprintf(
             './/*[count(*)=0 and contains(text(), \'%s\')]',
             $mode
         ));
-        assertNotNull($label, 'Preview mode switch not found');
+        Assert::assertNotNull($label, 'Preview mode switch not found');
 
         $label->click();
 
@@ -654,7 +655,7 @@ SCRIPT
             }
         }
 
-        assertGreaterThan(0, count($formFields), sprintf(
+        Assert::assertGreaterThan(0, count($formFields), sprintf(
             'Chosen.js dropdown named "%s" not found',
             $field
         ));
@@ -669,11 +670,11 @@ SCRIPT
             }
         }
 
-        assertNotNull($container, 'Chosen.js field container not found');
+        Assert::assertNotNull($container, 'Chosen.js field container not found');
 
         // Click on newly expanded list element, indirectly setting the dropdown value
         $linkEl = $container->find('xpath', './/a');
-        assertNotNull($linkEl, 'Chosen.js link element not found');
+        Assert::assertNotNull($linkEl, 'Chosen.js link element not found');
         $this->getSession()->wait(100); // wait for dropdown overlay to appear
         $linkEl->click();
 

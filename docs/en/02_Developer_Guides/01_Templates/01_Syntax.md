@@ -100,12 +100,12 @@ If you wish to pass parameters to getter functions, you must use the full method
 
 [note]
 For more detail around how variables are inserted and formatted into a template see 
-[Formating, Modifying and Casting Variables](casting)
+[Formatting, Modifying and Casting Variables](casting)
 [/note]
 
 Variables can come from your database fields, or custom methods you define on your objects.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 public function UsersIpAddress()
@@ -114,7 +114,7 @@ public function UsersIpAddress()
 }
 ```
 
-**app/code/Page.ss**
+**app/src/Page.ss**
 
 ```html
 <p>You are coming from $UsersIpAddress.</p>
@@ -129,7 +129,7 @@ object the methods get called on. For the standard `Page.ss` template the scope 
 class. This object gives you access to all the database fields on [PageController](api:SilverStripe\CMS\Model\SiteTree\PageController), its corresponding [Page](api:SilverStripe\CMS\Model\SiteTree\Page)
 record and any subclasses of those two.
 
-**app/code/Layout/Page.ss**
+**app/src/Layout/Page.ss**
 
 ```ss
 $Title
@@ -444,7 +444,7 @@ $Foo // returns "3"
 ```
 
 [hint]
-For more information on formatting and casting variables see [Formating, Modifying and Casting Variables](casting)
+For more information on formatting and casting variables see [Formatting, Modifying and Casting Variables](casting)
 [/hint]
 
 ## Scope
@@ -498,7 +498,7 @@ Given the following structure, it will output the text.
 	Page 'Child 2' is a child of 'MyPage'
 ```
 [notice]
-Additional selectors implicitely change the scope so you need to put additional `$Up` to get what you expect.
+Additional selectors implicitly change the scope so you need to put additional `$Up` to get what you expect.
 [/notice]
 
 ```ss

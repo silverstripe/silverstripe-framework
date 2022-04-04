@@ -111,7 +111,7 @@ A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable 
 
  | Pattern     | Description | 
  | ----------- | --------------- | 
- | `$`         | **Param Variable** - Starts the name of a paramater variable, it is optional to match this unless ! is used | 
+ | `$`         | **Param Variable** - Starts the name of a parameter variable, it is optional to match this unless ! is used | 
  | `!`         | **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
  | `//`        | **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
 
@@ -205,7 +205,7 @@ you can specify these in your Controller class via the **$url_handlers** static 
 This is useful when you want to provide custom actions for the mapping of `teams/*`. Say for instance we want to respond
 `coaches`, and `staff` to the one controller action `payroll`.
 
-**app/code/controllers/TeamController.php**
+**app/src/controllers/TeamController.php**
 
 ```php
 use SilverStripe\Control\Controller;

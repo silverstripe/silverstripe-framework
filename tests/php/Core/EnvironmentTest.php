@@ -44,7 +44,7 @@ class EnvironmentTest extends SapphireTest
         $vars = Environment::getVariables();
         $this->assertEquals('initial', Environment::getEnv('_ENVTEST_RESTORED'));
 
-        // Modify enironment
+        // Modify environment
         Environment::putEnv('_ENVTEST_RESTORED=new');
         $this->assertEquals('initial', $vars['env']['_ENVTEST_RESTORED']);
         $this->assertEquals('new', Environment::getEnv('_ENVTEST_RESTORED'));

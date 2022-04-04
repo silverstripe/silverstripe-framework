@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -50,6 +51,28 @@ class GridField extends FormField
     private static $allowed_actions = [
         'index',
         'gridFieldAlterAction',
+    ];
+
+    /**
+     * Default globally configured readonly components.
+     *
+     * @see $readonlyComponents
+     * @var array
+     */
+    private static $default_readonly_components = [
+        GridField_ActionMenu::class,
+        GridFieldConfig_RecordViewer::class,
+        GridFieldButtonRow::class,
+        GridFieldDataColumns::class,
+        GridFieldDetailForm::class,
+        GridFieldLazyLoader::class,
+        GridFieldPageCount::class,
+        GridFieldPaginator::class,
+        GridFieldFilterHeader::class,
+        GridFieldSortableHeader::class,
+        GridFieldToolbarHeader::class,
+        GridFieldViewButton::class,
+        GridState_Component::class,
     ];
 
     /**
@@ -113,21 +136,7 @@ class GridField extends FormField
      *
      * @var array
      */
-    protected $readonlyComponents = [
-        GridField_ActionMenu::class,
-        GridFieldConfig_RecordViewer::class,
-        GridFieldButtonRow::class,
-        GridFieldDataColumns::class,
-        GridFieldDetailForm::class,
-        GridFieldLazyLoader::class,
-        GridFieldPageCount::class,
-        GridFieldPaginator::class,
-        GridFieldFilterHeader::class,
-        GridFieldSortableHeader::class,
-        GridFieldToolbarHeader::class,
-        GridFieldViewButton::class,
-        GridState_Component::class,
-    ];
+    protected $readonlyComponents = [];
 
     /**
      * Pattern used for looking up
@@ -143,6 +152,9 @@ class GridField extends FormField
     public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
     {
         parent::__construct($name, $title, null);
+
+        // Set readonly components for this gridfield.
+        $this->setReadonlyComponents($this->config()->get('default_readonly_components'));
 
         $this->name = $name;
 
@@ -258,8 +270,10 @@ class GridField extends FormField
 
         // If the edit button has been removed, replace it with a view button
         if ($hadEditButton && !$copyConfig->getComponentByType(GridFieldViewButton::class)) {
-            $copyConfig->addComponent(new GridFieldViewButton);
+            $copyConfig->addComponent(GridFieldViewButton::create());
         }
+
+        $copy->extend('afterPerformReadonlyTransformation', $this);
 
         return $copy;
     }
@@ -294,7 +308,7 @@ class GridField extends FormField
         $this->config = $config;
 
         if (!$this->config->getComponentByType(GridState_Component::class)) {
-            $this->config->addComponent(new GridState_Component());
+            $this->config->addComponent(GridState_Component::create());
         }
 
         return $this;
@@ -439,7 +453,7 @@ class GridField extends FormField
     public function FieldHolder($properties = [])
     {
         $this->extend('onBeforeRenderHolder', $this, $properties);
-        
+
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
@@ -654,6 +668,18 @@ class GridField extends FormField
             $tableAttributes,
             $header . "\n" . $footer . "\n" . $body
         );
+
+        $message = Convert::raw2xml($this->getMessage());
+        if (is_array($message)) {
+            $message = $message['message'];
+        }
+        if ($message) {
+            $content['after'] .= HTML::createTag(
+                'p',
+                ['class' => 'message ' . $this->getMessageType()],
+                $message
+            );
+        }
 
         return HTML::createTag(
             'fieldset',

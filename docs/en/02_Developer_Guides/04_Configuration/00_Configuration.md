@@ -28,7 +28,7 @@ Configuration values are static properties on any Silverstripe CMS class. These 
 marked with a `@config` docblock. The API documentation will also list the static properties for the class. They should
 be marked `private static` and follow the `lower_case_with_underscores` structure.
 
-**app/code/MyClass.php**
+**app/src/MyClass.php**
 
 
 ```php
@@ -65,7 +65,7 @@ $config = $this->config()->get('property');
 
 You may need to apply the [Configurable](api:SilverStripe\Core\Config\Configurable) trait in order to access the `config()` method.
 
-**app/code/MyOtherClass.php**
+**app/src/MyOtherClass.php**
 
 ```php
 use SilverStripe\Core\Config\Configurable;
@@ -334,15 +334,15 @@ rules contained match.
 
 You then list any of the following rules as sub-keys, with informational values as either a single value or a list.
 
-  - 'classexists', in which case the value(s) should be classes that must exist
-  - 'moduleexists', in which case the value(s) should be modules that must exist. This supports either folder
+  - `classexists`, in which case the value(s) should be classes that must exist
+  - `moduleexists`, in which case the value(s) should be modules that must exist. This supports either folder
     name or composer `vendor/name` format.
-  - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the Silverstripe CMS
+  - `environment`, in which case the value(s) should be one of "live", "test" or "dev" to indicate the Silverstripe CMS
     mode the site must be in
-  - 'envvarset', in which case the value(s) should be environment variables that must be set
-  - 'constantdefined', in which case the value(s) should be constants that must be defined
-  - 'envorconstant' A variable which should be defined either via environment vars or constants
-  - 'extensionloaded', in which case the PHP extension(s) must be loaded
+  - `envvarset`, in which case the value(s) should be environment variables that must be set
+  - `constantdefined`, in which case the value(s) should be constants that must be defined
+  - `envorconstant`, a variable which should be defined either via environment vars or constants (and optionally be set to a specific value)
+  - `extensionloaded`, in which case the PHP extension(s) must be loaded
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
@@ -371,6 +371,18 @@ Only:
   moduleexists:
     - 'silverstripe/blog'
     - 'silverstripe/lumberjack'
+---
+```
+
+The `envorconstant` rule allows you to get even more specific by also directly comparing values of environment variables
+and constants. In this example, both `TEST_ENV` and `TEST_CONST` have to be defined _and_ set to certain values:
+
+```yaml
+---
+Only:
+  envorconstant:
+    TEST_ENV: 'example'
+    TEST_CONST: true
 ---
 ```
 

@@ -94,7 +94,7 @@ i18n::config()
 
 Localization in Silverstripe CMS uses PHP's [intl extension](http://php.net/intl).
 Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
-are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
+are defined in [ICU format](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#simpledateformat),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
 
 These settings are not used for CMS presentation.
@@ -124,7 +124,7 @@ By default, URLs for pages in Silverstripe CMS (the `SiteTree->URLSegment` prope
 are automatically reduced to the allowed allowed subset of ASCII characters.
 If characters outside this subset are added, they are either removed or (if possible) "transliterated".
 This describes the process of converting from one character set to another
-while keeping characters recognizeable. For example, vowels with french accents
+while keeping characters recognizable. For example, vowels with french accents
 are replaced with their base characters, `pâté` becomes `pate`.
 
 It is advisable to set the `SS_Transliterator.use_iconv` setting to true via config for systems
@@ -225,7 +225,7 @@ class MyObject extends DataObject implements i18nEntityProvider
 ```
 
 In YML format this will be expressed as the below. This follows the
-[ruby i18n convention](guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
+[ruby i18n convention](https://guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
 
 ```yaml
 en:

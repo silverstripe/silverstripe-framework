@@ -65,9 +65,11 @@ Page:
 
 ```xml
 <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true">
-    <testsuite name="Default">
-        <directory>app/tests/</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="Default">
+            <directory>app/tests/</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">app/src</directory>
@@ -104,7 +106,7 @@ The final part of our test is an assertion command, `assertEquals`. An assertion
 in our test methods (in this case we are testing if two values are equal). A test method can have more than one 
 assertion command, and if any one of these assertions fail, so will the test method.
 
-The example **phpunit.xml** file should be placed in the root folder of your project. PHPUnit 5.7 should be included by default, as a dev dependancy, in the **composer.json** file.
+The example **phpunit.xml** file should be placed in the root folder of your project. PHPUnit 5.7 should be included by default, as a dev dependency, in the **composer.json** file.
 
 ## Caching
 

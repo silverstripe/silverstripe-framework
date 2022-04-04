@@ -291,7 +291,7 @@ and production environments.
 ### Combined CSS Files
 
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
-the third paramter of the `combine_files` function:
+the third parameter of the `combine_files` function:
 
 ```php
 $loader = SilverStripe\View\ThemeResourceLoader::inst();
@@ -316,7 +316,7 @@ the destination location of the resulting combined CSS.
 ### Combined JS Files
 
 You can also add the 'async' and/or 'defer' attributes to combined Javascript files as you would with the 
-`Requirements::javascript` call - use the third paramter of the `combine_files` function:
+`Requirements::javascript` call - use the third parameter of the `combine_files` function:
 
 ```php
 $loader = SilverStripe\View\ThemeResourceLoader::inst();

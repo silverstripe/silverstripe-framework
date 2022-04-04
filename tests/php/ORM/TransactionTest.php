@@ -20,19 +20,19 @@ class TransactionTest extends SapphireTest
 
     private static $originalVersionInfo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         self::$originalVersionInfo = Deprecation::dump_settings();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Deprecation::restore_settings(self::$originalVersionInfo);
         parent::tearDown();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         if (!DB::get_conn()->supportsTransactions()) {
@@ -48,7 +48,7 @@ class TransactionTest extends SapphireTest
             return;
         }
 
-        // Test that successful transactions are comitted
+        // Test that successful transactions are committed
         $obj = new TestObject();
         $failed = false;
         $conn->withTransaction(
@@ -192,7 +192,7 @@ class TransactionTest extends SapphireTest
         $fail = DataObject::get_one(TestObject::class, "\"Title\"='Read only page failed'");
 
         //This page should be in the system
-        $this->assertInternalType('object', $success);
+        $this->assertIsObject($success);
         $this->assertTrue($success->exists());
 
         //This page should NOT exist, we had 'read only' permissions

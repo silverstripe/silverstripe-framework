@@ -9,7 +9,7 @@ icon: reply
 Controllers can facilitate redirecting users from one place to another using `HTTP` redirection using the `Location` 
 HTTP header.
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
@@ -47,7 +47,7 @@ private static $url_handlers = [
 ];
 ```
 
-For more information on `$url_handlers` see the [Routing](routing) documenation.
+For more information on `$url_handlers` see the [Routing](routing) documentation.
 
 ## API Documentation
 

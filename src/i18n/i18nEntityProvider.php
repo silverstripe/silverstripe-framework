@@ -5,7 +5,7 @@ namespace SilverStripe\i18n;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 /**
- * Dynamically provide translatable entites for the {@link i18n} logic.
+ * Dynamically provide translatable entities for the {@link i18n} logic.
  * This is particularly handy for natural language strings in static variables
  * of a class definition, as the _t() method can only be used in a runtime/instance
  * context. The provideI18nEntities() method enables you to define your own entities

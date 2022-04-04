@@ -124,7 +124,7 @@ class FormScaffolderTest extends SapphireTest
 
         $this->assertNotNull(
             $fields->dataFieldByName('Title'),
-            'scaffoldCMSFields() includes explitly defined "restrictFields"'
+            'scaffoldCMSFields() includes explicitly defined "restrictFields"'
         );
         $this->assertNull(
             $fields->dataFieldByName('Content'),

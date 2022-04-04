@@ -17,7 +17,7 @@ class DatetimeFieldTest extends SapphireTest
 {
     protected $timezone = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -26,7 +26,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->timezone = date_default_timezone_get();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DBDatetime::clear_mock_now();
         date_default_timezone_set($this->timezone);
@@ -146,7 +146,7 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
 
         // Some localisation packages exclude the ',' in default medium format
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#29/03/2003(,)? 11:00:00 (PM|pm)#',
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
@@ -490,15 +490,31 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertTrue($result->isReadonly());
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Can't change timezone after setting a value
-     */
     public function testSetTimezoneThrowsExceptionWhenChangingTimezoneAfterSettingValue()
     {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage("Can't change timezone after setting a value");
         date_default_timezone_set('Europe/Berlin');
         $field = new DatetimeField('Datetime', 'Time', '2003-03-29 23:59:38');
         $field->setTimezone('Pacific/Auckland');
+    }
+
+    public function testModifyReturnNewField(): void
+    {
+        $globalStateNow = '2020-01-01 00:00:00';
+        DBDatetime::set_mock_now($globalStateNow);
+
+        // Suppose we need to know the current time in our feature, we store it in a variable
+        // Make this field immutable, so future modifications don't apply to any other object references
+        $now = DBDatetime::now()->setImmutable(true);
+
+        // Later in the code we want to know the time value for 10 days later, we can reuse our $now variable
+        $later = $now->modify('+ 10 days')->Rfc2822();
+
+        // Our expectation is that this code should not apply the change to our
+        // $now variable declared earlier in the code
+        $this->assertSame('2020-01-11 00:00:00', $later, 'We expect to get a future datetime');
+        $this->assertSame($globalStateNow, $now->Rfc2822(), 'We expect to get the current datetime');
     }
 
     protected function getMockForm()

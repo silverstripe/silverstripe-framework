@@ -19,7 +19,7 @@ class DBPolymorphicForeignKey extends DBComposite
     public function scaffoldFormField($title = null, $params = null)
     {
         // Opt-out of form field generation - Scaffolding should be performed on
-        // the has_many end, or set programatically.
+        // the has_many end, or set programmatically.
         // @todo - Investigate suitable FormField
         return null;
     }

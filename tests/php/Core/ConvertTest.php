@@ -19,14 +19,14 @@ class ConvertTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // clear the previous locale setting
         $this->previousLocaleSetting = null;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // If a test sets the locale, reset it on teardown
@@ -242,7 +242,7 @@ PHP
         $this->assertEquals(3, count($decoded), '3 items in the decoded array');
         $this->assertContains('Bloggs', $decoded, 'Contains "Bloggs" value in decoded array');
         $this->assertContains('Jones', $decoded, 'Contains "Jones" value in decoded array');
-        $this->assertContains('Structure', $decoded['My']['Complicated']);
+        $this->assertStringContainsString('Structure', $decoded['My']['Complicated']);
     }
 
     /**

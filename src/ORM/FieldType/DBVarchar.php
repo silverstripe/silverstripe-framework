@@ -45,7 +45,7 @@ class DBVarchar extends DBString
     }
 
     /**
-     * Allow the ability to access the size of the field programatically. This
+     * Allow the ability to access the size of the field programmatically. This
      * can be useful if you want to have text fields with a length limit that
      * is dictated by the DB field.
      *

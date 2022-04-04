@@ -14,7 +14,7 @@ Browsers without support receive an `<input type=text>` based polyfill.
 
 The following example will add a simple DateField to your Page, allowing you to enter a date manually. 
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
@@ -55,7 +55,7 @@ DateField::create('MyDate')
 ```
 
 [info]
-The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
+The formats are based on [ICU format](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#simpledateformat).
 [/info]
  
 

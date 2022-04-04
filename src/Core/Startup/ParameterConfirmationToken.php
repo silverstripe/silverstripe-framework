@@ -107,7 +107,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
     }
 
     /**
-     * Is the parmeter requested in a BackURL param?
+     * Is the parameter requested in a BackURL param?
      *
      * @return bool
      */

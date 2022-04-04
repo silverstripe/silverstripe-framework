@@ -259,9 +259,14 @@ class DataExtensionTest extends SapphireTest
         // Check child fields removed by grandchild in beforeUpdateCMSFields
         $this->assertEmpty($fields->dataFieldByName('ChildFieldBeforeExtension')); // Removed by grandchild class
 
+        // Check child fields removed by grandchild in afterUpdateCMSFields
+        $this->assertEmpty($fields->dataFieldByName('ChildFieldAfterExtension')); // Removed by grandchild class
+
         // Check grandchild field modified by extension
         $this->assertNotEmpty($preExtendedField = $fields->dataFieldByName('GrandchildFieldBeforeExtension'));
+        $this->assertNotEmpty($postExtendedField = $fields->dataFieldByName('GrandchildFieldAfterExtension'));
         $this->assertEquals($preExtendedField->Title(), 'GrandchildFieldBeforeExtension: Modified Title');
+        $this->assertEquals($postExtendedField->Title(), 'GrandchildFieldAfterExtension');
 
         // Post-extension fields
         $this->assertNotEmpty($fields->dataFieldByName('ChildField'));

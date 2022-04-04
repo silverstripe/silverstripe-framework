@@ -7,6 +7,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Session;
+use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 use Symfony\Component\DomCrawler\Crawler;
@@ -55,9 +56,9 @@ class CmsFormsContext implements Context
 
         $form = $page->find('css', '#Form_EditForm');
         if (trim($negative)) {
-            assertNull($form, 'I should not see an edit page form');
+            Assert::assertNull($form, 'I should not see an edit page form');
         } else {
-            assertNotNull($form, 'I should see an edit page form');
+            Assert::assertNotNull($form, 'I should see an edit page form');
         }
     }
 
@@ -154,20 +155,31 @@ class CmsFormsContext implements Context
 				$matchedNode = $node;
 			}
 		}
-		assertNotNull($matchedNode);
+        Assert::assertNotNull($matchedNode);
 
-		$assertFn = $negate ? 'assertNotEquals' : 'assertEquals';
-		if($formatting == 'bold') {
-			call_user_func($assertFn, 'strong', $matchedNode->nodeName);
-		} else if($formatting == 'left aligned') {
-			if($matchedNode->getAttribute('class')) {
-				call_user_func($assertFn, 'text-left', $matchedNode->getAttribute('class'));
-			}
-		} else if($formatting == 'right aligned') {
-			call_user_func($assertFn, 'text-right', $matchedNode->getAttribute('class'));
-		}
-	}
-	// @codingStandardsIgnoreEnd
+        if ($formatting == 'bold') {
+            if ($negate) {
+                Assert::assertNotEquals('strong', $matchedNode->nodeName);
+            } else {
+                Assert::assertEquals('strong', $matchedNode->nodeName);
+            }
+        } else if ($formatting == 'left aligned') {
+            if ($matchedNode->getAttribute('class')) {
+                if ($negate) {
+                    Assert::assertNotEquals('text-left', $matchedNode->getAttribute('class'));
+                } else {
+                    Assert::assertEquals('text-left', $matchedNode->getAttribute('class'));
+                }
+            }
+        } else if ($formatting == 'right aligned') {
+            if ($negate) {
+                Assert::assertNotEquals('text-right', $matchedNode->getAttribute('class'));
+            } else {
+                Assert::assertEquals('text-right', $matchedNode->getAttribute('class'));
+            }
+        }
+    }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Selects the first textual match in the HTML editor. Does not support
@@ -226,9 +238,9 @@ JS;
         }
 
         if (trim($negative)) {
-            assertNull($matchedEl);
+            Assert::assertNull($matchedEl);
         } else {
-            assertNotNull($matchedEl);
+            Assert::assertNotNull($matchedEl);
         }
     }
 
@@ -287,19 +299,19 @@ JS;
         $parentElement = null;
         $this->retryThrowable(function () use (&$parentElement, &$page, $selector) {
             $parentElement = $page->find('css', $selector);
-            assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
+            Assert::assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
             $page = $this->getSession()->getPage();
         });
 
         $this->retryThrowable(function () use ($parentElement, $selector) {
             $dropdown = $parentElement->find('css', '.Select-arrow');
-            assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
+            Assert::assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
             $dropdown->click();
         });
 
         $this->retryThrowable(function () use ($text, $parentElement, $selector) {
             $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-            assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
+            Assert::assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
             $element->click();
         });
     }
@@ -322,7 +334,7 @@ JS;
             $element = $this->findInputByLabelContent($locator);
         }
         
-        assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
+        Assert::assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
     }
 
@@ -335,7 +347,7 @@ JS;
             return null;
         }
 
-        assertCount(1, $label, sprintf(
+        Assert::assertCount(1, $label, sprintf(
             'Found more than one element containing the phrase "%s".',
             $locator
         ));
@@ -406,7 +418,7 @@ JS;
     public function assertIShouldSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
     {
         $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
-        assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+        Assert::assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
     }
 
     /**
@@ -418,7 +430,7 @@ JS;
     public function assertIShouldNotSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
     {
         $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
-        assertNull($button, sprintf('Button "%s" found', $buttonLabel));
+        Assert::assertNull($button, sprintf('Button "%s" found', $buttonLabel));
     }
 
     /**
@@ -430,7 +442,7 @@ JS;
     public function stepIClickTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
     {
         $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
-        assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+        Assert::assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
 
         $button->click();
     }
@@ -447,7 +459,7 @@ JS;
     {
         $page = $this->getSession()->getPage();
         $gridField = $page->find('xpath', sprintf('//*[@data-name="%s"]', $gridFieldName));
-        assertNotNull($gridField, sprintf('Gridfield "%s" not found', $gridFieldName));
+        Assert::assertNotNull($gridField, sprintf('Gridfield "%s" not found', $gridFieldName));
 
         $name = $gridField->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $rowName));
         if (!$name) {
@@ -472,12 +484,12 @@ JS;
     {
         $page = $this->getSession()->getPage();
         $listBox = $page->find('xpath', sprintf('//*[@name="%s[]"]', $fieldName));
-        assertNotNull($listBox, sprintf('The listbox %s is not found', $fieldName));
+        Assert::assertNotNull($listBox, sprintf('The listbox %s is not found', $fieldName));
 
         $option = $listBox->getParent()
             ->find('css', '.chosen-choices')
             ->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $optionLabel));
-        assertNotNull($option, sprintf('Option %s is not found', $optionLabel));
+        Assert::assertNotNull($option, sprintf('Option %s is not found', $optionLabel));
 
         $button = $option->getParent()->find('css', 'a');
 

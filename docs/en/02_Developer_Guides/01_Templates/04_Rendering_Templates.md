@@ -22,7 +22,7 @@ The following will render the given data into a template. Given the template:
 Our application code can render into that view using `renderWith`. This method is called on the [ViewableData](api:SilverStripe\View\ViewableData) 
 instance with a template name or an array of templates to render. 
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 $arrayData = new SilverStripe\View\ArrayData([

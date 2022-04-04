@@ -82,7 +82,7 @@ class GroupedDropdownFieldTest extends SapphireTest
             ]
         );
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<option value="" selected="selected" >\(Choose A\)<\/option>/',
             preg_replace('/\s+/', ' ', (string)$field->Field())
         );
@@ -103,7 +103,7 @@ class GroupedDropdownFieldTest extends SapphireTest
                 ],
             ]
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<option value="" selected="selected" >\(Choose B\)<\/option>/',
             preg_replace('/\s+/', ' ', (string)$field->Field())
         );
@@ -124,7 +124,7 @@ class GroupedDropdownFieldTest extends SapphireTest
             ]
         );
         $field->setEmptyString('(Choose C)');
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<option value="" selected="selected" >\(Choose C\)<\/option>/',
             preg_replace('/\s+/', ' ', (string)$field->Field())
         );
@@ -152,14 +152,14 @@ class GroupedDropdownFieldTest extends SapphireTest
 
         // value on first level
         $field->setValue("1");
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<span class="readonly" id="Test">One</span>\n?<input type="hidden" name="Test" value="1" />#',
             (string)$field->performReadonlyTransformation()->Field()
         );
 
         // value on first level
         $field->setValue("2");
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#<span class="readonly" id="Test">Two</span>\n?<input type="hidden" name="Test" value="2" />#',
             (string)$field->performReadonlyTransformation()->Field()
         );

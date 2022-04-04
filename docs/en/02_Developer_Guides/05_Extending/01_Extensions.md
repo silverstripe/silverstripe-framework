@@ -18,7 +18,7 @@ For performance reasons a few classes are excluded from receiving extensions, in
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
 [/info]
 
-**app/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
@@ -79,7 +79,7 @@ Extra database fields can be added with a extension in the same manner as if the
 they're applied to. These will be added to the table of the base object - the extension will actually edit the $db, 
 $has_one etc.
 
-**app/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
@@ -124,7 +124,7 @@ we added a `SayHi` method which is unique to our extension.
 // "Hi Sam"
 ```
 
-**app/code/Page.php**
+**app/src/Page.php**
 
 ```php
 use SilverStripe\Security\Security;
@@ -160,7 +160,7 @@ variables at that given point. In this case, the core function `getValidator` on
 `updateValidator` hook for developers to modify the core method. The `MyMemberExtension` would modify the core member's
 validator by defining the `updateValidator` method.
 
-**app/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
@@ -359,7 +359,7 @@ populated.
 
 * [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
 
-## Related Documentaion
+## Related Documentation
 
 * [Injector](injector/)
 

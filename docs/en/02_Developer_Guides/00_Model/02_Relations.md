@@ -201,7 +201,9 @@ class Company extends DataObject
 ```
 
 Multiple `$has_one` relationships are okay if they aren't linking to the same object type. Otherwise, they have to be
-named.
+named. With that said, naming is recommended in all cases as it makes your code more resilient to change. Adding new relationships is easier when you don't need to review and update existing ones.
+
+You can use `RelationValidationService` for validation of relationships. This tool will point out the relationships which may need a review.
 
 If you're using the default scaffolded form fields with multiple `has_one` relationships, you will end up with a CMS field for each relation. If you don't want these you can remove them by their IDs:
 
@@ -223,6 +225,8 @@ declaring the `$belongs_to`.
 
 Similarly with `$has_many`, dot notation can be used to explicitly specify the `$has_one` which refers to this relation.
 This is not mandatory unless the relationship would be otherwise ambiguous.
+
+You can use `RelationValidationService` for validation of relationships. This tool will point out the relationships which may need a review.
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -251,7 +255,15 @@ how the developer wishes to manage this join table.
 
 [warning]
 Please specify a $belongs_many_many-relationship on the related class as well, in order
-to have the necessary accessors available on both ends.
+to have the necessary accessors available on both ends. You can use `RelationValidationService` for validation of relationships. This tool will point out the relationships which may need a review.
+
+Example configuration:
+
+```yaml
+SilverStripe\Dev\Validation\RelationValidationService:
+  output_enabled: true
+```
+
 [/warning]
 
 Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well.

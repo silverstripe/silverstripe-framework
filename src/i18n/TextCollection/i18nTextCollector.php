@@ -20,7 +20,7 @@ use SilverStripe\i18n\Messages\Writer;
 /**
  * SilverStripe-variant of the "gettext" tool:
  * Parses the string content of all PHP-files and SilverStripe templates
- * for ocurrences of the _t() translation method. Also uses the {@link i18nEntityProvider}
+ * for occurrences of the _t() translation method. Also uses the {@link i18nEntityProvider}
  * interface to get dynamically defined entities by executing the
  * {@link provideI18nEntities()} method on all implementors of this interface.
  *
@@ -372,7 +372,8 @@ class i18nTextCollector
         // For each module do a simple merge of the default yml with these strings
         foreach ($entitiesByModule as $module => $messages) {
             // Load existing localisations
-            $masterFile = "{$this->basePath}/{$module}/lang/{$this->defaultLocale}.yml";
+            $masterFile = ModuleLoader::inst()->getManifest()->getModule($module)->getPath() .
+                DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $this->defaultLocale . '.yml';
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
@@ -423,7 +424,7 @@ class i18nTextCollector
                     }
                     unset($spec['module']);
 
-                    // If only element is defalt, simplify
+                    // If only element is default, simplify
                     if (count($spec) === 1 && !empty($spec['default'])) {
                         $spec = $spec['default'];
                     }
@@ -807,7 +808,7 @@ class i18nTextCollector
      * Allows classes which implement i18nEntityProvider to provide
      * additional translation strings.
      *
-     * Not all classes can be instanciated without mandatory arguments,
+     * Not all classes can be instantiated without mandatory arguments,
      * so entity collection doesn't work for all SilverStripe classes currently
      *
      * @uses i18nEntityProvider
@@ -861,7 +862,7 @@ class i18nTextCollector
     }
 
     /**
-     * Normalizes enitities with namespaces.
+     * Normalizes entities with namespaces.
      *
      * @param string $fullName
      * @param string $_namespace

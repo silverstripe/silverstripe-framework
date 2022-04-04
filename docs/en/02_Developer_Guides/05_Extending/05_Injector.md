@@ -141,7 +141,31 @@ SilverStripe\Core\Injector\Injector:
       - [ pushHandler, [ %$DefaultHandler ] ]
 ```
 
-## Using constants as variables
+### Special YML Syntax
+
+You can use the special `%$` prefix in the configuration yml to fetch items via the Injector. For example:
+
+```yml
+App\Services\MediumQueuedJobService:
+    properties:
+      queueRunner: '%$App\Tasks\Engines\MediumQueueAsyncRunner'
+```
+
+It is equivalent of calling `Injector::get()->instance(MediumQueueAsyncRunner::class)` and assigning the result to the `MediumQueuedJobService::queueRunner` property. This can be useful as these properties can easily updated if provided in a module or be changed for unit testing. It can also be used to provide constructor arguments such as [this example from the assets module](https://github.com/silverstripe/silverstripe-assets/blob/1/_config/asset.yml):
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  # Define the secondary adapter for protected assets
+  SilverStripe\Assets\Flysystem\ProtectedAdapter:
+    class: SilverStripe\Assets\Flysystem\ProtectedAssetAdapter
+  # Define the secondary filesystem for protected assets
+  League\Flysystem\Filesystem.protected:
+    class: League\Flysystem\Filesystem
+    constructor:
+      FilesystemAdapter: '%$SilverStripe\Assets\Flysystem\ProtectedAdapter'
+```
+
+## Using constants and environment variables
 
 Any of the core constants can be used as a service argument by quoting with back ticks "`". Please ensure you also quote the entire value (see below).
 
@@ -150,6 +174,18 @@ CachingService:
   class: SilverStripe\Cache\CacheProvider
   properties:
     CacheDir: '`TEMP_DIR`'
+```
+
+Environment variables can be used in the same way:
+
+```yml
+App\Services\MyService:
+    class: App\Services\MyService
+    constructor:
+      baseURL: '`SS_API_URI`'
+      credentials:
+        id: '`SS_API_CLIENT_ID`'
+        secret: '`SS_API_CLIENT_SECRET`'
 ```
 
 Note: undefined variables will be replaced with null.
@@ -171,7 +207,7 @@ SilverStripe\Core\Injector\Injector:
     factory: MyFactory
 ```
 
-**app/code/MyFactory.php**
+**app/src/MyFactory.php**
 
 
 ```php

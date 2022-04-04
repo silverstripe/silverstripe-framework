@@ -246,7 +246,7 @@ class LostPasswordHandler extends RequestHandler
     }
 
     /**
-     * Avoid information disclosure by displaying the same status, regardless wether the email address actually exists
+     * Avoid information disclosure by displaying the same status, regardless whether the email address actually exists
      *
      * @param array $data
      * @return HTTPResponse

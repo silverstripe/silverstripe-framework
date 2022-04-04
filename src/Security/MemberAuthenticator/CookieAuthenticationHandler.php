@@ -12,7 +12,7 @@ use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 
 /**
- * Authenticate a member pased on a session cookie
+ * Authenticate a member passed on a session cookie
  */
 class CookieAuthenticationHandler implements AuthenticationHandler
 {

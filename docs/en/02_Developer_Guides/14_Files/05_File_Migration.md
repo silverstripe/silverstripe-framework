@@ -210,7 +210,7 @@ Use the following estimates to decide how you will run your file migration:
 | < 10000 | Command Line | 10000 seconds | 950 MB |
 | 10000+ | Command Line or contact support | n/a | n/a |
 
-Your exact experience will vary based on your host server, the size of your files and other conditions. If your site is hosted on a managed environement (e.g.: [Common Web Platform](https://www.cwp.govt.nz/service-desk) or [Silverstripe Cloud](https://docs.platform.silverstripe.com/support/)), you may not have access to the command line to manually run the migration task. Contact your hosting provider's helpdesk if that's your case.
+Your exact experience will vary based on your host server, the size of your files and other conditions. If your site is hosted on a managed environment (e.g.: [Common Web Platform](https://www.cwp.govt.nz/service-desk) or [Silverstripe Cloud](https://docs.platform.silverstripe.com/support/)), you may not have access to the command line to manually run the migration task. Contact your hosting provider's helpdesk if that's your case.
 
 
 ## Natural path vs Hash Path
@@ -297,9 +297,9 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Assets\FilenameParsing\FileResolutionStrategy.public:
     class: SilverStripe\Assets\FilenameParsing\FileIDHelperResolutionStrategy
     properties:
-    DefaultFileIDHelper: '%$SilverStripe\Assets\FilenameParsing\HashFileIDHelper'
-    ResolutionFileIDHelpers:
-      - '%$SilverStripe\Assets\FilenameParsing\HashFileIDHelper'
+      DefaultFileIDHelper: '%$SilverStripe\Assets\FilenameParsing\HashFileIDHelper'
+      ResolutionFileIDHelpers:
+        - '%$SilverStripe\Assets\FilenameParsing\HashFileIDHelper'
       VersionedStage: Live
   # Define protected resolution strategy
   SilverStripe\Assets\FilenameParsing\FileResolutionStrategy.protected:

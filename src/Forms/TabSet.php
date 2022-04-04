@@ -178,13 +178,17 @@ class TabSet extends CompositeField
 
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             $this->attributes,
             [
                 'id' => $this->ID(),
                 'class' => $this->extraClass()
             ]
         );
+
+        $this->extend('updateAttributes', $attributes);
+
+        return $attributes;
     }
 
     /**

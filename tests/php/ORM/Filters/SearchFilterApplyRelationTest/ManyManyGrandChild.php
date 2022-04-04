@@ -8,7 +8,7 @@ class ManyManyGrandChild extends ManyManyChild implements TestOnly
 {
     private static $table_name = 'SearchFilterApplyRelationTest_ManyManyGrandChild';
 
-    // This is to create an seperate Table only.
+    // This is to create an separate Table only.
     private static $db = [
         "GrantChildField" => "Varchar",
     ];

@@ -78,7 +78,7 @@ class DB
      * Pass an object that's a subclass of SS_Database.  This object will be used when {@link DB::query()}
      * is called.
      *
-     * @param Database $connection The connecton object to set as the connection.
+     * @param Database $connection The connection object to set as the connection.
      * @param string $name The name to give to this connection.  If you omit this argument, the connection
      * will be the default one used by the ORM.  However, you can store other named connections to
      * be accessed through DB::get_conn($name).  This is useful when you have an application that
@@ -677,7 +677,7 @@ class DB
     }
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
      *
      * @param bool $quiet
      */

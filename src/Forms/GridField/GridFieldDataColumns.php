@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataObject;
 /**
  * @see GridField
  */
-class GridFieldDataColumns implements GridField_ColumnProvider
+class GridFieldDataColumns extends AbstractGridFieldComponent implements GridField_ColumnProvider
 {
 
     /**

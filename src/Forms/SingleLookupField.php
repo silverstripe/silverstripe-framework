@@ -83,7 +83,7 @@ class SingleLookupField extends SingleSelectField
     }
 
     /**
-     * Note: we need to transform value in here becaue React fields do not use Field() to display value
+     * Note: we need to transform value in here because React fields do not use Field() to display value
      *
      * @return mixed
      */

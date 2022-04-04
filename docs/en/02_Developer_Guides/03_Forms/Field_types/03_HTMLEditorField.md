@@ -16,7 +16,7 @@ information about inserted images or media elements.
 The framework comes with a [HTMLEditorField](api:SilverStripe\Forms\HTMLEditor\HTMLEditorField) form field class which encapsulates most of the required
 functionality. It is usually added through the [DataObject::getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method:
 
-**app/code/MyObject.php**
+**app/src/MyObject.php**
 
 
 ```php
@@ -338,7 +338,7 @@ Example: Remove field for "image captions"
 ```php
 use SilverStripe\Core\Extension;
 
-// File: app/code/MyToolbarExtension.php
+// File: app/src/MyToolbarExtension.php
 class MyToolbarExtension extends Extension 
 {
     public function updateFieldsForImage(&$fields, $url, $file) 
@@ -383,7 +383,7 @@ of the CMS you have to take care of instantiate yourself:
 use SilverStripe\Admin\ModalController;
 use SilverStripe\Control\Controller;
 
-// File: app/code/MyController.php
+// File: app/src/MyController.php
 class MyObjectController extends Controller 
 {
     public function Modals() 

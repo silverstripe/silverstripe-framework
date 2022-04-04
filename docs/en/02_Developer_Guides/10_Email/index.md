@@ -215,6 +215,8 @@ email marked as spam. If you want to send from another address think about using
 
 You will also have to remove the `SS_SEND_ALL_EMAILS_FROM` environment variable if it is present.
 
+If you need greater control over this email address, for instance if are running the subsites modules, you can implement the `SilverStripe\Control\Email\Email::updateDefaultFrom()` extension hook.
+
 ## Redirecting Emails
 
 There are several other [configuration settings](/developer_guides/configuration) to manipulate the email server.

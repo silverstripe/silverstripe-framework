@@ -18,7 +18,7 @@ use LogicException;
  *
  * @see GridField
  */
-class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
+class GridFieldSortableHeader extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
 
     /**
@@ -83,7 +83,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
     }
 
     /**
-     * Specify sortings with fieldname as the key, and actual fieldname to sort as value.
+     * Specify sorting with fieldname as the key, and actual fieldname to sort as value.
      * Example: array("MyCustomTitle"=>"Title", "MyCustomBooleanField" => "ActualBooleanField")
      *
      * @param array $sorting
@@ -146,7 +146,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                     if ($tmpItem instanceof SS_List) {
                         // It's impossible to sort on a HasManyList/ManyManyList
                         break;
-                    } elseif (method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
+                    } elseif ($tmpItem && method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
                         // The part is a relation name, so get the object/list from it
                         $tmpItem = $tmpItem->$methodName();
                     } elseif ($tmpItem instanceof DataObject

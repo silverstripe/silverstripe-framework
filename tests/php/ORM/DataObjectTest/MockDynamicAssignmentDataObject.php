@@ -25,7 +25,7 @@ class MockDynamicAssignmentDataObject extends DataObject implements TestOnly
         // This field tries to emit dynamic assignment but will fail because of scalar only
         'DynamicScalarOnlyField' => MockDynamicAssignmentDBField::class . '(1,1)',
 
-        // This field does dynamic assignement and will pass
+        // This field does dynamic assignment and will pass
         'DynamicField' => MockDynamicAssignmentDBField::class . '(0,1)',
     ];
 
@@ -45,7 +45,7 @@ class MockDynamicAssignmentDataObject extends DataObject implements TestOnly
             // This field tries to emit dynamic assignment but will fail because of scalar only
             'ManyManyDynamicScalarOnlyField' => MockDynamicAssignmentDBField::class . '(1,1)',
 
-            // This field does dynamic assignement and will pass
+            // This field does dynamic assignment and will pass
             'ManyManyDynamicField' => MockDynamicAssignmentDBField::class . '(0,1)',
         ]
     ];

@@ -91,11 +91,12 @@ class ModuleLoader
      *
      * @param bool $includeTests
      * @param bool $forceRegen
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false)
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         foreach ($this->manifests as $manifest) {
-            $manifest->init($includeTests, $forceRegen);
+            $manifest->init($includeTests, $forceRegen, $ignoredCIConfigs);
         }
     }
 }

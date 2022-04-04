@@ -1,5 +1,5 @@
 ---
-title: The DataObject model type
+title: Adding DataObjects to the schema
 summary: An overview of how the DataObject model can influence the creation of types, queries, and mutations
 ---
 
@@ -77,9 +77,28 @@ query {
   readPages {
     nodes {
       title
+      content
+      ... on BlogPage {
+        date(format: NICE)
+        comments {
+          nodes {
+            comment
+            author {
+              firstName
+            }
+          }
+        }
+      }
     }
 }
 ```
+
+[info]
+Note the use of the default arguments on `date`. Fields created from `DBFields`
+generate their own default sets of arguments. For more information, see the
+[DBFieldArgs](query_plugins#dbfieldargs) for more information.
+[/info]
+
 
 A mutation:
 ```graphql
@@ -177,7 +196,134 @@ onSale:
 
 * The mapping of our field names to the DataObject property is case-insensitive. It is a
 convention in GraphQL APIs to use lowerCamelCase fields, so this is given by default.
+
 [/notice]
+
+### Bulk loading models
+
+It's likely that in your application, you have a whole collection of classes you want exposed to the API, with roughly
+the same fields and operations exposed on them. It can be really tedious to write a new declaration for every single
+dataobject in your project, and as you add new ones, there's a bit of overhead in remembering to add it to the
+GraphQL schema.
+
+Common use cases might be:
+
+* Add everything in `App\Models`
+* Add every implementation of `BaseElement`
+* Add anything with the `Versioned` extension
+* Add everything that matches `src/*Model.php`
+
+You can create logic like this using the `bulkLoad` configuration file, which allows you to specify groups of directives
+that load a bundle of classes and apply the same set of configuration to all of them.
+
+
+**_graphql/bulkLoad.yml**
+```yaml
+elemental: # An arbitrary key to define what these directives are doing
+  # Load all content blocks
+  load:
+    inheritanceLoader:
+      include:
+          - DNADesign\Elemental\Models\BaseElement
+      exclude:
+          - MyApp\Elements\MySecretElement
+  # Add all fields and read operations
+  apply:
+    fields:
+      '*': true
+    operations:
+      read: true
+      readOne: true      
+app:
+  # Load everything in our app that has the Versioned extension
+  load:
+    namespaceLoader:
+      include:
+        - MyApp\Models\*
+    extensionLoader:
+      include:
+        - SilverStripe\Versioned\Versioned
+    filepathLoader:
+      exclude:
+        - app/src/Models/*.secret.php
+  apply:
+    fields:
+      '*': true
+    operations:
+      '*': true
+```
+
+By default, four loaders are provided to you to help gather specific classnames:
+
+#### By namespace
+* **Identifier**: `namespaceLoader`
+* **Description**: Include or exclude classes based on their namespace  
+* **Example**: `include: [MyApp\Models\*]`
+  
+#### By inheritance
+
+* **Identifier**: `inheritanceLoader`
+* **Description**: Include or exclude everything that matches or extends a given base class
+* **Example**: `include: [DNADesign\Elemental\Models\BaseElement]`
+
+#### By applied extension
+
+* **Identifier**: `extensionLoader`
+* **Description**: Include or exclude any class that has a given extension applied
+* **Example**: `include: [SilverStripe\Versioned\Versioned]`
+  
+#### By filepath
+
+* **Identifier**: `filepathLoader`
+* **Description**: Include or exclude any classes in files matching a given glob expression, relative to the base path. Module syntax is allowed. 
+* **Examples**:
+  - `include: [ 'src/models/*.model.php' ]`
+  - `include: [ 'somevendor/somemodule: src/Models/*.php' ]`    
+
+Each block starts with a collection of all classes that gets filtered as each loader runs. The primary job
+of a loader is to _remove_ classes from the entire collection, not add them in.
+
+[info]
+`exclude` directives will always supersede `include` directives.
+[/info]
+
+[info]
+If you find that this paints with too big a brush, you can always override individual models explicitly in `models.yml`.
+The bulk loaders run _before_ the models.yml config is loaded.
+[/info]
+
+#### DataObjects subclasses are the default starting point
+
+Because this is Silverstripe CMS, and it's likely that you're using dataobject models only, the bulk loaders start with an
+initial filter, which is defined as follows:
+
+```yaml
+inheritanceLoader:
+  include:
+    - SilverStripe\ORM\DataObject
+```
+
+This ensures that at a bare minimum, you're always filtering by dataobject classes only. If, for some reason, you
+have a non-dataobject class in `App\Models\*`, it will automatically be filtered out due to this default setting.
+
+This default is configured in the `defaultBulkLoad` setting in your schema config. Should you ever want to disable
+that, just set it to `false`.
+
+**_graphql/config.yml**
+```
+defaultBulkLoad: false
+```
+
+#### Creating your own bulk loader
+
+Bulk loaders must extend `SilverStripe\GraphQL\Schema\BulkLoader\AbstractBulkLoader`.  They need to declare an
+identifier (e.g. `namespaceLoader`) to be referenced in the config, and they must provide a
+`collect(Collection $collection): Collection` which returns a new `Collection` instance once the loader has done its
+work parsing through the `include` and `exclude` directives.
+
+Bulk loaders are automatically registered. Just creating the class is all you need to do to have it available for use
+in your `bulkLoad.yml` file.
+
 
 ### Customising model fields
 
@@ -221,9 +367,9 @@ Page:
         paginateList: false # don't paginate the read operation
 ```
 
-### Blacklisted fields {#blacklisted-fields}
+### Disallowed fields {#disallowed-fields}
 
-While selecting all fields via `*` is usedful, there are some fields that you
+While selecting all fields via `*` is useful, there are some fields that you
 don't want to accidentally expose, especially if you're a module author
 and expect models within this code to be used through custom GraphQL endpoints.
 For example, a module might add a secret "preview token" to each `SiteTree`.
@@ -231,8 +377,8 @@ A custom GraphQL endpoint might have used `fields: '*'` on `SiteTree` to list pa
 on the public site, which now includes a sensitive field.
 
 The `graphql_blacklisted_fields` property on `DataObject` allows you to
-blacklist fields globally for all GraphQL schemas.
-This blacklist applies for all operations (read, update, etc).  
+disallow fields globally for all GraphQL schemas.
+This block list applies for all operations (read, update, etc).  
 
 **app/_config/graphql.yml**
 ```yaml
@@ -258,6 +404,25 @@ of your DataObject as its typename (see: `ClassInfo::shortName()`). That is,
 Given the brevity of these type names, it's not inconceivable that you could run into naming
 collisions, particularly if you use feature-based namespacing. Fortunately, there are
 hooks you have available to help influence the typename.
+
+#### Explicit type mapping
+
+You can explicitly provide type name for a given class using the `typeMapping` setting in your schema config.
+
+**app/_graphql/config.yml**
+```yaml
+typeMapping:
+  MyProject\MyApp\Page: SpecialPage
+```
+
+It may be necessary to use `typeMapping` in projects that have a lot of similar class names in different namespaces, which will cause a collision
+when the type name is derived from the class name. The most case for this
+is the `Page` class, which is both at the root namespace and often in your
+app namespace, e.g. `MyApp\Models\Page`.
+
+
+
+
 
 #### The type formatter
 
