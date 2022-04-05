@@ -44,6 +44,9 @@ class DBText extends DBString
      */
     private static $summarySentenceSeparators = [
         '.',
+        '?',
+        '!',
+        ':',
     ];
 
     /**
@@ -149,7 +152,7 @@ class DBText extends DBString
         // Split on sentences (don't remove period)
         $sentences = array_filter(array_map(function ($str) {
             return trim($str);
-        }, preg_split('@(?<=[(' . $summarySentenceSeparators . ')])@', $value) ?: []));
+        }, preg_split('@(?<=[' . preg_quote($summarySentenceSeparators, '@') . '])@', $value) ?: []));
         $wordCount = count(preg_split('#\s+#u', $sentences[0]) ?: []);
 
         // if the first sentence is too long, show only the first $maxWords words
