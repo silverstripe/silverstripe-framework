@@ -475,8 +475,10 @@ class FormField extends RequestHandler
             $component = $record->relObject($relation);
         }
 
-        if ($fieldName) {
+        if ($fieldName && $component) {
             $component->setCastedField($fieldName, $this->dataValue());
+        } else {
+            $record->setCastedField($this->name, $this->dataValue());
         }
     }
 
