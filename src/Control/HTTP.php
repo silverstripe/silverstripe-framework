@@ -259,7 +259,7 @@ class HTTP
         $path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
 
         // handle URL params which are existing / new
-        $params = ($params) ? '?' . http_build_query($params, null, $separator) : '';
+        $params = ($params) ? '?' . http_build_query($params, '', $separator) : '';
 
         // keep fragments (anchors) intact.
         $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ? '#' . $parts['fragment'] : '';

@@ -68,9 +68,6 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processAll($filepath, $preview = false)
     {
-        $previousDetectLE = ini_get('auto_detect_line_endings');
-        ini_set('auto_detect_line_endings', true);
-
         $this->extend('onBeforeProcessAll', $filepath, $preview);
 
         $result = BulkLoader_Result::create();
@@ -144,8 +141,6 @@ class CsvBulkLoader extends BulkLoader
                 $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
             }
             print $failedMessage . PHP_EOL;
-        } finally {
-            ini_set('auto_detect_line_endings', $previousDetectLE);
         }
 
         $this->extend('onAfterProcessAll', $result, $preview);
@@ -182,9 +177,6 @@ class CsvBulkLoader extends BulkLoader
     protected function splitFile($path, $lines = null)
     {
         Deprecation::notice('5.0', 'splitFile is deprecated, please process files using a stream');
-        $previous = ini_get('auto_detect_line_endings');
-
-        ini_set('auto_detect_line_endings', true);
 
         if (!is_int($lines)) {
             $lines = $this->config()->get("lines");
@@ -230,10 +222,7 @@ class CsvBulkLoader extends BulkLoader
                 $count = 0;
             }
         }
-
         fclose($to);
-
-        ini_set('auto_detect_line_endings', $previous);
 
         return $files;
     }
