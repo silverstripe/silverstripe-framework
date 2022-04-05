@@ -14,6 +14,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\Tes
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Stadium;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 
@@ -29,7 +30,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         Team::class,
         Cheerleader::class,
         Player::class,
-        Permissions::class
+        Permissions::class,
+        Stadium::class,
     ];
 
     protected static $extra_controllers = [
@@ -41,15 +43,12 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', ['Test']);
         $this->assertEquals(
             [
-                'Name:PartialMatch',
-                'City:StartsWith',
-                'Cheerleaders.Name:StartsWith'
+                'Name:StartsWith',
+                'City:EndsWith',
+                'Country:ExactMatch',
+                'Type:Fulltext'
             ],
-            $autoCompleter->scaffoldSearchFields(Team::class)
-        );
-        $this->assertEquals(
-            [ 'Name:StartsWith' ],
-            $autoCompleter->scaffoldSearchFields(Cheerleader::class)
+            $autoCompleter->scaffoldSearchFields(Stadium::class)
         );
     }
 
