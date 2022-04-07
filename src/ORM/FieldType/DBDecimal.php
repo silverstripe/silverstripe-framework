@@ -126,7 +126,7 @@ class DBDecimal extends DBField
             return 0;
         }
 
-        if (ctype_digit($value)) {
+        if (ctype_digit((string) $value)) {
             return (int)$value;
         }
 

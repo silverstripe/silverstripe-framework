@@ -168,7 +168,6 @@ class CSVParser implements Iterator
      */
     protected function openFile()
     {
-        ini_set('auto_detect_line_endings', 1);
         $this->fileHandle = fopen($this->filename, 'r');
 
         if ($this->providedHeaderRow) {

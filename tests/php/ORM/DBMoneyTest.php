@@ -350,7 +350,7 @@ class DBMoneyTest extends SapphireTest
      */
     protected function clean($input)
     {
-        $nbsp = html_entity_decode('&nbsp;', null, 'UTF-8');
+        $nbsp = html_entity_decode('&nbsp;', 0, 'UTF-8');
         return str_replace(' ', $nbsp, trim($input));
     }
 }

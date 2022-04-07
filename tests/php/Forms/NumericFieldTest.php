@@ -24,8 +24,8 @@ class NumericFieldTest extends SapphireTest
     {
         return str_replace(
             [
-                html_entity_decode('&nbsp;', null, 'UTF-8'),
-                html_entity_decode('&#8239;', null, 'UTF-8'), // narrow non-breaking space
+                html_entity_decode('&nbsp;', 0, 'UTF-8'),
+                html_entity_decode('&#8239;', 0, 'UTF-8'), // narrow non-breaking space
             ],
             ' ',
             trim($input)

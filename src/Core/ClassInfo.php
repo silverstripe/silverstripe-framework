@@ -10,6 +10,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
 
 /**
  * Provides introspection information about the class tree.
@@ -597,7 +598,7 @@ class ClassInfo
 
         // only keep classes with the Extension applied
         $classes = array_filter($classes, function ($class) use ($extensionClass) {
-            return Extensible::has_extension($class, $extensionClass);
+            return ViewableData::has_extension($class, $extensionClass);
         });
 
         return $classes;

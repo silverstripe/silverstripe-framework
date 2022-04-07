@@ -146,7 +146,7 @@ abstract class HTMLValue extends ViewableData
     {
         $doc = $this->getDocument();
 
-        if (method_exists($doc, $method)) {
+        if ($doc && method_exists($doc, $method)) {
             return call_user_func_array([$doc, $method], $arguments);
         } else {
             return parent::__call($method, $arguments);
