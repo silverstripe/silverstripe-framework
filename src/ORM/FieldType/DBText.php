@@ -213,7 +213,7 @@ class DBText extends DBString
         $position = empty($keywords) ? 0 : (int) mb_stripos($text, $keywords);
 
         // We want to search string to be in the middle of our block to give it some context
-        $position = max(0, $position - ($characters / 2));
+        $position = floor(max(0, $position - ($characters / 2)));
 
         if ($position > 0) {
             // We don't want to start mid-word

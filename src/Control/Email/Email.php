@@ -19,6 +19,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ViewableData;
 use Swift_Message;
+use Swift_Mime_SimpleMessage;
 use Swift_MimePart;
 
 /**
@@ -260,7 +261,10 @@ class Email extends ViewableData
     public function getSwiftMessage()
     {
         if (!$this->swiftMessage) {
-            $this->setSwiftMessage(new Swift_Message(null, null, 'text/html', 'utf-8'));
+            $message = new Swift_Message(null, null, 'text/html', 'utf-8');
+            // Set priority to fix PHP 8.1 SimpleMessage::getPriority() sscanf() null parameter
+            $message->setPriority(Swift_Mime_SimpleMessage::PRIORITY_NORMAL);
+            $this->setSwiftMessage($message);
         }
 
         return $this->swiftMessage;
