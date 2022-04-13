@@ -384,7 +384,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             return;
         }
         // Split the array in half
-        $halfway = count($array) / 2;
+        $halfway = floor(count($array) / 2);
         $array1 = array_slice($array, 0, $halfway);
         $array2 = array_slice($array, $halfway);
         // Recurse to sort the two halves
