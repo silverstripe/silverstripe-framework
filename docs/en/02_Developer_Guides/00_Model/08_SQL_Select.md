@@ -31,7 +31,7 @@ $count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
 
 // Through SQLSelect abstraction layer.
 $query = new SQLSelect();
-$count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
+$count = $query->setFrom('Member')->setSelect('COUNT(*)')->execute();
 
 // Through the ORM.
 $count = Member::get()->count();
