@@ -246,7 +246,7 @@ class ShortcodeParserTest extends SapphireTest
 
     protected function assertEqualsIgnoringWhitespace($a, $b, $message = '')
     {
-        $this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
+        $this->assertEquals(preg_replace('/\s+/', '', $a ?? ''), preg_replace('/\s+/', '', $b ?? ''), $message);
     }
 
     public function testExtractBefore()

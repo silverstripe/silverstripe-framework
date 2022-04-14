@@ -188,7 +188,7 @@ class ClassInfoTest extends SapphireTest
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[0]));
         ClassInfo::reset_db_cache();
-        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtoupper($classes[0])));
+        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtoupper($classes[0] ?? '')));
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
 
@@ -200,7 +200,7 @@ class ClassInfoTest extends SapphireTest
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));
         ClassInfo::reset_db_cache();
-        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2])));
+        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2] ?? '')));
     }
 
     /**

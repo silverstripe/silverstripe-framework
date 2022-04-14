@@ -120,7 +120,7 @@ class FieldGroup extends CompositeField
             return parent::getName();
         }
 
-        return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);
+        return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title ?? '');
     }
 
     /**
@@ -160,7 +160,7 @@ class FieldGroup extends CompositeField
         foreach ($dataFields as $subfield) {
             $message = $subfield->obj('Message')->forTemplate();
             if ($message) {
-                $messages[] = rtrim($message, ".");
+                $messages[] = rtrim($message ?? '', ".");
             }
         }
 

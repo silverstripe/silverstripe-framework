@@ -55,7 +55,7 @@ class i18nTest extends SapphireTest
                 'es_AR',
                 'es_ES',
             ],
-            array_keys($translations)
+            array_keys($translations ?? [])
         );
 
         // Test indeterminate locales

@@ -63,6 +63,6 @@ class EnvironmentBypass implements Bypass
      */
     public function checkRequestForBypass(HTTPRequest $request)
     {
-        return in_array(Director::get_environment_type(), $this->environments, true);
+        return in_array(Director::get_environment_type(), $this->environments ?? [], true);
     }
 }

@@ -72,11 +72,11 @@ class GridFieldDeleteActionTest extends SapphireTest
         }
         $content = new CSSContentParser($this->gridField->FieldHolder());
         // Check that there are content
-        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item')));
+        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item') ?? []));
         // Make sure that there are no delete buttons
         $this->assertEquals(
             0,
-            count($content->getBySelector('.gridfield-button-delete')),
+            count($content->getBySelector('.gridfield-button-delete') ?? []),
             'Delete buttons should not show when not logged in.'
         );
     }
@@ -86,7 +86,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->logInWithPermission('ADMIN');
         $content = new CSSContentParser($this->gridField->FieldHolder());
         $deleteButtons = $content->getBySelector('.action--delete');
-        $this->assertEquals(3, count($deleteButtons), 'Delete buttons should show when logged in.');
+        $this->assertEquals(3, count($deleteButtons ?? []), 'Delete buttons should show when logged in.');
     }
 
     public function testActionsRequireCSRF()

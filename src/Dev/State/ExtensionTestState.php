@@ -47,14 +47,14 @@ class ExtensionTestState implements TestState
         /** @var string|DataObject $dataClass */
         // Remove any illegal extensions that are present
         foreach ($class::getIllegalExtensions() as $dataClass => $extensions) {
-            if (!class_exists($dataClass)) {
+            if (!class_exists($dataClass ?? '')) {
                 continue;
             }
             if ($extensions === '*') {
                 $extensions = $dataClass::get_extensions();
             }
             foreach ($extensions as $extension) {
-                if (!class_exists($extension) || !$dataClass::has_extension($extension)) {
+                if (!class_exists($extension ?? '') || !$dataClass::has_extension($extension)) {
                     continue;
                 }
                 if (!isset($this->extensionsToReapply[$dataClass])) {
@@ -68,12 +68,12 @@ class ExtensionTestState implements TestState
 
         // Add any required extensions that aren't present
         foreach ($class::getRequiredExtensions() as $dataClass => $extensions) {
-            if (!class_exists($dataClass)) {
+            if (!class_exists($dataClass ?? '')) {
                 throw new LogicException("Test {$class} requires dataClass {$dataClass} which doesn't exist");
             }
             foreach ($extensions as $extension) {
                 $extension = Extension::get_classname_without_arguments($extension);
-                if (!class_exists($extension)) {
+                if (!class_exists($extension ?? '')) {
                     throw new LogicException("Test {$class} requires extension {$extension} which doesn't exist");
                 }
                 if (!$dataClass::has_extension($extension)) {

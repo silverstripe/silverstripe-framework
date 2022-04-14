@@ -25,7 +25,7 @@ class CoreTest extends SapphireTest
     {
         $user = TempFolder::getTempFolderUsername();
 
-        if (file_exists($this->tempPath)) {
+        if (file_exists($this->tempPath ?? '')) {
             $this->assertEquals(TempFolder::getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
         } else {
             $user = TempFolder::getTempFolderUsername();
@@ -62,9 +62,9 @@ class CoreTest extends SapphireTest
             '-cache-var-www-silverstripe-test-project'
         ] as $dir) {
             $path = $base . $dir;
-            if (file_exists($path)) {
+            if (file_exists($path ?? '')) {
                 rmdir($path . DIRECTORY_SEPARATOR . $user);
-                rmdir($path);
+                rmdir($path ?? '');
             }
         }
     }

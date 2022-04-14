@@ -85,9 +85,9 @@ class HTMLEditorSanitiserTest extends FunctionalTest
             $sanitiser = new HtmlEditorSanitiser($config);
 
             $value = 'noopener noreferrer';
-            if (strpos($desc, 'link_rel_value is an empty string') !== false) {
+            if (strpos($desc ?? '', 'link_rel_value is an empty string') !== false) {
                 $value = '';
-            } elseif (strpos($desc, 'link_rel_value is null') !== false) {
+            } elseif (strpos($desc ?? '', 'link_rel_value is null') !== false) {
                 $value = null;
             }
             Config::inst()->set(HTMLEditorSanitiser::class, 'link_rel_value', $value);

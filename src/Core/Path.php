@@ -25,16 +25,16 @@ class Path
     public static function join(...$parts)
     {
         // In case $parts passed as an array in first parameter
-        if (count($parts) === 1 && is_array($parts[0])) {
+        if (count($parts ?? []) === 1 && is_array($parts[0])) {
             $parts = $parts[0];
         }
 
         // Cleanup and join all parts
-        $parts = array_filter(array_map('trim', $parts));
+        $parts = array_filter(array_map('trim', $parts ?? []));
         $fullPath = static::normalise(implode(DIRECTORY_SEPARATOR, $parts));
 
         // Protect against directory traversal vulnerability (OTG-AUTHZ-001)
-        if (strpos($fullPath, '..') !== false) {
+        if (strpos($fullPath ?? '', '..') !== false) {
             throw new InvalidArgumentException('Can not collapse relative folders');
         }
 
@@ -51,11 +51,11 @@ class Path
      */
     public static function normalise($path, $relative = false)
     {
-        $path = trim(Convert::slashes($path));
+        $path = trim(Convert::slashes($path) ?? '');
         if ($relative) {
-            return trim($path, self::TRIM_CHARS);
+            return trim($path ?? '', self::TRIM_CHARS ?? '');
         } else {
-            return rtrim($path, self::TRIM_CHARS);
+            return rtrim($path ?? '', self::TRIM_CHARS ?? '');
         }
     }
 }

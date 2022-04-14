@@ -433,7 +433,7 @@ class Form extends ViewableData implements HasRequestHandler
     {
         $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
-            return unserialize($resultData);
+            return unserialize($resultData ?? '');
         }
         return null;
     }
@@ -525,7 +525,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function castingHelper($field)
     {
         // Override casting for field message
-        if (strcasecmp($field, 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
+        if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
             return $helper;
         }
         return parent::castingHelper($field);
@@ -699,7 +699,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($action->getValidationExempt()) {
             return true;
         }
-        if (in_array($action->actionName(), $this->getValidationExemptActions())) {
+        if (in_array($action->actionName(), $this->getValidationExemptActions() ?? [])) {
             return true;
         }
         return false;
@@ -724,7 +724,7 @@ class Form extends ViewableData implements HasRequestHandler
         $this->securityTokenAdded = true;
 
         // add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
-        if (strtoupper($this->FormMethod()) != $this->FormHttpMethod()) {
+        if (strtoupper($this->FormMethod() ?? '') != $this->FormHttpMethod()) {
             $methodField = new HiddenField('_method', '', $this->FormHttpMethod());
             $methodField->setForm($this);
             $extraFields->push($methodField);
@@ -1017,7 +1017,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setFormMethod($method, $strict = null)
     {
-        $this->formMethod = strtoupper($method);
+        $this->formMethod = strtoupper($method ?? '');
         if ($strict !== null) {
             $this->setStrictFormMethodCheck($strict);
         }
@@ -1378,7 +1378,7 @@ class Form extends ViewableData implements HasRequestHandler
             $name = $field->getName();
 
             // Skip fields that have been excluded
-            if ($fieldList && !in_array($name, $fieldList)) {
+            if ($fieldList && !in_array($name, $fieldList ?? [])) {
                 continue;
             }
 
@@ -1394,7 +1394,7 @@ class Form extends ViewableData implements HasRequestHandler
 
             if (is_object($data)) {
                 // Allow dot-syntax traversal of has-one relations fields
-                if (strpos($name, '.') !== false) {
+                if (strpos($name ?? '', '.') !== false) {
                     $exists = (
                         $data->hasMethod('relField')
                     );
@@ -1419,21 +1419,21 @@ class Form extends ViewableData implements HasRequestHandler
 
             // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
-                if (array_key_exists($name, $data)) {
+                if (array_key_exists($name, $data ?? [])) {
                     $exists = true;
                     $val = $data[$name];
                 // PHP turns the '.'s in POST vars into '_'s
-                } elseif (array_key_exists($altName = str_replace('.', '_', $name), $data)) {
+                } elseif (array_key_exists($altName = str_replace('.', '_', $name ?? ''), $data ?? [])) {
                     $exists = true;
                     $val = $data[$altName];
-                } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
+                } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name ?? '', $matches)) {
                     // If field is in array-notation we need to access nested data
                     //discard first match which is just the whole string
                     array_shift($matches);
                     $keys = array_pop($matches);
                     $name = array_shift($matches);
                     $name = array_shift($name);
-                    if (array_key_exists($name, $data)) {
+                    if (array_key_exists($name, $data ?? [])) {
                         $tmpData = &$data[$name];
                         // drill down into the data array looking for the corresponding value
                         foreach ($keys as $arrayKey) {
@@ -1491,7 +1491,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($dataFields) {
             foreach ($dataFields as $field) {
             // Skip fields that have been excluded
-                if ($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) {
+                if ($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList ?? [])) {
                     continue;
                 }
 
@@ -1707,7 +1707,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function extraClass()
     {
-        return implode(' ', array_unique($this->extraClasses));
+        return implode(' ', array_unique($this->extraClasses ?? []));
     }
 
     /**
@@ -1720,7 +1720,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function hasExtraClass($class)
     {
         //split at white space
-        $classes = preg_split('/\s+/', $class);
+        $classes = preg_split('/\s+/', $class ?? '');
         foreach ($classes as $class) {
             if (!isset($this->extraClasses[$class])) {
                 return false;
@@ -1740,7 +1740,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function addExtraClass($class)
     {
         //split at white space
-        $classes = preg_split('/\s+/', $class);
+        $classes = preg_split('/\s+/', $class ?? '');
         foreach ($classes as $class) {
             //add classes one by one
             $this->extraClasses[$class] = $class;
@@ -1758,7 +1758,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function removeExtraClass($class)
     {
         //split at white space
-        $classes = preg_split('/\s+/', $class);
+        $classes = preg_split('/\s+/', $class ?? '');
         foreach ($classes as $class) {
             //unset one by one
             unset($this->extraClasses[$class]);

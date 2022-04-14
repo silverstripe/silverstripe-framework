@@ -233,7 +233,7 @@ class InjectorTest extends SapphireTest
         $injector->updateSpec(AnotherService::class, 'filters', 'Three');
         $another = $injector->get(AnotherService::class);
 
-        $this->assertEquals(3, count($another->filters));
+        $this->assertEquals(3, count($another->filters ?? []));
         $this->assertEquals('Three', $another->filters[2]);
     }
 

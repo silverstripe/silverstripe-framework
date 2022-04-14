@@ -154,7 +154,7 @@ class SSViewer_Scope
     {
         // Restore previous un-completed lookup chain if set
         $previousLocalState = $this->localStack ? array_pop($this->localStack) : null;
-        array_splice($this->itemStack, $this->localIndex + 1, count($this->itemStack), $previousLocalState);
+        array_splice($this->itemStack, $this->localIndex + 1, count($this->itemStack ?? []), $previousLocalState);
 
         list(
             $this->item,
@@ -252,7 +252,7 @@ class SSViewer_Scope
      */
     public function pushScope()
     {
-        $newLocalIndex = count($this->itemStack) - 1;
+        $newLocalIndex = count($this->itemStack ?? []) - 1;
 
         $this->popIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::POP_INDEX] = $this->localIndex;
         $this->localIndex = $newLocalIndex;

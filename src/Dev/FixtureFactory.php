@@ -174,9 +174,9 @@ class FixtureFactory
         }
 
         // If the class doesn't exist, look for a table instead
-        if (!class_exists($class)) {
+        if (!class_exists($class ?? '')) {
             $tableNames = DataObject::getSchema()->getTableNames();
-            $potential = array_search($class, $tableNames);
+            $potential = array_search($class, $tableNames ?? []);
             if (!$potential) {
                 throw new \LogicException("'$class' is neither a class nor a table name");
             }
@@ -206,11 +206,11 @@ class FixtureFactory
      */
     public function clear($limitToClass = null, $metadata = false)
     {
-        $classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures);
+        $classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures ?? []);
         foreach ($classes as $class) {
             $ids = $this->fixtures[$class];
             foreach ($ids as $id => $dbId) {
-                if (class_exists($class)) {
+                if (class_exists($class ?? '')) {
                     $instance = DataObject::get($class)->byId($dbId);
                     if ($instance) {
                         $instance->delete();
@@ -256,10 +256,10 @@ class FixtureFactory
      */
     protected function parseValue($value)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
-            if (strpos($value, '.') !== false) {
-                list($class, $identifier) = explode('.', substr($value, 2), 2);
+            if (strpos($value ?? '', '.') !== false) {
+                list($class, $identifier) = explode('.', substr($value ?? '', 2), 2);
             } else {
                 throw new \LogicException("Bad fixture lookup identifier: " . $value);
             }

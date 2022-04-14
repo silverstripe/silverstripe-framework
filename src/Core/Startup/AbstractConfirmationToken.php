@@ -61,7 +61,7 @@ abstract class AbstractConfirmationToken
      */
     protected function pathForToken($token)
     {
-        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_' . preg_replace('/[^a-z0-9]+/', '', $token);
+        return TEMP_PATH . DIRECTORY_SEPARATOR . 'token_' . preg_replace('/[^a-z0-9]+/', '', $token ?? '');
     }
 
     /**
@@ -76,7 +76,7 @@ abstract class AbstractConfirmationToken
         $token = $rg->randomToken('md5');
 
         // Store a file in the session save path (safer than /tmp, as open_basedir might limit that)
-        file_put_contents($this->pathForToken($token), $token);
+        file_put_contents($this->pathForToken($token) ?? '', $token);
 
         return $token;
     }
@@ -107,9 +107,9 @@ abstract class AbstractConfirmationToken
         $file = $this->pathForToken($token);
         $content = null;
 
-        if (file_exists($file)) {
-            $content = file_get_contents($file);
-            unlink($file);
+        if (file_exists($file ?? '')) {
+            $content = file_get_contents($file ?? '');
+            unlink($file ?? '');
         }
 
         return $content === $token;

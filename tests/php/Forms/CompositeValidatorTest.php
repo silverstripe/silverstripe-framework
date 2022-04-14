@@ -158,7 +158,7 @@ class CompositeValidatorTest extends SapphireTest
             'FooBar' => '',
         ];
         // We only care right now about the fields we've got setup in this array
-        $form = $this->getForm(array_keys($data));
+        $form = $this->getForm(array_keys($data ?? []));
         $form->disableSecurityToken();
         // Setup validator now that we've got our form
         $form->setValidator($compositeValidator);
@@ -180,7 +180,7 @@ class CompositeValidatorTest extends SapphireTest
             'Foo' => '',
         ];
         // We only care right now about the fields we've got setup in this array
-        $form = $this->getForm(array_keys($data));
+        $form = $this->getForm(array_keys($data ?? []));
         $form->disableSecurityToken();
         // Setup validator now that we've got our form
         $form->setValidator($compositeValidator);

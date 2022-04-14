@@ -72,7 +72,7 @@ class GroupTest extends FunctionalTest
 
         $this->assertEquals(
             2,
-            count($updatedGroups->column()),
+            count($updatedGroups->column() ?? []),
             "Adding a toplevel group works"
         );
         $this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
@@ -92,7 +92,7 @@ class GroupTest extends FunctionalTest
         $updatedGroups = $member->Groups();
         $this->assertEquals(
             1,
-            count($updatedGroups->column()),
+            count($updatedGroups->column() ?? []),
             "Removing a previously added toplevel group works"
         );
         $this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
@@ -106,14 +106,14 @@ class GroupTest extends FunctionalTest
 
         // Can save user to unsaved group
         $group->Members()->add($member);
-        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
 
         // Persists after writing to DB
         $group->write();
 
         /** @var Group $group */
         $group = Group::get()->byID($group->ID);
-        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
     }
 
     public function testCollateAncestorIDs()
@@ -129,14 +129,14 @@ class GroupTest extends FunctionalTest
 
         $this->assertEquals(
             1,
-            count($parentGroup->collateAncestorIDs()),
+            count($parentGroup->collateAncestorIDs() ?? []),
             'Root node only contains itself'
         );
         $this->assertContains($parentGroup->ID, $parentGroup->collateAncestorIDs());
 
         $this->assertEquals(
             2,
-            count($childGroup->collateAncestorIDs()),
+            count($childGroup->collateAncestorIDs() ?? []),
             'Contains parent nodes, with child node first'
         );
         $this->assertContains($parentGroup->ID, $childGroup->collateAncestorIDs());
@@ -144,7 +144,7 @@ class GroupTest extends FunctionalTest
 
         $this->assertEquals(
             1,
-            count($orphanGroup->collateAncestorIDs()),
+            count($orphanGroup->collateAncestorIDs() ?? []),
             'Orphaned nodes dont contain invalid parent IDs'
         );
         $this->assertContains($orphanGroup->ID, $orphanGroup->collateAncestorIDs());
@@ -158,8 +158,8 @@ class GroupTest extends FunctionalTest
         /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'parentgroup');
         $groupIds = $this->allFixtureIDs(Group::class);
-        $ids = array_intersect_key($groupIds, array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
-        $this->assertEquals(array_values($ids), $group->collateFamilyIDs());
+        $ids = array_intersect_key($groupIds ?? [], array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
+        $this->assertEquals(array_values($ids ?? []), $group->collateFamilyIDs());
     }
 
     /**
@@ -293,7 +293,7 @@ class GroupTest extends FunctionalTest
         $validators = $newGroup->getCMSCompositeValidator()->getValidators();
         $this->assertCount(1, $validators);
         $this->assertInstanceOf(RequiredFields::class, $validators[0]);
-        $this->assertTrue(in_array('Title', $validators[0]->getRequired()));
+        $this->assertTrue(in_array('Title', $validators[0]->getRequired() ?? []));
 
         $newGroup->Title = $group1->Title;
         $result = $newGroup->validate();

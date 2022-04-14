@@ -102,7 +102,7 @@ class ClassLoader
      */
     public function getItemPath($class)
     {
-        foreach (array_reverse($this->manifests) as $manifest) {
+        foreach (array_reverse($this->manifests ?? []) as $manifest) {
             /** @var ClassManifest $manifestInst */
             $manifestInst = $manifest['instance'];
             if ($path = $manifestInst->getItemPath($class)) {

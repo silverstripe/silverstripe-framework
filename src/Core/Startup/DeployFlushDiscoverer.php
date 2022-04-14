@@ -88,11 +88,11 @@ class DeployFlushDiscoverer implements FlushDiscoverer
      */
     protected function getDeployTimestamp($resource)
     {
-        if (!file_exists($resource)) {
+        if (!file_exists($resource ?? '')) {
             return 0;
         }
 
-        return max(filemtime($resource), filectime($resource));
+        return max(filemtime($resource ?? ''), filectime($resource ?? ''));
     }
 
     /**

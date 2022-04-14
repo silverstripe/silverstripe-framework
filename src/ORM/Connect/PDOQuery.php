@@ -34,7 +34,7 @@ class PDOQuery extends Query
 
     public function numRecords()
     {
-        return count($this->results);
+        return count($this->results ?? []);
     }
 
     public function nextRecord()

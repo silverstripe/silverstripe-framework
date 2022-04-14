@@ -49,7 +49,7 @@ class Member_GroupSet extends ManyManyList
         while ($groupIDs) {
             $allGroupIDs = array_merge($allGroupIDs, $groupIDs);
             $groupIDs = DataObject::get(Group::class)->byIDs($groupIDs)->column("ParentID");
-            $groupIDs = array_filter($groupIDs);
+            $groupIDs = array_filter($groupIDs ?? []);
         }
 
         // Add a filter to this DataList

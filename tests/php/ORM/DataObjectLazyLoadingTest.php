@@ -69,8 +69,8 @@ class DataObjectLazyLoadingTest extends SapphireTest
             preg_match(
                 $this->normaliseSQL(
                     '/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/'
-                ),
-                $this->normaliseSQL($playerList->sql($parameters))
+                ) ?? '',
+                $this->normaliseSQL($playerList->sql($parameters)) ?? ''
             )
         );
     }
@@ -83,8 +83,8 @@ class DataObjectLazyLoadingTest extends SapphireTest
         $this->assertEquals(
             1,
             preg_match(
-                $this->normaliseSQL('/SELECT DISTINCT .* LEFT JOIN .* /'),
-                $this->normaliseSQL($playerList->sql($parameters))
+                $this->normaliseSQL('/SELECT DISTINCT .* LEFT JOIN .* /') ?? '',
+                $this->normaliseSQL($playerList->sql($parameters)) ?? ''
             )
         );
     }

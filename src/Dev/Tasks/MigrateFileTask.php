@@ -76,7 +76,7 @@ class MigrateFileTask extends BuildTask
         $subtasks = !empty($args['only']) ? explode(',', $args['only']) : $this->defaultSubtasks;
 
         $subtask = 'move-files';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(FileMigrationHelper::class)) {
                 $this->logger->error("No file migration helper detected");
             } else {
@@ -95,7 +95,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'migrate-folders';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(FolderMigrationHelper::class)) {
                 $this->logger->error("No folder migration helper detected");
             } else {
@@ -114,7 +114,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'move-thumbnails';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(LegacyThumbnailMigrationHelper::class)) {
                 $this->logger->error("LegacyThumbnailMigrationHelper not found");
             } else {
@@ -129,7 +129,7 @@ class MigrateFileTask extends BuildTask
                     ->run($this->getStore());
 
                 if ($paths) {
-                    $this->logger->info(sprintf("%d thumbnails moved", count($paths)));
+                    $this->logger->info(sprintf("%d thumbnails moved", count($paths ?? [])));
                 } else {
                     $this->logger->info("No thumbnails needed to be moved");
                 }
@@ -139,7 +139,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'generate-cms-thumbnails';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(ImageThumbnailHelper::class)) {
                 $this->logger->error("ImageThumbnailHelper not found");
             } else {
@@ -164,7 +164,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'fix-folder-permissions';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(FixFolderPermissionsHelper::class)) {
                 $this->logger->error("FixFolderPermissionsHelper not found");
             } else {
@@ -190,7 +190,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'fix-secureassets';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(SecureAssetsMigrationHelper::class)) {
                 $this->logger->error("SecureAssetsMigrationHelper not found");
             } else {
@@ -205,8 +205,8 @@ class MigrateFileTask extends BuildTask
                     ->setLogger($this->logger)
                     ->run($this->getStore());
 
-                if (count($paths) > 0) {
-                    $this->logger->info(sprintf("Repaired %d folders broken folder restrictions", count($paths)));
+                if (count($paths ?? []) > 0) {
+                    $this->logger->info(sprintf("Repaired %d folders broken folder restrictions", count($paths ?? [])));
                 } else {
                     $this->logger->info("No folders required fixes");
                 }
@@ -216,7 +216,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'normalise-access';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(NormaliseAccessMigrationHelper::class)) {
                 $this->logger->error("No normalise access migration helper detected");
             } else {
@@ -235,7 +235,7 @@ class MigrateFileTask extends BuildTask
         }
 
         $subtask = 'relocate-userform-uploads-2020-9280';
-        if (in_array($subtask, $subtasks)) {
+        if (in_array($subtask, $subtasks ?? [])) {
             if (!class_exists(RecoverUploadLocationsHelper::class)) {
                 $this->logger->error("No UserForms helper detected");
             } else {
@@ -294,10 +294,10 @@ TXT;
     protected function validateArgs($args)
     {
         if (!empty($args['only'])) {
-            $only = explode(',', $args['only']);
+            $only = explode(',', $args['only'] ?? '');
 
-            $diff = array_diff($only, $this->defaultSubtasks);
-            $diff = array_diff($diff, $this->optInSubtasks);
+            $diff = array_diff($only ?? [], $this->defaultSubtasks);
+            $diff = array_diff($diff ?? [], $this->optInSubtasks);
 
             if ($diff) {
                 throw new \InvalidArgumentException('Invalid subtasks detected: ' . implode(', ', $diff));

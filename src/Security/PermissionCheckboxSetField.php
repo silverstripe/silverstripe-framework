@@ -196,10 +196,10 @@ class PermissionCheckboxSetField extends FormField
             foreach ($this->source as $categoryName => $permissions) {
                 $options .= "<li><h5>$categoryName</h5></li>";
                 foreach ($permissions as $code => $permission) {
-                    if (in_array($code, $this->hiddenPermissions)) {
+                    if (in_array($code, $this->hiddenPermissions ?? [])) {
                         continue;
                     }
-                    if (in_array($code, $globalHidden)) {
+                    if (in_array($code, $globalHidden ?? [])) {
                         continue;
                     }
 
@@ -207,8 +207,8 @@ class PermissionCheckboxSetField extends FormField
 
                     $odd = ($odd + 1) % 2;
                     $extraClass = $odd ? 'odd' : 'even';
-                    $extraClass .= ' val' . str_replace(' ', '', $code);
-                    $itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
+                    $extraClass .= ' val' . str_replace(' ', '', $code ?? '');
+                    $itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code ?? '');
                     $disabled = $inheritMessage = '';
                     $checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code]))
                         ? ' checked="checked"'
@@ -229,7 +229,7 @@ class PermissionCheckboxSetField extends FormField
                     }
 
                     // Disallow modification of "privileged" permissions unless currently logged-in user is an admin
-                    if (!Permission::check('ADMIN') && in_array($code, $privilegedPermissions)) {
+                    if (!Permission::check('ADMIN') && in_array($code, $privilegedPermissions ?? [])) {
                         $disabled = ' disabled="true"';
                     }
 
@@ -303,7 +303,7 @@ class PermissionCheckboxSetField extends FormField
             && !Permission::check('ADMIN')
         ) {
             foreach ($this->value as $id => $bool) {
-                if (in_array($id, $privilegedPermissions)) {
+                if (in_array($id, $privilegedPermissions ?? [])) {
                     unset($this->value[$id]);
                 }
             }

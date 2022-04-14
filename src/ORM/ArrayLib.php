@@ -71,7 +71,7 @@ class ArrayLib
      */
     public static function valuekey($arr)
     {
-        return array_combine($arr, $arr);
+        return array_combine($arr ?? [], $arr ?? []);
     }
 
     /**
@@ -97,7 +97,7 @@ class ArrayLib
     public static function filter_keys($arr, $keys)
     {
         foreach ($arr as $key => $v) {
-            if (!in_array($key, $keys)) {
+            if (!in_array($key, $keys ?? [])) {
                 unset($arr[$key]);
             }
         }
@@ -119,7 +119,7 @@ class ArrayLib
     {
         $isAssociative = !empty($array)
             && is_array($array)
-            && ($array !== array_values($array));
+            && ($array !== array_values($array ?? []));
 
         return $isAssociative;
     }
@@ -142,7 +142,7 @@ class ArrayLib
             return false;
         }
 
-        if (in_array($needle, $haystack, $strict)) {
+        if (in_array($needle, $haystack ?? [], $strict ?? false)) {
             return true;
         } else {
             foreach ($haystack as $obj) {
@@ -170,7 +170,7 @@ class ArrayLib
             return is_array($v) ? ArrayLib::array_map_recursive($f, $v) : call_user_func($f, $v);
         };
 
-        return array_map($applyOrRecurse, $array);
+        return array_map($applyOrRecurse, $array ?? []);
     }
 
     /**
@@ -190,7 +190,7 @@ class ArrayLib
         $arrays = func_get_args();
         $merged = [];
 
-        if (count($arrays) == 1) {
+        if (count($arrays ?? []) == 1) {
             return $array;
         }
 
@@ -210,7 +210,7 @@ class ArrayLib
             }
 
             foreach ($array as $key => $value) {
-                if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
+                if (is_array($value) && array_key_exists($key, $merged ?? []) && is_array($merged[$key])) {
                     $merged[$key] = ArrayLib::array_merge_recursive($merged[$key], $value);
                 } else {
                     $merged[$key] = $value;
@@ -262,11 +262,11 @@ class ArrayLib
         // Keyed by already-iterated items
         $iterated = [];
         // Get all items not yet iterated
-        while ($items = array_diff_key($list, $iterated)) {
+        while ($items = array_diff_key($list ?? [], $iterated)) {
             // Yield all results
             foreach ($items as $key => $value) {
                 // Skip items removed by a prior step
-                if (array_key_exists($key, $list)) {
+                if (array_key_exists($key, $list ?? [])) {
                     // Ensure we yield from the source list
                     $iterated[$key] = true;
                     yield $key => $list[$key];

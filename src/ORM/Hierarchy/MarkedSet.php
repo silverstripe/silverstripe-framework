@@ -462,7 +462,7 @@ class MarkedSet
         // foreach can't handle an ever-growing $nodes list
         foreach (ArrayLib::iterateVolatile($this->markedNodes) as $node) {
             $children = $this->markChildren($node);
-            if ($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
+            if ($nodeCountThreshold && sizeof($this->markedNodes ?? []) > $nodeCountThreshold) {
                 // Undo marking children as opened since they're lazy loaded
                 /** @var DataObject|Hierarchy $child */
                 foreach ($children as $child) {
@@ -529,7 +529,7 @@ class MarkedSet
             $value = $this->markingFilter['value'];
 
             if (is_array($value)) {
-                return in_array($node->$parameterName, $value);
+                return in_array($node->$parameterName, $value ?? []);
             } else {
                 return $node->$parameterName == $value;
             }
@@ -654,7 +654,7 @@ class MarkedSet
      */
     public function markedNodeIDs()
     {
-        return array_keys($this->markedNodes);
+        return array_keys($this->markedNodes ?? []);
     }
 
     /**

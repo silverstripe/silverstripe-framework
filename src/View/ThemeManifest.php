@@ -167,7 +167,7 @@ class ThemeManifest implements ThemeList
         if ($basename !== self::TEMPLATES_DIR) {
             return;
         }
-        $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
+        $dir = trim(substr(dirname($pathname ?? ''), strlen($this->base ?? '')), '/\\');
         $this->themes[] = "/" . $dir;
     }
 

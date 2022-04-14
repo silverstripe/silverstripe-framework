@@ -595,7 +595,7 @@ class GridFieldTest extends SapphireTest
 
         $members = $content->getBySelector('.ss-gridfield-item tr');
 
-        $this->assertEquals(2, count($members));
+        $this->assertEquals(2, count($members ?? []));
 
         $this->assertEquals(
             (string)$members[0]->td[0],

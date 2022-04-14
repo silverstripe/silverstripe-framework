@@ -62,7 +62,7 @@ class UrlPathStartswith implements Rule, Bypass
     protected function checkPath($path)
     {
         $targetPath = $this->getPath();
-        return strncmp($this->normalisePath($path), $targetPath, strlen($targetPath)) === 0;
+        return strncmp($this->normalisePath($path) ?? '', $targetPath ?? '', strlen($targetPath ?? '')) === 0;
     }
 
     public function checkRequestForBypass(HTTPRequest $request)

@@ -46,6 +46,6 @@ class RandomGenerator
      */
     public function randomToken($algorithm = 'whirlpool')
     {
-        return hash($algorithm, random_bytes(64));
+        return hash($algorithm ?? '', random_bytes(64));
     }
 }

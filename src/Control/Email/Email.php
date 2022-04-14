@@ -296,7 +296,7 @@ class Email extends ViewableData
         // admin_email can have a string or an array config
         // https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
         $adminEmail = $this->config()->get('admin_email');
-        if (is_array($adminEmail) && count($adminEmail) > 0) {
+        if (is_array($adminEmail) && count($adminEmail ?? []) > 0) {
             $defaultFrom = array_keys($adminEmail)[0];
         } else {
             if (is_string($adminEmail)) {
@@ -331,9 +331,9 @@ class Email extends ViewableData
     private function sanitiseAddress($address)
     {
         if (is_array($address)) {
-            return array_map('trim', $address);
+            return array_map('trim', $address ?? []);
         }
-        return trim($address);
+        return trim($address ?? '');
     }
 
     /**
@@ -759,8 +759,8 @@ class Email extends ViewableData
      */
     public function setHTMLTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
-            $template = substr($template, 0, -3);
+        if (substr($template ?? '', -3) == '.ss') {
+            $template = substr($template ?? '', 0, -3);
         }
         $this->HTMLTemplate = $template;
 
@@ -785,8 +785,8 @@ class Email extends ViewableData
      */
     public function setPlainTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
-            $template = substr($template, 0, -3);
+        if (substr($template ?? '', -3) == '.ss') {
+            $template = substr($template ?? '', 0, -3);
         }
         $this->plainTemplate = $template;
 

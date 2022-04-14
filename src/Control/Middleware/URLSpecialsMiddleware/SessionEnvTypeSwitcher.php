@@ -23,7 +23,7 @@ trait SessionEnvTypeSwitcher
     {
         $session = $request->getSession();
 
-        if (array_key_exists('isTest', $request->getVars())) {
+        if (array_key_exists('isTest', $request->getVars() ?? [])) {
             if (!is_null($isTest = $request->getVar('isTest'))) {
                 if ($isTest === $session->get('isTest')) {
                     return false;
@@ -34,7 +34,7 @@ trait SessionEnvTypeSwitcher
             $session->set('isTest', $isTest);
 
             return true;
-        } elseif (array_key_exists('isDev', $request->getVars())) {
+        } elseif (array_key_exists('isDev', $request->getVars() ?? [])) {
             if (!is_null($isDev = $request->getVar('isDev'))) {
                 if ($isDev === $session->get('isDev')) {
                     return false;

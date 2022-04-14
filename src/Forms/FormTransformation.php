@@ -44,16 +44,16 @@ class FormTransformation
             function ($name) {
                 return ClassInfo::shortName($name);
             },
-            array_values(ClassInfo::ancestry($this))
+            array_values(ClassInfo::ancestry($this) ?? [])
         ));
         $fieldClasses = array_reverse(array_map(
             function ($name) {
                 return ClassInfo::shortName($name);
             },
-            array_values(ClassInfo::ancestry($field))
+            array_values(ClassInfo::ancestry($field) ?? [])
         ));
 
-        $len = max(sizeof($transNames), sizeof($fieldClasses));
+        $len = max(sizeof($transNames ?? []), sizeof($fieldClasses ?? []));
         for ($i=0; $i<$len; $i++) {
             // This is lets fieldClasses be longer than transNames
             if (!empty($transNames[$i])) {

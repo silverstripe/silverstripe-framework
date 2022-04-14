@@ -39,7 +39,7 @@ class YamlFixtureTest extends SapphireTest
     public function testStringFixture()
     {
         $absPath = __DIR__ . '/YamlFixtureTest.yml';
-        $string = file_get_contents($absPath);
+        $string = file_get_contents($absPath ?? '');
         $obj = Injector::inst()->create(YamlFixture::class, $string);
         $this->assertEquals($string, $obj->getFixtureString());
         $this->assertNull($obj->getFixtureFile());

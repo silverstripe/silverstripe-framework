@@ -77,7 +77,7 @@ class LoginAttempt extends DataObject
     public function setEmail($email)
     {
         // Store hashed email only
-        $this->EmailHashed = sha1($email);
+        $this->EmailHashed = sha1($email ?? '');
         return $this;
     }
 
@@ -90,7 +90,7 @@ class LoginAttempt extends DataObject
     public static function getByEmail($email)
     {
         return static::get()->filterAny([
-            'EmailHashed' => sha1($email),
+            'EmailHashed' => sha1($email ?? ''),
         ]);
     }
 }

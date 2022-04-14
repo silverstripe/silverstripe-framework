@@ -82,10 +82,10 @@ class CheckboxSetField extends MultiSelectField
             $itemID = Convert::raw2htmlid("{$formID}_{$itemValue}");
             $odd = !$odd;
             $extraClass = $odd ? 'odd' : 'even';
-            $extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
+            $extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue ?? '');
 
-            $itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
-            $itemDisabled = $this->isDisabled() || in_array($itemValue, $disabledItems);
+            $itemChecked = in_array($itemValue, $selectedValues ?? []) || in_array($itemValue, $defaultItems ?? []);
+            $itemDisabled = $this->isDisabled() || in_array($itemValue, $disabledItems ?? []);
 
             $options->push(new ArrayData([
                 'ID' => $itemID,

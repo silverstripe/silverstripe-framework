@@ -105,7 +105,7 @@ class DBVarchar extends DBString
     public function URL()
     {
         $value = $this->RAW();
-        if (preg_match('#^[a-zA-Z]+://#', $value)) {
+        if (preg_match('#^[a-zA-Z]+://#', $value ?? '')) {
             return $value;
         }
         return 'http://' . $value;
@@ -117,7 +117,7 @@ class DBVarchar extends DBString
      */
     public function RTF()
     {
-        return str_replace("\n", '\par ', $this->RAW());
+        return str_replace("\n", '\par ', $this->RAW() ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)

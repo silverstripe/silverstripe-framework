@@ -171,7 +171,7 @@ class DBQueryBuilder
         foreach ($select as $alias => $field) {
             // Don't include redundant aliases.
             $fieldAlias = "\"{$alias}\"";
-            if ($alias === $field || substr($field, -strlen($fieldAlias)) === $fieldAlias) {
+            if ($alias === $field || substr($field ?? '', -strlen($fieldAlias ?? '')) === $fieldAlias) {
                 $clauses[] = $field;
             } else {
                 $clauses[] = "$field AS $fieldAlias";

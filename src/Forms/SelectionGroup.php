@@ -54,8 +54,8 @@ class SelectionGroup extends CompositeField
                 $selectionItems[] = $item;
             } else {
                 // Convert legacy format
-                if (strpos($key, '//') !== false) {
-                    list($key,$title) = explode('//', $key, 2);
+                if (strpos($key ?? '', '//') !== false) {
+                    list($key,$title) = explode('//', $key ?? '', 2);
                 } else {
                     $title = null;
                 }

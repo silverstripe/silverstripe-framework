@@ -47,10 +47,10 @@ class HttpMethodBypass implements Bypass
     {
         // uppercase and exclude empties
         $methods = array_reduce(
-            $methods,
+            $methods ?? [],
             function ($result, $method) {
-                $method = strtoupper(trim($method));
-                if (strlen($method)) {
+                $method = strtoupper(trim($method ?? ''));
+                if (strlen($method ?? '')) {
                     $result[] = $method;
                 }
                 return $result;
@@ -59,7 +59,7 @@ class HttpMethodBypass implements Bypass
         );
 
         foreach ($methods as $method) {
-            if (!in_array($method, $this->methods, true)) {
+            if (!in_array($method, $this->methods ?? [], true)) {
                 $this->methods[] = $method;
             }
         }
@@ -76,6 +76,6 @@ class HttpMethodBypass implements Bypass
      */
     public function checkRequestForBypass(HTTPRequest $request)
     {
-        return in_array($request->httpMethod(), $this->methods, true);
+        return in_array($request->httpMethod(), $this->methods ?? [], true);
     }
 }

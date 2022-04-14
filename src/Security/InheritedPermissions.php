@@ -248,13 +248,13 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         $useCached = true
     ) {
         // Validate ids
-        $ids = array_filter($ids, 'is_numeric');
+        $ids = array_filter($ids ?? [], 'is_numeric');
         if (empty($ids)) {
             return [];
         }
 
         // Default result: nothing editable
-        $result = array_fill_keys($ids, false);
+        $result = array_fill_keys($ids ?? [], false);
 
         // Validate member permission
         // Only VIEW allows anonymous (Anyone) permissions
@@ -267,10 +267,10 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         $cacheKey = $this->generateCacheKey($type, $memberID);
         $cachePermissions = $this->getCachePermissions($cacheKey);
         if ($useCached && $cachePermissions) {
-            $cachedValues = array_intersect_key($cachePermissions, $result);
+            $cachedValues = array_intersect_key($cachePermissions ?? [], $result);
 
             // If we can't find everything in the cache, then look up the remainder separately
-            $uncachedIDs = array_keys(array_diff_key($result, $cachePermissions));
+            $uncachedIDs = array_keys(array_diff_key($result ?? [], $cachePermissions));
             if ($uncachedIDs) {
                 $uncachedValues = $this->batchPermissionCheck($type, $uncachedIDs, $member, $globalPermission, false);
                 return $cachedValues + $uncachedValues;
@@ -299,7 +299,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                     ->byIDs($ids);
                 // Exclude previously calculated records from later stage calculations
                 if ($combinedStageResult) {
-                    $stageRecords = $stageRecords->exclude('ID', array_keys($combinedStageResult));
+                    $stageRecords = $stageRecords->exclude('ID', array_keys($combinedStageResult ?? []));
                 }
                 $stageResult = $this->batchPermissionCheckForStage(
                     $type,
@@ -350,7 +350,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         Member $member = null
     ) {
         // Initialise all IDs to false
-        $result = array_fill_keys($stageRecords->column('ID'), false);
+        $result = array_fill_keys($stageRecords->column('ID') ?? [], false);
 
         // Get the uninherited permissions
         $typeField = $this->getPermissionField($type);
@@ -385,7 +385,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
 
         if ($uninheritedPermissions) {
             // Set all the relevant items in $result to true
-            $result = array_fill_keys($uninheritedPermissions, true) + $result;
+            $result = array_fill_keys($uninheritedPermissions ?? [], true) + $result;
         }
 
         // This looks for any of our subjects who has their permission set to "inherited" in the CMS.
@@ -419,15 +419,15 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         if (!empty($groupedByParent)) {
             $actuallyInherited = $this->batchPermissionCheck(
                 $type,
-                array_keys($groupedByParent),
+                array_keys($groupedByParent ?? []),
                 $member,
                 $globalPermission
             );
             if ($actuallyInherited) {
-                $parentIDs = array_keys(array_filter($actuallyInherited));
+                $parentIDs = array_keys(array_filter($actuallyInherited ?? []));
                 foreach ($parentIDs as $parentID) {
                     // Set all the relevant items in $result to true
-                    $result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+                    $result = array_fill_keys($groupedByParent[$parentID] ?? [], true) + $result;
                 }
             }
         }
@@ -471,11 +471,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     public function canDeleteMultiple($ids, Member $member = null, $useCached = true)
     {
         // Validate ids
-        $ids = array_filter($ids, 'is_numeric');
+        $ids = array_filter($ids ?? [], 'is_numeric');
         if (empty($ids)) {
             return [];
         }
-        $result = array_fill_keys($ids, false);
+        $result = array_fill_keys($ids ?? [], false);
 
         // Validate member permission
         if (!$member || !$member->ID) {
@@ -487,10 +487,10 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         $cacheKey = "delete-{$member->ID}";
         $cachePermissions = $this->getCachePermissions($cacheKey);
         if ($useCached && $cachePermissions) {
-            $cachedValues = array_intersect_key($cachePermissions[$cacheKey], $result);
+            $cachedValues = array_intersect_key($cachePermissions[$cacheKey] ?? [], $result);
 
             // If we can't find everything in the cache, then look up the remainder separately
-            $uncachedIDs = array_keys(array_diff_key($result, $cachePermissions[$cacheKey]));
+            $uncachedIDs = array_keys(array_diff_key($result ?? [], $cachePermissions[$cacheKey]));
             if ($uncachedIDs) {
                 $uncachedValues = $this->canDeleteMultiple($uncachedIDs, $member, false);
                 return $cachedValues + $uncachedValues;
@@ -499,7 +499,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         }
 
         // You can only delete pages that you can edit
-        $editableIDs = array_keys(array_filter($this->canEditMultiple($ids, $member)));
+        $editableIDs = array_keys(array_filter($this->canEditMultiple($ids, $member) ?? []));
         if ($editableIDs) {
             // You can only delete pages whose children you can delete
             $childRecords = DataObject::get($this->baseClass)
@@ -512,7 +512,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 $deletableChildren = $this->canDeleteMultiple($childIDs, $member);
 
                 // Get a list of all the parents that have no undeletable children
-                $deletableParents = array_fill_keys($editableIDs, true);
+                $deletableParents = array_fill_keys($editableIDs ?? [], true);
                 foreach ($deletableChildren as $id => $canDelete) {
                     if (!$canDelete) {
                         unset($deletableParents[$children[$id]]);
@@ -520,11 +520,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 }
 
                 // Use that to filter the list of deletable parents that have children
-                $deletableParents = array_keys($deletableParents);
+                $deletableParents = array_keys($deletableParents ?? []);
 
                 // Also get the $ids that don't have children
-                $parents = array_unique($children->values());
-                $deletableLeafNodes = array_diff($editableIDs, $parents);
+                $parents = array_unique($children->values() ?? []);
+                $deletableLeafNodes = array_diff($editableIDs ?? [], $parents);
 
                 // Combine the two
                 $deletable = array_merge($deletableParents, $deletableLeafNodes);
@@ -534,7 +534,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         }
 
         // Convert the array of deletable IDs into a map of the original IDs with true/false as the value
-        return array_fill_keys($deletable, true) + array_fill_keys($ids, false);
+        return array_fill_keys($deletable ?? [], true) + array_fill_keys($ids ?? [], false);
     }
 
     /**
@@ -752,7 +752,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      */
     protected function generateCacheKey($type, $memberID)
     {
-        $classKey = str_replace('\\', '-', $this->baseClass);
+        $classKey = str_replace('\\', '-', $this->baseClass ?? '');
         return "{$type}-{$classKey}-{$memberID}";
     }
 }

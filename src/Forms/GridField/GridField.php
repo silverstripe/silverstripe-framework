@@ -263,7 +263,7 @@ class GridField extends FormField
         $allowedComponents = $this->getReadonlyComponents();
         foreach ($this->getConfig()->getComponents() as $component) {
             // if a component doesn't exist, remove it from the readonly version.
-            if (!in_array(get_class($component), $allowedComponents)) {
+            if (!in_array(get_class($component), $allowedComponents ?? [])) {
                 $copyConfig->removeComponent($component);
             }
         }
@@ -354,18 +354,18 @@ class GridField extends FormField
             $castingDefinition = array_shift($castingDefinition);
         }
 
-        if (strpos($castingDefinition, '->') === false) {
+        if (strpos($castingDefinition ?? '', '->') === false) {
             $castingFieldType = $castingDefinition;
             $castingField = DBField::create_field($castingFieldType, $value);
 
-            return call_user_func_array([$castingField, 'XML'], $castingParams);
+            return call_user_func_array([$castingField, 'XML'], $castingParams ?? []);
         }
 
-        list($castingFieldType, $castingMethod) = explode('->', $castingDefinition);
+        list($castingFieldType, $castingMethod) = explode('->', $castingDefinition ?? '');
 
         $castingField = DBField::create_field($castingFieldType, $value);
 
-        return call_user_func_array([$castingField, $castingMethod], $castingParams);
+        return call_user_func_array([$castingField, $castingMethod], $castingParams ?? []);
     }
 
     /**
@@ -471,7 +471,7 @@ class GridField extends FormField
 
                 if ($fragments) {
                     foreach ($fragments as $fragmentKey => $fragmentValue) {
-                        $fragmentKey = strtolower($fragmentKey);
+                        $fragmentKey = strtolower($fragmentKey ?? '');
 
                         if (!isset($content[$fragmentKey])) {
                             $content[$fragmentKey] = '';
@@ -484,7 +484,7 @@ class GridField extends FormField
         }
 
         foreach ($content as $contentKey => $contentValue) {
-            $content[$contentKey] = trim($contentValue);
+            $content[$contentKey] = trim($contentValue ?? '');
         }
 
         // Replace custom fragments and check which fragments are defined. Circular dependencies
@@ -501,16 +501,16 @@ class GridField extends FormField
         // TODO: Break the below into separate reducer methods
 
         // Continue looping if any placeholders exist
-        while (array_filter($content, function ($value) {
-            return preg_match(self::FRAGMENT_REGEX, $value);
+        while (array_filter($content ?? [], function ($value) {
+            return preg_match(self::FRAGMENT_REGEX ?? '', $value ?? '');
         })) {
             foreach ($content as $contentKey => $contentValue) {
                 // Skip if this specific content has no placeholders
-                if (!preg_match_all(self::FRAGMENT_REGEX, $contentValue, $matches)) {
+                if (!preg_match_all(self::FRAGMENT_REGEX ?? '', $contentValue ?? '', $matches)) {
                     continue;
                 }
                 foreach ($matches[1] as $match) {
-                    $fragmentName = strtolower($match);
+                    $fragmentName = strtolower($match ?? '');
                     $fragmentDefined[$fragmentName] = true;
 
                     $fragment = '';
@@ -522,7 +522,7 @@ class GridField extends FormField
                     // If the fragment still has a fragment definition in it, when we should defer
                     // this item until later.
 
-                    if (preg_match(self::FRAGMENT_REGEX, $fragment, $matches)) {
+                    if (preg_match(self::FRAGMENT_REGEX ?? '', $fragment ?? '', $matches)) {
                         if (isset($fragmentDeferred[$contentKey]) && $fragmentDeferred[$contentKey] > 5) {
                             throw new LogicException(sprintf(
                                 'GridField HTML fragment "%s" and "%s" appear to have a circular dependency.',
@@ -545,8 +545,8 @@ class GridField extends FormField
                     } else {
                         $content[$contentKey] = preg_replace(
                             sprintf('/\$DefineFragment\(%s\)/i', $fragmentName),
-                            $fragment,
-                            $content[$contentKey]
+                            $fragment ?? '',
+                            $content[$contentKey] ?? ''
                         );
                     }
                 }
@@ -565,7 +565,7 @@ class GridField extends FormField
             }
         }
 
-        $total = count($list);
+        $total = count($list ?? []);
 
         if ($total > 0) {
             $rows = [];
@@ -609,7 +609,7 @@ class GridField extends FormField
             $cell = HTML::createTag(
                 'td',
                 [
-                    'colspan' => count($columns),
+                    'colspan' => count($columns ?? []),
                 ],
                 _t('SilverStripe\\Forms\\GridField\\GridField.NoItemsFound', 'No items found')
             );
@@ -632,7 +632,7 @@ class GridField extends FormField
         $this->addExtraClass('ss-gridfield grid-field field');
 
         $fieldsetAttributes = array_diff_key(
-            $this->getAttributes(),
+            $this->getAttributes() ?? [],
             [
                 'value' => false,
                 'type' => false,
@@ -997,7 +997,7 @@ class GridField extends FormField
             $this->buildColumnDispatch();
         }
 
-        return count($this->columnDispatch);
+        return count($this->columnDispatch ?? []);
     }
 
     /**
@@ -1062,7 +1062,7 @@ class GridField extends FormField
         $store = Injector::inst()->create(StateStore::class . '.' . $this->getName());
 
         foreach ($data as $dataKey => $dataValue) {
-            if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey, $matches)) {
+            if (preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $dataKey ?? '', $matches)) {
                 $stateChange = $store->load($matches[1]);
 
                 $actionName = $stateChange['actionName'];
@@ -1104,13 +1104,13 @@ class GridField extends FormField
      */
     public function handleAlterAction($actionName, $arguments, $data)
     {
-        $actionName = strtolower($actionName);
+        $actionName = strtolower($actionName ?? '');
 
         foreach ($this->getComponents() as $component) {
             if ($component instanceof GridField_ActionProvider) {
                 $actions = array_map('strtolower', (array) $component->getActions($this));
 
-                if (in_array($actionName, $actions)) {
+                if (in_array($actionName, $actions ?? [])) {
                     return $component->handleAction($this, $actionName, $arguments, $data);
                 }
             }

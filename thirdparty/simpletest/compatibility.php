@@ -20,7 +20,7 @@ class SimpleTestCompatibility {
      *    @static
      */
     static function copy($object) {
-        if (version_compare(phpversion(), '5') >= 0) {
+        if (version_compare(phpversion() ?? '', '5') >= 0) {
             eval('$copy = clone $object;');
             return $copy;
         }
@@ -38,7 +38,7 @@ class SimpleTestCompatibility {
      *    @static
      */
     function isIdentical($first, $second) {
-        if (version_compare(phpversion(), '5') >= 0) {
+        if (version_compare(phpversion() ?? '', '5') >= 0) {
             return SimpleTestCompatibility::_isIdenticalType($first, $second);
         }
         if ($first != $second) {
@@ -85,10 +85,10 @@ class SimpleTestCompatibility {
      *    @static
      */
     function _isArrayOfIdenticalTypes($first, $second) {
-        if (array_keys($first) != array_keys($second)) {
+        if (array_keys($first ?? []) != array_keys($second ?? [])) {
             return false;
         }
-        foreach (array_keys($first) as $key) {
+        foreach (array_keys($first ?? []) as $key) {
             $is_identical = SimpleTestCompatibility::_isIdenticalType(
                     $first[$key],
                     $second[$key]);
@@ -108,7 +108,7 @@ class SimpleTestCompatibility {
      *    @static
      */
     function isReference(&$first, &$second) {
-        if (version_compare(phpversion(), '5', '>=') && is_object($first)) {
+        if (version_compare(phpversion() ?? '', '5', '>=') && is_object($first)) {
             return ($first === $second);
         }
         if (is_object($first) && is_object($second)) {
@@ -135,10 +135,10 @@ class SimpleTestCompatibility {
      *    @static
      */
     function isA($object, $class) {
-        if (version_compare(phpversion(), '5') >= 0) {
-            if (! class_exists($class, false)) {
+        if (version_compare(phpversion() ?? '', '5') >= 0) {
+            if (! class_exists($class ?? '', false)) {
                 if (function_exists('interface_exists')) {
-                    if (! interface_exists($class, false))  {
+                    if (! interface_exists($class ?? '', false))  {
                         return false;
                     }
                 }
@@ -147,10 +147,10 @@ class SimpleTestCompatibility {
             return $is_a;
         }
         if (function_exists('is_a')) {
-            return is_a($object, $class);
+            return is_a($object, $class ?? '');
         }
-        return ((strtolower($class) == get_class($object))
-                or (is_subclass_of($object, $class)));
+        return ((strtolower($class ?? '') == get_class($object))
+                or (is_subclass_of($object, $class ?? '')));
     }
     
     /**
@@ -162,9 +162,9 @@ class SimpleTestCompatibility {
      */
     function setTimeout($handle, $timeout) {
         if (function_exists('stream_set_timeout')) {
-            stream_set_timeout($handle, $timeout, 0);
+            stream_set_timeout($handle, $timeout ?? 0, 0);
         } elseif (function_exists('socket_set_timeout')) {
-            socket_set_timeout($handle, $timeout, 0);
+            socket_set_timeout($handle, $timeout ?? 0, 0);
         } elseif (function_exists('set_socket_timeout')) {
             set_socket_timeout($handle, $timeout, 0);
         }

@@ -79,7 +79,7 @@ if (class_exists(Constraint::class)) {
             }
 
             //we have remaining matches?
-            if (count($this->matches) !== 0) {
+            if (count($this->matches ?? []) !== 0) {
                 $success = false;
                 $this->hasLeftoverItems = true;
             }
@@ -129,8 +129,8 @@ if (class_exists(Constraint::class)) {
             $matchesToString = function ($matches) use ($matchToString) {
                 $matchesAsString = implode(' and ', array_map(
                     $matchToString,
-                    array_keys($matches),
-                    array_values($matches)
+                    array_keys($matches ?? []),
+                    array_values($matches ?? [])
                 ));
 
                 return '(' . $matchesAsString . ')';
@@ -138,7 +138,7 @@ if (class_exists(Constraint::class)) {
 
             $allMatchesAsString = implode(
                 "\n or ",
-                array_map($matchesToString, $this->matches)
+                array_map($matchesToString, $this->matches ?? [])
             );
 
 
@@ -222,7 +222,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
         }
 
         //we have remaining matches?
-        if (count($this->matches) !== 0) {
+        if (count($this->matches ?? []) !== 0) {
             $success = false;
             $this->hasLeftoverItems = true;
         }
@@ -272,8 +272,8 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
         $matchesToString = function ($matches) use ($matchToString) {
             $matchesAsString = implode(' and ', array_map(
                 $matchToString,
-                array_keys($matches),
-                array_values($matches)
+                array_keys($matches ?? []),
+                array_values($matches ?? [])
             ));
 
             return '(' . $matchesAsString . ')';
@@ -281,7 +281,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
 
         $allMatchesAsString = implode(
             "\n or ",
-            array_map($matchesToString, $this->matches)
+            array_map($matchesToString, $this->matches ?? [])
         );
 
 

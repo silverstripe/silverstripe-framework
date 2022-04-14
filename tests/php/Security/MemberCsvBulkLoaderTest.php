@@ -28,7 +28,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $loader = new MemberCsvBulkLoader();
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 2);
+        $this->assertEquals(count($created ?? []), 2);
         $this->assertEquals($created[0]->Email, 'author1@test.com');
         $this->assertEquals($created[1]->Email, 'author2@test.com');
     }
@@ -43,9 +43,9 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $loader = new MemberCsvBulkLoader();
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
+        $this->assertEquals(count($created ?? []), 1);
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
+        $this->assertEquals(count($updated ?? []), 1);
         $this->assertEquals($created[0]->Email, 'author2@test.com');
         $this->assertEquals($updated[0]->Email, 'author1@test.com');
         $this->assertEquals($updated[0]->FirstName, 'author1_first');
@@ -61,10 +61,10 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(1, count($created[0]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[0]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[0]->Groups()->column('ID'));
 
-        $this->assertEquals(1, count($created[1]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[1]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[1]->Groups()->column('ID'));
     }
 
@@ -84,10 +84,10 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $this->assertEquals($newgroup->Title, 'newgroup');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(1, count($created[0]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[0]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[0]->Groups()->column('ID'));
 
-        $this->assertEquals(2, count($created[1]->Groups()->column('ID')));
+        $this->assertEquals(2, count($created[1]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[1]->Groups()->column('ID'));
         $this->assertContains($newgroup->ID, $created[1]->Groups()->column('ID'));
     }

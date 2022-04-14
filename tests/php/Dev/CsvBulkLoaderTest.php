@@ -44,7 +44,7 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CsvBulkLoader(Player::class);
         $filepath = $this->csvPath . 'PlayersWithHeader.csv';
-        $file = fopen($filepath, 'r');
+        $file = fopen($filepath ?? '', 'r');
         $compareCount = $this->getLineCount($file);
         fgetcsv($file); // pop header row
         $compareRow = fgetcsv($file);
@@ -118,7 +118,7 @@ class CsvBulkLoaderTest extends SapphireTest
             $this->assertContains($bio, $expectedBios);
         }
 
-        $this->assertEquals(Player::get()->count(), count($expectedBios));
+        $this->assertEquals(Player::get()->count(), count($expectedBios ?? []));
     }
 
     /**
@@ -128,7 +128,7 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CsvBulkLoader(Player::class);
         $filepath = $this->csvPath . 'Players.csv';
-        $file = fopen($filepath, 'r');
+        $file = fopen($filepath ?? '', 'r');
         $compareCount = $this->getLineCount($file);
         $compareRow = fgetcsv($file);
         $loader->columnMap = [
@@ -175,7 +175,7 @@ class CsvBulkLoaderTest extends SapphireTest
     {
         $loader = new CsvBulkLoader(Player::class);
         $filepath = $this->csvPath . 'PlayersWithCustomHeaderAndRelation.csv';
-        $file = fopen($filepath, 'r');
+        $file = fopen($filepath ?? '', 'r');
         $compareCount = $this->getLineCount($file);
         fgetcsv($file); // pop header row
         $compareRow = fgetcsv($file);

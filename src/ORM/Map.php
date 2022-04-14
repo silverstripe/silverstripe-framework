@@ -85,7 +85,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function keys()
     {
-        return array_keys($this->toArray());
+        return array_keys($this->toArray() ?? []);
     }
 
     /**
@@ -95,7 +95,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function values()
     {
-        return array_values($this->toArray());
+        return array_values($this->toArray() ?? []);
     }
 
     /**
@@ -150,6 +150,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -170,6 +171,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -202,6 +204,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (isset($this->firstItems[$key])) {
@@ -226,6 +229,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -253,6 +257,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return Map_Iterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new Map_Iterator(
@@ -270,10 +275,11 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->list->count() +
-            count($this->firstItems) +
-            count($this->lastItems);
+            count($this->firstItems ?? []) +
+            count($this->lastItems ?? []);
     }
 }

@@ -76,7 +76,7 @@ class ModuleManifest
     public function __construct($base, CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
-        $this->cacheKey = sha1($base) . '_modules';
+        $this->cacheKey = sha1($base ?? '') . '_modules';
         $this->cacheFactory = $cacheFactory;
     }
 
@@ -150,7 +150,7 @@ class ModuleManifest
         $modules = $this->getModules();
         // Work in reverse priority, so the higher priority modules get later execution
         /** @var Module $module */
-        foreach (array_reverse($modules) as $module) {
+        foreach (array_reverse($modules ?? []) as $module) {
             $module->activate();
         }
     }
@@ -183,7 +183,7 @@ class ModuleManifest
         $finder->find($this->base);
 
         // Include root itself if module
-        if ($finder->isDirectoryModule(basename($this->base), $this->base, 0)) {
+        if ($finder->isDirectoryModule(basename($this->base ?? ''), $this->base, 0)) {
             $this->addModule($this->base);
         }
 
@@ -206,9 +206,9 @@ class ModuleManifest
         }
 
         // Fall back to lookup by shortname
-        if (!strstr($name, '/')) {
+        if (!strstr($name ?? '', '/')) {
             foreach ($this->modules as $module) {
-                if (strcasecmp($module->getShortName(), $name) === 0) {
+                if (strcasecmp($module->getShortName() ?? '', $name ?? '') === 0) {
                     return $module;
                 }
             }
@@ -260,7 +260,7 @@ class ModuleManifest
     public function getModuleByPath($path)
     {
         // Ensure path exists
-        $path = realpath($path);
+        $path = realpath($path ?? '');
         if (!$path) {
             return null;
         }
@@ -273,12 +273,12 @@ class ModuleManifest
 
         foreach ($modules as $module) {
             // Check if path is in module
-            $modulePath = realpath($module->getPath());
+            $modulePath = realpath($module->getPath() ?? '');
             // if there is a real path
             if ($modulePath) {
                 // we remove separator to ensure that we are comparing fairly
-                $modulePath = rtrim($modulePath, DIRECTORY_SEPARATOR);
-                $path = rtrim($path, DIRECTORY_SEPARATOR);
+                $modulePath = rtrim($modulePath ?? '', DIRECTORY_SEPARATOR);
+                $path = rtrim($path ?? '', DIRECTORY_SEPARATOR);
                 // if the paths are not the same
                 if ($modulePath !== $path) {
                     //add separator to avoid mixing up, for example:
@@ -286,7 +286,7 @@ class ModuleManifest
                     $modulePath .= DIRECTORY_SEPARATOR;
                     $path .= DIRECTORY_SEPARATOR;
                     // if the module path is not the same as the start of the module path being tested
-                    if (stripos($path, $modulePath) !== 0) {
+                    if (stripos($path ?? '', $modulePath ?? '') !== 0) {
                         // then we need to test the next module
                         continue;
                     }

@@ -45,7 +45,7 @@ class SSListExporterTest extends SapphireTest
             ? $className::create($constructorParam)
             : $className::create();
 
-        $export = ltrim($this->exporter->export($obj));
+        $export = ltrim($this->exporter->export($obj) ?? '');
 
         $this->assertStringStartsWith(get_class($obj), $export, 'Export should start with object\'s class name');
     }

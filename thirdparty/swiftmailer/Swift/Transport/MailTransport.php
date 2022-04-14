@@ -157,9 +157,9 @@ class Swift_Transport_MailTransport implements Swift_Transport
         $message->getHeaders()->set($subjectHeader);
 
         // Separate headers from body
-        if (false !== $endHeaders = strpos($messageStr, "\r\n\r\n")) {
-            $headers = substr($messageStr, 0, $endHeaders) . "\r\n"; //Keep last EOL
-            $body = substr($messageStr, $endHeaders + 4);
+        if (false !== $endHeaders = strpos($messageStr ?? '', "\r\n\r\n")) {
+            $headers = substr($messageStr ?? '', 0, $endHeaders) . "\r\n"; //Keep last EOL
+            $body = substr($messageStr ?? '', $endHeaders + 4);
         } else {
             $headers = $messageStr . "\r\n";
             $body = '';
@@ -169,16 +169,16 @@ class Swift_Transport_MailTransport implements Swift_Transport
 
         if ("\r\n" != PHP_EOL) {
             // Non-windows (not using SMTP)
-            $headers = str_replace("\r\n", PHP_EOL, $headers);
-            $subject = str_replace("\r\n", PHP_EOL, $subject);
-            $body = str_replace("\r\n", PHP_EOL, $body);
-            $to = str_replace("\r\n", PHP_EOL, $to);
+            $headers = str_replace("\r\n", PHP_EOL, $headers ?? '');
+            $subject = str_replace("\r\n", PHP_EOL, $subject ?? '');
+            $body = str_replace("\r\n", PHP_EOL, $body ?? '');
+            $to = str_replace("\r\n", PHP_EOL, $to ?? '');
         } else {
             // Windows, using SMTP
-            $headers = str_replace("\r\n.", "\r\n..", $headers);
-            $subject = str_replace("\r\n.", "\r\n..", $subject);
-            $body = str_replace("\r\n.", "\r\n..", $body);
-            $to = str_replace("\r\n.", "\r\n..", $to);
+            $headers = str_replace("\r\n.", "\r\n..", $headers ?? '');
+            $subject = str_replace("\r\n.", "\r\n..", $subject ?? '');
+            $body = str_replace("\r\n.", "\r\n..", $body ?? '');
+            $to = str_replace("\r\n.", "\r\n..", $to ?? '');
         }
 
         if ($this->_invoker->mail($to, $subject, $body, $headers, $this->_formatExtraParams($this->_extraParams, $reversePath))) {
@@ -243,10 +243,10 @@ class Swift_Transport_MailTransport implements Swift_Transport
         if (!empty($return)) {
             $path = $return;
         } elseif (!empty($sender)) {
-            $keys = array_keys($sender);
+            $keys = array_keys($sender ?? []);
             $path = array_shift($keys);
         } elseif (!empty($from)) {
-            $keys = array_keys($from);
+            $keys = array_keys($from ?? []);
             $path = array_shift($keys);
         }
 
@@ -265,17 +265,17 @@ class Swift_Transport_MailTransport implements Swift_Transport
     private function _isShellSafe($string)
     {
         // Future-proof
-        if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
+        if (escapeshellcmd($string ?? '') !== $string || !in_array(escapeshellarg($string ?? ''), ["'$string'", "\"$string\""])) {
             return false;
         }
 
-        $length = strlen($string);
+        $length = strlen($string ?? '');
         for ($i = 0; $i < $length; ++$i) {
             $c = $string[$i];
             // All other characters have a special meaning in at least one common shell, including = and +.
             // Full stop (.) has a special meaning in cmd.exe, but its impact should be negligible here.
             // Note that this does permit non-Latin alphanumeric characters based on the current locale.
-            if (!ctype_alnum($c) && strpos('@_-.', $c) === false) {
+            if (!ctype_alnum($c) && strpos('@_-.', $c ?? '') === false) {
                 return false;
             }
         }
@@ -293,11 +293,11 @@ class Swift_Transport_MailTransport implements Swift_Transport
      */
     private function _formatExtraParams($extraParams, $reversePath)
     {
-        if (false !== strpos($extraParams, '-f%s')) {
+        if (false !== strpos($extraParams ?? '', '-f%s')) {
             if (empty($reversePath) || false === $this->_isShellSafe($reversePath)) {
-                $extraParams = str_replace('-f%s', '', $extraParams);
+                $extraParams = str_replace('-f%s', '', $extraParams ?? '');
             } else {
-                $extraParams = sprintf($extraParams, $reversePath);
+                $extraParams = sprintf($extraParams ?? '', $reversePath);
             }
         }
 

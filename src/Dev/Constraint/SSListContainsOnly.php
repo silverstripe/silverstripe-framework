@@ -66,7 +66,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
         }
 
         //we have remaining matches?
-        if (!$this->itemNotMatching && count($this->matches) !== 0) {
+        if (!$this->itemNotMatching && count($this->matches ?? []) !== 0) {
             $success = false;
             $this->hasLeftoverItems = true;
         }

@@ -83,7 +83,7 @@ class ModuleLoader
      */
     public function countManifests()
     {
-        return count($this->manifests);
+        return count($this->manifests ?? []);
     }
 
     /**

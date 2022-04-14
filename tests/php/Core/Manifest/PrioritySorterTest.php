@@ -34,7 +34,7 @@ class PrioritySorterTest extends SapphireTest
         ]);
 
         $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
+        $keys = array_keys($result ?? []);
         $this->assertEquals('module/three', $keys[0]);
         $this->assertEquals('module/one', $keys[1]);
         $this->assertEquals('module/two', $keys[2]);
@@ -51,7 +51,7 @@ class PrioritySorterTest extends SapphireTest
             ->setVariable('$project', 'module/one');
 
         $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
+        $keys = array_keys($result ?? []);
         $this->assertEquals('module/three', $keys[0]);
         $this->assertEquals('module/one', $keys[1]);
         $this->assertEquals('module/two', $keys[2]);
@@ -68,7 +68,7 @@ class PrioritySorterTest extends SapphireTest
         ])
             ->setRestKey('$other_modules');
         $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
+        $keys = array_keys($result ?? []);
         $this->assertEquals('module/two', $keys[0]);
         $this->assertEquals('module/one', $keys[1]);
         $this->assertEquals('module/three', $keys[2]);
@@ -87,7 +87,7 @@ class PrioritySorterTest extends SapphireTest
             ->setRestKey('other_modules');
 
         $result = $this->sorter->getSortedList();
-        $keys = array_keys($result);
+        $keys = array_keys($result ?? []);
         $this->assertEquals('module/two', $keys[0]);
         $this->assertEquals('module/one', $keys[1]);
         $this->assertEquals('module/three', $keys[2]);

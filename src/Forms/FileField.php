@@ -120,7 +120,7 @@ class FileField extends FormField implements FileHandleField
             }
         }
 
-        return array_unique($accept);
+        return array_unique($accept ?? []);
     }
 
     /**
@@ -181,8 +181,8 @@ class FileField extends FormField implements FileHandleField
         // $_FILES super-global so it will be stored as $_FILES['mutli_file_syntax']
         // multi-file uploads, which are not officially supported by Silverstripe, though may be
         // implemented in custom code, so we should still ensure they are at least validated
-        $isMultiFileUpload = strpos($this->name, '[') !== false;
-        $fieldName = preg_replace('#\[(.*?)\]$#', '', $this->name);
+        $isMultiFileUpload = strpos($this->name ?? '', '[') !== false;
+        $fieldName = preg_replace('#\[(.*?)\]$#', '', $this->name ?? '');
 
         if (!isset($_FILES[$fieldName])) {
             return true;
@@ -190,7 +190,7 @@ class FileField extends FormField implements FileHandleField
 
         if ($isMultiFileUpload) {
             $isValid = true;
-            foreach (array_keys($_FILES[$fieldName]['name']) as $key) {
+            foreach (array_keys($_FILES[$fieldName]['name'] ?? []) as $key) {
                 $fileData = [
                     'name' => $_FILES[$fieldName]['name'][$key],
                     'type' => $_FILES[$fieldName]['type'][$key],

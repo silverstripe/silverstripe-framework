@@ -165,7 +165,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     {
         // Raise warning if inconsistent with DataObject::dbObject() behaviour
         // This will cause spec args to be shifted down by the number of provided $args
-        if ($args && strpos($spec, '(') !== false) {
+        if ($args && strpos($spec ?? '', '(') !== false) {
             trigger_error('Additional args provided in both $spec and $args', E_USER_WARNING);
         }
         // Ensure name is always first argument
@@ -303,7 +303,7 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     public function getIndexType()
     {
-        if (array_key_exists('index', $this->options)) {
+        if (array_key_exists('index', $this->options ?? [])) {
             $type = $this->options['index'];
         } else {
             $type = static::config()->get('index');
@@ -434,7 +434,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function URLATT()
     {
-        return urlencode($this->RAW());
+        return urlencode($this->RAW() ?? '');
     }
 
     /**
@@ -444,7 +444,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      */
     public function RAWURLATT()
     {
-        return rawurlencode($this->RAW());
+        return rawurlencode($this->RAW() ?? '');
     }
 
     /**

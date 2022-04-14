@@ -39,10 +39,10 @@ class IPUtils
             $ips = [$ips];
         }
 
-        $method = substr_count($requestIP, ':') > 1 ? 'checkIP6' : 'checkIP4';
+        $method = substr_count($requestIP ?? '', ':') > 1 ? 'checkIP6' : 'checkIP4';
 
         foreach ($ips as $ip) {
-            if (self::$method($requestIP, trim($ip))) {
+            if (self::$method($requestIP, trim($ip ?? ''))) {
                 return true;
             }
         }
@@ -64,8 +64,8 @@ class IPUtils
             return false;
         }
 
-        if (false !== strpos($ip, '/')) {
-            list($address, $netmask) = explode('/', $ip, 2);
+        if (false !== strpos($ip ?? '', '/')) {
+            list($address, $netmask) = explode('/', $ip ?? '', 2);
 
             if ($netmask === '0') {
                 return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
@@ -79,7 +79,7 @@ class IPUtils
             $netmask = 32;
         }
 
-        return 0 === substr_compare(sprintf('%032b', ip2long($requestIP)), sprintf('%032b', ip2long($address)), 0, $netmask);
+        return 0 === substr_compare(sprintf('%032b', ip2long($requestIP ?? '')), sprintf('%032b', ip2long($address ?? '')), 0, $netmask);
     }
     /**
      * Compares two IPv6 addresses.
@@ -102,8 +102,8 @@ class IPUtils
             throw new \RuntimeException('Unable to check IPv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
 
-        if (false !== strpos($ip, '/')) {
-            list($address, $netmask) = explode('/', $ip, 2);
+        if (false !== strpos($ip ?? '', '/')) {
+            list($address, $netmask) = explode('/', $ip ?? '', 2);
 
             if ($netmask < 1 || $netmask > 128) {
                 return false;
@@ -113,8 +113,8 @@ class IPUtils
             $netmask = 128;
         }
 
-        $bytesAddr = unpack('n*', @inet_pton($address));
-        $bytesTest = unpack('n*', @inet_pton($requestIP));
+        $bytesAddr = unpack('n*', @inet_pton($address ?? ''));
+        $bytesTest = unpack('n*', @inet_pton($requestIP ?? ''));
 
         if (!$bytesAddr || !$bytesTest) {
             return false;

@@ -167,7 +167,7 @@ PHP
             return false;
         }
 
-        return count($this->getApplicableAuthenticators(Authenticator::CMS_LOGIN)) > 0;
+        return count($this->getApplicableAuthenticators(Authenticator::CMS_LOGIN) ?? []) > 0;
     }
 
     /**

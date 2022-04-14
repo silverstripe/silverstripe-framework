@@ -33,7 +33,7 @@ class PhpSyntaxTest extends SapphireTest
         $files[] = FRAMEWORK_PATH . '/src/Dev/Install/config-form.html';
 
         foreach ($files as $i => $file) {
-            $CLI_file = escapeshellarg($file);
+            $CLI_file = escapeshellarg($file ?? '');
             foreach ($settingTests as $settingTest) {
                 $returnCode = 0;
                 $output = [];

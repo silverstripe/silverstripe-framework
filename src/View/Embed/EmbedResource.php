@@ -89,7 +89,7 @@ class EmbedResource implements Embeddable
             return $this->getEmbed()->title;
         }
 
-        return preg_replace('/\?.*/', '', basename($this->getEmbed()->getUrl()));
+        return preg_replace('/\?.*/', '', basename($this->getEmbed()->getUrl() ?? ''));
     }
 
     public function getType()

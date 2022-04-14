@@ -99,7 +99,7 @@ class FieldListTest extends SapphireTest
         array_pop($fields);
         array_push($fields, $day, $month, $year);
 
-        $this->assertEquals($fields, array_values($fieldList->saveableFields()));
+        $this->assertEquals($fields, array_values($fieldList->saveableFields() ?? []));
     }
 
     public function testFieldNames()
@@ -646,7 +646,7 @@ class FieldListTest extends SapphireTest
         );
 
         $this->assertEquals(
-            array_keys($fields->dataFields()),
+            array_keys($fields->dataFields() ?? []),
             [
             'A',
             'NewField1',

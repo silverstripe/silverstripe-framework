@@ -306,14 +306,14 @@ class ThemeResourceLoaderTest extends SapphireTest
     protected function createTestTemplates($templates)
     {
         foreach ($templates as $template) {
-            file_put_contents($template, '');
+            file_put_contents($template ?? '', '');
         }
     }
 
     protected function removeTestTemplates($templates)
     {
         foreach ($templates as $template) {
-            unlink($template);
+            unlink($template ?? '');
         }
     }
 

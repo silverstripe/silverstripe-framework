@@ -32,7 +32,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
 
         // Ignore etag for no-store
         $cacheControl = $response->getHeader('Cache-Control');
-        if ($cacheControl && strstr($cacheControl, 'no-store')) {
+        if ($cacheControl && strstr($cacheControl ?? '', 'no-store')) {
             return $response;
         }
 
@@ -51,7 +51,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
         // Check If-Modified-Since
         $ifModifiedSince = $request->getHeader('If-Modified-Since');
         $lastModified = $response->getHeader('Last-Modified');
-        if ($ifModifiedSince && $lastModified && strtotime($ifModifiedSince) >= strtotime($lastModified)) {
+        if ($ifModifiedSince && $lastModified && strtotime($ifModifiedSince ?? '') >= strtotime($lastModified ?? '')) {
             return $this->sendNotModified($request, $response);
         }
 
@@ -76,7 +76,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
         }
 
         // Generate etag from body
-        return sprintf('"%s"', md5($response->getBody()));
+        return sprintf('"%s"', md5($response->getBody() ?? ''));
     }
 
     /**

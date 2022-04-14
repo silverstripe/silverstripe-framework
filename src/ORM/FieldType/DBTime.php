@@ -59,7 +59,7 @@ class DBTime extends DBField
             $source = $value; // parse timestamp
         } else {
             // Convert using strtotime
-            $source = strtotime($value);
+            $source = strtotime($value ?? '');
         }
         if ($value === false) {
             return false;
@@ -185,7 +185,7 @@ class DBTime extends DBField
     public function getTimestamp()
     {
         if ($this->value) {
-            return strtotime($this->value);
+            return strtotime($this->value ?? '');
         }
         return 0;
     }

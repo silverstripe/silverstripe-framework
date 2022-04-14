@@ -86,7 +86,7 @@ class CMSMemberLoginForm extends MemberLoginForm
         // Determine returnurl to redirect to parent page
         $logoutLink = $this->getExternalLink('logout');
         if ($returnURL = $this->controller->getRequest()->requestVar('BackURL')) {
-            $logoutLink = Controller::join_links($logoutLink, '?BackURL=' . urlencode($returnURL));
+            $logoutLink = Controller::join_links($logoutLink, '?BackURL=' . urlencode($returnURL ?? ''));
         }
 
         // Make actions

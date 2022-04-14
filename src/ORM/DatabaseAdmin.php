@@ -95,7 +95,7 @@ class DatabaseAdmin extends Controller
         $allClasses = get_declared_classes();
         $rootClasses = [];
         foreach ($allClasses as $class) {
-            if (get_parent_class($class) == DataObject::class) {
+            if (get_parent_class($class ?? '') == DataObject::class) {
                 $rootClasses[$class] = [];
             }
         }
@@ -104,7 +104,7 @@ class DatabaseAdmin extends Controller
         foreach ($allClasses as $class) {
             if (!isset($rootClasses[$class]) && is_subclass_of($class, DataObject::class)) {
                 foreach ($rootClasses as $rootClass => $dummy) {
-                    if (is_subclass_of($class, $rootClass)) {
+                    if (is_subclass_of($class, $rootClass ?? '')) {
                         $rootClasses[$rootClass][] = $class;
                         break;
                     }
@@ -135,7 +135,7 @@ class DatabaseAdmin extends Controller
         // If this code is being run outside of a dev/build or without a ?flush query string param,
         // the class manifest hasn't been flushed, so do it here
         $request = $this->getRequest();
-        if (!array_key_exists('flush', $request->getVars()) && strpos($request->getURL(), 'dev/build') !== 0) {
+        if (!array_key_exists('flush', $request->getVars() ?? []) && strpos($request->getURL() ?? '', 'dev/build') !== 0) {
             ClassLoader::inst()->getManifest()->regenerate(false);
         }
 
@@ -209,10 +209,10 @@ class DatabaseAdmin extends Controller
         $file = TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(['\\', '/', ':'], '.', Director::baseFolder());
+            . str_replace(['\\', '/', ':'], '.', Director::baseFolder() ?? '');
 
-        if (file_exists($file)) {
-            return filemtime($file);
+        if (file_exists($file ?? '')) {
+            return filemtime($file ?? '');
         }
         return null;
     }
@@ -273,7 +273,7 @@ class DatabaseAdmin extends Controller
             // Check to ensure that the re-instated SS_DATABASE_SUFFIX functionality won't unexpectedly
             // rename the database. To be removed for SS5
             if ($suffix = Environment::getEnv('SS_DATABASE_SUFFIX')) {
-                $previousName = preg_replace("/{$suffix}$/", '', $database);
+                $previousName = preg_replace("/{$suffix}$/", '', $database ?? '');
 
                 if (!isset($_GET['force_suffix_rename']) && DB::get_conn()->databaseExists($previousName)) {
                     throw new DatabaseException(
@@ -309,7 +309,7 @@ class DatabaseAdmin extends Controller
 
             foreach ($dataClasses as $dataClass) {
                 // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                if (!class_exists($dataClass)) {
+                if (!class_exists($dataClass ?? '')) {
                     continue;
                 }
 
@@ -366,7 +366,7 @@ class DatabaseAdmin extends Controller
             foreach ($dataClasses as $dataClass) {
                 // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
                 // Test_ indicates that it's the data class is part of testing system
-                if (strpos($dataClass, 'Test_') === false && class_exists($dataClass)) {
+                if (strpos($dataClass ?? '', 'Test_') === false && class_exists($dataClass ?? '')) {
                     if (!$quiet) {
                         if (Director::is_cli()) {
                             echo " * $dataClass\n";
@@ -387,7 +387,7 @@ class DatabaseAdmin extends Controller
         touch(TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'
-            . str_replace(['\\', '/', ':'], '.', Director::baseFolder()));
+            . str_replace(['\\', '/', ':'], '.', Director::baseFolder() ?? ''));
 
         if (isset($_REQUEST['from_installer'])) {
             echo "OK";
@@ -443,12 +443,12 @@ class DatabaseAdmin extends Controller
         $currentClassNameList = DB::query("SELECT DISTINCT(\"{$fieldName}\") FROM \"{$table}\"")->column();
 
         // Get all invalid classes for this field
-        $invalidClasses = array_intersect($currentClassNameList, array_keys($mapping));
+        $invalidClasses = array_intersect($currentClassNameList ?? [], array_keys($mapping ?? []));
         if (!$invalidClasses) {
             return;
         }
 
-        $numberClasses = count($invalidClasses);
+        $numberClasses = count($invalidClasses ?? []);
         DB::alteration_message(
             "Correcting obsolete {$fieldName} values for {$numberClasses} outdated types",
             'obsolete'
@@ -527,7 +527,7 @@ class DatabaseAdmin extends Controller
     {
         $baseClasses = [];
         foreach (ClassInfo::subclassesFor(DataObject::class) as $class) {
-            if (get_parent_class($class) == DataObject::class) {
+            if (get_parent_class($class ?? '') == DataObject::class) {
                 $baseClasses[] = $class;
             }
         }
@@ -559,7 +559,7 @@ class DatabaseAdmin extends Controller
                         $subclassTable = $schema->tableName($subclass);
                         $id = $record['ID'];
                         if (($record['ClassName'] != $subclass)
-                            && (!is_subclass_of($record['ClassName'], $subclass))
+                            && (!is_subclass_of($record['ClassName'], $subclass ?? ''))
                             && isset($recordExists[$subclass][$id])
                         ) {
                             $sql = "DELETE FROM \"$subclassTable\" WHERE \"ID\" = ?";

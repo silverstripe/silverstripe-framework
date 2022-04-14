@@ -127,7 +127,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
         foreach ($columns as $columnField) {
             $currentColumn++;
             $metadata = $gridField->getColumnMetadata($columnField);
-            $fieldName = str_replace('.', '-', $columnField);
+            $fieldName = str_replace('.', '-', $columnField ?? '');
             $title = $metadata['title'];
 
             if (isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) {
@@ -136,12 +136,12 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
 
             $allowSort = ($title && $list->canSortBy($columnField));
 
-            if (!$allowSort && strpos($columnField, '.') !== false) {
+            if (!$allowSort && strpos($columnField ?? '', '.') !== false) {
                 // we have a relation column with dot notation
                 // @see DataObject::relField for approximation
-                $parts = explode('.', $columnField);
+                $parts = explode('.', $columnField ?? '');
                 $tmpItem = singleton($list->dataClass());
-                for ($idx = 0; $idx < sizeof($parts); $idx++) {
+                for ($idx = 0; $idx < sizeof($parts ?? []); $idx++) {
                     $methodName = $parts[$idx];
                     if ($tmpItem instanceof SS_List) {
                         // It's impossible to sort on a HasManyList/ManyManyList
@@ -154,7 +154,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                     ) {
                         // Else, if we've found a database field at the end of the chain, we can sort on it.
                         // If a method is applied further to this field (E.g. 'Cost.Currency') then don't try to sort.
-                        $allowSort = $idx === sizeof($parts) - 1;
+                        $allowSort = $idx === sizeof($parts ?? []) - 1;
                         break;
                     } else {
                         // If neither method nor field, then unable to sort
@@ -187,7 +187,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                     }
                 }
             } else {
-                if ($currentColumn == count($columns)) {
+                if ($currentColumn == count($columns ?? [])) {
                     $filter = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
 
                     if ($filter && $filter->useLegacyFilterHeader && $filter->canFilterAnyColumns($gridField)) {

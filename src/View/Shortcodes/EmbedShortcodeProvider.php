@@ -203,7 +203,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             }
             foreach (['"', "'"] as $quote) {
                 $rx = "/(<iframe .*?)$attr=$quote([0-9]+)$quote([^>]+>)/";
-                $content = preg_replace($rx, "$1{$attr}={$quote}{$value}{$quote}$3", $content);
+                $content = preg_replace($rx ?? '', "$1{$attr}={$quote}{$value}{$quote}$3", $content ?? '');
             }
         }
 
@@ -266,7 +266,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     {
         $attributes = ArrayList::create();
         foreach ($arguments as $key => $value) {
-            if (in_array($key, $exclude)) {
+            if (in_array($key, $exclude ?? [])) {
                 continue;
             }
 
@@ -339,6 +339,6 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     private static function cleanKeySegment(string $str): string
     {
-        return preg_replace('/[^a-zA-Z0-9\-]/', '', $str);
+        return preg_replace('/[^a-zA-Z0-9\-]/', '', $str ?? '');
     }
 }

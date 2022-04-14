@@ -146,7 +146,7 @@ class CompositeField extends FormField
         if ($count === 1) {
             $compositeTitle .= 'Group';
         }
-        return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
+        return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle ?? '');
     }
 
     /**

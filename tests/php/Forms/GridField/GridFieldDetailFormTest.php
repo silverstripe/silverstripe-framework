@@ -65,7 +65,7 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $parser = new CSSContentParser($response->getBody());
         $errors = $parser->getBySelector('span.required');
-        $this->assertEquals(1, count($errors));
+        $this->assertEquals(1, count($errors ?? []));
 
         $response = $this->post(
             $addformurl,
@@ -77,7 +77,7 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $parser = new CSSContentParser($response->getBody());
         $errors = $parser->getBySelector('span.required');
-        $this->assertEquals(2, count($errors));
+        $this->assertEquals(2, count($errors ?? []));
     }
 
     public function testAddForm()

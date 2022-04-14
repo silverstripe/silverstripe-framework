@@ -42,7 +42,7 @@ class Storage
     public function __construct(Session $session, $id, $new = true)
     {
         $id = trim((string) $id);
-        if (!strlen($id)) {
+        if (!strlen($id ?? '')) {
             throw new \InvalidArgumentException('Storage ID must not be empty');
         }
 
@@ -75,7 +75,7 @@ class Storage
     public function confirm($data)
     {
         foreach ($this->getItems() as $item) {
-            $key = base64_encode($this->getTokenHash($item));
+            $key = base64_encode($this->getTokenHash($item) ?? '');
 
             if (!isset($data[$key]) || $data[$key] !== '1') {
                 return false;
@@ -105,7 +105,7 @@ class Storage
         $items = [];
 
         foreach ($this->getItems() as $item) {
-            $hash = base64_encode($this->getTokenHash($item));
+            $hash = base64_encode($this->getTokenHash($item) ?? '');
 
             $items[$hash] = '1';
         }
@@ -127,7 +127,7 @@ class Storage
 
         $salted = $salt . $token;
 
-        return hash(static::HASH_ALGO, $salted, true);
+        return hash(static::HASH_ALGO ?? '', $salted ?? '', true);
     }
 
     /**
@@ -139,7 +139,7 @@ class Storage
     {
         $salt = $this->getSessionSalt();
 
-        return bin2hex(hash(static::HASH_ALGO, $salt . 'cookie key', true));
+        return bin2hex(hash(static::HASH_ALGO ?? '', $salt . 'cookie key', true));
     }
 
     /**
@@ -151,7 +151,7 @@ class Storage
     {
         $salt = $this->getSessionSalt();
 
-        return base64_encode(hash(static::HASH_ALGO, $salt . 'csrf token', true));
+        return base64_encode(hash(static::HASH_ALGO ?? '', $salt . 'csrf token', true));
     }
 
     /**
@@ -263,15 +263,15 @@ class Storage
      */
     protected function setSuccessPostVars(array $data)
     {
-        $checksum = hash_init(static::HASH_ALGO);
+        $checksum = hash_init(static::HASH_ALGO ?? '');
         $cookieData = [];
 
         foreach ($data as $key => $val) {
             $key = strval($key);
             $val = strval($val);
 
-            hash_update($checksum, $key);
-            hash_update($checksum, $val);
+            hash_update($checksum, $key ?? '');
+            hash_update($checksum, $val ?? '');
 
             $cookieData[] = [$key, $val];
         }
@@ -322,13 +322,13 @@ class Storage
             return null;
         }
 
-        $cookieData = json_decode($cookieData, true, 3);
+        $cookieData = json_decode($cookieData ?? '', true, 3);
 
         if (!is_array($cookieData)) {
             return null;
         }
 
-        $checksum = hash_init(static::HASH_ALGO);
+        $checksum = hash_init(static::HASH_ALGO ?? '');
 
         $data = [];
         foreach ($cookieData as $pair) {
@@ -339,8 +339,8 @@ class Storage
             $key = $pair[0];
             $val = $pair[1];
 
-            hash_update($checksum, $key);
-            hash_update($checksum, $val);
+            hash_update($checksum, $key ?? '');
+            hash_update($checksum, $val ?? '');
 
             $data[$key] = $val;
         }

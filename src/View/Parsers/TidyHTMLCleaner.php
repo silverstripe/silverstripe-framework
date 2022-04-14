@@ -27,6 +27,6 @@ class TidyHTMLCleaner extends HTMLCleaner
         $output = $tidy->repairString($content, $this->config);
 
         // Clean leading/trailing whitespace
-        return preg_replace('/(^\s+)|(\s+$)/', '', $output);
+        return preg_replace('/(^\s+)|(\s+$)/', '', $output ?? '');
     }
 }

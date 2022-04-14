@@ -182,7 +182,7 @@ class ErrorControlChain
     {
         $error = error_get_last();
         $message = $error ? $error['message'] : '';
-        return stripos($message, 'memory') !== false && stripos($message, 'exhausted') !== false;
+        return stripos($message ?? '', 'memory') !== false && stripos($message ?? '', 'exhausted') !== false;
     }
 
     static $transtable = [
@@ -193,7 +193,7 @@ class ErrorControlChain
 
     protected function translateMemstring($memString)
     {
-        $char = strtolower(substr($memString, -1));
+        $char = strtolower(substr($memString ?? '', -1));
         $fact = isset(self::$transtable[$char]) ? self::$transtable[$char] : 1;
         return ((int)$memString) * $fact;
     }

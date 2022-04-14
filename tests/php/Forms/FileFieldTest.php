@@ -78,9 +78,9 @@ class FileFieldTest extends FunctionalTest
         $tmpFilePath = TEMP_PATH . DIRECTORY_SEPARATOR . $tmpFileName;
 
         // multi_file_syntax
-        if (strpos($name, '[') !== false) {
+        if (strpos($name ?? '', '[') !== false) {
             $key = 0;
-            if (preg_match('#\[(.+?)\]#', $name, $m)) {
+            if (preg_match('#\[(.+?)\]#', $name ?? '', $m)) {
                 $key = $m[1];
             }
             return [

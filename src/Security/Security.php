@@ -202,7 +202,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getAuthenticators()
     {
-        return array_filter($this->authenticators);
+        return array_filter($this->authenticators ?? []);
     }
 
     /**
@@ -433,7 +433,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return $controller->redirect(Controller::join_links(
             Security::config()->uninherited('login_url'),
-            "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
+            "?BackURL=" . urlencode($_SERVER['REQUEST_URI'] ?? '')
         ));
     }
 
@@ -480,7 +480,7 @@ class Security extends Controller implements TemplateGlobalProvider
                     $authenticator->getLoginHandler($this->Link())->loginForm()
                 ];
             },
-            $this->getApplicableAuthenticators()
+            $this->getApplicableAuthenticators() ?? []
         );
     }
 
@@ -575,7 +575,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         // Use the default setting for which Page to use to render the security page
         $pageClass = $this->config()->get('page_class');
-        if (!$pageClass || !class_exists($pageClass)) {
+        if (!$pageClass || !class_exists($pageClass ?? '')) {
             return $this;
         }
 
@@ -603,7 +603,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function generateTabbedFormSet($forms)
     {
-        if (count($forms) === 1) {
+        if (count($forms ?? []) === 1) {
             return $forms;
         }
 
@@ -780,10 +780,10 @@ class Security extends Controller implements TemplateGlobalProvider
 
             if (!$authenticator->supportedServices() & $service) {
                 // Try to be helpful and show the service constant name, e.g. Authenticator::LOGIN
-                $constants = array_flip((new ReflectionClass(Authenticator::class))->getConstants());
+                $constants = array_flip((new ReflectionClass(Authenticator::class))->getConstants() ?? []);
 
                 $message = 'Invalid Authenticator "' . $authName . '" for ';
-                if (array_key_exists($service, $constants)) {
+                if (array_key_exists($service, $constants ?? [])) {
                     $message .= 'service: Authenticator::' . $constants[$service];
                 } else {
                     $message .= 'unknown authenticator service';
@@ -881,7 +881,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
 
         // Simpler case for a single authenticator
-        if (count($handlers) === 1) {
+        if (count($handlers ?? []) === 1) {
             return $this->delegateToHandler(array_values($handlers)[0], $title, $templates);
         }
 
@@ -890,7 +890,7 @@ class Security extends Controller implements TemplateGlobalProvider
             function (RequestHandler $handler) {
                 return $handler->handleRequest($this->getRequest());
             },
-            $handlers
+            $handlers ?? []
         );
 
         $response = call_user_func_array($aggregator, [$results]);
@@ -1033,7 +1033,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function getPasswordResetLink($member, $autologinToken)
     {
-        $autologinToken = urldecode($autologinToken);
+        $autologinToken = urldecode($autologinToken ?? '');
 
         return static::singleton()->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
     }
@@ -1265,7 +1265,7 @@ class Security extends Controller implements TemplateGlobalProvider
             }
 
             $objFields = $schema->databaseFields($class, false);
-            $missingFields = array_diff_key($objFields, $dbFields);
+            $missingFields = array_diff_key($objFields ?? [], $dbFields);
 
             if ($missingFields) {
                 return false;

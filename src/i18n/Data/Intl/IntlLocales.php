@@ -1416,7 +1416,7 @@ class IntlLocales implements Locales, Resettable
         }
 
         // Default to lang_LANG
-        return strtolower($lang) . '_' . strtoupper($lang);
+        return strtolower($lang ?? '') . '_' . strtoupper($lang ?? '');
     }
 
     /**
@@ -1570,7 +1570,7 @@ class IntlLocales implements Locales, Resettable
      */
     public function countryFromLocale($locale)
     {
-        return strtolower(Locale::getRegion($locale)) ?: null;
+        return strtolower(Locale::getRegion($locale) ?? '') ?: null;
     }
 
     /**
@@ -1591,19 +1591,19 @@ class IntlLocales implements Locales, Resettable
         }
 
         // Check the configurable whitelist
-        $localeCode = strtolower($lang) . '_' . strtoupper($region);
+        $localeCode = strtolower($lang ?? '') . '_' . strtoupper($region ?? '');
         $locales = $this->getLocales();
 
-        if (array_key_exists($localeCode, $locales)
-            || array_key_exists(strtolower($localeCode), $locales)
+        if (array_key_exists($localeCode, $locales ?? [])
+            || array_key_exists(strtolower($localeCode ?? ''), $locales ?? [])
         ) {
             return true;
         }
 
         // Fallback
-        return strcasecmp($lang, $region)
-            && strcasecmp($lang, $locale)
-            && strcasecmp($region, $locale);
+        return strcasecmp($lang ?? '', $region ?? '')
+            && strcasecmp($lang ?? '', $locale ?? '')
+            && strcasecmp($region ?? '', $locale ?? '');
     }
 
     /**

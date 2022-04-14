@@ -21,11 +21,11 @@ class ArrayListTest extends SapphireTest
         );
 
         $list[] = ['Num' => 2];
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
         $this->assertEquals(['Num' => 2], $list->last());
 
         $list[] = ['Num' => 3];
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(['Num' => 3], $list->last());
     }
 
@@ -38,7 +38,7 @@ class ArrayListTest extends SapphireTest
             $three = new DataObject(['Title' => 'three'])
             ]
         );
-        $this->assertEquals(count($list), 3);
+        $this->assertEquals(count($list ?? []), 3);
         $this->assertTrue(isset($list[0]), 'First item in the set is set');
         $this->assertEquals($one, $list[0], 'First item in the set is accessible by array notation');
     }
@@ -53,13 +53,13 @@ class ArrayListTest extends SapphireTest
             ]
         );
         unset($list[0]);
-        $this->assertEquals(count($list), 2);
+        $this->assertEquals(count($list ?? []), 2);
     }
 
     public function testArrayAccessSet()
     {
         $list = new ArrayList();
-        $this->assertEquals(0, count($list));
+        $this->assertEquals(0, count($list ?? []));
         $list['testing!'] = $test = new DataObject(['Title' => 'I\'m testing!']);
         $this->assertEquals($test, $list['testing!'], 'Set item is accessible by the key we set it as');
     }
@@ -151,7 +151,7 @@ class ArrayListTest extends SapphireTest
 
         $list->remove(['Key' => 2]);
         $this->assertEquals(
-            array_values($list->toArray()),
+            array_values($list->toArray() ?? []),
             [
             ['Key' => 1], ['Key' => 3]
             ]
@@ -170,12 +170,12 @@ class ArrayListTest extends SapphireTest
 
         $this->assertEquals(['Key' => 1], $list[0]);
         $list->replace(['Key' => 1], ['Replaced' => 1]);
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(['Replaced' => 1], $list[0]);
 
         $this->assertEquals($two, $list[1]);
         $list->replace($two, ['Replaced' => 2]);
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(['Replaced' => 2], $list[1]);
     }
 
@@ -192,7 +192,7 @@ class ArrayListTest extends SapphireTest
             ]
         );
 
-        $this->assertEquals(4, count($list));
+        $this->assertEquals(4, count($list ?? []));
         $this->assertEquals(
             $list->toArray(),
             [
@@ -213,12 +213,12 @@ class ArrayListTest extends SapphireTest
             ]
         );
 
-        $this->assertEquals(5, count($list));
+        $this->assertEquals(5, count($list ?? []));
         $list->removeDuplicates();
-        $this->assertEquals(5, count($list));
+        $this->assertEquals(5, count($list ?? []));
 
         $list->removeDuplicates('Field');
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals([1, 2, 3], $list->column('Field'));
         $this->assertEquals([1, 2, 3], $list->column('ID'));
     }
@@ -226,36 +226,36 @@ class ArrayListTest extends SapphireTest
     public function testPushPop()
     {
         $list = new ArrayList(['Num' => 1]);
-        $this->assertEquals(1, count($list));
+        $this->assertEquals(1, count($list ?? []));
 
         $list->push(['Num' => 2]);
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
         $this->assertEquals(['Num' => 2], $list->last());
 
         $list->push(['Num' => 3]);
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(['Num' => 3], $list->last());
 
         $this->assertEquals(['Num' => 3], $list->pop());
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
         $this->assertEquals(['Num' => 2], $list->last());
     }
 
     public function testShiftUnshift()
     {
         $list = new ArrayList(['Num' => 1]);
-        $this->assertEquals(1, count($list));
+        $this->assertEquals(1, count($list ?? []));
 
         $list->unshift(['Num' => 2]);
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
         $this->assertEquals(['Num' => 2], $list->first());
 
         $list->unshift(['Num' => 3]);
-        $this->assertEquals(3, count($list));
+        $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(['Num' => 3], $list->first());
 
         $this->assertEquals(['Num' => 3], $list->shift());
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
         $this->assertEquals(['Num' => 2], $list->first());
     }
 

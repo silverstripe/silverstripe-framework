@@ -29,10 +29,10 @@ class ViewableData_Customised extends ViewableData
     public function __call($method, $arguments)
     {
         if ($this->customised->hasMethod($method)) {
-            return call_user_func_array([$this->customised, $method], $arguments);
+            return call_user_func_array([$this->customised, $method], $arguments ?? []);
         }
 
-        return call_user_func_array([$this->original, $method], $arguments);
+        return call_user_func_array([$this->original, $method], $arguments ?? []);
     }
 
     public function __get($property)

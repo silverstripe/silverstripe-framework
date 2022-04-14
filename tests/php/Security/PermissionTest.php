@@ -89,18 +89,18 @@ class PermissionTest extends SapphireTest
     {
         $member = $this->objFromFixture(Member::class, 'access');
         $permissions = Permission::permissions_for_member($member->ID);
-        $this->assertEquals(4, count($permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_AssetAdmin', $permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions));
-        $this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions));
+        $this->assertEquals(4, count($permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_AssetAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions ?? []));
 
         $group = $this->objFromFixture("SilverStripe\\Security\\Group", "access");
 
         Permission::deny($group->ID, "CMS_ACCESS_MyAdmin");
         $permissions = Permission::permissions_for_member($member->ID);
-        $this->assertEquals(3, count($permissions));
-        $this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions));
+        $this->assertEquals(3, count($permissions ?? []));
+        $this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions ?? []));
     }
 
     public function testRolesAndPermissionsFromParentGroupsAreInherited()

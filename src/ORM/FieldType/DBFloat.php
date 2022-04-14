@@ -37,17 +37,17 @@ class DBFloat extends DBField
      */
     public function Nice()
     {
-        return number_format($this->value, 2);
+        return number_format($this->value ?? 0.0, 2);
     }
 
     public function Round($precision = 3)
     {
-        return round($this->value, $precision);
+        return round($this->value ?? 0.0, $precision ?? 0);
     }
 
     public function NiceRound($precision = 3)
     {
-        return number_format(round($this->value, $precision), $precision);
+        return number_format(round($this->value ?? 0.0, $precision ?? 0), $precision ?? 0);
     }
 
     public function scaffoldFormField($title = null, $params = null)

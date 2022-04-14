@@ -140,7 +140,7 @@ class DBClassName extends DBEnum
         $classNames = ClassInfo::subclassesFor($this->getBaseClass());
         $dataobject = strtolower(DataObject::class);
         unset($classNames[$dataobject]);
-        return array_values($classNames);
+        return array_values($classNames ?? []);
     }
 
     public function setValue($value, $record = null, $markChanged = true)
@@ -163,7 +163,7 @@ class DBClassName extends DBEnum
         // Allow classes to set default class
         $baseClass = $this->getBaseClass();
         $defaultClass = Config::inst()->get($baseClass, 'default_classname');
-        if ($defaultClass &&  class_exists($defaultClass)) {
+        if ($defaultClass &&  class_exists($defaultClass ?? '')) {
             return $defaultClass;
         }
 

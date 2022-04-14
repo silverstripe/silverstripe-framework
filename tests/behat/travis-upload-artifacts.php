@@ -18,7 +18,7 @@ function run($cmd, $echo = true)
     if ($echo) {
         echo "+ $cmd\n";
     }
-    passthru($cmd, $returnVar);
+    passthru($cmd ?? '', $returnVar);
     if ($returnVar > 0) {
         die($returnVar);
     }
@@ -33,7 +33,7 @@ function run($cmd, $echo = true)
 function checkenv($envs)
 {
     if ($envs) {
-        foreach (explode(',', $envs) as $env) {
+        foreach (explode(',', $envs ?? '') as $env) {
             if (!getenv($env)) {
                 return false;
             }
@@ -72,7 +72,7 @@ if (isset($opts['artifacts-path'])) {
 $targetPath = $opts['target-path'];
 $baseUrl = $opts['artifacts-base-url'];
 
-if (!$artifactsPath || !is_dir($artifactsPath)) {
+if (!$artifactsPath || !is_dir($artifactsPath ?? '')) {
     echo "No artifacts found, skipped\n";
     exit(0);
 }
@@ -83,12 +83,12 @@ run("curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/insta
 echo "Creating {$artifactsPath}index.html...\n";
 
 $html = '<html><head></head><body><ul>';
-$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(realpath($artifactsPath)), RecursiveIteratorIterator::SELF_FIRST);
+$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(realpath($artifactsPath ?? '')), RecursiveIteratorIterator::SELF_FIRST);
 foreach ($objects as $name => $object) {
     if ($object->isDir()) {
         continue;
     }
-    $relativePath = trim(str_replace(realpath($artifactsPath) . '/', '', $object->getPathName()), '/');
+    $relativePath = trim(str_replace(realpath($artifactsPath ?? '') . '/', '', $object->getPathName() ?? '') ?? '', '/');
     $html .= sprintf('<li><a href="%s">%s</a></li>', $relativePath, $relativePath);
 }
 $html .= '</ul></body></html>';
@@ -98,5 +98,5 @@ file_put_contents("{$artifactsPath}index.html", $html);
 run("~/bin/artifacts upload --permissions public-read --target-paths $targetPath $artifactsPath");
 
 $fullPath = str_replace('//', '/', "$baseUrl/$targetPath/index.html");
-$fullPath = str_replace('https:/s3', 'https://s3', $fullPath);
+$fullPath = str_replace('https:/s3', 'https://s3', $fullPath ?? '');
 echo "Uploaded artifacts to $fullPath\n";

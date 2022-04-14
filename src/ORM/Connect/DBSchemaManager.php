@@ -376,9 +376,9 @@ abstract class DBSchemaManager
             $tableOptionsChanged = false;
             // Check for DB constant on the schema class
             $dbIDName = sprintf('%s::ID', static::class);
-            $dbID = defined($dbIDName) ? constant($dbIDName) : null;
+            $dbID = defined($dbIDName ?? '') ? constant($dbIDName) : null;
             if ($dbID && isset($options[$dbID])) {
-                if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
+                if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID] ?? '', $alteredEngineMatches)) {
                     $alteredEngine = $alteredEngineMatches[1];
                     $tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->first();
                     $tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
@@ -400,11 +400,11 @@ abstract class DBSchemaManager
             foreach ($fieldSchema as $fieldName => $fieldSpec) {
                 //Is this an array field?
                 $arrayValue = '';
-                if (strpos($fieldSpec, '[') !== false) {
+                if (strpos($fieldSpec ?? '', '[') !== false) {
                     //If so, remove it and store that info separately
-                    $pos = strpos($fieldSpec, '[');
-                    $arrayValue = substr($fieldSpec, $pos);
-                    $fieldSpec = substr($fieldSpec, 0, $pos);
+                    $pos = strpos($fieldSpec ?? '', '[');
+                    $arrayValue = substr($fieldSpec ?? '', $pos ?? 0);
+                    $fieldSpec = substr($fieldSpec ?? '', 0, $pos);
                 }
 
                 /** @var DBField $fieldObj */
@@ -535,11 +535,11 @@ MESSAGE
     {
         // Remove any leading/trailing brackets and outlying modifiers
         // E.g. 'unique (Title, "QuotedColumn");' => 'Title, "QuotedColumn"'
-        $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec);
+        $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec ?? '');
 
         // Split potentially quoted modifiers
         // E.g. 'Title, "QuotedColumn"' => ['Title', 'QuotedColumn']
-        return preg_split('/"?\s*,\s*"?/', trim($containedSpec, '(") '));
+        return preg_split('/"?\s*,\s*"?/', trim($containedSpec ?? '', '(") '));
     }
 
     /**
@@ -581,8 +581,8 @@ MESSAGE
         // check array spec
         if (is_array($spec) && isset($spec['type'])) {
             return $spec['type'];
-        } elseif (!is_array($spec) && preg_match('/(?<type>\w+)\s*\(/', $spec, $matchType)) {
-            return strtolower($matchType['type']);
+        } elseif (!is_array($spec) && preg_match('/(?<type>\w+)\s*\(/', $spec ?? '', $matchType)) {
+            return strtolower($matchType['type'] ?? '');
         } else {
             return 'index';
         }
@@ -604,10 +604,10 @@ MESSAGE
     {
         // Return already converted spec
         if (!is_array($indexSpec)
-            || !array_key_exists('type', $indexSpec)
-            || !array_key_exists('columns', $indexSpec)
+            || !array_key_exists('type', $indexSpec ?? [])
+            || !array_key_exists('columns', $indexSpec ?? [])
             || !is_array($indexSpec['columns'])
-            || array_key_exists('value', $indexSpec)
+            || array_key_exists('value', $indexSpec ?? [])
         ) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -642,7 +642,7 @@ MESSAGE
             return false;
         }
         $fields = $this->fieldList($tableName);
-        return array_key_exists($fieldName, $fields);
+        return array_key_exists($fieldName, $fields ?? []);
     }
 
     /**
@@ -677,7 +677,7 @@ MESSAGE
         // collations.
         // TODO: move this to the MySQLDatabase file, or drop it altogether?
         if (!$this->database->supportsCollations()) {
-            $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec);
+            $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec ?? '');
         }
 
         if (!isset($this->tableList[strtolower($table)])) {
@@ -719,23 +719,23 @@ MESSAGE
             // If enums/sets are being modified, then we need to fix existing data in the table.
             // Update any records where the enum is set to a legacy value to be set to the default.
             $enumValuesExpr = "/^(enum|set)\\s*\\(['\"](?<values>[^'\"]+)['\"]\\).*/i";
-            if (preg_match($enumValuesExpr, $specValue, $specMatches)
-                && preg_match($enumValuesExpr, $spec_orig, $oldMatches)
+            if (preg_match($enumValuesExpr ?? '', $specValue ?? '', $specMatches)
+                && preg_match($enumValuesExpr ?? '', $spec_orig ?? '', $oldMatches)
             ) {
-                $new = preg_split("/'\\s*,\\s*'/", $specMatches['values']);
-                $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values']);
+                $new = preg_split("/'\\s*,\\s*'/", $specMatches['values'] ?? '');
+                $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values'] ?? '');
 
                 $holder = [];
                 foreach ($old as $check) {
-                    if (!in_array($check, $new)) {
+                    if (!in_array($check, $new ?? [])) {
                         $holder[] = $check;
                     }
                 }
 
-                if (count($holder)) {
+                if (count($holder ?? [])) {
                     // Get default pre-escaped for SQL. We just use this directly, as we don't have a real way to
                     // de-encode SQL values
-                        $default = explode('default ', $spec_orig);
+                        $default = explode('default ', $spec_orig ?? '');
                     $defaultSQL = isset($default[1]) ? $default[1] : 'NULL';
                     // Reset to default any value in that is in the old enum, but not the new one
                     $placeholders = DB::placeholders($holder);
@@ -764,7 +764,7 @@ MESSAGE
     public function dontRequireField($table, $fieldName)
     {
         $fieldList = $this->fieldList($table);
-        if (array_key_exists($fieldName, $fieldList)) {
+        if (array_key_exists($fieldName, $fieldList ?? [])) {
             $suffix = '';
             while (isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
                 $suffix = $suffix
@@ -808,7 +808,7 @@ MESSAGE
                     default:
                         $sign = ' ';
                 }
-                $message = strip_tags($message);
+                $message = strip_tags($message ?? '');
                 echo "  $sign $message\n";
             } else {
                 switch ($type) {
@@ -862,7 +862,7 @@ MESSAGE
     {
         // Check if table exists
         $tables = $this->tableList();
-        if (!array_key_exists(strtolower($tableName), $tables)) {
+        if (!array_key_exists(strtolower($tableName ?? ''), $tables ?? [])) {
             return;
         }
 

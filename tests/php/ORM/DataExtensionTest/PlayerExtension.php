@@ -17,7 +17,7 @@ class PlayerExtension extends DataExtension implements TestOnly
 
         // Only add these extensions if the $class is set to DataExtensionTest_Player, to
         // test that the argument works.
-        if (strcasecmp($class, Player::class) === 0) {
+        if (strcasecmp($class ?? '', Player::class) === 0) {
             $config['db'] = [
                 'Address' => 'Text',
                 'DateBirth' => 'Date',

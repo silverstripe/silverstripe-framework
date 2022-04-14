@@ -52,7 +52,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
 
         // Add to groups defined in CSV
         if (isset($record['Groups']) && $record['Groups']) {
-            $groupCodes = explode(',', $record['Groups']);
+            $groupCodes = explode(',', $record['Groups'] ?? '');
             foreach ($groupCodes as $groupCode) {
                 $groupCode = Convert::raw2url($groupCode);
                 if (!isset($_cache_groupByCode[$groupCode])) {

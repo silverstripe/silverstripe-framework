@@ -124,7 +124,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
         }
 
         // Process source files
-        $files = array_filter($files);
+        $files = array_filter($files ?? []);
         $libResource = $this->resolveRelativeResource($tinymceDir, 'tinymce');
         $libContent = $this->getFileContents($libResource);
 
@@ -165,7 +165,7 @@ SCRIPT;
                 return Director::makeRelative($path->getURL());
             }
             return $path;
-        }, $files);
+        }, $files ?? []);
 
         // Join list of paths
         $filesList = Convert::raw2js(implode(',', $fileURLS));
@@ -189,14 +189,14 @@ SCRIPT;
         } else {
             $path = Director::baseFolder() . '/' . $file;
         }
-        if (!file_exists($path)) {
+        if (!file_exists($path ?? '')) {
             return null;
         }
-        $content = file_get_contents($path);
+        $content = file_get_contents($path ?? '');
 
         // Remove UTF-8 BOM
-        if (substr($content, 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf)) {
-            $content = substr($content, 3);
+        if (substr($content ?? '', 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf)) {
+            $content = substr($content ?? '', 3);
         }
 
         return $content;
@@ -227,12 +227,12 @@ SCRIPT;
      */
     public function generateFilename(TinyMCEConfig $config)
     {
-        $hash = substr(sha1(json_encode($config->getAttributes())), 0, 10);
+        $hash = substr(sha1(json_encode($config->getAttributes()) ?? ''), 0, 10);
         $name = $this->checkName($config);
         $url = str_replace(
             ['{name}', '{hash}'],
             [$name, $hash],
-            $this->config()->get('filename_base')
+            $this->config()->get('filename_base') ?? ''
         );
         return $url;
     }
@@ -246,7 +246,7 @@ SCRIPT;
      */
     public static function flush()
     {
-        $dir = dirname(static::config()->get('filename_base'));
+        $dir = dirname(static::config()->get('filename_base') ?? '');
         static::singleton()->getAssetHandler()->removeContent($dir);
     }
 
@@ -265,7 +265,7 @@ SCRIPT;
             if ($base instanceof ModuleResource) {
                 $next = $base->getRelativeResource($resource . $ext);
             } else {
-                $next = rtrim($base, '/') . '/' . $resource . $ext;
+                $next = rtrim($base ?? '', '/') . '/' . $resource . $ext;
             }
             // Ensure resource exists
             if ($this->resourceExists($next)) {
@@ -289,7 +289,7 @@ SCRIPT;
         if ($resource instanceof ModuleResource) {
             return $resource->exists();
         }
-        $base = rtrim(Director::baseFolder(), '/');
+        $base = rtrim(Director::baseFolder() ?? '', '/');
         return file_exists($base . '/' . $resource);
     }
 }

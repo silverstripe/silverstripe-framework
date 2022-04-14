@@ -52,21 +52,25 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     // PROXIED METHODS ---------------------------------------------------------
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return $this->list->offsetExists($key);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->list->offsetGet($key);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         $this->list->offsetSet($key, $value);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         $this->list->offsetUnset($key);
@@ -92,6 +96,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         $this->list->remove($itemObject);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->list->getIterator();
@@ -117,6 +122,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->count();
     }
 
+    #[\ReturnTypeWillChange]
     public function Count()
     {
         return $this->list->count();

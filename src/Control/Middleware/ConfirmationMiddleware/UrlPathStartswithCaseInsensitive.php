@@ -14,7 +14,7 @@ class UrlPathStartswithCaseInsensitive extends UrlPathStartswith
     {
         $pattern = $this->getPath();
 
-        $mb_path = mb_strcut($this->normalisePath($path), 0, strlen($pattern));
-        return mb_stripos($mb_path, $pattern) === 0;
+        $mb_path = mb_strcut($this->normalisePath($path) ?? '', 0, strlen($pattern ?? ''));
+        return mb_stripos($mb_path ?? '', $pattern ?? '') === 0;
     }
 }

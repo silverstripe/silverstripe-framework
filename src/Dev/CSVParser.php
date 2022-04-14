@@ -168,7 +168,7 @@ class CSVParser implements Iterator
      */
     protected function openFile()
     {
-        $this->fileHandle = fopen($this->filename, 'r');
+        $this->fileHandle = fopen($this->filename ?? '', 'r');
 
         if ($this->providedHeaderRow) {
             $this->headerRow = $this->remapHeader($this->providedHeaderRow);
@@ -199,8 +199,8 @@ class CSVParser implements Iterator
         $srcRow = fgetcsv(
             $this->fileHandle,
             0,
-            $this->delimiter,
-            $this->enclosure
+            $this->delimiter ?? '',
+            $this->enclosure ?? ''
         );
 
         $this->headerRow = $this->remapHeader($srcRow);
@@ -247,8 +247,8 @@ class CSVParser implements Iterator
         $srcRow = fgetcsv(
             $this->fileHandle,
             0,
-            $this->delimiter,
-            $this->enclosure
+            $this->delimiter ?? '',
+            $this->enclosure ?? ''
         );
 
         if ($srcRow) {
@@ -259,12 +259,12 @@ class CSVParser implements Iterator
                 $value = str_replace(
                     ['\\' . $this->enclosure,'\\' . $this->delimiter],
                     [$this->enclosure, $this->delimiter],
-                    $value
+                    $value ?? ''
                 );
                 // Trim leading tab
                 // [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
-                $value = ltrim($value, "\t");
-                if (array_key_exists($i, $this->headerRow)) {
+                $value = ltrim($value ?? '', "\t");
+                if (array_key_exists($i, $this->headerRow ?? [])) {
                     if ($this->headerRow[$i]) {
                         $row[$this->headerRow[$i]] = $value;
                     }
@@ -294,6 +294,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->closeFile();
@@ -303,6 +304,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->currentRow;
@@ -311,6 +313,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->rowNum;
@@ -319,6 +322,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->fetchCSVRow();
@@ -329,6 +333,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->currentRow ? true : false;

@@ -60,25 +60,25 @@ class TreeDropdownFieldTest extends SapphireTest
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
-        $tree = json_decode($response->getBody(), true);
+        $tree = json_decode($response->getBody() ?? '', true);
 
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
 
         $this->assertContains(
             $folder1->Name,
-            array_column($tree['children'], 'title'),
+            array_column($tree['children'] ?? [], 'title'),
             $folder1->Name . ' is found in the json'
         );
 
-        $filtered = array_filter($tree['children'], function ($entry) use ($folder1) {
+        $filtered = array_filter($tree['children'] ?? [], function ($entry) use ($folder1) {
             return $folder1->Name === $entry['title'];
         });
         $folder1Tree = array_pop($filtered);
 
         $this->assertContains(
             $folder1Subfolder1->Name,
-            array_column($folder1Tree['children'], 'title'),
+            array_column($folder1Tree['children'] ?? [], 'title'),
             $folder1Subfolder1->Name . ' is found in the folder1 entry in the json'
         );
     }
@@ -91,20 +91,20 @@ class TreeDropdownFieldTest extends SapphireTest
         $request = new HTTPRequest('GET', 'url', ['search'=>'sub', 'format' => 'json', 'flatList' => '1']);
         $request->setSession(new Session([]));
         $response = $field->tree($request);
-        $tree = json_decode($response->getBody(), true);
+        $tree = json_decode($response->getBody() ?? '', true);
 
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
 
         $this->assertNotContains(
             $folder1->Name,
-            array_column($tree['children'], 'title'),
+            array_column($tree['children'] ?? [], 'title'),
             $folder1->Name . ' is not found in the json'
         );
 
         $this->assertContains(
             $folder1Subfolder1->Name,
-            array_column($tree['children'], 'title'),
+            array_column($tree['children'] ?? [], 'title'),
             $folder1Subfolder1->Name . ' is found in the json'
         );
     }
@@ -123,8 +123,8 @@ class TreeDropdownFieldTest extends SapphireTest
         );
         $request->setSession(new Session([]));
         $response = $field->tree($request);
-        $tree = json_decode($response->getBody(), true);
-        $actualNodeIDs = array_column($tree['children'], 'id');
+        $tree = json_decode($response->getBody() ?? '', true);
+        $actualNodeIDs = array_column($tree['children'] ?? [], 'id');
 
 
         // Get the list of expected node IDs from the YML Fixture
@@ -155,8 +155,8 @@ class TreeDropdownFieldTest extends SapphireTest
         );
         $request->setSession(new Session([]));
         $response = $field->tree($request);
-        $tree = json_decode($response->getBody(), true);
-        $actualNodeIDs = array_column($tree['children'], 'id');
+        $tree = json_decode($response->getBody() ?? '', true);
+        $actualNodeIDs = array_column($tree['children'] ?? [], 'id');
 
         // Get the list of expected node IDs from the YML Fixture
         $expectedNodeIDs = array_map(

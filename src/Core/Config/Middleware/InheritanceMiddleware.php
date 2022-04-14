@@ -33,7 +33,7 @@ class InheritanceMiddleware implements Middleware
         }
 
         // Skip if not a class or not parent class
-        $parent = class_exists($class) ? get_parent_class($class) : null;
+        $parent = class_exists($class ?? '') ? get_parent_class($class) : null;
         if (!$parent) {
             return $config;
         }

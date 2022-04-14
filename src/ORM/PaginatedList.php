@@ -146,7 +146,7 @@ class PaginatedList extends ListDecorator
     public function getTotalItems()
     {
         if ($this->totalItems === null) {
-            $this->totalItems = count($this->list);
+            $this->totalItems = count($this->list ?? []);
         }
 
         return $this->totalItems;
@@ -211,6 +211,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return IteratorIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $pageLength = $this->getPageLength();
@@ -352,7 +353,7 @@ class PaginatedList extends ListDecorator
                     'Link' => null,
                     'CurrentBool' => false
                 ]));
-            } elseif ($num == 1 || $num == $total || in_array($num, $range)) {
+            } elseif ($num == 1 || $num == $total || in_array($num, $range ?? [])) {
                 $result->push(new ArrayData([
                     'PageNum' => $num,
                     'Link' => $link,

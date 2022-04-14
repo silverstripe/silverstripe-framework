@@ -205,26 +205,26 @@ class RequirementsTest extends SapphireTest
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
         $this->assertMatchesRegularExpression(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '/',
+            '/src=".*' . preg_quote($combinedFileName ?? '', '/') . '/',
             $html,
             'combined javascript file is included in html header'
         );
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         $this->assertTrue(
-            file_exists($combinedFilePath),
+            file_exists($combinedFilePath ?? ''),
             'combined javascript file exists'
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
         $this->assertStringContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
         $this->assertStringContainsString(
             "alert('c')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
 
@@ -248,7 +248,7 @@ class RequirementsTest extends SapphireTest
         );
 
         // Then do it again, this time not requiring the files beforehand
-        unlink($combinedFilePath);
+        unlink($combinedFilePath ?? '');
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupCombinedNonrequiredRequirements($backend);
@@ -256,26 +256,26 @@ class RequirementsTest extends SapphireTest
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
         $this->assertMatchesRegularExpression(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '/',
+            '/src=".*' . preg_quote($combinedFileName ?? '', '/') . '/',
             $html,
             'combined javascript file is included in html header'
         );
 
         /* COMBINED JAVASCRIPT FILE EXISTS */
         $this->assertTrue(
-            file_exists($combinedFilePath),
+            file_exists($combinedFilePath ?? ''),
             'combined javascript file exists'
         );
 
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
         $this->assertStringContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
         $this->assertStringContainsString(
             "alert('c')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
 
@@ -306,7 +306,7 @@ class RequirementsTest extends SapphireTest
 
         /* ASYNC IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '" async/',
+            '/src=".*' . preg_quote($combinedFileName ?? '', '/') . '" async/',
             $html,
             'async is included in script tag'
         );
@@ -324,12 +324,12 @@ class RequirementsTest extends SapphireTest
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
         $this->assertStringContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
         $this->assertStringContainsString(
             "alert('c')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
 
@@ -370,7 +370,7 @@ class RequirementsTest extends SapphireTest
         );
 
         // setup again for testing defer
-        unlink($combinedFilePath);
+        unlink($combinedFilePath ?? '');
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
 
@@ -380,7 +380,7 @@ class RequirementsTest extends SapphireTest
 
         /* DEFER IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '" defer/',
+            '/src=".*' . preg_quote($combinedFileName ?? '', '/') . '" defer/',
             $html,
             'defer is included in script tag'
         );
@@ -398,12 +398,12 @@ class RequirementsTest extends SapphireTest
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
         $this->assertStringContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
         $this->assertStringContainsString(
             "alert('c')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
 
@@ -444,7 +444,7 @@ class RequirementsTest extends SapphireTest
         );
 
         // setup again for testing async and defer
-        unlink($combinedFilePath);
+        unlink($combinedFilePath ?? '');
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
 
@@ -454,7 +454,7 @@ class RequirementsTest extends SapphireTest
 
         /* ASYNC/DEFER IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
-            '/src=".*' . preg_quote($combinedFileName, '/') . '" async="async" defer="defer"/',
+            '/src=".*' . preg_quote($combinedFileName ?? '', '/') . '" async="async" defer="defer"/',
             $html,
             'async and defer are included in script tag'
         );
@@ -469,12 +469,12 @@ class RequirementsTest extends SapphireTest
         /* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
         $this->assertStringContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
         $this->assertStringContainsString(
             "alert('c')",
-            file_get_contents($combinedFilePath),
+            file_get_contents($combinedFilePath ?? ''),
             'combined javascript has correct content'
         );
 
@@ -514,7 +514,7 @@ class RequirementsTest extends SapphireTest
             'normal requirements don\'t have async/defer'
         );
 
-        unlink($combinedFilePath);
+        unlink($combinedFilePath ?? '');
     }
 
     public function testCombinedCss()
@@ -611,7 +611,7 @@ class RequirementsTest extends SapphireTest
         $this->assertFileExists($combinedFilePath2);
         $this->assertStringNotContainsString(
             "alert('b')",
-            file_get_contents($combinedFilePath2),
+            file_get_contents($combinedFilePath2 ?? ''),
             'blocked uncombined files are not included'
         );
         $backend->unblock('javascript/RequirementsTest_b.js');
@@ -842,7 +842,7 @@ class RequirementsTest extends SapphireTest
         $backend->javascript('javascript/RequirementsTest_a.js');
         $html = $backend->includeInHTML($template);
         //wiping out commented-out html
-        $html = preg_replace('/<!--(.*)-->/Uis', '', $html);
+        $html = preg_replace('/<!--(.*)-->/Uis', '', $html ?? '');
         $this->assertStringContainsString("RequirementsTest_a.js", $html);
     }
 
@@ -1042,7 +1042,7 @@ EOS
         if (is_array($files)) {
             $failedMatches = [];
             foreach ($files as $file) {
-                if (!array_key_exists($file, $includedFiles)) {
+                if (!array_key_exists($file, $includedFiles ?? [])) {
                     $failedMatches[] = $file;
                 }
             }
@@ -1052,14 +1052,14 @@ EOS
                 "Failed asserting the $type files '"
                 . implode("', '", $failedMatches)
                 . "' have exact matches in the required elements:\n'"
-                . implode("'\n'", array_keys($includedFiles)) . "'"
+                . implode("'\n'", array_keys($includedFiles ?? [])) . "'"
             );
         } else {
             $this->assertArrayHasKey(
                 $files,
                 $includedFiles,
                 "Failed asserting the $type file '$files' has an exact match in the required elements:\n'"
-                . implode("'\n'", array_keys($includedFiles)) . "'"
+                . implode("'\n'", array_keys($includedFiles ?? [])) . "'"
             );
         }
     }
@@ -1070,7 +1070,7 @@ EOS
         if (is_array($files)) {
             $failedMatches = [];
             foreach ($files as $file) {
-                if (array_key_exists($file, $includedFiles)) {
+                if (array_key_exists($file, $includedFiles ?? [])) {
                     $failedMatches[] = $file;
                 }
             }
@@ -1080,14 +1080,14 @@ EOS
                 "Failed asserting the $type files '"
                 . implode("', '", $failedMatches)
                 . "' do not have exact matches in the required elements:\n'"
-                . implode("'\n'", array_keys($includedFiles)) . "'"
+                . implode("'\n'", array_keys($includedFiles ?? [])) . "'"
             );
         } else {
             $this->assertArrayNotHasKey(
                 $files,
                 $includedFiles,
                 "Failed asserting the $type file '$files' does not have an exact match in the required elements:"
-                        . "\n'" . implode("'\n'", array_keys($includedFiles)) . "'"
+                        . "\n'" . implode("'\n'", array_keys($includedFiles ?? [])) . "'"
             );
         }
     }
@@ -1102,8 +1102,8 @@ EOS
      */
     protected function getBackendFiles($backend, $type)
     {
-        $type = strtolower($type);
-        switch (strtolower($type)) {
+        $type = strtolower($type ?? '');
+        switch (strtolower($type ?? '')) {
             case 'css':
                 return $backend->getCSS();
             case 'js':

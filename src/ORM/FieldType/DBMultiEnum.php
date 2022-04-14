@@ -20,9 +20,9 @@ class DBMultiEnum extends DBEnum
         // Validate and assign the default
         $this->default = null;
         if ($default) {
-            $defaults = preg_split('/ *, */', trim($default));
+            $defaults = preg_split('/ *, */', trim($default ?? ''));
             foreach ($defaults as $thisDefault) {
-                if (!in_array($thisDefault, $this->enum)) {
+                if (!in_array($thisDefault, $this->enum ?? [])) {
                     throw new \InvalidArgumentException(
                         "Enum::__construct() The default value '$thisDefault' does not match "
                         . 'any item in the enumeration'

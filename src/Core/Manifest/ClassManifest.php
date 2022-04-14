@@ -332,13 +332,13 @@ class ClassManifest
      */
     public function getItemPath($name)
     {
-        $lowerName = strtolower($name);
+        $lowerName = strtolower($name ?? '');
         foreach ([
              $this->classes,
              $this->interfaces,
              $this->traits,
          ] as $source) {
-            if (isset($source[$lowerName]) && file_exists($source[$lowerName])) {
+            if (isset($source[$lowerName]) && file_exists($source[$lowerName] ?? '')) {
                 return $source[$lowerName];
             }
         }
@@ -353,7 +353,7 @@ class ClassManifest
      */
     public function getItemName($name)
     {
-        $lowerName = strtolower($name);
+        $lowerName = strtolower($name ?? '');
         foreach ([
              $this->classNames,
              $this->interfaceNames,
@@ -429,8 +429,8 @@ class ClassManifest
             $class = get_class($class);
         }
 
-        $lClass = strtolower($class);
-        if (array_key_exists($lClass, $this->descendants)) {
+        $lClass = strtolower($class ?? '');
+        if (array_key_exists($lClass, $this->descendants ?? [])) {
             return $this->descendants[$lClass];
         }
 
@@ -477,8 +477,8 @@ class ClassManifest
      */
     public function getImplementorsOf($interface)
     {
-        $lowerInterface = strtolower($interface);
-        if (array_key_exists($lowerInterface, $this->implementors)) {
+        $lowerInterface = strtolower($interface ?? '');
+        if (array_key_exists($lowerInterface, $this->implementors ?? [])) {
             return $this->implementors[$lowerInterface];
         } else {
             return [];
@@ -550,7 +550,7 @@ class ClassManifest
         // files will have changed and TokenisedRegularExpression is quite
         // slow. A combination of the file name and file contents hash are used,
         // since just using the datetime lead to problems with upgrading.
-        $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
+        $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename ?? '') . '_' . md5_file($pathname ?? '');
 
         // Attempt to load from cache
         // Note: $classes, $interfaces and $traits arrays have correct-case keys, not lowercase
@@ -583,8 +583,8 @@ class ClassManifest
 
         // Merge raw class data into global list
         foreach ($classes as $className => $classInfo) {
-            $lowerClassName = strtolower($className);
-            if (array_key_exists($lowerClassName, $this->classes)) {
+            $lowerClassName = strtolower($className ?? '');
+            if (array_key_exists($lowerClassName, $this->classes ?? [])) {
                 throw new Exception(sprintf(
                     'There are two files containing the "%s" class: "%s" and "%s"',
                     $className,
@@ -594,8 +594,8 @@ class ClassManifest
             }
 
             // Skip if implements TestOnly, but doesn't include tests
-            $lowerInterfaces = array_map('strtolower', $classInfo['interfaces']);
-            if (!$includeTests && in_array(strtolower(TestOnly::class), $lowerInterfaces)) {
+            $lowerInterfaces = array_map('strtolower', $classInfo['interfaces'] ?? []);
+            if (!$includeTests && in_array(strtolower(TestOnly::class), $lowerInterfaces ?? [])) {
                 $changed = true;
                 unset($classes[$className]);
                 continue;
@@ -607,7 +607,7 @@ class ClassManifest
             // Add to children
             if ($classInfo['extends']) {
                 foreach ($classInfo['extends'] as $ancestor) {
-                    $lowerAncestor = strtolower($ancestor);
+                    $lowerAncestor = strtolower($ancestor ?? '');
                     if (!isset($this->children[$lowerAncestor])) {
                         $this->children[$lowerAncestor] = [];
                     }
@@ -619,7 +619,7 @@ class ClassManifest
 
             // Load interfaces
             foreach ($classInfo['interfaces'] as $interface) {
-                $lowerInterface = strtolower($interface);
+                $lowerInterface = strtolower($interface ?? '');
                 if (!isset($this->implementors[$lowerInterface])) {
                     $this->implementors[$lowerInterface] = [];
                 }
@@ -629,14 +629,14 @@ class ClassManifest
 
         // Merge all found interfaces into list
         foreach ($interfaces as $interfaceName => $interfaceInfo) {
-            $lowerInterface = strtolower($interfaceName);
+            $lowerInterface = strtolower($interfaceName ?? '');
             $this->interfaces[$lowerInterface] = $pathname;
             $this->interfaceNames[$lowerInterface] = $interfaceName;
         }
 
         // Merge all traits
         foreach ($traits as $traitName => $traitInfo) {
-            $lowerTrait = strtolower($traitName);
+            $lowerTrait = strtolower($traitName ?? '');
             $this->traits[$lowerTrait] = $pathname;
             $this->traitNames[$lowerTrait] = $traitName;
         }
@@ -662,7 +662,7 @@ class ClassManifest
     protected function coalesceDescendants($class)
     {
         // Reset descendents to immediate children initially
-        $lowerClass = strtolower($class);
+        $lowerClass = strtolower($class ?? '');
         if (empty($this->children[$lowerClass])) {
             return [];
         }
@@ -736,7 +736,7 @@ class ClassManifest
             }
             // Detect legacy cache keys (non-associative)
             $array = $data[$key];
-            if (!empty($array) && is_numeric(key($array))) {
+            if (!empty($array) && is_numeric(key($array ?? []))) {
                 return false;
             }
         }

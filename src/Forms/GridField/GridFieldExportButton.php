@@ -178,7 +178,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             $csvWriter->addFormatter(function (array $row) {
                 foreach ($row as &$item) {
                     // [SS-2017-007] Sanitise XLS executable column values with a leading tab
-                    if (preg_match('/^[-@=+].*/', $item)) {
+                    if (preg_match('/^[-@=+].*/', $item ?? '')) {
                         $item = "\t" . $item;
                     }
                 }
@@ -192,7 +192,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
             // source name as the header instead
             foreach ($csvColumns as $columnSource => $columnHeader) {
-                if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
+                if (is_array($columnHeader) && array_key_exists('title', $columnHeader ?? [])) {
                     $headers[] = $columnHeader['title'];
                 } else {
                     $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
@@ -242,9 +242,9 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
                         }
 
                         $value = $columnHeader($relObj);
-                    } elseif ($gridFieldColumnsComponent && array_key_exists($columnSource, $columnsHandled)) {
+                    } elseif ($gridFieldColumnsComponent && array_key_exists($columnSource, $columnsHandled ?? [])) {
                         $value = strip_tags(
-                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource)
+                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource) ?? ''
                         );
                     } else {
                         $value = $gridField->getDataFieldValue($item, $columnSource);

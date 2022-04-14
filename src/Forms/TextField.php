@@ -141,7 +141,7 @@ class TextField extends FormField implements TippableFieldInterface
      */
     public function validate($validator)
     {
-        if (!is_null($this->maxLength) && mb_strlen($this->value) > $this->maxLength) {
+        if (!is_null($this->maxLength) && mb_strlen($this->value ?? '') > $this->maxLength) {
             $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
             $validator->validationError(
                 $this->name,

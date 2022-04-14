@@ -630,11 +630,11 @@ class FormTest extends FunctionalTest
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission reloads form if security token invalid');
         $this->assertTrue(
-            stripos($response->getBody(), 'name="SecurityID" value="' . $expectedToken . '"') !== false,
+            stripos($response->getBody() ?? '', 'name="SecurityID" value="' . $expectedToken . '"') !== false,
             'Submission reloads with correct security token after failure'
         );
         $this->assertTrue(
-            stripos($response->getBody(), 'name="SecurityID" value="' . $invalidToken . '"') === false,
+            stripos($response->getBody() ?? '', 'name="SecurityID" value="' . $invalidToken . '"') === false,
             'Submission reloads without incorrect security token after failure'
         );
 
@@ -646,7 +646,7 @@ class FormTest extends FunctionalTest
         $tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
         $this->assertEquals(
             1,
-            count($tokenEls),
+            count($tokenEls ?? []),
             'Token form field added for controller without disableSecurityToken()'
         );
         $token = (string)$tokenEls[0];
@@ -1147,7 +1147,7 @@ class FormTest extends FunctionalTest
                 html_entity_decode('&#8239;', 0, 'UTF-8'), // narrow non-breaking space
             ],
             ' ',
-            trim($input)
+            trim($input ?? '')
         );
     }
 }

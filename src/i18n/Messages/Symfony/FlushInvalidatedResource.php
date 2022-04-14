@@ -31,8 +31,8 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
     {
         // Check mtime of canary
         $canary = static::canary();
-        if (file_exists($canary)) {
-            return filemtime($canary) < $timestamp;
+        if (file_exists($canary ?? '')) {
+            return filemtime($canary ?? '') < $timestamp;
         }
 
         // Rebuild canary
@@ -95,6 +95,6 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      */
     protected static function touch()
     {
-        touch(static::canary());
+        touch(static::canary() ?? '');
     }
 }

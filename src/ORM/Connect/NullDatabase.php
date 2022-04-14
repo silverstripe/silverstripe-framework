@@ -54,7 +54,7 @@ class NullDatabase extends Database
      */
     public function query($sql, $errorLevel = E_USER_ERROR)
     {
-        throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
+        throw new NullDatabaseException(sprintf($this->queryErrorMessage ?? '', $sql));
     }
 
     /**
@@ -62,7 +62,7 @@ class NullDatabase extends Database
      */
     public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
     {
-        throw new NullDatabaseException(sprintf($this->queryErrorMessage, $sql));
+        throw new NullDatabaseException(sprintf($this->queryErrorMessage ?? '', $sql));
     }
 
     /**

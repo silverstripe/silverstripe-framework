@@ -407,11 +407,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             while ($parentClass !== parent::class) {
                 // _action templates have higher priority
                 if ($action && $action != 'index') {
-                    $actionTemplates[] = strtok($parentClass, '_') . '_' . $action;
+                    $actionTemplates[] = strtok($parentClass ?? '', '_') . '_' . $action;
                 }
                 // class templates have lower priority
-                $classTemplates[] = strtok($parentClass, '_');
-                $parentClass = get_parent_class($parentClass);
+                $classTemplates[] = strtok($parentClass ?? '', '_');
+                $parentClass = get_parent_class($parentClass ?? '');
             }
 
             // Add controller templates for inheritance chain
@@ -447,8 +447,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
         $returnURL = $fullURL;
 
-        if (($pos = strpos($fullURL, $action)) !== false) {
-            $returnURL = substr($fullURL, 0, $pos);
+        if (($pos = strpos($fullURL ?? '', $action ?? '')) !== false) {
+            $returnURL = substr($fullURL ?? '', 0, $pos);
         }
 
         return $returnURL;
@@ -471,12 +471,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         $class = static::class;
         while ($class != 'SilverStripe\\Control\\RequestHandler') {
-            $templateName = strtok($class, '_') . '_' . $action;
+            $templateName = strtok($class ?? '', '_') . '_' . $action;
             if (SSViewer::hasTemplate($templateName)) {
                 return $class;
             }
 
-            $class = get_parent_class($class);
+            $class = get_parent_class($class ?? '');
         }
 
         return null;
@@ -500,8 +500,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $templates   = [];
 
         while ($parentClass != __CLASS__) {
-            $templates[] = strtok($parentClass, '_') . '_' . $action;
-            $parentClass = get_parent_class($parentClass);
+            $templates[] = strtok($parentClass ?? '', '_') . '_' . $action;
+            $parentClass = get_parent_class($parentClass ?? '');
         }
 
         return SSViewer::hasTemplate($templates);
@@ -585,7 +585,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $member = Security::getCurrentUser();
         }
         if (is_array($perm)) {
-            $perm = array_map([$this, 'can'], $perm, array_fill(0, count($perm), $member));
+            $perm = array_map([$this, 'can'], $perm ?? [], array_fill(0, count($perm ?? []), $member));
             return min($perm);
         }
         if ($this->hasMethod($methodName = 'can' . $perm)) {
@@ -679,27 +679,27 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         foreach ($args as $arg) {
             // Find fragment identifier - keep the last one
-            if (strpos($arg, '#') !== false) {
-                list($arg, $fragmentIdentifier) = explode('#', $arg, 2);
+            if (strpos($arg ?? '', '#') !== false) {
+                list($arg, $fragmentIdentifier) = explode('#', $arg ?? '', 2);
             }
             // Find querystrings
-            if (strpos($arg, '?') !== false) {
-                list($arg, $suffix) = explode('?', $arg, 2);
-                parse_str($suffix, $localargs);
+            if (strpos($arg ?? '', '?') !== false) {
+                list($arg, $suffix) = explode('?', $arg ?? '', 2);
+                parse_str($suffix ?? '', $localargs);
                 $queryargs = array_merge($queryargs, $localargs);
             }
             if ((is_string($arg) && $arg) || is_numeric($arg)) {
                 $arg = (string) $arg;
-                if ($result && substr($result, -1) != '/' && $arg[0] != '/') {
+                if ($result && substr($result ?? '', -1) != '/' && $arg[0] != '/') {
                     $result .= "/$arg";
                 } else {
-                    $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
+                    $result .= (substr($result ?? '', -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
                 }
             }
         }
 
         if ($queryargs) {
-            $result .= '?' . http_build_query($queryargs);
+            $result .= '?' . http_build_query($queryargs ?? []);
         }
 
         if ($fragmentIdentifier) {

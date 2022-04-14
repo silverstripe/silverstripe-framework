@@ -313,7 +313,7 @@ abstract class BaseKernel implements Kernel
     {
         // Is there an _ss_environment.php file?
         if (!file_exists($this->basePath . '/_ss_environment.php') &&
-            !file_exists(dirname($this->basePath) . '/_ss_environment.php')
+            !file_exists(dirname($this->basePath ?? '') . '/_ss_environment.php')
         ) {
             return;
         }

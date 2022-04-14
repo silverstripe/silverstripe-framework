@@ -157,7 +157,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
             return 'Contact an administrator: ' . Email::obfuscate($adminEmail);
         }
 
-        if (!is_array($adminEmail) || !count($adminEmail)) {
+        if (!is_array($adminEmail) || !count($adminEmail ?? [])) {
             return null;
         }
 

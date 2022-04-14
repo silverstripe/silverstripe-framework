@@ -87,10 +87,10 @@ class ListboxField extends MultiSelectField
         $options = [];
         $selectedValue = $this->getValueArray();
         foreach ($this->getSource() as $itemValue => $title) {
-            $itemSelected = in_array($itemValue, $selectedValue)
-                || in_array($itemValue, $this->getDefaultItems());
+            $itemSelected = in_array($itemValue, $selectedValue ?? [])
+                || in_array($itemValue, $this->getDefaultItems() ?? []);
             $itemDisabled = $this->isDisabled()
-                || in_array($itemValue, $this->getDisabledItems());
+                || in_array($itemValue, $this->getDisabledItems() ?? []);
             $options[] = new ArrayData([
                 'Title' => $title,
                 'Value' => $itemValue,

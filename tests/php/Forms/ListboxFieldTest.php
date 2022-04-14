@@ -154,7 +154,7 @@ class ListboxFieldTest extends SapphireTest
         $field->setValue('a');
         $parser = new CSSContentParser($field->Field());
         $optEls = $parser->getBySelector('option');
-        $this->assertEquals(3, count($optEls));
+        $this->assertEquals(3, count($optEls ?? []));
         $this->assertEquals('selected', (string)$optEls[0]['selected']);
         $this->assertEquals('', (string)$optEls[1]['selected']);
         $this->assertEquals('', (string)$optEls[2]['selected']);
@@ -167,7 +167,7 @@ class ListboxFieldTest extends SapphireTest
         $field->setValue(['a', 'c']);
         $parser = new CSSContentParser($field->Field());
         $optEls = $parser->getBySelector('option');
-        $this->assertEquals(3, count($optEls));
+        $this->assertEquals(3, count($optEls ?? []));
         $this->assertEquals('selected', (string)$optEls[0]['selected']);
         $this->assertEquals('', (string)$optEls[1]['selected']);
         $this->assertEquals('selected', (string)$optEls[2]['selected']);
@@ -278,7 +278,7 @@ class ListboxFieldTest extends SapphireTest
         $p = new CSSContentParser($field->performReadonlyTransformation()->Field());
         $this->assertEquals(
             'Tag 1, Tag 2',
-            trim(preg_replace('/\s+/', ' ', $p->getByXpath('//span')[0]))
+            trim(preg_replace('/\s+/', ' ', $p->getByXpath('//span')[0] ?? '') ?? '')
         );
         $this->assertEquals(
             '1, 2',

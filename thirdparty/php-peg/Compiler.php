@@ -41,10 +41,10 @@ class PHPWriter {
 	}
 
 	function function_name( $str ) {
-		$str = preg_replace( '/-/', '_', $str ) ;
-		$str = preg_replace( '/\$/', 'DLR', $str ) ;
-		$str = preg_replace( '/\*/', 'STR', $str ) ;
-		$str = preg_replace( '/[^\w]+/', '', $str ) ;
+		$str = preg_replace( '/-/', '_', $str ?? '' ) ;
+		$str = preg_replace( '/\$/', 'DLR', $str ?? '' ) ;
+		$str = preg_replace( '/\*/', 'STR', $str ?? '' ) ;
+		$str = preg_replace( '/[^\w]+/', '', $str ?? '' ) ;
 		return $str ;
 	}
 
@@ -255,7 +255,7 @@ abstract class TokenExpressionable extends TokenTerminal {
 	static $expression_rx = '/ \$(\w+) | { \$(\w+) } /x';
 
 	function contains_expression( $value ){
-		return preg_match(self::$expression_rx, $value);
+		return preg_match(self::$expression_rx, $value ?? '');
 	}
 
 	function expression_replace($matches) {
@@ -263,14 +263,14 @@ abstract class TokenExpressionable extends TokenTerminal {
 	}
 	
 	function match_code( $value ) {
-		$value = preg_replace_callback(self::$expression_rx, array($this, 'expression_replace'), $value);
+		$value = preg_replace_callback(self::$expression_rx, array($this, 'expression_replace'), $value ?? '');
 		return parent::match_code($value);
 	}
 }
 
 class TokenLiteral extends TokenExpressionable {
 	function __construct( $value ) {
-		parent::__construct( 'literal', "'" . substr($value,1,-1) . "'" );
+		parent::__construct( 'literal', "'" . substr($value ?? '',1,-1) . "'" );
 	}
 
 	function match_code( $value ) {
@@ -289,8 +289,8 @@ class TokenLiteral extends TokenExpressionable {
 
 class TokenRegex extends TokenExpressionable {
 	static function escape( $rx ) {
-		$rx = str_replace( "'", "\\'", $rx ) ;
-		$rx = str_replace( '\\\\', '\\\\\\\\', $rx ) ;
+		$rx = str_replace( "'", "\\'", $rx ?? '' ) ;
+		$rx = str_replace( '\\\\', '\\\\\\\\', $rx ?? '' ) ;
 		return $rx ;
 	}
 	
@@ -503,17 +503,17 @@ class Rule extends PHPWriter {
 		$this->lines = $lines;
 		
 		// Find the first line (if any) that's an attached function definition. Can skip first line (unless this block is malformed)
-		for ($i = 1; $i < count($lines); $i++) {
-			if (preg_match(self::$function_rx, $lines[$i])) break;
+		for ($i = 1; $i < count($lines ?? []); $i++) {
+			if (preg_match(self::$function_rx, $lines[$i] ?? '')) break;
 		}
 		
 		// Then split into the two parts
-		$spec = array_slice($lines, 0, $i);
-		$funcs = array_slice($lines, $i);
+		$spec = array_slice($lines ?? [], 0, $i);
+		$funcs = array_slice($lines ?? [], $i ?? 0);
 		
 		// Parse out the spec
 		$spec = implode("\n", $spec);
-		if (!preg_match(self::$rule_rx, $spec, $specmatch)) user_error('Malformed rule spec ' . $spec, E_USER_ERROR);
+		if (!preg_match(self::$rule_rx, $spec ?? '', $specmatch)) user_error('Malformed rule spec ' . $spec, E_USER_ERROR);
 		
 		$this->name = $specmatch['name'];
 		
@@ -525,10 +525,10 @@ class Rule extends PHPWriter {
 		$this->arguments = array();
 		
 		if ($specmatch['arguments']) {
-			preg_match_all(self::$argument_rx, $specmatch['arguments'], $arguments, PREG_SET_ORDER);
+			preg_match_all(self::$argument_rx, $specmatch['arguments'] ?? '', $arguments, PREG_SET_ORDER);
 			
 			foreach ($arguments as $argument){
-				$this->arguments[trim($argument[1])] = trim($argument[2]);
+				$this->arguments[trim($argument[1])] = trim($argument[2] ?? '');
 			}
 		}
 		
@@ -542,15 +542,15 @@ class Rule extends PHPWriter {
 			if (!$this->extends) user_error('Replace matcher, but not on an extends rule', E_USER_ERROR);
 			
 			$this->replacements = array();
-			preg_match_all(self::$replacement_rx, $specmatch['rule'], $replacements, PREG_SET_ORDER);
+			preg_match_all(self::$replacement_rx, $specmatch['rule'] ?? '', $replacements, PREG_SET_ORDER);
 			
 			$rule = $this->extends->rule;
 			
 			foreach ($replacements as $replacement) {
-				$search = trim($replacement[1]);
-				$replace = trim($replacement[3]); if ($replace == "''" || $replace == '""') $replace = "";
+				$search = trim($replacement[1] ?? '');
+				$replace = trim($replacement[3] ?? ''); if ($replace == "''" || $replace == '""') $replace = "";
 				
-				$rule = str_replace($search, ' '.$replace.' ', $rule);
+				$rule = str_replace($search ?? '', ' '.$replace.' ', $rule ?? '');
 			}
 			
 			$this->rule = $rule;
@@ -565,7 +565,7 @@ class Rule extends PHPWriter {
 
 		foreach( $funcs as $line ) {
 			/* Handle function definitions */
-			if ( preg_match( self::$function_rx, $line, $func_match, 0 ) ) {
+			if ( preg_match( self::$function_rx, $line ?? '', $func_match, 0 ) ) {
 				$active_function = $func_match[1];
 				$this->functions[$active_function] = $func_match[2] . PHP_EOL;
 			}
@@ -575,16 +575,16 @@ class Rule extends PHPWriter {
 
 	/* Manual parsing, because we can't bootstrap ourselves yet */
 	function parse_rule() {
-		$rule = trim( $this->rule ) ;
+		$rule = trim( $this->rule ?? '' ) ;
 
 		/* If this is a regex end-token, just mark it and return */
-		if ( substr( $rule, 0, 1 ) == '/' ) {
+		if ( substr( $rule ?? '', 0, 1 ) == '/' ) {
 			$this->parsed = new TokenRegex( $rule ) ;
 		}
 		else {
 			$tokens = array() ;
 			$this->tokenize( $rule, $tokens ) ;
-			$this->parsed = ( count( $tokens ) == 1 ? array_pop( $tokens ) : new TokenSequence( $tokens ) ) ;
+			$this->parsed = ( count( $tokens ?? [] ) == 1 ? array_pop( $tokens ) : new TokenSequence( $tokens ) ) ;
 		}
 		
 	}
@@ -599,53 +599,53 @@ class Rule extends PHPWriter {
 
 		$pending = new Pending() ;
 
-		while ( $o < strlen( $str ) ) {
-			$sub = substr( $str, $o ) ;
+		while ( $o < strlen( $str ?? '' ) ) {
+			$sub = substr( $str ?? '', $o ?? 0 ) ;
 
 			/* Absorb white-space */
-			if ( preg_match( '/^\s+/', $sub, $match ) ) {
-				$o += strlen( $match[0] ) ;
+			if ( preg_match( '/^\s+/', $sub ?? '', $match ) ) {
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle expression labels */
-			elseif ( preg_match( '/^(\w*):/', $sub, $match ) ) {
+			elseif ( preg_match( '/^(\w*):/', $sub ?? '', $match ) ) {
 				$pending->set( 'tag', isset( $match[1] ) ? $match[1] : '' ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle descent token */
-			elseif ( preg_match( '/^[\w-]+/', $sub, $match ) ) {
+			elseif ( preg_match( '/^[\w-]+/', $sub ?? '', $match ) ) {
 				$tokens[] = $t = new TokenRecurse( $match[0] ) ; $pending->apply_if_present( $t ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle " quoted literals */
-			elseif ( preg_match( '/^"[^"]*"/', $sub, $match ) ) {
+			elseif ( preg_match( '/^"[^"]*"/', $sub ?? '', $match ) ) {
 				$tokens[] = $t = new TokenLiteral( $match[0] ) ; $pending->apply_if_present( $t ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle ' quoted literals */
-			elseif ( preg_match( "/^'[^']*'/", $sub, $match ) ) {
+			elseif ( preg_match( "/^'[^']*'/", $sub ?? '', $match ) ) {
 				$tokens[] = $t = new TokenLiteral( $match[0] ) ; $pending->apply_if_present( $t ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle regexs */
-			elseif ( preg_match( self::$rx_rx, $sub, $match ) ) {
+			elseif ( preg_match( self::$rx_rx, $sub ?? '', $match ) ) {
 				$tokens[] = $t = new TokenRegex( $match[0] ) ; $pending->apply_if_present( $t ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle $ call literals */
-			elseif ( preg_match( '/^\$(\w+)/', $sub, $match ) ) {
+			elseif ( preg_match( '/^\$(\w+)/', $sub ?? '', $match ) ) {
 				$tokens[] = $t = new TokenExpressionedRecurse( $match[1] ) ; $pending->apply_if_present( $t ) ;
-				$o += strlen( $match[0] ) ;
+				$o += strlen( $match[0] ?? '' ) ;
 			}
 			/* Handle flags */
-			elseif ( preg_match( '/^\@(\w+)/', $sub, $match ) ) {
-				$l = count( $tokens ) - 1 ;
-				$o += strlen( $match[0] ) ;
+			elseif ( preg_match( '/^\@(\w+)/', $sub ?? '', $match ) ) {
+				$l = count( $tokens ?? [] ) - 1 ;
+				$o += strlen( $match[0] ?? '' ) ;
 				user_error( "TODO: Flags not currently supported", E_USER_WARNING ) ;
 			}
 			/* Handle control tokens */
 			else {
-				$c = substr( $sub, 0, 1 ) ;
-				$l = count( $tokens ) - 1 ;
+				$c = substr( $sub ?? '', 0, 1 ) ;
+				$l = count( $tokens ?? [] ) - 1 ;
 				$o += 1 ;
 				switch( $c ) {
 					case '?':
@@ -747,7 +747,7 @@ class Rule extends PHPWriter {
 
 		$functions = array() ;
 		foreach( $this->functions as $name => $function ) {
-			$function_name = $this->function_name( preg_match( '/^_/', $name ) ? $this->name.$name : $this->name.'_'.$name ) ;
+			$function_name = $this->function_name( preg_match( '/^_/', $name ?? '' ) ? $this->name.$name : $this->name.'_'.$name ) ;
 			$functions[] = implode( PHP_EOL, array(
 				'function ' . $function_name . ' ' . $function
 			));
@@ -771,35 +771,35 @@ class RuleSet {
 	}
 	
 	function compile($indent, $rulestr) {
-		$indentrx = '@^'.preg_quote($indent).'@';
+		$indentrx = '@^'.preg_quote($indent ?? '').'@';
 		
 		$out = array();
 		$block = array();
 		
-		foreach (preg_split('/\r\n|\r|\n/', $rulestr) as $line) {
+		foreach (preg_split('/\r\n|\r|\n/', $rulestr ?? '') as $line) {
 			// Ignore blank lines
-			if (!trim($line)) continue;
+			if (!trim($line ?? '')) continue;
 			// Ignore comments
-			if (preg_match('/^[\x20|\t]+#/', $line)) continue;
+			if (preg_match('/^[\x20|\t]+#/', $line ?? '')) continue;
 			
 			// Strip off indent
 			if (!empty($indent)) { 
-				if (strpos($line, $indent) === 0) $line = substr($line, strlen($indent));
+				if (strpos($line ?? '', $indent ?? '') === 0) $line = substr($line ?? '', strlen($indent ?? ''));
 				else user_error('Non-blank line with inconsistent index in parser block', E_USER_ERROR);
 			}
 			
 			// Any indented line, add to current set of lines
-			if (preg_match('/^\x20|\t/', $line)) $block[] = $line;
+			if (preg_match('/^\x20|\t/', $line ?? '')) $block[] = $line;
 			
 			// Any non-indented line marks a new block. Add a rule for the current block, then start a new block
 			else {
-				if (count($block)) $this->addRule($indent, $block, $out);
+				if (count($block ?? [])) $this->addRule($indent, $block, $out);
 				$block = array($line);
 			}
 		}
 		
 		// Any unfinished block add a rule for
-		if (count($block)) $this->addRule($indent, $block, $out);
+		if (count($block ?? [])) $this->addRule($indent, $block, $out);
 		
 		// And return the compiled version
 		return implode( '', $out ) ;
@@ -819,12 +819,12 @@ class ParserCompiler {
 		$indent = $match[1];
 		
 		/* Get the parser name for this block */
-		if     ($class = trim($match[2])) self::$currentClass = $class;
+		if     ($class = trim($match[2] ?? '')) self::$currentClass = $class;
 		elseif (self::$currentClass)      $class = self::$currentClass;
 		else                              $class = self::$currentClass = 'Anonymous Parser';
 		
 		/* Check for pragmas */
-		if (strpos($class, '!') === 0) {
+		if (strpos($class ?? '', '!') === 0) {
 			switch ($class) {
 				case '!silent':
 					// NOP - dont output
@@ -855,11 +855,11 @@ class ParserCompiler {
 			\*/                                        # The comment end
 		@mx';
 
-		return preg_replace_callback( $rx, array( 'ParserCompiler', 'create_parser' ), $string ) ;
+		return preg_replace_callback( $rx ?? '', array( 'ParserCompiler', 'create_parser' ), $string ?? '' ) ;
 	}
 
 	static function cli( $args ) {
-		if ( count( $args ) == 1 ) {
+		if ( count( $args ?? [] ) == 1 ) {
 			print "Parser Compiler: A compiler for PEG parsers in PHP \n" ;
 			print "(C) 2009 SilverStripe. See COPYING for redistribution rights. \n" ;
 			print "\n" ;
@@ -868,11 +868,11 @@ class ParserCompiler {
 		}
 		else {
 			$fname = ( $args[1] == '-' ? 'php://stdin' : $args[1] ) ;
-			$string = file_get_contents( $fname ) ;
+			$string = file_get_contents( $fname ?? '' ) ;
 			$string = self::compile( $string ) ;
 
 			if ( !empty( $args[2] ) && $args[2] != '-' ) {
-				file_put_contents( $args[2], $string ) ;
+				file_put_contents( $args[2] ?? '', $string ) ;
 			}
 			else {
 				print $string ;

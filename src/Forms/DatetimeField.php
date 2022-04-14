@@ -196,7 +196,7 @@ class DatetimeField extends TextField
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
-            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern()));
+            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern() ?? ''));
             $timestamp = $fromFormatter->parse($datetime);
         }
 
@@ -411,7 +411,7 @@ class DatetimeField extends TextField
         $timestamp = $formatter->parse($datetime);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($datetime, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($datetime ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }
@@ -584,7 +584,7 @@ class DatetimeField extends TextField
         // Check min date (in server timezone)
         $min = $this->getMinDatetime();
         if ($min) {
-            $oops = strtotime($this->value) < strtotime($min);
+            $oops = strtotime($this->value ?? '') < strtotime($min ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
@@ -609,7 +609,7 @@ class DatetimeField extends TextField
         // Check max date (in server timezone)
         $max = $this->getMaxDatetime();
         if ($max) {
-            $oops = strtotime($this->value) > strtotime($max);
+            $oops = strtotime($this->value ?? '') > strtotime($max ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,

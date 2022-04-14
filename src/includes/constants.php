@@ -49,12 +49,12 @@ if (!defined('BASE_PATH')) {
 
             $matched = preg_match(
                 '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
-                $backtraceItem['file'],
+                $backtraceItem['file'] ?? '',
                 $matches
             );
 
             if ($matched) {
-                return realpath($matches['base']) ?: DIRECTORY_SEPARATOR;
+                return realpath($matches['base'] ?? '') ?: DIRECTORY_SEPARATOR;
             }
         }
 
@@ -91,7 +91,7 @@ if (!Environment::getEnv('SS_IGNORE_DOT_ENV')) {
 }
 
 // Validate SS_BASE_URL is absolute
-if (Environment::getEnv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', Environment::getEnv('SS_BASE_URL'))) {
+if (Environment::getEnv('SS_BASE_URL') && !preg_match('#^(\w+:)?//.*#', Environment::getEnv('SS_BASE_URL') ?? '')) {
     call_user_func(function () {
         $base = Environment::getEnv('SS_BASE_URL');
         user_error(
@@ -111,7 +111,7 @@ if (!defined('BASE_URL')) {
         $base = Environment::getEnv('SS_BASE_URL');
         if ($base) {
             // Strip relative path from SS_BASE_URL
-            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+            return rtrim(parse_url($base ?? '', PHP_URL_PATH) ?? '', '/');
         }
 
         // Unless specified, use empty string for base in CLI
@@ -125,34 +125,34 @@ if (!defined('BASE_URL')) {
         $scriptName = Convert::slashes($_SERVER['SCRIPT_NAME'], '/');
 
         // Ensure script is served from public folder (otherwise error)
-        if (stripos($path, PUBLIC_PATH) !== 0) {
+        if (stripos($path ?? '', PUBLIC_PATH) !== 0) {
             return '';
         }
 
         // Get entire url following PUBLIC_PATH
-        $urlSegmentToRemove = Convert::slashes(substr($path, strlen(PUBLIC_PATH)), '/');
-        if (substr($scriptName, -strlen($urlSegmentToRemove)) !== $urlSegmentToRemove) {
+        $urlSegmentToRemove = Convert::slashes(substr($path ?? '', strlen(PUBLIC_PATH)), '/');
+        if (substr($scriptName ?? '', -strlen($urlSegmentToRemove ?? '')) !== $urlSegmentToRemove) {
             return '';
         }
 
         // Remove this from end of SCRIPT_NAME to get url to base
-        $baseURL = substr($scriptName, 0, -strlen($urlSegmentToRemove));
-        $baseURL = rtrim(ltrim($baseURL, '.'), '/');
+        $baseURL = substr($scriptName ?? '', 0, -strlen($urlSegmentToRemove ?? ''));
+        $baseURL = rtrim(ltrim($baseURL ?? '', '.'), '/');
 
         // When htaccess redirects from /base to /base/public folder, we need to only include /public
         // in the BASE_URL if it's also present in the request
         if (!$baseURL
             || !PUBLIC_DIR
             || !isset($_SERVER['REQUEST_URI'])
-            || substr($baseURL, -strlen(PUBLIC_DIR)) !== PUBLIC_DIR
+            || substr($baseURL ?? '', -strlen(PUBLIC_DIR)) !== PUBLIC_DIR
         ) {
             return $baseURL;
         }
 
         $requestURI = $_SERVER['REQUEST_URI'];
         // Check if /base/public or /base are in the request (delimited by /)
-        foreach ([$baseURL, dirname($baseURL)] as $candidate) {
-            if (stripos($requestURI, rtrim($candidate, '/') . '/') === 0) {
+        foreach ([$baseURL, dirname($baseURL ?? '')] as $candidate) {
+            if (stripos($requestURI ?? '', rtrim($candidate ?? '', '/') . '/') === 0) {
                 return $candidate;
             }
         }
@@ -186,7 +186,7 @@ if (!defined('ASSETS_PATH')) {
             (PUBLIC_DIR ? PUBLIC_DIR : null),
             ASSETS_DIR
         ];
-        define('ASSETS_PATH', implode(DIRECTORY_SEPARATOR, array_filter($paths)));
+        define('ASSETS_PATH', implode(DIRECTORY_SEPARATOR, array_filter($paths ?? [])));
     });
 }
 
@@ -202,7 +202,7 @@ if (!defined('TEMP_PATH')) {
     } elseif ($path = Environment::getEnv('SS_TEMP_PATH')) {
         // If path is relative, rewrite it to be relative to BASE_PATH - as web requests are relative to
         // public/index.php, and we don't want the TEMP_PATH to be inside the public/ directory by default
-        if (ltrim($path, DIRECTORY_SEPARATOR) === $path) {
+        if (ltrim($path ?? '', DIRECTORY_SEPARATOR) === $path) {
             $path = BASE_PATH . DIRECTORY_SEPARATOR . $path;
         }
         define('TEMP_PATH', $path);
@@ -220,7 +220,7 @@ if (!defined('TEMP_FOLDER')) {
 if (!defined('RESOURCES_DIR')) {
     $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
     $resourcesDir = $project->getResourcesDir() ?: 'resources';
-    if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir)) {
+    if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir ?? '')) {
         define('RESOURCES_DIR', $resourcesDir);
     } else {
         throw new LogicException(sprintf(

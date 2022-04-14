@@ -85,7 +85,7 @@ class URLSegmentFilter implements FilterInterface
             }
         }
 
-        $name = mb_strtolower($name);
+        $name = mb_strtolower($name ?? '');
         $replacements = $this->getReplacements();
 
         // Unset automated removal of non-ASCII characters, and don't try to transliterate
@@ -94,13 +94,13 @@ class URLSegmentFilter implements FilterInterface
         }
 
         foreach ($replacements as $regex => $replace) {
-            $name = preg_replace($regex, $replace, $name);
+            $name = preg_replace($regex ?? '', $replace ?? '', $name ?? '');
         }
 
         // Multibyte URLs require percent encoding to comply to RFC 3986.
         // Without this setting, the "remove non-ASCII chars" regex takes care of that.
         if ($this->getAllowMultibyte()) {
-            $name = rawurlencode($name);
+            $name = rawurlencode($name ?? '');
         }
 
         return $name;

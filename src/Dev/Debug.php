@@ -179,17 +179,17 @@ class Debug
         $accepted = $request->getAcceptMimetypes(false);
 
         // Explicit opt in
-        if (in_array('text/html', $accepted)) {
+        if (in_array('text/html', $accepted ?? [])) {
             return true;
         };
 
         // Implicit opt-out
-        if (in_array('application/json', $accepted)) {
+        if (in_array('application/json', $accepted ?? [])) {
             return false;
         }
 
         // Fallback to wildcard comparison
-        if (in_array('*/*', $accepted)) {
+        if (in_array('*/*', $accepted ?? [])) {
             return true;
         }
         return false;

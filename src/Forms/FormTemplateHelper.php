@@ -39,7 +39,7 @@ class FormTemplateHelper
         }
 
         $reflection = new ReflectionClass($form);
-        $shortName = str_replace(['.', '/'], '', $form->getName());
+        $shortName = str_replace(['.', '/'], '', $form->getName() ?? '');
         return Convert::raw2htmlid($reflection->getShortName() . '_' . $shortName);
     }
 
@@ -62,7 +62,7 @@ class FormTemplateHelper
     public function generateFieldID($field)
     {
         // Don't include '.'s in IDs, they confused JavaScript
-        $name = str_replace('.', '_', $field->getName());
+        $name = str_replace('.', '_', $field->getName() ?? '');
 
         if ($form = $field->getForm()) {
             return sprintf(

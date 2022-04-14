@@ -83,7 +83,7 @@ class Tip
      */
     public function setImportanceLevel(string $importance_level): self
     {
-        if (!in_array($importance_level, self::IMPORTANCE_LEVELS)) {
+        if (!in_array($importance_level, self::IMPORTANCE_LEVELS ?? [])) {
             throw new InvalidArgumentException(
                 'Provided importance level must be defined in Tip::IMPORTANCE_LEVELS'
             );

@@ -72,7 +72,7 @@ class DatabaseAdapterRegistry implements Flushable
     public static function register($config)
     {
         // Validate config
-        $missing = array_diff(['title', 'class', 'helperClass', 'supported'], array_keys($config));
+        $missing = array_diff(['title', 'class', 'helperClass', 'supported'], array_keys($config ?? []));
         if ($missing) {
             throw new InvalidArgumentException(
                 "Missing database helper config keys: '" . implode("', '", $missing) . "'"
@@ -256,6 +256,6 @@ class DatabaseAdapterRegistry implements Flushable
 
         // Construct
         $class = $adapters[$databaseClass]['helperClass'];
-        return (class_exists($class)) ? new $class() : null;
+        return (class_exists($class ?? '')) ? new $class() : null;
     }
 }

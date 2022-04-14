@@ -174,6 +174,6 @@ class TextareaField extends FormField
      */
     public function ValueEntities()
     {
-        return htmlentities($this->Value(), ENT_COMPAT, 'UTF-8');
+        return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8');
     }
 }

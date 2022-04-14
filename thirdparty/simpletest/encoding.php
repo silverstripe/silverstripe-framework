@@ -37,7 +37,7 @@ class SimpleEncodedPair {
      *    @access public
      */
     function asRequest() {
-        return urlencode($this->_key) . '=' . urlencode($this->_value);
+        return urlencode($this->_key ?? '') . '=' . urlencode($this->_value ?? '');
     }
 
     /**
@@ -146,7 +146,7 @@ class SimpleAttachment {
      */
     function _isOnlyAscii($ascii) {
         for ($i = 0, $length = strlen($ascii); $i < $length; $i++) {
-            if (ord($ascii[$i]) > 127) {
+            if (ord($ascii[$i] ?? '') > 127) {
                 return false;
             }
         }
@@ -285,9 +285,9 @@ class SimpleEncoding {
                 $values[] = $pair->getValue();
             }
         }
-        if (count($values) == 0) {
+        if (count($values ?? []) == 0) {
             return false;
-        } elseif (count($values) == 1) {
+        } elseif (count($values ?? []) == 1) {
             return $values[0];
         } else {
             return $values;
@@ -469,7 +469,7 @@ class SimplePostEncoding extends SimpleEncoding {
      *    @access public
      */
     function writeHeadersTo(&$socket) {
-        $socket->write("Content-Length: " . (integer)strlen($this->_encode()) . "\r\n");
+        $socket->write("Content-Length: " . (integer)strlen($this->_encode() ?? '') . "\r\n");
         $socket->write("Content-Type: application/x-www-form-urlencoded\r\n");
     }
 
@@ -520,7 +520,7 @@ class SimpleMultipartEncoding extends SimplePostEncoding {
      *    @access public
      */
     function writeHeadersTo(&$socket) {
-        $socket->write("Content-Length: " . (integer)strlen($this->_encode()) . "\r\n");
+        $socket->write("Content-Length: " . (integer)strlen($this->_encode() ?? '') . "\r\n");
         $socket->write("Content-Type: multipart/form-data, boundary=" . $this->_boundary . "\r\n");
     }
 
