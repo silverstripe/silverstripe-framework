@@ -90,3 +90,43 @@ SilverStripe\MimeValidator\MimeUploadValidator:
       - 'text/plain'
       - 'text/calendar'
 ```
+
+## Adding new image types {#add-image-format}
+
+Silverstripe CMS support JPEG, GIF, PNG and WebP images format out of the box. Silverstripe CMS can be configured to support other less common images format (e.g.: AVIF). For this to work, your version of PHP and of the [`intervention/image` library](https://intervention.io/) must support these alternative image format.
+
+For example, this snippet can be added to the configuration of older Silverstripe CMS projects to allow them to work with WebP images. 
+
+```yml
+---
+Name: myproject-assetsfiletypes
+After: '#assetsfiletypes'
+---
+SilverStripe\Assets\File:
+  file_types:
+    webp: 'WebP Image File Format'
+  allowed_extensions:
+    - webp
+  app_categories:
+    image:
+      - webp
+    image/supported:
+      - webp
+  class_for_file_extension:
+    webp: SilverStripe\Assets\Image
+
+SilverStripe\Assets\Storage\DBFile:
+  supported_images:
+    - image/webp
+
+---
+Name: myproject-mimevalidator
+After: '#mimevalidator'
+Only:
+  moduleexists: silverstripe/mimevalidator
+---
+SilverStripe\MimeValidator\MimeUploadValidator:
+  MimeTypes:
+    webp:
+      - image/webp
+```
