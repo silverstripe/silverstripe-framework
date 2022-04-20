@@ -128,6 +128,19 @@ class BlogPost extends DataObject
 
 ```
 
+Add ElementalAreasExtension to the DataObject
+
+**app/_config/elemental.yml**
+
+```yml
+
+App\Models\BlogPost:
+  extensions: 
+    - DNADesign\Elemental\Extensions\ElementalAreasExtension
+
+```
+
+
 ## Creating Previewable DataObject in CMS admin section
 
 Class BlogPost can implement CMSPreviewable interface to show a preview.
@@ -208,6 +221,19 @@ class BlogPost extends DataObject implements CMSPreviewable
 }
 
 ```
+Add template for DataObject to display data. In this example we create BlogPost.ss file in templates/App/Models/Blogs directory.
+
+**BlogPost.ss**
+
+```yml
+
+<% if $ElementalArea %>
+    $ElementalArea
+<% end_if %>
+
+```
+
+
 
 ## Related Documentation
 
