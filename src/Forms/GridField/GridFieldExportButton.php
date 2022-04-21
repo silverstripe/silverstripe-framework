@@ -244,7 +244,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
                         $value = $columnHeader($relObj);
                     } elseif ($gridFieldColumnsComponent && array_key_exists($columnSource, $columnsHandled)) {
                         $value = strip_tags(
-                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource)
+                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnsHandled[$columnSource])
                         );
                     } else {
                         $value = $gridField->getDataFieldValue($item, $columnSource);
