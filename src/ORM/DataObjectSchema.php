@@ -69,6 +69,15 @@ class DataObjectSchema
     protected $tableNames = [];
 
     /**
+     * Array of classes that have been confirmed ready for database queries.
+     * When the database has once been verified as ready, it will not do the
+     * checks again.
+     *
+     * @var boolean[]
+     */
+    protected $tableReadyClasses = [];
+
+    /**
      * Clear cached table names
      */
     public function reset()
@@ -1111,6 +1120,90 @@ class DataObjectSchema
         } else {
             $polymorphic = false;
             return $remoteField . 'ID';
+        }
+    }
+
+    /**
+     * Check if all tables and field columns for a class exist in the database.
+     *
+     * @param string $class
+     * @return boolean
+     */
+    public function tableIsReadyForClass(string $class): bool
+    {
+        if (!is_subclass_of($class, DataObject::class)) {
+            throw new InvalidArgumentException("$class is not a subclass of " . DataObject::class);
+        }
+
+        // Don't check again if we already know the db is ready for this class.
+        // Necessary here before the loop to catch situations where a subclass
+        // is forced as ready without having to check all the superclasses.
+        if (!empty($this->tableReadyClasses[$class])) {
+            return true;
+        }
+
+        // Check if all tables and fields required for the class exist in the database.
+        $requiredClasses = ClassInfo::dataClassesFor($class);
+        foreach ($requiredClasses as $required) {
+            // Skip test classes, as not all test classes are scaffolded at once
+            if (is_a($required, TestOnly::class, true)) {
+                continue;
+            }
+
+            // Don't check again if we already know the db is ready for this class.
+            if (!empty($this->tableReadyClasses[$class])) {
+                continue;
+            }
+
+            // if any of the tables aren't created in the database
+            $table = $this->tableName($required);
+            if (!ClassInfo::hasTable($table)) {
+                return false;
+            }
+
+            // HACK: DataExtensions aren't applied until a class is instantiated for
+            // the first time, so create an instance here.
+            singleton($required);
+
+            // if any of the tables don't have all fields mapped as table columns
+            $dbFields = DB::field_list($table);
+            if (!$dbFields) {
+                return false;
+            }
+
+            $objFields = $this->databaseFields($required, false);
+            $missingFields = array_diff_key($objFields, $dbFields);
+
+            if ($missingFields) {
+                return false;
+            }
+
+            // Add each ready class to the cached array.
+            $this->tableReadyClasses[$required] = true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Resets the tableReadyClasses cache.
+     *
+     * @param string|null $class The specific class to be cleared.
+     * If not passed, the cache for all classes is cleared.
+     * @param bool $clearFullHeirarchy Whether to clear the full class hierarchy or only the given class.
+     */
+    public function clearTableReadyForClass(?string $class = null, bool $clearFullHierarchy = true): void
+    {
+        if ($class) {
+            $clearClasses = [$class];
+            if ($clearFullHierarchy) {
+                $clearClasses = ClassInfo::dataClassesFor($class);
+            }
+            foreach ($clearClasses as $clear) {
+                unset($this->tableReadyClasses[$clear]);
+            }
+        } else {
+            $this->tableReadyClasses = [];
         }
     }
 

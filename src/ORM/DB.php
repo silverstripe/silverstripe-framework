@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM;
 
-use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -59,8 +58,6 @@ class DB
      * @var array List of configs each in the $databaseConfig format
      */
     protected static $configs = [];
-
-
 
     /**
      * The last SQL query run.
