@@ -25,6 +25,18 @@ class DBCurrency extends DBDecimal
      */
     private static $currency_symbol = '$';
 
+    /**
+     * @config
+     * @var string
+     */
+    private static $thousands_sep = ',';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $dec_point = '.';
+
     public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0)
     {
         parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
@@ -35,7 +47,13 @@ class DBCurrency extends DBDecimal
      */
     public function Nice()
     {
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
+        $val = $this->config()->currency_symbol . number_format(
+            abs($this->value),
+            2,
+            $this->config()->dec_point,
+            $this->config()->thousands_sep
+        );
+        
         if ($this->value < 0) {
             return "($val)";
         }
@@ -48,7 +66,13 @@ class DBCurrency extends DBDecimal
      */
     public function Whole()
     {
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
+        $val = $this->config()->currency_symbol . number_format(
+            abs($this->value),
+            0,
+            $this->config()->dec_point,
+            $this->config()->thousands_sep
+        );
+        
         if ($this->value < 0) {
             return "($val)";
         }
@@ -61,7 +85,17 @@ class DBCurrency extends DBDecimal
         if (is_numeric($value)) {
             $this->value = $value;
         } elseif (preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
-            $this->value = str_replace(['$', ',', $this->config()->currency_symbol], '', $matches[0]);
+            $this->value = str_replace(
+                [
+                    '$',
+                    ',',
+                    $this->config()->currency_symbol,
+                    $this->config()->dec_point,
+                    $this->config()->thousands_sep
+                ],
+                '',
+                $matches[0]
+            );
         } else {
             $this->value = 0;
         }
