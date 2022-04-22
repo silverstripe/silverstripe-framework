@@ -173,7 +173,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $success = false;
         $error = '';
         if ($version) {
-            $success = version_compare($version, '5.0', '>=');
+            $success = version_compare($version ?? '', '5.0', '>=');
             if (!$success) {
                 $error = "Your MySQL server version is $version. It's recommended you use at least MySQL 5.0.";
             }
@@ -213,13 +213,13 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
     {
 
         // Reject filename unsafe characters (cross platform)
-        if (preg_match('/[\\\\\/\?%\*\:\|"\<\>\.]+/', $database)) {
+        if (preg_match('/[\\\\\/\?%\*\:\|"\<\>\.]+/', $database ?? '')) {
             return false;
         }
 
         // Restricted to characters in the ASCII and Extended ASCII range
         // @see http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
-        return preg_match('/^[\x{0001}-\x{FFFF}]+$/u', $database);
+        return preg_match('/^[\x{0001}-\x{FFFF}]+$/u', $database ?? '');
     }
 
     /**
@@ -239,7 +239,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         }
 
         // Escape all valid database patterns (permission must exist on all tables)
-        $sqlDatabase = addcslashes($database, '_%'); // See http://dev.mysql.com/doc/refman/5.7/en/string-literals.html
+        $sqlDatabase = addcslashes($database ?? '', '_%'); // See http://dev.mysql.com/doc/refman/5.7/en/string-literals.html
         $dbPattern = sprintf(
             '((%s)|(%s)|(%s)|(%s))',
             preg_quote("\"$sqlDatabase\".*"), // Regexp escape sql-escaped db identifier
@@ -248,7 +248,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
             preg_quote('*.*')
         );
         $expression = '/GRANT[ ,\w]+((ALL PRIVILEGES)|(' . $permission . '(?! ((VIEW)|(ROUTINE)))))[ ,\w]+ON ' . $dbPattern . '/i';
-        return preg_match($expression, $grant);
+        return preg_match($expression ?? '', $grant ?? '');
     }
 
     /**
@@ -277,7 +277,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         $conn = $this->createConnection($databaseConfig, $error);
         if ($conn) {
             $list = $this->column($conn->query("SHOW DATABASES"));
-            if (in_array($databaseConfig['database'], $list)) {
+            if (in_array($databaseConfig['database'], $list ?? [])) {
                 $success = true;
                 $alreadyExists = true;
             } else {

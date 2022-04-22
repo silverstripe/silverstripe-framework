@@ -523,7 +523,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $this->saveFormIntoRecord($data, $form);
 
         $link = '<a href="' . $this->Link('edit') . '">"'
-            . htmlspecialchars($this->record->Title, ENT_QUOTES)
+            . htmlspecialchars($this->record->Title ?? '', ENT_QUOTES)
             . '"</a>';
         $message = _t(
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Saved',
@@ -583,7 +583,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
 
         $map = $list->limit($limit, $limitOffset)->column('ID');
-        $index = array_search($this->record->ID, $map);
+        $index = array_search($this->record->ID, $map ?? []);
         return isset($map[$index+$offset]) ? $map[$index+$offset] : false;
     }
 
@@ -700,7 +700,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'Deleted {type} {name}',
             [
                 'type' => $this->record->i18n_singular_name(),
-                'name' => htmlspecialchars($title, ENT_QUOTES)
+                'name' => htmlspecialchars($title ?? '', ENT_QUOTES)
             ]
         );
 

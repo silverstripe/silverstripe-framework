@@ -65,8 +65,8 @@ class ExtensionMiddleware implements Middleware
         foreach ($extensions as $extension) {
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             // Strip service name specifier
-            $extensionClass = strtok($extensionClass, '.');
-            if (!class_exists($extensionClass)) {
+            $extensionClass = strtok($extensionClass ?? '', '.');
+            if (!class_exists($extensionClass ?? '')) {
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in 'extensions'");
             }
 

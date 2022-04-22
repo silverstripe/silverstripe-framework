@@ -61,7 +61,7 @@ class DBForeignKey extends DBInt
         if (empty($this->object)) {
             return null;
         }
-        $relationName = substr($this->name, 0, -2);
+        $relationName = substr($this->name ?? '', 0, -2);
         $hasOneClass = DataObject::getSchema()->hasOneComponent(get_class($this->object), $relationName);
         if (empty($hasOneClass)) {
             return null;

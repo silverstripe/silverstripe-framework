@@ -83,12 +83,12 @@ class GridFieldFilterHeaderTest extends SapphireTest
             '<tr class="grid-field__filter-header grid-field__search-holder--hidden">',
             $htmlFragment['header']
         );
-        $this->assertFalse(array_key_exists('buttons-before-right', $htmlFragment));
+        $this->assertFalse(array_key_exists('buttons-before-right', $htmlFragment ?? []));
     }
 
     public function testSearchFieldSchema()
     {
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
 
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
         $this->assertEquals('Name', $searchSchema->name);
@@ -109,7 +109,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
             ]
         );
         $this->gridField->setRequest($request);
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
 
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
         $this->assertEquals('Name', $searchSchema->name);

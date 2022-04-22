@@ -131,7 +131,7 @@ class PermissionAwareConfirmationMiddleware extends ConfirmationMiddleware
         $loginPage = sprintf(
             '%s?BackURL=%s',
             Director::absoluteURL(Security::config()->get('login_url')),
-            urlencode($backURL)
+            urlencode($backURL ?? '')
         );
 
         $result = new HTTPResponse();

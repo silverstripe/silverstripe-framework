@@ -59,7 +59,7 @@ class ReadonlyField extends FormField
     public function castingHelper($field)
     {
         // Get dynamic cast for 'Value' field
-        if (strcasecmp($field, 'Value') === 0) {
+        if (strcasecmp($field ?? '', 'Value') === 0) {
             return $this->getValueCast();
         }
 

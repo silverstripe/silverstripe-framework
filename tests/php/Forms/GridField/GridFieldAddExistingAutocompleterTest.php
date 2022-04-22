@@ -67,8 +67,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = json_decode($response->getBody(), true);
-        $this->assertEquals(1, count($result));
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(1, count($result ?? []));
         $this->assertEquals(
             [[
             'label' => 'Team 2',
@@ -84,8 +84,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = json_decode($response->getBody(), true);
-        $this->assertEquals(1, count($result), "The relational filter did not work");
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(1, count($result ?? []), "The relational filter did not work");
 
         $response = $this->post(
             'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search'
@@ -93,7 +93,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
             [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = json_decode($response->getBody(), true);
+        $result = json_decode($response->getBody() ?? '', true);
         $this->assertEmpty($result, 'The output is either an empty array or boolean FALSE');
     }
 
@@ -107,7 +107,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $this->assertFalse($response->isError());
         $parser = new CSSContentParser($response->getBody());
         $items = $parser->getBySelector('.grid-field .ss-gridfield-items .ss-gridfield-item');
-        $this->assertEquals(1, count($items));
+        $this->assertEquals(1, count($items ?? []));
         $this->assertEquals($team1->ID, (int)$items[0]['data-id']);
 
         $btns = $parser->getBySelector('.grid-field .action_gridfield_relationadd');
@@ -121,7 +121,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $this->assertFalse($response->isError());
         $parser = new CSSContentParser($response->getBody());
         $items = $parser->getBySelector('.grid-field .ss-gridfield-items .ss-gridfield-item');
-        $this->assertEquals(2, count($items));
+        $this->assertEquals(2, count($items ?? []));
         $this->assertListEquals(
             [
             ['ID' => (int)$items[0]['data-id']],
@@ -143,14 +143,14 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
         $response = $component->doSearch($grid, $request);
         $this->assertFalse($response->isError());
-        $result = json_decode($response->getBody(), true);
+        $result = json_decode($response->getBody() ?? '', true);
         $this->assertEquals(
             ['Team 1', 'Team 2', 'Team 3', 'Team 4'],
             array_map(
                 function ($item) {
                     return $item['label'];
                 },
-                $result
+                $result ?? []
             )
         );
 
@@ -158,14 +158,14 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
         $response = $component->doSearch($grid, $request);
         $this->assertFalse($response->isError());
-        $result = json_decode($response->getBody(), true);
+        $result = json_decode($response->getBody() ?? '', true);
         $this->assertEquals(
             ['Team 4', 'Team 3', 'Team 2', 'Team 1'],
             array_map(
                 function ($item) {
                     return $item['label'];
                 },
-                $result
+                $result ?? []
             )
         );
     }

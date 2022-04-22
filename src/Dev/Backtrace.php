@@ -98,7 +98,7 @@ class Backtrace
             }
         }
 
-        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions)) {
+        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions ?? [])) {
             array_shift($bt);
         }
 
@@ -117,7 +117,7 @@ class Backtrace
                     }
                 }
             } else {
-                if (in_array($bt[$i]['function'], $ignoredArgs)) {
+                if (in_array($bt[$i]['function'], $ignoredArgs ?? [])) {
                     $match = true;
                 }
             }
@@ -178,7 +178,7 @@ class Backtrace
             foreach ($item['args'] as $arg) {
                 if (!is_object($arg) || method_exists($arg, '__toString')) {
                     $sarg = is_array($arg) ? 'Array' : strval($arg);
-                    $args[] = (strlen($sarg) > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
+                    $args[] = (strlen($sarg ?? '') > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
                 } else {
                     $args[] = get_class($arg);
                 }
@@ -209,7 +209,7 @@ class Backtrace
             if ($plainText) {
                 $result .= self::full_func_name($item, true) . "\n";
                 if (isset($item['line']) && isset($item['file'])) {
-                    $result .= basename($item['file']) . ":$item[line]\n";
+                    $result .= basename($item['file'] ?? '') . ":$item[line]\n";
                 }
                 $result .= "\n";
             } else {
@@ -218,7 +218,7 @@ class Backtrace
                 } else {
                     $name = self::full_func_name($item, true);
                 }
-                $result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
+                $result .= "<li><b>" . htmlentities($name ?? '', ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
                 $result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';
                 $result .= isset($item['line']) ? ":$item[line]" : '';
                 $result .= "</li>\n";

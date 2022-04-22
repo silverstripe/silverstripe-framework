@@ -75,12 +75,12 @@ class GridFieldActionMenuTest extends SapphireTest
 
         $content = new CSSContentParser($this->gridField->FieldHolder());
         // Check that there are content
-        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item')));
+        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item') ?? []));
         // Make sure that there are edit links, even though the user doesn't have "edit" permissions
         // (they can still view the records)
         $this->assertEquals(
             3,
-            count($content->getBySelector('.gridfield-actionmenu__container')),
+            count($content->getBySelector('.gridfield-actionmenu__container') ?? []),
             'Edit links should show when not logged in.'
         );
     }
@@ -100,7 +100,7 @@ class GridFieldActionMenuTest extends SapphireTest
         $this->assertNotNull($node);
         $this->assertCount(1, $node);
         $schema = (string) $node[0]->attributes()['data-schema'];
-        $json = json_decode($schema, true);
+        $json = json_decode($schema ?? '', true);
         $this->assertCount(2, $json);
 
         // Now set the component to not display
@@ -117,7 +117,7 @@ class GridFieldActionMenuTest extends SapphireTest
         $this->assertNotNull($node);
         $this->assertCount(1, $node);
         $schema = (string) $node[0]->attributes()['data-schema'];
-        $json = json_decode($schema, true);
+        $json = json_decode($schema ?? '', true);
         $this->assertCount(1, $json);
     }
 
@@ -126,6 +126,6 @@ class GridFieldActionMenuTest extends SapphireTest
         $this->logInWithPermission('ADMIN');
         $content = new CSSContentParser($this->gridField->FieldHolder());
         $editLinks = $content->getBySelector('.gridfield-actionmenu__container');
-        $this->assertEquals(3, count($editLinks), 'Edit links should show when logged in.');
+        $this->assertEquals(3, count($editLinks ?? []), 'Edit links should show when logged in.');
     }
 }

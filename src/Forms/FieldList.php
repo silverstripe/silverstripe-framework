@@ -144,7 +144,7 @@ class FieldList extends ArrayList
      */
     public function dataFieldNames()
     {
-        return array_keys($this->dataFields());
+        return array_keys($this->dataFields() ?? []);
     }
 
     /**
@@ -359,7 +359,7 @@ class FieldList extends ArrayList
             }
 
             if (($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
-                array_splice($this->items, $i, 1);
+                array_splice($this->items, $i ?? 0, 1);
                 break;
             } elseif ($child instanceof CompositeField) {
                 $child->removeByName($fieldName, $dataFieldOnly);
@@ -436,8 +436,8 @@ class FieldList extends ArrayList
      */
     public function findTab($tabName)
     {
-        $parts = explode('.', $tabName);
-        $last_idx = count($parts) - 1;
+        $parts = explode('.', $tabName ?? '');
+        $last_idx = count($parts ?? []) - 1;
 
         $currentPointer = $this;
 
@@ -465,8 +465,8 @@ class FieldList extends ArrayList
      */
     public function findOrMakeTab($tabName, $title = null)
     {
-        $parts = explode('.', $tabName);
-        $last_idx = count($parts) - 1;
+        $parts = explode('.', $tabName ?? '');
+        $last_idx = count($parts ?? []) - 1;
         // We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
         // add it to TabSet and Tab too.
         $currentPointer = $this;
@@ -512,16 +512,16 @@ class FieldList extends ArrayList
     public function fieldByName($name)
     {
         $fullName = $name;
-        if (strpos($name, '.') !== false) {
-            list($name, $remainder) = explode('.', $name, 2);
+        if (strpos($name ?? '', '.') !== false) {
+            list($name, $remainder) = explode('.', $name ?? '', 2);
         } else {
             $remainder = null;
         }
 
         foreach ($this as $child) {
-            if (trim($fullName) == trim($child->getName()) || $fullName == $child->id) {
+            if (trim($fullName ?? '') == trim($child->getName() ?? '') || $fullName == $child->id) {
                 return $child;
-            } elseif (trim($name) == trim($child->getName()) || $name == $child->id) {
+            } elseif (trim($name ?? '') == trim($child->getName() ?? '') || $name == $child->id) {
                 if ($remainder) {
                     if ($child instanceof CompositeField) {
                         return $child->fieldByName($remainder);
@@ -552,7 +552,7 @@ class FieldList extends ArrayList
     {
         if ($dataFields = $this->dataFields()) {
             foreach ($dataFields as $child) {
-                if (trim($name) == trim($child->getName()) || $name == $child->id) {
+                if (trim($name ?? '') == trim($child->getName() ?? '') || $name == $child->id) {
                     return $child;
                 }
             }
@@ -582,7 +582,7 @@ class FieldList extends ArrayList
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i, 0, [$item]);
+                array_splice($this->items, $i ?? 0, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertBefore($name, $item, false);

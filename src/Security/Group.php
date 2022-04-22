@@ -204,7 +204,7 @@ class Group extends DataObject
         // Only add a dropdown for HTML editor configurations if more than one is available.
         // Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
         $editorConfigMap = HTMLEditorConfig::get_available_configs_map();
-        if (count($editorConfigMap) > 1) {
+        if (count($editorConfigMap ?? []) > 1) {
             $fields->addFieldToTab(
                 'Root.Permissions',
                 new DropdownField(
@@ -402,7 +402,7 @@ class Group extends DataObject
      */
     public function inGroup($group)
     {
-        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs());
+        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs() ?? []);
     }
 
     /**
@@ -427,9 +427,9 @@ class Group extends DataObject
         if (empty($candidateIDs)) {
             return false;
         }
-        $matches = array_intersect($candidateIDs, $ancestorIDs);
+        $matches = array_intersect($candidateIDs ?? [], $ancestorIDs);
         if ($requireAll) {
-            return count($candidateIDs) === count($matches);
+            return count($candidateIDs ?? []) === count($matches ?? []);
         }
         return !empty($matches);
     }
@@ -476,7 +476,7 @@ class Group extends DataObject
      */
     public function getTreeTitle()
     {
-        $title = htmlspecialchars($this->Title, ENT_QUOTES);
+        $title = htmlspecialchars($this->Title ?? '', ENT_QUOTES);
         $this->extend('updateTreeTitle', $title);
         return $title;
     }
@@ -512,7 +512,7 @@ class Group extends DataObject
                 ->filter('GroupID', $this->Parent()->collateAncestorIDs())
                 ->column('Code');
             $privilegedCodes = Permission::config()->get('privileged_permissions');
-            if (array_intersect($inheritedCodes, $privilegedCodes)) {
+            if (array_intersect($inheritedCodes ?? [], $privilegedCodes)) {
                 $result->addError(
                     _t(
                         'SilverStripe\\Security\\Group.HierarchyPermsError',
@@ -538,7 +538,7 @@ class Group extends DataObject
             );
         }
 
-        if (in_array($this->Title, $currentGroups)) {
+        if (in_array($this->Title, $currentGroups ?? [])) {
             $result->addError(
                 _t(
                     'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',

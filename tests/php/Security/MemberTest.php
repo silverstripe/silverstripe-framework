@@ -257,7 +257,7 @@ class MemberTest extends FunctionalTest
         // We should get redirected to Security/passwordsent
         $this->assertStringContainsString(
             'Security/lostpassword/passwordsent',
-            urldecode($response->getHeader('Location'))
+            urldecode($response->getHeader('Location') ?? '')
         );
 
         // Check existence of reset link
@@ -890,14 +890,14 @@ class MemberTest extends FunctionalTest
         $otherAdmin = $this->objFromFixture(Member::class, 'other-admin');
 
         $this->assertTrue(
-            in_array($admin->getTitle(), $members),
+            in_array($admin->getTitle(), $members ?? []),
             $admin->getTitle() . ' should be in the returned list.'
         );
         $this->assertTrue(
-            in_array($otherAdmin->getTitle(), $members),
+            in_array($otherAdmin->getTitle(), $members ?? []),
             $otherAdmin->getTitle() . ' should be in the returned list.'
         );
-        $this->assertEquals(2, count($members), 'There should be 2 members from the admin group');
+        $this->assertEquals(2, count($members ?? []), 'There should be 2 members from the admin group');
     }
 
     /**
@@ -1020,7 +1020,7 @@ class MemberTest extends FunctionalTest
             $this->session(),
             null,
             [
-                'alc_enc' => $m1->ID . ':asdfasd' . str_rot13($token),
+                'alc_enc' => $m1->ID . ':asdfasd' . str_rot13($token ?? ''),
                 'alc_device' => $firstHash->DeviceID
             ]
         );
@@ -1032,7 +1032,7 @@ class MemberTest extends FunctionalTest
             null,
             [
                 'alc_enc' => $m1->ID . ':' . $token,
-                'alc_device' => str_rot13($firstHash->DeviceID)
+                'alc_device' => str_rot13($firstHash->DeviceID ?? '')
             ]
         );
         $this->assertStringNotContainsString($message, $response->getBody());

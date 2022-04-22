@@ -403,7 +403,7 @@ class TimeField extends TextField
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
-            $fromFormatter->setPattern(str_replace(':ss', '', DBTime::ISO_TIME));
+            $fromFormatter->setPattern(str_replace(':ss', '', DBTime::ISO_TIME ?? ''));
             $timestamp = $fromFormatter->parse($time);
         }
 
@@ -457,7 +457,7 @@ class TimeField extends TextField
         $timestamp = $formatter->parse($time);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($time, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($time ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }
@@ -498,7 +498,7 @@ class TimeField extends TextField
         $currentTimezone = date_default_timezone_get();
         try {
             if ($timezone) {
-                date_default_timezone_set($timezone);
+                date_default_timezone_set($timezone ?? '');
             }
             return $callback();
         } finally {

@@ -268,7 +268,7 @@ class DB
 
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
-        return (bool)preg_match($pattern, $name);
+        return (bool)preg_match($pattern ?? '', $name ?? '');
     }
 
     /**
@@ -365,7 +365,7 @@ class DB
     public static function placeholders($input, $join = ', ')
     {
         if (is_array($input)) {
-            $number = count($input);
+            $number = count($input ?? []);
         } elseif (is_numeric($input)) {
             $number = intval($input);
         } else {
@@ -374,7 +374,7 @@ class DB
         if ($number === 0) {
             return null;
         }
-        return implode($join, array_fill(0, $number, '?'));
+        return implode($join ?? '', array_fill(0, $number ?? 0, '?'));
     }
 
     /**
@@ -385,10 +385,10 @@ class DB
      */
     public static function inline_parameters($sql, $parameters)
     {
-        $segments = preg_split('/\?/', $sql);
+        $segments = preg_split('/\?/', $sql ?? '');
         $joined = '';
         $inString = false;
-        $numSegments = count($segments);
+        $numSegments = count($segments ?? []);
         for ($i = 0; $i < $numSegments; $i++) {
             $input = $segments[$i];
             // Append next segment
@@ -399,10 +399,10 @@ class DB
             }
             // check string escape on previous fragment
             // Remove escaped backslashes, count them!
-            $input = preg_replace('/\\\\\\\\/', '', $input);
+            $input = preg_replace('/\\\\\\\\/', '', $input ?? '');
             // Count quotes
-            $totalQuotes = substr_count($input, "'"); // Includes double quote escaped quotes
-            $escapedQuotes = substr_count($input, "\\'");
+            $totalQuotes = substr_count($input ?? '', "'"); // Includes double quote escaped quotes
+            $escapedQuotes = substr_count($input ?? '', "\\'");
             if ((($totalQuotes - $escapedQuotes) % 2) !== 0) {
                 $inString = !$inString;
             }

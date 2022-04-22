@@ -64,7 +64,7 @@ class FulltextSearchable extends DataExtension
             $searchableClasses = [$searchableClasses];
         }
         foreach ($searchableClasses as $class) {
-            if (!class_exists($class)) {
+            if (!class_exists($class ?? '')) {
                 continue;
             }
 
@@ -92,9 +92,9 @@ class FulltextSearchable extends DataExtension
         if (is_array($searchFields)) {
             $this->searchFields = $searchFields;
         } else {
-            $this->searchFields = explode(',', $searchFields);
+            $this->searchFields = explode(',', $searchFields ?? '');
             foreach ($this->searchFields as &$field) {
-                $field = trim($field);
+                $field = trim($field ?? '');
             }
         }
     }

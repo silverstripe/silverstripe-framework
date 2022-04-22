@@ -295,7 +295,7 @@ class Session
         // Director::baseURL can return absolute domain names - this extracts the relevant parts
         // for the session otherwise we can get broken session cookies
         if (Director::is_absolute_url($path)) {
-            $urlParts = parse_url($path);
+            $urlParts = parse_url($path ?? '');
             $path = $urlParts['path'];
             if (!$domain) {
                 $domain = $urlParts['host'];
@@ -409,7 +409,7 @@ class Session
     protected function markChanged($name)
     {
         $diffVar = &$this->changedData;
-        foreach (explode('.', $name) as $namePart) {
+        foreach (explode('.', $name ?? '') as $namePart) {
             if (!isset($diffVar[$namePart])) {
                 $diffVar[$namePart] = [];
             }
@@ -432,7 +432,7 @@ class Session
      */
     public function addToArray($name, $val)
     {
-        $names = explode('.', $name);
+        $names = explode('.', $name ?? '');
 
         // We still want to do this even if we have strict path checking for legacy code
         $var = &$this->data;
@@ -472,7 +472,7 @@ class Session
         // Unset var
         if ($var !== null) {
             // Unset parent key
-            $parentParts = explode('.', $name);
+            $parentParts = explode('.', $name ?? '');
             $basePart = array_pop($parentParts);
             if ($parentParts) {
                 $parent = &$this->nestedValueRef(implode('.', $parentParts), $this->data);
@@ -491,7 +491,7 @@ class Session
     public function clearAll()
     {
         if ($this->data && is_array($this->data)) {
-            foreach (array_keys($this->data) as $key) {
+            foreach (array_keys($this->data ?? []) as $key) {
                 $this->clear($key);
             }
         }
@@ -583,7 +583,7 @@ class Session
     {
         // Find var to change
         $var = &$source;
-        foreach (explode('.', $name) as $namePart) {
+        foreach (explode('.', $name ?? '') as $namePart) {
             if (!isset($var)) {
                 $var = [];
             }
@@ -608,7 +608,7 @@ class Session
     {
         // Find var to change
         $var = $source;
-        foreach (explode('.', $name) as $namePart) {
+        foreach (explode('.', $name ?? '') as $namePart) {
             if (!isset($var[$namePart])) {
                 return null;
             }
@@ -631,7 +631,7 @@ class Session
         foreach ($changes as $key => $changed) {
             if ($changed === true) {
                 // Determine if replacement or removal
-                if (array_key_exists($key, $source)) {
+                if (array_key_exists($key, $source ?? [])) {
                     $destination[$key] = $source[$key];
                 } else {
                     unset($destination[$key]);

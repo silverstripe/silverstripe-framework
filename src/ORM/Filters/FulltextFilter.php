@@ -64,12 +64,12 @@ class FulltextFilter extends SearchFilter
     public function getDbName()
     {
         $indexes = DataObject::getSchema()->databaseIndexes($this->model);
-        if (array_key_exists($this->getName(), $indexes)) {
+        if (array_key_exists($this->getName(), $indexes ?? [])) {
             $index = $indexes[$this->getName()];
         } else {
             return parent::getDbName();
         }
-        if (is_array($index) && array_key_exists('columns', $index)) {
+        if (is_array($index) && array_key_exists('columns', $index ?? [])) {
             return $this->prepareColumns($index['columns']);
         } else {
             throw new Exception(sprintf(
@@ -90,11 +90,11 @@ class FulltextFilter extends SearchFilter
     protected function prepareColumns($columns)
     {
         $prefix = DataQuery::applyRelationPrefix($this->relation);
-        $table = DataObject::getSchema()->tableForField($this->model, current($columns));
+        $table = DataObject::getSchema()->tableForField($this->model, current($columns ?? []));
         $fullTable = $prefix . $table;
         $columns = array_map(function ($col) use ($fullTable) {
             return "\"{$fullTable}\".\"{$col}\"";
-        }, $columns);
+        }, $columns ?? []);
         return implode(',', $columns);
     }
 }

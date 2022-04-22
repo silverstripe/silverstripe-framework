@@ -45,8 +45,8 @@ abstract class PasswordEncryptor
             );
         }
 
-        $class=key($encryptors[$algorithm]);
-        if (!class_exists($class)) {
+        $class=key($encryptors[$algorithm] ?? []);
+        if (!class_exists($class ?? '')) {
             throw new PasswordEncryptor_NotFoundException(
                 sprintf('No class found for "%s"', $class)
             );
@@ -57,7 +57,7 @@ abstract class PasswordEncryptor
         }
 
         // Don't treat array keys as argument names - keeps PHP 7 and PHP 8 operating similarly
-        $arguments = array_values($encryptors[$algorithm]);
+        $arguments = array_values($encryptors[$algorithm] ?? []);
         return($refClass->newInstanceArgs($arguments));
     }
 
@@ -84,7 +84,7 @@ abstract class PasswordEncryptor
     public function salt($password, $member = null)
     {
         $generator = new RandomGenerator();
-        return substr($generator->randomToken('sha1'), 0, 50);
+        return substr($generator->randomToken('sha1') ?? '', 0, 50);
     }
 
     /**
@@ -101,6 +101,6 @@ abstract class PasswordEncryptor
      */
     public function check($hash, $password, $salt = null, $member = null)
     {
-        return hash_equals($hash, $this->encrypt($password, $salt, $member));
+        return hash_equals($hash ?? '', $this->encrypt($password, $salt, $member) ?? '');
     }
 }

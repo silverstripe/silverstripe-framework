@@ -113,6 +113,6 @@ abstract class Extension
     public static function get_classname_without_arguments($extensionStr)
     {
         // Split out both args and service name
-        return strtok(strtok($extensionStr, '('), '.');
+        return strtok(strtok($extensionStr ?? '', '(') ?? '', '.');
     }
 }

@@ -131,7 +131,7 @@ class FormRequestHandler extends RequestHandler
         }
 
         // Ensure we only process saveable fields (non structural, readonly, or disabled)
-        $allowedFields = array_keys($this->form->Fields()->saveableFields());
+        $allowedFields = array_keys($this->form->Fields()->saveableFields() ?? []);
 
         // Populate the form
         $this->form->loadDataFrom($vars, true, $allowedFields);
@@ -165,17 +165,17 @@ class FormRequestHandler extends RequestHandler
         // Determine the action button clicked
         $funcName = null;
         foreach ($vars as $paramName => $paramVal) {
-            if (substr($paramName, 0, 7) == 'action_') {
+            if (substr($paramName ?? '', 0, 7) == 'action_') {
                 // Break off querystring arguments included in the action
-                if (strpos($paramName, '?') !== false) {
-                    list($paramName, $paramVars) = explode('?', $paramName, 2);
+                if (strpos($paramName ?? '', '?') !== false) {
+                    list($paramName, $paramVars) = explode('?', $paramName ?? '', 2);
                     $newRequestParams = [];
-                    parse_str($paramVars, $newRequestParams);
+                    parse_str($paramVars ?? '', $newRequestParams);
                     $vars = array_merge((array)$vars, (array)$newRequestParams);
                 }
 
                 // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName);
+                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName ?? '');
                 break;
             }
         }
@@ -359,7 +359,7 @@ class FormRequestHandler extends RequestHandler
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
-            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL ?? ''));
         }
         return $link;
     }
@@ -375,7 +375,7 @@ class FormRequestHandler extends RequestHandler
     {
         // Ajax form submissions accept json encoded errors by default
         $acceptType = $this->getRequest()->getHeader('Accept');
-        if (strpos($acceptType, 'application/json') !== false) {
+        if (strpos($acceptType ?? '', 'application/json') !== false) {
             // Send validation errors back as JSON with a flag at the start
             $response = new HTTPResponse(json_encode($result->getMessages()));
             $response->addHeader('Content-Type', 'application/json');
@@ -473,7 +473,7 @@ class FormRequestHandler extends RequestHandler
         $actions = $this->form->Actions()->dataFields();
 
         $fieldsAndActions = array_merge($fields, $actions);
-        $actions = array_filter($fieldsAndActions, function ($fieldOrAction) {
+        $actions = array_filter($fieldsAndActions ?? [], function ($fieldOrAction) {
             return $fieldOrAction instanceof FormAction;
         });
 

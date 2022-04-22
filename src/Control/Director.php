@@ -214,7 +214,7 @@ class Director implements TemplateGlobalProvider
                         $session->set($key, $value);
                     }
                     // Unset removed keys
-                    foreach (array_diff_key($sessionArray, $_SESSION) as $key => $value) {
+                    foreach (array_diff_key($sessionArray ?? [], $_SESSION) as $key => $value) {
                         $session->clear($key);
                     }
                 }
@@ -239,7 +239,7 @@ class Director implements TemplateGlobalProvider
         };
 
         // Strip any hash
-        $url = strtok($url, '#');
+        $url = strtok($url ?? '', '#');
 
         // Handle absolute URLs
         // If a port is mentioned in the absolute URL, be sure to add that into the HTTP host
@@ -251,20 +251,20 @@ class Director implements TemplateGlobalProvider
         // Ensure URL is properly made relative.
         // Example: url passed is "/ss31/my-page" (prefixed with BASE_URL), this should be changed to "my-page"
         $url = self::makeRelative($url);
-        if (strpos($url, '?') !== false) {
-            list($url, $getVarsEncoded) = explode('?', $url, 2);
-            parse_str($getVarsEncoded, $newVars['_GET']);
+        if (strpos($url ?? '', '?') !== false) {
+            list($url, $getVarsEncoded) = explode('?', $url ?? '', 2);
+            parse_str($getVarsEncoded ?? '', $newVars['_GET']);
         } else {
             $newVars['_GET'] = [];
         }
-        $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . ltrim($url, '/');
+        $newVars['_SERVER']['REQUEST_URI'] = Director::baseURL() . ltrim($url ?? '', '/');
         $newVars['_REQUEST'] = array_merge($newVars['_GET'], $newVars['_POST']);
 
         // Normalise vars
         $newVars = HTTPRequestBuilder::cleanEnvironment($newVars);
 
         // Create new request
-        $request = HTTPRequestBuilder::createFromVariables($newVars, $body, ltrim($url, '/'));
+        $request = HTTPRequestBuilder::createFromVariables($newVars, $body, ltrim($url ?? '', '/'));
         if ($headers) {
             foreach ($headers as $k => $v) {
                 $request->addHeader($k, $v);
@@ -325,8 +325,8 @@ class Director implements TemplateGlobalProvider
 
             // Normalise route rule
             if (is_string($controllerOptions)) {
-                if (substr($controllerOptions, 0, 2) == '->') {
-                    $controllerOptions = ['Redirect' => substr($controllerOptions, 2)];
+                if (substr($controllerOptions ?? '', 0, 2) == '->') {
+                    $controllerOptions = ['Redirect' => substr($controllerOptions ?? '', 2)];
                 } else {
                     $controllerOptions = ['Controller' => $controllerOptions];
                 }
@@ -446,14 +446,14 @@ class Director implements TemplateGlobalProvider
         }
 
         // Check if there is already a protocol given
-        if (preg_match('/^http(s?):\/\//', $url)) {
+        if (preg_match('/^http(s?):\/\//', $url ?? '')) {
             return $url;
         }
 
         // Absolute urls without protocol are added
         // E.g. //google.com -> http://google.com
-        if (strpos($url, '//') === 0) {
-            return self::protocol() . substr($url, 2);
+        if (strpos($url ?? '', '//') === 0) {
+            return self::protocol() . substr($url ?? '', 2);
         }
 
         // Determine method for mapping the parent to this relative url
@@ -488,13 +488,13 @@ class Director implements TemplateGlobalProvider
     protected static function parseHost($url)
     {
         // Get base hostname
-        $host = parse_url($url, PHP_URL_HOST);
+        $host = parse_url($url ?? '', PHP_URL_HOST);
         if (!$host) {
             return null;
         }
 
         // Include port
-        $port = parse_url($url, PHP_URL_PORT);
+        $port = parse_url($url ?? '', PHP_URL_PORT);
         if ($port) {
             $host .= ':' . $port;
         }
@@ -510,13 +510,13 @@ class Director implements TemplateGlobalProvider
      */
     protected static function validateUserAndPass($url)
     {
-        $parsedURL = parse_url($url);
+        $parsedURL = parse_url($url ?? '');
 
         // Validate user (disallow slashes)
-        if (!empty($parsedURL['user']) && strstr($parsedURL['user'], '\\')) {
+        if (!empty($parsedURL['user']) && strstr($parsedURL['user'] ?? '', '\\')) {
             return false;
         }
-        if (!empty($parsedURL['pass']) && strstr($parsedURL['pass'], '\\')) {
+        if (!empty($parsedURL['pass']) && strstr($parsedURL['pass'] ?? '', '\\')) {
             return false;
         }
 
@@ -581,7 +581,7 @@ class Director implements TemplateGlobalProvider
     public static function port(HTTPRequest $request = null)
     {
         $host = static::host($request);
-        return (int)parse_url($host, PHP_URL_PORT) ?: null;
+        return (int)parse_url($host ?? '', PHP_URL_PORT) ?: null;
     }
 
     /**
@@ -593,7 +593,7 @@ class Director implements TemplateGlobalProvider
     public static function hostName(HTTPRequest $request = null)
     {
         $host = static::host($request);
-        return parse_url($host, PHP_URL_HOST) ?: null;
+        return parse_url($host ?? '', PHP_URL_HOST) ?: null;
     }
 
     /**
@@ -630,7 +630,7 @@ class Director implements TemplateGlobalProvider
         // Check override from alternate_base_url
         if ($baseURL = self::config()->uninherited('alternate_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
-            $protocol = parse_url($baseURL, PHP_URL_SCHEME);
+            $protocol = parse_url($baseURL ?? '', PHP_URL_SCHEME);
             if ($protocol) {
                 return $protocol === 'https';
             }
@@ -645,7 +645,7 @@ class Director implements TemplateGlobalProvider
         // Check default_base_url
         if ($baseURL = self::config()->uninherited('default_base_url')) {
             $baseURL = Injector::inst()->convertServiceProperty($baseURL);
-            $protocol = parse_url($baseURL, PHP_URL_SCHEME);
+            $protocol = parse_url($baseURL ?? '', PHP_URL_SCHEME);
             if ($protocol) {
                 return $protocol === 'https';
             }
@@ -665,7 +665,7 @@ class Director implements TemplateGlobalProvider
         $alternate = self::config()->get('alternate_base_url');
         if ($alternate) {
             $alternate = Injector::inst()->convertServiceProperty($alternate);
-            return rtrim(parse_url($alternate, PHP_URL_PATH), '/') . '/';
+            return rtrim(parse_url($alternate ?? '', PHP_URL_PATH) ?? '', '/') . '/';
         }
 
         // Get env base url
@@ -738,24 +738,24 @@ class Director implements TemplateGlobalProvider
     public static function makeRelative($url)
     {
         // Allow for the accidental inclusion whitespace and // in the URL
-        $url = preg_replace('#([^:])//#', '\\1/', trim($url));
+        $url = preg_replace('#([^:])//#', '\\1/', trim($url ?? ''));
 
         // If using a real url, remove protocol / hostname / auth / port
-        if (preg_match('#^(?<protocol>https?:)?//(?<hostpart>[^/]*)(?<url>(/.*)?)$#i', $url, $matches)) {
+        if (preg_match('#^(?<protocol>https?:)?//(?<hostpart>[^/]*)(?<url>(/.*)?)$#i', $url ?? '', $matches)) {
             $url = $matches['url'];
         }
 
         // Empty case
-        if (trim($url, '\\/') === '') {
+        if (trim($url ?? '', '\\/') === '') {
             return '';
         }
 
         // Remove base folder or url
         foreach ([self::publicFolder(), self::baseFolder(), self::baseURL()] as $base) {
             // Ensure single / doesn't break comparison (unless it would make base empty)
-            $base = rtrim($base, '\\/') ?: $base;
-            if (stripos($url, $base) === 0) {
-                return ltrim(substr($url, strlen($base)), '\\/');
+            $base = rtrim($base ?? '', '\\/') ?: $base;
+            if (stripos($url ?? '', $base ?? '') === 0) {
+                return ltrim(substr($url ?? '', strlen($base ?? '')), '\\/');
             }
         }
 
@@ -778,7 +778,7 @@ class Director implements TemplateGlobalProvider
         if ($path[0] == '/' || $path[0] == '\\') {
             return true;
         }
-        return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) == 1;
+        return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path ?? '') == 1;
     }
 
     /**
@@ -791,7 +791,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_root_relative_url($url)
     {
-        return strpos($url, '/') === 0 && strpos($url, '//') !== 0;
+        return strpos($url ?? '', '/') === 0 && strpos($url ?? '', '//') !== 0;
     }
 
     /**
@@ -811,21 +811,21 @@ class Director implements TemplateGlobalProvider
     public static function is_absolute_url($url)
     {
         // Strip off the query and fragment parts of the URL before checking
-        if (($queryPosition = strpos($url, '?')) !== false) {
-            $url = substr($url, 0, $queryPosition - 1);
+        if (($queryPosition = strpos($url ?? '', '?')) !== false) {
+            $url = substr($url ?? '', 0, $queryPosition - 1);
         }
-        if (($hashPosition = strpos($url, '#')) !== false) {
-            $url = substr($url, 0, $hashPosition - 1);
+        if (($hashPosition = strpos($url ?? '', '#')) !== false) {
+            $url = substr($url ?? '', 0, $hashPosition - 1);
         }
-        $colonPosition = strpos($url, ':');
-        $slashPosition = strpos($url, '/');
+        $colonPosition = strpos($url ?? '', ':');
+        $slashPosition = strpos($url ?? '', '/');
         return (
             // Base check for existence of a host on a compliant URL
-            parse_url($url, PHP_URL_HOST)
+            parse_url($url ?? '', PHP_URL_HOST)
             // Check for more than one leading slash without a protocol.
             // While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
             // and hence a potential security risk. Single leading slashes are not an issue though.
-            || preg_match('%^\s*/{2,}%', $url)
+            || preg_match('%^\s*/{2,}%', $url ?? '')
             || (
                 // If a colon is found, check if it's part of a valid scheme definition
                 // (meaning its not preceded by a slash).
@@ -903,7 +903,7 @@ class Director implements TemplateGlobalProvider
         // If path is relative to public folder search there first
         if (self::publicDir()) {
             $path = Path::join(self::publicFolder(), $file);
-            if (file_exists($path)) {
+            if (file_exists($path ?? '')) {
                 return $path;
             }
         }
@@ -922,8 +922,8 @@ class Director implements TemplateGlobalProvider
     public static function fileExists($file)
     {
         // replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
-        $file = preg_replace('/([^\?]*)?.*/', '$1', $file);
-        return file_exists(Director::getAbsFile($file));
+        $file = preg_replace('/([^\?]*)?.*/', '$1', $file ?? '');
+        return file_exists(Director::getAbsFile($file) ?? '');
     }
 
     /**

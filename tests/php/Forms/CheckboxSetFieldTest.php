@@ -385,8 +385,8 @@ class CheckboxSetFieldTest extends SapphireTest
         $this->assertTrue($field->Required());
 
         $attributes = $field->getAttributes();
-        $this->assertFalse(array_key_exists("aria-required", $attributes));
-        $this->assertFalse(array_key_exists("name", $attributes));
-        $this->assertFalse(array_key_exists("required", $attributes));
+        $this->assertFalse(array_key_exists("aria-required", $attributes ?? []));
+        $this->assertFalse(array_key_exists("name", $attributes ?? []));
+        $this->assertFalse(array_key_exists("required", $attributes ?? []));
     }
 }

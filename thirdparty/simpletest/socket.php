@@ -106,7 +106,7 @@ class SimpleSocket extends SimpleStickyError {
         if ($this->isError() || ! $this->isOpen()) {
             return false;
         }
-        $count = fwrite($this->_handle, $message);
+        $count = fwrite($this->_handle, $message ?? '');
         if (! $count) {
             if ($count === false) {
                 $this->_setError('Cannot write to socket');
@@ -131,7 +131,7 @@ class SimpleSocket extends SimpleStickyError {
         if ($this->isError() || ! $this->isOpen()) {
             return false;
         }
-        $raw = @fread($this->_handle, $this->_block_size);
+        $raw = @fread($this->_handle, $this->_block_size ?? 0);
         if ($raw === false) {
             $this->_setError('Cannot read from socket');
             $this->close();
@@ -178,7 +178,7 @@ class SimpleSocket extends SimpleStickyError {
      *    @access protected
      */
     function _openSocket($host, $port, &$error_number, &$error, $timeout) {
-        return @fsockopen($host, $port, $error_number, $error, $timeout);
+        return @fsockopen($host ?? '', $port ?? 0, $error_number, $error, $timeout);
     }
 }
 

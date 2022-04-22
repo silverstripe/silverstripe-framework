@@ -180,7 +180,7 @@ class SQLSelect extends SQLConditionalExpression
     public function selectField($field, $alias = null)
     {
         if (!$alias) {
-            if (preg_match('/"([^"]+)"$/', $field, $matches)) {
+            if (preg_match('/"([^"]+)"$/', $field ?? '', $matches)) {
                 $alias = $matches[1];
             } else {
                 $alias = $field;
@@ -264,10 +264,10 @@ class SQLSelect extends SQLConditionalExpression
                 'limit' => (int)$limit,
             ];
         } elseif ($limit && is_string($limit)) {
-            if (strpos($limit, ',') !== false) {
-                list($start, $innerLimit) = explode(',', $limit, 2);
+            if (strpos($limit ?? '', ',') !== false) {
+                list($start, $innerLimit) = explode(',', $limit ?? '', 2);
             } else {
-                list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
+                list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit ?? ''), 2);
             }
 
             $this->limit = [
@@ -326,10 +326,10 @@ class SQLSelect extends SQLConditionalExpression
         }
 
         if (is_string($clauses)) {
-            if (strpos($clauses, "(") !== false) {
-                $sort = preg_split("/,(?![^()]*+\\))/", $clauses);
+            if (strpos($clauses ?? '', "(") !== false) {
+                $sort = preg_split("/,(?![^()]*+\\))/", $clauses ?? '');
             } else {
-                $sort = explode(",", $clauses);
+                $sort = explode(",", $clauses ?? '');
             }
 
             $clauses = [];
@@ -343,8 +343,8 @@ class SQLSelect extends SQLConditionalExpression
         if (is_array($clauses)) {
             foreach ($clauses as $key => $value) {
                 if (!is_numeric($key)) {
-                    $column = trim($key);
-                    $columnDir = strtoupper(trim($value));
+                    $column = trim($key ?? '');
+                    $columnDir = strtoupper(trim($value ?? ''));
                 } else {
                     list($column, $columnDir) = $this->getDirectionFromString($value);
                 }
@@ -365,13 +365,13 @@ class SQLSelect extends SQLConditionalExpression
             $orderby = [];
             foreach ($this->orderby as $clause => $dir) {
                 // public function calls and multi-word columns like "CASE WHEN ..."
-                if (strpos($clause, '(') !== false || strpos($clause, " ") !== false) {
+                if (strpos($clause ?? '', '(') !== false || strpos($clause ?? '', " ") !== false) {
                     // Move the clause to the select fragment, substituting a placeholder column in the sort fragment.
-                    $clause = trim($clause);
+                    $clause = trim($clause ?? '');
                     do {
                         $column = "_SortColumn{$i}";
                         ++$i;
-                    } while (array_key_exists('"' . $column . '"', $this->orderby));
+                    } while (array_key_exists('"' . $column . '"', $this->orderby ?? []));
                     $this->selectField($clause, $column);
                     $clause = '"' . $column . '"';
                 }
@@ -392,9 +392,9 @@ class SQLSelect extends SQLConditionalExpression
      */
     private function getDirectionFromString($value, $defaultDirection = null)
     {
-        if (preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
-            $column = trim($matches[1]);
-            $direction = strtoupper($matches[2]);
+        if (preg_match('/^(.*)(asc|desc)$/i', $value ?? '', $matches)) {
+            $column = trim($matches[1] ?? '');
+            $direction = strtoupper($matches[2] ?? '');
         } else {
             $column = $value;
             $direction = $defaultDirection ? $defaultDirection : "ASC";
@@ -418,14 +418,14 @@ class SQLSelect extends SQLConditionalExpression
 
         if (!is_array($orderby)) {
             // spilt by any commas not within brackets
-            $orderby = preg_split('/,(?![^()]*+\\))/', $orderby);
+            $orderby = preg_split('/,(?![^()]*+\\))/', $orderby ?? '');
         }
 
         foreach ($orderby as $k => $v) {
-            if (strpos($v, ' ') !== false) {
+            if (strpos($v ?? '', ' ') !== false) {
                 unset($orderby[$k]);
 
-                $rule = explode(' ', trim($v));
+                $rule = explode(' ', trim($v ?? ''));
                 $clause = $rule[0];
                 $dir = (isset($rule[1])) ? $rule[1] : 'ASC';
 
@@ -448,7 +448,7 @@ class SQLSelect extends SQLConditionalExpression
         $this->orderby = [];
 
         foreach ($order as $clause => $dir) {
-            $dir = (strtoupper($dir) == 'DESC') ? 'ASC' : 'DESC';
+            $dir = (strtoupper($dir ?? '') == 'DESC') ? 'ASC' : 'DESC';
             $this->addOrderBy($clause, $dir);
         }
 
@@ -572,7 +572,7 @@ class SQLSelect extends SQLConditionalExpression
     public function unlimitedRowCount($column = null)
     {
         // we can't clear the select if we're relying on its output by a HAVING clause
-        if (count($this->having)) {
+        if (count($this->having ?? [])) {
             $records = $this->execute();
             return $records->numRecords();
         }
@@ -610,7 +610,7 @@ class SQLSelect extends SQLConditionalExpression
      */
     public function canSortBy($fieldName)
     {
-        $fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName);
+        $fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName ?? '');
 
         return isset($this->select[$fieldName]);
     }

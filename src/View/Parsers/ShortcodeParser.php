@@ -120,7 +120,7 @@ class ShortcodeParser
      */
     public function registered($shortcode)
     {
-        return array_key_exists($shortcode, $this->shortcodes);
+        return array_key_exists($shortcode, $this->shortcodes ?? []);
     }
 
     /**
@@ -322,7 +322,7 @@ class ShortcodeParser
         $tags = [];
 
         // Step 1: perform basic regex scan of individual tags
-        if (preg_match_all(static::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+        if (preg_match_all(static::tagrx() ?? '', $content ?? '', $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             foreach ($matches as $match) {
                 // Ignore any elements
                 if (empty($match['open'][0]) && empty($match['close'][0])) {
@@ -333,12 +333,12 @@ class ShortcodeParser
                 $attrs = [];
 
                 if (!empty($match['attrs'][0])) {
-                    preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
+                    preg_match_all(static::attrrx() ?? '', $match['attrs'][0] ?? '', $attrmatches, PREG_SET_ORDER);
 
                     foreach ($attrmatches as $attr) {
                         $name = '';
                         $value = '';
-                        $parts = array_values(array_filter($attr));
+                        $parts = array_values(array_filter($attr ?? []));
                         //the first element in the array is the complete delcaration (`id=1`) - we don't need this
                         array_shift($parts);
 
@@ -354,7 +354,7 @@ class ShortcodeParser
                 $tags[] = [
                     'text' => $match[0][0],
                     's' => $match[0][1],
-                    'e' => $match[0][1] + strlen($match[0][0]),
+                    'e' => $match[0][1] + strlen($match[0][0] ?? ''),
                     'open' =>  isset($match['open'][0]) ? $match['open'][0] : null,
                     'close' => isset($match['close'][0]) ? $match['close'][0] : null,
                     'attrs' => $attrs,
@@ -365,7 +365,7 @@ class ShortcodeParser
         }
 
         // Step 2: cluster open/close tag pairs into single entries
-        $i = count($tags);
+        $i = count($tags ?? []);
         while ($i--) {
             if (!empty($tags[$i]['close'])) {
                 // If the tag just before this one isn't the related opening tag, throw an error
@@ -397,8 +397,8 @@ class ShortcodeParser
                     }
 
                     // Otherwise, grab content between tags, save in opening tag & delete the closing one
-                    $tags[$i-1]['text'] = substr($content, $tags[$i-1]['s'], $tags[$i]['e'] - $tags[$i-1]['s']);
-                    $tags[$i-1]['content'] = substr($content, $tags[$i-1]['e'], $tags[$i]['s'] - $tags[$i-1]['e']);
+                    $tags[$i-1]['text'] = substr($content ?? '', $tags[$i-1]['s'] ?? 0, $tags[$i]['e'] - $tags[$i-1]['s']);
+                    $tags[$i-1]['content'] = substr($content ?? '', $tags[$i-1]['e'] ?? 0, $tags[$i]['s'] - $tags[$i-1]['e']);
                     $tags[$i-1]['e'] = $tags[$i]['e'];
 
                     unset($tags[$i]);
@@ -417,7 +417,7 @@ class ShortcodeParser
             }
         }
 
-        return array_values($tags);
+        return array_values($tags ?? []);
     }
 
     /**
@@ -436,16 +436,16 @@ class ShortcodeParser
         // The start index of the next tag, remembered as we step backwards through the list
         $li = null;
 
-        $i = count($tags);
+        $i = count($tags ?? []);
         while ($i--) {
             if ($li === null) {
-                $tail = substr($content, $tags[$i]['e']);
+                $tail = substr($content ?? '', $tags[$i]['e'] ?? 0);
             } else {
-                $tail = substr($content, $tags[$i]['e'], $li - $tags[$i]['e']);
+                $tail = substr($content ?? '', $tags[$i]['e'] ?? 0, $li - $tags[$i]['e']);
             }
 
             if ($tags[$i]['escaped']) {
-                $str = substr($content, $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
+                $str = substr($content ?? '', $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
             } else {
                 $str = $generator($i, $tags[$i]) . $tail . $str;
             }
@@ -453,7 +453,7 @@ class ShortcodeParser
             $li = $tags[$i]['s'];
         }
 
-        return substr($content, 0, $tags[0]['s']) . $str;
+        return substr($content ?? '', 0, $tags[0]['s']) . $str;
     }
 
     /**
@@ -476,7 +476,7 @@ class ShortcodeParser
 
             if ($tags) {
                 $node->nodeValue = $this->replaceTagsWithText(
-                    htmlspecialchars($node->nodeValue),
+                    htmlspecialchars($node->nodeValue ?? ''),
                     $tags,
                     function ($idx, $tag) use ($parser, $extra) {
                         return $parser->getShortcodeReplacementText($tag, $extra, false);
@@ -522,10 +522,10 @@ class ShortcodeParser
             do {
                 $parent = $parent->parentNode;
             } while ($parent instanceof DOMElement &&
-                !in_array(strtolower($parent->tagName), self::$block_level_elements)
+                !in_array(strtolower($parent->tagName ?? ''), self::$block_level_elements)
             );
 
-            $node->setAttribute('data-parentid', count($parents));
+            $node->setAttribute('data-parentid', count($parents ?? []));
             $parents[] = $parent;
         }
 
@@ -595,7 +595,7 @@ class ShortcodeParser
             $this->insertAfter($node, $parent);
         } elseif ($location == self::INLINE) {
             // Do nothing
-            if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
+            if (in_array(strtolower($node->tagName ?? ''), self::$block_level_elements)) {
                 user_error(
                     'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
@@ -645,10 +645,10 @@ class ShortcodeParser
         // If no shortcodes defined, don't try and parse any
         if (!$this->shortcodes) {
             $continue = false;
-        } elseif (!trim($content)) {
+        } elseif (!trim($content ?? '')) {
             // If no content, don't try and parse it
             $continue = false;
-        } elseif (strpos($content, '[') === false) {
+        } elseif (strpos($content ?? '', '[') === false) {
             // If no shortcode tag, don't try and parse it
             $continue = false;
         }
@@ -729,7 +729,7 @@ class ShortcodeParser
                     $tag = $tags[$matches[1]];
                     return $parser->getShortcodeReplacementText($tag);
                 },
-                $content
+                $content ?? ''
             );
         }
 

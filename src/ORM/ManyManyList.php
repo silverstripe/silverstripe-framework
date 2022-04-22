@@ -291,7 +291,7 @@ class ManyManyList extends RelationList
                 // that DataObject::prepareManipulationTable writes fields
                 foreach ($this->extraFields as $fieldName => $fieldSpec) {
                     // Skip fields without an assignment
-                    if (array_key_exists($fieldName, $extraFields)) {
+                    if (array_key_exists($fieldName, $extraFields ?? [])) {
                         $fieldObject = Injector::inst()->create($fieldSpec, $fieldName);
                         $fieldObject->setValue($extraFields[$fieldName]);
                         $fieldObject->writeToManipulation($manipulation[$this->joinTable]);

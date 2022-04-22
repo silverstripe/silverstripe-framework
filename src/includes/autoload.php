@@ -11,7 +11,7 @@ call_user_func(function () {
         getcwd() . '/vendor/autoload.php',
     ];
     foreach ($candidates as $candidate) {
-        if (file_exists($candidate)) {
+        if (file_exists($candidate ?? '')) {
             require_once $candidate;
             return;
         }

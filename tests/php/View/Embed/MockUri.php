@@ -13,7 +13,7 @@ class MockUri implements UriInterface
 
     public function __construct(string $url)
     {
-        $p = parse_url($url);
+        $p = parse_url($url ?? '');
         $this->scheme = $p['scheme'] ?? '';
         $this->host = $p['host'] ?? '';
         $this->path = $p['path'] ?? '';
@@ -98,7 +98,7 @@ class MockUri implements UriInterface
             '%s://%s%s%s',
             $this->getScheme(),
             $this->getHost(),
-            '/' . ltrim($this->getPath(), '/'),
+            '/' . ltrim($this->getPath() ?? '', '/'),
             $query ? "?$query" : ''
         );
     }

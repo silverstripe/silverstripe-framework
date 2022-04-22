@@ -50,8 +50,8 @@ class HTMLEditorFieldTest extends FunctionalTest
         foreach ($files as $file) {
             $fromPath = __DIR__ . '/HTMLEditorFieldTest/images/' . $file->Name;
             $destPath = TestAssetStore::getLocalPath($file); // Only correct for test asset store
-            Filesystem::makeFolder(dirname($destPath));
-            copy($fromPath, $destPath);
+            Filesystem::makeFolder(dirname($destPath ?? ''));
+            copy($fromPath ?? '', $destPath ?? '');
         }
     }
 

@@ -48,7 +48,7 @@ class DataObjectDuplicationTest extends SapphireTest
         );
         $this->assertEmpty(
             array_intersect(
-                $orig->bobcats()->getIDList(),
+                $orig->bobcats()->getIDList() ?? [],
                 $duplicate->bobcats()->getIDList()
             )
         );

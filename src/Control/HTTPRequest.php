@@ -153,7 +153,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function __construct($httpMethod, $url, $getVars = [], $postVars = [], $body = null)
     {
-        $this->httpMethod = strtoupper($httpMethod);
+        $this->httpMethod = strtoupper($httpMethod ?? '');
         $this->setUrl($url);
         $this->getVars = (array) $getVars;
         $this->postVars = (array) $postVars;
@@ -175,15 +175,15 @@ class HTTPRequest implements ArrayAccess
         $this->url = $url;
 
         // Normalize URL if its relative (strictly speaking), or has leading slashes
-        if (Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-            $this->url = preg_replace(['/\/+/','/^\//', '/\/$/'], ['/','',''], $this->url);
+        if (Director::is_relative_url($url) || preg_match('/^\//', $url ?? '')) {
+            $this->url = preg_replace(['/\/+/','/^\//', '/\/$/'], ['/','',''], $this->url ?? '');
         }
-        if (preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
+        if (preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url ?? '', $matches)) {
             $this->url = $matches[1];
             $this->extension = $matches[2];
         }
         if ($this->url) {
-            $this->dirParts = preg_split('|/+|', $this->url);
+            $this->dirParts = preg_split('|/+|', $this->url ?? '');
         } else {
             $this->dirParts = [];
         }
@@ -351,7 +351,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function addHeader($header, $value)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         $this->headers[$header] = $value;
         return $this;
     }
@@ -372,7 +372,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getHeader($header)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         return (isset($this->headers[$header])) ? $this->headers[$header] : null;
     }
 
@@ -385,7 +385,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function removeHeader($header)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         unset($this->headers[$header]);
         return $this;
     }
@@ -402,11 +402,11 @@ class HTTPRequest implements ArrayAccess
 
         if ($includeGetVars) {
             $vars = $this->getVars();
-            if (count($vars)) {
-                $url .= '?' . http_build_query($vars);
+            if (count($vars ?? [])) {
+                $url .= '?' . http_build_query($vars ?? []);
             }
-        } elseif (strpos($url, "?") !== false) {
-            $url = substr($url, 0, strpos($url, "?"));
+        } elseif (strpos($url ?? '', "?") !== false) {
+            $url = substr($url ?? '', 0, strpos($url ?? '', "?"));
         }
 
         return $url;
@@ -434,6 +434,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $offset
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->postVars[$offset]) || isset($this->getVars[$offset]);
@@ -445,16 +446,19 @@ class HTTPRequest implements ArrayAccess
      * @param string $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->requestVar($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->getVars[$offset] = $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->getVars[$offset]);
@@ -480,10 +484,10 @@ class HTTPRequest implements ArrayAccess
             $mimeType = HTTP::get_mime_type($fileName);
         }
         $response = new HTTPResponse($fileData);
-        $response->addHeader("content-type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+        $response->addHeader("content-type", "$mimeType; name=\"" . addslashes($fileName ?? '') . "\"");
         // Note a IE-only fix that inspects this header in HTTP::add_cache_headers().
-        $response->addHeader("content-disposition", "attachment; filename=\"" . addslashes($fileName) . "\"");
-        $response->addHeader("content-length", strlen($fileData));
+        $response->addHeader("content-disposition", "attachment; filename=\"" . addslashes($fileName ?? '') . "\"");
+        $response->addHeader("content-length", strlen($fileData ?? ''));
 
         return $response;
     }
@@ -510,7 +514,7 @@ class HTTPRequest implements ArrayAccess
     public function match($pattern, $shiftOnSuccess = false)
     {
         // Check if a specific method is required
-        if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
+        if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern ?? '', $matches)) {
             $requiredMethod = $matches[1];
             if ($requiredMethod != $this->httpMethod) {
                 return false;
@@ -526,32 +530,32 @@ class HTTPRequest implements ArrayAccess
         }
 
         // Check for the '//' marker that represents the "shifting point"
-        $doubleSlashPoint = strpos($pattern, '//');
+        $doubleSlashPoint = strpos($pattern ?? '', '//');
         if ($doubleSlashPoint !== false) {
-            $shiftCount = substr_count(substr($pattern, 0, $doubleSlashPoint), '/') + 1;
-            $pattern = str_replace('//', '/', $pattern);
-            $patternParts = explode('/', $pattern);
+            $shiftCount = substr_count(substr($pattern ?? '', 0, $doubleSlashPoint), '/') + 1;
+            $pattern = str_replace('//', '/', $pattern ?? '');
+            $patternParts = explode('/', $pattern ?? '');
         } else {
-            $patternParts = explode('/', $pattern);
-            $shiftCount = sizeof($patternParts);
+            $patternParts = explode('/', $pattern ?? '');
+            $shiftCount = sizeof($patternParts ?? []);
         }
 
         // Filter out any "empty" matching parts - either from an initial / or a trailing /
-        $patternParts = array_values(array_filter($patternParts));
+        $patternParts = array_values(array_filter($patternParts ?? []));
 
         $arguments = [];
         foreach ($patternParts as $i => $part) {
-            $part = trim($part);
+            $part = trim($part ?? '');
 
             // Match a variable
             if (isset($part[0]) && $part[0] == '$') {
                 // A variable ending in ! is required
-                if (substr($part, -1) == '!') {
+                if (substr($part ?? '', -1) == '!') {
                     $varRequired = true;
-                    $varName = substr($part, 1, -1);
+                    $varName = substr($part ?? '', 1, -1);
                 } else {
                     $varRequired = false;
-                    $varName = substr($part, 1);
+                    $varName = substr($part ?? '', 1);
                 }
 
                 // Fail if a required variable isn't populated
@@ -567,17 +571,17 @@ class HTTPRequest implements ArrayAccess
                     }
                     if ($varName === '*') {
                         array_pop($patternParts);
-                        $shiftCount = sizeof($patternParts);
-                        $patternParts = array_merge($patternParts, array_slice($this->dirParts, $i));
+                        $shiftCount = sizeof($patternParts ?? []);
+                        $patternParts = array_merge($patternParts, array_slice($this->dirParts ?? [], $i ?? 0));
                         break;
                     } else {
                         array_pop($patternParts);
-                        $shiftCount = sizeof($patternParts);
-                        $remaining = count($this->dirParts) - $i;
+                        $shiftCount = sizeof($patternParts ?? []);
+                        $remaining = count($this->dirParts ?? []) - $i;
                         for ($j = 1; $j <= $remaining; $j++) {
                             $arguments["$${j}"] = $this->dirParts[$j + $i - 1];
                         }
-                        $patternParts = array_merge($patternParts, array_keys($arguments));
+                        $patternParts = array_merge($patternParts, array_keys($arguments ?? []));
                         break;
                     }
                 } else {
@@ -606,7 +610,7 @@ class HTTPRequest implements ArrayAccess
             $this->shift($shiftCount);
             // We keep track of pattern parts that we looked at but didn't shift off.
             // This lets us say that we have *parsed* the whole URL even when we haven't *shifted* it all
-            $this->unshiftedButParsedParts = sizeof($patternParts) - $shiftCount;
+            $this->unshiftedButParsedParts = sizeof($patternParts ?? []) - $shiftCount;
         }
 
         $this->latestParams = $arguments;
@@ -640,12 +644,12 @@ class HTTPRequest implements ArrayAccess
      */
     public function shiftAllParams()
     {
-        $keys    = array_keys($this->allParams);
-        $values  = array_values($this->allParams);
+        $keys    = array_keys($this->allParams ?? []);
+        $values  = array_values($this->allParams ?? []);
         $value   = array_shift($values);
 
         // push additional unparsed URL parts onto the parameter stack
-        if (array_key_exists($this->unshiftedButParsedParts, $this->dirParts)) {
+        if (array_key_exists($this->unshiftedButParsedParts, $this->dirParts ?? [])) {
             $values[] = $this->dirParts[$this->unshiftedButParsedParts];
         }
 
@@ -741,11 +745,11 @@ class HTTPRequest implements ArrayAccess
      */
     public function isEmptyPattern($pattern)
     {
-        if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
+        if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern ?? '', $matches)) {
             $pattern = $matches[2];
         }
 
-        if (trim($pattern) == "") {
+        if (trim($pattern ?? '') == "") {
             return true;
         }
         return false;
@@ -787,7 +791,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function allParsed()
     {
-        return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;
+        return sizeof($this->dirParts ?? []) <= $this->unshiftedButParsedParts;
     }
 
     /**
@@ -835,9 +839,9 @@ class HTTPRequest implements ArrayAccess
     public function getAcceptMimetypes($includeQuality = false)
     {
         $mimetypes = [];
-        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('accept'));
+        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('accept') ?? '');
         foreach ($mimetypesWithQuality as $mimetypeWithQuality) {
-            $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
+            $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality ?? '');
         }
         return $mimetypes;
     }
@@ -861,7 +865,7 @@ class HTTPRequest implements ArrayAccess
             throw new \InvalidArgumentException('HTTPRequest::setHttpMethod: Invalid HTTP method');
         }
 
-        $this->httpMethod = strtoupper($method);
+        $this->httpMethod = strtoupper($method ?? '');
         return $this;
     }
 
@@ -895,7 +899,7 @@ class HTTPRequest implements ArrayAccess
      */
     private static function isValidHttpMethod($method)
     {
-        return in_array(strtoupper($method), ['GET','POST','PUT','DELETE','HEAD']);
+        return in_array(strtoupper($method ?? ''), ['GET','POST','PUT','DELETE','HEAD']);
     }
 
     /**
@@ -914,7 +918,7 @@ class HTTPRequest implements ArrayAccess
             if (!self::isValidHttpMethod($postVars['_method'])) {
                 throw new InvalidArgumentException('HTTPRequest::detect_method(): Invalid "_method" parameter');
             }
-            return strtoupper($postVars['_method']);
+            return strtoupper($postVars['_method'] ?? '');
         }
         return $origMethod;
     }

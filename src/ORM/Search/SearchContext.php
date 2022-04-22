@@ -175,7 +175,7 @@ class SearchContext
         $this->setSearchParams($searchParams);
 
         foreach ($this->searchParams as $key => $value) {
-            $key = str_replace('__', '.', $key);
+            $key = str_replace('__', '.', $key ?? '');
             if ($filter = $this->getFilter($key)) {
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
@@ -186,8 +186,8 @@ class SearchContext
                             $searchFields = $modelObj->searchableFields()[$key]['match_any'];
                             $sqlSearchFields = [];
                             foreach ($searchFields as $dottedRelation) {
-                                $relation = substr($dottedRelation, 0, strpos($dottedRelation, '.'));
-                                $relations = explode('.', $dottedRelation);
+                                $relation = substr($dottedRelation ?? '', 0, strpos($dottedRelation ?? '', '.'));
+                                $relations = explode('.', $dottedRelation ?? '');
                                 $fieldName = array_pop($relations);
                                 $relationModelName = $dataQuery->applyRelation($relation);
                                 $relationPrefix = $dataQuery->applyRelationPrefix($relation);

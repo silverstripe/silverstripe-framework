@@ -242,7 +242,7 @@ class TreeDropdownField extends FormField
         $this->setShowSearch($showSearch);
 
         // Extra settings for Folders
-        if (strcasecmp($sourceObject, Folder::class) === 0) {
+        if (strcasecmp($sourceObject ?? '', Folder::class) === 0) {
             $this->setChildrenMethod('ChildFolders');
             $this->setNumChildrenMethod('numChildFolders');
         }
@@ -514,7 +514,7 @@ class TreeDropdownField extends FormField
 
         // Allow to pass values to be selected within the ajax request
         $value = $request->requestVar('forceValue') ?: $this->value;
-        if ($value && ($values = preg_split('/,\s*/', $value))) {
+        if ($value && ($values = preg_split('/,\s*/', $value ?? ''))) {
             foreach ($values as $value) {
                 if (!$value || $value == 'unchanged') {
                     continue;
@@ -724,7 +724,7 @@ class TreeDropdownField extends FormField
             $child['contextString'] = ($contextString !== '') ? $contextString . '/' : '';
             unset($child['children']);
 
-            if (!$this->search || in_array($child['id'], $this->realSearchIds)) {
+            if (!$this->search || in_array($child['id'], $this->realSearchIds ?? [])) {
                 $output[] = $child;
             }
             $output = array_merge($output, $this->flattenChildrenArray($grandChildren, $childTitles));
@@ -760,7 +760,7 @@ class TreeDropdownField extends FormField
 
         while (!empty($parents)) {
             $items = DataObject::get($sourceObject)
-                ->filter("ID", array_keys($parents));
+                ->filter("ID", array_keys($parents ?? []));
             $parents = [];
 
             foreach ($items as $item) {

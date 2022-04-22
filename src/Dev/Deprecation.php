@@ -107,7 +107,7 @@ class Deprecation
             return null;
         }
 
-        $callingfile = realpath($backtrace[1]['file']);
+        $callingfile = realpath($backtrace[1]['file'] ?? '');
 
         return ModuleLoader::inst()->getManifest()->getModuleByPath($callingfile);
     }
@@ -180,10 +180,10 @@ class Deprecation
         $backtrace = null;
 
         // If you pass #.#, assume #.#.0
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) {
+        if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
             $atVersion .= '.0';
         }
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion)) {
+        if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion ?? '')) {
             $checkVersion .= '.0';
         }
 
@@ -203,7 +203,7 @@ class Deprecation
         }
 
         // Check the version against the notice version
-        if ($checkVersion && version_compare($checkVersion, $atVersion, '>=')) {
+        if ($checkVersion && version_compare($checkVersion ?? '', $atVersion ?? '', '>=')) {
             // Get the calling scope
             if ($scope == Deprecation::SCOPE_METHOD) {
                 if (!$backtrace) {
@@ -226,16 +226,16 @@ class Deprecation
             }
 
             // Then raise the notice
-            if (substr($string, -1) != '.') {
+            if (substr($string ?? '', -1) != '.') {
                 $string .= ".";
             }
 
             $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
             if ($caller) {
-                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level);
+                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level ?? 0);
             } else {
-                user_error($string, $level);
+                user_error($string ?? '', $level ?? 0);
             }
         }
     }

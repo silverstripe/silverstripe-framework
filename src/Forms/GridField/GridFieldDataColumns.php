@@ -38,13 +38,13 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     public function augmentColumns($gridField, &$columns)
     {
-        $baseColumns = array_keys($this->getDisplayFields($gridField));
+        $baseColumns = array_keys($this->getDisplayFields($gridField) ?? []);
 
         foreach ($baseColumns as $col) {
             $columns[] = $col;
         }
 
-        $columns = array_unique($columns);
+        $columns = array_unique($columns ?? []);
     }
 
     /**
@@ -55,7 +55,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     public function getColumnsHandled($gridField)
     {
-        return array_keys($this->getDisplayFields($gridField));
+        return array_keys($this->getDisplayFields($gridField) ?? []);
     }
 
     /**
@@ -154,7 +154,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     {
         // Find the data column for the given named column
         $columns = $this->getDisplayFields($gridField);
-        $columnInfo = array_key_exists($columnName, $columns) ? $columns[$columnName] : null;
+        $columnInfo = array_key_exists($columnName, $columns ?? []) ? $columns[$columnName] : null;
 
         // Allow callbacks
         if (is_array($columnInfo) && isset($columnInfo['callback'])) {
@@ -186,7 +186,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return ['class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName)];
+        return ['class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName ?? '')];
     }
 
     /**
@@ -222,12 +222,12 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     protected function getValueFromRelation($record, $columnName)
     {
-        $fieldNameParts = explode('.', $columnName);
+        $fieldNameParts = explode('.', $columnName ?? '');
         $tmpItem = clone($record);
-        for ($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
+        for ($idx = 0; $idx < sizeof($fieldNameParts ?? []); $idx++) {
             $methodName = $fieldNameParts[$idx];
             // Last mmethod call from $columnName return what that method is returning
-            if ($idx == sizeof($fieldNameParts) - 1) {
+            if ($idx == sizeof($fieldNameParts ?? []) - 1) {
                 return $tmpItem->XML_val($methodName);
             }
             // else get the object from this $methodName
@@ -247,20 +247,20 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     protected function castValue($gridField, $fieldName, $value)
     {
         // If a fieldCasting is specified, we assume the result is safe
-        if (array_key_exists($fieldName, $this->fieldCasting)) {
+        if (array_key_exists($fieldName, $this->fieldCasting ?? [])) {
             $value = $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
         } elseif (is_object($value)) {
             // If the value is an object, we do one of two things
             if (method_exists($value, 'Nice')) {
                 // If it has a "Nice" method, call that & make sure the result is safe
-                $value = nl2br(Convert::raw2xml($value->Nice()));
+                $value = nl2br(Convert::raw2xml($value->Nice()) ?? '');
             } else {
                 // Otherwise call forTemplate - the result of this should already be safe
                 $value = $value->forTemplate();
             }
         } else {
             // Otherwise, just treat as a text string & make sure the result is safe
-            $value = nl2br(Convert::raw2xml($value));
+            $value = nl2br(Convert::raw2xml($value) ?? '');
         }
 
         return $value;
@@ -276,7 +276,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     protected function formatValue($gridField, $item, $fieldName, $value)
     {
-        if (!array_key_exists($fieldName, $this->fieldFormatting)) {
+        if (!array_key_exists($fieldName, $this->fieldFormatting ?? [])) {
             return $value;
         }
 
@@ -284,9 +284,9 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
         if (!is_string($spec) && is_callable($spec)) {
             return $spec($value, $item);
         } else {
-            $format = str_replace('$value', "__VAL__", $spec);
-            $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
-            $format = str_replace('__VAL__', '$value', $format);
+            $format = str_replace('$value', "__VAL__", $spec ?? '');
+            $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format ?? '');
+            $format = str_replace('__VAL__', '$value', $format ?? '');
             eval('$value = "' . $format . '";');
             return $value;
         }
@@ -306,7 +306,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
         }
 
         foreach ($escape as $search => $replace) {
-            $value = str_replace($search, $replace, $value);
+            $value = str_replace($search ?? '', $replace ?? '', $value ?? '');
         }
         return $value;
     }

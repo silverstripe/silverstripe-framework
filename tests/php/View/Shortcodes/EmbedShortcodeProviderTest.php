@@ -12,7 +12,7 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
 {
     public function assertEqualIgnoringWhitespace($a, $b, $message = '')
     {
-        $this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
+        $this->assertEquals(preg_replace('/\s+/', '', $a ?? ''), preg_replace('/\s+/', '', $b ?? ''), $message);
     }
 
     private function getShortcodeHtml(
@@ -22,8 +22,8 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
         string $secondResponse,
         array $arguments
     ): string {
-        $firstResponse = str_replace("\n", '', $firstResponse);
-        $secondResponse = str_replace("\n", '', $secondResponse);
+        $firstResponse = str_replace("\n", '', $firstResponse ?? '');
+        $secondResponse = str_replace("\n", '', $secondResponse ?? '');
         $embedContainer = $this->createEmbedContainer($urlA, $urlB, $firstResponse, $secondResponse);
         return EmbedShortcodeProvider::handle_shortcode($arguments, '', null, '', ['Embeddable' => $embedContainer]);
     }

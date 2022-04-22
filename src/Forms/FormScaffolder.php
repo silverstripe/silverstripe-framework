@@ -83,7 +83,7 @@ class FormScaffolder
         // Add logical fields directly specified in db config
         foreach ($this->obj->config()->get('db') as $fieldName => $fieldType) {
             // Skip restricted fields
-            if ($this->restrictFields && !in_array($fieldName, $this->restrictFields)) {
+            if ($this->restrictFields && !in_array($fieldName, $this->restrictFields ?? [])) {
                 continue;
             }
 
@@ -112,7 +112,7 @@ class FormScaffolder
         // add has_one relation fields
         if ($this->obj->hasOne()) {
             foreach ($this->obj->hasOne() as $relationship => $component) {
-                if ($this->restrictFields && !in_array($relationship, $this->restrictFields)) {
+                if ($this->restrictFields && !in_array($relationship, $this->restrictFields ?? [])) {
                     continue;
                 }
                 $fieldName = $component === 'SilverStripe\\ORM\\DataObject'

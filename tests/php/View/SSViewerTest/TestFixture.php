@@ -34,14 +34,14 @@ class TestFixture extends ViewableData
         $childName = $this->argedName($fieldName, $arguments);
 
         // Special field name Loop### to create a list
-        if (preg_match('/^Loop([0-9]+)$/', $fieldName, $matches)) {
+        if (preg_match('/^Loop([0-9]+)$/', $fieldName ?? '', $matches)) {
             $output = new ArrayList();
             for ($i = 0; $i < $matches[1]; $i++) {
                 $output->push(new TestFixture($childName));
             }
             return $output;
         } else {
-            if (preg_match('/NotSet/i', $fieldName)) {
+            if (preg_match('/NotSet/i', $fieldName ?? '')) {
                 return new ViewableData();
             } else {
                 return new TestFixture($childName);
@@ -52,10 +52,10 @@ class TestFixture extends ViewableData
 
     public function XML_val($fieldName, $arguments = null, $cache = false)
     {
-        if (preg_match('/NotSet/i', $fieldName)) {
+        if (preg_match('/NotSet/i', $fieldName ?? '')) {
             return '';
         } else {
-            if (preg_match('/Raw/i', $fieldName)) {
+            if (preg_match('/Raw/i', $fieldName ?? '')) {
                 return $fieldName;
             } else {
                 return '[out:' . $this->argedName($fieldName, $arguments) . ']';

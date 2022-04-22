@@ -15,7 +15,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest
         $loader = new GroupCsvBulkLoader();
         $results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest.csv');
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 2);
+        $this->assertEquals(count($created ?? []), 2);
         $this->assertEquals($created[0]->Code, 'newgroup1');
         $this->assertEquals($created[0]->ParentID, 0);
         $this->assertEquals($created[1]->Code, 'newchildgroup1');
@@ -33,11 +33,11 @@ class GroupCsvBulkLoaderTest extends SapphireTest
         $results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
+        $this->assertEquals(count($created ?? []), 1);
         $this->assertEquals($created[0]->Code, 'newchildgroup1');
 
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
+        $this->assertEquals(count($updated ?? []), 1);
         $this->assertEquals($updated[0]->Code, 'newgroup1-2');
         $this->assertEquals($updated[0]->Title, 'New Group 1');
     }
@@ -48,12 +48,12 @@ class GroupCsvBulkLoaderTest extends SapphireTest
         $results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest_withExisting.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
+        $this->assertEquals(count($created ?? []), 1);
         $this->assertEquals($created[0]->Code, 'newgroup1');
         $this->assertEquals($created[0]->Permissions()->column('Code'), ['CODE1']);
 
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
+        $this->assertEquals(count($updated ?? []), 1);
         $this->assertEquals($updated[0]->Code, 'existinggroup');
         $array1=$updated[0]->Permissions()->column('Code');
         $array2=['CODE1', 'CODE2'];

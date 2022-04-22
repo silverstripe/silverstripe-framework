@@ -46,7 +46,7 @@ class ToggleCompositeField extends CompositeField
     {
         $context = $this;
 
-        if (count($properties)) {
+        if (count($properties ?? [])) {
             $context = $this->customise($properties);
         }
 

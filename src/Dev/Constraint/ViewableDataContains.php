@@ -104,7 +104,7 @@ if (class_exists(Constraint::class)) {
          */
         public function toString(): string
         {
-            return 'contains only Objects where "' . key($this->match) . '" is "' . current($this->match) . '"';
+            return 'contains only Objects where "' . key($this->match ?? []) . '" is "' . current($this->match ?? []) . '"';
         }
     }
 }
@@ -201,6 +201,6 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      */
     public function toString()
     {
-        return 'contains only Objects where "' . key($this->match) . '" is "' . current($this->match) . '"';
+        return 'contains only Objects where "' . key($this->match ?? []) . '" is "' . current($this->match ?? []) . '"';
     }
 }

@@ -235,7 +235,7 @@ class TestSession
             $url = Director::makeRelative($form->getAction()->asString());
 
             $postVars = [];
-            parse_str($submission->_encode(), $postVars);
+            parse_str($submission->_encode() ?? '', $postVars);
             return $this->post($url, $postVars);
         } else {
             user_error("TestSession::submitForm called when there is no form loaded."
@@ -252,7 +252,7 @@ class TestSession
     {
         if ($this->lastResponse->getHeader('Location')) {
             $url = Director::makeRelative($this->lastResponse->getHeader('Location'));
-            $url = strtok($url, '#');
+            $url = strtok($url ?? '', '#');
             return $this->get($url);
         }
     }

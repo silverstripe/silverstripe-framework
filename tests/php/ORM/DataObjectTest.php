@@ -181,7 +181,7 @@ class DataObjectTest extends SapphireTest
                 'Name',
                 'Comment'
             ],
-            array_slice(array_keys($dbFields), 4, 2),
+            array_slice(array_keys($dbFields ?? []), 4, 2),
             'DataObject::db returns fields in correct order'
         );
     }
@@ -1287,7 +1287,7 @@ class DataObjectTest extends SapphireTest
             'HasOneRelationshipID',
             'ExtendedHasOneRelationshipID'
         ];
-        $actual = array_keys($teamSpecifications);
+        $actual = array_keys($teamSpecifications ?? []);
         sort($expected);
         sort($actual);
         $this->assertEquals(
@@ -1310,7 +1310,7 @@ class DataObjectTest extends SapphireTest
             'HasOneRelationshipID',
             'ExtendedHasOneRelationshipID'
         ];
-        $actual = array_keys($teamFields);
+        $actual = array_keys($teamFields ?? []);
         sort($expected);
         sort($actual);
         $this->assertEquals(
@@ -1336,7 +1336,7 @@ class DataObjectTest extends SapphireTest
             'SubclassFieldWithOverride',
             'ParentTeamID',
         ];
-        $actual = array_keys($subteamSpecifications);
+        $actual = array_keys($subteamSpecifications ?? []);
         sort($expected);
         sort($actual);
         $this->assertEquals(
@@ -1352,7 +1352,7 @@ class DataObjectTest extends SapphireTest
             'SubclassFieldWithOverride',
             'ParentTeamID',
         ];
-        $actual = array_keys($subteamFields);
+        $actual = array_keys($subteamFields ?? []);
         sort($expected);
         sort($actual);
         $this->assertEquals(
@@ -1667,7 +1667,7 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
         $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
-        $this->assertContains('ClassName', array_keys($changedFields));
+        $this->assertContains('ClassName', array_keys($changedFields ?? []));
         $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
         $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
         $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
@@ -1699,7 +1699,7 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
         $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
-        $this->assertContains('ClassName', array_keys($changedFields));
+        $this->assertContains('ClassName', array_keys($changedFields ?? []));
         $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
         $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
         $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
@@ -2047,7 +2047,7 @@ class DataObjectTest extends SapphireTest
             "\"DataObjectTest_Team\".\"ID\" IN
 			($obj1->ID, $obj2->ID)"
         )->column("SubclassDatabaseField");
-        $this->assertEquals(array_intersect($values, ['obj1', 'obj2']), $values);
+        $this->assertEquals(array_intersect($values ?? [], ['obj1', 'obj2']), $values);
     }
 
     public function testClassNameSetForNewObjects()
@@ -2590,7 +2590,7 @@ class DataObjectTest extends SapphireTest
             'Salary' => 50,
         ]);
         $this->assertEquals('Staff', $staff->EmploymentType);
-        $this->assertEquals(['Salary'], array_keys($staff->getChangedFields()));
+        $this->assertEquals(['Salary'], array_keys($staff->getChangedFields() ?? []));
 
 
         // Test hydration (DataObject::CREATE_HYDRATED)
@@ -2642,9 +2642,9 @@ class DataObjectTest extends SapphireTest
         $obj = new DataObjectTest\Fixture();
         // enums are parsed correctly
         $vals = ['25', '50', '75', '100'];
-        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnum')->enumValues());
+        $this->assertSame(array_combine($vals ?? [], $vals ?? []), $obj->dbObject('MyEnum')->enumValues());
         // enum with dots in their values are also parsed correctly
         $vals = ['25.25', '50.00', '75.00', '100.50'];
-        $this->assertSame(array_combine($vals, $vals), $obj->dbObject('MyEnumWithDots')->enumValues());
+        $this->assertSame(array_combine($vals ?? [], $vals ?? []), $obj->dbObject('MyEnumWithDots')->enumValues());
     }
 }

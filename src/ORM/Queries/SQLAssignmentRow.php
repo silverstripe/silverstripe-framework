@@ -59,7 +59,7 @@ class SQLAssignmentRow
         // Note that there could be multiple parameters, e.g.
         // ['MAX(?,?)' => [1,2]] although the container should
         // have a single item
-        if (count($value) == 1) {
+        if (count($value ?? []) == 1) {
             foreach ($value as $sql => $parameters) {
                 if (!is_string($sql)) {
                     continue;
@@ -223,7 +223,7 @@ class SQLAssignmentRow
      */
     public function getColumns()
     {
-        return array_keys($this->assignments);
+        return array_keys($this->assignments ?? []);
     }
 
     /**

@@ -53,7 +53,7 @@ class ParallelRegex {
      *    @access public
      */
     function addPattern($pattern, $label = true) {
-        $count = count($this->_patterns);
+        $count = count($this->_patterns ?? []);
         $this->_patterns[$count] = $pattern;
         $this->_labels[$count] = $label;
         $this->_regex = null;
@@ -69,15 +69,15 @@ class ParallelRegex {
      *    @access public
      */
     function match($subject, &$match) {
-        if (count($this->_patterns) == 0) {
+        if (count($this->_patterns ?? []) == 0) {
             return false;
         }
-        if (! preg_match($this->_getCompoundedRegex(), $subject, $matches)) {
+        if (! preg_match($this->_getCompoundedRegex() ?? '', $subject ?? '', $matches)) {
             $match = '';
             return false;
         }
         $match = $matches[0];
-        for ($i = 1; $i < count($matches); $i++) {
+        for ($i = 1; $i < count($matches ?? []); $i++) {
             if ($matches[$i]) {
                 return $this->_labels[$i - 1];
             }
@@ -99,7 +99,7 @@ class ParallelRegex {
                 $this->_patterns[$i] = '(' . str_replace(
                         array('/', '(', ')'),
                         array('\/', '\(', '\)'),
-                        $this->_patterns[$i]) . ')';
+                        $this->_patterns[$i] ?? '') . ')';
             }
             $this->_regex = "/" . implode("|", $this->_patterns) . "/" . $this->_getPerlMatchingFlags();
         }
@@ -160,7 +160,7 @@ class SimpleStateStack {
      *    @access public
      */
     function leave() {
-        if (count($this->_stack) == 1) {
+        if (count($this->_stack ?? []) == 1) {
             return false;
         }
         array_pop($this->_stack);
@@ -309,7 +309,7 @@ class SimpleLexer {
         if (! isset($this->_parser)) {
             return false;
         }
-        $length = strlen($raw);
+        $length = strlen($raw ?? '');
         while (is_array($parsed = $this->_reduce($raw))) {
             list($raw, $unmatched, $matched, $mode) = $parsed;
             if (! $this->_dispatchTokens($unmatched, $matched, $mode)) {
@@ -318,10 +318,10 @@ class SimpleLexer {
             if ($raw === '') {
                 return true;
             }
-            if (strlen($raw) == $length) {
+            if (strlen($raw ?? '') == $length) {
                 return false;
             }
-            $length = strlen($raw);
+            $length = strlen($raw ?? '');
         }
         if (! $parsed) {
             return false;
@@ -386,7 +386,7 @@ class SimpleLexer {
      *    @access private
      */
     function _isSpecialMode($mode) {
-        return (strncmp($mode, "_", 1) == 0);
+        return (strncmp($mode ?? '', "_", 1) == 0);
     }
 
     /**
@@ -397,7 +397,7 @@ class SimpleLexer {
      *    @access private
      */
     function _decodeSpecial($mode) {
-        return substr($mode, 1);
+        return substr($mode ?? '', 1);
     }
 
     /**
@@ -433,9 +433,9 @@ class SimpleLexer {
      */
     function _reduce($raw) {
         if ($action = $this->_regexes[$this->_mode->getCurrent()]->match($raw, $match)) {
-            $unparsed_character_count = strpos($raw, $match);
-            $unparsed = substr($raw, 0, $unparsed_character_count);
-            $raw = substr($raw, $unparsed_character_count + strlen($match));
+            $unparsed_character_count = strpos($raw ?? '', $match ?? '');
+            $unparsed = substr($raw ?? '', 0, $unparsed_character_count);
+            $raw = substr($raw ?? '', $unparsed_character_count + strlen($match ?? ''));
             return array($raw, $unparsed, $match, $action);
         }
         return true;
@@ -596,7 +596,7 @@ class SimpleHtmlSaxParser {
      */
     function acceptStartToken($token, $event) {
         if ($event == LEXER_ENTER) {
-            $this->_tag = strtolower(substr($token, 1));
+            $this->_tag = strtolower(substr($token ?? '', 1));
             return true;
         }
         if ($event == LEXER_EXIT) {
@@ -608,7 +608,7 @@ class SimpleHtmlSaxParser {
             return $success;
         }
         if ($token != '=') {
-            $this->_current_attribute = strtolower(SimpleHtmlSaxParser::decodeHtml($token));
+            $this->_current_attribute = strtolower(SimpleHtmlSaxParser::decodeHtml($token) ?? '');
             $this->_attributes[$this->_current_attribute] = '';
         }
         return true;
@@ -623,10 +623,10 @@ class SimpleHtmlSaxParser {
      *    @access public
      */
     function acceptEndToken($token, $event) {
-        if (! preg_match('/<\/(.*)>/', $token, $matches)) {
+        if (! preg_match('/<\/(.*)>/', $token ?? '', $matches)) {
             return false;
         }
-        return $this->_listener->endElement(strtolower($matches[1]));
+        return $this->_listener->endElement(strtolower($matches[1] ?? ''));
     }
 
     /**
@@ -644,7 +644,7 @@ class SimpleHtmlSaxParser {
             }
             if ($event == LEXER_SPECIAL) {
                 $this->_attributes[$this->_current_attribute] .=
-                        preg_replace('/^=\s*/' , '', SimpleHtmlSaxParser::decodeHtml($token));
+                        preg_replace('/^=\s*/' , '', SimpleHtmlSaxParser::decodeHtml($token) ?? '');
             }
         }
         return true;
@@ -691,7 +691,7 @@ class SimpleHtmlSaxParser {
      *    @static
      */
     static function decodeHtml($html) {
-        return html_entity_decode($html, ENT_QUOTES);
+        return html_entity_decode($html ?? '', ENT_QUOTES);
     }
 
     /**
@@ -704,15 +704,15 @@ class SimpleHtmlSaxParser {
      *    @static
      */
     static function normalise($html) {
-        $text = preg_replace('|<!--.*?-->|', '', $html);
-        $text = preg_replace('|<script[^>]*>.*?</script>|', '', $text);
-        $text = preg_replace('|<img[^>]*alt\s*=\s*"([^"]*)"[^>]*>|', ' \1 ', $text);
-        $text = preg_replace('|<img[^>]*alt\s*=\s*\'([^\']*)\'[^>]*>|', ' \1 ', $text);
-        $text = preg_replace('|<img[^>]*alt\s*=\s*([a-zA-Z_]+)[^>]*>|', ' \1 ', $text);
-        $text = preg_replace('|<[^>]*>|', '', $text);
+        $text = preg_replace('|<!--.*?-->|', '', $html ?? '');
+        $text = preg_replace('|<script[^>]*>.*?</script>|', '', $text ?? '');
+        $text = preg_replace('|<img[^>]*alt\s*=\s*"([^"]*)"[^>]*>|', ' \1 ', $text ?? '');
+        $text = preg_replace('|<img[^>]*alt\s*=\s*\'([^\']*)\'[^>]*>|', ' \1 ', $text ?? '');
+        $text = preg_replace('|<img[^>]*alt\s*=\s*([a-zA-Z_]+)[^>]*>|', ' \1 ', $text ?? '');
+        $text = preg_replace('|<[^>]*>|', '', $text ?? '');
         $text = SimpleHtmlSaxParser::decodeHtml($text);
-        $text = preg_replace('|\s+|', ' ', $text);
-        return trim(trim($text), "\xA0");        // TODO: The \xAO is a &nbsp;. Add a test for this.
+        $text = preg_replace('|\s+|', ' ', $text ?? '');
+        return trim(trim($text ?? ''), "\xA0");        // TODO: The \xAO is a &nbsp;. Add a test for this.
     }
 }
 

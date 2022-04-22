@@ -452,7 +452,7 @@ class ControllerTest extends FunctionalTest
         $internalRelativeUrl = Controller::join_links(Director::baseURL(), '/some-url');
         $internalAbsoluteUrl = Controller::join_links(Director::absoluteBaseURL(), '/some-url');
 
-        $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($internalRelativeUrl));
+        $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($internalRelativeUrl ?? ''));
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
             $internalAbsoluteUrl,
@@ -462,7 +462,7 @@ class ControllerTest extends FunctionalTest
 
         // BackURL is internal link
         $internalAbsoluteUrl = Director::absoluteBaseURL() . '/some-url';
-        $link = 'TestController/redirectbacktest?BackURL=' . urlencode($internalAbsoluteUrl);
+        $link = 'TestController/redirectbacktest?BackURL=' . urlencode($internalAbsoluteUrl ?? '');
         $response = $this->get($link);
         $this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'));
         $this->assertEquals(
@@ -473,7 +473,7 @@ class ControllerTest extends FunctionalTest
 
         // Note that this test is affected by the prior ->get()
         $externalAbsoluteUrl = 'http://myhost.com/some-url';
-        $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($externalAbsoluteUrl));
+        $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($externalAbsoluteUrl ?? ''));
         $this->assertEquals(
             Director::absoluteURL($link),
             $response->getHeader('Location'),

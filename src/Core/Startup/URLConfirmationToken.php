@@ -46,7 +46,7 @@ class URLConfirmationToken extends AbstractConfirmationToken
         $this->request = $request;
         $this->currentURL = $request->getURL(false);
 
-        $this->tokenParameterName = preg_replace('/[^a-z0-9]/i', '', $urlToCheck) . 'token';
+        $this->tokenParameterName = preg_replace('/[^a-z0-9]/i', '', $urlToCheck ?? '') . 'token';
         $this->urlExistsInBackURL = $this->getURLExistsInBackURL($request);
 
         // If the token provided is valid, mark it as such
@@ -62,8 +62,8 @@ class URLConfirmationToken extends AbstractConfirmationToken
      */
     protected function getURLExistsInBackURL(HTTPRequest $request)
     {
-        $backURL = ltrim($request->getVar('BackURL'), '/');
-        return (strpos($backURL, $this->urlToCheck) === 0);
+        $backURL = ltrim($request->getVar('BackURL') ?? '', '/');
+        return (strpos($backURL ?? '', $this->urlToCheck ?? '') === 0);
     }
 
     /**
@@ -135,7 +135,7 @@ class URLConfirmationToken extends AbstractConfirmationToken
 
     protected function redirectURL()
     {
-        $query = http_build_query($this->getRedirectUrlParams());
+        $query = http_build_query($this->getRedirectUrlParams() ?? []);
         return Controller::join_links($this->getRedirectUrlBase(), '?' . $query);
     }
 }

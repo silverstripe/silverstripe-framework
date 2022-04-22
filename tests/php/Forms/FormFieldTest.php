@@ -226,14 +226,14 @@ class FormFieldTest extends SapphireTest
             $field = new FormField('<html>', '<html>', '<html>');
             $field->setAttribute($value, $key);
             $html = $field->getAttributesHTML();
-            $this->assertFalse(strpos($html, '<html>'));
+            $this->assertFalse(strpos($html ?? '', '<html>'));
         }
 
         $field = new FormField('<html>', '<html>', '<html>');
         $field->setAttribute($key, $value);
         $html = $field->getAttributesHTML();
 
-        $this->assertFalse(strpos($html, '<html>'));
+        $this->assertFalse(strpos($html ?? '', '<html>'));
     }
 
     /**
@@ -247,7 +247,7 @@ class FormFieldTest extends SapphireTest
 
         $html = $field->debug();
 
-        $this->assertFalse(strpos($html, '<html>'));
+        $this->assertFalse(strpos($html ?? '', '<html>'));
     }
 
     public function testReadonly()
@@ -386,7 +386,7 @@ class FormFieldTest extends SapphireTest
     {
         $field = new FormField('MyField');
         $schema = $field->getSchemaDataDefaults();
-        $this->assertFalse(array_key_exists('titleTip', $schema));
+        $this->assertFalse(array_key_exists('titleTip', $schema ?? []));
         $field->setTitleTip(new Tip('Test tip'));
         $schema = $field->getSchemaDataDefaults();
         $this->assertSame('Test tip', $schema['titleTip']['content']);
@@ -416,7 +416,7 @@ class FormFieldTest extends SapphireTest
         // Make user the user can't define custom keys on the schema.
         $field = $field->setSchemaData(['myCustomKey' => 'yolo']);
         $schema = $field->getSchemaData();
-        $this->assertEquals(array_key_exists('myCustomKey', $schema), false);
+        $this->assertEquals(array_key_exists('myCustomKey', $schema ?? []), false);
     }
 
     public function testGetSchemaState()
@@ -439,7 +439,7 @@ class FormFieldTest extends SapphireTest
         // Make user the user can't define custom keys on the schema.
         $field->setSchemaState(['myCustomKey' => 'yolo']);
         $schema = $field->getSchemaState();
-        $this->assertEquals(array_key_exists('myCustomKey', $schema), false);
+        $this->assertEquals(array_key_exists('myCustomKey', $schema ?? []), false);
     }
 
     public function testGetSchemaStateWithFormValidation()

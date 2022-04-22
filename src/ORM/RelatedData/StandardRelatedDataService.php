@@ -74,8 +74,8 @@ class StandardRelatedDataService implements RelatedDataService
         $this->addRelatedManyManys($classIDs, $record, $throughClasses);
 
         // Loop config data to find "reverse" relationships pointing back to $record
-        foreach (array_keys($this->config) as $lowercaseClassName) {
-            if (!class_exists($lowercaseClassName)) {
+        foreach (array_keys($this->config ?? []) as $lowercaseClassName) {
+            if (!class_exists($lowercaseClassName ?? '')) {
                 continue;
             }
             // Example of $class: My\App\MyPage (extends SiteTree)
@@ -158,11 +158,11 @@ class StandardRelatedDataService implements RelatedDataService
         $candidateClass = $class;
         while ($candidateClass) {
             $dbFields = $this->dataObjectSchema->databaseFields($candidateClass, false);
-            if (array_key_exists($componentIDField, $dbFields)) {
+            if (array_key_exists($componentIDField, $dbFields ?? [])) {
                 $tableName = $this->dataObjectSchema->tableName($candidateClass);
                 break;
             }
-            $candidateClass = get_parent_class($class);
+            $candidateClass = get_parent_class($class ?? '');
         }
         return $tableName;
     }
@@ -183,7 +183,7 @@ class StandardRelatedDataService implements RelatedDataService
             // Prevent duplicate counting of self-referential relations e.g.
             // MyFile::$many_many = [ 'MyFile' => MyFile::class ]
             // This relation will still be counted in $this::addRelatedReverseManyManys()
-            if (strpos($componentClass, '.') !== false || $record instanceof $componentClass) {
+            if (strpos($componentClass ?? '', '.') !== false || $record instanceof $componentClass) {
                 continue;
             }
             $results = $this->fetchManyManyResults($record, $class, $component, false);
@@ -217,8 +217,8 @@ class StandardRelatedDataService implements RelatedDataService
         }
         $usesThroughTable = $data['join'] != $joinTableName;
 
-        $parentField = preg_replace('#ID$#', '', $data['parentField']) . 'ID';
-        $childField = preg_replace('#ID$#', '', $data['childField']) . 'ID';
+        $parentField = preg_replace('#ID$#', '', $data['parentField'] ?? '') . 'ID';
+        $childField = preg_replace('#ID$#', '', $data['childField'] ?? '') . 'ID';
         $selectField = !$reverse ? $childField : $parentField;
         $selectFields = [$selectField];
         $whereField = !$reverse ? $parentField : $childField;
@@ -239,7 +239,7 @@ class StandardRelatedDataService implements RelatedDataService
         // and FileLink will make the same query multiple times for all the different page subclasses because
         // the FileLink is associated with the Base Page class database table
         $queryIden = implode('-', array_merge($selectFields, [$joinTableName, $whereField, $record->ID]));
-        if (array_key_exists($queryIden, $this->queryIdens)) {
+        if (array_key_exists($queryIden, $this->queryIdens ?? [])) {
             return null;
         }
         $this->queryIdens[$queryIden] = true;
@@ -263,7 +263,7 @@ class StandardRelatedDataService implements RelatedDataService
     private function deriveJoinTableName(array $data): string
     {
         $joinTableName = $data['join'];
-        if (!ClassInfo::hasTable($joinTableName) && class_exists($joinTableName)) {
+        if (!ClassInfo::hasTable($joinTableName) && class_exists($joinTableName ?? '')) {
             $class = $joinTableName;
             if (!isset($this->classToTableName[$class])) {
                 return null;
@@ -346,7 +346,7 @@ class StandardRelatedDataService implements RelatedDataService
             $componentClass = $this->updateComponentClass($componentClass, $throughClasses);
             if (!($record instanceof $componentClass) ||
                 // Ignore belongs_many_many_through with dot syntax
-                strpos($componentClass, '.') !== false
+                strpos($componentClass ?? '', '.') !== false
             ) {
                 continue;
             }
@@ -368,7 +368,7 @@ class StandardRelatedDataService implements RelatedDataService
             return;
         }
         foreach ($results as $row) {
-            if (count(array_keys($row)) === 2 && isset($row['ParentClass']) && isset($row['ParentID'])) {
+            if (count(array_keys($row ?? [])) === 2 && isset($row['ParentClass']) && isset($row['ParentID'])) {
                 // Example $class: SilverStripe\Assets\Shortcodes\FileLinkTracking
                 // Example $parentClass: Page
                 $parentClass = $row['ParentClass'];
@@ -378,7 +378,7 @@ class StandardRelatedDataService implements RelatedDataService
                 if ($class === DataObject::class) {
                     continue;
                 }
-                foreach (array_values($row) as $classID) {
+                foreach (array_values($row ?? []) as $classID) {
                     $classIDs[$class] = $classIDs[$class] ?? [];
                     $classIDs[$class][] = $classID;
                 }
@@ -395,7 +395,7 @@ class StandardRelatedDataService implements RelatedDataService
     private function prepareClassNameLiteral(string $value): string
     {
         $c = chr(92);
-        $escaped = str_replace($c, "{$c}{$c}", $value);
+        $escaped = str_replace($c ?? '', "{$c}{$c}", $value ?? '');
         // postgres
         if (stripos(get_class(DB::get_conn()), 'postgres') !== false) {
             return "E'{$escaped}'";
@@ -419,7 +419,7 @@ class StandardRelatedDataService implements RelatedDataService
         }
         $throughClass = $componentClass['through'];
         $throughClasses[$throughClass] = true;
-        $lowercaseThroughClass = strtolower($throughClass);
+        $lowercaseThroughClass = strtolower($throughClass ?? '');
         $toComponent = $componentClass['to'];
         return $this->config[$lowercaseThroughClass]['has_one'][$toComponent];
     }
@@ -452,8 +452,8 @@ class StandardRelatedDataService implements RelatedDataService
      */
     private function removeClasses(array &$classIDs, array $excludedClasses, array $throughClasses): void
     {
-        foreach (array_keys($classIDs) as $class) {
-            if (isset($throughClasses[$class]) || in_array($class, $excludedClasses)) {
+        foreach (array_keys($classIDs ?? []) as $class) {
+            if (isset($throughClasses[$class]) || in_array($class, $excludedClasses ?? [])) {
                 unset($classIDs[$class]);
             }
         }

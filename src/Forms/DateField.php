@@ -388,7 +388,7 @@ class DateField extends TextField
         // Check min date
         $min = $this->getMinDate();
         if ($min) {
-            $oops = strtotime($this->value) < strtotime($min);
+            $oops = strtotime($this->value ?? '') < strtotime($min ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
@@ -413,7 +413,7 @@ class DateField extends TextField
         // Check max date
         $max = $this->getMaxDate();
         if ($max) {
-            $oops = strtotime($this->value) > strtotime($max);
+            $oops = strtotime($this->value ?? '') > strtotime($max ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
@@ -570,7 +570,7 @@ class DateField extends TextField
         $timestamp = $formatter->parse($date);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($date, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($date ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }

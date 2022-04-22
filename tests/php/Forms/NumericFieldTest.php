@@ -28,7 +28,7 @@ class NumericFieldTest extends SapphireTest
                 html_entity_decode('&#8239;', 0, 'UTF-8'), // narrow non-breaking space
             ],
             ' ',
-            trim($input)
+            trim($input ?? '')
         );
     }
 

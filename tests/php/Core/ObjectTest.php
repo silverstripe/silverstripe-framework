@@ -64,8 +64,8 @@ class ObjectTest extends SapphireTest
 
         foreach ($objs as $i => $obj) {
             foreach ($trueMethods as $method) {
-                $methodU = strtoupper($method);
-                $methodL = strtoupper($method);
+                $methodU = strtoupper($method ?? '');
+                $methodL = strtoupper($method ?? '');
                 $this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method");
                 $this->assertTrue($obj->hasMethod($methodU), "Test that obj#$i has method $methodU");
                 $this->assertTrue($obj->hasMethod($methodL), "Test that obj#$i has method $methodL");

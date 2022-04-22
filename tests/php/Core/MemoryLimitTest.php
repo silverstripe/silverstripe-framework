@@ -33,7 +33,7 @@ class MemoryLimitTest extends SapphireTest
     {
         if (!in_array('suhosin', get_loaded_extensions())) {
             ini_set('memory_limit', $this->origMemLimit);
-            set_time_limit($this->origTimeLimit);
+            set_time_limit($this->origTimeLimit ?? 0);
             Environment::setMemoryLimitMax($this->origMemLimitMax);
             Environment::setTimeLimitMax($this->origTimeLimitMax);
         }

@@ -44,7 +44,7 @@ class CmsFormsContext implements Context
      */
     protected function fixStepArgument($argument)
     {
-        return str_replace('\\"', '"', $argument);
+        return str_replace('\\"', '"', $argument ?? '');
     }
 
     /**
@@ -55,7 +55,7 @@ class CmsFormsContext implements Context
         $page = $this->getSession()->getPage();
 
         $form = $page->find('css', '#Form_EditForm');
-        if (trim($negative)) {
+        if (trim($negative ?? '')) {
             Assert::assertNull($form, 'I should not see an edit page form');
         } else {
             Assert::assertNotNull($form, 'I should see an edit page form');
@@ -74,7 +74,7 @@ class CmsFormsContext implements Context
         $this->getSession()->evaluateScript(sprintf(
             "jQuery('#%s').entwine('ss').getEditor().setContent('%s')",
             $inputField->getAttribute('id'),
-            addcslashes($value, "'")
+            addcslashes($value ?? '', "'")
         ));
         $this->getSession()->evaluateScript(sprintf(
             "jQuery('#%s').entwine('ss').getEditor().save()",
@@ -93,7 +93,7 @@ class CmsFormsContext implements Context
         $this->getSession()->evaluateScript(sprintf(
             "jQuery('#%s').entwine('ss').getEditor().insertContent('%s')",
             $inputField->getAttribute('id'),
-            addcslashes($value, "'")
+            addcslashes($value ?? '', "'")
         ));
     }
 
@@ -104,15 +104,15 @@ class CmsFormsContext implements Context
     {
         $element = $this->getHtmlField($locator);
         $actual = $element->getValue();
-        $regex = '/' . preg_quote($html, '/') . '/ui';
+        $regex = '/' . preg_quote($html ?? '', '/') . '/ui';
         $failed = false;
 
-        if (trim($negative)) {
-            if (preg_match($regex, $actual)) {
+        if (trim($negative ?? '')) {
+            if (preg_match($regex ?? '', $actual ?? '')) {
                 $failed = true;
             }
         } else {
-            if (!preg_match($regex, $actual)) {
+            if (!preg_match($regex ?? '', $actual ?? '')) {
                 $failed = true;
             }
         }
@@ -150,7 +150,7 @@ class CmsFormsContext implements Context
 			if(
 				$node->firstChild
 				&& $node->firstChild->nodeType == XML_TEXT_NODE
-				&& stripos($node->firstChild->nodeValue, $text) !== FALSE
+				&& stripos($node->firstChild->nodeValue ?? '', $text ?? '') !== FALSE
 			) {
 				$matchedNode = $node;
 			}
@@ -191,7 +191,7 @@ class CmsFormsContext implements Context
     {
         $inputField = $this->getHtmlField($field);
         $inputFieldId = $inputField->getAttribute('id');
-        $text = addcslashes($text, "'");
+        $text = addcslashes($text ?? '', "'");
 
         $js = <<<JS
 // TODO <IE9 support
@@ -237,7 +237,7 @@ JS;
             }
         }
 
-        if (trim($negative)) {
+        if (trim($negative ?? '')) {
             Assert::assertNull($matchedEl);
         } else {
             Assert::assertNotNull($matchedEl);

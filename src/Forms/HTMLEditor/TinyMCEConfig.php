@@ -414,8 +414,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     public function enablePlugins($plugin)
     {
         $plugins = func_get_args();
-        if (is_array(current($plugins))) {
-            $plugins = current($plugins);
+        if (is_array(current($plugins ?? []))) {
+            $plugins = current($plugins ?? []);
         }
         foreach ($plugins as $name => $path) {
             // if plugins are passed without a path
@@ -423,7 +423,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
                 $name = $path;
                 $path = null;
             }
-            if (!array_key_exists($name, $this->plugins)) {
+            if (!array_key_exists($name, $this->plugins ?? [])) {
                 $this->plugins[$name] = $path;
             }
         }
@@ -438,8 +438,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     public function disablePlugins($plugin)
     {
         $plugins = func_get_args();
-        if (is_array(current($plugins))) {
-            $plugins = current($plugins);
+        if (is_array(current($plugins ?? []))) {
+            $plugins = current($plugins ?? []);
         }
         foreach ($plugins as $name) {
             unset($this->plugins[$name]);
@@ -485,7 +485,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      */
     public function getButtons()
     {
-        return array_filter($this->buttons);
+        return array_filter($this->buttons ?? []);
     }
 
     /**
@@ -541,7 +541,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     protected function modifyButtons($name, $offset, $del = 0, $add = null)
     {
         foreach ($this->buttons as &$buttons) {
-            if (($idx = array_search($name, $buttons)) !== false) {
+            if (($idx = array_search($name, $buttons ?? [])) !== false) {
                 if ($add) {
                     array_splice($buttons, $idx + $offset, $del, $add);
                 } else {
@@ -659,7 +659,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         $settings['toolbar'] = [];
         foreach ($buttons as $rowButtons) {
             $row = implode(' ', $rowButtons);
-            if (count($buttons) > 1) {
+            if (count($buttons ?? []) > 1) {
                 $settings['toolbar'][] = $row;
             } else {
                 $settings['toolbar'] = $row;

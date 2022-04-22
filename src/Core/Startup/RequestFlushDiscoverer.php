@@ -51,7 +51,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
     {
         $request = $this->request;
 
-        $getVar = array_key_exists('flush', $request->getVars());
+        $getVar = array_key_exists('flush', $request->getVars() ?? []);
         $devBuild = $request->getURL() === 'dev/build';
 
         // WARNING!

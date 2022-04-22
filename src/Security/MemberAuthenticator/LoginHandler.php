@@ -131,7 +131,7 @@ class LoginHandler extends RequestHandler
             function ($message) {
                 return $message['message'];
             },
-            $result->getMessages()
+            $result->getMessages() ?? []
         ));
 
         $form->sessionMessage($message, 'bad');
@@ -139,7 +139,7 @@ class LoginHandler extends RequestHandler
         // Failed login
 
         /** @skipUpgrade */
-        if (array_key_exists('Email', $data)) {
+        if (array_key_exists('Email', $data ?? [])) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
             $this
                 ->getRequest()

@@ -196,11 +196,11 @@ class CoreKernel extends BaseKernel
             $loopCount = (int)$chooseName;
             $databaseDir = $this->basePath;
             for ($i = 0; $i < $loopCount-1; $i++) {
-                $databaseDir = dirname($databaseDir);
+                $databaseDir = dirname($databaseDir ?? '');
             }
 
             // Build name
-            $database = str_replace('.', '', basename($databaseDir));
+            $database = str_replace('.', '', basename($databaseDir ?? ''));
             $prefix = $this->getDatabasePrefix();
 
             if ($prefix) {

@@ -98,7 +98,7 @@ abstract class SQLExpression
         }
 
         if ($this->replacementsOld) {
-            $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+            $sql = str_replace($this->replacementsOld ?? '', $this->replacementsNew ?? '', $sql ?? '');
         }
 
         return $sql;
@@ -125,7 +125,7 @@ abstract class SQLExpression
     {
         $target = array_keys(get_object_vars($object));
         foreach (get_object_vars($this) as $variable => $value) {
-            if (in_array($variable, $target)) {
+            if (in_array($variable, $target ?? [])) {
                 $object->$variable = $value;
             }
         }

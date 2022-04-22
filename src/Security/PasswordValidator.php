@@ -176,7 +176,7 @@ class PasswordValidator
         if ($this->testNames !== null) {
             return $this->testNames;
         }
-        return array_keys(array_filter($this->getTests()));
+        return array_keys(array_filter($this->getTests() ?? []));
     }
 
     /**
@@ -232,7 +232,7 @@ class PasswordValidator
         $valid = ValidationResult::create();
 
         $minLength = $this->getMinLength();
-        if ($minLength && strlen($password) < $minLength) {
+        if ($minLength && strlen($password ?? '') < $minLength) {
             $error = _t(
                 __CLASS__ . '.TOOSHORT',
                 'Password is too short, it must be {minimum} or more characters long',
@@ -249,17 +249,17 @@ class PasswordValidator
             $tests = $this->getTests();
 
             foreach ($testNames as $name) {
-                if (preg_match($tests[$name], $password)) {
+                if (preg_match($tests[$name] ?? '', $password ?? '')) {
                     continue;
                 }
                 $missedTests[] = _t(
-                    __CLASS__ . '.STRENGTHTEST' . strtoupper($name),
+                    __CLASS__ . '.STRENGTHTEST' . strtoupper($name ?? ''),
                     $name,
                     'The user needs to add this to their password for more complexity'
                 );
             }
 
-            $score = count($testNames) - count($missedTests);
+            $score = count($testNames ?? []) - count($missedTests ?? []);
             if ($missedTests && $score < $minTestScore) {
                 $error = _t(
                     __CLASS__ . '.LOWCHARSTRENGTH',

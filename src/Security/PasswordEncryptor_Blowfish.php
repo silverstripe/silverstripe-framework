@@ -58,7 +58,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
 
         // We *never* want to generate blank passwords. If something
         // goes wrong, throw an exception.
-        if (strpos($encryptedPassword, '$2') === false) {
+        if (strpos($encryptedPassword ?? '', '$2') === false) {
             throw new PasswordEncryptor_EncryptionFailed('Blowfish password encryption failed.');
         }
 
@@ -68,19 +68,19 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     public function encryptX($password, $salt)
     {
         $methodAndSalt = '$2x$' . $salt;
-        $encryptedPassword = crypt($password, $methodAndSalt);
+        $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
 
-        if (strpos($encryptedPassword, '$2x$') === 0) {
+        if (strpos($encryptedPassword ?? '', '$2x$') === 0) {
             return $encryptedPassword;
         }
 
         // Check if system a is actually x, and if available, use that.
         if ($this->checkAEncryptionLevel() == 'x') {
             $methodAndSalt = '$2a$' . $salt;
-            $encryptedPassword = crypt($password, $methodAndSalt);
+            $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
 
-            if (strpos($encryptedPassword, '$2a$') === 0) {
-                $encryptedPassword = '$2x$' . substr($encryptedPassword, strlen('$2a$'));
+            if (strpos($encryptedPassword ?? '', '$2a$') === 0) {
+                $encryptedPassword = '$2x$' . substr($encryptedPassword ?? '', strlen('$2a$'));
                 return $encryptedPassword;
             }
         }
@@ -91,19 +91,19 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     public function encryptY($password, $salt)
     {
         $methodAndSalt = '$2y$' . $salt;
-        $encryptedPassword = crypt($password, $methodAndSalt);
+        $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
 
-        if (strpos($encryptedPassword, '$2y$') === 0) {
+        if (strpos($encryptedPassword ?? '', '$2y$') === 0) {
             return $encryptedPassword;
         }
 
         // Check if system a is actually y, and if available, use that.
         if ($this->checkAEncryptionLevel() == 'y') {
             $methodAndSalt = '$2a$' . $salt;
-            $encryptedPassword = crypt($password, $methodAndSalt);
+            $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
 
-            if (strpos($encryptedPassword, '$2a$') === 0) {
-                $encryptedPassword = '$2y$' . substr($encryptedPassword, strlen('$2a$'));
+            if (strpos($encryptedPassword ?? '', '$2a$') === 0) {
+                $encryptedPassword = '$2y$' . substr($encryptedPassword ?? '', strlen('$2a$'));
                 return $encryptedPassword;
             }
         }
@@ -115,9 +115,9 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     {
         if ($this->checkAEncryptionLevel() == 'a') {
             $methodAndSalt = '$2a$' . $salt;
-            $encryptedPassword = crypt($password, $methodAndSalt);
+            $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
 
-            if (strpos($encryptedPassword, '$2a$') === 0) {
+            if (strpos($encryptedPassword ?? '', '$2a$') === 0) {
                 return $encryptedPassword;
             }
         }
@@ -162,16 +162,16 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     public function salt($password, $member = null)
     {
         $generator = new RandomGenerator();
-        return sprintf('%02d', self::$cost) . '$' . substr($generator->randomToken('sha1'), 0, 22);
+        return sprintf('%02d', self::$cost) . '$' . substr($generator->randomToken('sha1') ?? '', 0, 22);
     }
 
     public function check($hash, $password, $salt = null, $member = null)
     {
-        if (strpos($hash, '$2y$') === 0) {
+        if (strpos($hash ?? '', '$2y$') === 0) {
             return $hash === $this->encryptY($password, $salt);
-        } elseif (strpos($hash, '$2a$') === 0) {
+        } elseif (strpos($hash ?? '', '$2a$') === 0) {
             return $hash === $this->encryptA($password, $salt);
-        } elseif (strpos($hash, '$2x$') === 0) {
+        } elseif (strpos($hash ?? '', '$2x$') === 0) {
             return $hash === $this->encryptX($password, $salt);
         }
 

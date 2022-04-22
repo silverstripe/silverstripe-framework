@@ -194,7 +194,7 @@ class ConfirmedPasswordField extends FormField
             $field->setDisabled($this->isDisabled());
             $field->setReadonly($this->isReadonly());
 
-            if (count($this->attributes)) {
+            if (count($this->attributes ?? [])) {
                 foreach ($this->attributes as $name => $value) {
                     $field->setAttribute($name, $value);
                 }
@@ -310,7 +310,7 @@ class ConfirmedPasswordField extends FormField
     public function setChildrenTitles($titles)
     {
         $expectedChildren = $this->getRequireExistingPassword() ? 3 : 2;
-        if (is_array($titles) && count($titles) === $expectedChildren) {
+        if (is_array($titles) && count($titles ?? []) === $expectedChildren) {
             foreach ($this->getChildren() as $field) {
                 if (isset($titles[0])) {
                     /** @var FormField $field */
@@ -476,7 +476,7 @@ class ConfirmedPasswordField extends FormField
                 );
             }
             $limitRegex = '/^.' . $limit . '$/';
-            if (!empty($value) && !preg_match($limitRegex, $value)) {
+            if (!empty($value) && !preg_match($limitRegex ?? '', $value ?? '')) {
                 $validator->validationError(
                     $name,
                     $errorMsg,
@@ -488,7 +488,7 @@ class ConfirmedPasswordField extends FormField
         }
 
         if ($this->getRequireStrongPassword()) {
-            if (!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/', $value)) {
+            if (!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/', $value ?? '')) {
                 $validator->validationError(
                     $name,
                     _t(

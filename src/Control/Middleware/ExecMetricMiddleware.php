@@ -43,7 +43,7 @@ class ExecMetricMiddleware implements HTTPMiddleware
      */
     private function showMetric(HTTPRequest $request)
     {
-        return Director::isDev() && array_key_exists('execmetric', $request->getVars());
+        return Director::isDev() && array_key_exists('execmetric', $request->getVars() ?? []);
     }
 
     /**

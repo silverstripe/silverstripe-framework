@@ -117,8 +117,8 @@ class PolymorphicHasManyList extends HasManyList
         $foreignClass = $this->getForeignClass();
         $classNames = ClassInfo::subclassesFor($foreignClass);
         $classForeignKey = $this->classForeignKey;
-        $classValueLower = strtolower($item->$classForeignKey);
-        if (!array_key_exists($classValueLower, $classNames)) {
+        $classValueLower = strtolower($item->$classForeignKey ?? '');
+        if (!array_key_exists($classValueLower, $classNames ?? [])) {
             return;
         }
 
@@ -128,7 +128,7 @@ class PolymorphicHasManyList extends HasManyList
 
         if (empty($foreignID)
             || $foreignID == $item->$foreignKey
-            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
+            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID ?? []))
         ) {
             $item->$foreignKey = null;
             $item->$classForeignKey = null;

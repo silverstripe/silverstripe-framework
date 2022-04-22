@@ -102,7 +102,7 @@ class DropdownFieldTest extends SapphireTest
         $field->setEmptyString('(Select one)');
         $field->setValue(1);
         $readonlyField = $field->performReadonlyTransformation();
-        preg_match('/Yes/', $field->Field(), $matches);
+        preg_match('/Yes/', $field->Field() ?? '', $matches);
         $this->assertEquals($matches[0], 'Yes');
     }
 
@@ -126,7 +126,7 @@ class DropdownFieldTest extends SapphireTest
 
         $this->assertEquals(
             2,
-            count($options),
+            count($options ?? []),
             'Two options exist in the markup, one for the source, one for empty'
         );
 
@@ -154,7 +154,7 @@ class DropdownFieldTest extends SapphireTest
 
         $this->assertEquals(
             1,
-            count($options),
+            count($options ?? []),
             'As hasEmptyDefault is not provided, then no default option.'
         );
     }
@@ -237,7 +237,7 @@ class DropdownFieldTest extends SapphireTest
 
         $this->assertEquals(
             2,
-            count($options),
+            count($options ?? []),
             'Two options exist in the markup, one for the source, one for empty'
         );
     }
@@ -315,10 +315,10 @@ class DropdownFieldTest extends SapphireTest
         $field = $this->createDropdownField('(Any)');
 
         /* 3 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 3, '3 options are available');
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
         $this->assertEquals(
-            count($selectedOptions),
+            count($selectedOptions ?? []),
             1,
             'We only have 1 selected option, since a dropdown can only possibly have one!'
         );
@@ -327,9 +327,9 @@ class DropdownFieldTest extends SapphireTest
         $field = $this->createDropdownField();
 
         /* 2 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 2, '2 options are available');
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
-        $this->assertEquals(count($selectedOptions), 0, 'There are no selected options');
+        $this->assertEquals(count($selectedOptions ?? []), 0, 'There are no selected options');
     }
 
     public function testIntegerZeroValueSeelctedOptionBehaviour()
@@ -380,18 +380,18 @@ class DropdownFieldTest extends SapphireTest
         $field->setDisabledItems([0,1]);
 
         /* 3 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 3, '3 options are available');
 
         /* There are 2 disabled options */
         $disabledOptions = $this->findDisabledOptionElements($field->Field());
-        $this->assertEquals(count($disabledOptions), 2, 'We have 2 disabled options');
+        $this->assertEquals(count($disabledOptions ?? []), 2, 'We have 2 disabled options');
 
         /* Create a field without a blank value & set 1 to disabled, then set none to disabled (unset) */
         $field = $this->createDropdownField();
         $field->setDisabledItems([1]);
 
         /* 2 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 2, '2 options are available');
 
         /* get disabled items returns an array of one */
         $this->assertEquals(
@@ -404,7 +404,7 @@ class DropdownFieldTest extends SapphireTest
 
         /* There are no disabled options anymore */
         $disabledOptions = $this->findDisabledOptionElements($field->Field());
-        $this->assertEquals(count($disabledOptions), 0, 'There are no disabled options');
+        $this->assertEquals(count($disabledOptions ?? []), 0, 'There are no disabled options');
     }
 
     /**

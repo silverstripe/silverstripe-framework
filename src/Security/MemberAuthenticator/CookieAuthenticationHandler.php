@@ -134,11 +134,11 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         $uidAndToken = Cookie::get($this->getTokenCookieName());
         $deviceID = Cookie::get($this->getDeviceCookieName());
 
-        if ($deviceID === null || strpos($uidAndToken, ':') === false) {
+        if ($deviceID === null || strpos($uidAndToken ?? '', ':') === false) {
             return null;
         }
 
-        list($uid, $token) = explode(':', $uidAndToken, 2);
+        list($uid, $token) = explode(':', $uidAndToken ?? '', 2);
 
         if (!$uid || !$token) {
             return null;

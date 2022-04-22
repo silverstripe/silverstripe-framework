@@ -184,15 +184,15 @@ class MySQLDatabase extends Database implements TransactionManager
     ) {
         $pageClass = SiteTree::class;
         $fileClass = File::class;
-        if (!class_exists($pageClass)) {
+        if (!class_exists($pageClass ?? '')) {
             throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
         }
-        if (!class_exists($fileClass)) {
+        if (!class_exists($fileClass ?? '')) {
             throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
         }
 
         $keywords = $this->escapeString($keywords);
-        $htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
+        $htmlEntityKeywords = htmlentities($keywords ?? '', ENT_NOQUOTES, 'UTF-8');
 
         $extraFilters = [$pageClass => '', $fileClass => ''];
 
@@ -218,7 +218,7 @@ class MySQLDatabase extends Database implements TransactionManager
         // by checking for its existence first
         $fileTable = DataObject::getSchema()->tableName($fileClass);
         $fields = $this->getSchemaManager()->fieldList($fileTable);
-        if (array_key_exists('ShowInSearch', $fields)) {
+        if (array_key_exists('ShowInSearch', $fields ?? [])) {
             $extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
         }
 
@@ -237,8 +237,8 @@ class MySQLDatabase extends Database implements TransactionManager
 
             // We make the relevance search by converting a boolean mode search into a normal one
             $booleanChars = ['*', '+', '@', '-', '(', ')', '<', '>'];
-            $relevanceKeywords = str_replace($booleanChars, '', $keywords);
-            $htmlEntityRelevanceKeywords = str_replace($booleanChars, '', $htmlEntityKeywords);
+            $relevanceKeywords = str_replace($booleanChars ?? '', '', $keywords ?? '');
+            $htmlEntityRelevanceKeywords = str_replace($booleanChars ?? '', '', $htmlEntityKeywords ?? '');
             $relevance[$pageClass] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
                     . "AGAINST ('$relevanceKeywords') "
                     . "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
@@ -444,16 +444,16 @@ class MySQLDatabase extends Database implements TransactionManager
 
     public function formattedDatetimeClause($date, $format)
     {
-        preg_match_all('/%(.)/', $format, $matches);
+        preg_match_all('/%(.)/', $format ?? '', $matches);
         foreach ($matches[1] as $match) {
             if (array_search($match, ['Y', 'm', 'd', 'H', 'i', 's', 'U']) === false) {
                 user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
             }
         }
 
-        if (preg_match('/^now$/i', $date)) {
+        if (preg_match('/^now$/i', $date ?? '')) {
             $date = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date ?? '')) {
             $date = "'$date'";
         }
 
@@ -466,11 +466,11 @@ class MySQLDatabase extends Database implements TransactionManager
 
     public function datetimeIntervalClause($date, $interval)
     {
-        $interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval);
+        $interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval ?? '');
 
-        if (preg_match('/^now$/i', $date)) {
+        if (preg_match('/^now$/i', $date ?? '')) {
             $date = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date ?? '')) {
             $date = "'$date'";
         }
 
@@ -480,15 +480,15 @@ class MySQLDatabase extends Database implements TransactionManager
     public function datetimeDifferenceClause($date1, $date2)
     {
         // First date format
-        if (preg_match('/^now$/i', $date1)) {
+        if (preg_match('/^now$/i', $date1 ?? '')) {
             $date1 = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date1)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date1 ?? '')) {
             $date1 = "'$date1'";
         }
         // Second date format
-        if (preg_match('/^now$/i', $date2)) {
+        if (preg_match('/^now$/i', $date2 ?? '')) {
             $date2 = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date2)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date2 ?? '')) {
             $date2 = "'$date2'";
         }
 

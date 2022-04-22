@@ -396,8 +396,8 @@ class DataQueryTest extends SapphireTest
         );
         $result = $query->getFinalisedQuery(['Title']);
         $from = $result->getFrom();
-        $this->assertContains('DataQueryTest_C', array_keys($from));
-        $this->assertNotContains('DataQueryTest_E', array_keys($from));
+        $this->assertContains('DataQueryTest_C', array_keys($from ?? []));
+        $this->assertNotContains('DataQueryTest_E', array_keys($from ?? []));
 
         // Including filter on sub-table requires it
         $query = new DataQuery(DataQueryTest\ObjectC::class);
@@ -409,8 +409,8 @@ class DataQueryTest extends SapphireTest
         $from = $result->getFrom();
 
         // Check that including "SortOrder" prompted inclusion of DataQueryTest_E table
-        $this->assertContains('DataQueryTest_C', array_keys($from));
-        $this->assertContains('DataQueryTest_E', array_keys($from));
+        $this->assertContains('DataQueryTest_C', array_keys($from ?? []));
+        $this->assertContains('DataQueryTest_E', array_keys($from ?? []));
         $arrayResult = iterator_to_array($result->execute());
         $first = array_shift($arrayResult);
         $this->assertNotNull($first);

@@ -94,7 +94,7 @@ class PrioritySorter
         $this->addVariables();
 
         // Find all items that don't have their order specified by the config system
-        $unspecified = array_diff($this->names, $this->priorities);
+        $unspecified = array_diff($this->names ?? [], $this->priorities);
 
         if (!empty($unspecified)) {
             $this->includeRest($unspecified);
@@ -132,7 +132,7 @@ class PrioritySorter
     public function setItems(array $items)
     {
         $this->items = $items;
-        $this->names = array_keys($items);
+        $this->names = array_keys($items ?? []);
 
         return $this;
     }
@@ -170,15 +170,15 @@ class PrioritySorter
     protected function addVariables()
     {
         // Remove variables from the list
-        $varValues = array_values($this->variables);
-        $this->names = array_filter($this->names, function ($name) use ($varValues) {
-            return !in_array($name, $varValues);
+        $varValues = array_values($this->variables ?? []);
+        $this->names = array_filter($this->names ?? [], function ($name) use ($varValues) {
+            return !in_array($name, $varValues ?? []);
         });
 
         // Replace variables with their values
         $this->priorities = array_map(function ($name) {
             return $this->resolveValue($name);
-        }, $this->priorities);
+        }, $this->priorities ?? []);
     }
 
     /**
@@ -189,10 +189,10 @@ class PrioritySorter
     {
         $otherItemsIndex = false;
         if ($this->restKey) {
-            $otherItemsIndex = array_search($this->restKey, $this->priorities);
+            $otherItemsIndex = array_search($this->restKey, $this->priorities ?? []);
         }
         if ($otherItemsIndex !== false) {
-            array_splice($this->priorities, $otherItemsIndex, 1, $list);
+            array_splice($this->priorities, $otherItemsIndex ?? 0, 1, $list);
         } else {
             // Otherwise just jam them on the end
             $this->priorities = array_merge($this->priorities, $list);

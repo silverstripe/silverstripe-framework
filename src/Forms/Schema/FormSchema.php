@@ -52,12 +52,12 @@ class FormSchema
     public function getMultipartSchema($schemaParts, $schemaID, Form $form = null, ValidationResult $result = null)
     {
         if (!is_array($schemaParts)) {
-            $schemaParts = preg_split('#\s*,\s*#', $schemaParts) ?: [];
+            $schemaParts = preg_split('#\s*,\s*#', $schemaParts ?? '') ?: [];
         }
-        $wantSchema = in_array('schema', $schemaParts);
-        $wantState = in_array('state', $schemaParts);
-        $wantErrors = in_array('errors', $schemaParts);
-        $auto = in_array('auto', $schemaParts);
+        $wantSchema = in_array('schema', $schemaParts ?? []);
+        $wantState = in_array('state', $schemaParts ?? []);
+        $wantErrors = in_array('errors', $schemaParts ?? []);
+        $auto = in_array('auto', $schemaParts ?? []);
 
         // Require ID
         if (empty($schemaID)) {

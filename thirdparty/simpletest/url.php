@@ -48,13 +48,13 @@ class SimpleUrl {
         list($this->_username, $this->_password) = $this->_chompLogin($url);
         $this->_host = $this->_chompHost($url);
         $this->_port = false;
-        if (preg_match('/(.*?):(.*)/', $this->_host, $host_parts)) {
+        if (preg_match('/(.*?):(.*)/', $this->_host ?? '', $host_parts)) {
             $this->_host = $host_parts[1];
             $this->_port = (integer)$host_parts[2];
         }
         $this->_path = $this->_chompPath($url);
         $this->_request = $this->_parseRequest($this->_chompRequest($url));
-        $this->_fragment = (strncmp($url, "#", 1) == 0 ? substr($url, 1) : false);
+        $this->_fragment = (strncmp($url ?? '', "#", 1) == 0 ? substr($url, 1) : false);
         $this->_target = false;
     }
 
@@ -66,7 +66,7 @@ class SimpleUrl {
      *    @access private
      */
     function _chompCoordinates(&$url) {
-        if (preg_match('/(.*)\?(\d+),(\d+)$/', $url, $matches)) {
+        if (preg_match('/(.*)\?(\d+),(\d+)$/', $url ?? '', $matches)) {
             $url = $matches[1];
             return array((integer)$matches[2], (integer)$matches[3]);
         }
@@ -81,7 +81,7 @@ class SimpleUrl {
      *    @access private
      */
     function _chompScheme(&$url) {
-        if (preg_match('/^([^\/:]*):(\/\/)(.*)/', $url, $matches)) {
+        if (preg_match('/^([^\/:]*):(\/\/)(.*)/', $url ?? '', $matches)) {
             $url = $matches[2] . $matches[3];
             return $matches[1];
         }
@@ -100,15 +100,15 @@ class SimpleUrl {
      */
     function _chompLogin(&$url) {
         $prefix = '';
-        if (preg_match('/^(\/\/)(.*)/', $url, $matches)) {
+        if (preg_match('/^(\/\/)(.*)/', $url ?? '', $matches)) {
             $prefix = $matches[1];
             $url = $matches[2];
         }
-        if (preg_match('/^([^\/]*)@(.*)/', $url, $matches)) {
+        if (preg_match('/^([^\/]*)@(.*)/', $url ?? '', $matches)) {
             $url = $prefix . $matches[2];
-            $parts = preg_split('/:/', $matches[1]);
+            $parts = preg_split('/:/', $matches[1] ?? '');
             return array(
-                    urldecode($parts[0]),
+                    urldecode($parts[0] ?? ''),
                     isset($parts[1]) ? urldecode($parts[1]) : false);
         }
         $url = $prefix . $url;
@@ -127,16 +127,16 @@ class SimpleUrl {
      *    @access private
      */
     function _chompHost(&$url) {
-        if (preg_match('/^(\/\/)(.*?)(\/.*|\?.*|#.*|$)/', $url, $matches)) {
+        if (preg_match('/^(\/\/)(.*?)(\/.*|\?.*|#.*|$)/', $url ?? '', $matches)) {
             $url = $matches[3];
             return $matches[2];
         }
-        if (preg_match('/(.*?)(\.\.\/|\.\/|\/|\?|#|$)(.*)/', $url, $matches)) {
+        if (preg_match('/(.*?)(\.\.\/|\.\/|\/|\?|#|$)(.*)/', $url ?? '', $matches)) {
             $tlds = SimpleUrl::getAllTopLevelDomains();
-            if (preg_match('/[a-z0-9\-]+\.(' . $tlds . ')/i', $matches[1])) {
+            if (preg_match('/[a-z0-9\-]+\.(' . $tlds . ')/i', $matches[1] ?? '')) {
                 $url = $matches[2] . $matches[3];
                 return $matches[1];
-            } elseif (preg_match('/[a-z0-9\-]+\.[a-z0-9\-]+\.[a-z0-9\-]+/i', $matches[1])) {
+            } elseif (preg_match('/[a-z0-9\-]+\.[a-z0-9\-]+\.[a-z0-9\-]+/i', $matches[1] ?? '')) {
                 $url = $matches[2] . $matches[3];
                 return $matches[1];
             }
@@ -153,7 +153,7 @@ class SimpleUrl {
      *    @access private
      */
     function _chompPath(&$url) {
-        if (preg_match('/(.*?)(\?|#|$)(.*)/', $url, $matches)) {
+        if (preg_match('/(.*?)(\?|#|$)(.*)/', $url ?? '', $matches)) {
             $url = $matches[2] . $matches[3];
             return ($matches[1] ? $matches[1] : '');
         }
@@ -168,7 +168,7 @@ class SimpleUrl {
      *    @access private
      */
     function _chompRequest(&$url) {
-        if (preg_match('/\?(.*?)(#|$)(.*)/', $url, $matches)) {
+        if (preg_match('/\?(.*?)(#|$)(.*)/', $url ?? '', $matches)) {
             $url = $matches[2] . $matches[3];
             return $matches[1];
         }
@@ -184,9 +184,9 @@ class SimpleUrl {
     function _parseRequest($raw) {
         $this->_raw = $raw;
         $request = new SimpleGetEncoding();
-        foreach (preg_split('/&/', $raw) as $pair) {
-            if (preg_match('/(.*?)=(.*)/', $pair, $matches)) {
-                $request->add($matches[1], urldecode($matches[2]));
+        foreach (preg_split('/&/', $raw ?? '') as $pair) {
+            if (preg_match('/(.*?)=(.*)/', $pair ?? '', $matches)) {
+                $request->add($matches[1], urldecode($matches[2] ?? ''));
             } elseif ($pair) {
                 $request->add($pair, '');
             }
@@ -238,7 +238,7 @@ class SimpleUrl {
      *    @access public
      */
     function getTld() {
-        $path_parts = pathinfo($this->getHost());
+        $path_parts = pathinfo($this->getHost() ?? '');
         return (isset($path_parts['extension']) ? $path_parts['extension'] : false);
     }
 
@@ -270,7 +270,7 @@ class SimpleUrl {
      *    @access public
      */
     function getPage() {
-        if (! preg_match('/([^\/]*?)$/', $this->getPath(), $matches)) {
+        if (! preg_match('/([^\/]*?)$/', $this->getPath() ?? '', $matches)) {
             return false;
         }
         return $matches[1];
@@ -282,7 +282,7 @@ class SimpleUrl {
      *    @access public
      */
     function getBasePath() {
-        if (! preg_match('/(.*\/)[^\/]*?$/', $this->getPath(), $matches)) {
+        if (! preg_match('/(.*\/)[^\/]*?$/', $this->getPath() ?? '', $matches)) {
             return false;
         }
         return $matches[1];
@@ -346,7 +346,7 @@ class SimpleUrl {
             $encoded = $this->_request->asUrlRequest();
         }
         if ($encoded) {
-            return '?' . preg_replace('/^\?/', '', $encoded);
+            return '?' . preg_replace('/^\?/', '', $encoded ?? '');
         }
         return '';
     }
@@ -422,7 +422,7 @@ class SimpleUrl {
         if ($this->getPort() && $this->getPort() != 80 ) {
             $port = ':'.$this->getPort();
         }
-        if (substr($this->_path, 0, 1) == '/') {
+        if (substr($this->_path ?? '', 0, 1) == '/') {
             $path = $this->normalisePath($this->_path);
         }
         $encoded = $this->getEncodedRequest();
@@ -490,7 +490,7 @@ class SimpleUrl {
      *    @access private
      */
     function _isRelativePath($path) {
-        return (substr($path, 0, 1) != '/');
+        return (substr($path ?? '', 0, 1) != '/');
     }
 
     /**
@@ -513,8 +513,8 @@ class SimpleUrl {
      *    @access public
      */
     function normalisePath($path) {
-        $path = preg_replace('|/\./|', '/', $path);
-        return preg_replace('|/[^/]+/\.\./|', '/', $path);
+        $path = preg_replace('|/\./|', '/', $path ?? '');
+        return preg_replace('|/[^/]+/\.\./|', '/', $path ?? '');
     }
 
     /**

@@ -78,7 +78,7 @@ class EmbedContainer implements Embeddable
             return $extractor->title;
         }
         if ($extractor->url instanceof UriInterface) {
-            return basename($extractor->url->getPath());
+            return basename($extractor->url->getPath() ?? '');
         }
         return '';
     }
@@ -89,18 +89,18 @@ class EmbedContainer implements Embeddable
     public function getType()
     {
         $html = $this->getExtractor()->code->html ?? '';
-        if (strpos($html, '<video') !== false) {
+        if (strpos($html ?? '', '<video') !== false) {
             return 'video';
         }
-        if (strpos($html, '<audio') !== false) {
+        if (strpos($html ?? '', '<audio') !== false) {
             return 'audio';
         }
         foreach (['iframe', 'blockquote', 'pre', 'script', 'style'] as $richTag) {
-            if (strpos($html, "<{$richTag}") !== false) {
+            if (strpos($html ?? '', "<{$richTag}") !== false) {
                 return 'rich';
             }
         }
-        if (strpos($html, '<img') !== false) {
+        if (strpos($html ?? '', '<img') !== false) {
             return 'photo';
         }
         return 'link';

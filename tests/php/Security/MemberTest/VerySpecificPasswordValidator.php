@@ -11,7 +11,7 @@ class VerySpecificPasswordValidator extends PasswordValidator implements TestOnl
     public function validate($password, $member)
     {
         $result = ValidationResult::create();
-        if (strlen($password) !== 17) {
+        if (strlen($password ?? '') !== 17) {
             $result->addError('Password must be 17 characters long');
         }
         return $result;

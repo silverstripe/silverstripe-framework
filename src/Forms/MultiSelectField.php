@@ -96,7 +96,7 @@ abstract class MultiSelectField extends SelectField
         // Detect DB relation or field
         if ($relation instanceof Relation) {
             // Load ids from relation
-            $value = array_values($relation->getIDList());
+            $value = array_values($relation->getIDList() ?? []);
             parent::setValue($value);
         } elseif ($record->hasField($fieldName)) {
             // Load dataValue from field... a CSV for DBMultiEnum
@@ -176,7 +176,7 @@ abstract class MultiSelectField extends SelectField
         }
 
         // If json deserialisation fails, then fallover to legacy format
-        $result = json_decode($value, true);
+        $result = json_decode($value ?? '', true);
         if ($result !== false) {
             return $result;
         }
@@ -200,9 +200,9 @@ abstract class MultiSelectField extends SelectField
             ',',
             array_map(
                 function ($x) {
-                    return str_replace(',', '', $x);
+                    return str_replace(',', '', $x ?? '');
                 },
-                array_values($value)
+                array_values($value ?? [])
             )
         );
     }
@@ -220,7 +220,7 @@ abstract class MultiSelectField extends SelectField
             return [];
         }
 
-        return preg_split('/\s*,\s*/', trim($value));
+        return preg_split('/\s*,\s*/', trim($value ?? ''));
     }
 
     /**
@@ -237,7 +237,7 @@ abstract class MultiSelectField extends SelectField
         // Filter out selected values not in the data source
         $self = $this;
         $invalidValues = array_filter(
-            $values,
+            $values ?? [],
             function ($userValue) use ($self, $validValues) {
                 foreach ($validValues as $formValue) {
                     if ($self->isSelectedValue($formValue, $userValue)) {

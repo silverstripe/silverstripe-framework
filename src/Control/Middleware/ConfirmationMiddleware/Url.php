@@ -118,7 +118,7 @@ class Url implements Rule, Bypass
     {
         $httpMethods = $this->getHttpMethods();
 
-        if (count($httpMethods) && !in_array($request->httpMethod(), $httpMethods, true)) {
+        if (count($httpMethods ?? []) && !in_array($request->httpMethod(), $httpMethods ?? [], true)) {
             return false;
         }
 
@@ -132,7 +132,7 @@ class Url implements Rule, Bypass
             // compare the request parameters with the declared ones
             foreach ($this->params as $key => $val) {
                 if (is_null($val)) {
-                    $cmp = array_key_exists($key, $getVars);
+                    $cmp = array_key_exists($key, $getVars ?? []);
                 } else {
                     $cmp = isset($getVars[$key]) && $getVars[$key] === strval($val);
                 }
@@ -144,7 +144,7 @@ class Url implements Rule, Bypass
 
             // check only declared parameters exist in the request
             foreach ($getVars as $key => $val) {
-                if (!array_key_exists($key, $this->params)) {
+                if (!array_key_exists($key, $this->params ?? [])) {
                     return false;
                 }
             }

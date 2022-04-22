@@ -29,14 +29,14 @@ class EmailField extends TextField
      */
     public function validate($validator)
     {
-        $this->value = trim($this->value);
+        $this->value = trim($this->value ?? '');
 
         $pattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
 
         // Escape delimiter characters.
-        $safePattern = str_replace('/', '\\/', $pattern);
+        $safePattern = str_replace('/', '\\/', $pattern ?? '');
 
-        if ($this->value && !preg_match('/' . $safePattern . '/i', $this->value)) {
+        if ($this->value && !preg_match('/' . $safePattern . '/i', $this->value ?? '')) {
             $validator->validationError(
                 $this->name,
                 _t('SilverStripe\\Forms\\EmailField.VALIDATION', 'Please enter an email address'),

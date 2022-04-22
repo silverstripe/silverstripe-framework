@@ -131,7 +131,7 @@ class HasManyList extends RelationList
         $foreignKey = $this->getForeignKey();
 
         if (empty($foreignID)
-            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
+            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID ?? []))
             || $foreignID == $item->$foreignKey
         ) {
             $item->$foreignKey = null;

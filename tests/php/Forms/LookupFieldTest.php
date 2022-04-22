@@ -16,7 +16,7 @@ class LookupFieldTest extends SapphireTest
         $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue(null);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test"><i>(none)</i></span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="" />', $result);
@@ -27,7 +27,7 @@ class LookupFieldTest extends SapphireTest
         $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue(1);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
         $this->assertStringContainsString('<span class="readonly" id="test">one</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="1" />', $result);
     }
@@ -37,7 +37,7 @@ class LookupFieldTest extends SapphireTest
         $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue('w00t');
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">w00t</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="" />', $result);
@@ -49,7 +49,7 @@ class LookupFieldTest extends SapphireTest
         $source = ['one' => 'one val', 'two' => 'two val', 'three' => 'three val'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue(['one','two']);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">one val, two val</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="one, two" />', $result);
@@ -61,7 +61,7 @@ class LookupFieldTest extends SapphireTest
         $source = [1 => 'one', 2 => 'two', 3 => 'three'];
         $field = new LookupField('test', 'test', $source);
         $field->setValue([1,2]);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">one, two</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="1, 2" />', $result);
@@ -76,7 +76,7 @@ class LookupFieldTest extends SapphireTest
         $source = DataObject::get(Member::class);
         $field = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
         $field->setValue([$member1->ID, $member2->ID]);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">member1, member2</span>', $result);
         $this->assertStringContainsString(sprintf(
@@ -102,13 +102,13 @@ class LookupFieldTest extends SapphireTest
 
         $field = new LookupField('test', 'test', $choices);
         $field->setValue(3);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">Carrots</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="3" />', $result);
 
         $field->setValue([3, 9]);
-        $result = trim($field->Field()->getValue());
+        $result = trim($field->Field()->getValue() ?? '');
 
         $this->assertStringContainsString('<span class="readonly" id="test">Carrots, Vegan</span>', $result);
         $this->assertStringContainsString('<input type="hidden" name="test" value="3, 9" />', $result);

@@ -60,7 +60,7 @@ class Member_Validator extends RequiredFields
             $required = array_merge($required, $config);
         }
 
-        parent::__construct(array_unique($required));
+        parent::__construct(array_unique($required ?? []));
     }
 
     /**
@@ -149,11 +149,11 @@ class Member_Validator extends RequiredFields
                 $stillAdmin = false;
             } else {
                 $adminGroups = array_intersect(
-                    $data['DirectGroups'],
+                    $data['DirectGroups'] ?? [],
                     Permission::get_groups_by_permission('ADMIN')->column()
                 );
 
-                if (count($adminGroups) === 0) {
+                if (count($adminGroups ?? []) === 0) {
                     $stillAdmin = false;
                 }
             }

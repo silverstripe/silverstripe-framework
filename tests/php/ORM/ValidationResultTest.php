@@ -18,7 +18,7 @@ class ValidationResultTest extends SapphireTest
         /**
  * @var ValidationResult $result2
 */
-        $result2 = unserialize($serialised);
+        $result2 = unserialize($serialised ?? '');
         $this->assertEquals(
             [
             [

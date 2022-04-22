@@ -244,7 +244,7 @@ class SimpleHttpRequest {
         foreach ($this->_headers as $header_line) {
             $socket->write($header_line . "\r\n");
         }
-        if (count($this->_cookies) > 0) {
+        if (count($this->_cookies ?? []) > 0) {
             $socket->write("Cookie: " . implode(";", $this->_cookies) . "\r\n");
         }
         $encoding->writeHeadersTo($socket);
@@ -316,7 +316,7 @@ class SimpleHttpHeaders {
         $this->_cookies = array();
         $this->_authentication = false;
         $this->_realm = false;
-        foreach (preg_split("/\r\n/", $headers) as $header_line) {
+        foreach (preg_split("/\r\n/", $headers ?? '') as $header_line) {
             $this->_parseHeaderLine($header_line);
         }
     }
@@ -431,22 +431,22 @@ class SimpleHttpHeaders {
      *    @access protected
      */
     function _parseHeaderLine($header_line) {
-        if (preg_match('/HTTP\/(\d+\.\d+)\s+(\d+)/i', $header_line, $matches)) {
+        if (preg_match('/HTTP\/(\d+\.\d+)\s+(\d+)/i', $header_line ?? '', $matches)) {
             $this->_http_version = $matches[1];
             $this->_response_code = $matches[2];
         }
-        if (preg_match('/Content-type:\s*(.*)/i', $header_line, $matches)) {
-            $this->_mime_type = trim($matches[1]);
+        if (preg_match('/Content-type:\s*(.*)/i', $header_line ?? '', $matches)) {
+            $this->_mime_type = trim($matches[1] ?? '');
         }
-        if (preg_match('/Location:\s*(.*)/i', $header_line, $matches)) {
-            $this->_location = trim($matches[1]);
+        if (preg_match('/Location:\s*(.*)/i', $header_line ?? '', $matches)) {
+            $this->_location = trim($matches[1] ?? '');
         }
-        if (preg_match('/Set-cookie:(.*)/i', $header_line, $matches)) {
+        if (preg_match('/Set-cookie:(.*)/i', $header_line ?? '', $matches)) {
             $this->_cookies[] = $this->_parseCookie($matches[1]);
         }
-        if (preg_match('/WWW-Authenticate:\s+(\S+)\s+realm=\"(.*?)\"/i', $header_line, $matches)) {
+        if (preg_match('/WWW-Authenticate:\s+(\S+)\s+realm=\"(.*?)\"/i', $header_line ?? '', $matches)) {
             $this->_authentication = $matches[1];
-            $this->_realm = trim($matches[2]);
+            $this->_realm = trim($matches[2] ?? '');
         }
     }
 
@@ -457,17 +457,17 @@ class SimpleHttpHeaders {
      *    @access private
      */
     function _parseCookie($cookie_line) {
-        $parts = preg_split('/;/', $cookie_line);
+        $parts = preg_split('/;/', $cookie_line ?? '');
         $cookie = array();
-        preg_match('/\s*(.*?)\s*=(.*)/', array_shift($parts), $cookie);
+        preg_match('/\s*(.*?)\s*=(.*)/', array_shift($parts) ?? '', $cookie);
         foreach ($parts as $part) {
-            if (preg_match('/\s*(.*?)\s*=(.*)/', $part, $matches)) {
-                $cookie[$matches[1]] = trim($matches[2]);
+            if (preg_match('/\s*(.*?)\s*=(.*)/', $part ?? '', $matches)) {
+                $cookie[$matches[1]] = trim($matches[2] ?? '');
             }
         }
         return new SimpleCookie(
                 $cookie[1],
-                trim($cookie[2]),
+                trim($cookie[2] ?? ''),
                 isset($cookie["path"]) ? $cookie["path"] : "",
                 isset($cookie["expires"]) ? $cookie["expires"] : false);
     }
@@ -517,11 +517,11 @@ class SimpleHttpResponse extends SimpleStickyError {
         if (! $raw) {
             $this->_setError('Nothing fetched');
             $this->_headers = new SimpleHttpHeaders('');
-        } elseif (! strstr($raw, "\r\n\r\n")) {
+        } elseif (! strstr($raw ?? '', "\r\n\r\n")) {
             $this->_setError('Could not split headers from content');
             $this->_headers = new SimpleHttpHeaders($raw);
         } else {
-            list($headers, $this->_content) = preg_split("/\r\n\r\n/", $raw, 2);
+            list($headers, $this->_content) = preg_split("/\r\n\r\n/", $raw ?? '', 2);
             $this->_headers = new SimpleHttpHeaders($headers);
         }
     }

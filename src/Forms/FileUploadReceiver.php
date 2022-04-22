@@ -403,7 +403,7 @@ trait FileUploadReceiver
             && is_array($postVars['tmp_name'])
             && !empty($postVars['tmp_name']['Uploads'])
         ) {
-            for ($i = 0; $i < count($postVars['tmp_name']['Uploads']); $i++) {
+            for ($i = 0; $i < count($postVars['tmp_name']['Uploads'] ?? []); $i++) {
                 // Skip if "empty" file
                 if (empty($postVars['tmp_name']['Uploads'][$i])) {
                     continue;

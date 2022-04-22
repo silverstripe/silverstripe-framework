@@ -46,13 +46,13 @@ class LookupField extends MultiSelectField
         // Don't check if string arguments are matching against the source,
         // as they might be generated HTML diff views instead of the actual values
         if ($this->value && is_string($this->value) && empty($mapped)) {
-            $mapped[] = Convert::raw2xml(trim($this->value));
+            $mapped[] = Convert::raw2xml(trim($this->value ?? ''));
             $values = [];
         }
 
         if ($mapped) {
-            $attrValue = implode(', ', array_values($mapped));
-            $inputValue = implode(', ', array_values($values));
+            $attrValue = implode(', ', array_values($mapped ?? []));
+            $inputValue = implode(', ', array_values($values ?? []));
         } else {
             $attrValue = '<i>(' . _t('SilverStripe\\Forms\\FormField.NONE', 'none') . ')</i>';
             $inputValue = '';

@@ -44,7 +44,7 @@ trait PathAware
      */
     protected function normalisePath($path)
     {
-        if (substr($path, -1) !== '/') {
+        if (substr($path ?? '', -1) !== '/') {
             return $path . '/';
         } else {
             return $path;

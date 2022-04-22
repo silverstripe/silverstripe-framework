@@ -138,13 +138,13 @@ class Module implements Serializable
             // Strip from full composer name
             $composerName = $this->getComposerName();
             if ($composerName) {
-                list(, $name) = explode('/', $composerName);
+                list(, $name) = explode('/', $composerName ?? '');
                 return $name;
             }
         }
 
         // Base name of directory
-        return basename($this->path);
+        return basename($this->path ?? '');
     }
 
     /**
@@ -182,7 +182,7 @@ class Module implements Serializable
         if ($this->path === $this->basePath) {
             return '';
         }
-        return substr($this->path, strlen($this->basePath) + 1);
+        return substr($this->path ?? '', strlen($this->basePath ?? '') + 1);
     }
 
     public function __serialize(): array
@@ -223,7 +223,7 @@ class Module implements Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->path, $this->basePath, $this->composerData) = json_decode($serialized, true);
+        list($this->path, $this->basePath, $this->composerData) = json_decode($serialized ?? '', true);
         $this->resources = [];
     }
 
@@ -233,7 +233,7 @@ class Module implements Serializable
     public function activate()
     {
         $config = "{$this->path}/_config.php";
-        if (file_exists($config)) {
+        if (file_exists($config ?? '')) {
             requireFile($config);
         }
     }
@@ -245,9 +245,9 @@ class Module implements Serializable
     {
         // Load composer data
         $path = "{$this->path}/composer.json";
-        if (file_exists($path)) {
-            $content = file_get_contents($path);
-            $result = json_decode($content, true);
+        if (file_exists($path ?? '')) {
+            $content = file_get_contents($path ?? '');
+            $result = json_decode($content ?? '', true);
             if (json_last_error()) {
                 $errorMessage = json_last_error_msg();
                 throw new Exception("$path: $errorMessage");
@@ -433,7 +433,7 @@ class Module implements Serializable
         }
 
         // Let's see if we are using an exact version constraint. e.g. ~1.2.3 or 1.2.3 or ~1.2 or 1.2.*
-        if (preg_match("/^~?$majorVersionFallback(\.(\d+)|\*){0,2}/", $constraint)) {
+        if (preg_match("/^~?$majorVersionFallback(\.(\d+)|\*){0,2}/", $constraint ?? '')) {
             return true;
         }
 

@@ -75,14 +75,14 @@ class DBEnum extends DBString
 
             // If there's a default, then use this
             if ($default && !is_int($default)) {
-                if (in_array($default, $enum)) {
+                if (in_array($default, $enum ?? [])) {
                     $this->setDefault($default);
                 } else {
                     throw new \InvalidArgumentException(
                         "Enum::__construct() The default value '$default' does not match any item in the enumeration"
                     );
                 }
-            } elseif (is_int($default) && $default < count($enum)) {
+            } elseif (is_int($default) && $default < count($enum ?? [])) {
                 // Set to specified index if given
                 $this->setDefault($enum[$default]);
             } else {
@@ -242,10 +242,10 @@ class DBEnum extends DBString
             $enum = preg_split(
                 '/\s*,\s*/',
                 // trim commas only if they are on the right with a newline following it
-                ltrim(preg_replace('/,\s*\n\s*$/', '', $enum))
+                ltrim(preg_replace('/,\s*\n\s*$/', '', $enum ?? '') ?? '')
             );
         }
-        $this->enum = array_values($enum);
+        $this->enum = array_values($enum ?? []);
         return $this;
     }
 

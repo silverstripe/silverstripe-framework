@@ -22,7 +22,7 @@ class DBYearTest extends SapphireTest
         $source = $field->getSource();
 
         $lastValue = end($source);
-        $lastKey = key($source);
+        $lastKey = key($source ?? []);
 
         //Keys and values should be the same - and the last one should be 1900
         $this->assertEquals(1900, $lastValue);
@@ -38,7 +38,7 @@ class DBYearTest extends SapphireTest
         //The first one should be the current year
         $currentYear = (int)date('Y');
         $firstValue = reset($source);
-        $firstKey = key($source);
+        $firstKey = key($source ?? []);
 
         $this->assertEquals($currentYear, $firstValue);
         $this->assertEquals($currentYear, $firstKey);

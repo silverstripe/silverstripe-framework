@@ -150,7 +150,7 @@ class TaskRunner extends Controller
 
             $singleton = BuildTask::singleton($class);
             $description = $singleton->getDescription();
-            $description = trim($description);
+            $description = trim($description ?? '');
 
             $desc = (Director::is_cli())
                 ? Convert::html2raw($description)
@@ -159,7 +159,7 @@ class TaskRunner extends Controller
             $availableTasks[] = [
                 'class' => $class,
                 'title' => $singleton->getTitle(),
-                'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class),
+                'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class ?? ''),
                 'description' => $desc,
             ];
         }
@@ -202,7 +202,7 @@ class TaskRunner extends Controller
 
             // inject CSS into the heaader
             $element = sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $path);
-            $header = str_replace('</head>', $element . '</head>', $header);
+            $header = str_replace('</head>', $element . '</head>', $header ?? '');
         }
 
         return $header;

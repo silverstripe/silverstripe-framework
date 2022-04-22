@@ -85,7 +85,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      */
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
         }
     }
@@ -167,7 +167,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      */
     public function getExtraClass()
     {
-        return implode(' ', array_keys($this->extraClass));
+        return implode(' ', array_keys($this->extraClass ?? []));
     }
 
     /**

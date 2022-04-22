@@ -43,7 +43,7 @@ trait UploadReceiver
 
         // filter out '' since this would be a regex problem on JS end
         $this->getValidator()->setAllowedExtensions(
-            array_filter(File::config()->allowed_extensions)
+            array_filter(File::config()->allowed_extensions ?? [])
         );
 
         // get the lower max size

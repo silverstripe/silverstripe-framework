@@ -246,7 +246,7 @@ class SecurityTest extends FunctionalTest
         $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 
         /* We have only 1 input, one to allow the user to log in as someone else */
-        $this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
+        $this->assertEquals(count($items ?? []), 1, 'There is 1 input, allowing the user to log in as someone else.');
 
         /* Submit the form, using only the logout action and a hidden field for the authenticator */
         $response = $this->submitForm(
@@ -278,7 +278,7 @@ class SecurityTest extends FunctionalTest
         $items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
         /* We have 2 text inputs - one for email, and another for the password */
-        $this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
+        $this->assertEquals(count($items ?? []), 2, 'There are 2 inputs - one for email, another for password');
 
         $this->autoFollowRedirection = false;
 
@@ -295,11 +295,11 @@ class SecurityTest extends FunctionalTest
         $items = $this
             ->cssParser()
             ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
-        $this->assertEquals(1, count($items));
+        $this->assertEquals(1, count($items ?? []));
         $this->assertEmpty((string)$items[0]->attributes()->value);
         $this->assertEquals('off', (string)$items[0]->attributes()->autocomplete);
         $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
-        $this->assertEquals(1, count($form));
+        $this->assertEquals(1, count($form ?? []));
         $this->assertEquals('off', (string)$form[0]->attributes()->autocomplete);
 
         // Test that username does persist when necessary
@@ -309,11 +309,11 @@ class SecurityTest extends FunctionalTest
         $items = $this
             ->cssParser()
             ->getBySelector('#MemberLoginForm_LoginForm #MemberLoginForm_LoginForm_Email');
-        $this->assertEquals(1, count($items));
+        $this->assertEquals(1, count($items ?? []));
         $this->assertEquals('myuser@silverstripe.com', (string)$items[0]->attributes()->value);
         $this->assertNotEquals('off', (string)$items[0]->attributes()->autocomplete);
         $form = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm');
-        $this->assertEquals(1, count($form));
+        $this->assertEquals(1, count($form ?? []));
         $this->assertNotEquals('off', (string)$form[0]->attributes()->autocomplete);
     }
 
@@ -392,7 +392,7 @@ class SecurityTest extends FunctionalTest
         );
         // for some reason the redirect happens to a relative URL
         $this->assertMatchesRegularExpression(
-            '/^' . preg_quote(Director::absoluteBaseURL(), '/') . 'testpage/',
+            '/^' . preg_quote(Director::absoluteBaseURL() ?? '', '/') . 'testpage/',
             $response->getHeader('Location'),
             "Internal absolute BackURLs work when passed through to login form"
         );
@@ -824,7 +824,7 @@ class SecurityTest extends FunctionalTest
     {
         $result = $this->session()->get('FormInfo.MemberLoginForm_LoginForm.result');
         if ($result) {
-            return unserialize($result);
+            return unserialize($result ?? '');
         }
         return null;
     }

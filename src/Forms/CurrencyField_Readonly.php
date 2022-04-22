@@ -22,7 +22,7 @@ class CurrencyField_Readonly extends ReadonlyField
         $currencySymbol = DBCurrency::config()->get('currency_symbol');
         if ($this->value) {
             $val = Convert::raw2xml($this->value);
-            $val = $currencySymbol . number_format(preg_replace('/[^0-9.-]/', '', $val), 2);
+            $val = $currencySymbol . number_format(preg_replace('/[^0-9.-]/', '', $val ?? '') ?? 0.0, 2);
             $valforInput = Convert::raw2att($val);
         } else {
             $val = '<i>' . $currencySymbol . '0.00</i>';

@@ -13,7 +13,7 @@ class HTML4Value extends HTMLValue
     {
         // Ensure that \r (carriage return) characters don't get replaced with "&#13;" entity by DOMDocument
         // This behaviour is apparently XML spec, but we don't want this because it messes up the HTML
-        $content = str_replace(chr(13), '', $content);
+        $content = str_replace(chr(13), '', $content ?? '');
 
         // Reset the document if we're in an invalid state for some reason
         if (!$this->isValid()) {

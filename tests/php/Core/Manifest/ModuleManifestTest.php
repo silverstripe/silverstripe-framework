@@ -38,7 +38,7 @@ class ModuleManifestTest extends SapphireTest
                 'silverstripe/modulecbetter',
                 'silverstripe/root-module',
             ],
-            array_keys($modules)
+            array_keys($modules ?? [])
         );
     }
 

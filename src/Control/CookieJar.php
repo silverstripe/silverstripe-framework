@@ -113,7 +113,7 @@ class CookieJar implements Cookie_Backend
         }
 
         //Normalise cookie names by replacing '.' with '_'
-        $safeName = str_replace('.', '_', $name);
+        $safeName = str_replace('.', '_', $name ?? '');
         if (isset($cookies[$safeName])) {
             return $cookies[$safeName];
         }
@@ -170,7 +170,7 @@ class CookieJar implements Cookie_Backend
     ) {
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
-            return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+            return setcookie($name ?? '', $value ?? '', $expiry ?? 0, $path ?? '', $domain ?? '', $secure ?? false, $httpOnly ?? false);
         }
 
         if (Cookie::config()->uninherited('report_errors')) {

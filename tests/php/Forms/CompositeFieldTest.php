@@ -47,14 +47,14 @@ class CompositeFieldTest extends SapphireTest
             new TextField('A'),
             new TextField('B')
         );
-        $this->assertStringStartsWith('<div', trim($div->FieldHolder()));
-        $this->assertStringEndsWith('/div>', trim($div->FieldHolder()));
+        $this->assertStringStartsWith('<div', trim($div->FieldHolder() ?? ''));
+        $this->assertStringEndsWith('/div>', trim($div->FieldHolder() ?? ''));
 
         $fieldset = new CompositeField();
         $fieldset->setTag('fieldset');
 
-        $this->assertStringStartsWith('<fieldset', trim($fieldset->FieldHolder()));
-        $this->assertStringEndsWith('/fieldset>', trim($fieldset->FieldHolder()));
+        $this->assertStringStartsWith('<fieldset', trim($fieldset->FieldHolder() ?? ''));
+        $this->assertStringEndsWith('/fieldset>', trim($fieldset->FieldHolder() ?? ''));
     }
 
     public function testPushAndUnshift()

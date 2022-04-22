@@ -82,7 +82,7 @@ class Transliterator
             'ω'=>'w', 'Ω'=>'W', 'ώ'=>'o', 'Ώ'=>'O', 'ὠ'=>'o', 'Ὠ'=>'O',
         ];
 
-        return strtr($source, $table);
+        return strtr($source ?? '', $table ?? '');
     }
 
     /**
@@ -93,6 +93,6 @@ class Transliterator
      */
     protected function useIconv($source)
     {
-        return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source);
+        return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source ?? '');
     }
 }

@@ -224,7 +224,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         // Check www.
-        if ($this->getForceWWW() && strpos($host, 'www.') !== 0) {
+        if ($this->getForceWWW() && strpos($host ?? '', 'www.') !== 0) {
             $host = "www.{$host}";
         }
 
@@ -300,7 +300,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         // Filter redirect based on url
         $relativeURL = $request->getURL(true);
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $relativeURL)) {
+            if (preg_match($pattern ?? '', $relativeURL ?? '')) {
                 return true;
             }
         }
@@ -368,12 +368,12 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         // If CLI, EnabledEnvs must contain CLI
-        if (Director::is_cli() && !in_array('cli', $enabledEnvs)) {
+        if (Director::is_cli() && !in_array('cli', $enabledEnvs ?? [])) {
             return false;
         }
 
         // Check other envs
-        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs);
+        return empty($enabledEnvs) || in_array(Director::get_environment_type(), $enabledEnvs ?? []);
     }
 
     /**

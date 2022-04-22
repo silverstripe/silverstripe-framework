@@ -69,7 +69,7 @@ class GridField_FormAction extends FormAction
      */
     public function nameEncode($value)
     {
-        return (string)preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value);
+        return (string)preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value ?? '');
     }
 
     /**
@@ -79,7 +79,7 @@ class GridField_FormAction extends FormAction
      */
     public function _nameEncode($match)
     {
-        return '%' . dechex(ord($match[0]));
+        return '%' . dechex(ord($match[0] ?? ''));
     }
 
     /**

@@ -230,13 +230,13 @@ abstract class Database
             $result = $callback($sql);
             $endtime = round(microtime(true) - $starttime, 4);
             // replace parameters as closely as possible to what we'd expect the DB to put in
-            if (in_array(strtolower($_REQUEST['showqueries']), ['inline', 'backtrace'])) {
+            if (in_array(strtolower($_REQUEST['showqueries'] ?? ''), ['inline', 'backtrace'])) {
                 $sql = DB::inline_parameters($sql, $parameters);
-            } elseif (strtolower($_REQUEST['showqueries']) === 'whitelist') {
+            } elseif (strtolower($_REQUEST['showqueries'] ?? '') === 'whitelist') {
                 $displaySql = false;
                 foreach (self::$whitelist_array as $query => $searchType) {
                     $fullQuery = ($searchType === self::FULL_QUERY && $query === $sql);
-                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql, $query) !== false);
+                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql ?? '', $query ?? '') !== false);
                     if (!$fullQuery && !$partialQuery) {
                         continue;
                     }
@@ -348,7 +348,7 @@ abstract class Database
     {
         // Split string into components
         if (!is_array($value)) {
-            $value = explode($separator, $value);
+            $value = explode($separator ?? '', $value ?? '');
         }
 
         // Implode quoted column
@@ -478,7 +478,7 @@ abstract class Database
         $clause = $isNull
             ? "%s IS NULL"
             : "%s IS NOT NULL";
-        return sprintf($clause, $field);
+        return sprintf($clause ?? '', $field);
     }
 
     /**
@@ -906,7 +906,7 @@ abstract class Database
         // Check DB creation permission
         if (!$create) {
             if ($errorLevel !== false) {
-                user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
+                user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel ?? 0);
             }
             // Unselect database
             $this->connector->unloadDatabase();

@@ -43,7 +43,7 @@ class DevConfigController extends Controller
         $subtitle = "Config manifest";
 
         if (Director::is_cli()) {
-            $body .= sprintf("\n%s\n\n", strtoupper($subtitle));
+            $body .= sprintf("\n%s\n\n", strtoupper($subtitle ?? ''));
             $body .= Yaml::dump(Config::inst()->getAll(), 99, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
         } else {
             $renderer = DebugView::create();
@@ -73,9 +73,9 @@ class DevConfigController extends Controller
         $subtitle = "Missing Config property definitions";
 
         foreach ($this->array_keys_recursive(Config::inst()->getAll(), 2) as $className => $props) {
-            $props = array_keys($props);
+            $props = array_keys($props ?? []);
 
-            if (!count($props)) {
+            if (!count($props ?? [])) {
                 // We can skip this entry
                 continue;
             }
@@ -89,7 +89,7 @@ class DevConfigController extends Controller
                 $defined = false;
                 // Check ancestry (private properties don't inherit natively)
                 foreach (ClassInfo::ancestry($className) as $cn) {
-                    if (property_exists($cn, $prop)) {
+                    if (property_exists($cn, $prop ?? '')) {
                         $defined = true;
                         break;
                     }
@@ -104,12 +104,12 @@ class DevConfigController extends Controller
             }
         }
 
-        $output = count($missing)
+        $output = count($missing ?? [])
             ? implode("\n", $missing)
             : "All configured properties are defined\n";
 
         if (Director::is_cli()) {
-            $body .= sprintf("\n%s\n\n", strtoupper($subtitle));
+            $body .= sprintf("\n%s\n\n", strtoupper($subtitle ?? ''));
             $body .= $output;
         } else {
             $renderer = DebugView::create();
@@ -142,7 +142,7 @@ class DevConfigController extends Controller
     {
         if ($depth < $maxdepth) {
             $depth++;
-            $keys = array_keys($array);
+            $keys = array_keys($array ?? []);
 
             foreach ($keys as $key) {
                 if (!is_array($array[$key])) {

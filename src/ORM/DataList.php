@@ -250,7 +250,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function canFilterBy($fieldName)
     {
         $model = singleton($this->dataClass);
-        $relations = explode(".", $fieldName);
+        $relations = explode(".", $fieldName ?? '');
         // First validate the relationships
         $fieldName = array_pop($relations);
         foreach ($relations as $r) {
@@ -330,7 +330,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             list($col, $dir) = func_get_args();
 
             // Validate direction
-            if (!in_array(strtolower($dir), ['desc', 'asc'])) {
+            if (!in_array(strtolower($dir ?? ''), ['desc', 'asc'])) {
                 user_error('Second argument to sort must be either ASC or DESC');
             }
 
@@ -342,7 +342,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
 
             if (is_string($sort) && $sort) {
-                if (false !== stripos($sort, ' asc') || false !== stripos($sort, ' desc')) {
+                if (false !== stripos($sort ?? '', ' asc') || false !== stripos($sort ?? '', ' desc')) {
                     $query->sort($sort);
                 } else {
                     $list->applyRelation($sort, $column, true);
@@ -387,7 +387,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         // Validate and process arguments
         $arguments = func_get_args();
-        switch (sizeof($arguments)) {
+        switch (sizeof($arguments ?? [])) {
             case 1:
                 $filters = $arguments[0];
 
@@ -526,14 +526,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Simple fields without relations are mapped directly
-        if (strpos($field, '.') === false) {
+        if (strpos($field ?? '', '.') === false) {
             $columnName = '"' . $field . '"';
             return $this;
         }
 
         return $this->alterDataQuery(
             function (DataQuery $query) use ($field, &$columnName, $linearOnly) {
-                $relations = explode('.', $field);
+                $relations = explode('.', $field ?? '');
                 $fieldName = array_pop($relations);
 
                 // Apply relation
@@ -555,7 +555,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     protected function isValidRelationName($field)
     {
-        return preg_match('/^[A-Z0-9._]+$/i', $field);
+        return preg_match('/^[A-Z0-9._]+$/i', $field ?? '');
     }
 
     /**
@@ -568,7 +568,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected function createSearchFilter($filter, $value)
     {
         // Field name is always the first component
-        $fieldArgs = explode(':', $filter);
+        $fieldArgs = explode(':', $filter ?? '');
         $fieldName = array_shift($fieldArgs);
 
         // Inspect type of second argument to determine context
@@ -582,7 +582,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             // Whether this is a valid modifier on the default filter, or a filter itself.
             /** @var SearchFilter $defaultFilterInstance */
             $defaultFilterInstance = Injector::inst()->get('DataListFilter.default');
-            if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers())) {
+            if (in_array(strtolower($secondArg ?? ''), $defaultFilterInstance->getSupportedModifiers() ?? [])) {
                 // Treat second (and any subsequent) argument as modifiers, using default filter
                 $filterServiceName = 'DataListFilter.default';
                 array_unshift($modifiers, $secondArg);
@@ -838,7 +838,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
-        if (class_exists($row['RecordClassName'])) {
+        if (class_exists($row['RecordClassName'] ?? '')) {
             $class = $row['RecordClassName'];
         }
 
@@ -866,6 +866,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->toArray());
@@ -876,6 +877,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->dataQuery->count();
@@ -1072,7 +1074,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Remove any items that haven't been mentioned
-        $this->removeMany(array_keys($itemsToDelete));
+        $this->removeMany(array_keys($itemsToDelete ?? []));
     }
 
     /**
@@ -1248,6 +1250,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return ($this->limit(1, $key)->first() != null);
@@ -1261,6 +1264,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @return DataObject
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->limit(1, $key)->first();
@@ -1272,6 +1276,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @param mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
@@ -1282,6 +1287,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param mixed $key
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         throw new \BadMethodCallException("Can't alter items in a DataList using array-access");

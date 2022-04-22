@@ -71,7 +71,7 @@ class TreeMultiselectFieldTest extends SapphireTest
             static function ($f) {
                 return $f->ID;
             },
-            $this->folders
+            $this->folders ?? []
         );
         $this->fieldValue = implode(',', $this->folderIds);
     }
@@ -269,7 +269,7 @@ class TreeMultiselectFieldTest extends SapphireTest
                     'Filename' => $folder->Filename,
                 ];
             },
-            $this->loadFolders()
+            $this->loadFolders() ?? []
         );
 
         // Set list of items by array of ids

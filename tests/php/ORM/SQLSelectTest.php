@@ -43,7 +43,7 @@ class SQLSelectTest extends SapphireTest
         $qry = SQLSelectTest\TestObject::get()->dataQuery()->getFinalisedQuery();
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $count = $qry->count('"SQLSelectTest_DO"."ID"');
-        $this->assertEquals(count($ids), $count);
+        $this->assertEquals(count($ids ?? []), $count);
         $this->assertIsInt($count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
@@ -65,7 +65,7 @@ class SQLSelectTest extends SapphireTest
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $qry->setLimit(1);
         $count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
-        $this->assertEquals(count($ids), $count);
+        $this->assertEquals(count($ids ?? []), $count);
         $this->assertIsInt($count);
         // Test without column - SQLSelect has different logic for this
         $count = $qry->unlimitedRowCount();

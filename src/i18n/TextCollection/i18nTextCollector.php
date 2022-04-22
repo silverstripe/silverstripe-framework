@@ -213,9 +213,9 @@ class i18nTextCollector
             $modules = array_filter(array_map(function ($name) {
                 $module = ModuleLoader::inst()->getManifest()->getModule($name);
                 return $module ? $module->getName() : null;
-            }, $restrictToModules));
+            }, $restrictToModules ?? []));
             // Remove modules
-            foreach (array_diff(array_keys($entitiesByModule), $modules) as $module) {
+            foreach (array_diff(array_keys($entitiesByModule ?? []), $modules) as $module) {
                 unset($entitiesByModule[$module]);
             }
         }
@@ -257,18 +257,18 @@ class i18nTextCollector
      */
     protected function getConflicts($entitiesByModule)
     {
-        $modules = array_keys($entitiesByModule);
+        $modules = array_keys($entitiesByModule ?? []);
         $allConflicts = [];
         // bubble-compare each group of modules
-        for ($i = 0; $i < count($modules) - 1; $i++) {
-            $left = array_keys($entitiesByModule[$modules[$i]]);
-            for ($j = $i+1; $j < count($modules); $j++) {
-                $right = array_keys($entitiesByModule[$modules[$j]]);
-                $conflicts = array_intersect($left, $right);
+        for ($i = 0; $i < count($modules ?? []) - 1; $i++) {
+            $left = array_keys($entitiesByModule[$modules[$i]] ?? []);
+            for ($j = $i+1; $j < count($modules ?? []); $j++) {
+                $right = array_keys($entitiesByModule[$modules[$j]] ?? []);
+                $conflicts = array_intersect($left ?? [], $right);
                 $allConflicts = array_merge($allConflicts, $conflicts);
             }
         }
-        return array_unique($allConflicts);
+        return array_unique($allConflicts ?? []);
     }
 
     /**
@@ -287,8 +287,8 @@ class i18nTextCollector
     protected function getBestModuleForKey($entitiesByModule, $key)
     {
         // Check classes
-        $class = current(explode('.', $key));
-        if (array_key_exists($class, $this->classModuleCache)) {
+        $class = current(explode('.', $key ?? ''));
+        if (array_key_exists($class, $this->classModuleCache ?? [])) {
             return $this->classModuleCache[$class];
         }
         $owner = $this->findModuleForClass($class);
@@ -337,23 +337,23 @@ class i18nTextCollector
         }
 
         // If we can't find a class, see if it needs to be fully qualified
-        if (strpos($class, '\\') !== false) {
+        if (strpos($class ?? '', '\\') !== false) {
             return null;
         }
 
         // Find FQN that ends with $class
         $classes = preg_grep(
             '/' . preg_quote("\\{$class}", '\/') . '$/i',
-            ClassLoader::inst()->getManifest()->getClassNames()
+            ClassLoader::inst()->getManifest()->getClassNames() ?? []
         );
 
         // Find all modules for candidate classes
         $modules = array_unique(array_map(function ($class) {
             $module = ClassLoader::inst()->getManifest()->getOwnerModule($class);
             return $module ? $module->getName() : null;
-        }, $classes));
+        }, $classes ?? []));
 
-        if (count($modules) === 1) {
+        if (count($modules ?? []) === 1) {
             return reset($modules);
         }
 
@@ -425,7 +425,7 @@ class i18nTextCollector
                     unset($spec['module']);
 
                     // If only element is default, simplify
-                    if (count($spec) === 1 && !empty($spec['default'])) {
+                    if (count($spec ?? []) === 1 && !empty($spec['default'])) {
                         $spec = $spec['default'];
                     }
                 }
@@ -476,8 +476,8 @@ class i18nTextCollector
         // Search for calls in code files if these exists
         $fileList = $this->getFileListForModule($module);
         foreach ($fileList as $filePath) {
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $content = file_get_contents($filePath);
+            $extension = pathinfo($filePath ?? '', PATHINFO_EXTENSION);
+            $content = file_get_contents($filePath ?? '');
             // Filter based on extension
             if ($extension === 'php') {
                 $entities = array_merge(
@@ -511,7 +511,7 @@ class i18nTextCollector
         $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module->getRelativePath(), 'themes/') === 0) {
+        if (stripos($module->getRelativePath() ?? '', 'themes/') === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
@@ -653,21 +653,21 @@ class i18nTextCollector
                 // Check text
                 if ($id == T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
-                    if (preg_match('/^\'(?<text>.*)\'$/s', $text, $matches)) {
+                    if (preg_match('/^\'(?<text>.*)\'$/s', $text ?? '', $matches)) {
                         $text = preg_replace_callback(
                             '/\\\\([\\\\\'])/s', // only \ and '
                             function ($input) {
-                                return stripcslashes($input[0]);
+                                return stripcslashes($input[0] ?? '');
                             },
-                            $matches['text']
+                            $matches['text'] ?? ''
                         );
-                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text, $matches)) {
+                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text ?? '', $matches)) {
                         $text = preg_replace_callback(
                             '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
                             function ($input) {
-                                return stripcslashes($input[0]);
+                                return stripcslashes($input[0] ?? '');
                             },
-                            $matches['text']
+                            $matches['text'] ?? ''
                         );
                     } else {
                         throw new LogicException("Invalid string escape: " . $text);
@@ -789,7 +789,7 @@ class i18nTextCollector
 
         // use the old method of getting _t() style translatable entities
         // Collect in actual template
-        if (preg_match_all('/(_t\([^\)]*?\))/ms', $content, $matches)) {
+        if (preg_match_all('/(_t\([^\)]*?\))/ms', $content ?? '', $matches)) {
             foreach ($matches[1] as $match) {
                 $entities = array_merge($entities, $this->collectFromCode($match, $fileName, $module));
             }
@@ -822,7 +822,7 @@ class i18nTextCollector
         $classes = ClassInfo::classes_for_file($filePath);
         foreach ($classes as $class) {
             // Skip non-implementing classes
-            if (!class_exists($class) || !is_a($class, i18nEntityProvider::class, true)) {
+            if (!class_exists($class ?? '') || !is_a($class, i18nEntityProvider::class, true)) {
                 continue;
             }
 
@@ -838,14 +838,14 @@ class i18nTextCollector
             // Handle deprecated return syntax
             foreach ($provided as $key => $value) {
                 // Detect non-associative result for any key
-                if (is_array($value) && $value === array_values($value)) {
+                if (is_array($value) && $value === array_values($value ?? [])) {
                     Deprecation::notice('5.0', 'Non-associative translations from providei18nEntities is deprecated');
                     $entity = array_filter([
                         'default' => $value[0],
                         'comment' => isset($value[1]) ? $value[1] : null,
                         'module' => isset($value[2]) ? $value[2] : null,
                     ]);
-                    if (count($entity) === 1) {
+                    if (count($entity ?? []) === 1) {
                         $provided[$key] = $value[0];
                     } elseif ($entity) {
                         $provided[$key] = $entity;
@@ -871,8 +871,8 @@ class i18nTextCollector
     protected function normalizeEntity($fullName, $_namespace = null)
     {
         // split fullname into entity parts
-        $entityParts = explode('.', $fullName);
-        if (count($entityParts) > 1) {
+        $entityParts = explode('.', $fullName ?? '');
+        if (count($entityParts ?? []) > 1) {
             // templates don't have a custom namespace
             $entity = array_pop($entityParts);
             // namespace might contain dots, so we explode
@@ -887,7 +887,7 @@ class i18nTextCollector
         // and skip the processing. This is mostly used for
         // dynamically translating static properties, e.g. looping
         // through $db, which are detected by {@link collectFromEntityProviders}.
-        if ($entity && strpos('$', $entity) !== false) {
+        if ($entity && strpos('$', $entity ?? '') !== false) {
             return false;
         }
 
@@ -911,13 +911,13 @@ class i18nTextCollector
             $fileList = [];
         }
         // Skip ignored folders
-        if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude, $folder)) {
+        if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude ?? '', $folder ?? '')) {
             return $fileList;
         }
 
         foreach (glob($folder . '/*') as $path) {
             // Recurse if directory
-            if (is_dir($path)) {
+            if (is_dir($path ?? '')) {
                 $fileList = array_merge(
                     $fileList,
                     $this->getFilesRecursive($path, $fileList, $type, $folderExclude)
@@ -926,8 +926,8 @@ class i18nTextCollector
             }
 
             // Check if this extension is included
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            if (in_array($extension, $this->fileExtensions)
+            $extension = pathinfo($path ?? '', PATHINFO_EXTENSION);
+            if (in_array($extension, $this->fileExtensions ?? [])
                 && (!$type || $type === $extension)
             ) {
                 $fileList[$path] = $path;

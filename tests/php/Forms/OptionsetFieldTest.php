@@ -79,7 +79,7 @@ class OptionsetFieldTest extends SapphireTest
         $field->setEmptyString('(Select one)');
         $field->setValue(1);
         $readonlyField = $field->performReadonlyTransformation();
-        preg_match('/Yes/', $readonlyField->Field(), $matches);
+        preg_match('/Yes/', $readonlyField->Field() ?? '', $matches);
         $this->assertEquals($matches[0], 'Yes');
     }
 
@@ -119,8 +119,8 @@ class OptionsetFieldTest extends SapphireTest
         $this->assertTrue($field->Required());
 
         $attributes = $field->getAttributes();
-        $this->assertFalse(array_key_exists("name", $attributes));
-        $this->assertFalse(array_key_exists("required", $attributes));
-        $this->assertTrue(array_key_exists("role", $attributes));
+        $this->assertFalse(array_key_exists("name", $attributes ?? []));
+        $this->assertFalse(array_key_exists("required", $attributes ?? []));
+        $this->assertTrue(array_key_exists("role", $attributes ?? []));
     }
 }

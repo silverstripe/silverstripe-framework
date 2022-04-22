@@ -107,7 +107,7 @@ class SSViewerTest extends SapphireTest
     {
         $data = new ArrayData([ 'Var' => 'var value' ]);
         $result = $data->renderWith("SSViewerTestPartialTemplate");
-        $this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U", '', $result)));
+        $this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U", '', $result ?? '') ?? ''));
     }
 
     /**
@@ -117,7 +117,7 @@ class SSViewerTest extends SapphireTest
     {
         $data = new ArrayData([ 'Var' => 'phpinfo' ]);
         $result = $data->renderWith("SSViewerTestPartialTemplate");
-        $this->assertEquals('Test partial template: phpinfo', trim(preg_replace("/<!--.*-->/U", '', $result)));
+        $this->assertEquals('Test partial template: phpinfo', trim(preg_replace("/<!--.*-->/U", '', $result ?? '') ?? ''));
     }
 
     public function testIncludeScopeInheritance()
@@ -197,7 +197,7 @@ class SSViewerTest extends SapphireTest
     {
         foreach ($expected as $expectedStr) {
             $this->assertTrue(
-                (boolean) preg_match("/{$expectedStr}/", $result),
+                (boolean) preg_match("/{$expectedStr}/", $result ?? ''),
                 "Didn't find '{$expectedStr}' in:\n{$result}"
             );
         }
@@ -241,7 +241,7 @@ class SSViewerTest extends SapphireTest
         );
         Requirements::set_backend($origReq);
 
-        $this->assertFalse((bool)trim($template), "Should be no content in this return.");
+        $this->assertFalse((bool)trim($template ?? ''), "Should be no content in this return.");
     }
 
     public function testRequirementsCombine()
@@ -259,15 +259,15 @@ class SSViewerTest extends SapphireTest
 
         // secondly, make sure that requirements is generated, even though minification failed
         $testBackend->processCombinedFiles();
-        $js = array_keys($testBackend->getJavascript());
+        $js = array_keys($testBackend->getJavascript() ?? []);
         $combinedTestFilePath = Director::publicFolder() . reset($js);
         $this->assertStringContainsString('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
         // and make sure the combined content matches the input content, i.e. no loss of functionality
-        if (!file_exists($combinedTestFilePath)) {
+        if (!file_exists($combinedTestFilePath ?? '')) {
             $this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
         }
-        $combinedTestFileContents = file_get_contents($combinedTestFilePath);
+        $combinedTestFileContents = file_get_contents($combinedTestFilePath ?? '');
         $this->assertStringContainsString($jsFileContents, $combinedTestFileContents);
     }
 
@@ -280,7 +280,7 @@ class SSViewerTest extends SapphireTest
         $testBackend->setCombinedFilesEnabled(true);
 
         $testFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/RequirementsTest_a.js';
-        $testFileContent = file_get_contents($testFile);
+        $testFileContent = file_get_contents($testFile ?? '');
 
         $mockMinifier = $this->getMockBuilder(Requirements_Minifier::class)
         ->setMethods(['minify'])
@@ -1177,14 +1177,14 @@ after'
 
         $result = $view->process($data);
         // We don't care about whitespace
-        $rationalisedResult = trim(preg_replace('/\s+/', ' ', $result));
+        $rationalisedResult = trim(preg_replace('/\s+/', ' ', $result ?? '') ?? '');
 
         $this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
     }
 
     public function assertEqualIgnoringWhitespace($a, $b, $message = '')
     {
-        $this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
+        $this->assertEquals(preg_replace('/\s+/', '', $a ?? ''), preg_replace('/\s+/', '', $b ?? ''), $message);
     }
 
     /**
@@ -1728,7 +1728,7 @@ after'
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
-            $tmplFile,
+            $tmplFile ?? '',
             '<!DOCTYPE html>
 			<html>
 				<head><% base_tag %></head>
@@ -1774,7 +1774,7 @@ after'
             'SSTemplateParser should only rewrite anchor hrefs'
         );
 
-        unlink($tmplFile);
+        unlink($tmplFile ?? '');
     }
 
     public function testRewriteHashlinksInPhpMode()
@@ -1785,7 +1785,7 @@ after'
 
         // Note: SSViewer_FromString doesn't rewrite hash links.
         file_put_contents(
-            $tmplFile,
+            $tmplFile ?? '',
             '<!DOCTYPE html>
 			<html>
 				<head><% base_tag %></head>
@@ -1814,7 +1814,7 @@ EOC;
             'SSTemplateParser should only rewrite anchor hrefs'
         );
 
-        unlink($tmplFile);
+        unlink($tmplFile ?? '');
     }
 
     public function testRenderWithSourceFileComments()
@@ -1909,8 +1909,8 @@ EOC;
         $viewer = new SSViewer([$name]);
         $data = new ArrayData([]);
         $result = $viewer->process($data);
-        $expected = str_replace(["\r", "\n"], '', $expected);
-        $result = str_replace(["\r", "\n"], '', $result);
+        $expected = str_replace(["\r", "\n"], '', $expected ?? '');
+        $result = str_replace(["\r", "\n"], '', $result ?? '');
         $this->assertEquals($result, $expected);
     }
 
@@ -1939,13 +1939,13 @@ EOC;
 
         Requirements::set_backend($backend);
 
-        $this->assertEquals(1, substr_count($template->process(new ViewableData()), "a.css"));
-        $this->assertEquals(1, substr_count($template->process(new ViewableData()), "b.css"));
+        $this->assertEquals(1, substr_count($template->process(new ViewableData()) ?? '', "a.css"));
+        $this->assertEquals(1, substr_count($template->process(new ViewableData()) ?? '', "b.css"));
 
         // if we disable the requirements then we should get nothing
         $template->includeRequirements(false);
-        $this->assertEquals(0, substr_count($template->process(new ViewableData()), "a.css"));
-        $this->assertEquals(0, substr_count($template->process(new ViewableData()), "b.css"));
+        $this->assertEquals(0, substr_count($template->process(new ViewableData()) ?? '', "a.css"));
+        $this->assertEquals(0, substr_count($template->process(new ViewableData()) ?? '', "b.css"));
     }
 
     public function testRequireCallInTemplateInclude()
@@ -1959,7 +1959,7 @@ EOC;
             $this->assertEquals(
                 1,
                 substr_count(
-                    $template->process(new ViewableData()),
+                    $template->process(new ViewableData()) ?? '',
                     "tests/php/View/SSViewerTest/javascript/RequirementsTest_a.js"
                 )
             );
@@ -2011,7 +2011,7 @@ EOC;
         ];
 
         foreach ($tests as $template => $expected) {
-            $this->assertEquals($expected, trim($this->render($template, $data)));
+            $this->assertEquals($expected, trim($this->render($template, $data) ?? ''));
         }
     }
 
@@ -2027,7 +2027,7 @@ EOC;
 				{$TestWithCall.Message}
 			<% end_if %>';
 
-        $this->assertEquals('HiHi', preg_replace('/\s+/', '', $this->render($template, $data)));
+        $this->assertEquals('HiHi', preg_replace('/\s+/', '', $this->render($template, $data) ?? ''));
         $this->assertEquals(
             1,
             $data->testWithCalls,
@@ -2042,7 +2042,7 @@ EOC;
 				<% end_loop %>
 			<% end_if %>';
 
-        $this->assertEquals('OneTwo', preg_replace('/\s+/', '', $this->render($template, $data)));
+        $this->assertEquals('OneTwo', preg_replace('/\s+/', '', $this->render($template, $data) ?? ''));
         $this->assertEquals(
             1,
             $data->testLoopCalls,
@@ -2090,26 +2090,26 @@ EOC;
     public function testFromStringCaching()
     {
         $content = 'Test content';
-        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache.' . sha1($content);
-        if (file_exists($cacheFile)) {
-            unlink($cacheFile);
+        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache.' . sha1($content ?? '');
+        if (file_exists($cacheFile ?? '')) {
+            unlink($cacheFile ?? '');
         }
 
         // Test global behaviors
         $this->render($content, null, null);
-        $this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
+        $this->assertFalse(file_exists($cacheFile ?? ''), 'Cache file was created when caching was off');
 
         SSViewer_FromString::config()->update('cache_template', true);
         $this->render($content, null, null);
-        $this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
-        unlink($cacheFile);
+        $this->assertTrue(file_exists($cacheFile ?? ''), 'Cache file wasn\'t created when it was meant to');
+        unlink($cacheFile ?? '');
 
         // Test instance behaviors
         $this->render($content, null, false);
-        $this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
+        $this->assertFalse(file_exists($cacheFile ?? ''), 'Cache file was created when caching was off');
 
         $this->render($content, null, true);
-        $this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
-        unlink($cacheFile);
+        $this->assertTrue(file_exists($cacheFile ?? ''), 'Cache file wasn\'t created when it was meant to');
+        unlink($cacheFile ?? '');
     }
 }

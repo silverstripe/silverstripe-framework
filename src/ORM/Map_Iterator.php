@@ -60,6 +60,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->firstItemIdx = 0;
@@ -87,6 +88,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
@@ -115,7 +117,7 @@ class Map_Iterator implements Iterator
             }
             return $item->{$key};
         } else {
-            if (array_key_exists($key, $item)) {
+            if (array_key_exists($key, $item ?? [])) {
                 return $item[$key];
             }
         }
@@ -126,6 +128,7 @@ class Map_Iterator implements Iterator
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
@@ -144,6 +147,7 @@ class Map_Iterator implements Iterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->firstItemIdx++;
@@ -156,7 +160,7 @@ class Map_Iterator implements Iterator
             }
 
             if ($this->excludedItems) {
-                while (($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
+                while (($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems ?? [], true)) {
                     $this->items->next();
                 }
             }
@@ -184,6 +188,7 @@ class Map_Iterator implements Iterator
      *
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return (

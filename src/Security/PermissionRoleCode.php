@@ -35,7 +35,7 @@ class PermissionRoleCode extends DataObject
         // Check that new code doesn't increase privileges, unless an admin is editing.
         $privilegedCodes = Permission::config()->privileged_permissions;
         if ($this->Code
-            && in_array($this->Code, $privilegedCodes)
+            && in_array($this->Code, $privilegedCodes ?? [])
             && !Permission::check('ADMIN')
         ) {
             $result->addError(

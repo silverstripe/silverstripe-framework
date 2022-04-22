@@ -84,14 +84,14 @@ class ConfirmationMiddleware implements HTTPMiddleware
     {
         $url = $this->confirmationFormUrl;
 
-        if (substr($url, 0, 1) === '/') {
+        if (substr($url ?? '', 0, 1) === '/') {
             // add BASE_URL explicitly if not absolute
             $url = Controller::join_links(Director::baseURL(), $url);
         }
 
         return Controller::join_links(
             $url,
-            urlencode($confirmationStorageId)
+            urlencode($confirmationStorageId ?? '')
         );
     }
 
@@ -203,7 +203,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
     {
         $storage = Injector::inst()->createWithArgs(Confirmation\Storage::class, [$request->getSession(), $this->confirmationId, false]);
 
-        if (!count($storage->getItems())) {
+        if (!count($storage->getItems() ?? [])) {
             return $this->buildConfirmationRedirect($request, $storage, $items);
         }
 

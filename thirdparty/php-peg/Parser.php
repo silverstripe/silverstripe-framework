@@ -24,12 +24,12 @@ class ParserRegexp {
 
 		if ( $dirty ) {
 			$this->check_pos = $current_pos ;
-			$matched = preg_match( $this->rx, $this->parser->string, $this->matches, PREG_OFFSET_CAPTURE, $this->check_pos) ;
+			$matched = preg_match( $this->rx ?? '', $this->parser->string ?? '', $this->matches, PREG_OFFSET_CAPTURE, $this->check_pos ?? 0) ;
 			if ( $matched ) $this->match_pos = $this->matches[0][1] ; else $this->match_pos = NULL ;
 		}
 
 		if ( $this->match_pos === $current_pos ) {
-			$this->parser->pos += strlen( $this->matches[0][0] );
+			$this->parser->pos += strlen( $this->matches[0][0] ?? '' );
 			return $this->matches[0][0] ;
 		}
 
@@ -75,9 +75,9 @@ class Parser {
 	}
 
 	function whitespace() {
-		$matched = preg_match( '/[ \t]+/', $this->string, $matches, PREG_OFFSET_CAPTURE, $this->pos ) ;
+		$matched = preg_match( '/[ \t]+/', $this->string ?? '', $matches, PREG_OFFSET_CAPTURE, $this->pos ?? 0 ) ;
 		if ( $matched && $matches[0][1] == $this->pos ) {
-			$this->pos += strlen( $matches[0][0] );
+			$this->pos += strlen( $matches[0][0] ?? '' );
 			return ' ' ;
 		}
 		return FALSE ;
@@ -85,8 +85,8 @@ class Parser {
 
  	function literal( $token ) {
  		/* Debugging: * / print( "Looking for token '$token' @ '" . substr( $this->string, $this->pos ) . "'\n" ) ; /* */
- 		$toklen = strlen( $token ) ;
- 		$substr = substr( $this->string, $this->pos, $toklen ) ;
+ 		$toklen = strlen( $token ?? '' ) ;
+ 		$substr = substr( $this->string ?? '', $this->pos ?? 0, $toklen ) ;
 		if ( $substr == $token ) {
 			$this->pos += $toklen ;
 			return $token ;
@@ -207,9 +207,9 @@ class Packrat extends Parser {
 		parent::__construct( $string ) ;
 
 		$max = unpack( 'N', "\x00\xFD\xFF\xFF" ) ;
-		if ( strlen( $string ) > $max[1] ) user_error( 'Attempting to parse string longer than Packrat Parser can handle', E_USER_ERROR ) ;
+		if ( strlen( $string ?? '' ) > $max[1] ) user_error( 'Attempting to parse string longer than Packrat Parser can handle', E_USER_ERROR ) ;
 
-		$this->packstatebase = str_repeat( "\xFF", strlen( $string )*3 ) ;
+		$this->packstatebase = str_repeat( "\xFF", strlen( $string ?? '' )*3 ) ;
 		$this->packstate = array() ;
 		$this->packres = array() ;
 	}
@@ -223,7 +223,7 @@ class Packrat extends Parser {
 		$pos *= 3 ;
 		if ( $this->packstate[$key][$pos] == "\xFE" ) return FALSE ;
 
-		$this->pos = ord($this->packstate[$key][$pos]) << 16 | ord($this->packstate[$key][$pos+1]) << 8 | ord($this->packstate[$key][$pos+2]) ;
+		$this->pos = ord($this->packstate[$key][$pos] ?? '') << 16 | ord($this->packstate[$key][$pos+1] ?? '') << 8 | ord($this->packstate[$key][$pos+2] ?? '') ;
 		return $this->packres["$key:$pos"] ;
 	}
 
@@ -258,7 +258,7 @@ class FalseOnlyPackrat extends Parser {
 	function __construct( $string ) {
 		parent::__construct( $string ) ;
 
-		$this->packstatebase = str_repeat( '.', strlen( $string ) ) ;
+		$this->packstatebase = str_repeat( '.', strlen( $string ?? '' ) ) ;
 		$this->packstate = array() ;
 	}
 

@@ -397,7 +397,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         {
             $annotations = $this->getAnnotations();
 
-            return array_key_exists('useDatabase', $annotations['method'])
+            return array_key_exists('useDatabase', $annotations['method'] ?? [])
                 && $annotations['method']['useDatabase'][0] !== 'false';
         }
 
@@ -411,7 +411,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         {
             $annotations = $this->getAnnotations();
 
-            return array_key_exists('useDatabase', $annotations['method'])
+            return array_key_exists('useDatabase', $annotations['method'] ?? [])
                 && $annotations['method']['useDatabase'][0] === 'false';
         }
 
@@ -599,7 +599,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
                 throw new LogicException('getItemPath returned null for ' . static::class
                     . '. Try adding flush=1 to the test run.');
             }
-            return dirname($filename);
+            return dirname($filename ?? '');
         }
 
         /**
@@ -609,8 +609,8 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         {
             $base = Director::baseFolder();
             $path = $this->getCurrentAbsolutePath();
-            if (substr($path, 0, strlen($base)) == $base) {
-                $path = preg_replace('/^\/*/', '', substr($path, strlen($base)));
+            if (substr($path ?? '', 0, strlen($base ?? '')) == $base) {
+                $path = preg_replace('/^\/*/', '', substr($path ?? '', strlen($base ?? '')));
             }
             return $path;
         }
@@ -926,7 +926,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          */
         protected static function normaliseSQL($sql)
         {
-            return trim(preg_replace('/\s+/m', ' ', $sql));
+            return trim(preg_replace('/\s+/m', ' ', $sql ?? '') ?? '');
         }
 
         /**
@@ -1021,7 +1021,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
                 $request = CLIRequestBuilder::createFromEnvironment();
 
                 $app = new HTTPApplication($kernel);
-                $flush = array_key_exists('flush', $request->getVars());
+                $flush = array_key_exists('flush', $request->getVars() ?? []);
 
                 // Custom application
                 $res = $app->execute($request, function (HTTPRequest $request) {
@@ -1046,7 +1046,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
                 // Allow flush from the command line in the absence of HTTPApplication's special sauce
                 $flush = false;
                 foreach ($_SERVER['argv'] as $arg) {
-                    if (preg_match('/^(--)?flush(=1)?$/', $arg)) {
+                    if (preg_match('/^(--)?flush(=1)?$/', $arg ?? '')) {
                         $flush = true;
                     }
                 }
@@ -1204,8 +1204,8 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         protected function useTestTheme($themeBaseDir, $theme, $callback)
         {
             Config::nest();
-            if (strpos($themeBaseDir, BASE_PATH) === 0) {
-                $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
+            if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
+                $themeBaseDir = substr($themeBaseDir ?? '', strlen(BASE_PATH));
             }
             SSViewer::config()->update('theme_enabled', true);
             SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
@@ -1233,7 +1233,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
             return array_map(function ($fixtureFilePath) {
                 return $this->resolveFixturePath($fixtureFilePath);
-            }, $fixtureFiles);
+            }, $fixtureFiles ?? []);
         }
 
         /**
@@ -1264,7 +1264,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         protected function resolveFixturePath($fixtureFilePath)
         {
             // support loading via composer name path.
-            if (strpos($fixtureFilePath, ':') !== false) {
+            if (strpos($fixtureFilePath ?? '', ':') !== false) {
                 return ModuleResourceLoader::singleton()->resolvePath($fixtureFilePath);
             }
 
@@ -1318,7 +1318,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             foreach ($this->getExtraControllers() as $class) {
                 $controllerInst = Controller::singleton($class);
                 $link = Director::makeRelative($controllerInst->Link());
-                $route = rtrim($link, '/') . '//$Action/$ID/$OtherID';
+                $route = rtrim($link ?? '', '/') . '//$Action/$ID/$OtherID';
                 $rules[$route] = $class;
             }
             return $rules;
@@ -1700,7 +1700,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $annotations = $this->getAnnotations();
 
-        return array_key_exists('useDatabase', $annotations['method'])
+        return array_key_exists('useDatabase', $annotations['method'] ?? [])
             && $annotations['method']['useDatabase'][0] !== 'false';
     }
 
@@ -1714,7 +1714,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $annotations = $this->getAnnotations();
 
-        return array_key_exists('useDatabase', $annotations['method'])
+        return array_key_exists('useDatabase', $annotations['method'] ?? [])
             && $annotations['method']['useDatabase'][0] === 'false';
     }
 
@@ -1902,7 +1902,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             throw new LogicException('getItemPath returned null for ' . static::class
                 . '. Try adding flush=1 to the test run.');
         }
-        return dirname($filename);
+        return dirname($filename ?? '');
     }
 
     /**
@@ -1912,8 +1912,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     {
         $base = Director::baseFolder();
         $path = $this->getCurrentAbsolutePath();
-        if (substr($path, 0, strlen($base)) == $base) {
-            $path = preg_replace('/^\/*/', '', substr($path, strlen($base)));
+        if (substr($path ?? '', 0, strlen($base ?? '')) == $base) {
+            $path = preg_replace('/^\/*/', '', substr($path ?? '', strlen($base ?? '')));
         }
         return $path;
     }
@@ -2255,7 +2255,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      */
     protected static function normaliseSQL($sql)
     {
-        return trim(preg_replace('/\s+/m', ' ', $sql));
+        return trim(preg_replace('/\s+/m', ' ', $sql ?? '') ?? '');
     }
 
     /**
@@ -2353,7 +2353,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $request = CLIRequestBuilder::createFromEnvironment();
 
             $app = new HTTPApplication($kernel);
-            $flush = array_key_exists('flush', $request->getVars());
+            $flush = array_key_exists('flush', $request->getVars() ?? []);
 
             // Custom application
             $res = $app->execute($request, function (HTTPRequest $request) {
@@ -2378,7 +2378,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             // Allow flush from the command line in the absence of HTTPApplication's special sauce
             $flush = false;
             foreach ($_SERVER['argv'] as $arg) {
-                if (preg_match('/^(--)?flush(=1)?$/', $arg)) {
+                if (preg_match('/^(--)?flush(=1)?$/', $arg ?? '')) {
                     $flush = true;
                 }
             }
@@ -2536,8 +2536,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected function useTestTheme($themeBaseDir, $theme, $callback)
     {
         Config::nest();
-        if (strpos($themeBaseDir, BASE_PATH) === 0) {
-            $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
+        if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
+            $themeBaseDir = substr($themeBaseDir ?? '', strlen(BASE_PATH));
         }
         SSViewer::config()->update('theme_enabled', true);
         SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
@@ -2565,7 +2565,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         return array_map(function ($fixtureFilePath) {
             return $this->resolveFixturePath($fixtureFilePath);
-        }, $fixtureFiles);
+        }, $fixtureFiles ?? []);
     }
 
     /**
@@ -2596,7 +2596,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected function resolveFixturePath($fixtureFilePath)
     {
         // support loading via composer name path.
-        if (strpos($fixtureFilePath, ':') !== false) {
+        if (strpos($fixtureFilePath ?? '', ':') !== false) {
             return ModuleResourceLoader::singleton()->resolvePath($fixtureFilePath);
         }
 
@@ -2650,7 +2650,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         foreach ($this->getExtraControllers() as $class) {
             $controllerInst = Controller::singleton($class);
             $link = Director::makeRelative($controllerInst->Link());
-            $route = rtrim($link, '/') . '//$Action/$ID/$OtherID';
+            $route = rtrim($link ?? '', '/') . '//$Action/$ID/$OtherID';
             $rules[$route] = $class;
         }
         return $rules;

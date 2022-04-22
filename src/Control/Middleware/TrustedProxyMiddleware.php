@@ -146,7 +146,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
             foreach ($this->getProxyHostHeaders() as $header) {
                 $hostList = $request->getHeader($header);
                 if ($hostList) {
-                    $request->addHeader('Host', strtok($hostList, ','));
+                    $request->addHeader('Host', strtok($hostList ?? '', ','));
                     break;
                 }
             }
@@ -155,7 +155,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
             foreach ($this->getProxySchemeHeaders() as $header) {
                 $headerValue = $request->getHeader($header);
                 if ($headerValue) {
-                    $request->setScheme(strtolower($headerValue));
+                    $request->setScheme(strtolower($headerValue ?? ''));
                     break;
                 }
             }
@@ -199,7 +199,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         // Validate IP address
         $ip = $request->getIP();
         if ($ip) {
-            return IPUtils::checkIP($ip, preg_split('/\s*,\s*/', $trustedIPs));
+            return IPUtils::checkIP($ip, preg_split('/\s*,\s*/', $trustedIPs ?? ''));
         }
 
         return false;
@@ -216,7 +216,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
     {
         // Sometimes the IP from a load balancer could be "x.x.x.x, y.y.y.y, z.z.z.z"
         // so we need to find the most likely candidate
-        $ips = preg_split('/\s*,\s*/', $headerValue);
+        $ips = preg_split('/\s*,\s*/', $headerValue ?? '');
 
         // Prioritise filters
         $filters = [
@@ -227,7 +227,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         foreach ($filters as $filter) {
             // Find best IP
             foreach ($ips as $ip) {
-                if (filter_var($ip, FILTER_VALIDATE_IP, $filter)) {
+                if (filter_var($ip, FILTER_VALIDATE_IP, $filter ?? 0)) {
                     return $ip;
                 }
             }

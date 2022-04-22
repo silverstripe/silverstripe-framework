@@ -76,7 +76,7 @@ class DBDate extends DBField
             if (is_null($value)) {
                 return null;
             }
-            $source = strtotime($value); // convert string to timestamp
+            $source = strtotime($value ?? ''); // convert string to timestamp
         }
         if ($value === false) {
             return false;
@@ -275,8 +275,8 @@ class DBDate extends DBField
         }
 
         // Replace {o} with ordinal representation of day of the month
-        if (strpos($format, '{o}') !== false) {
-            $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format);
+        if (strpos($format ?? '', '{o}') !== false) {
+            $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format ?? '');
         }
 
         $formatter = $this->getCustomFormatter($locale, $format);
@@ -291,7 +291,7 @@ class DBDate extends DBField
     public function getTimestamp()
     {
         if ($this->value) {
-            return strtotime($this->value);
+            return strtotime($this->value ?? '');
         }
         return 0;
     }
@@ -525,7 +525,7 @@ class DBDate extends DBField
      */
     public function InPast()
     {
-        return strtotime($this->value) < DBDatetime::now()->getTimestamp();
+        return strtotime($this->value ?? '') < DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -534,7 +534,7 @@ class DBDate extends DBField
      */
     public function InFuture()
     {
-        return strtotime($this->value) > DBDatetime::now()->getTimestamp();
+        return strtotime($this->value ?? '') > DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -561,7 +561,7 @@ class DBDate extends DBField
      */
     public function modify(string $adjustment): self
     {
-        $modifiedTime = strtotime($adjustment, $this->getTimestamp());
+        $modifiedTime = strtotime($adjustment ?? '', $this->getTimestamp());
         return $this->setValue($modifiedTime);
     }
 
@@ -572,7 +572,7 @@ class DBDate extends DBField
      */
     public function URLDate()
     {
-        return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE));
+        return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
@@ -598,7 +598,7 @@ class DBDate extends DBField
             return null;
         }
         // Validate date
-        if (!checkdate($month, $day, $year)) {
+        if (!checkdate($month ?? 0, $day ?? 0, $year ?? 0)) {
             throw new InvalidArgumentException(
                 "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
@@ -619,7 +619,7 @@ class DBDate extends DBField
         // split on known delimiters (. / -)
         if (!preg_match(
             '#^(?<first>\\d+)[-/\\.](?<second>\\d+)[-/\\.](?<third>\\d+)(?<time>.*)$#',
-            $value,
+            $value ?? '',
             $matches
         )) {
             throw new InvalidArgumentException(
@@ -634,7 +634,7 @@ class DBDate extends DBField
         ];
         // Flip d-m-y to y-m-d
         if ($parts[0] < 1000 && $parts[2] > 1000) {
-            $parts = array_reverse($parts);
+            $parts = array_reverse($parts ?? []);
         }
         if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
             throw new InvalidArgumentException(

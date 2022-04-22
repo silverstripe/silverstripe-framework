@@ -101,7 +101,7 @@ class PopoverField extends FieldGroup
     {
         $valid = ['top', 'right', 'bottom', 'left'];
 
-        if (!in_array($placement, $valid)) {
+        if (!in_array($placement, $valid ?? [])) {
             throw new InvalidArgumentException(
                 'Invalid placement value. Valid: top, left, bottom, right'
             );

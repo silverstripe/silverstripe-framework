@@ -32,10 +32,10 @@ class GroupedListTest extends SapphireTest
 
         $grouped = $list->groupBy('Name');
 
-        $this->assertEquals(3, count($grouped));
-        $this->assertEquals(3, count($grouped['AAA']));
-        $this->assertEquals(3, count($grouped['BBB']));
-        $this->assertEquals(2, count($grouped['CCC']));
+        $this->assertEquals(3, count($grouped ?? []));
+        $this->assertEquals(3, count($grouped['AAA'] ?? []));
+        $this->assertEquals(3, count($grouped['BBB'] ?? []));
+        $this->assertEquals(2, count($grouped['CCC'] ?? []));
     }
 
     public function testGroupedBy()
@@ -59,9 +59,9 @@ class GroupedListTest extends SapphireTest
         $first   = $grouped->first();
         $last    = $grouped->last();
 
-        $this->assertEquals(3, count($first->Children));
+        $this->assertEquals(3, count($first->Children ?? []));
         $this->assertEquals('AAA', $first->Name);
-        $this->assertEquals(2, count($last->Children));
+        $this->assertEquals(2, count($last->Children ?? []));
         $this->assertEquals('CCC', $last->Name);
     }
 
@@ -139,22 +139,22 @@ class GroupedListTest extends SapphireTest
             $children = $group->Children;
             $childGroups = $children->GroupedBy('Number');
 
-            $this->assertEquals(3, count($childGroups));
+            $this->assertEquals(3, count($childGroups ?? []));
 
             $first = $childGroups->first();
             $last  = $childGroups->last();
 
             if ($group->Name == 'AAA') {
-                $this->assertEquals(3, count($first->Children));
+                $this->assertEquals(3, count($first->Children ?? []));
                 $this->assertEquals('111', $first->Number);
-                $this->assertEquals(2, count($last->Children));
+                $this->assertEquals(2, count($last->Children ?? []));
                 $this->assertEquals('333', $last->Number);
             }
 
             if ($group->Name == 'BBB') {
-                $this->assertEquals(2, count($first->Children));
+                $this->assertEquals(2, count($first->Children ?? []));
                 $this->assertEquals('111', $first->Number);
-                $this->assertEquals(1, count($last->Children));
+                $this->assertEquals(1, count($last->Children ?? []));
                 $this->assertEquals('333', $last->Number);
             }
         }

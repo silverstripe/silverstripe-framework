@@ -44,9 +44,9 @@ class PasswordEncryptorTest extends SapphireTest
             ['test' => [TestEncryptor::class => null]]
         );
         $encryptors = PasswordEncryptor::get_encryptors();
-        $this->assertContains('test', array_keys($encryptors));
+        $this->assertContains('test', array_keys($encryptors ?? []));
         $encryptor = $encryptors['test'];
-        $this->assertStringContainsString(TestEncryptor::class, key($encryptor));
+        $this->assertStringContainsString(TestEncryptor::class, key($encryptor ?? []));
     }
 
     public function testEncryptorPHPHashWithArguments()
@@ -90,7 +90,7 @@ class PasswordEncryptorTest extends SapphireTest
         $password = 'mypassword';
 
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertTrue(
             $e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x'
@@ -102,7 +102,7 @@ class PasswordEncryptorTest extends SapphireTest
 
         PasswordEncryptor_Blowfish::set_cost(1);
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertNotEquals(1, PasswordEncryptor_Blowfish::get_cost());
         $this->assertEquals(4, PasswordEncryptor_Blowfish::get_cost());
@@ -113,7 +113,7 @@ class PasswordEncryptorTest extends SapphireTest
 
         PasswordEncryptor_Blowfish::set_cost(11);
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertEquals(11, PasswordEncryptor_Blowfish::get_cost());
 

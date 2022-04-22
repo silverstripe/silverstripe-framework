@@ -29,23 +29,23 @@ class HTMLEditorConfigTest extends SapphireTest
     {
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1');
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByArray()
     {
         $c = new TinyMCEConfig();
         $c->enablePlugins(['plugin1', 'plugin2']);
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByMultipleStringParameters()
     {
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1', 'plugin2');
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByArrayWithPaths()
@@ -69,33 +69,33 @@ class HTMLEditorConfigTest extends SapphireTest
             ]
         );
         $attributes = $c->getAttributes();
-        $config = json_decode($attributes['data-config'], true);
+        $config = json_decode($attributes['data-config'] ?? '', true);
         $plugins = $config['external_plugins'];
         $this->assertNotEmpty($plugins);
 
         // Plugin specified via relative url
-        $this->assertContains('plugin1', array_keys($plugins));
+        $this->assertContains('plugin1', array_keys($plugins ?? []));
         $this->assertEquals(
             'http://mysite.com/subdir/mypath/plugin1.js',
             $plugins['plugin1']
         );
 
         // Plugin specified via root-relative url
-        $this->assertContains('plugin2', array_keys($plugins));
+        $this->assertContains('plugin2', array_keys($plugins ?? []));
         $this->assertEquals(
             'http://mysite.com/anotherbase/mypath/plugin2.js',
             $plugins['plugin2']
         );
 
         // Plugin specified with absolute url
-        $this->assertContains('plugin3', array_keys($plugins));
+        $this->assertContains('plugin3', array_keys($plugins ?? []));
         $this->assertEquals(
             'https://www.google.com/plugin.js',
             $plugins['plugin3']
         );
 
         // Plugin specified with standard location
-        $this->assertContains('plugin4', array_keys($plugins));
+        $this->assertContains('plugin4', array_keys($plugins ?? []));
         $this->assertEquals(
             '/subdir/test/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
             $plugins['plugin4']
@@ -110,7 +110,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1');
         $c->disablePlugins('plugin1');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByArray()
@@ -118,8 +118,8 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->enablePlugins(['plugin1', 'plugin2']);
         $c->disablePlugins(['plugin1', 'plugin2']);
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByMultipleStringParameters()
@@ -127,8 +127,8 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1', 'plugin2');
         $c->disablePlugins('plugin1', 'plugin2');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByArrayWithPaths()
@@ -137,8 +137,8 @@ class HTMLEditorConfigTest extends SapphireTest
         $c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
         $c->disablePlugins(['plugin1', 'plugin2']);
         $plugins = $c->getPlugins();
-        $this->assertNotContains('plugin1', array_keys($plugins));
-        $this->assertNotContains('plugin2', array_keys($plugins));
+        $this->assertNotContains('plugin1', array_keys($plugins ?? []));
+        $this->assertNotContains('plugin2', array_keys($plugins ?? []));
     }
 
     public function testRequireJSIncludesAllConfigs()

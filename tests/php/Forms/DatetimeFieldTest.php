@@ -30,7 +30,7 @@ class DatetimeFieldTest extends SapphireTest
     protected function tearDown(): void
     {
         DBDatetime::clear_mock_now();
-        date_default_timezone_set($this->timezone);
+        date_default_timezone_set($this->timezone ?? '');
         parent::tearDown();
     }
 

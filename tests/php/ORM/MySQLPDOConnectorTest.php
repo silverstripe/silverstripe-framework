@@ -27,7 +27,7 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $config['database'] = 'information_schema';
         Config::inst()->set(MySQLDatabase::class, 'connection_collation', $defaultCollation);
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -55,7 +55,7 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $config['database'] = 'information_schema';
         Config::inst()->set(MySQLDatabase::class, 'connection_collation', $customCollation);
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -92,7 +92,7 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $config['database'] = 'information_schema';
         Config::inst()->set(MySQLDatabase::class, 'connection_collation', $collation);
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -119,7 +119,7 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $config['database'] = 'information_schema';
         Config::inst()->set(MySQLDatabase::class, 'connection_collation', $collation);
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 

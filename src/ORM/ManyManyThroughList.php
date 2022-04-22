@@ -73,8 +73,8 @@ class ManyManyThroughList extends RelationList
         $joinAlias = $this->manipulator->getJoinAlias();
         $prefix = $joinAlias . '_';
         foreach ($row as $key => $value) {
-            if (strpos($key, $prefix) === 0) {
-                $joinKey = substr($key, strlen($prefix));
+            if (strpos($key ?? '', $prefix ?? '') === 0) {
+                $joinKey = substr($key ?? '', strlen($prefix ?? ''));
                 $joinRow[$joinKey] = $value;
                 unset($row[$key]);
             }
@@ -197,7 +197,7 @@ class ManyManyThroughList extends RelationList
         if (!is_array($foreignIDs)) {
             $foreignIDs = [$foreignIDs];
         }
-        $foreignIDsToAdd = array_combine($foreignIDs, $foreignIDs);
+        $foreignIDsToAdd = array_combine($foreignIDs ?? [], $foreignIDs ?? []);
 
         // Update existing records
         $localKey = $this->manipulator->getLocalKey();
