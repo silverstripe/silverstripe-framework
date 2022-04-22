@@ -38,8 +38,10 @@ class DirectorTest extends SapphireTest
 
         // Ensure redirects enabled on all environments and global state doesn't affect the tests
         CanonicalURLMiddleware::singleton()
+            ->setForceSSL(null)
             ->setForceSSLDomain(null)
             ->setForceSSLPatterns([])
+            ->setForceWWW(null)
             ->setEnabledEnvs(true);
         $this->expectedRedirect = null;
     }
@@ -858,7 +860,10 @@ class DirectorTest extends SapphireTest
 
         $processor = new RequestProcessor([$filter]);
 
-        Injector::inst()->registerService($processor, RequestProcessor::class);
+        $middlewares = Director::singleton()->getMiddlewares();
+        $middlewares['RequestProcessorMiddleware'] = $processor;
+        Director::singleton()->setMiddlewares($middlewares);
+
         $response = Director::test('some-dummy-url');
         $this->assertEquals(404, $response->getStatusCode());
 
