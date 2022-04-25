@@ -470,7 +470,6 @@ class Director implements TemplateGlobalProvider
             // Default to respecting site base_url
             $parent = self::absoluteBaseURL();
         }
-        static::singleton()->extend('updateAbsoluteURLParent', $parent);
 
         // Map empty urls to relative slash and join to base
         if (empty($url) || $url === '.' || $url === './') {
