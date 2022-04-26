@@ -67,7 +67,8 @@ class MySQLiConnector extends DBConnector
         try {
             $success = $statement->prepare($sql);
         } catch (mysqli_sql_exception $e) {
-            throw new DatabaseException($e->getMessage());
+            $success = false;
+            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
         }
         return $statement;
     }
