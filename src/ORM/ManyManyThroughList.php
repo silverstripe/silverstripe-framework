@@ -130,27 +130,37 @@ class ManyManyThroughList extends RelationList
         // Find has_many row with a local key matching the given id
         $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
         $records = $hasManyList->filter($this->manipulator->getLocalKey(), $itemID);
-        $affectedIds = [];
 
         // Rather than simple un-associating the record (as in has_many list)
         // Delete the actual mapping row as many_many deletions behave.
         /** @var DataObject $record */
         foreach ($records as $record) {
-            $affectedIds[] = $record->ID;
             $record->delete();
         }
 
-        if ($this->removeCallbacks && $affectedIds) {
-            $this->removeCallbacks->call($this, $affectedIds);
+        if ($this->removeCallbacks && $itemID) {
+            $this->removeCallbacks->call($this, [$itemID]);
         }
     }
 
     public function removeAll()
     {
-        // Empty has_many table matching the current foreign key
-        $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
-        $affectedIds = $hasManyList->column('ID');
-        $hasManyList->removeAll();
+        // Get the IDs of records in the current list
+        $affectedIds = $this->limit(null)->column('ID');
+        if (empty($affectedIds)) {
+            return;
+        }
+
+        // Get the join records that apply for the current list
+        $records = $this->manipulator->getJoinClass()::get()->filter([
+            $this->manipulator->getForeignIDKey() => $this->getForeignID(),
+            $this->manipulator->getLocalKey() => $affectedIds,
+        ]);
+
+        /** @var DataObject $record */
+        foreach ($records as $record) {
+            $record->delete();
+        }
 
         if ($this->removeCallbacks && $affectedIds) {
             $this->removeCallbacks->call($this, $affectedIds);
