@@ -18,7 +18,8 @@ class Person extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        'Group' => PeopleGroup::class
+        'Group' => PeopleGroup::class,
+        'PolymorphicGroup' => DataObject::class,
     ];
 
     private static $many_many = [

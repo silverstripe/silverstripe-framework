@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests\GridField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
@@ -14,6 +15,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryControlle
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 
 /**
@@ -26,6 +28,7 @@ class GridFieldDetailFormTest extends FunctionalTest
     protected static $extra_dataobjects = [
         Person::class,
         PeopleGroup::class,
+        PolymorphicPeopleGroup::class,
         Category::class,
     ];
 
@@ -117,6 +120,30 @@ class GridFieldDetailFormTest extends FunctionalTest
             ->sort('Name')
             ->First();
         $this->assertEquals($count + 1, $group->People()->Count());
+    }
+
+    public function testAddFormWithPolymorphicHasOne()
+    {
+        // Log in for permissions check
+        $this->logInWithPermission('ADMIN');
+        // Prepare gridfield and other objects
+        $group = new PolymorphicPeopleGroup();
+        $group->write();
+        $gridField = $group->getCMSFields()->dataFieldByName('People');
+        $gridField->setForm(new Form());
+        $detailForm = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $record = new Person();
+
+        // Trigger creation of the item edit form
+        $reflectionDetailForm = new \ReflectionClass($detailForm);
+        $reflectionMethod = $reflectionDetailForm->getMethod('getItemRequestHandler');
+        $reflectionMethod->setAccessible(true);
+        $itemrequest = $reflectionMethod->invoke($detailForm, $gridField, $record, new Controller());
+        $itemrequest->ItemEditForm();
+
+        // The polymorphic values should be pre-loaded
+        $this->assertEquals(PolymorphicPeopleGroup::class, $record->PolymorphicGroupClass);
+        $this->assertEquals($group->ID, $record->PolymorphicGroupID);
     }
 
     public function testViewForm()
