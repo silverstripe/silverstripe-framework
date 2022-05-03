@@ -39,7 +39,7 @@ class TempFolder
         $user = '';
         if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
             $userDetails = posix_getpwuid(posix_getuid());
-            $user = $userDetails['name'];
+            $user = $userDetails['name'] ?? false;
         }
         if (!$user) {
             $user = Environment::getEnv('APACHE_RUN_USER');
