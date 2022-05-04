@@ -72,7 +72,7 @@ it:
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
   SilverStripe\Forms\FormField:
-    EXAMPLE: 'e.g. {format}'
+    EXAMPLE: 'p. es. {format}'
     NONE: nessuno
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Principale
