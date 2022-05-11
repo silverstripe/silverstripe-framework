@@ -288,6 +288,8 @@ de:
     db_LockedOutUntil: 'Gesperrt bis'
     db_Password: Passwort
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
+    KEEP_ME_SIGNED_IN: '{count} Tage lang angemeldet bleiben'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Sie bleiben auf diesem Gerät für {count} Tage angemeldet. Verwenden Sie diese Funktion nur, wenn Sie dem von Ihnen verwendeten Gerät vertrauen.'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS Benutzer Login Formular'
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'

@@ -217,7 +217,6 @@ en:
     GROUPNAME: 'Group name'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     HierarchyPermsError: 'Can''t assign parent group "{group}" with privileged permissions (requires ADMIN access)'
-    ValidationIdentifierAlreadyExists: 'A Group ({group}) already exists with the same {identifier}'
     Locked: 'Locked?'
     MEMBERS: Members
     NEWGROUP: 'New Group'
@@ -233,6 +232,7 @@ en:
     RolesAddEditLink: 'Manage roles'
     SINGULARNAME: Group
     Sort: 'Sort Order'
+    ValidationIdentifierAlreadyExists: 'A Group ({group}) already exists with the same {identifier}'
     has_many_Permissions: Permissions
     many_many_Members: Members
   SilverStripe\Security\LoginAttempt:

@@ -288,6 +288,8 @@ nl:
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
+    KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de inloggegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: Inlogformulier
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten'
@@ -345,8 +347,8 @@ nl:
     PLURALNAME: 'Versleutelde logins'
     PLURALS:
       one: 'Een versleutelde login'
-      other: '{count} versleutelde logins'
-    SINGULARNAME: 'Versleutelde login'
+      other: '{count} loginsleutels'
+    SINGULARNAME: Loginsleutel
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'
@@ -355,7 +357,7 @@ nl:
     CONFIRMLOGOUT: 'Klik op onderstaande knop om uit te loggen.'
     ENTERNEWPASSWORD: 'Voer een nieuw wachtwoord in.'
     ERRORPASSWORDPERMISSION: 'U moet ingelogd zijn om uw wachtwoord te kunnen veranderen!'
-    LOGIN: 'Meld aan'
+    LOGIN: Inloggen
     LOGOUT: Uitloggen
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
