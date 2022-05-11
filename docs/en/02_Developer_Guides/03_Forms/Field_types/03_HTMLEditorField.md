@@ -265,6 +265,19 @@ SilverStripe\AssetAdmin\Forms\RemoteFileFormFactory:
 HtmlEditorConfig::get('cms')->disablePlugins('ssembed');
 ```
 
+Use the following config if you need to send outbound requests through a proxy:
+
+```yaml
+---
+Name: myembed
+After: coreoembed
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\Http\Client\ClientInterface.oembed:
+    constructor:
+      - proxy: '111.222.333.444:55'
+```
+
 ## Limiting oembed URLs
 
 HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when

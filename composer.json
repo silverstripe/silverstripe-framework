@@ -60,7 +60,8 @@
     },
     "conflict": {
         "egulias/email-validator": "^2",
-        "phpunit/phpunit": "^6 || ^7 || ^8"
+        "phpunit/phpunit": "^6 || ^7 || ^8",
+        "cwp/cwp-core": "<2.11.0"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
