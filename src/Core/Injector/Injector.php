@@ -524,15 +524,30 @@ class Injector implements ContainerInterface
         }
 
         // Evaluate constants surrounded by back ticks
-        if (preg_match('/^`(?<name>[^`]+)`$/', $value ?? '', $matches)) {
-            $envValue = Environment::getEnv($matches['name']);
-            if ($envValue !== false) {
-                $value = $envValue;
-            } elseif (defined($matches['name'] ?? '')) {
-                $value = constant($matches['name'] ?? '');
-            } else {
-                $value = null;
+        $hasBacticks = false;
+        $allMissing = true;
+        // $value must start and end with backticks, though there can be multiple
+        // things being subsituted within $value e.g. "`VAR_ONE`:`VAR_TWO`:`VAR_THREE`"
+        if (preg_match('/^`.+`$/', $value ?? '')) {
+            $hasBacticks = true;
+            preg_match_all('/`(?<name>[^`]+)`/', $value, $matches);
+            foreach ($matches['name'] as $name) {
+                $envValue = Environment::getEnv($name);
+                $val = '';
+                if ($envValue !== false) {
+                    $val = $envValue;
+                } elseif (defined($name)) {
+                    $val = constant($name);
+                }
+                $value = str_replace("`$name`", $val, $value);
+                if ($val) {
+                    $allMissing = false;
+                }
             }
+        }
+        // silverstripe sometimes explictly expects a null value rather than just an empty string
+        if ($hasBacticks && $allMissing && $value === '') {
+            return null;
         }
 
         return $value;

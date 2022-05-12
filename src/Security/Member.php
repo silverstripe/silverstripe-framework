@@ -106,7 +106,7 @@ class Member extends DataObject
      * @config
      * @var boolean
      */
-    private static $notify_password_change = false;
+    private static $notify_password_change = true;
 
     /**
      * All searchable database columns
