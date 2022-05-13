@@ -248,6 +248,22 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     }
 
     /**
+     * Test safe version of sleep()
+     *
+     * @param int $seconds
+     * @return DBDatetime
+     * @throws Exception
+     */
+    public static function mockSleep(int $seconds): DBDatetime
+    {
+        $now = DBDatetime::now();
+        $now->modify(sprintf('+ %d seconds', $seconds));
+        DBDatetime::set_mock_now($now);
+
+        return $now;
+    }
+
+    /**
      * Run a callback with specific time, original mock value is retained after callback
      *
      * @param DBDatetime|string $time
