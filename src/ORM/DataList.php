@@ -1174,7 +1174,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function removeAll()
     {
-        foreach ($this as $item) {
+        foreach ($this->getGenerator() as $item) {
             $this->remove($item);
         }
         return $this;
