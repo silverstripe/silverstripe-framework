@@ -459,6 +459,17 @@ class DataListTest extends SapphireTest
     }
 
     /**
+     * Test DataList->removeAll()
+     */
+    public function testRemoveAll()
+    {
+        $list = Team::get();
+        $this->assertGreaterThan(0, $list->count());
+        $list->removeAll();
+        $this->assertCount(0, $list);
+    }
+
+    /**
      * Test DataList->canSortBy()
      */
     public function testCanSortBy()
