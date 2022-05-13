@@ -30,6 +30,14 @@ class PolymorphicHasManyList extends HasManyList
     }
 
     /**
+     * Gets the field name which holds the related object class.
+     */
+    public function getForeignClassKey(): string
+    {
+        return $this->classForeignKey;
+    }
+
+    /**
      * Create a new PolymorphicHasManyList relation list.
      *
      * @param string $dataClass The class of the DataObjects that this will list.

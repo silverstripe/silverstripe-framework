@@ -18,6 +18,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\PolymorphicHasManyList;
 use SilverStripe\ORM\RelationList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
@@ -201,6 +202,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $key = $list->getForeignKey();
             $id = $list->getForeignID();
             $this->record->$key = $id;
+            // If the list is polymorphic, add the foreign class as well.
+            if ($list instanceof PolymorphicHasManyList) {
+                $classKey = $list->getForeignClassKey();
+                $class = $list->getForeignClass();
+                $this->record->$classKey = $class;
+            }
         }
 
         if (!$this->record->canView()) {
