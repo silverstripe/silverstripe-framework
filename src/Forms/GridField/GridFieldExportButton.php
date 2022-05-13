@@ -234,7 +234,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
 
                         $value = $columnHeader($relObj);
-                    } elseif ($gridFieldColumnsComponent && array_key_exists($columnSource, $columnsHandled)) {
+                    } elseif ($gridFieldColumnsComponent && in_array($columnSource, $columnsHandled)) {
                         $value = strip_tags(
                             $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource)
                         );
