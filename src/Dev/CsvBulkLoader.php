@@ -68,9 +68,6 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processAll($filepath, $preview = false)
     {
-        $previousDetectLE = ini_get('auto_detect_line_endings');
-        ini_set('auto_detect_line_endings', true);
-
         $this->extend('onBeforeProcessAll', $filepath, $preview);
 
         $result = BulkLoader_Result::create();
@@ -91,8 +88,8 @@ class CsvBulkLoader extends BulkLoader
             $tabExtractor = function ($row, $rowOffset) {
                 foreach ($row as &$item) {
                     // [SS-2017-007] Ensure all cells with leading tab and then [@=+] have the tab removed on import
-                    if (preg_match("/^\t[\-@=\+]+.*/", $item)) {
-                        $item = ltrim($item, "\t");
+                    if (preg_match("/^\t[\-@=\+]+.*/", $item ?? '')) {
+                        $item = ltrim($item ?? '', "\t");
                     }
                 }
                 return $row;
@@ -107,8 +104,8 @@ class CsvBulkLoader extends BulkLoader
                         if ($column == $renamedColumn) {
                             continue;
                         }
-                        if (array_key_exists($column, $row)) {
-                            if (strpos($renamedColumn, '_ignore_') !== 0) {
+                        if (array_key_exists($column, $row ?? [])) {
+                            if (strpos($renamedColumn ?? '', '_ignore_') !== 0) {
                                 $row[$renamedColumn] = $row[$column];
                             }
                             unset($row[$column]);
@@ -144,8 +141,6 @@ class CsvBulkLoader extends BulkLoader
                 $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
             }
             print $failedMessage . PHP_EOL;
-        } finally {
-            ini_set('auto_detect_line_endings', $previousDetectLE);
         }
 
         $this->extend('onAfterProcessAll', $result, $preview);
@@ -157,7 +152,7 @@ class CsvBulkLoader extends BulkLoader
     {
         $map = [];
         foreach ($this->columnMap as $column => $newColumn) {
-            if (strpos($newColumn, "->") === 0) {
+            if (strpos($newColumn ?? '', "->") === 0) {
                 $map[$column] = $column;
             } elseif (is_null($newColumn)) {
                 // the column map must consist of unique scalar values
@@ -182,9 +177,6 @@ class CsvBulkLoader extends BulkLoader
     protected function splitFile($path, $lines = null)
     {
         Deprecation::notice('5.0', 'splitFile is deprecated, please process files using a stream');
-        $previous = ini_get('auto_detect_line_endings');
-
-        ini_set('auto_detect_line_endings', true);
 
         if (!is_int($lines)) {
             $lines = $this->config()->get("lines");
@@ -192,14 +184,14 @@ class CsvBulkLoader extends BulkLoader
 
         $new = $this->getNewSplitFileName();
 
-        $to = fopen($new, 'w+');
-        $from = fopen($path, 'r');
+        $to = fopen($new ?? '', 'w+');
+        $from = fopen($path ?? '', 'r');
 
         $header = null;
 
         if ($this->hasHeaderRow) {
             $header = fgets($from);
-            fwrite($to, $header);
+            fwrite($to, $header ?? '');
         }
 
         $files = [];
@@ -208,7 +200,7 @@ class CsvBulkLoader extends BulkLoader
         $count = 0;
 
         while (!feof($from)) {
-            fwrite($to, fgets($from));
+            fwrite($to, fgets($from) ?? '');
 
             $count++;
 
@@ -218,11 +210,11 @@ class CsvBulkLoader extends BulkLoader
                 // get a new temporary file name, to write the next lines to
                 $new = $this->getNewSplitFileName();
 
-                $to = fopen($new, 'w+');
+                $to = fopen($new ?? '', 'w+');
 
                 if ($this->hasHeaderRow) {
                     // add the headers to the new file
-                    fwrite($to, $header);
+                    fwrite($to, $header ?? '');
                 }
 
                 $files[] = $new;
@@ -230,10 +222,7 @@ class CsvBulkLoader extends BulkLoader
                 $count = 0;
             }
         }
-
         fclose($to);
-
-        ini_set('auto_detect_line_endings', $previous);
 
         return $files;
     }
@@ -244,7 +233,7 @@ class CsvBulkLoader extends BulkLoader
     protected function getNewSplitFileName()
     {
         Deprecation::notice('5.0', 'getNewSplitFileName is deprecated, please name your files yourself');
-        return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class), true) . '.csv';
+        return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class) ?? '', true) . '.csv';
     }
 
     /**
@@ -271,7 +260,7 @@ class CsvBulkLoader extends BulkLoader
             // same callback
             $map = [];
             foreach ($this->columnMap as $k => $v) {
-                if (strpos($v, "->") === 0) {
+                if (strpos($v ?? '', "->") === 0) {
                     $map[$k] = $k;
                 } else {
                     $map[$k] = $v;
@@ -347,9 +336,9 @@ class CsvBulkLoader extends BulkLoader
                     $obj->write();
                     $obj->flushCache(); // avoid relation caching confusion
                 }
-            } elseif (strpos($fieldName, '.') !== false) {
+            } elseif (strpos($fieldName ?? '', '.') !== false) {
                 // we have a relation column with dot notation
-                [$relationName, $columnName] = explode('.', $fieldName);
+                [$relationName, $columnName] = explode('.', $fieldName ?? '');
                 // always gives us an component (either empty or existing)
                 $relationObj = $obj->getComponent($relationName);
                 if (!$preview) {
@@ -376,8 +365,8 @@ class CsvBulkLoader extends BulkLoader
             // look up the mapping to see if this needs to map to callback
             $mapped = $this->columnMap && isset($this->columnMap[$fieldName]);
 
-            if ($mapped && strpos($this->columnMap[$fieldName], '->') === 0) {
-                $funcName = substr($this->columnMap[$fieldName], 2);
+            if ($mapped && strpos($this->columnMap[$fieldName] ?? '', '->') === 0) {
+                $funcName = substr($this->columnMap[$fieldName] ?? '', 2);
 
                 $this->$funcName($obj, $val, $record);
             } elseif ($obj->hasMethod("import{$fieldName}")) {

@@ -271,7 +271,7 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertCount(1, LoginAttempt::get());
         $attempt = LoginAttempt::get()->first();
         $this->assertEmpty($attempt->Email); // Doesn't store potentially sensitive data
-        $this->assertEquals(sha1($email), $attempt->EmailHashed);
+        $this->assertEquals(sha1($email ?? ''), $attempt->EmailHashed);
         $this->assertEquals(LoginAttempt::FAILURE, $attempt->Status);
     }
 

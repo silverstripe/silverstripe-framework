@@ -12,10 +12,10 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
-use SilverStripe\ORM\Filters\SearchFilter;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -241,7 +241,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
 
         $params = [];
         foreach ($searchFields as $searchField) {
-            $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:StartsWith";
+            $name = (strpos($searchField ?? '', ':') !== false) ? $searchField : "$searchField:StartsWith";
             $params[$name] = $searchStr;
         }
 
@@ -251,7 +251,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
             $results = $this->searchList;
         } else {
             $results = DataList::create($dataClass)
-                ->sort(strtok($searchFields[0], ':'), 'ASC');
+                ->sort(strtok($searchFields[0] ?? '', ':'), 'ASC');
         }
 
         // Apply baseline filtering and limits which should hold regardless of any customisations
@@ -342,12 +342,12 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         if ($fieldSpecs = $obj->searchableFields()) {
             $customSearchableFields = $obj->config()->get('searchable_fields');
             foreach ($fieldSpecs as $name => $spec) {
-                if (is_array($spec) && array_key_exists('filter', $spec)) {
+                if (is_array($spec) && array_key_exists('filter', $spec ?? [])) {
                     // The searchableFields() spec defaults to PartialMatch,
                     // so we need to check the original setting.
                     // If the field is defined $searchable_fields = array('MyField'),
                     // then default to StartsWith filter, which makes more sense in this context.
-                    if (!$customSearchableFields || array_search($name, $customSearchableFields)) {
+                    if (!$customSearchableFields || array_search($name, $customSearchableFields ?? []) !== false) {
                         $filter = 'StartsWith';
                     } else {
                         $filterName = $spec['filter'];
@@ -356,12 +356,12 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
                             $filterName = get_class($filterName);
                         }
                         // It can be a fully qualified class name
-                        if (strpos($filterName, '\\') !== false) {
-                            $filterNameParts = explode("\\", $filterName);
+                        if (strpos($filterName ?? '', '\\') !== false) {
+                            $filterNameParts = explode("\\", $filterName ?? '');
                             // We expect an alias matching the class name without namespace, see #coresearchaliases
                             $filterName = array_pop($filterNameParts);
                         }
-                        $filter = preg_replace('/Filter$/', '', $filterName);
+                        $filter = preg_replace('/Filter$/', '', $filterName ?? '');
                     }
                     $fields[] = "{$name}:{$filter}";
                 } else {
@@ -397,7 +397,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
             $labels = [];
             if ($searchFields) {
                 foreach ($searchFields as $searchField) {
-                    $searchField = explode(':', $searchField);
+                    $searchField = explode(':', $searchField ?? '');
                     $label = singleton($dataClass)->fieldLabel($searchField[0]);
                     if ($label) {
                         $labels[] = $label;

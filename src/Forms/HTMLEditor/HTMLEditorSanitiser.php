@@ -70,7 +70,7 @@ class HTMLEditorSanitiser
      */
     protected function patternToRegex($str)
     {
-        return '/^' . preg_replace('/([?+*])/', '.$1', $str) . '$/';
+        return '/^' . preg_replace('/([?+*])/', '.$1', $str ?? '') . '$/';
     }
 
     /**
@@ -87,8 +87,8 @@ class HTMLEditorSanitiser
         $attrRuleRegExp = '/^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/';
         $hasPatternsRegExp = '/[*?+]/';
 
-        foreach (explode(',', $validElements) as $validElement) {
-            if (preg_match($elementRuleRegExp, $validElement, $matches)) {
+        foreach (explode(',', $validElements ?? '') as $validElement) {
+            if (preg_match($elementRuleRegExp ?? '', $validElement ?? '', $matches)) {
                 $prefix = isset($matches[1]) ? $matches[1] : null;
                 $elementName = isset($matches[2]) ? $matches[2] : null;
                 $outputName = isset($matches[3]) ? $matches[3] : null;
@@ -114,8 +114,8 @@ class HTMLEditorSanitiser
 
                 // Attributes defined
                 if ($attrData) {
-                    foreach (explode('|', $attrData) as $attr) {
-                        if (preg_match($attrRuleRegExp, $attr, $matches)) {
+                    foreach (explode('|', $attrData ?? '') as $attr) {
+                        if (preg_match($attrRuleRegExp ?? '', $attr ?? '', $matches)) {
                             $attr = new stdClass();
 
                             $attrType = isset($matches[1]) ? $matches[1] : null;
@@ -144,12 +144,12 @@ class HTMLEditorSanitiser
                                     $attr->forcedValue = $value;
                                 } elseif ($prefix === '<') {
                                     // Required values
-                                    $attr->validValues = explode('?', $value);
+                                    $attr->validValues = explode('?', $value ?? '');
                                 }
                             }
 
                             // Check for attribute patterns
-                            if (preg_match($hasPatternsRegExp, $attrName)) {
+                            if (preg_match($hasPatternsRegExp ?? '', $attrName ?? '')) {
                                 $attr->pattern = $this->patternToRegex($attrName);
                                 $element->attributePatterns[] = $attr;
                             } else {
@@ -171,7 +171,7 @@ class HTMLEditorSanitiser
                 }
 
                 // Add pattern or exact element
-                if (preg_match($hasPatternsRegExp, $elementName)) {
+                if (preg_match($hasPatternsRegExp ?? '', $elementName ?? '')) {
                     $element->pattern = $this->patternToRegex($elementName);
                     $this->elementPatterns[] = $element;
                 } else {
@@ -192,7 +192,7 @@ class HTMLEditorSanitiser
             return $this->elements[$tag];
         }
         foreach ($this->elementPatterns as $element) {
-            if (preg_match($element->pattern, $tag)) {
+            if (preg_match($element->pattern ?? '', $tag ?? '')) {
                 return $element;
             }
         }
@@ -212,7 +212,7 @@ class HTMLEditorSanitiser
             return $elementRule->attributes[$name];
         }
         foreach ($elementRule->attributePatterns as $attribute) {
-            if (preg_match($attribute->pattern, $name)) {
+            if (preg_match($attribute->pattern ?? '', $name ?? '')) {
                 return $attribute;
             }
         }
@@ -271,7 +271,7 @@ class HTMLEditorSanitiser
         }
 
         // If the rule has a set of valid values, check them to see if this attribute is one
-        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues)) {
+        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues ?? [])) {
             return false;
         }
 

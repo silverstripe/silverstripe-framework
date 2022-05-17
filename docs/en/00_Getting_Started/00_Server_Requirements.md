@@ -10,9 +10,9 @@ Silverstripe CMS needs to be installed on a web server. Content authors and webs
 to access a web-based GUI to do their day-to-day work. Website designers and developers require access to the files on
 the server to update templates, website logic, and perform upgrades or maintenance.
 
-## PHP {php}
+## PHP
 
-* PHP >=7.3
+* PHP >=7.4
 * PHP extensions: `ctype`, `dom`, `fileinfo`, `hash`, `intl`, `mbstring`, `session`, `simplexml`, `tokenizer`, `xml`
 * PHP configuration: `memory_limit` with at least `48M`
 * PHP extension for image manipulation: Either `gd` or `imagick`
@@ -97,6 +97,11 @@ If you aren't explicitly [packaging](#building-packaging-deployment)
 your Silverstripe CMS project during your deployment process, additional write access may be required to generate supporting
 files on the fly. This is not recommended, because it can lead to extended execution times as well as cause
 inconsistencies between multiple server environments when manifest and cache storage isn't shared between servers.
+
+Note that permissions may be required for other directories for specific functionality - for example graphql v4 requires
+write access to the special `.graphql-generated` directory by default, and if you use the
+[i18nTextCollector](api:SilverStripe\i18n\TextCollection\i18nTextCollector) you will need to provide write access to the
+relevant i18n `lang` directories.
 
 ### Assets
 

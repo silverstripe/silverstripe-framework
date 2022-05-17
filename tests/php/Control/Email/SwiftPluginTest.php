@@ -45,18 +45,18 @@ class SwiftPluginTest extends SapphireTest
         $headers = $email->getSwiftMessage()->getHeaders();
 
         $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
+        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('original-from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('original-from@example.com', array_keys($email->getFrom() ?? []));
 
         $this->assertTrue($headers->has('X-Original-To'));
         $this->assertTrue($headers->has('X-Original-Cc'));
         $this->assertTrue($headers->has('X-Original-Bcc'));
         $this->assertFalse($headers->has('X-Original-From'));
 
-        $originalTo = array_keys($headers->get('X-Original-To')->getFieldBodyModel());
-        $originalCc = array_keys($headers->get('X-Original-Cc')->getFieldBodyModel());
-        $originalBcc = array_keys($headers->get('X-Original-Bcc')->getFieldBodyModel());
+        $originalTo = array_keys($headers->get('X-Original-To')->getFieldBodyModel() ?? []);
+        $originalCc = array_keys($headers->get('X-Original-Cc')->getFieldBodyModel() ?? []);
+        $originalBcc = array_keys($headers->get('X-Original-Bcc')->getFieldBodyModel() ?? []);
 
         $this->assertCount(1, $originalTo);
         $this->assertContains('original-to@example.com', $originalTo);
@@ -80,10 +80,10 @@ class SwiftPluginTest extends SapphireTest
         $this->assertTrue($headers->has('X-Original-From'));
 
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
 
         $this->assertCount(1, $headers->get('X-Original-From')->getFieldBodyModel());
-        $this->assertContains('original-from@example.com', array_keys($headers->get('X-Original-From')->getFieldBodyModel()));
+        $this->assertContains('original-from@example.com', array_keys($headers->get('X-Original-From')->getFieldBodyModel() ?? []));
     }
 
     public function testCCAllEmailsTo()
@@ -93,8 +93,8 @@ class SwiftPluginTest extends SapphireTest
         $this->getMailer()->send($email->getSwiftMessage());
 
         $this->assertCount(2, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC()));
-        $this->assertContains('original-cc@example.com', array_keys($email->getCC()));
+        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
+        $this->assertContains('original-cc@example.com', array_keys($email->getCC() ?? []));
     }
 
     public function testBCCAllEmailsTo()
@@ -104,7 +104,7 @@ class SwiftPluginTest extends SapphireTest
         $this->getMailer()->send($email->getSwiftMessage());
 
         $this->assertCount(2, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
-        $this->assertContains('original-bcc@example.com', array_keys($email->getBCC()));
+        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
+        $this->assertContains('original-bcc@example.com', array_keys($email->getBCC() ?? []));
     }
 }

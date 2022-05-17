@@ -125,9 +125,9 @@ class ExactMatchFilter extends SearchFilter
         if (empty($values)) {
             throw new \InvalidArgumentException("Cannot filter {$field} against an empty set");
         }
-        $hasNull = in_array(null, $values, true);
+        $hasNull = in_array(null, $values ?? [], true);
         if ($hasNull) {
-            $values = array_filter($values, function ($value) {
+            $values = array_filter($values ?? [], function ($value) {
                 return $value !== null;
             });
         }
@@ -155,11 +155,11 @@ class ExactMatchFilter extends SearchFilter
                 $this->getCaseSensitive(),
                 true
             );
-            $count = count($values);
+            $count = count($values ?? []);
             if ($count > 1) {
                 $connective = $inclusive ? ' OR ' : ' AND ';
-                $conditions = array_fill(0, $count, $comparisonClause);
-                $predicate = implode($connective, $conditions);
+                $conditions = array_fill(0, $count ?? 0, $comparisonClause);
+                $predicate = implode($connective ?? '', $conditions);
             } else {
                 $predicate = $comparisonClause;
             }

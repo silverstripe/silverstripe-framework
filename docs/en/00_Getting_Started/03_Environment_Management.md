@@ -58,13 +58,16 @@ Environment::setEnv('API_KEY', 'AABBCCDDEEFF012345');
 
 ### Using environment variables in config
 
-To use environment variables in `.yaml` configs you can reference them using backticks.
+To use environment variables in `.yaml` configs you can reference them using backticks. You can have multiple
+environment variables within a single value, though the overall value must start and end with backticks.
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
     MyServiceClass:
         properties:
-            MyProperty: '`ENV_VAR_HERE`'
+            MyProperty: '`ENV_VAR_ONE`'
+            MultiValueProperty: '`ENV_VAR_ONE`:`ENV_VAR_TWO`'
+            ThisWillNotSubstitute: 'lorem `REGULAR_TEXT` ipsum'
 ```
 
 [info]

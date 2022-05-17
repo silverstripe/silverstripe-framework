@@ -49,7 +49,7 @@ class ManifestFileFinder extends FileFinder
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
         if ($inVendor) {
             // Skip nested vendor folders (e.g. vendor/silverstripe/framework/vendor)
-            if ($depth == 4 && basename($pathname) === self::VENDOR_DIR) {
+            if ($depth == 4 && basename($pathname ?? '') === self::VENDOR_DIR) {
                 return false;
             }
 
@@ -60,7 +60,7 @@ class ManifestFileFinder extends FileFinder
 
             // Stop searching if we are in a non-module library
             $libraryPath = $this->upLevels($pathname, $depth - 3);
-            $libraryBase = basename($libraryPath);
+            $libraryBase = basename($libraryPath ?? '');
             if (!$this->isDirectoryModule($libraryBase, $libraryPath, 3)) {
                 return false;
             }
@@ -79,7 +79,7 @@ class ManifestFileFinder extends FileFinder
         // Skip if test dir inside vendor module with unexpected CI Configuration
         if ($depth > 3 && $basename === self::TESTS_DIR && $ignoredCIConfig = $this->getOption('ignored_ci_configs')) {
             $ciLib = $this->findModuleCIPhpConfiguration($basename, $pathname, $depth);
-            if (in_array($ciLib, $ignoredCIConfig)) {
+            if (in_array($ciLib, $ignoredCIConfig ?? [])) {
                 return false;
             }
         }
@@ -97,7 +97,7 @@ class ManifestFileFinder extends FileFinder
      */
     public function isInsideVendor($basename, $pathname, $depth)
     {
-        $base = basename($this->upLevels($pathname, $depth - 1));
+        $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === self::VENDOR_DIR;
     }
 
@@ -111,7 +111,7 @@ class ManifestFileFinder extends FileFinder
      */
     public function isInsideThemes($basename, $pathname, $depth)
     {
-        $base = basename($this->upLevels($pathname, $depth - 1));
+        $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === THEMES_DIR;
     }
 
@@ -162,8 +162,8 @@ class ManifestFileFinder extends FileFinder
             if ($ignored) {
                 return true;
             }
-            $pathname = dirname($pathname);
-            $basename = basename($pathname);
+            $pathname = dirname($pathname ?? '');
+            $basename = basename($pathname ?? '');
             $depth--;
         }
         return false;
@@ -211,7 +211,7 @@ class ManifestFileFinder extends FileFinder
             return null;
         }
         while ($depth--) {
-            $pathname = dirname($pathname);
+            $pathname = dirname($pathname ?? '');
         }
         return $pathname;
     }
@@ -251,7 +251,7 @@ class ManifestFileFinder extends FileFinder
 
         // Check if directory name is ignored
         $ignored = $this->getIgnoredDirs();
-        if (in_array($basename, $ignored)) {
+        if (in_array($basename, $ignored ?? [])) {
             return true;
         }
 
@@ -278,8 +278,8 @@ class ManifestFileFinder extends FileFinder
         }
 
         // We pop the current folder and use the next entry the pathname
-        $newBasename = basename($pathname);
-        $newPathname = dirname($pathname);
+        $newBasename = basename($pathname ?? '');
+        $newPathname = dirname($pathname ?? '');
         $newDepth = $depth - 1;
 
         if ($this->isDirectoryModule($newBasename, $newPathname, $newDepth)) {

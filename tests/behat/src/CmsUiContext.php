@@ -100,11 +100,11 @@ class CmsUiContext implements Context
     {
         $this->iShouldSeeAToast($notice, $type);
 
-        $actions = explode(',', $actions);
+        $actions = explode(',', $actions ?? '');
         foreach ($actions as $order => $action) {
             $this->getMainContext()->assertElementContains(
                 sprintf('.toast--%s .toast__action:nth-child(%s)', $type, $order+1),
-                trim($action)
+                trim($action ?? '')
             );
         }
     }
@@ -229,7 +229,7 @@ class CmsUiContext implements Context
 
         // Check text within this element
         $element = $cmsListElement->find('named', ['content', "'$text'"]);
-        if (strstr($negate, 'not')) {
+        if (strstr($negate ?? '', 'not')) {
             Assert::assertNull($element, sprintf('Unexpected %s found in cms list', $text));
         } else {
             Assert::assertNotNull($element, sprintf('Expected %s not found in cms list', $text));
@@ -426,14 +426,14 @@ SCRIPT
         $cssIcon = $treeNode->getParent()->getAttribute("class");
         if ($action == "expand") {
             //ensure it is collapsed
-            if (false === strpos($cssIcon, 'jstree-open')) {
+            if (false === strpos($cssIcon ?? '', 'jstree-open')) {
                 $nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
                 Assert::assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
                 $nodeIcon->click();
             }
         } else {
             //ensure it is expanded
-            if (false === strpos($cssIcon, 'jstree-closed')) {
+            if (false === strpos($cssIcon ?? '', 'jstree-closed')) {
                 $nodeIcon = $treeNode->getParent()->find('css', '.jstree-icon');
                 Assert::assertTrue($nodeIcon->isVisible(), "CMS node '$nodeText' not found");
                 $nodeIcon->click();
@@ -655,7 +655,7 @@ SCRIPT
             }
         }
 
-        Assert::assertGreaterThan(0, count($formFields), sprintf(
+        Assert::assertGreaterThan(0, count($formFields ?? []), sprintf(
             'Chosen.js dropdown named "%s" not found',
             $field
         ));
@@ -678,7 +678,7 @@ SCRIPT
         $this->getSession()->wait(100); // wait for dropdown overlay to appear
         $linkEl->click();
 
-        if (in_array('treedropdown', explode(' ', $container->getAttribute('class')))) {
+        if (in_array('treedropdown', explode(' ', $container->getAttribute('class') ?? ''))) {
             // wait for ajax dropdown to load
             $this->getSession()->wait(
                 5000,
@@ -715,7 +715,7 @@ SCRIPT
      */
     protected function fixStepArgument($argument)
     {
-        return str_replace('\\"', '"', $argument);
+        return str_replace('\\"', '"', $argument ?? '');
     }
 
     /**
@@ -729,7 +729,7 @@ SCRIPT
     {
         $container = $el->getParent();
         while ($container && $container->getTagName() != 'body') {
-            if ($container->isVisible() && in_array($class, explode(' ', $container->getAttribute('class')))) {
+            if ($container->isVisible() && in_array($class, explode(' ', $container->getAttribute('class') ?? ''))) {
                 return $container;
             }
             $container = $container->getParent();

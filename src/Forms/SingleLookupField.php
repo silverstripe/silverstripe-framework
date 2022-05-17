@@ -29,7 +29,7 @@ class SingleLookupField extends SingleSelectField
         $source = $this->getSource();
         $source = ($source instanceof Map) ? $source->toArray() : $source;
 
-        if (array_key_exists($value, $source)) {
+        if (array_key_exists($value, $source ?? [])) {
             return $source[$value];
         }
 

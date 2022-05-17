@@ -239,7 +239,7 @@ PHP
     {
         $val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
         $decoded = Convert::json2array($val);
-        $this->assertEquals(3, count($decoded), '3 items in the decoded array');
+        $this->assertEquals(3, count($decoded ?? []), '3 items in the decoded array');
         $this->assertContains('Bloggs', $decoded, 'Contains "Bloggs" value in decoded array');
         $this->assertContains('Jones', $decoded, 'Contains "Jones" value in decoded array');
         $this->assertStringContainsString('Structure', $decoded['My']['Complicated']);
@@ -281,8 +281,8 @@ PHP
     {
         $message = sprintf(
             'Expected "%s" but given "%s"',
-            addcslashes($expected, "\r\n"),
-            addcslashes($actual, "\r\n")
+            addcslashes($expected ?? '', "\r\n"),
+            addcslashes($actual ?? '', "\r\n")
         );
         $this->assertEquals($expected, $actual, $message);
     }

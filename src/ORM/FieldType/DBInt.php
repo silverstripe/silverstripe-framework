@@ -34,7 +34,7 @@ class DBInt extends DBField
      */
     public function Formatted()
     {
-        return number_format($this->value);
+        return number_format($this->value ?? 0.0);
     }
 
     public function requireField()

@@ -80,7 +80,7 @@ class DataListTest extends SapphireTest
         $list = ValidatedObject::get()
             ->filter(['Created:GreaterThan' => '2013-02-01 00:00:00'])
             ->toArray();
-        $this->assertEquals(2, count($list));
+        $this->assertEquals(2, count($list ?? []));
     }
 
     public function testSubtract()
@@ -147,7 +147,7 @@ class DataListTest extends SapphireTest
 
         // count()/first()/last() methods may alter limit/offset, so run the query and manually check the count
         $check = $list->limit(null, 1)->toArray();
-        $this->assertEquals(2, count($check));
+        $this->assertEquals(2, count($check ?? []));
     }
 
     public function testDistinct()
@@ -340,7 +340,7 @@ class DataListTest extends SapphireTest
                 'TeamID'=> $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment3')->TeamID,
             ],
         ];
-        $this->assertEquals(3, count($nestedArray));
+        $this->assertEquals(3, count($nestedArray ?? []));
         $this->assertEquals($expected[0]['Name'], $nestedArray[0]['Name']);
         $this->assertEquals($expected[1]['Comment'], $nestedArray[1]['Comment']);
         $this->assertEquals($expected[2]['TeamID'], $nestedArray[2]['TeamID']);
@@ -456,6 +456,17 @@ class DataListTest extends SapphireTest
         $this->assertNotNull($list->byID($id));
         $list->removeByID($id);
         $this->assertNull($list->byID($id));
+    }
+
+    /**
+     * Test DataList->removeAll()
+     */
+    public function testRemoveAll()
+    {
+        $list = Team::get();
+        $this->assertGreaterThan(0, $list->count());
+        $list->removeAll();
+        $this->assertCount(0, $list);
     }
 
     /**
@@ -1064,7 +1075,7 @@ class DataListTest extends SapphireTest
 
         $this->assertEquals(2, $list->count());
         $values = $list->column('Name');
-        $this->assertEquals(array_intersect($values, ['Joe', 'Bob']), $values);
+        $this->assertEquals(array_intersect($values ?? [], ['Joe', 'Bob']), $values);
     }
 
     public function testFilterOnImplicitJoin()
@@ -1106,8 +1117,8 @@ class DataListTest extends SapphireTest
         $this->assertEquals($id, $list->first()->ID);
 
         $list = SubTeam::get();
-        $this->assertEquals(3, count($list));
-        $this->assertEquals(2, count($list->exclude('ID', $id)));
+        $this->assertEquals(3, count($list ?? []));
+        $this->assertEquals(2, count($list->exclude('ID', $id) ?? []));
     }
 
     /**
@@ -1473,7 +1484,7 @@ class DataListTest extends SapphireTest
         );
 
         $result = $list->column('Name');
-        $expected = array_intersect($result, ['Joe', 'Bob']);
+        $expected = array_intersect($result ?? [], ['Joe', 'Bob']);
 
         $this->assertEquals(2, $list->count());
         $this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
@@ -1858,7 +1869,7 @@ class DataListTest extends SapphireTest
             ->applyRelation('Products.Title', $columnName)
             ->column($columnName);
 
-        $productTitles = array_diff($productTitles, [null]);
+        $productTitles = array_diff($productTitles ?? [], [null]);
         sort($productTitles);
 
         $this->assertEquals([
@@ -1870,7 +1881,7 @@ class DataListTest extends SapphireTest
     public function testChunkedFetch()
     {
         $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
-        $expectedSize = sizeof($expectedIDs);
+        $expectedSize = sizeof($expectedIDs ?? []);
 
         $dataQuery = new DataListQueryCounter(Team::class);
         $this->chunkTester(

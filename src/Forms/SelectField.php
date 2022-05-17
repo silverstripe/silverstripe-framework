@@ -100,7 +100,7 @@ abstract class SelectField extends FormField
         if ($this->isDisabled()) {
             return true;
         }
-        return in_array($value, $this->getDisabledItems());
+        return in_array($value, $this->getDisabledItems() ?? []);
     }
 
     public function getAttributes()
@@ -118,7 +118,7 @@ abstract class SelectField extends FormField
      */
     protected function getSourceValues()
     {
-        return array_keys($this->getSource());
+        return array_keys($this->getSource() ?? []);
     }
 
     /**
@@ -130,9 +130,9 @@ abstract class SelectField extends FormField
      */
     public function getValidValues()
     {
-        $valid = array_diff($this->getSourceValues(), $this->getDisabledItems());
+        $valid = array_diff($this->getSourceValues() ?? [], $this->getDisabledItems());
         // Renumber indexes from 0
-        return array_values($valid);
+        return array_values($valid ?? []);
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class SelectField extends FormField
 
         // Direct array
         if (is_array($values)) {
-            return array_values($values);
+            return array_values($values ?? []);
         }
 
         // Extract lists
@@ -203,7 +203,7 @@ abstract class SelectField extends FormField
             return $values->column('ID');
         }
 
-        return [trim($values)];
+        return [trim($values ?? '')];
     }
 
     /**

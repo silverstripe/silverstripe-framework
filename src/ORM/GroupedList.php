@@ -24,7 +24,7 @@ class GroupedList extends ListDecorator
             // if $item is an array, $index is used as the index
             $key = is_object($item) ? ($item->hasMethod($index) ? $item->$index() : $item->$index) : $item[$index];
 
-            if (array_key_exists($key, $result)) {
+            if (array_key_exists($key, $result ?? [])) {
                 $result[$key]->push($item);
             } else {
                 $result[$key] = new ArrayList([$item]);

@@ -91,14 +91,14 @@ class YamlFixture
      */
     public function __construct($fixture)
     {
-        if (false !== strpos($fixture, "\n")) {
+        if (false !== strpos($fixture ?? '', "\n")) {
             $this->fixtureString = $fixture;
         } else {
             if (!Director::is_absolute($fixture)) {
                 $fixture = Director::baseFolder() . '/' . $fixture;
             }
 
-            if (!file_exists($fixture)) {
+            if (!file_exists($fixture ?? '')) {
                 throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture
                     . '" not found');
             }
@@ -136,11 +136,11 @@ class YamlFixture
         if (isset($this->fixtureString)) {
             $fixtureContent = $parser->parse($this->fixtureString);
         } else {
-            if (!file_exists($this->fixtureFile) || is_dir($this->fixtureFile)) {
+            if (!file_exists($this->fixtureFile ?? '') || is_dir($this->fixtureFile ?? '')) {
                 return;
             }
 
-            $contents = file_get_contents($this->fixtureFile);
+            $contents = file_get_contents($this->fixtureFile ?? '');
             $fixtureContent = $parser->parse($contents);
 
             if (!$fixtureContent) {

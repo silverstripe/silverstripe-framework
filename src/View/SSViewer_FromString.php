@@ -49,13 +49,13 @@ class SSViewer_FromString extends SSViewer
      */
     public function process($item, $arguments = null, $scope = null)
     {
-        $hash = sha1($this->content);
+        $hash = sha1($this->content ?? '');
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . ".cache.$hash";
 
-        if (!file_exists($cacheFile) || isset($_GET['flush'])) {
+        if (!file_exists($cacheFile ?? '') || isset($_GET['flush'])) {
             $content = $this->parseTemplateContent($this->content, "string sha1=$hash");
-            $fh = fopen($cacheFile, 'w');
-            fwrite($fh, $content);
+            $fh = fopen($cacheFile ?? '', 'w');
+            fwrite($fh, $content ?? '');
             fclose($fh);
         }
 
@@ -68,7 +68,7 @@ class SSViewer_FromString extends SSViewer
         }
 
         if (!$cacheTemplate) {
-            unlink($cacheFile);
+            unlink($cacheFile ?? '');
         }
 
         return $val;

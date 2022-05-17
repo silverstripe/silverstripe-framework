@@ -53,7 +53,7 @@ class PathTest extends SapphireTest
         // Rewrite tests for other filesystems (output arg only)
         if (DIRECTORY_SEPARATOR !== '/') {
             foreach ($tests as $index => $test) {
-                $tests[$index][1] = str_replace('/', DIRECTORY_SEPARATOR, $tests[$index][1]);
+                $tests[$index][1] = str_replace('/', DIRECTORY_SEPARATOR, $tests[$index][1] ?? '');
             }
         }
         return $tests;
@@ -110,7 +110,7 @@ class PathTest extends SapphireTest
         // Rewrite tests for other filesystems (output arg only)
         if (DIRECTORY_SEPARATOR !== '/') {
             foreach ($tests as $index => $test) {
-                $tests[$index][1] = str_replace('/', DIRECTORY_SEPARATOR, $tests[$index][1]);
+                $tests[$index][1] = str_replace('/', DIRECTORY_SEPARATOR, $tests[$index][1] ?? '');
             }
         }
         return $tests;

@@ -36,7 +36,7 @@ class TinyMCEConfigTest extends SapphireTest
                 "Locale code {$locale} maps to {$resource}.js which exists"
             );
             // Check we don't simplify to locale when a specific version exists
-            if (strpos($resource, '_') === false) {
+            if (strpos($resource ?? '', '_') === false) {
                 $this->assertFileDoesNotExist(
                     "{$langs}/{$locale}.js",
                     "Locale code {$locale} doesn't map to simple {$resource}.js when a better {$locale}.js is available"
@@ -83,7 +83,7 @@ class TinyMCEConfigTest extends SapphireTest
 
         $this->assertEquals(
             3,
-            sizeof($translations),
+            sizeof($translations ?? []),
             'Only two presets have valid translation + the generic PIXEL_WIDTH one'
         );
         $this->assertEquals('Foo bar', $translations[TinyMCEConfig::class . '.TEST']);

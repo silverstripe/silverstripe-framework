@@ -106,7 +106,7 @@ class ViewableData implements IteratorAggregate
     public function __isset($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
+        if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
             return true;
         }
         if ($this->hasField($property)) {
@@ -129,7 +129,7 @@ class ViewableData implements IteratorAggregate
     public function __get($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
+        if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
             return $this->$method();
         }
         if ($this->hasField($property)) {
@@ -193,7 +193,7 @@ class ViewableData implements IteratorAggregate
      */
     public function hasField($field)
     {
-        return property_exists($this, $field);
+        return property_exists($this, $field ?? '');
     }
 
     /**
@@ -353,7 +353,7 @@ class ViewableData implements IteratorAggregate
     {
         // Strip arguments
         $spec = $this->castingHelper($field);
-        return trim(strtok($spec, '('));
+        return trim(strtok($spec ?? '', '(') ?? '');
     }
 
     /**
@@ -576,6 +576,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator([$this]);
@@ -623,7 +624,7 @@ class ViewableData implements IteratorAggregate
         $themes = SSViewer::get_themes();
         foreach ($themes as $theme) {
             // Skip theme sets
-            if (strpos($theme, '$') === 0) {
+            if (strpos($theme ?? '', '$') === 0) {
                 continue;
             }
             // Map theme path to url
@@ -647,23 +648,23 @@ class ViewableData implements IteratorAggregate
     public function CSSClasses($stopAtClass = self::class)
     {
         $classes       = [];
-        $classAncestry = array_reverse(ClassInfo::ancestry(static::class));
+        $classAncestry = array_reverse(ClassInfo::ancestry(static::class) ?? []);
         $stopClasses   = ClassInfo::ancestry($stopAtClass);
 
         foreach ($classAncestry as $class) {
-            if (in_array($class, $stopClasses)) {
+            if (in_array($class, $stopClasses ?? [])) {
                 break;
             }
             $classes[] = $class;
         }
 
         // optionally add template identifier
-        if (isset($this->template) && !in_array($this->template, $classes)) {
+        if (isset($this->template) && !in_array($this->template, $classes ?? [])) {
             $classes[] = $this->template;
         }
 
         // Strip out namespaces
-        $classes = preg_replace('#.*\\\\#', '', $classes);
+        $classes = preg_replace('#.*\\\\#', '', $classes ?? '');
 
         return Convert::raw2att(implode(' ', $classes));
     }

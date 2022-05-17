@@ -249,6 +249,6 @@ class ValidationResult implements Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->messages, $this->isValid) = json_decode($serialized, true);
+        list($this->messages, $this->isValid) = json_decode($serialized ?? '', true);
     }
 }

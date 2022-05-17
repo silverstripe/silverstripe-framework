@@ -79,7 +79,7 @@ class MySQLStatement extends Query
         // Buffer all results
         $this->statement->store_result();
 
-        call_user_func_array([$this->statement, 'bind_result'], $variables);
+        call_user_func_array([$this->statement, 'bind_result'], $variables ?? []);
     }
 
     /**
@@ -129,7 +129,7 @@ class MySQLStatement extends Query
         $row = [];
         foreach ($this->boundValues as $key => $value) {
             $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
-            if (in_array($this->types[$key], $floatTypes)) {
+            if (in_array($this->types[$key], $floatTypes ?? [])) {
                 $value = (float)$value;
             }
             $row[$key] = $value;

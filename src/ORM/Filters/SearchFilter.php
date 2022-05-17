@@ -104,8 +104,8 @@ abstract class SearchFilter
      */
     protected function addRelation($name)
     {
-        if (strstr($name, '.')) {
-            $parts = explode('.', $name);
+        if (strstr($name ?? '', '.')) {
+            $parts = explode('.', $name ?? '');
             $this->name = array_pop($parts);
             $this->relation = $parts;
         } else {
@@ -124,8 +124,8 @@ abstract class SearchFilter
             return;
         }
 
-        if (!preg_match('/([A-Za-z]+)\(\s*(?:([A-Za-z_*][A-Za-z0-9_]*))?\s*\)$/', $name, $matches)) {
-            if (stristr($name, '(') !== false) {
+        if (!preg_match('/([A-Za-z]+)\(\s*(?:([A-Za-z_*][A-Za-z0-9_]*))?\s*\)$/', $name ?? '', $matches)) {
+            if (stristr($name ?? '', '(') !== false) {
                 throw new InvalidArgumentException(sprintf(
                     'Malformed aggregate filter %s',
                     $name
@@ -135,7 +135,7 @@ abstract class SearchFilter
         }
 
         $this->aggregate = [
-            'function' => strtoupper($matches[1]),
+            'function' => strtoupper($matches[1] ?? ''),
             'column' => isset($matches[2]) ? $matches[2] : null
         ];
     }
@@ -178,11 +178,11 @@ abstract class SearchFilter
      */
     public function setModifiers(array $modifiers)
     {
-        $modifiers = array_map('strtolower', $modifiers);
+        $modifiers = array_map('strtolower', $modifiers ?? []);
 
         // Validate modifiers are supported
         $allowed = $this->getSupportedModifiers();
-        $unsupported = array_diff($modifiers, $allowed);
+        $unsupported = array_diff($modifiers ?? [], $allowed);
         if ($unsupported) {
             throw new InvalidArgumentException(
                 static::class . ' does not accept ' . implode(', ', $unsupported) . ' as modifiers'
@@ -305,7 +305,7 @@ abstract class SearchFilter
 
         // fallback to the provided name in the event of a joined column
         // name (as the candidate class doesn't check joined records)
-        $parts = explode('.', $this->fullName);
+        $parts = explode('.', $this->fullName ?? '');
         return '"' . implode('"."', $parts) . '"';
     }
 
@@ -353,7 +353,7 @@ abstract class SearchFilter
      */
     public function apply(DataQuery $query)
     {
-        if (($key = array_search('not', $this->modifiers)) !== false) {
+        if (($key = array_search('not', $this->modifiers ?? [])) !== false) {
             unset($this->modifiers[$key]);
             return $this->exclude($query);
         }
@@ -391,7 +391,7 @@ abstract class SearchFilter
      */
     public function exclude(DataQuery $query)
     {
-        if (($key = array_search('not', $this->modifiers)) !== false) {
+        if (($key = array_search('not', $this->modifiers ?? [])) !== false) {
             unset($this->modifiers[$key]);
             return $this->apply($query);
         }
@@ -442,9 +442,9 @@ abstract class SearchFilter
     protected function getCaseSensitive()
     {
         $modifiers = $this->getModifiers();
-        if (in_array('case', $modifiers)) {
+        if (in_array('case', $modifiers ?? [])) {
             return true;
-        } elseif (in_array('nocase', $modifiers)) {
+        } elseif (in_array('nocase', $modifiers ?? [])) {
             return false;
         } else {
             return null;

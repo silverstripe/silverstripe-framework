@@ -108,7 +108,7 @@ class RelationValidationService implements Resettable
     public function executeValidation(): void
     {
         $errors = $this->validateRelations();
-        $count = count($errors);
+        $count = count($errors ?? []);
 
         if ($count === 0) {
             return;
@@ -231,7 +231,7 @@ class RelationValidationService implements Resettable
                 continue;
             }
 
-            if (mb_strpos($class, $pattern) === 0) {
+            if (mb_strpos($class ?? '', $pattern ?? '') === 0) {
                 // Classname prefix matches the pattern
                 return true;
             }
@@ -295,7 +295,7 @@ class RelationValidationService implements Resettable
                 continue;
             }
 
-            if (mb_strpos($relationData, '.') !== false) {
+            if (mb_strpos($relationData ?? '', '.') !== false) {
                 $this->logError(
                     $class,
                     $relationName,
@@ -395,7 +395,7 @@ class RelationValidationService implements Resettable
             $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('has_one');
 
-            if (array_key_exists($relatedRelation, $relatedRelations)) {
+            if (array_key_exists($relatedRelation, $relatedRelations ?? [])) {
                 continue;
             }
 
@@ -444,7 +444,7 @@ class RelationValidationService implements Resettable
             $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('has_one');
 
-            if (array_key_exists($relatedRelation, $relatedRelations)) {
+            if (array_key_exists($relatedRelation, $relatedRelations ?? [])) {
                 continue;
             }
 
@@ -556,7 +556,7 @@ class RelationValidationService implements Resettable
             $relatedObject = DataObject::singleton($relatedClass);
             $relatedRelations = (array) $relatedObject->config()->uninherited('many_many');
 
-            if (array_key_exists($relatedRelation, $relatedRelations)) {
+            if (array_key_exists($relatedRelation, $relatedRelations ?? [])) {
                 continue;
             }
 
@@ -570,13 +570,13 @@ class RelationValidationService implements Resettable
      */
     protected function parsePlainRelation(string $relationData): ?array
     {
-        if (mb_strpos($relationData, '.') === false) {
+        if (mb_strpos($relationData ?? '', '.') === false) {
             return null;
         }
 
-        $segments = explode('.', $relationData);
+        $segments = explode('.', $relationData ?? '');
 
-        if (count($segments) !== 2) {
+        if (count($segments ?? []) !== 2) {
             return null;
         }
 
@@ -597,7 +597,7 @@ class RelationValidationService implements Resettable
     {
         if (is_array($relationData)) {
             foreach (['through', 'to'] as $key) {
-                if (!array_key_exists($key, $relationData)) {
+                if (!array_key_exists($key, $relationData ?? [])) {
                     return null;
                 }
             }
@@ -612,7 +612,7 @@ class RelationValidationService implements Resettable
             $throughObject = DataObject::singleton($through);
             $throughRelations = (array) $throughObject->config()->uninherited('has_one');
 
-            if (!array_key_exists($to, $throughRelations)) {
+            if (!array_key_exists($to, $throughRelations ?? [])) {
                 return null;
             }
 

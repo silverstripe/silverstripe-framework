@@ -12,7 +12,7 @@ class GridField_ActionMenu extends AbstractGridFieldComponent implements GridFie
 {
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
         }
     }
@@ -86,7 +86,7 @@ class GridField_ActionMenu extends AbstractGridFieldComponent implements GridFie
                 $actions = $item->getActions($gridField);
             }
 
-            if (in_array($actionName, $actions)) {
+            if (in_array($actionName, $actions ?? [])) {
                 $item->handleAction($gridField, $actionName, $arguments, $data);
             }
         }

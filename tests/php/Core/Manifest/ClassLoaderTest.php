@@ -69,7 +69,7 @@ class ClassLoaderTest extends SapphireTest
         $loader->pushManifest($this->testManifest1);
         $this->assertEquals(
             realpath($this->baseManifest1 . '/module/classes/ClassA.php'),
-            realpath($loader->getItemPath('ClassA'))
+            realpath($loader->getItemPath('ClassA') ?? '')
         );
         $this->assertEquals(
             false,
@@ -91,7 +91,7 @@ class ClassLoaderTest extends SapphireTest
         );
         $this->assertEquals(
             realpath($this->baseManifest2 . '/module/classes/OtherClassA.php'),
-            realpath($loader->getItemPath('OtherClassA'))
+            realpath($loader->getItemPath('OtherClassA') ?? '')
         );
     }
 }

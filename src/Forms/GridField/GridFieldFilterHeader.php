@@ -284,7 +284,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
 
         $context = $this->getSearchContext($gridField);
         $params = $gridField->getRequest()->postVar('filter') ?: [];
-        if (array_key_exists($gridField->getName(), $params)) {
+        if (array_key_exists($gridField->getName(), $params ?? [])) {
             $params = $params[$gridField->getName()];
         }
         if ($context->getSearchParams()) {
@@ -302,7 +302,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         if (!$this->useLegacyFilterHeader && !empty($filters)) {
             $filters = array_combine(array_map(function ($key) {
                 return 'Search__' . $key;
-            }, array_keys($filters)), $filters);
+            }, array_keys($filters ?? [])), $filters ?? []);
         }
 
         $searchAction = GridField_FormAction::create($gridField, 'filter', false, 'filter', null);
@@ -352,7 +352,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         foreach ($columns as $columnField) {
             $metadata = $gridField->getColumnMetadata($columnField);
             // Get the field name, without any modifications
-            $name = explode('.', $columnField);
+            $name = explode('.', $columnField ?? '');
             $title = $metadata['title'];
             $field = $searchFields->fieldByName($name[0]);
 
@@ -465,7 +465,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
                 );
             }
 
-            if ($currentColumn == count($columns)) {
+            if ($currentColumn == count($columns ?? [])) {
                 $fields->push(
                     GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
                         ->addExtraClass('btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit ss-gridfield-button-filter')

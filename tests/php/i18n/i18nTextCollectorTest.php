@@ -30,7 +30,7 @@ class i18nTextCollectorTest extends SapphireTest
 
     protected function tearDown(): void
     {
-        if (is_dir($this->alternateBaseSavePath)) {
+        if (is_dir($this->alternateBaseSavePath ?? '')) {
             Filesystem::removeFolder($this->alternateBaseSavePath);
         }
 
@@ -459,7 +459,7 @@ PHP;
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
-        $html = file_get_contents($templateFilePath);
+        $html = file_get_contents($templateFilePath ?? '');
         $matches = $c->collectFromTemplate($html, $templateFilePath, $mymodule);
 
         $this->assertArrayHasKey('i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
@@ -541,11 +541,11 @@ PHP;
         // i18ntestmodule
         $moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.yml';
         $this->assertTrue(
-            file_exists($moduleLangFile),
+            file_exists($moduleLangFile ?? ''),
             'Master language file can be written to modules /lang folder'
         );
 
-        $moduleLangFileContent = file_get_contents($moduleLangFile);
+        $moduleLangFileContent = file_get_contents($moduleLangFile ?? '');
         $this->assertStringContainsString(
             "    ADDITION: Addition\n",
             $moduleLangFileContent
@@ -574,10 +574,10 @@ PHP;
         // i18nothermodule
         $otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.yml';
         $this->assertTrue(
-            file_exists($otherModuleLangFile),
+            file_exists($otherModuleLangFile ?? ''),
             'Master language file can be written to modules /lang folder'
         );
-        $otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
+        $otherModuleLangFileContent = file_get_contents($otherModuleLangFile ?? '');
         $this->assertStringContainsString(
             "    ENTITY: 'Other Module Entity'\n",
             $otherModuleLangFileContent
@@ -721,7 +721,7 @@ PHP;
                 'i18nothermodule',
                 'i18ntestmodule',
             ],
-            array_keys($modules)
+            array_keys($modules ?? [])
         );
 
         $this->assertEquals('i18ntestmodule', $collector->findModuleForClass_Test('i18nTestNamespacedClass'));
@@ -744,7 +744,7 @@ PHP;
         // Non-standard modules can't be safely filtered, so just index everything
         $nonStandardFiles = $collector->getFileListForModule_Test('i18nnonstandardmodule');
         $nonStandardRoot = $this->alternateBasePath . '/i18nnonstandardmodule';
-        $this->assertEquals(3, count($nonStandardFiles));
+        $this->assertEquals(3, count($nonStandardFiles ?? []));
         $this->assertArrayHasKey("{$nonStandardRoot}/_config.php", $nonStandardFiles);
         $this->assertArrayHasKey("{$nonStandardRoot}/phpfile.php", $nonStandardFiles);
         $this->assertArrayHasKey("{$nonStandardRoot}/template.ss", $nonStandardFiles);
@@ -752,7 +752,7 @@ PHP;
         // Normal module should have predictable dir structure
         $testFiles = $collector->getFileListForModule_Test('i18ntestmodule');
         $testRoot = $this->alternateBasePath . '/i18ntestmodule';
-        $this->assertEquals(7, count($testFiles));
+        $this->assertEquals(7, count($testFiles ?? []));
         // Code in code folder is detected
         $this->assertArrayHasKey("{$testRoot}/code/i18nTestModule.php", $testFiles);
         $this->assertArrayHasKey("{$testRoot}/code/subfolder/_config.php", $testFiles);
@@ -766,7 +766,7 @@ PHP;
         // Standard modules with code in odd places should only have code in those directories detected
         $otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
         $otherRoot = $this->alternateBasePath . '/i18nothermodule';
-        $this->assertEquals(4, count($otherFiles));
+        $this->assertEquals(4, count($otherFiles ?? []));
         // Only detect well-behaved files
         $this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
         $this->assertArrayHasKey("{$otherRoot}/code/i18nProviderClass.php", $otherFiles);

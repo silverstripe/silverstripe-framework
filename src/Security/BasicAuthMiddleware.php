@@ -107,7 +107,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
         // Filter redirect based on url
         $relativeURL = $request->getURL(true);
         foreach ($patterns as $pattern => $result) {
-            if (preg_match($pattern, $relativeURL)) {
+            if (preg_match($pattern ?? '', $relativeURL ?? '')) {
                 return $result;
             }
         }

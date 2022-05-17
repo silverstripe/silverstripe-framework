@@ -75,7 +75,7 @@ class MySQLQuery extends Query
                 if (!isset($this->columns[$i])) {
                     throw new DatabaseException("Can't get metadata for column $i");
                 }
-                if (in_array($this->columns[$i]->type, $floatTypes)) {
+                if (in_array($this->columns[$i]->type, $floatTypes ?? [])) {
                     $value = (float)$value;
                 }
                 $data[$this->columns[$i]->name] = $value;

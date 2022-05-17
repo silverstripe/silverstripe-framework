@@ -140,7 +140,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                     }
 
                     // Save with both uppercase & lowercase first letter, so either works
-                    $lcFirst = strtolower($varName[0]) . substr($varName, 1);
+                    $lcFirst = strtolower($varName[0] ?? '') . substr($varName ?? '', 1);
                     $result[$lcFirst] = $details;
                     $result[ucfirst($varName)] = $details;
                 }
@@ -355,7 +355,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         // Check if the method to-be-called exists on the target object - if so, don't check any further
         // injection locations
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-        if (isset($on->$property) || method_exists($on, $property)) {
+        if (isset($on->$property) || method_exists($on, $property ?? '')) {
             return null;
         }
 

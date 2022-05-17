@@ -49,7 +49,7 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
 
     public function augmentColumns($field, &$columns)
     {
-        if (!in_array('Actions', $columns)) {
+        if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
         }
     }

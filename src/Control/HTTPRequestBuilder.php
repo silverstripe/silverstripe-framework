@@ -36,11 +36,11 @@ class HTTPRequestBuilder
         // Infer URL from REQUEST_URI unless explicitly provided
         if (!isset($url)) {
             // Remove query parameters (they're retained separately through $server['_GET']
-            $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
+            $url = parse_url($variables['_SERVER']['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
             // Remove base folders from the URL if webroot is hosted in a subfolder
-            if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
-                $url = substr($url, strlen(BASE_URL));
+            if (substr(strtolower($url ?? ''), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
+                $url = substr($url ?? '', strlen(BASE_URL));
             }
         }
 
@@ -88,10 +88,10 @@ class HTTPRequestBuilder
     {
         $headers = [];
         foreach ($server as $key => $value) {
-            if (substr($key, 0, 5) == 'HTTP_') {
-                $key = substr($key, 5);
-                $key = strtolower(str_replace('_', ' ', $key));
-                $key = str_replace(' ', '-', ucwords($key));
+            if (substr($key ?? '', 0, 5) == 'HTTP_') {
+                $key = substr($key ?? '', 5);
+                $key = strtolower(str_replace('_', ' ', $key ?? '') ?? '');
+                $key = str_replace(' ', '-', ucwords($key ?? ''));
                 $headers[$key] = $value;
             }
         }
@@ -118,8 +118,8 @@ class HTTPRequestBuilder
             // Shift PHP_AUTH_* into headers so they are available via request
             $headers['PHP_AUTH_USER'] = $server['PHP_AUTH_USER'];
             $headers['PHP_AUTH_PW'] = $server['PHP_AUTH_PW'];
-        } elseif ($authHeader && preg_match('/Basic\s+(?<token>.*)$/i', $authHeader, $matches)) {
-            list($name, $password) = explode(':', base64_decode($matches['token']));
+        } elseif ($authHeader && preg_match('/Basic\s+(?<token>.*)$/i', $authHeader ?? '', $matches)) {
+            list($name, $password) = explode(':', base64_decode($matches['token'] ?? '') ?? '');
             $headers['PHP_AUTH_USER'] = $name;
             $headers['PHP_AUTH_PW'] = $password;
         }

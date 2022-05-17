@@ -63,7 +63,7 @@ class GridState_Data
      */
     public function getData($name, $default = null)
     {
-        if (!array_key_exists($name, $this->data)) {
+        if (!array_key_exists($name, $this->data ?? [])) {
             $this->data[$name] = $default;
         } else {
             if (is_array($this->data[$name])) {
@@ -129,7 +129,7 @@ class GridState_Data
             } else {
                 $value = $v;
                 // Check if we have a default value for this key and if it matches our current value
-                if (array_key_exists($k, $this->defaults) && $this->defaults[$k] === $value) {
+                if (array_key_exists($k, $this->defaults ?? []) && $this->defaults[$k] === $value) {
                     continue;
                 }
             }

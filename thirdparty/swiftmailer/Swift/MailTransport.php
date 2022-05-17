@@ -34,7 +34,7 @@ class Swift_MailTransport extends Swift_Transport_MailTransport
     {
         call_user_func_array(
             [$this, 'Swift_Transport_MailTransport::__construct'],
-            $this->getDependencies()
+            $this->getDependencies() ?? []
         );
 
         $this->setExtraParams($extraParams);

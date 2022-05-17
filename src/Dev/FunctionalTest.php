@@ -308,7 +308,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             $message = $message ?:
             "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
-                . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
+                . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals ?? [])) . "'";
 
             foreach ($expectedMatches as $match) {
                 $this->assertTrue(isset($actuals[$match]), $message);
@@ -338,7 +338,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             $actuals = [];
             if ($items) {
                 foreach ($items as $item) {
-                    $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item));
+                    $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item) ?? '');
                 }
             }
 
@@ -381,7 +381,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             $message = $message ?:
                     "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
                     . implode("'\n'", $expectedMatches) . "'\n\n"
-                . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
+                . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals ?? [])) . "'";
 
             foreach ($expectedMatches as $match) {
                 $this->assertTrue(isset($actuals[$match]), $message);
@@ -750,7 +750,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $message = $message ?:
         "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
             . implode("'\n'", $expectedMatches) . "'\n\n"
-            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
+            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals ?? [])) . "'";
 
         foreach ($expectedMatches as $match) {
             $this->assertTrue(isset($actuals[$match]), $message);
@@ -780,7 +780,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $actuals = [];
         if ($items) {
             foreach ($items as $item) {
-                $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item));
+                $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item) ?? '');
             }
         }
 
@@ -823,7 +823,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
         $message = $message ?:
                 "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
-            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
+            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals ?? [])) . "'";
 
         foreach ($expectedMatches as $match) {
             $this->assertTrue(isset($actuals[$match]), $message);

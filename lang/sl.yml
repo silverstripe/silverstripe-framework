@@ -308,6 +308,8 @@ sl:
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
+    KEEP_ME_SIGNED_IN: 'Ohranjaj prijavo naslednjih ({count}) dni.'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'V tem brskalniku boste ostali prijavljeni naslednjih ({count}) dni. Uporabite to možnost samo, če uporabljate brskalnik, v katerem je to varno.'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Obrazec za prijavo v sistem'
     BUTTONFORGOTPASSWORD: 'Ne poznam gesla'

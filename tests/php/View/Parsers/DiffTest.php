@@ -51,8 +51,8 @@ class DiffTest extends SapphireTest
 
         // Very hard to debug this way, wouldn't need to do this if PHP had an *actual* DOM parsing lib,
         // and not just the poor excuse that is DOMDocument
-        $compare = preg_replace('/[\s\t\n\r]*/', '', $compare);
-        $expected = preg_replace('/[\s\t\n\r]*/', '', $expected);
+        $compare = preg_replace('/[\s\t\n\r]*/', '', $compare ?? '');
+        $expected = preg_replace('/[\s\t\n\r]*/', '', $expected ?? '');
 
         $this->assertEquals($expected, $compare);
     }

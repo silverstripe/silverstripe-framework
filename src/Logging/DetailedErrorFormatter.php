@@ -39,7 +39,7 @@ class DetailedErrorFormatter implements FormatterInterface
                 // call to the fatal error handler and is not useful, so exclude it entirely
                 $i = $this->findInTrace($trace, $context['file'], $context['line']);
                 if ($i !== null) {
-                    $context['trace'] = array_slice($trace, $i);
+                    $context['trace'] = array_slice($trace ?? [], $i ?? 0);
                 } else {
                     $context['trace'] = null;
                 }
@@ -57,7 +57,7 @@ class DetailedErrorFormatter implements FormatterInterface
 
     public function formatBatch(array $records)
     {
-        return implode("\n", array_map([$this, 'format'], $records));
+        return implode("\n", array_map([$this, 'format'], $records ?? []));
     }
 
     /**
@@ -105,15 +105,15 @@ class DetailedErrorFormatter implements FormatterInterface
         $output = $reporter->renderHeader();
         $output .= $reporter->renderError($httpRequest, $errno, $errstr, $errfile, $errline);
 
-        if (file_exists($errfile)) {
-            $lines = file($errfile);
+        if (file_exists($errfile ?? '')) {
+            $lines = file($errfile ?? '');
 
             // Make the array 1-based
             array_unshift($lines, "");
             unset($lines[0]);
 
             $offset = $errline-10;
-            $lines = array_slice($lines, $offset, 16, true);
+            $lines = array_slice($lines ?? [], $offset ?? 0, 16, true);
             $output .= $reporter->renderSourceFragment($lines, $errline);
         }
         $output .= $reporter->renderTrace($errcontext);

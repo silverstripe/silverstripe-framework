@@ -44,7 +44,7 @@ class Form extends BaseForm
         $request = $controller->getRequest();
         $storage = Injector::inst()->createWithArgs(Storage::class, [$request->getSession(), $storageId, false]);
 
-        if (count($storage->getItems())) {
+        if (count($storage->getItems() ?? [])) {
             $fieldList = $this->buildFieldList($storage);
             $actionList = $this->buildActionList($storage);
         } else {
@@ -103,7 +103,7 @@ class Form extends BaseForm
         $confirm = FormAction::create('doConfirm', _t(__CLASS__ . '.CONFIRM', 'Run the action'))->setAutofocus(true);
 
         if ($storage->getHttpMethod() === 'POST') {
-            $confirm->setAttribute('formaction', htmlspecialchars($storage->getSuccessUrl()));
+            $confirm->setAttribute('formaction', htmlspecialchars($storage->getSuccessUrl() ?? ''));
         }
 
         return FieldList::create($cancel, $confirm);

@@ -300,8 +300,8 @@ class DBFieldTest extends SapphireTest
         $value = 'üåäöÜÅÄÖ';
         foreach ($allFields as $stringField) {
             $stringField = DBString::create_field($stringField, $value);
-            for ($i = 1; $i < mb_strlen($value); $i++) {
-                $expected = mb_substr($value, 0, $i) . '…';
+            for ($i = 1; $i < mb_strlen($value ?? ''); $i++) {
+                $expected = mb_substr($value ?? '', 0, $i) . '…';
                 $this->assertEquals($expected, $stringField->LimitCharacters($i));
             }
         }

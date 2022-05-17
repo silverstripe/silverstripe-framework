@@ -93,11 +93,11 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
             && Permission::checkMember($record, 'ADMIN')
         ) {
             $adminGroups = array_intersect(
-                $record->Groups()->column(),
+                $record->Groups()->column() ?? [],
                 Permission::get_groups_by_permission('ADMIN')->column()
             );
 
-            if (count($adminGroups) === 1 && array_search($this->groupID, $adminGroups) !== false) {
+            if (count($adminGroups ?? []) === 1 && array_search($this->groupID, $adminGroups ?? []) !== false) {
                 return false;
             }
         }

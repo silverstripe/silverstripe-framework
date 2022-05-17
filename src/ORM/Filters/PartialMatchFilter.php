@@ -116,8 +116,8 @@ class PartialMatchFilter extends SearchFilter
             $parameters[] = $this->getMatchPattern($value);
         }
         // Since query connective is ambiguous, use AND explicitly here
-        $count = count($values);
-        $predicate = implode(' AND ', array_fill(0, $count, $comparisonClause));
+        $count = count($values ?? []);
+        $predicate = implode(' AND ', array_fill(0, $count ?? 0, $comparisonClause));
         return $query->where([$predicate => $parameters]);
     }
 

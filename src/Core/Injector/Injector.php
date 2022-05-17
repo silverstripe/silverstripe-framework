@@ -419,7 +419,7 @@ class Injector implements ContainerInterface
             }
 
             // okay, actually include it now we know we're going to use it
-            if (file_exists($file)) {
+            if (file_exists($file ?? '')) {
                 require_once $file;
             }
 
@@ -518,21 +518,36 @@ class Injector implements ContainerInterface
         }
 
         // Evaluate service references
-        if (is_string($value) && strpos($value, '%$') === 0) {
-            $id = substr($value, 2);
+        if (is_string($value) && strpos($value ?? '', '%$') === 0) {
+            $id = substr($value ?? '', 2);
             return $this->get($id);
         }
 
         // Evaluate constants surrounded by back ticks
-        if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
-            $envValue = Environment::getEnv($matches['name']);
-            if ($envValue !== false) {
-                $value = $envValue;
-            } elseif (defined($matches['name'])) {
-                $value = constant($matches['name']);
-            } else {
-                $value = null;
+        $hasBacticks = false;
+        $allMissing = true;
+        // $value must start and end with backticks, though there can be multiple
+        // things being subsituted within $value e.g. "`VAR_ONE`:`VAR_TWO`:`VAR_THREE`"
+        if (preg_match('/^`.+`$/', $value ?? '')) {
+            $hasBacticks = true;
+            preg_match_all('/`(?<name>[^`]+)`/', $value, $matches);
+            foreach ($matches['name'] as $name) {
+                $envValue = Environment::getEnv($name);
+                $val = '';
+                if ($envValue !== false) {
+                    $val = $envValue;
+                } elseif (defined($name)) {
+                    $val = constant($name);
+                }
+                $value = str_replace("`$name`", $val, $value);
+                if ($val) {
+                    $allMissing = false;
+                }
             }
+        }
+        // silverstripe sometimes explictly expects a null value rather than just an empty string
+        if ($hasBacticks && $allMissing && $value === '') {
+            return null;
         }
 
         return $value;
@@ -684,7 +699,7 @@ class Injector implements ContainerInterface
                     $objectMethod,
                     $this->convertServiceProperty(
                         isset($method[1]) ? $method[1] : []
-                    )
+                    ) ?? []
                 );
             }
         }
@@ -704,7 +719,7 @@ class Injector implements ContainerInterface
                     /* @var $propertyObject ReflectionProperty */
                     if ($propertyObject->isPublic() && !$propertyObject->getValue($object)) {
                         $origName = $propertyObject->getName();
-                        $name = ucfirst($origName);
+                        $name = ucfirst($origName ?? '');
                         if ($this->has($name)) {
                             // Pull the name out of the registry
                             $value = $this->get($name);
@@ -720,8 +735,8 @@ class Injector implements ContainerInterface
                 foreach ($methods as $methodObj) {
                     /* @var $methodObj ReflectionMethod */
                     $methName = $methodObj->getName();
-                    if (strpos($methName, 'set') === 0) {
-                        $pname = substr($methName, 3);
+                    if (strpos($methName ?? '', 'set') === 0) {
+                        $pname = substr($methName ?? '', 3);
                         if ($this->has($pname)) {
                             // Pull the name out of the registry
                             $value = $this->get($pname);
@@ -734,7 +749,7 @@ class Injector implements ContainerInterface
 
             $injections = Config::inst()->get(get_class($object), 'dependencies');
             // If the type defines some injections, set them here
-            if ($injections && count($injections)) {
+            if ($injections && count($injections ?? [])) {
                 foreach ($injections as $property => $value) {
                     // we're checking empty in case it already has a property at this name
                     // this doesn't catch privately set things, but they will only be set by a setter method,
@@ -860,11 +875,11 @@ class Injector implements ContainerInterface
 
         // okay, check whether we've got a compound name - don't worry about 0 index, cause that's an
         // invalid name
-        if (!strpos($name, '.')) {
+        if (!strpos($name ?? '', '.')) {
             return null;
         }
 
-        return $this->getServiceName(substr($name, 0, strrpos($name, '.')));
+        return $this->getServiceName(substr($name ?? '', 0, strrpos($name ?? '', '.')));
     }
 
     /**
@@ -918,7 +933,7 @@ class Injector implements ContainerInterface
         foreach ($this->serviceCache as $key => $object) {
             foreach ($types as $filterClass) {
                 // Prevent destructive flushing
-                if (strcasecmp($filterClass, 'object') === 0) {
+                if (strcasecmp($filterClass ?? '', 'object') === 0) {
                     throw new InvalidArgumentException("Global unregistration is not allowed");
                 }
                 if ($object instanceof $filterClass) {
@@ -1014,11 +1029,11 @@ class Injector implements ContainerInterface
     protected function normaliseArguments($name, $args = [])
     {
         // Allow service names of the form "%$ServiceName"
-        if (substr($name, 0, 2) == '%$') {
-            $name = substr($name, 2);
+        if (substr($name ?? '', 0, 2) == '%$') {
+            $name = substr($name ?? '', 2);
         }
 
-        if (strstr($name, '(')) {
+        if (strstr($name ?? '', '(')) {
             list($name, $extraArgs) = ClassInfo::parse_class_spec($name);
             if ($args) {
                 $args = array_merge($args, $extraArgs);
@@ -1026,7 +1041,7 @@ class Injector implements ContainerInterface
                 $args = $extraArgs;
             }
         }
-        $name = trim($name);
+        $name = trim($name ?? '');
         return [$name, $args];
     }
 
@@ -1078,11 +1093,11 @@ class Injector implements ContainerInterface
         }
 
         // Fail over to parent service if allowed
-        if (!$inherit || !strpos($name, '.')) {
+        if (!$inherit || !strpos($name ?? '', '.')) {
             return null;
         }
 
-        return $this->getServiceSpec(substr($name, 0, strrpos($name, '.')));
+        return $this->getServiceSpec(substr($name ?? '', 0, strrpos($name ?? '', '.')));
     }
 
     /**

@@ -19,10 +19,10 @@ class SSTemplateParseException extends Exception
      */
     public function __construct($message, $parser)
     {
-        $prior = substr($parser->string, 0, $parser->pos);
+        $prior = substr($parser->string ?? '', 0, $parser->pos);
 
-        preg_match_all('/\r\n|\r|\n/', $prior, $matches);
-        $line = count($matches[0]) + 1;
+        preg_match_all('/\r\n|\r|\n/', $prior ?? '', $matches);
+        $line = count($matches[0] ?? []) + 1;
 
         parent::__construct("Parse error in template on line $line. Error was: $message");
     }

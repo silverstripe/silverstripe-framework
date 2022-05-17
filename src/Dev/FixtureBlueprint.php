@@ -172,8 +172,8 @@ class FixtureBlueprint
                                 $extrafields = [];
                                 if (is_array($relVal)) {
                                     // Item is either first row, or key in yet another nested array
-                                    $item = key($relVal);
-                                    if (is_array($relVal[$item]) && count($relVal) === 1) {
+                                    $item = key($relVal ?? []);
+                                    if (is_array($relVal[$item]) && count($relVal ?? []) === 1) {
                                         // Extra fields from nested array
                                         $extrafields = $relVal[$item];
                                     } else {
@@ -194,13 +194,13 @@ class FixtureBlueprint
                         } else {
                             $items = is_array($fieldVal)
                             ? $fieldVal
-                            : preg_split('/ *, */', trim($fieldVal));
+                            : preg_split('/ *, */', trim($fieldVal ?? ''));
 
                             $parsedItems = [];
                             foreach ($items as $item) {
                                 // Check for correct format: =><relationname>.<identifier>.
                                 // Ignore if the item has already been replaced with a numeric DB identifier
-                                if (!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
+                                if (!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item ?? '')) {
                                     throw new InvalidArgumentException(sprintf(
                                         'Invalid format for relation "%s" on class "%s" ("%s")',
                                         $fieldName,
@@ -219,7 +219,7 @@ class FixtureBlueprint
                             }
                         }
                     } else {
-                        $hasOneField = preg_replace('/ID$/', '', $fieldName);
+                        $hasOneField = preg_replace('/ID$/', '', $fieldName ?? '');
                         if ($className = $schema->hasOneComponent($class, $hasOneField)) {
                             $obj->{$hasOneField . 'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
                             // Inject class for polymorphic relation
@@ -233,7 +233,7 @@ class FixtureBlueprint
             $obj->write();
 
             // If LastEdited was set in the fixture, set it here
-            if ($data && array_key_exists('LastEdited', $data)) {
+            if ($data && array_key_exists('LastEdited', $data ?? [])) {
                 $this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
             }
         } catch (Exception $e) {
@@ -282,7 +282,7 @@ class FixtureBlueprint
      */
     public function addCallback($type, $callback)
     {
-        if (!array_key_exists($type, $this->callbacks)) {
+        if (!array_key_exists($type, $this->callbacks ?? [])) {
             throw new InvalidArgumentException(sprintf('Invalid type "%s"', $type));
         }
 
@@ -297,7 +297,7 @@ class FixtureBlueprint
      */
     public function removeCallback($type, $callback)
     {
-        $pos = array_search($callback, $this->callbacks[$type]);
+        $pos = array_search($callback, $this->callbacks[$type] ?? []);
         if ($pos !== false) {
             unset($this->callbacks[$type][$pos]);
         }
@@ -308,7 +308,7 @@ class FixtureBlueprint
     protected function invokeCallbacks($type, $args = [])
     {
         foreach ($this->callbacks[$type] as $callback) {
-            call_user_func_array($callback, $args);
+            call_user_func_array($callback, $args ?? []);
         }
     }
 
@@ -324,9 +324,9 @@ class FixtureBlueprint
      */
     protected function parseValue($value, $fixtures = null, &$class = null)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
-            list($class, $identifier) = explode('.', substr($value, 2), 2);
+            list($class, $identifier) = explode('.', substr($value ?? '', 2), 2);
 
             if ($fixtures && !isset($fixtures[$class][$identifier])) {
                 throw new InvalidArgumentException(sprintf(

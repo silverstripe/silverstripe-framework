@@ -177,17 +177,17 @@ class i18n implements TemplateGlobalProvider
         // Deprecate legacy injection format (`string %s, %d`)
         // inject the variables from injectionArray (if present)
         $sprintfArgs = [];
-        if ($default && !preg_match('/\{[\w\d]*\}/i', $default) && preg_match('/%[s,d]/', $default)) {
+        if ($default && !preg_match('/\{[\w\d]*\}/i', $default ?? '') && preg_match('/%[s,d]/', $default ?? '')) {
             Deprecation::notice('5.0', 'sprintf style localisation variables are deprecated');
-            $sprintfArgs = array_values($injection);
+            $sprintfArgs = array_values($injection ?? []);
             $injection = [];
         }
 
         // If injection isn't associative, assume legacy injection format
         $failUnlessSprintf = false;
-        if ($injection && array_values($injection) === $injection) {
+        if ($injection && array_values($injection ?? []) === $injection) {
             $failUnlessSprintf = true; // Note: Will trigger either a deprecation error or exception below
-            $sprintfArgs = array_values($injection);
+            $sprintfArgs = array_values($injection ?? []);
             $injection = [];
         }
 
@@ -207,10 +207,10 @@ class i18n implements TemplateGlobalProvider
         }
 
         // Sometimes default is omitted, so we don't know we have %s injection format until after translation
-        if (!$default && !preg_match('/\{[\w\d]*\}/i', $result) && preg_match('/%[s,d]/', $result)) {
+        if (!$default && !preg_match('/\{[\w\d]*\}/i', $result ?? '') && preg_match('/%[s,d]/', $result ?? '')) {
             Deprecation::notice('5.0', 'sprintf style localisation is deprecated');
             if ($injection) {
-                $sprintfArgs = array_values($injection);
+                $sprintfArgs = array_values($injection ?? []);
             }
         } elseif ($failUnlessSprintf) {
             // Note: After removing deprecated code, you can move this error up into the is-associative check
@@ -220,7 +220,7 @@ class i18n implements TemplateGlobalProvider
 
         // @deprecated (see above)
         if ($sprintfArgs) {
-            return vsprintf($result, $sprintfArgs);
+            return vsprintf($result ?? '', $sprintfArgs ?? []);
         }
 
         return $result;
@@ -238,11 +238,11 @@ class i18n implements TemplateGlobalProvider
      */
     public static function parse_plurals($string)
     {
-        if (strstr($string, '|') && strstr($string, '{count}')) {
+        if (strstr($string ?? '', '|') && strstr($string ?? '', '{count}')) {
             $keys = i18n::config()->uninherited('default_plurals');
-            $values = explode('|', $string);
-            if (count($keys) == count($values)) {
-                return array_combine($keys, $values);
+            $values = explode('|', $string ?? '');
+            if (count($keys ?? []) == count($values ?? [])) {
+                return array_combine($keys ?? [], $values ?? []);
             }
         }
         return [];
@@ -259,8 +259,8 @@ class i18n implements TemplateGlobalProvider
     {
         // Validate against global plural list
         $forms = i18n::config()->uninherited('plurals');
-        $forms = array_combine($forms, $forms);
-        $intersect = array_intersect_key($plurals, $forms);
+        $forms = array_combine($forms ?? [], $forms ?? []);
+        $intersect = array_intersect_key($plurals ?? [], $forms);
         if ($intersect) {
             return implode('|', $intersect);
         }
@@ -303,7 +303,7 @@ class i18n implements TemplateGlobalProvider
      */
     public static function convert_rfc1766($locale)
     {
-        return str_replace('_', '-', $locale);
+        return str_replace('_', '-', $locale ?? '');
     }
 
     /**

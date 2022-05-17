@@ -50,10 +50,10 @@ class VersionProvider
             return $version;
         }
         $modules = $this->getModules();
-        $lockModules = $this->getModuleVersionFromComposer(array_keys($modules));
+        $lockModules = $this->getModuleVersionFromComposer(array_keys($modules ?? []));
         $moduleVersions = [];
         foreach ($modules as $module => $title) {
-            if (!array_key_exists($module, $lockModules)) {
+            if (!array_key_exists($module, $lockModules ?? [])) {
                 continue;
             }
             $version = $lockModules[$module];
@@ -152,7 +152,7 @@ class VersionProvider
     {
         $accountModule = [];
         foreach ($modules as $module => $value) {
-            if (!preg_match('#^([a-z0-9\-]+)/([a-z0-9\-]+)$#', $module, $m)) {
+            if (!preg_match('#^([a-z0-9\-]+)/([a-z0-9\-]+)$#', $module ?? '', $m)) {
                 continue;
             }
             $account = $m[1];
@@ -189,7 +189,7 @@ class VersionProvider
         $lockData = $this->getComposerLock();
         if ($lockData && !empty($lockData['packages'])) {
             foreach ($lockData['packages'] as $package) {
-                if (in_array($package['name'], $modules) && isset($package['version'])) {
+                if (in_array($package['name'], $modules ?? []) && isset($package['version'])) {
                     $versions[$package['name']] = $package['version'];
                 }
             }
@@ -206,23 +206,23 @@ class VersionProvider
     protected function getComposerLock($cache = true)
     {
         $composerLockPath = $this->getComposerLockPath();
-        if (!file_exists($composerLockPath)) {
+        if (!file_exists($composerLockPath ?? '')) {
             return [];
         }
 
         $lockData = [];
-        $jsonData = file_get_contents($composerLockPath);
+        $jsonData = file_get_contents($composerLockPath ?? '');
 
         if ($cache) {
             $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
-            $cacheKey = md5($jsonData);
+            $cacheKey = md5($jsonData ?? '');
             if ($versions = $cache->get($cacheKey)) {
-                $lockData = json_decode($versions, true);
+                $lockData = json_decode($versions ?? '', true);
             }
         }
 
         if (empty($lockData) && $jsonData) {
-            $lockData = json_decode($jsonData, true);
+            $lockData = json_decode($jsonData ?? '', true);
 
             if ($cache) {
                 $cache->set($cacheKey, $jsonData);

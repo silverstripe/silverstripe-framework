@@ -174,7 +174,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function URLDatetime()
     {
-        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE));
+        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)

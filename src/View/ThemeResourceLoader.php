@@ -104,19 +104,19 @@ class ThemeResourceLoader implements Flushable
      */
     public function getPath($identifier)
     {
-        $slashPos = strpos($identifier, '/');
-        $parts = explode(':', $identifier, 2);
+        $slashPos = strpos($identifier ?? '', '/');
+        $parts = explode(':', $identifier ?? '', 2);
 
         // If identifier starts with "/", it's a path from root
         if ($slashPos === 0) {
-            if (count($parts) > 1) {
+            if (count($parts ?? []) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
             return Path::normalise($identifier, true);
         }
 
         // If there is no slash / colon it's a legacy theme
-        if ($slashPos === false && count($parts) === 1) {
+        if ($slashPos === false && count($parts ?? []) === 1) {
             return Path::join(THEMES_DIR, $identifier);
         }
 
@@ -134,8 +134,8 @@ class ThemeResourceLoader implements Flushable
         } else {
             // If no module could be found, assume based on basename
             // with a warning
-            if (strstr('/', $moduleName)) {
-                list(, $modulePath) = explode('/', $parts[0], 2);
+            if (strstr('/', $moduleName ?? '')) {
+                list(, $modulePath) = explode('/', $parts[0] ?? '', 2);
             } else {
                 $modulePath = $moduleName;
             }
@@ -143,14 +143,14 @@ class ThemeResourceLoader implements Flushable
         }
 
         // Parse relative path for this theme within this module
-        $theme = count($parts) > 1 ? $parts[1] : '';
+        $theme = count($parts ?? []) > 1 ? $parts[1] : '';
         if (empty($theme)) {
             // "module/vendor:"
             // "module/vendor"
             $subpath = '';
-        } elseif (strpos($theme, '/') === 0) {
+        } elseif (strpos($theme ?? '', '/') === 0) {
             // "module/vendor:/sub/path"
-            $subpath = rtrim($theme, '/');
+            $subpath = rtrim($theme ?? '', '/');
         } else {
             // "module/vendor:subtheme"
             $subpath = '/themes/' . $theme;
@@ -197,12 +197,12 @@ class ThemeResourceLoader implements Flushable
         $type = '';
         if (is_array($template)) {
             // Check if templates has type specified
-            if (array_key_exists('type', $template)) {
+            if (array_key_exists('type', $template ?? [])) {
                 $type = $template['type'];
                 unset($template['type']);
             }
             // Templates are either nested in 'templates' or just the rest of the list
-            $templateList = array_key_exists('templates', $template) ? $template['templates'] : $template;
+            $templateList = array_key_exists('templates', $template ?? []) ? $template['templates'] : $template;
         } else {
             $templateList = [$template];
         }
@@ -221,14 +221,14 @@ class ThemeResourceLoader implements Flushable
             // If we have an .ss extension, this is a path, not a template name. We should
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
-            if (substr($template, -3) == '.ss' && file_exists($template)) {
+            if (substr($template ?? '', -3) == '.ss' && file_exists($template ?? '')) {
                 $this->getCache()->set($cacheKey, $template);
                 return $template;
             }
 
             // Check string template identifier
-            $template = str_replace('\\', '/', $template);
-            $parts = explode('/', $template);
+            $template = str_replace('\\', '/', $template ?? '');
+            $parts = explode('/', $template ?? '');
 
             $tail = array_pop($parts);
             $head = implode('/', $parts);
@@ -238,7 +238,7 @@ class ThemeResourceLoader implements Flushable
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
                 try {
                     $path = Path::join($pathParts) . '.ss';
-                    if (file_exists($path)) {
+                    if (file_exists($path ?? '')) {
                         $this->getCache()->set($cacheKey, $path);
                         return $path;
                     }
@@ -266,7 +266,7 @@ class ThemeResourceLoader implements Flushable
             $themes = SSViewer::get_themes();
         }
 
-        if (substr($name, -4) !== '.css') {
+        if (substr($name ?? '', -4) !== '.css') {
             $name .= '.css';
         }
 
@@ -295,7 +295,7 @@ class ThemeResourceLoader implements Flushable
             $themes = SSViewer::get_themes();
         }
 
-        if (substr($name, -3) !== '.js') {
+        if (substr($name ?? '', -3) !== '.js') {
             $name .= '.js';
         }
 
@@ -327,7 +327,7 @@ class ThemeResourceLoader implements Flushable
         foreach ($paths as $themePath) {
             $relativePath = Path::join($themePath, $resource);
             $absolutePath = Path::join($this->base, $relativePath);
-            if (file_exists($absolutePath)) {
+            if (file_exists($absolutePath ?? '')) {
                 return $relativePath;
             }
         }

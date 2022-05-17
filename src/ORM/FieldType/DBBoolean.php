@@ -85,7 +85,7 @@ class DBBoolean extends DBField
             return 0;
         }
         if (is_string($value)) {
-            switch (strtolower($value)) {
+            switch (strtolower($value ?? '')) {
                 case 'false':
                 case 'f':
                     return 0;

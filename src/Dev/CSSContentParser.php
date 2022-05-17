@@ -45,14 +45,14 @@ class CSSContentParser
                 'utf8'
             );
             $tidy->cleanRepair();
-            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy);
-            $tidy = str_replace('&#160;', '', $tidy);
+            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy ?? '');
+            $tidy = str_replace('&#160;', '', $tidy ?? '');
         } elseif (@shell_exec('which tidy')) {
             // using tiny through cli
-            $CLI_content = escapeshellarg($content);
+            $CLI_content = escapeshellarg($content ?? '');
             $tidy = `echo $CLI_content | tidy --force-output 1 -n -q -utf8 -asxhtml -w 99999 2> /dev/null`;
-            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy);
-            $tidy = str_replace('&#160;', '', $tidy);
+            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy ?? '');
+            $tidy = str_replace('&#160;', '', $tidy ?? '');
         } else {
             // no tidy library found, hence no sanitizing
             $tidy = $content;
@@ -65,7 +65,7 @@ class CSSContentParser
                 return null;
             });
         }
-        $this->simpleXML = @simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
+        $this->simpleXML = @simplexml_load_string($tidy ?? '', 'SimpleXMLElement', LIBXML_NOWARNING);
         if (!$this->simpleXML) {
             throw new Exception('CSSContentParser::__construct(): Could not parse content.'
                 . ' Please check the PHP extension tidy is installed.');
@@ -106,19 +106,19 @@ class CSSContentParser
      */
     public function selector2xpath($selector)
     {
-        $parts = preg_split('/\\s+/', $selector);
+        $parts = preg_split('/\\s+/', $selector ?? '');
         $xpath = "";
         foreach ($parts as $part) {
-            if (preg_match('/^([A-Za-z][A-Za-z0-9]*)/', $part, $matches)) {
+            if (preg_match('/^([A-Za-z][A-Za-z0-9]*)/', $part ?? '', $matches)) {
                 $xpath .= "//$matches[1]";
             } else {
                 $xpath .= "//*";
             }
             $xfilters = [];
-            if (preg_match('/#([^#.\[]+)/', $part, $matches)) {
+            if (preg_match('/#([^#.\[]+)/', $part ?? '', $matches)) {
                 $xfilters[] = "@id='$matches[1]'";
             }
-            if (preg_match('/\.([^#.\[]+)/', $part, $matches)) {
+            if (preg_match('/\.([^#.\[]+)/', $part ?? '', $matches)) {
                 $xfilters[] = "contains(@class,'$matches[1]')";
             }
             if ($xfilters) {

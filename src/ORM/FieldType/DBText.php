@@ -80,13 +80,13 @@ class DBText extends DBString
         }
 
         // Do a word-search
-        $words = preg_split('/\s+/u', $value) ?: [];
+        $words = preg_split('/\s+/u', $value ?? '') ?: [];
         $sentences = 0;
         foreach ($words as $i => $word) {
-            if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+            if (preg_match('/(!|\?|\.)$/', $word ?? '') && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word ?? '')) {
                 $sentences++;
                 if ($sentences >= $maxSentences) {
-                    return implode(' ', array_slice($words, 0, $i + 1));
+                    return implode(' ', array_slice($words ?? [], 0, $i + 1));
                 }
             }
         }
@@ -132,13 +132,13 @@ class DBText extends DBString
 
         // Split on sentences (don't remove period)
         $sentences = array_filter(array_map(function ($str) {
-            return trim($str);
-        }, preg_split('@(?<=\.)@', $value) ?: []));
-        $wordCount = count(preg_split('#\s+#u', $sentences[0]) ?: []);
+            return trim($str ?? '');
+        }, preg_split('@(?<=\.)@', $value ?? '') ?: []));
+        $wordCount = count(preg_split('#\s+#u', $sentences[0] ?? '') ?: []);
 
         // if the first sentence is too long, show only the first $maxWords words
         if ($wordCount > $maxWords) {
-            return implode(' ', array_slice(explode(' ', $sentences[0]), 0, $maxWords)) . $add;
+            return implode(' ', array_slice(explode(' ', $sentences[0] ?? ''), 0, $maxWords)) . $add;
         }
 
         // add each sentence while there are enough words to do so
@@ -149,11 +149,11 @@ class DBText extends DBString
 
             // If more sentences to process, count number of words
             if ($sentences) {
-                $wordCount += count(preg_split('#\s+#u', $sentences[0]) ?: []);
+                $wordCount += count(preg_split('#\s+#u', $sentences[0] ?? '') ?: []);
             }
-        } while ($wordCount < $maxWords && $sentences && trim($sentences[0]));
+        } while ($wordCount < $maxWords && $sentences && trim($sentences[0] ?? ''));
 
-        return trim($result);
+        return trim($result ?? '');
     }
 
     /**
@@ -169,7 +169,7 @@ class DBText extends DBString
         }
 
         // Split paragraphs and return first
-        $paragraphs = preg_split('#\n{2,}#', $value) ?: [];
+        $paragraphs = preg_split('#\n{2,}#', $value ?? '') ?: [];
         return reset($paragraphs);
     }
 
@@ -210,48 +210,48 @@ class DBText extends DBString
         $keywords = Convert::raw2xml($keywords);
 
         // Find the search string
-        $position = empty($keywords) ? 0 : (int) mb_stripos($text, $keywords);
+        $position = empty($keywords) ? 0 : (int) mb_stripos($text ?? '', $keywords ?? '');
 
         // We want to search string to be in the middle of our block to give it some context
-        $position = max(0, $position - ($characters / 2));
+        $position = floor(max(0, $position - ($characters / 2)) ?? 0.0);
 
         if ($position > 0) {
             // We don't want to start mid-word
             $position = max(
-                (int) mb_strrpos(mb_substr($text, 0, $position), ' '),
-                (int) mb_strrpos(mb_substr($text, 0, $position), "\n")
+                (int) mb_strrpos(mb_substr($text ?? '', 0, $position), ' '),
+                (int) mb_strrpos(mb_substr($text ?? '', 0, $position), "\n")
             );
         }
 
-        $summary = mb_substr($text, $position, $characters);
-        $stringPieces = explode(' ', $keywords);
+        $summary = mb_substr($text ?? '', $position ?? 0, $characters);
+        $stringPieces = explode(' ', $keywords ?? '');
 
         if ($highlight) {
             // Add a span around all key words from the search term as well
             if ($stringPieces) {
                 foreach ($stringPieces as $stringPiece) {
-                    if (mb_strlen($stringPiece) > 2) {
+                    if (mb_strlen($stringPiece ?? '') > 2) {
                         // Maintain case of original string
                         $summary = preg_replace(
-                            '/' . preg_quote($stringPiece, '/') . '/i',
+                            '/' . preg_quote($stringPiece ?? '', '/') . '/i',
                             '<mark>$0</mark>',
-                            $summary
+                            $summary ?? ''
                         );
                     }
                 }
             }
         }
-        $summary = trim($summary);
+        $summary = trim($summary ?? '');
 
         // Add leading / trailing '...' if trimmed on either end
         if ($position > 0) {
             $summary = $prefix . $summary;
         }
-        if (strlen($text) > ($characters + $position)) {
+        if (strlen($text ?? '') > ($characters + $position)) {
             $summary = $summary . $suffix;
         }
 
-        return nl2br($summary);
+        return nl2br($summary ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)

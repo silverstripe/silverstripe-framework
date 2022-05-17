@@ -68,7 +68,7 @@ class RateLimitMiddleware implements HTTPMiddleware
         } else {
             $key .= $request->getIP();
         }
-        return md5($key);
+        return md5($key ?? '');
     }
 
     /**

@@ -228,7 +228,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         foreach ($this->from as $key => $tableClause) {
             if (is_array($tableClause)) {
                 $table = '"' . $tableClause['table'] . '"';
-            } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) {
+            } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause ?? '', $matches)) {
                 $table = $matches[1];
             } else {
                 $table = $tableClause;
@@ -236,10 +236,10 @@ abstract class SQLConditionalExpression extends SQLExpression
 
             // Handle string replacements
             if ($this->replacementsOld) {
-                $table = str_replace($this->replacementsOld, $this->replacementsNew, $table);
+                $table = str_replace($this->replacementsOld ?? '', $this->replacementsNew ?? '', $table ?? '');
             }
 
-            $tables[] = preg_replace('/^"|"$/', '', $table);
+            $tables[] = preg_replace('/^"|"$/', '', $table ?? '');
         }
 
         return $tables;
@@ -287,16 +287,16 @@ abstract class SQLConditionalExpression extends SQLExpression
                     continue;
                 }
 
-                if (preg_match('/AS\s+(?:"[^"]+"|[A-Z0-9_]+)\s*$/i', $join)) {
+                if (preg_match('/AS\s+(?:"[^"]+"|[A-Z0-9_]+)\s*$/i', $join ?? '')) {
                     // custom aliases override the ones defined through array keys
                     // this is only meant to keep backward compatibility with SS <= 4.3,
                     // to be removed in SS5
                     continue;
                 }
 
-                $trimmedAlias = trim($alias, '"');
+                $trimmedAlias = trim($alias ?? '', '"');
 
-                if ($trimmedAlias !== trim($join, '"')) {
+                if ($trimmedAlias !== trim($join ?? '', '"')) {
                     $joins[$alias] = "{$join} AS \"{$trimmedAlias}\"";
                 }
 
@@ -305,20 +305,20 @@ abstract class SQLConditionalExpression extends SQLExpression
 
             if (is_string($join['filter'])) {
                 $filter = $join['filter'];
-            } elseif (sizeof($join['filter']) == 1) {
+            } elseif (sizeof($join['filter'] ?? []) == 1) {
                 $filter = $join['filter'][0];
             } else {
                 $filter = "(" . implode(") AND (", $join['filter']) . ")";
             }
 
             // Ensure tables are quoted, unless the table is actually a sub-select
-            $table = preg_match('/\bSELECT\b/i', $join['table'])
+            $table = preg_match('/\bSELECT\b/i', $join['table'] ?? '')
                 ? $join['table']
                 : "\"{$join['table']}\"";
             $aliasClause = ($alias != $join['table'])
                 ? " AS \"{$alias}\""
                 : "";
-            $joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
+            $joins[$alias] = strtoupper($join['type'] ?? '') . " JOIN " . $table . "$aliasClause ON $filter";
             if (!empty($join['parameters'])) {
                 $parameters = array_merge($parameters, $join['parameters']);
             }
@@ -338,13 +338,13 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     protected function getOrderedJoins($from)
     {
-        if (count($from) <= 1) {
+        if (count($from ?? []) <= 1) {
             return $from;
         }
 
         // shift the first FROM table out from so we only deal with the JOINs
         reset($from);
-        $baseFromAlias = key($from);
+        $baseFromAlias = key($from ?? []);
         $baseFrom = array_shift($from);
 
         $this->mergesort($from, function ($firstJoin, $secondJoin) {
@@ -380,13 +380,13 @@ abstract class SQLConditionalExpression extends SQLExpression
     protected function mergesort(&$array, $cmpFunction = 'strcmp')
     {
         // Arrays of size < 2 require no action.
-        if (count($array) < 2) {
+        if (count($array ?? []) < 2) {
             return;
         }
         // Split the array in half
-        $halfway = count($array) / 2;
-        $array1 = array_slice($array, 0, $halfway);
-        $array2 = array_slice($array, $halfway);
+        $halfway = floor(count($array ?? []) / 2);
+        $array1 = array_slice($array ?? [], 0, $halfway);
+        $array2 = array_slice($array ?? [], $halfway ?? 0);
         // Recurse to sort the two halves
         $this->mergesort($array1, $cmpFunction);
         $this->mergesort($array2, $cmpFunction);
@@ -599,12 +599,12 @@ abstract class SQLConditionalExpression extends SQLExpression
             if (!is_array($value) || isset($value['type'])) {
                 $parameters = [$value];
             } else {
-                $parameters = array_values($value);
+                $parameters = array_values($value ?? []);
             }
 
             // Append '= ?' if not present, parameters are given, and we have exactly one parameter
-            if (strpos($key, '?') === false) {
-                $parameterCount = count($parameters);
+            if (strpos($key ?? '', '?') === false) {
+                $parameterCount = count($parameters ?? []);
                 if ($parameterCount === 1) {
                     $key .= " = ?";
                 } elseif ($parameterCount > 1) {
@@ -617,7 +617,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         } elseif (is_array($value)) {
             // If predicates are nested one per array (as per the internal format)
             // then run a quick check over the contents and recursively parse
-            if (count($value) !== 1) {
+            if (count($value ?? []) !== 1) {
                 throw new \InvalidArgumentException(
                     'Nested predicates should be given as a single item array in '
                         . 'array($predicate => array($parameters)) format)'
@@ -654,7 +654,7 @@ abstract class SQLConditionalExpression extends SQLExpression
     protected function normalisePredicates(array $predicates)
     {
         // Since this function is called with func_get_args we should un-nest the single first parameter
-        if (count($predicates) == 1) {
+        if (count($predicates ?? []) == 1) {
             $predicates = array_shift($predicates);
         }
 
@@ -719,7 +719,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         $regexp = '/^(.*\.)?("|`)?ID("|`)?\s?(=|IN)/';
 
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
-            if (preg_match($regexp, $predicate)) {
+            if (preg_match($regexp ?? '', $predicate ?? '')) {
                 return true;
             }
         }
@@ -740,7 +740,7 @@ abstract class SQLConditionalExpression extends SQLExpression
 
         // @todo - Test this works with parameterized queries
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
-            if (preg_match($regexp, $predicate)) {
+            if (preg_match($regexp ?? '', $predicate ?? '')) {
                 return true;
             }
         }

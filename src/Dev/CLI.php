@@ -14,7 +14,7 @@ class CLI
     public static function supports_colour()
     {
         // Special case for buildbot
-        if (isset($_ENV['_']) && strpos($_ENV['_'], 'buildbot') !== false) {
+        if (isset($_ENV['_']) && strpos($_ENV['_'] ?? '', 'buildbot') !== false) {
             return false;
         }
 

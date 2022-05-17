@@ -90,7 +90,7 @@ class DBHTMLText extends DBText
     public function setWhitelist($whitelist)
     {
         if (!is_array($whitelist)) {
-            $whitelist = preg_split('/\s*,\s*/', $whitelist);
+            $whitelist = preg_split('/\s*,\s*/', $whitelist ?? '');
         }
         $this->whitelist = $whitelist;
         return $this;
@@ -115,11 +115,11 @@ class DBHTMLText extends DBText
      */
     public function setOptions(array $options = [])
     {
-        if (array_key_exists("shortcodes", $options)) {
+        if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
         }
 
-        if (array_key_exists("whitelist", $options)) {
+        if (array_key_exists("whitelist", $options ?? [])) {
             $this->setWhitelist($options['whitelist']);
         }
 
@@ -158,7 +158,7 @@ class DBHTMLText extends DBText
     {
         return sprintf(
             '<![CDATA[%s]]>',
-            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW())
+            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW() ?? '')
         );
     }
 
@@ -217,19 +217,19 @@ class DBHTMLText extends DBText
     public function Plain()
     {
         // Preserve line breaks
-        $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $this->RAW());
+        $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $this->RAW() ?? '');
 
         // Convert paragraph breaks to multi-lines
-        $text = preg_replace('/\<\/p\>/i', "\n\n", $text);
+        $text = preg_replace('/\<\/p\>/i', "\n\n", $text ?? '');
 
         // Strip out HTML tags
-        $text = strip_tags($text);
+        $text = strip_tags($text ?? '');
 
         // Implode >3 consecutive linebreaks into 2
-        $text = preg_replace('~(\R){2,}~u', "\n\n", $text);
+        $text = preg_replace('~(\R){2,}~u', "\n\n", $text ?? '');
 
         // Decode HTML entities back to plain text
-        return trim(Convert::xml2raw($text));
+        return trim(Convert::xml2raw($text) ?? '');
     }
 
     public function getSchemaValue()
@@ -247,6 +247,6 @@ class DBHTMLText extends DBText
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
-        return $value || (is_string($value) && strlen($value));
+        return $value || (is_string($value) && strlen($value ?? ''));
     }
 }

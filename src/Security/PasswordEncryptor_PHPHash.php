@@ -39,6 +39,6 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor
 
     public function encrypt($password, $salt = null, $member = null)
     {
-        return hash($this->algorithm, $password . $salt);
+        return hash($this->algorithm ?? '', $password . $salt);
     }
 }

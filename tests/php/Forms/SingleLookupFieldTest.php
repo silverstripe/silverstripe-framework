@@ -25,7 +25,7 @@ class SingleLookupFieldTest extends SapphireTest
         $this->assertInstanceOf(SingleLookupField::class, $testField);
 
         $testField->setValue('member1');
-        preg_match('/Member 1/', $testField->Field(), $matches);
+        preg_match('/Member 1/', $testField->Field() ?? '', $matches);
         $this->assertEquals($matches[0], 'Member 1');
     }
 
@@ -41,7 +41,7 @@ class SingleLookupFieldTest extends SapphireTest
         $this->assertInstanceOf(SingleLookupField::class, $testField);
 
         $testField->setValue('member123');
-        preg_match('/\(none\)/', $testField->Field(), $matches);
+        preg_match('/\(none\)/', $testField->Field() ?? '', $matches);
         $this->assertEquals($matches[0], '(none)');
     }
 }

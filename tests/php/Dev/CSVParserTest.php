@@ -31,7 +31,7 @@ class CSVParserTest extends SapphireTest
             /* Each row in the CSV file will be keyed with the header row */
             $this->assertEquals(
                 ['FirstName','Biography','Birthday','IsRegistered'],
-                array_keys($record)
+                array_keys($record ?? [])
             );
             $firstNames[] = $record['FirstName'];
             $biographies[] = $record['Biography'];
@@ -84,7 +84,7 @@ class CSVParserTest extends SapphireTest
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
             * left as-is. */
-            $this->assertEquals(['__fn','__BG','Birthday','IsRegistered'], array_keys($record));
+            $this->assertEquals(['__fn','__BG','Birthday','IsRegistered'], array_keys($record ?? []));
             $firstNames[] = $record['__fn'];
             $biographies[] = $record['__BG'];
             $birthdays[] = $record['Birthday'];
@@ -124,7 +124,7 @@ class CSVParserTest extends SapphireTest
         $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the header row that you gave */
-            $this->assertEquals(['__fn','__bio','__bd','__reg'], array_keys($record));
+            $this->assertEquals(['__fn','__bio','__bd','__reg'], array_keys($record ?? []));
             $firstNames[] = $record['__fn'];
             $biographies[] = $record['__bio'];
             $birthdays[] = $record['__bd'];

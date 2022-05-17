@@ -86,8 +86,8 @@ class DevelopmentAdmin extends Controller
         }
 
         // Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
-        $requestedDevBuild = (stripos($this->getRequest()->getURL(), 'dev/build') === 0)
-            && (stripos($this->getRequest()->getURL(), 'dev/build/defaults') === false);
+        $requestedDevBuild = (stripos($this->getRequest()->getURL() ?? '', 'dev/build') === 0)
+            && (stripos($this->getRequest()->getURL() ?? '', 'dev/build/defaults') === false);
 
         // We allow access to this controller regardless of live-status or ADMIN permission only
         // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
@@ -152,7 +152,7 @@ class DevelopmentAdmin extends Controller
             $controllerClass = $reg[$baseUrlPart]['controller'];
         }
 
-        if ($controllerClass && class_exists($controllerClass)) {
+        if ($controllerClass && class_exists($controllerClass ?? '')) {
             return $controllerClass::create();
         }
 

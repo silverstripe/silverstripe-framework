@@ -49,7 +49,7 @@ class CompositeValidator extends Validator
      */
     public function __construct(array $validators = [])
     {
-        $this->validators = array_values($validators);
+        $this->validators = array_values($validators ?? []);
 
         parent::__construct();
     }
@@ -216,7 +216,7 @@ class CompositeValidator extends Validator
      */
     protected function removeValidatorByKey(int $key): CompositeValidator
     {
-        if (!array_key_exists($key, $this->validators)) {
+        if (!array_key_exists($key, $this->validators ?? [])) {
             throw new InvalidArgumentException(
                 sprintf('Key "%s" does not exist in $validators array', $key)
             );

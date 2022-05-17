@@ -178,7 +178,7 @@ class RequestHandler extends ViewableData
 
         // Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
         if ($action[0] == '$') {
-            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)));
+            $action = str_replace("-", "_", $request->latestParam(substr($action ?? '', 1)) ?? '');
         }
 
         if (!$action) {
@@ -196,7 +196,7 @@ class RequestHandler extends ViewableData
             if (!$this->hasAction($action)) {
                 return $this->httpError(404, "Action '$action' isn't available $classMessage.");
             }
-            if (!$this->checkAccessAction($action) || in_array(strtolower($action), ['run', 'doinit'])) {
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action ?? ''), ['run', 'doinit'])) {
                 return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
             }
             $result = $this->handleAction($request, $action);
@@ -279,7 +279,7 @@ class RequestHandler extends ViewableData
                 }
             }
 
-            $handlerClass = get_parent_class($handlerClass);
+            $handlerClass = get_parent_class($handlerClass ?? '');
         }
         return null;
     }
@@ -292,7 +292,7 @@ class RequestHandler extends ViewableData
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
-            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL ?? ''));
         }
 
         return $link;
@@ -351,17 +351,17 @@ class RequestHandler extends ViewableData
         }
 
         if (is_array($actions)) {
-            if (array_key_exists('*', $actions)) {
+            if (array_key_exists('*', $actions ?? [])) {
                 throw new InvalidArgumentException("Invalid allowed_action '*'");
             }
 
             // convert all keys and values to lowercase to
             // allow for easier comparison, unless it is a permission code
-            $actions = array_change_key_case($actions, CASE_LOWER);
+            $actions = array_change_key_case($actions ?? [], CASE_LOWER);
 
             foreach ($actions as $key => $value) {
                 if (is_numeric($key)) {
-                    $actions[$key] = strtolower($value);
+                    $actions[$key] = strtolower($value ?? '');
                 }
             }
 
@@ -388,7 +388,7 @@ class RequestHandler extends ViewableData
         // Don't allow access to any non-public methods (inspect instance plus all extensions)
         $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
-            if (!method_exists($inst, $action)) {
+            if (!method_exists($inst, $action ?? '')) {
                 continue;
             }
             $r = new ReflectionClass(get_class($inst));
@@ -398,15 +398,15 @@ class RequestHandler extends ViewableData
             }
         }
 
-        $action  = strtolower($action);
+        $action  = strtolower($action ?? '');
         $actions = $this->allowedActions();
 
         // Check if the action is defined in the allowed actions of any ancestry class
         // as either a key or value. Note that if the action is numeric, then keys are not
         // searched for actions to prevent actual array keys being recognised as actions.
         if (is_array($actions)) {
-            $isKey   = !is_numeric($action) && array_key_exists($action, $actions);
-            $isValue = in_array($action, $actions, true);
+            $isKey   = !is_numeric($action) && array_key_exists($action, $actions ?? []);
+            $isValue = in_array($action, $actions ?? [], true);
             if ($isKey || $isValue) {
                 return true;
             }
@@ -414,7 +414,7 @@ class RequestHandler extends ViewableData
 
         $actionsWithoutExtra = $this->config()->get('allowed_actions', true);
         if (!is_array($actions) || !$actionsWithoutExtra) {
-            if (!in_array(strtolower($action), ['run', 'doinit']) && method_exists($this, $action)) {
+            if (!in_array(strtolower($action ?? ''), ['run', 'doinit']) && method_exists($this, $action ?? '')) {
                 return true;
             }
         }
@@ -430,12 +430,12 @@ class RequestHandler extends ViewableData
      */
     protected function definingClassForAction($actionOrigCasing)
     {
-        $action = strtolower($actionOrigCasing);
+        $action = strtolower($actionOrigCasing ?? '');
 
         $definingClass = null;
         $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
-            if (!method_exists($inst, $action)) {
+            if (!method_exists($inst, $action ?? '')) {
                 continue;
             }
             $r = new ReflectionClass(get_class($inst));
@@ -456,7 +456,7 @@ class RequestHandler extends ViewableData
     public function checkAccessAction($action)
     {
         $actionOrigCasing = $action;
-        $action = strtolower($action);
+        $action = strtolower($action ?? '');
 
         $isAllowed = false;
         $isDefined = false;
@@ -472,22 +472,22 @@ class RequestHandler extends ViewableData
             if ($test === true || $test === 1 || $test === '1') {
                 // TRUE should always allow access
                 $isAllowed = true;
-            } elseif (substr($test, 0, 2) == '->') {
+            } elseif (substr($test ?? '', 0, 2) == '->') {
                 // Determined by custom method with "->" prefix
-                list($method, $arguments) = ClassInfo::parse_class_spec(substr($test, 2));
-                $isAllowed = call_user_func_array([$this, $method], $arguments);
+                list($method, $arguments) = ClassInfo::parse_class_spec(substr($test ?? '', 2));
+                $isAllowed = call_user_func_array([$this, $method], $arguments ?? []);
             } else {
                 // Value is a permission code to check the current member against
                 $isAllowed = Permission::check($test);
             }
         } elseif (is_array($allowedActions)
-            && (($key = array_search($action, $allowedActions, true)) !== false)
+            && (($key = array_search($action, $allowedActions ?? [], true)) !== false)
             && is_numeric($key)
         ) {
             // Allow numeric array notation (search for array value as action instead of key)
             $isDefined = true;
             $isAllowed = true;
-        } elseif (is_array($allowedActions) && !count($allowedActions)) {
+        } elseif (is_array($allowedActions) && !count($allowedActions ?? [])) {
             // If defined as empty array, deny action
             $isAllowed = false;
         } elseif ($allowedActions === null) {

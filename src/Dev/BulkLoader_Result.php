@@ -62,9 +62,10 @@ class BulkLoader_Result implements \Countable
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function Count()
     {
-        return count($this->created) + count($this->updated);
+        return count($this->created ?? []) + count($this->updated ?? []);
     }
 
     /**
@@ -72,7 +73,7 @@ class BulkLoader_Result implements \Countable
      */
     public function CreatedCount()
     {
-        return count($this->created);
+        return count($this->created ?? []);
     }
 
     /**
@@ -80,7 +81,7 @@ class BulkLoader_Result implements \Countable
      */
     public function UpdatedCount()
     {
-        return count($this->updated);
+        return count($this->updated ?? []);
     }
 
     /**
@@ -88,7 +89,7 @@ class BulkLoader_Result implements \Countable
      */
     public function DeletedCount()
     {
-        return count($this->deleted);
+        return count($this->deleted ?? []);
     }
 
     /**

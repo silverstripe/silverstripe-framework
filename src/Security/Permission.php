@@ -198,11 +198,11 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if ($permCode === 'CMS_ACCESS') {
                     foreach (self::$cache_permissions[$memberID] as $perm) {
                         //if they have admin rights OR they have an explicit access to the CMS then give permission
-                        if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm, 0, 11) === 'CMS_ACCESS_') {
+                        if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm ?? '', 0, 11) === 'CMS_ACCESS_') {
                             return true;
                         }
                     }
-                } elseif (substr($permCode, 0, 11) === 'CMS_ACCESS_' && !in_array('CMS_ACCESS_LeftAndMain', $code)) {
+                } elseif (substr($permCode ?? '', 0, 11) === 'CMS_ACCESS_' && !in_array('CMS_ACCESS_LeftAndMain', $code ?? [])) {
                     //cms_access_leftandmain means access to all CMS areas
                     $code[] = 'CMS_ACCESS_LeftAndMain';
                 }
@@ -214,7 +214,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             }
 
             // Multiple $code values - return true if at least one matches, ie, intersection exists
-            return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
+            return (bool)array_intersect($code ?? [], self::$cache_permissions[$memberID]);
         }
 
         // Code filters
@@ -318,15 +318,15 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
 				INNER JOIN \"Group_Roles\" GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
 				WHERE \"GroupID\" IN ($groupCSV)
-			")->column());
+			")->column() ?? []);
 
             $denied = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
 				WHERE \"Type\" = " . self::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-			")->column());
+			")->column() ?? []);
 
-            return array_diff($allowed, $denied);
+            return array_diff($allowed ?? [], $denied);
         }
 
         return [];
@@ -469,7 +469,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         foreach ($toplevelGroups as $group) {
             $familyIDs = $group->collateFamilyIDs();
             if (is_array($familyIDs)) {
-                $groupIDs = array_merge($groupIDs, array_values($familyIDs));
+                $groupIDs = array_merge($groupIDs, array_values($familyIDs ?? []));
             }
         }
 
@@ -594,7 +594,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         if ($otherPerms) {
             foreach ($otherPerms as $otherPerm) {
-                if (!in_array($otherPerm, $flatCodeArray)) {
+                if (!in_array($otherPerm, $flatCodeArray ?? [])) {
                     $allCodes['Other'][$otherPerm] = [
                     'name' => $otherPerm,
                     'help' => null,
@@ -635,7 +635,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     {
         if ($a['sort'] == $b['sort']) {
             // Same sort value, do alpha instead
-            return strcmp($a['name'], $b['name']);
+            return strcmp($a['name'] ?? '', $b['name'] ?? '');
         } else {
             // Just numeric.
             return $a['sort'] < $b['sort'] ? -1 : 1;
@@ -675,7 +675,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function get_label_for_permission($perm)
     {
         $list = self::get_declared_permissions_list();
-        if (array_key_exists($perm, $list)) {
+        if (array_key_exists($perm, $list ?? [])) {
             return $list[$perm];
         }
         return $perm;

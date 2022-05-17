@@ -28,11 +28,11 @@ class YamlReader implements Reader
     public function read($locale, $path)
     {
         try {
-            if (!file_exists($path)) {
+            if (!file_exists($path ?? '')) {
                 return [];
             }
             // Load
-            $yaml = $this->getParser()->parse(file_get_contents($path));
+            $yaml = $this->getParser()->parse(file_get_contents($path ?? ''));
             if (empty($yaml[$locale])) {
                 return [];
             }

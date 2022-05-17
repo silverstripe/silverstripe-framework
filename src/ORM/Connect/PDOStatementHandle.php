@@ -79,13 +79,13 @@ class PDOStatementHandle
                 foreach ($this->columnMeta as $i => $meta) {
                     // Coerce any column types that aren't correctly retrieved from the database
                     if (isset($meta['native_type']) && isset(self::$type_mapping[$meta['native_type']])) {
-                        settype($rowArray[$i], self::$type_mapping[$meta['native_type']]);
+                        settype($rowArray[$i], self::$type_mapping[$meta['native_type']] ?? '');
                     }
                     $row[$meta['name']] = $rowArray[$i];
                 }
                 return $row;
             },
-            $this->statement->fetchAll(PDO::FETCH_NUM)
+            $this->statement->fetchAll(PDO::FETCH_NUM) ?? []
         );
     }
 

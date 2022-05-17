@@ -155,7 +155,7 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
             foreach ($allowedStartswith as $pattern) {
                 $startswith = $this->absoluteUrl($pattern);
 
-                if (strncmp($currentUrl, $startswith, strlen($startswith)) === 0) {
+                if (strncmp($currentUrl ?? '', $startswith ?? '', strlen($startswith ?? '')) === 0) {
                     return null;
                 }
             }
@@ -174,15 +174,15 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
      */
     protected static function absoluteUrl($url): string
     {
-        if (substr($url, 0, 1) === '/' && substr($url, 1, 1) !== '/') {
+        if (substr($url ?? '', 0, 1) === '/' && substr($url ?? '', 1, 1) !== '/') {
             // add BASE_URL explicitly if not absolute
             $url = Controller::join_links(Director::absoluteBaseURL(), $url);
         } else {
             $url = Director::absoluteURL($url) ?: Controller::join_links(Director::absoluteBaseURL(), $url);
         }
 
-        if (substr($url, -1) === '/') {
-            $url = substr($url, 0, -1);
+        if (substr($url ?? '', -1) === '/') {
+            $url = substr($url ?? '', 0, -1);
         }
 
         return $url;
@@ -203,12 +203,12 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
 
         $allowedTypes = static::config()->get('mimetypes_allowing_redirect') ?? [];
 
-        if (count(array_intersect($allowedTypes, $acceptableTypes)) > 0) {
+        if (count(array_intersect($allowedTypes ?? [], $acceptableTypes)) > 0) {
             $redirectAllowed = true;
         } else {
             //  if browser didn't send the Accept header
             //  with mimetypes, let's redirect anyway
-            $redirectAllowed = count($acceptableTypes) === 0;
+            $redirectAllowed = count($acceptableTypes ?? []) === 0;
         }
 
         if ($redirectAllowed) {

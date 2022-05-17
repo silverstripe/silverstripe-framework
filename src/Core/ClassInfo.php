@@ -10,6 +10,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
 
 /**
  * Provides introspection information about the class tree.
@@ -76,8 +77,8 @@ class ClassInfo
      */
     public static function exists($class)
     {
-        return class_exists($class, false)
-            || interface_exists($class, false)
+        return class_exists($class ?? '', false)
+            || interface_exists($class ?? '', false)
             || ClassLoader::inst()->getItemPath($class);
     }
 
@@ -112,7 +113,7 @@ class ClassInfo
      */
     public static function getValidSubClasses($class = SiteTree::class, $includeUnbacked = false)
     {
-        if (is_string($class) && !class_exists($class)) {
+        if (is_string($class) && !class_exists($class ?? '')) {
             return [];
         }
 
@@ -137,7 +138,7 @@ class ClassInfo
      */
     public static function dataClassesFor($nameOrObject)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
@@ -149,7 +150,7 @@ class ClassInfo
         );
 
         // Filter by table
-        return array_filter($classes, function ($next) {
+        return array_filter($classes ?? [], function ($next) {
             return DataObject::getSchema()->classHasTable($next);
         });
     }
@@ -188,13 +189,13 @@ class ClassInfo
      */
     public static function subclassesFor($nameOrObject, $includeBaseClass = true)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
         // Get class names
         $className = self::class_name($nameOrObject);
-        $lowerClassName = strtolower($className);
+        $lowerClassName = strtolower($className ?? '');
 
         // Merge with descendants
         $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
@@ -219,7 +220,7 @@ class ClassInfo
             return get_class($nameOrObject);
         }
 
-        $key = strtolower($nameOrObject);
+        $key = strtolower($nameOrObject ?? '');
         if (!isset(static::$_cache_class_names[$key])) {
             // Get manifest name
             $name = ClassLoader::inst()->getManifest()->getItemName($nameOrObject);
@@ -245,13 +246,13 @@ class ClassInfo
      */
     public static function ancestry($nameOrObject, $tablesOnly = false)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
         $class = self::class_name($nameOrObject);
 
-        $lowerClass = strtolower($class);
+        $lowerClass = strtolower($class ?? '');
 
         $cacheKey = $lowerClass . '_' . (string)$tablesOnly;
         $parent = $class;
@@ -261,8 +262,8 @@ class ClassInfo
                 if (!$tablesOnly || DataObject::getSchema()->classHasTable($parent)) {
                     $ancestry[strtolower($parent)] = $parent;
                 }
-            } while ($parent = get_parent_class($parent));
-            self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
+            } while ($parent = get_parent_class($parent ?? ''));
+            self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry ?? []);
         }
 
         return self::$_cache_ancestry[$cacheKey];
@@ -287,7 +288,7 @@ class ClassInfo
      */
     public static function classImplements($className, $interfaceName)
     {
-        $lowerClassName = strtolower($className);
+        $lowerClassName = strtolower($className ?? '');
         $implementors = self::implementorsOf($interfaceName);
         return isset($implementors[$lowerClassName]);
     }
@@ -307,7 +308,7 @@ class ClassInfo
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (strcasecmp($absFilePath, $compareFilePath) === 0) {
+            if (strcasecmp($absFilePath ?? '', $compareFilePath ?? '') === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
@@ -330,7 +331,7 @@ class ClassInfo
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (stripos($compareFilePath, $absFolderPath) === 0) {
+            if (stripos($compareFilePath ?? '', $absFolderPath ?? '') === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
@@ -348,14 +349,14 @@ class ClassInfo
      */
     public static function has_method_from($class, $method, $compclass)
     {
-        $lClass = strtolower($class);
-        $lMethod = strtolower($method);
-        $lCompclass = strtolower($compclass);
+        $lClass = strtolower($class ?? '');
+        $lMethod = strtolower($method ?? '');
+        $lCompclass = strtolower($compclass ?? '');
         if (!isset(self::$_cache_methods[$lClass])) {
             self::$_cache_methods[$lClass] = [];
         }
 
-        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass])) {
+        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass] ?? [])) {
             self::$_cache_methods[$lClass][$lMethod] = false;
 
             $classRef = new ReflectionClass($class);
@@ -366,7 +367,7 @@ class ClassInfo
             }
         }
 
-        return strtolower(self::$_cache_methods[$lClass][$lMethod]) === $lCompclass;
+        return strtolower(self::$_cache_methods[$lClass][$lMethod] ?? '') === $lCompclass;
     }
 
     /**
@@ -387,7 +388,7 @@ class ClassInfo
     public static function shortName($nameOrObject)
     {
         $name = static::class_name($nameOrObject);
-        $parts = explode('\\', $name);
+        $parts = explode('\\', $name ?? '');
         return end($parts);
     }
 
@@ -403,7 +404,7 @@ class ClassInfo
         if (empty($object) || (!is_object($object) && !is_string($object))) {
             return false;
         }
-        if (method_exists($object, $method)) {
+        if (method_exists($object, $method ?? '')) {
             return true;
         }
         return method_exists($object, 'hasMethod') && $object->hasMethod($method);
@@ -528,7 +529,7 @@ class ClassInfo
                     $oldBucket = $bucket;
                     // Fetch the key for the bucket at the top of the stack
                     end($bucketStack);
-                    $key = key($bucketStack);
+                    $key = key($bucketStack ?? []);
                     reset($bucketStack);
                     // Re-instate the bucket from the top of the stack
                     $bucket = &$bucketStack[$key];
@@ -552,7 +553,7 @@ class ClassInfo
                 if ($result === []) {
                     // Fetch the key that the array was pushed to
                     end($bucket);
-                    $key = key($bucket);
+                    $key = key($bucket ?? []);
                     reset($bucket);
                     // Store reference to "old" bucket in the stack
                     $bucketStack[$key] = &$bucket;
@@ -596,8 +597,8 @@ class ClassInfo
         }
 
         // only keep classes with the Extension applied
-        $classes = array_filter($classes, function ($class) use ($extensionClass) {
-            return Extensible::has_extension($class, $extensionClass);
+        $classes = array_filter($classes ?? [], function ($class) use ($extensionClass) {
+            return ViewableData::has_extension($class, $extensionClass);
         });
 
         return $classes;

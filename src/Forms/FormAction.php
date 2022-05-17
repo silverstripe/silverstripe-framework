@@ -125,7 +125,7 @@ class FormAction extends FormField
      */
     public function actionName()
     {
-        return substr($this->name, 7);
+        return substr($this->name ?? '', 7);
     }
 
     /**

@@ -41,6 +41,6 @@ class Player extends DataObject implements TestOnly
      */
     public function setUSBirthday($val, $record = null)
     {
-        $this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val);
+        $this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val ?? '');
     }
 }

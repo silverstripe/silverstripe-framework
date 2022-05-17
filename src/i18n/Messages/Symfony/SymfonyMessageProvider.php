@@ -169,8 +169,8 @@ class SymfonyMessageProvider implements MessageProvider
         $arguments = array_combine(
             array_map(function ($val) {
                 return '{' . $val . '}';
-            }, array_keys($injection)),
-            $injection
+            }, array_keys($injection ?? [])),
+            $injection ?? []
         );
         return $arguments;
     }

@@ -58,8 +58,8 @@ class TempDatabase
     {
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $result = preg_match(
-            sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix, '/')),
-            $name
+            sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix ?? '', '/')),
+            $name ?? ''
         );
         return $result === 1;
     }
@@ -248,7 +248,7 @@ class TempDatabase
             function () use ($dataClasses, $extraDataObjects) {
                 foreach ($dataClasses as $dataClass) {
                     // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                    if (class_exists($dataClass)) {
+                    if (class_exists($dataClass ?? '')) {
                         $SNG = singleton($dataClass);
                         if (!($SNG instanceof TestOnly)) {
                             $SNG->requireTable();

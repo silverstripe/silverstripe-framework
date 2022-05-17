@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use IntlDateFormatter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DatetimeField;
@@ -29,7 +30,7 @@ class DatetimeFieldTest extends SapphireTest
     protected function tearDown(): void
     {
         DBDatetime::clear_mock_now();
-        date_default_timezone_set($this->timezone);
+        date_default_timezone_set($this->timezone ?? '');
         parent::tearDown();
     }
 
@@ -256,12 +257,12 @@ class DatetimeFieldTest extends SapphireTest
     {
         $f = new DatetimeField('Datetime');
         $f->setMinDatetime('-7 days');
-        $f->setValue(strftime('%Y-%m-%d %T', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d H:i:s', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date below min datetime, with strtotime');
 
         $f = new DatetimeField('Datetime');
         $f->setMinDatetime('-7 days');
-        $f->setValue(strftime('%Y-%m-%d %T', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d H:i:s', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching min datetime, with strtotime');
     }
 
@@ -269,12 +270,12 @@ class DatetimeFieldTest extends SapphireTest
     {
         $f = new DatetimeField('Datetime');
         $f->setMaxDatetime('7 days');
-        $f->setValue(strftime('%Y-%m-%d %T', strtotime('8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d H:i:s', strtotime('8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date above max date, with strtotime');
 
         $f = new DatetimeField('Datetime');
         $f->setMaxDatetime('7 days');
-        $f->setValue(strftime('%Y-%m-%d %T', strtotime('7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d H:i:s', strtotime('7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
     }
 

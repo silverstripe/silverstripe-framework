@@ -30,7 +30,7 @@ class ManyManyListExtensionTest extends SapphireTest
         $secondaries = $primary->Secondary();
         $extraFields = $secondaries->getExtraFields();
 
-        $this->assertTrue(count($extraFields) > 0, 'has extra fields');
+        $this->assertTrue(count($extraFields ?? []) > 0, 'has extra fields');
         $this->assertTrue(isset($extraFields['DocumentSort']), 'has DocumentSort');
 
         // Test from the secondary (which is extended) to the primary (not extended)
@@ -40,7 +40,7 @@ class ManyManyListExtensionTest extends SapphireTest
         $primaries = $secondary->Primary();
         $extraFields = $primaries->getExtraFields();
 
-        $this->assertTrue(count($extraFields) > 0, 'has extra fields');
+        $this->assertTrue(count($extraFields ?? []) > 0, 'has extra fields');
         $this->assertTrue(isset($extraFields['DocumentSort']), 'has DocumentSort');
     }
 }

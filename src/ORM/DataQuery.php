@@ -124,7 +124,7 @@ class DataQuery
         // If given a parameterised condition extract only the condition
         if (is_array($fieldExpression)) {
             reset($fieldExpression);
-            $fieldExpression = key($fieldExpression);
+            $fieldExpression = key($fieldExpression ?? []);
         }
 
         $where = $this->query->getWhere();
@@ -140,7 +140,7 @@ class DataQuery
             // iteration to extract the predicate and parameters
             foreach ($condition as $predicate => $parameters) {
                 // @see SQLSelect::addWhere for why this is required here
-                if (strpos($predicate, $fieldExpression) !== false) {
+                if (strpos($predicate ?? '', $fieldExpression ?? '') !== false) {
                     unset($where[$i]);
                     $matched = true;
                 }
@@ -233,13 +233,13 @@ class DataQuery
                 // Check for any columns in the form '"Column" = ?' or '"Table"."Column"' = ?
                 if (preg_match_all(
                     '/(?:"(?<table>[^"]+)"\.)?"(?<column>[^"]+)"(?:[^\.]|$)/',
-                    $where,
+                    $where ?? '',
                     $matches,
                     PREG_SET_ORDER
                 )) {
                     foreach ($matches as $match) {
                         $column = $match['column'];
-                        if (!in_array($column, $queriedColumns)) {
+                        if (!in_array($column, $queriedColumns ?? [])) {
                             $queriedColumns[] = $column;
                         }
                     }
@@ -258,11 +258,11 @@ class DataQuery
                 // Restrict queried columns to that on the selected table
                 $tableFields = $schema->databaseFields($tableClass, false);
                 unset($tableFields['ID']);
-                $selectColumns = array_intersect($queriedColumns, array_keys($tableFields));
+                $selectColumns = array_intersect($queriedColumns ?? [], array_keys($tableFields ?? []));
             }
 
             // If this is a subclass without any explicitly requested columns, omit this from the query
-            if (!in_array($tableClass, $ancestorClasses) && empty($selectColumns)) {
+            if (!in_array($tableClass, $ancestorClasses ?? []) && empty($selectColumns)) {
                 continue;
             }
 
@@ -288,7 +288,7 @@ class DataQuery
             foreach ($this->collidingFields as $collisionField => $collisions) {
                 $caseClauses = [];
                 foreach ($collisions as $collision) {
-                    if (preg_match('/^"(?<table>[^"]+)"\./', $collision, $matches)) {
+                    if (preg_match('/^"(?<table>[^"]+)"\./', $collision ?? '', $matches)) {
                         $collisionTable = $matches['table'];
                         $collisionClass = $schema->tableClass($collisionTable);
                         if ($collisionClass) {
@@ -362,22 +362,22 @@ class DataQuery
 
                 // don't touch functions in the ORDER BY or public function calls
                 // selected as fields
-                if (strpos($k, '(') !== false) {
+                if (strpos($k ?? '', '(') !== false) {
                     continue;
                 }
 
-                $col = str_replace('"', '', trim($k));
-                $parts = explode('.', $col);
+                $col = str_replace('"', '', trim($k ?? ''));
+                $parts = explode('.', $col ?? '');
 
                 // Pull through SortColumn references from the originalSelect variables
-                if (preg_match('/_SortColumn/', $col)) {
+                if (preg_match('/_SortColumn/', $col ?? '')) {
                     if (isset($originalSelect[$col])) {
                         $query->selectField($originalSelect[$col], $col);
                     }
                     continue;
                 }
 
-                if (count($parts) == 1) {
+                if (count($parts ?? []) == 1) {
                     // Get expression for sort value
                     $qualCol = "\"{$parts[0]}\"";
                     $table = DataObject::getSchema()->tableForField($this->dataClass(), $parts[0]);
@@ -394,9 +394,9 @@ class DataQuery
                     // To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
                     // format internally; then this check can be part of selectField()
                     $selects = $query->getSelect();
-                    if (!isset($selects[$col]) && !in_array($qualCol, $selects)) {
+                    if (!isset($selects[$col]) && !in_array($qualCol, $selects ?? [])) {
                         // Use the original select if possible.
-                        if (array_key_exists($col, $originalSelect)) {
+                        if (array_key_exists($col, $originalSelect ?? [])) {
                             $query->selectField($originalSelect[$col], $col);
                         } else {
                             $query->selectField($qualCol);
@@ -405,7 +405,7 @@ class DataQuery
                 } else {
                     $qualCol = '"' . implode('"."', $parts) . '"';
 
-                    if (!in_array($qualCol, $query->getSelect())) {
+                    if (!in_array($qualCol, $query->getSelect() ?? [])) {
                         unset($newOrderby[$k]);
 
                         // Find the first free "_SortColumnX" slot
@@ -605,7 +605,7 @@ class DataQuery
         $compositeFields = $schema->compositeFields($tableClass, false);
         unset($databaseFields['ID']);
         foreach ($databaseFields as $k => $v) {
-            if ((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
+            if ((is_null($columns) || in_array($k, $columns ?? [])) && !isset($compositeFields[$k])) {
                 // Update $collidingFields if necessary
                 $expressionForField = $query->expressionForField($k);
                 $quotedField = $schema->sqlColumnForField($tableClass, $k);
@@ -620,7 +620,7 @@ class DataQuery
             }
         }
         foreach ($compositeFields as $k => $v) {
-            if ((is_null($columns) || in_array($k, $columns)) && $v) {
+            if ((is_null($columns) || in_array($k, $columns ?? [])) && $v) {
                 $tableName = $schema->tableName($tableClass);
                 $dbO = Injector::inst()->create($v, $k);
                 $dbO->setTable($tableName);
@@ -829,7 +829,7 @@ class DataQuery
             return null;
         }
         if (is_string($relation)) {
-            $relation = explode(".", $relation);
+            $relation = explode(".", $relation ?? '');
         }
         return strtolower(implode('_', $relation)) . '_';
     }
@@ -855,7 +855,7 @@ class DataQuery
         }
 
         if (is_string($relation)) {
-            $relation = explode(".", $relation);
+            $relation = explode(".", $relation ?? '');
         }
 
         $modelClass = $this->dataClass;
@@ -980,7 +980,7 @@ class DataQuery
         // Add join clause to the component's ancestry classes so that the search filter could search on
         // its ancestor fields.
         $ancestry = ClassInfo::ancestry($foreignClass, true);
-        $ancestry = array_reverse($ancestry);
+        $ancestry = array_reverse($ancestry ?? []);
         foreach ($ancestry as $ancestor) {
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $foreignTable) {
@@ -1041,7 +1041,7 @@ class DataQuery
         // its ancestor fields.
         $ancestry = ClassInfo::ancestry($foreignClass, true);
         if (!empty($ancestry)) {
-            $ancestry = array_reverse($ancestry);
+            $ancestry = array_reverse($ancestry ?? []);
             foreach ($ancestry as $ancestor) {
                 $ancestorTable = $schema->tableName($ancestor);
                 if ($ancestorTable !== $foreignBaseTable) {
@@ -1080,7 +1080,7 @@ class DataQuery
     ) {
         $schema = DataObject::getSchema();
 
-        if (class_exists($relationClassOrTable)) {
+        if (class_exists($relationClassOrTable ?? '')) {
             // class is provided
             $relationTable = $schema->tableName($relationClassOrTable);
             $relationTableUpdated = $this->getJoinTableName($relationClassOrTable, $relationTable);
@@ -1118,7 +1118,7 @@ class DataQuery
         // Add join clause to the component's ancestry classes so that the search filter could search on
         // its ancestor fields.
         $ancestry = ClassInfo::ancestry($componentClass, true);
-        $ancestry = array_reverse($ancestry);
+        $ancestry = array_reverse($ancestry ?? []);
         foreach ($ancestry as $ancestor) {
             $ancestorTable = $schema->tableName($ancestor);
             if ($ancestorTable !== $componentBaseTable) {
@@ -1163,7 +1163,7 @@ class DataQuery
     {
         $fieldExpressions = array_map(function ($item) use ($table) {
             return Convert::symbol2sql("{$table}.{$item}");
-        }, $fields);
+        }, $fields ?? []);
 
         $this->query->setSelect($fieldExpressions);
 
@@ -1181,7 +1181,7 @@ class DataQuery
     {
         $fieldExpressions = array_map(function ($item) use ($table) {
             return Convert::symbol2sql("{$table}.{$item}");
-        }, $fields);
+        }, $fields ?? []);
 
         $this->query->addSelect($fieldExpressions);
 
@@ -1340,12 +1340,12 @@ class DataQuery
     private function validateColumnField($field, SQLSelect $query)
     {
         // standard column - nothing to process here
-        if (strpos($field, '.') === false) {
+        if (strpos($field ?? '', '.') === false) {
             return false;
         }
 
-        $fieldData = explode('.', $field);
-        $tablePrefix = str_replace('"', '', $fieldData[0]);
+        $fieldData = explode('.', $field ?? '');
+        $tablePrefix = str_replace('"', '', $fieldData[0] ?? '');
 
         // check if related table is available
         return $query->isJoinedTo($tablePrefix);

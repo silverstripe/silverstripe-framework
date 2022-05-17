@@ -124,8 +124,8 @@ class FixtureTestState implements TestState
      */
     public function getFixtureFactory($class)
     {
-        $testClass = strtolower($class);
-        if (array_key_exists($testClass, $this->fixtureFactories)) {
+        $testClass = strtolower($class ?? '');
+        if (array_key_exists($testClass, $this->fixtureFactories ?? [])) {
             return $this->fixtureFactories[$testClass];
         }
         return false;
@@ -151,7 +151,7 @@ class FixtureTestState implements TestState
     {
         return array_map(function ($fixtureFilePath) use ($test) {
             return $this->resolveFixturePath($fixtureFilePath, $test);
-        }, $fixtures);
+        }, $fixtures ?? []);
     }
 
     /**
@@ -220,7 +220,7 @@ class FixtureTestState implements TestState
             throw new LogicException('getItemPath returned null for ' . static::class
                 . '. Try adding flush=1 to the test run.');
         }
-        return dirname($filename);
+        return dirname($filename ?? '');
     }
 
     /**
@@ -244,13 +244,13 @@ class FixtureTestState implements TestState
         $annotations = $test->getAnnotations();
 
         // annotation explicitly disables the DB
-        if (array_key_exists('useDatabase', $annotations['method'])
+        if (array_key_exists('useDatabase', $annotations['method'] ?? [])
             && $annotations['method']['useDatabase'][0] === 'false') {
             return false;
         }
 
         // annotation explicitly enables the DB
-        if (array_key_exists('useDatabase', $annotations['method'])
+        if (array_key_exists('useDatabase', $annotations['method'] ?? [])
             && $annotations['method']['useDatabase'][0] !== 'false') {
             return true;
         }
@@ -265,7 +265,7 @@ class FixtureTestState implements TestState
      */
     protected function resetFixtureFactory($class)
     {
-        $class = strtolower($class);
+        $class = strtolower($class ?? '');
         $this->fixtureFactories[$class] = Injector::inst()->create(FixtureFactory::class);
         $this->loaded[$class] = false;
     }

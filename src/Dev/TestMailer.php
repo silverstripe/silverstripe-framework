@@ -113,7 +113,7 @@ class TestMailer implements Mailer
                         $value = $this->normaliseSpaces($value);
                     }
                     if ($value[0] === '/') {
-                        $matched = preg_match($value, $emailValue);
+                        $matched = preg_match($value ?? '', $emailValue ?? '');
                     } else {
                         $matched = ($value === $emailValue);
                     }
@@ -135,6 +135,6 @@ class TestMailer implements Mailer
      */
     private function normaliseSpaces(string $value)
     {
-        return str_replace([', ', '; '], [',', ';'], $value);
+        return str_replace([', ', '; '], [',', ';'], $value ?? '');
     }
 }

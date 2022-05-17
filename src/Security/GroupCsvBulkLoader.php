@@ -47,7 +47,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         // set permission codes - these are all additive, meaning
         // existing permissions arent cleared.
         if (isset($record['PermissionCodes']) && $record['PermissionCodes']) {
-            foreach (explode(',', $record['PermissionCodes']) as $code) {
+            foreach (explode(',', $record['PermissionCodes'] ?? '') as $code) {
                 $p = DataObject::get_one('SilverStripe\\Security\\Permission', [
                     '"Permission"."Code"' => $code,
                     '"Permission"."GroupID"' => $group->ID

@@ -89,7 +89,7 @@ class GetParameter implements Rule, Bypass
      */
     protected function checkRequestHasParameter(HTTPRequest $request)
     {
-        return array_key_exists($this->name, $request->getVars());
+        return array_key_exists($this->name, $request->getVars() ?? []);
     }
 
     public function checkRequestForBypass(HTTPRequest $request)

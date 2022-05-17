@@ -24,7 +24,7 @@ class CurrencyField_Disabled extends CurrencyField
         if ($this->value) {
             $val = Convert::raw2xml($this->value);
             $val = DBCurrency::config()->get('currency_symbol')
-                . number_format(preg_replace('/[^0-9.-]/', '', $val), 2);
+                . number_format(preg_replace('/[^0-9.-]/', '', $val ?? '') ?? 0.0, 2);
             $valforInput = Convert::raw2att($val);
         } else {
             $valforInput = '';

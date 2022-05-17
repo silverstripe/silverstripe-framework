@@ -30,7 +30,7 @@ class SapphireTestState implements TestState
     public function getStateByName($name)
     {
         $states = $this->getStates();
-        if (array_key_exists($name, $states)) {
+        if (array_key_exists($name, $states ?? [])) {
             return $states[$name];
         }
         return false;
@@ -43,7 +43,7 @@ class SapphireTestState implements TestState
      */
     public function getStateByClass($class)
     {
-        $lClass = strtolower($class);
+        $lClass = strtolower($class ?? '');
         foreach ($this->getStates() as $state) {
             if ($lClass === strtolower(get_class($state))) {
                 return $state;
@@ -73,7 +73,7 @@ class SapphireTestState implements TestState
     {
         // Tear down in reverse order
         /** @var TestState $state */
-        foreach (array_reverse($this->states) as $state) {
+        foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDown($test);
         }
     }
@@ -94,7 +94,7 @@ class SapphireTestState implements TestState
     {
         // Tear down in reverse order
         /** @var TestState $state */
-        foreach (array_reverse($this->states) as $state) {
+        foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDownOnce($class);
         }
     }

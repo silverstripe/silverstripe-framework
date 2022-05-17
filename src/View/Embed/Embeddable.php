@@ -5,7 +5,7 @@ namespace SilverStripe\View\Embed;
 /**
  * Abstract interface for an embeddable resource
  *
- * @see EmbedResource
+ * @see EmbedContainer
  */
 interface Embeddable
 {

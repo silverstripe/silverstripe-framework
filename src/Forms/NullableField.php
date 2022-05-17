@@ -138,7 +138,7 @@ class NullableField extends FormField
     {
         $id = $this->getIsNullId();
 
-        if (is_array($data) && array_key_exists($id, $data) && $data[$id]) {
+        if (is_array($data) && array_key_exists($id, $data ?? []) && $data[$id]) {
             $value = null;
         }
 

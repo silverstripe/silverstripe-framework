@@ -102,8 +102,8 @@ abstract class RelationList extends DataList implements Relation
 
         // Remove `Foreign.` query parameters for created objects,
         // as this would interfere with relations on those objects.
-        foreach (array_keys($params) as $key) {
-            if (stripos($key, 'Foreign.') === 0) {
+        foreach (array_keys($params ?? []) as $key) {
+            if (stripos($key ?? '', 'Foreign.') === 0) {
                 unset($params[$key]);
             }
         }
@@ -122,7 +122,7 @@ abstract class RelationList extends DataList implements Relation
     public function forForeignID($id)
     {
         // Turn a 1-element array into a simple value
-        if (is_array($id) && sizeof($id) == 1) {
+        if (is_array($id) && sizeof($id ?? []) == 1) {
             $id = reset($id);
         }
 

@@ -21,13 +21,13 @@ class EnvironmentLoader
     public function loadFile($path, $overload = false)
     {
         // Not readable
-        if (!file_exists($path) || !is_readable($path)) {
+        if (!file_exists($path ?? '') || !is_readable($path ?? '')) {
             return null;
         }
 
         // Parse and cleanup content
         $result = [];
-        $variables = Parser::parse(file_get_contents($path));
+        $variables = Parser::parse(file_get_contents($path ?? ''));
         foreach ($variables as $name => $value) {
             // Conditionally prevent overloading
             if (!$overload) {

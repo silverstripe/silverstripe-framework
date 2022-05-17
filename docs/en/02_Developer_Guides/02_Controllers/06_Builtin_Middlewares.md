@@ -20,4 +20,4 @@ You may find them in the [SilverStripe\Control\Middleware](api:SilverStripe\Cont
 | [RateLimitMiddleware](api:SilverStripe\Control\Middleware\RateLimitMiddleware) | Access throttling, controls HTTP Retry-After header |
 | [SessionMiddleware](api:SilverStripe\Control\Middleware\SessionMiddleware) | PHP Session initialisation |
 | [TrustedProxyMiddleware](api:SilverStripe\Control\Middleware\TrustedProxyMiddleware) | Rewrites headers that provide IP and host details from upstream proxies |
-| [URLSpecialsMiddleware](api:SilverStripe\Control\Middleware\URLSpecialsMiddleware) | Controls some of the [URL special variables](../../debugging/url_variable_tools) |
+| [URLSpecialsMiddleware](api:SilverStripe\Control\Middleware\URLSpecialsMiddleware) | Controls some of the [URL special variables](../debugging/url_variable_tools) |

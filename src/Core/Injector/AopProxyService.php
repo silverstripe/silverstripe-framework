@@ -24,7 +24,7 @@ class AopProxyService
 
     public function __call($method, $args)
     {
-        if (method_exists($this->proxied, $method)) {
+        if (method_exists($this->proxied, $method ?? '')) {
             $continue = true;
             $result = null;
 
@@ -47,7 +47,7 @@ class AopProxyService
             }
 
             if ($continue) {
-                $result = call_user_func_array([$this->proxied, $method], $args);
+                $result = call_user_func_array([$this->proxied, $method], $args ?? []);
 
                 if (isset($this->afterCall[$method])) {
                     $methods = $this->afterCall[$method];

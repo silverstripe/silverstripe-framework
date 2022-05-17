@@ -95,19 +95,19 @@ class HTTP
      */
     public static function filename2url($filename)
     {
-        $filename = realpath($filename);
+        $filename = realpath($filename ?? '');
         if (!$filename) {
             return null;
         }
 
         // Filter files outside of the webroot
         $base = realpath(BASE_PATH);
-        $baseLength = strlen($base);
-        if (substr($filename, 0, $baseLength) !== $base) {
+        $baseLength = strlen($base ?? '');
+        if (substr($filename ?? '', 0, $baseLength) !== $base) {
             return null;
         }
 
-        $relativePath = ltrim(substr($filename, $baseLength), '/\\');
+        $relativePath = ltrim(substr($filename ?? '', $baseLength ?? 0), '/\\');
         return Director::absoluteURL($relativePath);
     }
 
@@ -120,10 +120,10 @@ class HTTP
      */
     public static function absoluteURLs($html)
     {
-        $html = str_replace('$CurrentPageURL', Controller::curr()->getRequest()->getURL(), $html);
+        $html = str_replace('$CurrentPageURL', Controller::curr()->getRequest()->getURL() ?? '', $html ?? '');
         return HTTP::urlRewriter($html, function ($url) {
             //no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
-            if (preg_match('/^\w+:/', $url)) {
+            if (preg_match('/^\w+:/', $url ?? '')) {
                 return $url;
             }
             return Director::absoluteURL($url, true);
@@ -195,7 +195,7 @@ class HTTP
 
         // Execute each expression
         foreach ($regExps as $regExp) {
-            $content = preg_replace_callback($regExp, $callback, $content);
+            $content = preg_replace_callback($regExp ?? '', $callback, $content ?? '');
         }
 
         return $content;
@@ -233,7 +233,7 @@ class HTTP
         }
 
         // try to parse uri
-        $parts = parse_url($uri);
+        $parts = parse_url($uri ?? '');
         if (!$parts) {
             throw new InvalidArgumentException("Can't parse URL: " . $uri);
         }
@@ -241,7 +241,7 @@ class HTTP
         // Parse params and add new variable
         $params = [];
         if (isset($parts['query'])) {
-            parse_str($parts['query'], $params);
+            parse_str($parts['query'] ?? '', $params);
         }
         $params[$varname] = $varvalue;
 
@@ -259,7 +259,7 @@ class HTTP
         $path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
 
         // handle URL params which are existing / new
-        $params = ($params) ? '?' . http_build_query($params, null, $separator) : '';
+        $params = ($params) ? '?' . http_build_query($params, '', $separator) : '';
 
         // keep fragments (anchors) intact.
         $fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ? '#' . $parts['fragment'] : '';
@@ -309,13 +309,13 @@ class HTTP
 
         if ($regexes) {
             foreach ($regexes as $regex) {
-                if (preg_match_all($regex, $content, $matches)) {
+                if (preg_match_all($regex ?? '', $content ?? '', $matches)) {
                     $result = array_merge_recursive($result, (isset($matches[2]) ? $matches[2] : $matches[1]));
                 }
             }
         }
 
-        return count($result) ? $result : null;
+        return count($result ?? []) ? $result : null;
     }
 
     /**
@@ -350,14 +350,14 @@ class HTTP
     {
         // If the finfo module is compiled into PHP, use it.
         $path = BASE_PATH . DIRECTORY_SEPARATOR . $filename;
-        if (class_exists('finfo') && file_exists($path)) {
+        if (class_exists('finfo') && file_exists($path ?? '')) {
             $finfo = new finfo(FILEINFO_MIME_TYPE);
             return $finfo->file($path);
         }
 
         // Fallback to use the list from the HTTP.yml configuration and rely on the file extension
         // to get the file mime-type
-        $ext = strtolower(File::get_file_extension($filename));
+        $ext = strtolower(File::get_file_extension($filename) ?? '');
         // Get the mime-types
         $mimeTypes = HTTP::config()->uninherited('MimeTypes');
 
@@ -409,7 +409,7 @@ class HTTP
     public static function register_etag($etag)
     {
         Deprecation::notice('5.0', 'Use ChangeDetectionMiddleware instead');
-        if (strpos($etag, '"') !== 0) {
+        if (strpos($etag ?? '', '"') !== 0) {
             $etag =  "\"{$etag}\"";
         }
         self::$etag = $etag;
@@ -517,7 +517,7 @@ class HTTP
             Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware API instead');
 
             $supportedDirectives = ['max-age', 'no-cache', 'no-store', 'must-revalidate'];
-            if ($foundUnsupported = array_diff(array_keys($configCacheControl), $supportedDirectives)) {
+            if ($foundUnsupported = array_diff(array_keys($configCacheControl ?? []), $supportedDirectives)) {
                 throw new \LogicException(
                     'Found unsupported legacy directives in HTTP.cache_control: ' .
                     implode(', ', $foundUnsupported) .

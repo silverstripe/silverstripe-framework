@@ -46,12 +46,12 @@ class DateFieldTest extends SapphireTest
     {
         $f = new DateField('Date');
         $f->setMinDate('-7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date below min date, with strtotime');
 
         $f = new DateField('Date');
         $f->setMinDate('-7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching min date, with strtotime');
     }
 
@@ -59,12 +59,12 @@ class DateFieldTest extends SapphireTest
     {
         $f = new DateField('Date');
         $f->setMaxDate('7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date above max date, with strtotime');
 
         $f = new DateField('Date');
         $f->setMaxDate('7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
     }
 

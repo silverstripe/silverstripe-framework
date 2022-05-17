@@ -207,7 +207,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
         // Load default from config
         $defaultVary = $this->config()->get('defaultVary');
-        return array_keys(array_filter($defaultVary));
+        return array_keys(array_filter($defaultVary ?? []));
     }
 
     /**
@@ -246,13 +246,13 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         $merged = [];
         foreach ($varies as $vary) {
             if ($vary && is_string($vary)) {
-                $vary = array_filter(preg_split("/\s*,\s*/", trim($vary)));
+                $vary = array_filter(preg_split("/\s*,\s*/", trim($vary ?? '')) ?? []);
             }
             if ($vary && is_array($vary)) {
                 $merged = array_merge($merged, $vary);
             }
         }
-        return array_unique($merged);
+        return array_unique($merged ?? []);
     }
 
 
@@ -265,7 +265,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function registerModificationDate($date)
     {
-        $timestamp = is_numeric($date) ? $date : strtotime($date);
+        $timestamp = is_numeric($date) ? $date : strtotime($date ?? '');
         if ($timestamp > $this->modificationDate) {
             $this->modificationDate = $timestamp;
         }
@@ -280,7 +280,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function setState($state)
     {
-        if (!array_key_exists($state, $this->stateDirectives)) {
+        if (!array_key_exists($state, $this->stateDirectives ?? [])) {
             throw new InvalidArgumentException("Invalid state {$state}");
         }
         $this->state = $state;
@@ -339,12 +339,12 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         }
         // make sure the directive is in the list of allowed directives
         $allowedDirectives = $this->config()->get('allowed_directives');
-        $directive = strtolower($directive);
-        if (!in_array($directive, $allowedDirectives)) {
+        $directive = strtolower($directive ?? '');
+        if (!in_array($directive, $allowedDirectives ?? [])) {
             throw new InvalidArgumentException('Directive ' . $directive . ' is not allowed');
         }
         foreach ((array)$states as $state) {
-            if (!array_key_exists($state, $this->stateDirectives)) {
+            if (!array_key_exists($state, $this->stateDirectives ?? [])) {
                 throw new InvalidArgumentException("Invalid state {$state}");
             }
             // Set or unset directive
@@ -394,7 +394,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function hasStateDirective($state, $directive)
     {
-        $directive = strtolower($directive);
+        $directive = strtolower($directive ?? '');
         return isset($this->stateDirectives[$state][$directive]);
     }
 
@@ -420,7 +420,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function getStateDirective($state, $directive)
     {
-        $directive = strtolower($directive);
+        $directive = strtolower($directive ?? '');
         if (isset($this->stateDirectives[$state][$directive])) {
             return $this->stateDirectives[$state][$directive];
         }

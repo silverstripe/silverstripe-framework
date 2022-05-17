@@ -141,7 +141,7 @@ class HTTPResponse
             $this->setStatusCode($statusCode, $statusDescription);
         }
         if (!$protocolVersion) {
-            if (preg_match('/HTTP\/(?<version>\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'], $matches)) {
+            if (preg_match('/HTTP\/(?<version>\d+(\.\d+)?)/i', $_SERVER['SERVER_PROTOCOL'] ?? '', $matches)) {
                 $protocolVersion = $matches['version'];
             }
         }
@@ -223,7 +223,7 @@ class HTTPResponse
      */
     public function getStatusDescription()
     {
-        return str_replace(["\r", "\n"], '', $this->statusDescription);
+        return str_replace(["\r", "\n"], '', $this->statusDescription ?? '');
     }
 
     /**
@@ -266,7 +266,7 @@ class HTTPResponse
      */
     public function addHeader($header, $value)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         $this->headers[$header] = $value;
         return $this;
     }
@@ -280,7 +280,7 @@ class HTTPResponse
      */
     public function getHeader($header)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         if (isset($this->headers[$header])) {
             return $this->headers[$header];
         }
@@ -305,7 +305,7 @@ class HTTPResponse
      */
     public function removeHeader($header)
     {
-        $header = strtolower($header);
+        $header = strtolower($header ?? '');
         unset($this->headers[$header]);
         return $this;
     }
@@ -381,9 +381,9 @@ EOT
                 $this->getStatusCode(),
                 $this->getStatusDescription()
             );
-            header($method);
+            header($method ?? '');
             foreach ($this->getHeaders() as $header => $value) {
-                header("{$header}: {$value}", true, $this->getStatusCode());
+                header("{$header}: {$value}", true, $this->getStatusCode() ?? 0);
             }
         } elseif ($this->getStatusCode() >= 300) {
             // It's critical that these status codes are sent; we need to report a failure if not.

@@ -79,8 +79,8 @@ class ConfigContext implements Context
         }
 
         foreach ($this->activatedConfigFiles as $configFile) {
-            if (file_exists($configFile)) {
-                unlink($configFile);
+            if (file_exists($configFile ?? '')) {
+                unlink($configFile ?? '');
             }
         }
         $this->activatedConfigFiles = [];
@@ -126,7 +126,7 @@ class ConfigContext implements Context
 
         // Load
         $this->activatedConfigFiles[] = $destPath;
-        copy($sourcePath, $destPath);
+        copy($sourcePath ?? '', $destPath ?? '');
 
         // Flush website
         $this->stepIFlush();

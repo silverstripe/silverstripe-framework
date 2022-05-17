@@ -38,8 +38,10 @@ class DirectorTest extends SapphireTest
 
         // Ensure redirects enabled on all environments and global state doesn't affect the tests
         CanonicalURLMiddleware::singleton()
+            ->setForceSSL(null)
             ->setForceSSLDomain(null)
             ->setForceSSLPatterns([])
+            ->setForceWWW(null)
             ->setEnabledEnvs(true);
         $this->expectedRedirect = null;
     }
@@ -74,7 +76,7 @@ class DirectorTest extends SapphireTest
         $tempFilePath = TEMP_PATH . DIRECTORY_SEPARATOR . $tempFileName;
 
         // create temp file
-        file_put_contents($tempFilePath, '');
+        file_put_contents($tempFilePath ?? '', '');
 
         $this->assertTrue(
             Director::fileExists($tempFilePath),
@@ -86,7 +88,7 @@ class DirectorTest extends SapphireTest
             'File exist check with query params ignored'
         );
 
-        unlink($tempFilePath);
+        unlink($tempFilePath ?? '');
     }
 
     public function testAbsoluteURL()
@@ -408,7 +410,7 @@ class DirectorTest extends SapphireTest
         $this->assertFalse(Director::is_site_url("http://test.com"));
         $this->assertTrue(Director::is_site_url(Director::absoluteBaseURL()));
         $this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
-        $this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL())));
+        $this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL() ?? '')));
         $this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
         $this->assertFalse(Director::is_site_url('http://google.com\@test.com'));
         $this->assertFalse(Director::is_site_url('http://google.com/@test.com'));
@@ -506,8 +508,8 @@ class DirectorTest extends SapphireTest
         $fixture = ['somekey' => 'sometestvalue'];
         foreach (['get', 'post'] as $method) {
             foreach (['return%sValue', 'returnRequestValue', 'returnCookieValue'] as $testfunction) {
-                $url = 'TestController/' . sprintf($testfunction, ucfirst($method))
-                    . '?' . http_build_query($fixture);
+                $url = 'TestController/' . sprintf($testfunction ?? '', ucfirst($method ?? ''))
+                    . '?' . http_build_query($fixture ?? []);
                 $tests[] = [$url, $fixture, $method];
             }
         }
@@ -526,7 +528,7 @@ class DirectorTest extends SapphireTest
             $url,
             $fixture,
             null,
-            strtoupper($method),
+            strtoupper($method ?? ''),
             null,
             null,
             Injector::inst()->createWithArgs(Cookie_Backend::class, [$fixture])
@@ -858,7 +860,10 @@ class DirectorTest extends SapphireTest
 
         $processor = new RequestProcessor([$filter]);
 
-        Injector::inst()->registerService($processor, RequestProcessor::class);
+        $middlewares = Director::singleton()->getMiddlewares();
+        $middlewares['RequestProcessorMiddleware'] = $processor;
+        Director::singleton()->setMiddlewares($middlewares);
+
         $response = Director::test('some-dummy-url');
         $this->assertEquals(404, $response->getStatusCode());
 

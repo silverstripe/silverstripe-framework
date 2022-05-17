@@ -155,7 +155,7 @@ class ConfirmationTokenChain
      */
     protected function redirectURL()
     {
-        $params = http_build_query($this->getRedirectUrlParams());
+        $params = http_build_query($this->getRedirectUrlParams() ?? []);
         return Controller::join_links($this->getRedirectUrlBase(), '?' . $params);
     }
 

@@ -110,7 +110,7 @@ class ModuleResource
      */
     public function exists()
     {
-        return file_exists($this->getPath());
+        return file_exists($this->getPath() ?? '');
     }
 
     /**

@@ -104,7 +104,7 @@ class TreeMultiselectField extends TreeDropdownField
         $data['data']['valueObjects'] = $values;
 
         // cannot rely on $this->value as this could be a many-many relationship
-        $value = array_column($values, 'id');
+        $value = array_column($values ?? [], 'id');
         if ($value) {
             sort($value);
             $data['value'] = $value;
@@ -151,13 +151,13 @@ class TreeMultiselectField extends TreeDropdownField
         $ids = [];
 
         if (is_string($value)) {
-            $ids = preg_split("#\s*,\s*#", trim($value));
+            $ids = preg_split("#\s*,\s*#", trim($value ?? ''));
         } elseif (is_array($value)) {
-            $ids = array_values($value);
+            $ids = array_values($value ?? []);
         }
 
         // Filter out empty strings
-        $ids = array_filter($ids);
+        $ids = array_filter($ids ?? []);
 
         // No value
         if (empty($ids)) {
@@ -208,7 +208,7 @@ class TreeMultiselectField extends TreeDropdownField
         $items = $this->getItems();
         $emptyTitle = _t('SilverStripe\\Forms\\DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 
-        if ($items && count($items)) {
+        if ($items && count($items ?? [])) {
             foreach ($items as $item) {
                 $idArray[] = $item->ID;
                 $titleArray[] = ($item instanceof ViewableData)
@@ -314,7 +314,7 @@ class TreeMultiselectField extends TreeDropdownField
         if ($this->getKeyField() === 'ID' && $key === 'unchanged') {
             $key = null;
         } elseif (is_string($key)) {
-            $key = preg_split('/\s*,\s*/', trim($key));
+            $key = preg_split('/\s*,\s*/', trim($key ?? ''));
         }
 
         return parent::objectForKey($key);

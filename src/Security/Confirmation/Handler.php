@@ -77,7 +77,7 @@ class Handler extends RequestHandler
     {
         $storageId = $this->request->param('StorageID');
 
-        if (!strlen(trim($storageId))) {
+        if (!strlen(trim($storageId ?? ''))) {
             $this->httpError(404, "Undefined StorageID");
         }
 

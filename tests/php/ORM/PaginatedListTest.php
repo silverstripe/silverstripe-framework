@@ -362,8 +362,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->FirstLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->FirstLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -395,8 +395,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->LastLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->LastLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -437,8 +437,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->NextLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->NextLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -476,8 +476,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->PrevLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->PrevLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);

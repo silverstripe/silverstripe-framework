@@ -229,15 +229,15 @@ class EmailTest extends SapphireTest
         );
 
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
         $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
+        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
         $this->assertEquals('subject', $email->getSubject());
         $this->assertEquals('body', $email->getBody());
         $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC()));
+        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
         $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
+        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
         $this->assertEquals('bounce@example.com', $email->getReturnPath());
     }
 
@@ -257,15 +257,15 @@ class EmailTest extends SapphireTest
         $this->assertInstanceOf(Swift_Message::class, $swiftMessage);
 
         $this->assertCount(1, $swiftMessage->getFrom());
-        $this->assertContains('from@example.com', array_keys($swiftMessage->getFrom()));
+        $this->assertContains('from@example.com', array_keys($swiftMessage->getFrom() ?? []));
         $this->assertCount(1, $swiftMessage->getTo());
-        $this->assertContains('to@example.com', array_keys($swiftMessage->getTo()));
+        $this->assertContains('to@example.com', array_keys($swiftMessage->getTo() ?? []));
         $this->assertEquals('subject', $swiftMessage->getSubject());
         $this->assertEquals('body', $swiftMessage->getBody());
         $this->assertCount(1, $swiftMessage->getCC());
-        $this->assertContains('cc@example.com', array_keys($swiftMessage->getCc()));
+        $this->assertContains('cc@example.com', array_keys($swiftMessage->getCc() ?? []));
         $this->assertCount(1, $swiftMessage->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($swiftMessage->getBcc()));
+        $this->assertContains('bcc@example.com', array_keys($swiftMessage->getBcc() ?? []));
         $this->assertEquals('bounce@example.com', $swiftMessage->getReturnPath());
     }
 
@@ -280,7 +280,7 @@ class EmailTest extends SapphireTest
         $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
         $email->getSwiftMessage()->setDate($dateTime);
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom()));
+        $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom() ?? []));
         $this->assertEquals(strtotime('2017-01-01 07:00:00'), $swiftMessage->getDate()->getTimestamp());
         $this->assertEquals($swiftMessage, $email->getSwiftMessage());
 
@@ -289,7 +289,7 @@ class EmailTest extends SapphireTest
         $swiftMessage->setFrom('from@example.com');
         $email->setSwiftMessage($swiftMessage);
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
     }
 
     public function testAdminEmailApplied()
@@ -298,35 +298,35 @@ class EmailTest extends SapphireTest
         $email = new Email();
 
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('admin@example.com', array_keys($email->getFrom()));
+        $this->assertContains('admin@example.com', array_keys($email->getFrom() ?? []));
     }
 
     public function testGetFrom()
     {
         $email = new Email('from@example.com');
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
     }
 
     public function testSetFrom()
     {
         $email = new Email('from@example.com');
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
         $email->setFrom('new-from@example.com');
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('new-from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('new-from@example.com', array_keys($email->getFrom() ?? []));
     }
 
     public function testAddFrom()
     {
         $email = new Email('from@example.com');
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
         $email->addFrom('new-from@example.com');
         $this->assertCount(2, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
-        $this->assertContains('new-from@example.com', array_keys($email->getFrom()));
+        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
+        $this->assertContains('new-from@example.com', array_keys($email->getFrom() ?? []));
     }
 
     public function testSetGetSender()
@@ -349,7 +349,7 @@ class EmailTest extends SapphireTest
     {
         $email = new Email('from@example.com', 'to@example.com');
         $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
+        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
         $email->setTo('new-to@example.com', 'Silver Stripe');
         $this->assertEquals(['new-to@example.com' => 'Silver Stripe'], $email->getTo());
     }
@@ -358,18 +358,18 @@ class EmailTest extends SapphireTest
     {
         $email = new Email('from@example.com', 'to@example.com');
         $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
+        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
         $email->addTo('new-to@example.com');
         $this->assertCount(2, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
-        $this->assertContains('new-to@example.com', array_keys($email->getTo()));
+        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
+        $this->assertContains('new-to@example.com', array_keys($email->getTo() ?? []));
     }
 
     public function testSetGetCC()
     {
         $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com');
         $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC()));
+        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
         $email->setCC('new-cc@example.com', 'Silver Stripe');
         $this->assertEquals(['new-cc@example.com' => 'Silver Stripe'], $email->getCC());
     }
@@ -378,11 +378,11 @@ class EmailTest extends SapphireTest
     {
         $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com');
         $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC()));
+        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
         $email->addCC('new-cc@example.com', 'Silver Stripe');
         $this->assertCount(2, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC()));
-        $this->assertContains('new-cc@example.com', array_keys($email->getCC()));
+        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
+        $this->assertContains('new-cc@example.com', array_keys($email->getCC() ?? []));
     }
 
     public function testSetGetBCC()
@@ -396,7 +396,7 @@ class EmailTest extends SapphireTest
             'bcc@example.com'
         );
         $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
+        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
         $email->setBCC('new-bcc@example.com', 'Silver Stripe');
         $this->assertEquals(['new-bcc@example.com' => 'Silver Stripe'], $email->getBCC());
     }
@@ -412,11 +412,11 @@ class EmailTest extends SapphireTest
             'bcc@example.com'
         );
         $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
+        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
         $email->addBCC('new-bcc@example.com', 'Silver Stripe');
         $this->assertCount(2, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
-        $this->assertContains('new-bcc@example.com', array_keys($email->getBCC()));
+        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
+        $this->assertContains('new-bcc@example.com', array_keys($email->getBCC() ?? []));
     }
 
     public function testReplyTo()
@@ -427,8 +427,8 @@ class EmailTest extends SapphireTest
         $this->assertEquals(['reply-to@example.com' => 'Silver Stripe'], $email->getReplyTo());
         $email->addReplyTo('new-reply-to@example.com');
         $this->assertCount(2, $email->getReplyTo());
-        $this->assertContains('reply-to@example.com', array_keys($email->getReplyTo()));
-        $this->assertContains('new-reply-to@example.com', array_keys($email->getReplyTo()));
+        $this->assertContains('reply-to@example.com', array_keys($email->getReplyTo() ?? []));
+        $this->assertContains('new-reply-to@example.com', array_keys($email->getReplyTo() ?? []));
     }
 
     public function testSubject()

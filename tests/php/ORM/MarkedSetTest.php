@@ -437,8 +437,8 @@ EOT;
     protected function assertHTMLSame($expected, $actual, $message = '')
     {
         // Trim each line, strip empty lines
-        $expected = implode("\n", array_filter(array_map('trim', explode("\n", $expected))));
-        $actual = implode("\n", array_filter(array_map('trim', explode("\n", $actual))));
+        $expected = implode("\n", array_filter(array_map('trim', explode("\n", $expected ?? ''))));
+        $actual = implode("\n", array_filter(array_map('trim', explode("\n", $actual ?? ''))));
         $this->assertXmlStringEqualsXmlString($expected, $actual, $message);
     }
 }

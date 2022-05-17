@@ -6,11 +6,16 @@ use Embed\Adapters\Adapter;
 use Embed\Embed;
 use Embed\Http\DispatcherInterface;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\Dev\Deprecation;
 
 /**
+ * This is a deprecated class that was compatible with embed/embed v3
+ * This has been replaced with EmbedContainer which is embed/embed v4 compatible
+ *
  * Encapsulation of an embed tag, linking to an external media source.
  *
  * @see Embed
+ * @deprecated 4.11..5.0 Use EmbedContainer instead
  */
 class EmbedResource implements Embeddable
 {
@@ -41,6 +46,7 @@ class EmbedResource implements Embeddable
      */
     public function __construct($url)
     {
+        Deprecation::notice('4.11', 'Use EmbedContainer instead');
         $this->url = $url;
     }
 
@@ -83,7 +89,7 @@ class EmbedResource implements Embeddable
             return $this->getEmbed()->title;
         }
 
-        return preg_replace('/\?.*/', '', basename($this->getEmbed()->getUrl()));
+        return preg_replace('/\?.*/', '', basename($this->getEmbed()->getUrl() ?? ''));
     }
 
     public function getType()

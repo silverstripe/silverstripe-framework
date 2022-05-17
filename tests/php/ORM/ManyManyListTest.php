@@ -324,8 +324,8 @@ class ManyManyListTest extends SapphireTest
 
         $firstPlayers->removeAll();
 
-        $this->assertEquals(0, count($firstPlayers));
-        $this->assertEquals(2, count($secondPlayers));
+        $this->assertEquals(0, count($firstPlayers ?? []));
+        $this->assertEquals(2, count($secondPlayers ?? []));
 
         $firstPlayers->removeAll();
 

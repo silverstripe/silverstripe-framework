@@ -264,8 +264,8 @@ abstract class DataExtension extends Extension
         if ($summary_fields) {
             // if summary_fields were passed in numeric array,
             // convert to an associative array
-            if ($summary_fields && array_key_exists(0, $summary_fields)) {
-                $summary_fields = array_combine(array_values($summary_fields), array_values($summary_fields));
+            if ($summary_fields && array_key_exists(0, $summary_fields ?? [])) {
+                $summary_fields = array_combine(array_values($summary_fields ?? []), array_values($summary_fields ?? []));
             }
             if ($summary_fields) {
                 $fields = array_merge($fields, $summary_fields);

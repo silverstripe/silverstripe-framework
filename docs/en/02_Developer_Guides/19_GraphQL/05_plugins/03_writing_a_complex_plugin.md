@@ -56,7 +56,7 @@ class GeocodableDataObject implements ModelTypePlugin
         );
 
         // only apply the plugin to geocodable DataObjects
-        if (!Extensible::has_extension($class, Geocodable::class)) {
+        if (!ViewableData::has_extension($class, Geocodable::class)) {
             return;
         }
 
@@ -85,7 +85,7 @@ class GeocodableQuery implements ModelQueryPlugin
     {
         $class = $query->getModel()->getSourceClass();
         // Only apply to geocodable objects
-        if (!Extensible::has_extension($class, Geocodable::class)) {
+        if (!ViewableData::has_extension($class, Geocodable::class)) {
             return;
         }
 
@@ -177,7 +177,7 @@ public function apply(ModelQuery $query, Schema $schema, array $config = []): vo
 {
     $class = $query->getModel()->getSourceClass();
     // Only apply to geocodable objects
-    if (!Extensible::has_extension($class, Geocodable::class)) {
+    if (!ViewableData::has_extension($class, Geocodable::class)) {
         return;
     }
 

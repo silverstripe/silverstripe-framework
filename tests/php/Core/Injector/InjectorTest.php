@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Tests\Injector;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorNotFoundException;
@@ -233,7 +234,7 @@ class InjectorTest extends SapphireTest
         $injector->updateSpec(AnotherService::class, 'filters', 'Three');
         $another = $injector->get(AnotherService::class);
 
-        $this->assertEquals(3, count($another->filters));
+        $this->assertEquals(3, count($another->filters ?? []));
         $this->assertEquals('Three', $another->filters[2]);
     }
 
@@ -813,6 +814,32 @@ class InjectorTest extends SapphireTest
         $this->assertTrue($item->property instanceof InjectorTest\ConstructableObject);
 
         $this->assertInstanceOf(OtherTestObject::class, $item->property->property);
+    }
+
+    /**
+     * @dataProvider provideConvertServicePropertyBackTicks
+     */
+    public function testConvertServicePropertyBackTicks($value, $expected)
+    {
+        Environment::setEnv('INJECTOR_TEST_CSP_A', 'ABC');
+        Environment::setEnv('INJECTOR_TEST_CSP_B', 'DEF');
+        Environment::setEnv('INJECTOR_TEST_CSP_C', 'GHI');
+        $actual = Injector::inst()->convertServiceProperty($value);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideConvertServicePropertyBackTicks()
+    {
+        return [
+            ['`INJECTOR_TEST_CSP_A`', 'ABC'],
+            ['`INJECTOR_TEST_CSP_A`:`INJECTOR_TEST_CSP_B`', 'ABC:DEF'],
+            ['`INJECTOR_TEST_CSP_A` some text `INJECTOR_TEST_CSP_B`', 'ABC some text DEF'],
+            ['`INJECTOR_TEST_CSP_A``INJECTOR_TEST_CSP_B`', 'ABCDEF'],
+            ['`INJECTOR_TEST_CSP_A`:`INJECTOR_TEST_CSP_B``INJECTOR_TEST_CSP_C`', 'ABC:DEFGHI'],
+            ['`INJECTOR_TEST_CSP_A`:`INJECTOR_TEST_CSP_X`', 'ABC:'],
+            ['`INJECTOR_TEST_CSP_X`', null],
+            ['lorem `INJECTOR_TEST_CSP_A` ipsum', 'lorem `INJECTOR_TEST_CSP_A` ipsum'],
+        ];
     }
 
     public function testNamedServices()

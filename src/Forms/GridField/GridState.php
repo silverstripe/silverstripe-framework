@@ -51,7 +51,7 @@ class GridState extends HiddenField
         if (is_array($d)) {
             return (object) array_map(function ($item) {
                 return GridState::array_to_object($item);
-            }, $d);
+            }, $d ?? []);
         }
 
         return $d;
@@ -60,7 +60,7 @@ class GridState extends HiddenField
     public function setValue($value, $data = null)
     {
         // Apply the value on top of the existing defaults
-        $data = json_decode($value, true);
+        $data = json_decode($value ?? '', true);
         if ($data) {
             $this->mergeValues($this->getData(), $data);
         }

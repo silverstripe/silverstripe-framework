@@ -123,6 +123,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->toArray());
@@ -180,7 +181,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function removeMany($items)
     {
-        $this->items = array_diff($this->items, $items);
+        $this->items = array_diff($this->items ?? [], $items);
         return $this;
     }
 
@@ -191,7 +192,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function removeDuplicates($field = 'ID')
     {
-        $this->items = array_unique($this->items);
+        $this->items = array_unique($this->items ?? []);
     }
 
     /**
@@ -218,14 +219,14 @@ class UnsavedRelationList extends ArrayList implements Relation
         // Get a list of IDs of our current items - if it's not a number then object then assume it's a DO.
         $ids = array_map(function ($obj) {
             return is_numeric($obj) ? $obj : $obj->ID;
-        }, $this->items);
+        }, $this->items ?? []);
 
         // Strip out duplicates and anything resolving to False.
-        $ids = array_filter(array_unique($ids));
+        $ids = array_filter(array_unique($ids ?? []));
 
         // Change the array from (1, 2, 3) to (1 => 1, 2 => 2, 3 => 3)
         if ($ids) {
-            $ids = array_combine($ids, $ids);
+            $ids = array_combine($ids ?? [], $ids ?? []);
         }
 
         return $ids;

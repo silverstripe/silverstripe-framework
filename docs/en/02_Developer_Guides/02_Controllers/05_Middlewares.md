@@ -26,6 +26,7 @@ will deliberately return a different response, e.g. an error response or a redir
 ```php
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 
 class CustomMiddleware implements HTTPMiddleware
 {
@@ -75,7 +76,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
     properties:
       Middlewares:
-        CustomMiddleware: %$CustomMiddleware
+        CustomMiddleware: '%$CustomMiddleware'
 ```
 
 
@@ -89,7 +90,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
     properties:
       Middlewares:
-        CustomMiddleware: %$ConfiguredMiddleware
+        CustomMiddleware: '%$ConfiguredMiddleware'
   ConfiguredMiddleware:
    class: 'CustomMiddleware'
    properties:
@@ -111,14 +112,14 @@ SilverStripe\Core\Injector\Injector:
   SpecialRouteMiddleware:
     class: SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter
     properties:
-      RequestHandler: %$MyController
+      RequestHandler: '%$MyController'
       Middlewares:
-        - %$CustomMiddleware
-        - %$AnotherMiddleware
+        - '%$CustomMiddleware'
+        - '%$AnotherMiddleware'
 SilverStripe\Control\Director:
   rules:
-    special\section:
-      Controller: %$SpecialRouteMiddleware
+    special/section:
+      Controller: '%$SpecialRouteMiddleware'
 ```
 
 ## Application middleware

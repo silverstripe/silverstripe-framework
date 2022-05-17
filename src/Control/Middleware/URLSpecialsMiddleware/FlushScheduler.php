@@ -28,7 +28,7 @@ trait FlushScheduler
      */
     public function scheduleFlush(HTTPRequest $request)
     {
-        $flush = array_key_exists('flush', $request->getVars()) || ($request->getURL() === 'dev/build');
+        $flush = array_key_exists('flush', $request->getVars() ?? []) || ($request->getURL() === 'dev/build');
 
         if (!$flush || Director::isManifestFlushed()) {
             return false;

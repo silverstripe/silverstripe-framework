@@ -64,7 +64,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest
         $request->addHeader('X-Pjax', 'myfragment,otherfragment');
         $request->addHeader('Accept', 'application/json');
         $response = $negotiator->respond($request);
-        $json = json_decode($response->getBody());
+        $json = json_decode($response->getBody() ?? '');
         $this->assertObjectHasAttribute('myfragment', $json);
         $this->assertEquals('myfragment response', $json->myfragment);
         $this->assertObjectHasAttribute('otherfragment', $json);
@@ -90,7 +90,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest
         $request->addHeader('Accept', 'application/json');
 
         $response = $negotiator->setFragmentOverride(['beta'])->respond($request);
-        $json = json_decode($response->getBody());
+        $json = json_decode($response->getBody() ?? '');
         $this->assertFalse(isset($json->alpha));
         $this->assertObjectHasAttribute('beta', $json);
     }

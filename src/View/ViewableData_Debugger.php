@@ -56,7 +56,7 @@ class ViewableData_Debugger extends ViewableData
                     if ($method->isPublic()) {
                         $debug .= "<li>\${$method->getName()}";
 
-                        if (count($method->getParameters())) {
+                        if (count($method->getParameters() ?? [])) {
                             $debug .= ' <small>(' . implode(', ', $method->getParameters()) . ')</small>';
                         }
 

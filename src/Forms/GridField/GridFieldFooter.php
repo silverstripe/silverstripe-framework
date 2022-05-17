@@ -66,7 +66,7 @@ class GridFieldFooter extends AbstractGridFieldComponent implements GridField_HT
             'footer' => $forTemplate->renderWith(
                 $template,
                 [
-                    'Colspan' => count($gridField->getColumns())
+                    'Colspan' => count($gridField->getColumns() ?? [])
                 ]
             )
         ];

@@ -201,11 +201,11 @@ class HierarchyTest extends SapphireTest
         $this->assertContains($obj2b->ID, $obj2IdList);
         $this->assertContains($obj2aa->ID, $obj2IdList);
         $this->assertContains($obj2ab->ID, $obj2IdList);
-        $this->assertEquals(4, count($obj2IdList));
+        $this->assertEquals(4, count($obj2IdList ?? []));
 
         $this->assertContains($obj2aa->ID, $obj2aIdList);
         $this->assertContains($obj2ab->ID, $obj2aIdList);
-        $this->assertEquals(2, count($obj2aIdList));
+        $this->assertEquals(2, count($obj2aIdList ?? []));
     }
 
     /**

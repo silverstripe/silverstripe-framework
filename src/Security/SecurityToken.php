@@ -237,7 +237,7 @@ class SecurityToken implements TemplateGlobalProvider
     protected function getRequestToken($request)
     {
         $name = $this->getName();
-        $header = 'X-' . ucwords(strtolower($name));
+        $header = 'X-' . ucwords(strtolower($name ?? ''));
         if ($token = $request->getHeader($header)) {
             return $token;
         }

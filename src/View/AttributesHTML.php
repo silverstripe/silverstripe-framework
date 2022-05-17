@@ -105,14 +105,14 @@ trait AttributesHTML
 
         $attributes = (array) $attributes;
 
-        $attributes = array_filter($attributes, function ($v) {
+        $attributes = array_filter($attributes ?? [], function ($v) {
             return ($v || $v === 0 || $v === '0');
         });
 
         if ($exclude) {
             $attributes = array_diff_key(
-                $attributes,
-                array_flip($exclude)
+                $attributes ?? [],
+                array_flip($exclude ?? [])
             );
         }
 

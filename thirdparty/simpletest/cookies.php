@@ -43,7 +43,7 @@ class SimpleCookie {
         $this->_path = ($path ? $this->_fixPath($path) : "/");
         $this->_expiry = false;
         if (is_string($expiry)) {
-            $this->_expiry = strtotime($expiry);
+            $this->_expiry = strtotime($expiry ?? '');
         } elseif (is_integer($expiry)) {
             $this->_expiry = $expiry;
         }
@@ -97,9 +97,9 @@ class SimpleCookie {
      */
     function _truncateHost($host) {
         $tlds = SimpleUrl::getAllTopLevelDomains();
-        if (preg_match('/[a-z\-]+\.(' . $tlds . ')$/i', $host, $matches)) {
+        if (preg_match('/[a-z\-]+\.(' . $tlds . ')$/i', $host ?? '', $matches)) {
             return $matches[0];
-        } elseif (preg_match('/[a-z\-]+\.[a-z\-]+\.[a-z\-]+$/i', $host, $matches)) {
+        } elseif (preg_match('/[a-z\-]+\.[a-z\-]+\.[a-z\-]+$/i', $host ?? '', $matches)) {
             return $matches[0];
         }
         return false;
@@ -143,9 +143,9 @@ class SimpleCookie {
      */
     function isValidPath($path) {
         return (strncmp(
-                $this->_fixPath($path),
-                $this->getPath(),
-                strlen($this->getPath())) == 0);
+                $this->_fixPath($path) ?? '',
+                $this->getPath() ?? '',
+                strlen($this->getPath() ?? '')) == 0);
     }
 
     /**
@@ -176,7 +176,7 @@ class SimpleCookie {
             return true;
         }
         if (is_string($now)) {
-            $now = strtotime($now);
+            $now = strtotime($now ?? '');
         }
         return ($this->_expiry < $now);
     }
@@ -209,10 +209,10 @@ class SimpleCookie {
      *    @access private
      */
     function _fixPath($path) {
-        if (substr($path, 0, 1) != '/') {
+        if (substr($path ?? '', 0, 1) != '/') {
             $path = '/' . $path;
         }
-        if (substr($path, -1, 1) != '/') {
+        if (substr($path ?? '', -1, 1) != '/') {
             $path .= '/';
         }
         return $path;
@@ -244,7 +244,7 @@ class SimpleCookieJar {
      */
     function restartSession($date = false) {
         $surviving_cookies = array();
-        for ($i = 0; $i < count($this->_cookies); $i++) {
+        for ($i = 0; $i < count($this->_cookies ?? []); $i++) {
             if (! $this->_cookies[$i]->getValue()) {
                 continue;
             }
@@ -268,7 +268,7 @@ class SimpleCookieJar {
      *    @access public
      */
     function agePrematurely($interval) {
-        for ($i = 0; $i < count($this->_cookies); $i++) {
+        for ($i = 0; $i < count($this->_cookies ?? []); $i++) {
             $this->_cookies[$i]->agePrematurely($interval);
         }
     }
@@ -299,7 +299,7 @@ class SimpleCookieJar {
      *    @access private
      */
     function _findFirstMatch($cookie) {
-        for ($i = 0; $i < count($this->_cookies); $i++) {
+        for ($i = 0; $i < count($this->_cookies ?? []); $i++) {
             $is_match = $this->_isMatch(
                     $cookie,
                     $this->_cookies[$i]->getHost(),
@@ -309,7 +309,7 @@ class SimpleCookieJar {
                 return $i;
             }
         }
-        return count($this->_cookies);
+        return count($this->_cookies ?? []);
     }
 
     /**
@@ -327,7 +327,7 @@ class SimpleCookieJar {
         $longest_path = '';
         foreach ($this->_cookies as $cookie) {
             if ($this->_isMatch($cookie, $host, $path, $name)) {
-                if (strlen($cookie->getPath()) > strlen($longest_path)) {
+                if (strlen($cookie->getPath() ?? '') > strlen($longest_path ?? '')) {
                     $value = $cookie->getValue();
                     $longest_path = $cookie->getPath();
                 }

@@ -21,7 +21,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $config['charset'] = $charset;
         $config['database'] = 'information_schema';
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -47,7 +47,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $config['collation'] = $customCollation;
         $config['database'] = 'information_schema';
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -103,7 +103,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $config['collation'] = $collation;
         $config['database'] = 'information_schema';
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 
@@ -129,7 +129,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $config['collation'] = $collation;
         $config['database'] = 'information_schema';
 
-        if (strtolower(substr($config['type'], 0, 5)) !== 'mysql') {
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             return $this->markTestSkipped('The test only relevant for MySQL');
         }
 

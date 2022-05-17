@@ -121,7 +121,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
         foreach ($this->getRows() as $row) {
             $columns = array_merge($columns, $row->getColumns());
         }
-        return array_unique($columns);
+        return array_unique($columns ?? []);
     }
 
     /**

@@ -71,13 +71,13 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
     protected function backURLToken(HTTPRequest $request)
     {
         $backURL = $request->getVar('BackURL');
-        if (!strstr($backURL, '?')) {
+        if (!strstr($backURL ?? '', '?')) {
             return null;
         }
 
         // Filter backURL if it contains the given request parameter
-        list(,$query) = explode('?', $backURL);
-        parse_str($query, $queryArgs);
+        list(,$query) = explode('?', $backURL ?? '');
+        parse_str($query ?? '', $queryArgs);
         $name = $this->getName();
         if (isset($queryArgs[$name])) {
             return $queryArgs[$name];
@@ -158,7 +158,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
 
     protected function redirectURL()
     {
-        $query = http_build_query($this->getRedirectUrlParams());
+        $query = http_build_query($this->getRedirectUrlParams() ?? []);
         return Controller::join_links($this->getRedirectUrlBase(), '?' . $query);
     }
 }
