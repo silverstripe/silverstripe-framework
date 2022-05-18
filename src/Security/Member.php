@@ -914,7 +914,7 @@ class Member extends DataObject
             && static::config()->get('notify_password_change')
             && $this->isInDB()
         ) {
-            Email::create()
+            $email = Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
@@ -922,8 +922,10 @@ class Member extends DataObject
                     __CLASS__ . '.SUBJECTPASSWORDCHANGED',
                     "Your password has been changed",
                     'Email subject'
-                ))
-                ->send();
+                ));
+
+            $this->extend('updateChangedPasswordEmail', $email);
+            $email->send();
         }
 
         // The test on $this->ID is used for when records are initially created. Note that this only works with
