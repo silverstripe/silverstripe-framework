@@ -1491,7 +1491,11 @@ class FormField extends RequestHandler
     public function getSchemaData()
     {
         $defaults = $this->getSchemaDataDefaults();
-        return array_replace_recursive($defaults, array_intersect_key($this->schemaData, $defaults));
+        $schema = array_replace_recursive($defaults, array_intersect_key($this->schemaData, $defaults));
+        
+        $this->extend('updateSchemaData', $schema);
+        
+        return $schema;
     }
 
     /**
