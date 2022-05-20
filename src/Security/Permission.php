@@ -392,9 +392,16 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function grant($groupID, $code, $arg = "any")
     {
-        $perm = new Permission();
-        $perm->GroupID = $groupID;
-        $perm->Code = $code;
+        $permissions = Permission::get()->filter(['GroupID' => $groupID, 'Code' => $code]);
+        
+        if ($permissions && $permissions->count() > 0) {
+            $perm = $permissions->last();
+        } else {
+            $perm = new Permission();
+            $perm->GroupID = $groupID;
+            $perm->Code = $code;
+        }
+
         $perm->Type = self::GRANT_PERMISSION;
 
         // Arg component
@@ -427,9 +434,16 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function deny($groupID, $code, $arg = "any")
     {
-        $perm = new Permission();
-        $perm->GroupID = $groupID;
-        $perm->Code = $code;
+        $permissions = Permission::get()->filter(['GroupID' => $groupID, 'Code' => $code]);
+
+        if ($permissions && $permissions->count() > 0) {
+            $perm = $permissions->last();
+        } else {
+            $perm = new Permission();
+            $perm->GroupID = $groupID;
+            $perm->Code = $code;
+        }
+
         $perm->Type = self::DENY_PERMISSION;
 
         // Arg component
