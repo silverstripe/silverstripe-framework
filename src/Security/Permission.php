@@ -392,10 +392,16 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function grant($groupID, $code, $arg = "any")
     {
-        $perm = new Permission();
-        $perm->GroupID = $groupID;
-        $perm->Code = $code;
-        $perm->Type = self::GRANT_PERMISSION;
+        $permissions = Permission::get()->filter(['GroupID' => $groupID, 'Code' => $code]);
+        
+        if ($permissions && $permissions->count() > 0) {
+            $perm = $permissions->first();
+        } else {
+            $perm = new Permission();
+            $perm->GroupID = $groupID;
+            $perm->Code = $code;
+            $perm->Type = self::GRANT_PERMISSION;
+        }
 
         // Arg component
         switch ($arg) {
