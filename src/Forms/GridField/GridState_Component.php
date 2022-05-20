@@ -5,13 +5,13 @@ namespace SilverStripe\Forms\GridField;
 /**
  * @see GridState
  */
-class GridState_Component implements GridField_HTMLProvider
+class GridState_Component extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     public function getHTMLFragments($gridField)
     {
-        return array(
+        return [
             'before' => $gridField->getState(false)->Field()
-        );
+        ];
     }
 }

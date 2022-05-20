@@ -7,8 +7,9 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Kernel;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 
 /**
@@ -18,74 +19,169 @@ use SilverStripe\Dev\FunctionalTest;
  */
 class HTTPTest extends FunctionalTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Set to disabled at null forcing level
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
+        HTTPCacheControlMiddleware::reset();
+    }
 
     public function testAddCacheHeaders()
     {
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        $this->assertEmpty($response->getHeader('Cache-Control'));
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
 
-        HTTP::set_cache_age(30);
-
-        HTTP::add_cache_headers($response);
+        $this->addCacheHeaders($response);
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
-        // Ensure max-age is zero for development.
-        /** @var Kernel $kernel */
-        $kernel = Injector::inst()->get(Kernel::class);
-        $kernel->setEnvironment(Kernel::DEV);
+        // Ensure cache headers are set correctly when disabled via config (e.g. when dev)
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', HTTPCacheControlMiddleware::LEVEL_DISABLED);
+        HTTPCacheControlMiddleware::reset();
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
-        $this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
+        $this->addCacheHeaders($response);
+        $this->assertStringContainsString('no-cache', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('no-store', $response->getHeader('Cache-Control'));
+        $this->assertStringContainsString('must-revalidate', $response->getHeader('Cache-Control'));
 
         // Ensure max-age setting is respected in production.
-        $kernel->setEnvironment(Kernel::LIVE);
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultState', 'disabled')
+            ->set('defaultForcingLevel', 0);
+        HTTPCacheControlMiddleware::reset();
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
-        $this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
-        $this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
+        $this->addCacheHeaders($response);
+        $this->assertStringContainsString('max-age=30', $response->getHeader('Cache-Control'));
+        $this->assertStringNotContainsString('max-age=0', $response->getHeader('Cache-Control'));
 
         // Still "live": Ensure header's aren't overridden if already set (using purposefully different values).
-        $headers = array(
+        $headers = [
             'Vary' => '*',
             'Pragma' => 'no-cache',
             'Cache-Control' => 'max-age=0, no-cache, no-store',
-        );
-        $response = new HTTPResponse($body, 200);
-        foreach ($headers as $name => $value) {
-            $response->addHeader($name, $value);
+        ];
+        foreach ($headers as $header => $value) {
+            $response->addHeader($header, $value);
         }
-        HTTP::add_cache_headers($response);
-        foreach ($headers as $name => $value) {
-            $this->assertEquals($value, $response->getHeader($name));
+        HTTPCacheControlMiddleware::reset();
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+        HTTPCacheControlMiddleware::singleton()->setMaxAge(30);
+        $this->addCacheHeaders($response);
+        foreach ($headers as $header => $value) {
+            $this->assertEquals($value, $response->getHeader($header));
         }
     }
 
     public function testConfigVary()
     {
-        /** @var Kernel $kernel */
-        $kernel = Injector::inst()->get(Kernel::class);
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        $kernel->setEnvironment(Kernel::LIVE);
-        HTTP::set_cache_age(30);
-        HTTP::add_cache_headers($response);
+        HTTPCacheControlMiddleware::singleton()
+            ->setMaxAge(30)
+            ->setVary('X-Requested-With, X-Forwarded-Protocol');
+        $this->addCacheHeaders($response);
 
+        // Vary set properly
         $v = $response->getHeader('Vary');
-        $this->assertNotEmpty($v);
+        $this->assertStringContainsString("X-Forwarded-Protocol", $v);
+        $this->assertStringContainsString("X-Requested-With", $v);
+        $this->assertStringNotContainsString("Cookie", $v);
+        $this->assertStringNotContainsString("User-Agent", $v);
+        $this->assertStringNotContainsString("Accept", $v);
 
-        $this->assertContains("Cookie", $v);
-        $this->assertContains("X-Forwarded-Protocol", $v);
-        $this->assertContains("User-Agent", $v);
-        $this->assertContains("Accept", $v);
-
-        HTTP::config()->update('vary', '');
+        // No vary
+        HTTPCacheControlMiddleware::singleton()
+            ->setMaxAge(30)
+            ->setVary(null);
+        HTTPCacheControlMiddleware::reset();
+        HTTPCacheControlMiddleware::config()
+            ->set('defaultVary', []);
 
         $response = new HTTPResponse($body, 200);
-        HTTP::add_cache_headers($response);
-
+        $this->addCacheHeaders($response);
         $v = $response->getHeader('Vary');
         $this->assertEmpty($v);
+    }
+
+    public function testDeprecatedVaryHandling()
+    {
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'vary',
+            'X-Foo'
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Vary');
+        $this->assertStringContainsString('X-Foo', $header);
+    }
+
+    public function testDeprecatedCacheControlHandling()
+    {
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                'no-store' => true,
+                'no-cache' => true,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Cache-Control');
+        $this->assertStringContainsString('no-store', $header);
+        $this->assertStringContainsString('no-cache', $header);
+    }
+
+    public function testDeprecatedCacheControlHandlingOnMaxAge()
+    {
+        HTTPCacheControlMiddleware::singleton()->publicCache();
+
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                // Needs to be separate from no-cache and no-store,
+                // since that would unset max-age
+                'max-age' => 99,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
+        $header = $response->getHeader('Cache-Control');
+        $this->assertStringContainsString('max-age=99', $header);
+    }
+
+    public function testDeprecatedCacheControlHandlingThrowsWithUnknownDirectives()
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Found unsupported legacy directives in HTTP\.cache_control: unknown/');
+        /** @var Config */
+        Config::modify()->set(
+            HTTP::class,
+            'cache_control',
+            [
+                'no-store' => true,
+                'unknown' => true,
+            ]
+        );
+        $response = new HTTPResponse('', 200);
+        $this->addCacheHeaders($response);
     }
 
     /**
@@ -110,18 +206,18 @@ class HTTPTest extends FunctionalTest
 			</p>
 		';
 
-        $expected = array (
+        $expected =  [
             '/', 'home/', 'mother/', '$Journey', 'space travel', 'unquoted', 'single quote', '/father', 'attributes',
             'journey', 'CAPS LOCK', 'quotes \'mixed\' up'
-        );
+        ];
 
         $result = HTTP::getLinksIn($content);
 
-        // Results don't neccesarily come out in the order they are in the $content param.
+        // Results don't necessarily come out in the order they are in the $content param.
         sort($result);
         sort($expected);
 
-        $this->assertTrue(is_array($result));
+        $this->assertIsArray($result);
         $this->assertEquals($expected, $result, 'Test that all links within the content are found.');
     }
 
@@ -137,7 +233,7 @@ class HTTPTest extends FunctionalTest
             $controller->setRequest($request);
             $controller->pushCurrent();
             try {
-                $this->assertContains(
+                $this->assertStringContainsString(
                     'relative/url?foo=bar',
                     HTTP::setGetVar('foo', 'bar'),
                     'Omitting a URL falls back to current URL'
@@ -148,36 +244,36 @@ class HTTPTest extends FunctionalTest
         }, 'relative/url/');
 
         $this->assertEquals(
-            'relative/url?foo=bar',
+            '/relative/url?foo=bar',
             HTTP::setGetVar('foo', 'bar', 'relative/url'),
             'Relative URL without existing query params'
         );
 
         $this->assertEquals(
-            'relative/url?baz=buz&amp;foo=bar',
+            '/relative/url?baz=buz&foo=bar',
             HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
             'Relative URL with existing query params, and new added key'
         );
 
         $this->assertEquals(
-            'http://test.com/?foo=new&amp;buz=baz',
+            'http://test.com/?foo=new&buz=baz',
             HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=old&buz=baz'),
-            'Absolute URL without path and multipe existing query params, overwriting an existing parameter'
+            'Absolute URL without path and multiple existing query params, overwriting an existing parameter'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'http://test.com/?foo=new',
             HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=&foo=old'),
             'Absolute URL and empty query param'
         );
         // http_build_query() escapes angular brackets, they should be correctly urldecoded by the browser client
         $this->assertEquals(
-            'http://test.com/?foo%5Btest%5D=one&amp;foo%5Btest%5D=two',
+            'http://test.com/?foo%5Btest%5D=one&foo%5Btest%5D=two',
             HTTP::setGetVar('foo[test]', 'two', 'http://test.com/?foo[test]=one'),
             'Absolute URL and PHP array query string notation'
         );
 
-        $urls = array(
+        $urls = [
             'http://www.test.com:8080',
             'http://test.com:3000/',
             'http://test.com:3030/baz/',
@@ -185,11 +281,11 @@ class HTTPTest extends FunctionalTest
             'http://baz@test.com/',
             'http://baz:foo@test.com:8080',
             'http://baz@test.com:8080'
-        );
+        ];
 
         foreach ($urls as $testURL) {
             $this->assertEquals(
-                $testURL .'?foo=bar',
+                $testURL . '?foo=bar',
                 HTTP::setGetVar('foo', 'bar', $testURL),
                 'Absolute URL and Port Number'
             );
@@ -205,6 +301,7 @@ class HTTPTest extends FunctionalTest
         $this->assertEquals('image/gif', HTTP::get_mime_type('file.gif'));
         $this->assertEquals('text/html', HTTP::get_mime_type('file.html'));
         $this->assertEquals('image/jpeg', HTTP::get_mime_type('file.jpg'));
+        $this->assertEquals('image/jpeg', HTTP::get_mime_type('upperfile.JPG'));
         $this->assertEquals('image/png', HTTP::get_mime_type('file.png'));
         $this->assertEquals(
             'image/vnd.adobe.photoshop',
@@ -225,8 +322,7 @@ class HTTPTest extends FunctionalTest
                 // background-image
                 // Note that using /./ in urls is absolutely acceptable
                 $this->assertEquals(
-                    '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'.
-                    'Content</div>',
+                    '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">' . 'Content</div>',
                     HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
                 );
 
@@ -289,8 +385,7 @@ class HTTPTest extends FunctionalTest
                 // background
                 // Note that using /./ in urls is absolutely acceptable
                 $this->assertEquals(
-                    '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'.
-                    'SS Blog</div>',
+                    '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">' . 'SS Blog</div>',
                     HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
                 );
 
@@ -341,11 +436,9 @@ class HTTPTest extends FunctionalTest
 
                 // data uri
                 $this->assertEquals(
-                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38'.
-                    'GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
+                    '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38' . 'GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
                     HTTP::absoluteURLs(
-                        '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH'.
-                        'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'
+                        '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH' . 'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'
                     ),
                     'Data URI links are not rewritten'
                 );
@@ -364,7 +457,7 @@ class HTTPTest extends FunctionalTest
     {
         $this->withBaseURL(
             'http://www.silverstripe.org/',
-            function ($test) {
+            function () {
                 $frameworkTests = ltrim(FRAMEWORK_DIR . '/tests', '/');
                 $this->assertEquals(
                     "http://www.silverstripe.org/$frameworkTests/php/Control/HTTPTest.php",
@@ -372,5 +465,24 @@ class HTTPTest extends FunctionalTest
                 );
             }
         );
+    }
+
+    /**
+     * Process cache headers on a response
+     *
+     * @param HTTPResponse $response
+     */
+    protected function addCacheHeaders(HTTPResponse $response)
+    {
+        // Mock request
+        $session = new Session([]);
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession($session);
+
+        // Run middleware
+        HTTPCacheControlMiddleware::singleton()
+            ->process($request, function () use ($response) {
+                return $response;
+            });
     }
 }

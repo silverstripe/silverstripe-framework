@@ -45,7 +45,7 @@ class SimpleTagBuilder {
                 'form' => 'SimpleFormTag',
                 'frame' => 'SimpleFrameTag');
         $attributes = $this->_keysToLowerCase($attributes);
-        if (array_key_exists($name, $map)) {
+        if (array_key_exists($name, $map ?? [])) {
             $tag_class = $map[$name];
             return new $tag_class($attributes);
         } elseif ($name == 'select') {
@@ -79,7 +79,7 @@ class SimpleTagBuilder {
         if (! isset($attributes['type'])) {
             return new SimpleTextTag($attributes);
         }
-        $type = strtolower(trim($attributes['type']));
+        $type = strtolower(trim($attributes['type'] ?? ''));
         $map = array(
                 'submit' => 'SimpleSubmitTag',
                 'image' => 'SimpleImageSubmitTag',
@@ -90,11 +90,11 @@ class SimpleTagBuilder {
                 'hidden' => 'SimpleTextTag',
                 'password' => 'SimpleTextTag',
                 'file' => 'SimpleUploadTag');
-        if (array_key_exists($type, $map)) {
+        if (array_key_exists($type, $map ?? [])) {
             $tag_class = $map[$type];
             return new $tag_class($attributes);
         }
-        return false;
+        return new SimpleTextTag($attributes);
     }
 
     /**
@@ -261,7 +261,7 @@ class SimplePageBuilder extends SimpleSaxListener {
      *    @access private
      */
     function _hasNamedTagOnOpenTagStack($name) {
-        return isset($this->_tags[$name]) && (count($this->_tags[$name]) > 0);
+        return isset($this->_tags[$name]) && (count($this->_tags[$name] ?? []) > 0);
     }
 
     /**
@@ -287,7 +287,7 @@ class SimplePageBuilder extends SimpleSaxListener {
      *    @access private
      */
     function _addContentToAllOpenTags($text) {
-        foreach (array_keys($this->_tags) as $name) {
+        foreach (array_keys($this->_tags ?? []) as $name) {
             for ($i = 0, $count = count($this->_tags[$name]); $i < $count; $i++) {
                 $this->_tags[$name][$i]->addContent($text);
             }
@@ -305,7 +305,7 @@ class SimplePageBuilder extends SimpleSaxListener {
         if ($tag->getTagName() != 'option') {
             return;
         }
-        foreach (array_keys($this->_tags) as $name) {
+        foreach (array_keys($this->_tags ?? []) as $name) {
             for ($i = 0, $count = count($this->_tags[$name]); $i < $count; $i++) {
                 $this->_tags[$name][$i]->addTag($tag);
             }
@@ -320,7 +320,7 @@ class SimplePageBuilder extends SimpleSaxListener {
      */
     function _openTag(&$tag) {
         $name = $tag->getTagName();
-        if (! in_array($name, array_keys($this->_tags))) {
+        if (! in_array($name, array_keys($this->_tags ?? []))) {
             $this->_tags[$name] = array();
         }
         $this->_tags[$name][] = &$tag;
@@ -592,7 +592,7 @@ class SimplePage {
         } elseif ($tag->getTagName() == "title") {
             $this->_setTitle($tag);
         } elseif ($this->_isFormElement($tag->getTagName())) {
-            for ($i = 0; $i < count($this->_open_forms); $i++) {
+            for ($i = 0; $i < count($this->_open_forms ?? []); $i++) {
                 $this->_open_forms[$i]->addWidget($tag);
             }
             $this->_last_widget = &$tag;
@@ -650,7 +650,7 @@ class SimplePage {
      *    @access public
      */
     function acceptFormEnd() {
-        if (count($this->_open_forms)) {
+        if (count($this->_open_forms ?? [])) {
             $this->_complete_forms[] = array_pop($this->_open_forms);
         }
     }
@@ -731,7 +731,7 @@ class SimplePage {
      *    @access public
      */
     function acceptPageEnd() {
-        while (count($this->_open_forms)) {
+        while (count($this->_open_forms ?? [])) {
             $this->_complete_forms[] = array_pop($this->_open_forms);
         }
         foreach ($this->_left_over_labels as $label) {
@@ -766,7 +766,7 @@ class SimplePage {
             return false;
         }
         $urls = array();
-        for ($i = 0; $i < count($this->_frames); $i++) {
+        for ($i = 0; $i < count($this->_frames ?? []); $i++) {
             $name = $this->_frames[$i]->getAttribute('name');
             $url = new SimpleUrl($this->_frames[$i]->getAttribute('src'));
             $urls[$name ? $name : $i + 1] = $this->expandUrl($url);
@@ -900,7 +900,7 @@ class SimplePage {
      *    @access public
      */
     function &getFormBySubmit($selector) {
-        for ($i = 0; $i < count($this->_complete_forms); $i++) {
+        for ($i = 0; $i < count($this->_complete_forms ?? []); $i++) {
             if ($this->_complete_forms[$i]->hasSubmit($selector)) {
                 return $this->_complete_forms[$i];
             }
@@ -918,7 +918,7 @@ class SimplePage {
      *    @access public
      */
     function &getFormByImage($selector) {
-        for ($i = 0; $i < count($this->_complete_forms); $i++) {
+        for ($i = 0; $i < count($this->_complete_forms ?? []); $i++) {
             if ($this->_complete_forms[$i]->hasImage($selector)) {
                 return $this->_complete_forms[$i];
             }
@@ -936,7 +936,7 @@ class SimplePage {
      *    @access public
      */
     function &getFormById($id) {
-        for ($i = 0; $i < count($this->_complete_forms); $i++) {
+        for ($i = 0; $i < count($this->_complete_forms ?? []); $i++) {
             if ($this->_complete_forms[$i]->getId() == $id) {
                 return $this->_complete_forms[$i];
             }
@@ -955,7 +955,7 @@ class SimplePage {
      */
     function setField($selector, $value, $position=false) {
         $is_set = false;
-        for ($i = 0; $i < count($this->_complete_forms); $i++) {
+        for ($i = 0; $i < count($this->_complete_forms ?? []); $i++) {
             if ($this->_complete_forms[$i]->setField($selector, $value, $position)) {
                 $is_set = true;
             }
@@ -972,7 +972,7 @@ class SimplePage {
      *    @access public
      */
     function getField($selector) {
-        for ($i = 0; $i < count($this->_complete_forms); $i++) {
+        for ($i = 0; $i < count($this->_complete_forms ?? []); $i++) {
             $value = $this->_complete_forms[$i]->getValue($selector);
             if (isset($value)) {
                 return $value;

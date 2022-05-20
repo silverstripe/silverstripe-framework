@@ -126,23 +126,23 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             }
 
             return $list;
-        } else {
-            $list = clone $this;
-            $list->inAlterDataQueryCall = true;
-
-            try {
-                $res = call_user_func($callback, $list->dataQuery, $list);
-                if ($res) {
-                    $list->dataQuery = $res;
-                }
-            } catch (Exception $e) {
-                $list->inAlterDataQueryCall = false;
-                throw $e;
-            }
-
-            $list->inAlterDataQueryCall = false;
-            return $list;
         }
+
+        $list = clone $this;
+        $list->inAlterDataQueryCall = true;
+
+        try {
+            $res = $callback($list->dataQuery, $list);
+            if ($res) {
+                $list->dataQuery = $res;
+            }
+        } catch (Exception $e) {
+            $list->inAlterDataQueryCall = false;
+            throw $e;
+        }
+
+        $list->inAlterDataQueryCall = false;
+        return $list;
     }
 
     /**
@@ -170,8 +170,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $clone = clone $this;
 
         if (is_array($keyOrArray)) {
-            foreach ($keyOrArray as $key => $val) {
-                $clone->dataQuery->setQueryParam($key, $val);
+            foreach ($keyOrArray as $key => $value) {
+                $clone->dataQuery->setQueryParam($key, $value);
             }
         } else {
             $clone->dataQuery->setQueryParam($keyOrArray, $val);
@@ -184,9 +184,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns the SQL query that will be used to get this DataList's records.  Good for debugging. :-)
      *
      * @param array $parameters Out variable for parameters required for this query
-     * @return string The resulting SQL query (may be paramaterised)
+     * @return string The resulting SQL query (may be parameterised)
      */
-    public function sql(&$parameters = array())
+    public function sql(&$parameters = [])
     {
         return $this->dataQuery->query()->sql($parameters);
     }
@@ -250,7 +250,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function canFilterBy($fieldName)
     {
         $model = singleton($this->dataClass);
-        $relations = explode(".", $fieldName);
+        $relations = explode(".", $fieldName ?? '');
         // First validate the relationships
         $fieldName = array_pop($relations);
         foreach ($relations as $r) {
@@ -309,7 +309,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
      *
-     * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+     * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
      * @return static
      */
     public function sort()
@@ -330,11 +330,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             list($col, $dir) = func_get_args();
 
             // Validate direction
-            if (!in_array(strtolower($dir), array('desc','asc'))) {
+            if (!in_array(strtolower($dir ?? ''), ['desc', 'asc'])) {
                 user_error('Second argument to sort must be either ASC or DESC');
             }
 
-            $sort = array($col => $dir);
+            $sort = [$col => $dir];
         } else {
             $sort = func_get_arg(0);
         }
@@ -342,7 +342,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
 
             if (is_string($sort) && $sort) {
-                if (stristr($sort, ' asc') || stristr($sort, ' desc')) {
+                if (false !== stripos($sort ?? '', ' asc') || false !== stripos($sort ?? '', ' desc')) {
                     $query->sort($sort);
                 } else {
                     $list->applyRelation($sort, $column, true);
@@ -363,9 +363,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Return a copy of this list which only includes items with these charactaristics
+     * Return a copy of this list which only includes items with these characteristics
      *
-     * @see SS_List::filter()
+     * @see Filterable::filter()
      *
      * @example $list = $list->filter('Name', 'bob'); // only bob in the list
      * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -387,13 +387,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         // Validate and process arguments
         $arguments = func_get_args();
-        switch (sizeof($arguments)) {
+        switch (sizeof($arguments ?? [])) {
             case 1:
                 $filters = $arguments[0];
 
                 break;
             case 2:
-                $filters = array($arguments[0] => $arguments[1]);
+                $filters = [$arguments[0] => $arguments[1]];
 
                 break;
             default:
@@ -415,14 +415,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         foreach ($filterArray as $expression => $value) {
             $filter = $this->createSearchFilter($expression, $value);
-            $list = $list->alterDataQuery(array($filter, 'apply'));
+            $list = $list->alterDataQuery([$filter, 'apply']);
         }
 
         return $list;
     }
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -448,7 +448,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function filterAny()
     {
         $numberFuncArgs = count(func_get_args());
-        $whereArguments = array();
+        $whereArguments = [];
 
         if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
@@ -501,8 +501,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Unlike getRelationName, this is immutable and will fallback to the quoted field
      * name if not a relation.
      *
+     * Example use (simple WHERE condition on data sitting in a related table):
+     *
+     * <code>
+     *  $columnName = null;
+     *  $list = Page::get()
+     *    ->applyRelation('TaxonomyTerms.ID', $columnName)
+     *    ->where([$columnName => 'my value']);
+     * </code>
+     *
+     *
      * @param string $field Name of field or relation to apply
-     * @param string &$columnName Quoted column name
+     * @param string $columnName Quoted column name (by reference)
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return $this DataList with this relation applied
@@ -516,14 +526,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Simple fields without relations are mapped directly
-        if (strpos($field, '.') === false) {
-            $columnName = '"'.$field.'"';
+        if (strpos($field ?? '', '.') === false) {
+            $columnName = '"' . $field . '"';
             return $this;
         }
 
         return $this->alterDataQuery(
             function (DataQuery $query) use ($field, &$columnName, $linearOnly) {
-                $relations = explode('.', $field);
+                $relations = explode('.', $field ?? '');
                 $fieldName = array_pop($relations);
 
                 // Apply relation
@@ -545,7 +555,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     protected function isValidRelationName($field)
     {
-        return preg_match('/^[A-Z0-9._]+$/i', $field);
+        return preg_match('/^[A-Z0-9._]+$/i', $field ?? '');
     }
 
     /**
@@ -558,7 +568,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected function createSearchFilter($filter, $value)
     {
         // Field name is always the first component
-        $fieldArgs = explode(':', $filter);
+        $fieldArgs = explode(':', $filter ?? '');
         $fieldName = array_shift($fieldArgs);
 
         // Inspect type of second argument to determine context
@@ -572,7 +582,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             // Whether this is a valid modifier on the default filter, or a filter itself.
             /** @var SearchFilter $defaultFilterInstance */
             $defaultFilterInstance = Injector::inst()->get('DataListFilter.default');
-            if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers())) {
+            if (in_array(strtolower($secondArg ?? ''), $defaultFilterInstance->getSupportedModifiers() ?? [])) {
                 // Treat second (and any subsequent) argument as modifiers, using default filter
                 $filterServiceName = 'DataListFilter.default';
                 array_unshift($modifiers, $secondArg);
@@ -587,9 +597,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Return a copy of this list which does not contain any items with these charactaristics
+     * Return a copy of this list which does not contain any items that match all params
      *
-     * @see SS_List::exclude()
      * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list = $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
      * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
@@ -599,13 +608,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @todo extract the sql from this method into a SQLGenerator class
      *
-     * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
+     * @param string|array
+     * @param string [optional]
+     *
      * @return $this
      */
     public function exclude()
     {
         $numberFuncArgs = count(func_get_args());
-        $whereArguments = array();
+        $whereArguments = [];
 
         if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
             $whereArguments = func_get_arg(0);
@@ -622,6 +633,43 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 $filter = $this->createSearchFilter($field, $value);
                 $filter->exclude($subquery);
             }
+        });
+    }
+
+    /**
+     * Return a copy of this list which does not contain any items with any of these params
+     *
+     * @example $list = $list->excludeAny('Name', 'bob'); // exclude bob from list
+     * @example $list = $list->excludeAny('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>21)); // exclude bob or Age 21
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or Age 21 or 43
+     * @example $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+     *          // bob, phil, 21 or 43 would be excluded
+     *
+     * @param string|array
+     * @param string [optional]
+     *
+     * @return $this
+     */
+    public function excludeAny()
+    {
+        $numberFuncArgs = count(func_get_args());
+        $whereArguments = [];
+
+        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+            $whereArguments = func_get_arg(0);
+        } elseif ($numberFuncArgs == 2) {
+            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+        } else {
+            throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
+        }
+
+        return $this->alterDataQuery(function (DataQuery $dataQuery) use ($whereArguments) {
+            foreach ($whereArguments as $field => $value) {
+                $filter = $this->createSearchFilter($field, $value);
+                $filter->exclude($dataQuery);
+            }
+            return $dataQuery;
         });
     }
 
@@ -657,7 +705,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array())
+    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->innerJoin($table, $onClause, $alias, $order, $parameters);
@@ -676,7 +724,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array())
+    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->leftJoin($table, $onClause, $alias, $order, $parameters);
@@ -693,7 +741,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         $query = $this->dataQuery->query();
         $rows = $query->execute();
-        $results = array();
+        $results = [];
 
         foreach ($rows as $row) {
             $results[] = $this->createDataObject($row);
@@ -709,7 +757,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toNestedArray()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this as $item) {
             $result[] = $item->toMap();
@@ -731,6 +779,20 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         return $this;
+    }
+
+    /**
+     * Returns a generator for this DataList
+     *
+     * @return \Generator&DataObject[]
+     */
+    public function getGenerator()
+    {
+        $query = $this->dataQuery->query()->execute();
+
+        while ($row = $query->record()) {
+            yield $this->createDataObject($row);
+        }
     }
 
     public function debug()
@@ -757,6 +819,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Create a DataObject from the given SQL row
+     * If called without $row['ID'] set, then a new object will be created rather than rehydrated.
      *
      * @param array $row
      * @return DataObject
@@ -775,11 +838,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
-        if (class_exists($row['RecordClassName'])) {
+        if (class_exists($row['RecordClassName'] ?? '')) {
             $class = $row['RecordClassName'];
         }
 
-        $item = Injector::inst()->create($class, $row, false, $this->getQueryParams());
+        $creationType = empty($row['ID']) ? DataObject::CREATE_OBJECT : DataObject::CREATE_HYDRATED;
+
+        $item = Injector::inst()->create($class, $row, $creationType, $this->getQueryParams());
 
         return $item;
     }
@@ -801,6 +866,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->toArray());
@@ -811,6 +877,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->dataQuery->count();
@@ -862,9 +929,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
 
     /**
-     * Returns the first item in this DataList
+     * Returns the first item in this DataList (instanceof DataObject)
      *
-     * @return DataObject
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
+     * @return DataObject|null
      */
     public function first()
     {
@@ -875,9 +944,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Returns the last item in this DataList
+     * Returns the last item in this DataList (instanceof DataObject)
      *
-     *  @return DataObject
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
+     * @return DataObject|null
      */
     public function last()
     {
@@ -894,11 +965,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function exists()
     {
-        return $this->count() > 0;
+        return $this->dataQuery->exists();
     }
 
     /**
      * Find the first DataObject of this DataList where the given key = value
+     *
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
      * @param string $key
      * @param string $value
@@ -936,8 +1009,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return the first DataObject with the given ID
      *
+     * The object returned is not cached, unlike {@link DataObject::get_by_id()}
+     *
      * @param int $id
-     * @return DataObject
+     * @return DataObject|null
      */
     public function byID($id)
     {
@@ -952,7 +1027,19 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function column($colName = "ID")
     {
-        return $this->dataQuery->column($colName);
+        $dataQuery = clone $this->dataQuery;
+        return $dataQuery->distinct(false)->column($colName);
+    }
+
+    /**
+     * Returns a unique array of a single field value for all items in the list.
+     *
+     * @param string $colName
+     * @return array
+     */
+    public function columnUnique($colName = "ID")
+    {
+        return $this->dataQuery->distinct(true)->column($colName);
     }
 
     // Member altering methods
@@ -965,7 +1052,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function setByIDList($idList)
     {
-        $has = array();
+        $has = [];
 
         // Index current data
         foreach ($this->column() as $id) {
@@ -987,7 +1074,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Remove any items that haven't been mentioned
-        $this->removeMany(array_keys($itemsToDelete));
+        $this->removeMany(array_keys($itemsToDelete ?? []));
     }
 
     /**
@@ -999,7 +1086,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function getIDList()
     {
         $ids = $this->column("ID");
-        return $ids ? array_combine($ids, $ids) : array();
+        return $ids ? array_combine($ids, $ids) : [];
     }
 
     /**
@@ -1009,7 +1096,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * Example: Get members from all Groups:
      *
-     *     DataList::Create("Group")->relation("Members")
+     *     DataList::Create(\SilverStripe\Security\Group::class)->relation("Members")
      *
      * @param string $relationName
      * @return HasManyList|ManyManyList
@@ -1017,7 +1104,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function relation($relationName)
     {
         $ids = $this->column('ID');
-        return singleton($this->dataClass)->$relationName()->forForeignID($ids);
+        $singleton = DataObject::singleton($this->dataClass);
+        /** @var HasManyList|ManyManyList $relation */
+        $relation = $singleton->$relationName($ids);
+        return $relation;
     }
 
     public function dbObject($fieldName)
@@ -1068,13 +1158,23 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * Shuffle the datalist using a random function provided by the SQL engine
+     *
+     * @return $this
+     */
+    public function shuffle()
+    {
+        return $this->sort(DB::get_conn()->random());
+    }
+
+    /**
      * Remove every element in this DataList.
      *
      * @return $this
      */
     public function removeAll()
     {
-        foreach ($this as $item) {
+        foreach ($this->getGenerator() as $item) {
             $this->remove($item);
         }
         return $this;
@@ -1110,7 +1210,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param DataObject $item
      * @todo Allow for amendment of this behaviour - for example, we can remove an item from
-     * an "ActiveItems" DataList by chaning the status to inactive.
+     * an "ActiveItems" DataList by changing the status to inactive.
      */
     public function remove($item)
     {
@@ -1150,6 +1250,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return ($this->limit(1, $key)->first() != null);
@@ -1158,9 +1259,12 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns item stored in list with index $key
      *
+     * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
      * @param mixed $key
      * @return DataObject
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->limit(1, $key)->first();
@@ -1172,9 +1276,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $key
      * @param mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
-        user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
     }
 
     /**
@@ -1182,8 +1287,49 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param mixed $key
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
-        user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
+    }
+
+    /**
+     * Iterate over this DataList in "chunks". This will break the query in smaller subsets and avoid loading the entire
+     * result set in memory at once. Beware not to perform any operations on the results that might alter the return
+     * order. Otherwise, you might break subsequent chunks.
+     *
+     * You also can not define a custom limit or offset when using the chunk method.
+     *
+     * @param int $chunkSize
+     * @throws InvalidArgumentException If `$chunkSize` has an invalid size.
+     * @return Generator|DataObject[]
+     */
+    public function chunkedFetch(int $chunkSize = 1000): iterable
+    {
+        if ($chunkSize < 1) {
+            throw new InvalidArgumentException(sprintf(
+                '%s::%s: chunkSize must be greater than or equal to 1',
+                __CLASS__,
+                __METHOD__
+            ));
+        }
+
+        $currentChunk = 0;
+
+        // Keep looping until we run out of chunks
+        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)->getIterator()) {
+            // Loop over all the item in our chunk
+            foreach ($chunk as $item) {
+                yield $item;
+            }
+
+
+            if ($chunk->count() < $chunkSize) {
+                // If our last chunk had less item than our chunkSize, we've reach the end.
+                break;
+            }
+
+            $currentChunk++;
+        }
     }
 }

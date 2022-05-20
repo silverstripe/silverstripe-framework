@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Path;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
@@ -39,7 +40,7 @@ class ModuleResource
     public function __construct(Module $module, $relativePath)
     {
         $this->module = $module;
-        $this->relativePath = ltrim($relativePath, Module::TRIM_CHARS);
+        $this->relativePath = Path::normalise($relativePath, true);
         if (empty($this->relativePath)) {
             throw new InvalidArgumentException("Resource cannot have empty path");
         }
@@ -48,35 +49,39 @@ class ModuleResource
     /**
      * Return the full filesystem path to this resource.
      *
-     * Note: In the case that this resource is mapped to the `resources` folder, this will
+     * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
      *
      * @return string Path with no trailing slash E.g. /var/www/module
      */
     public function getPath()
     {
-        return $this->module->getPath() . '/' . $this->relativePath;
+        return Path::join($this->module->getPath(), $this->relativePath);
     }
 
     /**
      * Get the path of this resource relative to the base path.
      *
-     * Note: In the case that this resource is mapped to the `resources` folder, this will
+     * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
      *
      * @return string Relative path (no leading /)
      */
     public function getRelativePath()
     {
-        $path = $this->module->getRelativePath() . '/' . $this->relativePath;
-        return ltrim($path, Module::TRIM_CHARS);
+        // Root module
+        $parent = $this->module->getRelativePath();
+        if (!$parent) {
+            return $this->relativePath;
+        }
+        return Path::join($parent, $this->relativePath);
     }
 
     /**
      * Public URL to this resource.
      * Note: May be either absolute url, or root-relative url
      *
-     * In the case that this resource is mapped to the `resources` folder this
+     * In the case that this resource is mapped to the `_resources` folder this
      * will be the mapped url rather than the original path.
      *
      * @return string
@@ -105,7 +110,7 @@ class ModuleResource
      */
     public function exists()
     {
-        return file_exists($this->getPath());
+        return file_exists($this->getPath() ?? '');
     }
 
     /**
@@ -135,15 +140,8 @@ class ModuleResource
      */
     public function getRelativeResource($path)
     {
-        // Check cache
-        $path = trim($path, Module::TRIM_CHARS);
-        if (isset($this->resources[$path])) {
-            return $this->resources[$path];
-        }
-
-        // Build new relative path
-        $relativeBase = rtrim($this->relativePath, Module::TRIM_CHARS);
-        $relativePath = "{$relativeBase}/{$path}";
-        return $this->resources[$path] = new ModuleResource($this->getModule(), $relativePath);
+        // Defer to parent module
+        $relativeToModule = Path::join($this->relativePath, $path);
+        return $this->getModule()->getResource($relativeToModule);
     }
 }

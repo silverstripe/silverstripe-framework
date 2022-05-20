@@ -3,10 +3,13 @@
 namespace SilverStripe\Forms\Tests;
 
 use IntlDateFormatter;
+use LogicException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\DateField_Disabled;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -14,7 +17,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class DateFieldTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -43,12 +46,12 @@ class DateFieldTest extends SapphireTest
     {
         $f = new DateField('Date');
         $f->setMinDate('-7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('-8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date below min date, with strtotime');
 
         $f = new DateField('Date');
         $f->setMinDate('-7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('-7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching min date, with strtotime');
     }
 
@@ -56,12 +59,12 @@ class DateFieldTest extends SapphireTest
     {
         $f = new DateField('Date');
         $f->setMaxDate('7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('8 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('8 days', DBDatetime::now()->getTimestamp())));
         $this->assertFalse($f->validate(new RequiredFields()), 'Date above max date, with strtotime');
 
         $f = new DateField('Date');
         $f->setMaxDate('7 days');
-        $f->setValue(strftime('%Y-%m-%d', strtotime('7 days', DBDatetime::now()->getTimestamp())));
+        $f->setValue(date('Y-m-d', strtotime('7 days', DBDatetime::now()->getTimestamp())));
         $this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
     }
 
@@ -190,39 +193,83 @@ class DateFieldTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateFormat/
-     */
     public function testHtml5WithCustomFormatThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setDateFormat/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setDateFormat('d/M/y');
         $dateField->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateLength/
-     */
     public function testHtml5WithCustomDateLengthThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setDateLength/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setDateLength(IntlDateFormatter::MEDIUM);
         $dateField->Value();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessageRegExp /Please opt-out .* if using setLocale/
-     */
     public function testHtml5WithCustomLocaleThrowsException()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Please opt-out .* if using setLocale/');
         $dateField = new DateField('Date', 'Date');
         $dateField->setValue('2010-03-31');
         $dateField->setLocale('de_DE');
         $dateField->Value();
+    }
+
+    public function testGetDateFormatHTML5()
+    {
+        $field = new DateField('Date');
+        $field->setHTML5(true);
+        $this->assertSame(DBDate::ISO_DATE, $field->getDateFormat());
+    }
+
+    public function testGetDateFormatViaSetter()
+    {
+        $field = new DateField('Date');
+        $field->setHTML5(false);
+        $field->setDateFormat('d-m-Y');
+        $this->assertSame('d-m-Y', $field->getDateFormat());
+    }
+
+    public function testGetAttributes()
+    {
+        $field = new DateField('Date');
+        $field
+            ->setHTML5(true)
+            ->setMinDate('1980-05-10')
+            ->setMaxDate('1980-05-20');
+
+        $result = $field->getAttributes();
+        $this->assertSame('1980-05-10', $result['min']);
+        $this->assertSame('1980-05-20', $result['max']);
+    }
+
+    public function testSetSubmittedValueNull()
+    {
+        $field = new DateField('Date');
+        $field->setSubmittedValue(false);
+        $this->assertNull($field->Value());
+    }
+
+    public function testPerformReadonlyTransformation()
+    {
+        $field = new DateField('Date');
+        $result = $field->performReadonlyTransformation();
+        $this->assertInstanceOf(DateField_Disabled::class, $result);
+        $this->assertTrue($result->isReadonly());
+    }
+
+    public function testValidateWithoutValueReturnsTrue()
+    {
+        $field = new DateField('Date');
+        $validator = new RequiredFields();
+        $this->assertTrue($field->validate($validator));
     }
 }

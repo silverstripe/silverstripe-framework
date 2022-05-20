@@ -50,6 +50,11 @@ class SSViewer implements Flushable
     const DEFAULT_THEME = '$default';
 
     /**
+     * Identifier for the public theme
+     */
+    const PUBLIC_THEME = '$public';
+
+    /**
      * A list (highest priority first) of themes to use
      * Only used when {@link $theme_enabled} is set to TRUE.
      *
@@ -69,7 +74,7 @@ class SSViewer implements Flushable
      * The used "theme", which usually consists of templates, images and stylesheets.
      * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
      *
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @config
      * @var string
      */
@@ -162,7 +167,7 @@ class SSViewer implements Flushable
      *
      * @var array
      */
-    protected $subTemplates = null;
+    protected $subTemplates = [];
 
     /**
      * @var bool
@@ -207,7 +212,7 @@ class SSViewer implements Flushable
                 $message .= ' in themes "' . print_r($themes, true) . '"';
             }
 
-            user_error($message, E_USER_WARNING);
+            user_error($message ?? '', E_USER_WARNING);
         }
     }
 
@@ -257,7 +262,7 @@ class SSViewer implements Flushable
         $currentThemes = SSViewer::get_themes();
         $finalThemes = array_merge($themes, $currentThemes);
         // array_values is used to ensure sequential array keys as array_unique can leave gaps
-        static::set_themes(array_values(array_unique($finalThemes)));
+        static::set_themes(array_values(array_unique($finalThemes ?? [])));
     }
 
     /**
@@ -267,7 +272,7 @@ class SSViewer implements Flushable
      */
     public static function get_themes()
     {
-        $default = [self::DEFAULT_THEME];
+        $default = [self::PUBLIC_THEME, self::DEFAULT_THEME];
 
         if (!SSViewer::config()->uninherited('theme_enabled')) {
             return $default;
@@ -284,7 +289,7 @@ class SSViewer implements Flushable
 
         // Support legacy behaviour
         if ($theme = SSViewer::config()->uninherited('theme')) {
-            return [$theme, self::DEFAULT_THEME];
+            return [self::PUBLIC_THEME, $theme, self::DEFAULT_THEME];
         }
 
         return $default;
@@ -315,7 +320,7 @@ class SSViewer implements Flushable
     {
         // Figure out the class name from the supplied context.
         if (!is_object($classOrObject) && !(
-            is_string($classOrObject) && class_exists($classOrObject)
+            is_string($classOrObject) && class_exists($classOrObject ?? '')
         )) {
             throw new InvalidArgumentException(
                 'SSViewer::get_templates_by_class() expects a valid class name as its first parameter.'
@@ -323,14 +328,14 @@ class SSViewer implements Flushable
         }
 
         $templates = [];
-        $classes = array_reverse(ClassInfo::ancestry($classOrObject));
+        $classes = array_reverse(ClassInfo::ancestry($classOrObject) ?? []);
         foreach ($classes as $class) {
             $template = $class . $suffix;
             $templates[] = $template;
             $templates[] = ['type' => 'Includes', $template];
 
             // If the class is "PageController" (PSR-2 compatibility) or "Page_Controller" (legacy), look for Page.ss
-            if (preg_match('/^(?<name>.+[^\\\\])_?Controller$/iU', $class, $matches)) {
+            if (preg_match('/^(?<name>.+[^\\\\])_?Controller$/iU', $class ?? '', $matches)) {
                 $templates[] = $matches['name'] . $suffix;
             }
 
@@ -502,7 +507,7 @@ class SSViewer implements Flushable
         if (!self::$template_cache_flushed || $force) {
             $dir = dir(TEMP_PATH);
             while (false !== ($file = $dir->read())) {
-                if (strstr($file, '.cache')) {
+                if (strstr($file ?? '', '.cache')) {
                     unlink(TEMP_PATH . DIRECTORY_SEPARATOR . $file);
                 }
             }
@@ -556,7 +561,7 @@ class SSViewer implements Flushable
     /**
      * Flag whether to include the requirements in this response.
      *
-     * @param bool
+     * @param bool $incl
      */
     public function includeRequirements($incl = true)
     {
@@ -579,7 +584,7 @@ class SSViewer implements Flushable
     protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null)
     {
         if (isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
-            $lines = file($cacheFile);
+            $lines = file($cacheFile ?? '');
             echo "<h2>Template: $cacheFile</h2>";
             echo "<pre>";
             foreach ($lines as $num => $line) {
@@ -627,19 +632,19 @@ class SSViewer implements Flushable
         $template = $this->chosen;
 
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache'
-            . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template)));
-        $lastEdited = filemtime($template);
+            . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template ?? '')) ?? '');
+        $lastEdited = filemtime($template ?? '');
 
-        if (!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited) {
-            $content = file_get_contents($template);
+        if (!file_exists($cacheFile ?? '') || filemtime($cacheFile ?? '') < $lastEdited) {
+            $content = file_get_contents($template ?? '');
             $content = $this->parseTemplateContent($content, $template);
 
-            $fh = fopen($cacheFile, 'w');
-            fwrite($fh, $content);
+            $fh = fopen($cacheFile ?? '', 'w');
+            fwrite($fh, $content ?? '');
             fclose($fh);
         }
 
-        $underlay = ['I18NNamespace' => basename($template)];
+        $underlay = ['I18NNamespace' => basename($template ?? '')];
 
         // Makes the rendered sub-templates available on the parent item,
         // through $Content and $Layout placeholders.
@@ -676,16 +681,16 @@ class SSViewer implements Flushable
 
         // If we have our crazy base tag, then fix # links referencing the current page.
         if ($rewrite) {
-            if (strpos($output, '<base') !== false) {
+            if (strpos($output ?? '', '<base') !== false) {
                 if ($rewrite === 'php') {
                     $thisURLRelativeToBase = <<<PHP
 <?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace("/^(\\\\/)+/", "/", \$_SERVER['REQUEST_URI'])); ?>
 PHP;
                 } else {
-                    $thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI']));
+                    $thisURLRelativeToBase = Convert::raw2att(preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI'] ?? ''));
                 }
 
-                $output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
+                $output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output ?? '');
             }
         }
 
@@ -740,14 +745,28 @@ PHP;
      * @param mixed $data Data context
      * @param array $arguments Additional arguments
      * @param Object $scope
+     * @param bool $globalRequirements
+     *
      * @return string Evaluated result
      */
-    public static function execute_template($template, $data, $arguments = null, $scope = null)
+    public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
     {
         $v = SSViewer::create($template);
-        $v->includeRequirements(false);
 
-        return $v->process($data, $arguments, $scope);
+        if ($globalRequirements) {
+            $v->includeRequirements(false);
+        } else {
+            //nest a requirements backend for our template rendering
+            $origBackend = Requirements::backend();
+            Requirements::set_backend(Requirements_Backend::create());
+        }
+        try {
+            return $v->process($data, $arguments, $scope);
+        } finally {
+            if (!$globalRequirements) {
+                Requirements::set_backend($origBackend);
+            }
+        }
     }
 
     /**
@@ -758,14 +777,28 @@ PHP;
      * @param string $content Input string
      * @param mixed $data Data context
      * @param array $arguments Additional arguments
+     * @param bool $globalRequirements
+     *
      * @return string Evaluated result
      */
-    public static function execute_string($content, $data, $arguments = null)
+    public static function execute_string($content, $data, $arguments = null, $globalRequirements = false)
     {
         $v = SSViewer::fromString($content);
-        $v->includeRequirements(false);
 
-        return $v->process($data, $arguments);
+        if ($globalRequirements) {
+            $v->includeRequirements(false);
+        } else {
+            //nest a requirements backend for our template rendering
+            $origBackend = Requirements::backend();
+            Requirements::set_backend(Requirements_Backend::create());
+        }
+        try {
+            return $v->process($data, $arguments);
+        } finally {
+            if (!$globalRequirements) {
+                Requirements::set_backend($origBackend);
+            }
+        }
     }
 
     /**
@@ -821,7 +854,7 @@ PHP;
         $base = Director::absoluteBaseURL();
 
         // Is the document XHTML?
-        if (preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar)) {
+        if (preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar ?? '')) {
             return "<base href=\"$base\" />";
         } else {
             return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";

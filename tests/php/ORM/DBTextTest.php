@@ -14,14 +14,14 @@ class DBTextTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // clear the previous locale setting
         $this->previousLocaleSetting = null;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // If a test sets the locale, reset it on teardown
@@ -38,9 +38,10 @@ class DBTextTest extends SapphireTest
         // Plain text values always encoded safely
         // HTML stored in non-html fields is treated literally.
         return [
-            ['The little brown fox jumped over the lazy cow.', 'The little brown fox...'],
+            ['The little brown fox jumped over the lazy cow.', 'The little brown fox…'],
             ['<p>Short & Sweet</p>', '&lt;p&gt;Short &amp; Sweet&lt;/p&gt;'],
-            ['This text contains &amp; in it', 'This text contains &amp;...'],
+            ['This text contains &amp; in it', 'This text contains &amp;…'],
+            ['Is an umault in schön?', 'Is an umault in schö…'],
         ];
     }
 
@@ -65,7 +66,7 @@ class DBTextTest extends SapphireTest
     {
         return [
             // Standard words limited, ellipsis added if truncated
-            ['Lorem ipsum dolor sit amet', 24, 'Lorem ipsum dolor sit...'],
+            ['Lorem ipsum dolor sit amet', 24, 'Lorem ipsum dolor sit…'],
 
             // Complete words less than the character limit don't get truncated, ellipsis not added
             ['Lorem ipsum', 24, 'Lorem ipsum'],
@@ -77,10 +78,13 @@ class DBTextTest extends SapphireTest
 
             // HTML stored in non-html fields is treated literally.
             // If storing HTML you should use DBHTMLText instead
-            ['<p>Lorem ipsum dolor sit amet</p>', 24, '&lt;p&gt;Lorem ipsum dolor...'],
-            ['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, '&lt;p&gt;&lt;span&gt;Lorem ipsum...'],
+            ['<p>Lorem ipsum dolor sit amet</p>', 24, '&lt;p&gt;Lorem ipsum dolor…'],
+            ['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, '&lt;p&gt;&lt;span&gt;Lorem ipsum…'],
             ['<p>Lorem ipsum</p>', 24, '&lt;p&gt;Lorem ipsum&lt;/p&gt;'],
-            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp;amp; ipsum dolor...']
+            ['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp;amp; ipsum dolor…'],
+
+            ['Is an umault in schön or not?', 22, 'Is an umault in schön…'],
+
         ];
     }
 
@@ -107,10 +111,10 @@ class DBTextTest extends SapphireTest
     {
         return [
             // Standard words limited, ellipsis added if truncated
-            ['The little brown fox jumped over the lazy cow.', 3, 'The little brown...'],
-            [' This text has white space around the ends ', 3, 'This text has...'],
+            ['The little brown fox jumped over the lazy cow.', 3, 'The little brown…'],
+            [' This text has white space around the ends ', 3, 'This text has…'],
 
-            // Words less than the limt word count don't get truncated, ellipsis not added
+            // Words less than the limit word count don't get truncated, ellipsis not added
             ['Two words', 3, 'Two words'],  // Two words shouldn't have an ellipsis
             ['These three words', 3, 'These three words'], // Three words shouldn't have an ellipsis
             ['One', 3, 'One'],  // Neither should one word
@@ -118,12 +122,15 @@ class DBTextTest extends SapphireTest
 
             // Text with special characters
             ['Nice & Easy', 3, 'Nice &amp; Easy'],
-            ['One & Two & Three', 3, 'One &amp; Two...'],
+            ['One & Two & Three', 3, 'One &amp; Two…'],
 
             // HTML stored in non-html fields is treated literally.
             // If storing HTML you should use DBHTMLText instead
-            ['<p>Text inside a paragraph tag should also work</p>', 3, '&lt;p&gt;Text inside a...'],
+            ['<p>Text inside a paragraph tag should also work</p>', 3, '&lt;p&gt;Text inside a…'],
             ['<p>Two words</p>', 3, '&lt;p&gt;Two words&lt;/p&gt;'],
+
+            // Check UTF8
+            ['Is an umault in schön or not?', 5, 'Is an umault in schön…'],
         ];
     }
 
@@ -156,6 +163,9 @@ class DBTextTest extends SapphireTest
             // If storing HTML you should use DBHTMLText instead
             ['<p>First sentence.</p>', 2, '&lt;p&gt;First sentence.&lt;/p&gt;'],
             ['<p>First sentence. Second sentence. Third sentence</p>', 2, '&lt;p&gt;First sentence. Second sentence.'],
+
+            // Check UTF8
+            ['Is schön. Isn\'t schön.', 1, 'Is schön.'],
         ];
     }
 
@@ -187,6 +197,9 @@ class DBTextTest extends SapphireTest
             // If storing HTML you should use DBHTMLText instead
             ['<br />First sentence.', '&lt;br /&gt;First sentence.'],
             ['<p>First sentence. Second sentence. Third sentence</p>', '&lt;p&gt;First sentence.'],
+
+            // Check UTF8
+            ['Is schön. Isn\'t schön.', 'Is schön.'],
         ];
     }
 
@@ -203,7 +216,7 @@ class DBTextTest extends SapphireTest
     }
 
     /**
-     * each test is in the format input, charactere limit, highlight, expected output
+     * each test is in the format input, character limit, highlight, expected output
      *
      * @return array
      */
@@ -214,7 +227,7 @@ class DBTextTest extends SapphireTest
                 'This is some text. It is a test',
                 20,
                 'test',
-                '... text. It is a <mark>test</mark>'
+                '… text. It is a <mark>test</mark>'
             ],
             [
                 // Retains case of original string
@@ -222,13 +235,13 @@ class DBTextTest extends SapphireTest
                 50,
                 'some test',
                 'This is <mark>some</mark> <mark>test</mark> text.'
-                . ' <mark>Test</mark> <mark>test</mark> what if you have...'
+                . ' <mark>Test</mark> <mark>test</mark> what if you have…'
             ],
             [
                 'Here is some text & HTML included',
                 20,
                 'html',
-                '... text &amp; <mark>HTML</mark> inc...'
+                '… text &amp; <mark>HTML</mark> inc…'
             ],
             [
                 'A dog ate a cat while looking at a Foobar',
@@ -243,14 +256,65 @@ class DBTextTest extends SapphireTest
                 'ate',
                 // it should highlight 3 letters or more.
                 'A dog <mark>ate</mark> a cat while looking at a Foobar',
+            ],
+            [
+                'both schön and können have umlauts',
+                21,
+                'schön',
+                // check UTF8 support
+                'both <mark>schön</mark> and können…',
+            ],
+            [
+                'both schön and können have umlauts',
+                21,
+                '',
+                // check non-existent search term
+                'both schön and können…',
             ]
+        ];
+    }
+
+    /**
+     * each test is in the format input, word limit, add ellipsis (false or string), expected output
+     *
+     * @return array
+     */
+    public function providerSummary()
+    {
+        return [
+            [
+                'This is some text. It is a test',
+                3,
+                false,
+                'This is some…',
+            ],
+            [
+                // check custom ellipsis
+                'This is a test text in a longer sentence and a custom ellipsis.',
+                8,
+                '...', // regular dots instead of the ellipsis character
+                'This is a test text in a longer...',
+            ],
+            [
+                'both schön and können have umlauts',
+                5,
+                false,
+                'both schön and können have…',
+            ],
+            [
+                // check invalid UTF8 handling — input is an invalid UTF sequence, output should be empty string
+                "\xf0\x28\x8c\xbc",
+                50,
+                false,
+                '',
+            ],
         ];
     }
 
     /**
      * @dataProvider providerContextSummary
      * @param string $originalValue Input
-     * @param int    $limit         Numer of characters
+     * @param int    $limit         Number of characters
      * @param string $keywords      Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */
@@ -296,7 +360,7 @@ class DBTextTest extends SapphireTest
     {
         // Install a UTF-8 locale
         $this->previousLocaleSetting = setlocale(LC_CTYPE, 0);
-        $locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+        $locales = ['en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8'];
         $localeInstalled = false;
         foreach ($locales as $locale) {
             if ($localeInstalled = setlocale(LC_CTYPE, $locale)) {
@@ -316,5 +380,25 @@ class DBTextTest extends SapphireTest
         $textObj->setValue($problematicText);
 
         $this->assertTrue(mb_check_encoding($textObj->FirstSentence(), 'UTF-8'));
+    }
+
+    public function testDefaultEllipsis()
+    {
+        $textObj = new DBText('Test');
+        $this->assertEquals('…', $textObj->defaultEllipsis());
+    }
+
+    /**
+     * @dataProvider providerSummary
+     * @param string $originalValue Input
+     * @param int    $words         Number of words
+     * @param mixed  $add           Ellipsis (false for default or string for custom text)
+     * @param string $expectedValue Expected output (XML encoded safely)
+     */
+    public function testSummary($originalValue, $words, $add, $expectedValue)
+    {
+        $text = DBField::create_field(DBText::class, $originalValue);
+        $result = $text->obj('Summary', [$words, $add])->forTemplate();
+        $this->assertEquals($expectedValue, $result);
     }
 }

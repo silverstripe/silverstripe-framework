@@ -9,26 +9,26 @@ class Player extends DataObject implements TestOnly
 {
     private static $table_name = 'CsvBulkLoaderTest_Player';
 
-    private static $db = array(
+    private static $db = [
         'FirstName' => 'Varchar(255)',
         'Biography' => 'HTMLText',
         'Birthday' => 'Date',
         'ExternalIdentifier' => 'Varchar(255)', // used for uniqueness checks on passed property
         'IsRegistered' => 'Boolean'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Team' => Team::class,
         'Contract' => PlayerContract::class
-    );
+    ];
 
     public function getTeamByTitle($title)
     {
         return DataObject::get_one(
             Team::class,
-            array(
+            [
             '"CsvBulkLoaderTest_Team"."Title"' => $title
-            )
+            ]
         );
     }
 
@@ -41,6 +41,6 @@ class Player extends DataObject implements TestOnly
      */
     public function setUSBirthday($val, $record = null)
     {
-        $this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val);
+        $this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val ?? '');
     }
 }

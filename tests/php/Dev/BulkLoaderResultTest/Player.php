@@ -9,8 +9,8 @@ class Player extends DataObject implements TestOnly
 {
     private static $table_name = 'BulkLoaderTestPlayer';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Status' => 'Varchar',
-    );
+    ];
 }

@@ -6,7 +6,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
- * Multi-line listbox field, created from a <select> tag.
+ * Multi-line listbox field, created from a select tag.
  *
  * <b>Usage</b>
  *
@@ -23,7 +23,7 @@ use SilverStripe\View\ArrayData;
  * )
  * </code>
  *
- * @see DropdownField for a simple <select> field with a single element.
+ * @see DropdownField for a simple select field with a single element.
  * @see CheckboxSetField for multiple selections through checkboxes.
  * @see OptionsetField for single selections via radiobuttons.
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
@@ -41,7 +41,7 @@ class ListboxField extends MultiSelectField
     /**
      * @var array
      */
-    protected $disabledItems = array();
+    protected $disabledItems = [];
 
     /**
      * Creates a new dropdown field.
@@ -52,7 +52,7 @@ class ListboxField extends MultiSelectField
      * @param string|array|null $value You can pass an array of values or a single value like a drop down to be selected
      * @param int $size Optional size of the select element
      */
-    public function __construct($name, $title = '', $source = array(), $value = null, $size = null)
+    public function __construct($name, $title = '', $source = [], $value = null, $size = null)
     {
         if ($size) {
             $this->setSize($size);
@@ -62,16 +62,16 @@ class ListboxField extends MultiSelectField
     }
 
     /**
-     * Returns a <select> tag containing all the appropriate <option> tags
+     * Returns a select tag containing all the appropriate option tags
      *
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'Options' => $this->getOptions(),
-        ));
+        ]);
 
         return FormField::Field($properties);
     }
@@ -84,19 +84,19 @@ class ListboxField extends MultiSelectField
     public function getOptions()
     {
         // Loop through and figure out which values were selected.
-        $options = array();
+        $options = [];
         $selectedValue = $this->getValueArray();
         foreach ($this->getSource() as $itemValue => $title) {
-            $itemSelected = in_array($itemValue, $selectedValue)
-                || in_array($itemValue, $this->getDefaultItems());
+            $itemSelected = in_array($itemValue, $selectedValue ?? [])
+                || in_array($itemValue, $this->getDefaultItems() ?? []);
             $itemDisabled = $this->isDisabled()
-                || in_array($itemValue, $this->getDisabledItems());
-            $options[] = new ArrayData(array(
+                || in_array($itemValue, $this->getDisabledItems() ?? []);
+            $options[] = new ArrayData([
                 'Title' => $title,
                 'Value' => $itemValue,
                 'Selected' => $itemSelected,
                 'Disabled' => $itemDisabled,
-            ));
+            ]);
         }
 
         $options = new ArrayList($options);
@@ -108,11 +108,11 @@ class ListboxField extends MultiSelectField
     {
         return array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'multiple' => 'true',
                 'size' => $this->getSize(),
                 'name' => $this->getName() . '[]'
-            )
+            ]
         );
     }
 

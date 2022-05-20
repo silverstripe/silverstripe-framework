@@ -7,18 +7,18 @@ use SilverStripe\ORM\DataExtension;
 
 class ContactRole extends DataExtension implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Website' => 'Varchar',
         'Phone' => 'Varchar(255)',
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'RelatedObjects' => RelatedObject::class
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'Phone' => '123'
-    );
+    ];
 
     private static $api_access = true;
 }

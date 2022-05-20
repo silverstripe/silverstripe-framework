@@ -10,7 +10,7 @@ use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\Member;
 
 /**
- * Authenticate a member pased on a session cookie
+ * Authenticate a member passed on a session cookie
  */
 class SessionAuthenticationHandler implements AuthenticationHandler
 {
@@ -45,9 +45,16 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      */
     public function authenticateRequest(HTTPRequest $request)
     {
+        $session = $request->getSession();
+
+        // Sessions are only started when a session cookie is detected
+        if (!$session->isStarted()) {
+            return null;
+        }
+
         // If ID is a bad ID it will be treated as if the user is not logged in, rather than throwing a
         // ValidationException
-        $id = $request->getSession()->get($this->getSessionVariable());
+        $id = $session->get($this->getSessionVariable());
         if (!$id) {
             return null;
         }
@@ -91,7 +98,8 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $file = '';
         $line = '';
 
-        // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+        // TODO: deprecate and use Session::regenerateSessionId
+        // @ is to suppress win32 warnings/notices when session wasn't cleaned up properly
         // There's nothing we can do about this, because it's an operating system function!
         if (!headers_sent($file, $line)) {
             @session_regenerate_id(true);
@@ -104,6 +112,10 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     public function logOut(HTTPRequest $request = null)
     {
         $request = $request ?: Controller::curr()->getRequest();
-        $request->getSession()->clear($this->getSessionVariable());
+        $request->getSession()->destroy(true, $request);
+
+        if (Member::config()->get('login_marker_cookie')) {
+            Cookie::force_expiry(Member::config()->get('login_marker_cookie'));
+        }
     }
 }

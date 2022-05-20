@@ -3,12 +3,9 @@
 namespace SilverStripe\Core;
 
 use InvalidArgumentException;
-use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -46,10 +43,9 @@ trait Extensible
      *
      * @var array
      */
-    private static $unextendable_classes = array(
+    private static $unextendable_classes = [
         ViewableData::class,
-        RequestHandler::class,
-    );
+    ];
 
     /**
      * @var Extension[] all current extension instances, or null if not declared yet.
@@ -64,7 +60,7 @@ trait Extensible
      *
      * @var callable[][]
      */
-    protected $beforeExtendCallbacks = array();
+    protected $beforeExtendCallbacks = [];
 
     /**
      * List of callbacks to call after extensions having extend called on them,
@@ -74,7 +70,7 @@ trait Extensible
      *
      * @var callable[][]
      */
-    protected $afterExtendCallbacks = array();
+    protected $afterExtendCallbacks = [];
 
     /**
      * Allows user code to hook into Object::extend prior to control
@@ -87,7 +83,7 @@ trait Extensible
     protected function beforeExtending($method, $callback)
     {
         if (empty($this->beforeExtendCallbacks[$method])) {
-            $this->beforeExtendCallbacks[$method] = array();
+            $this->beforeExtendCallbacks[$method] = [];
         }
         $this->beforeExtendCallbacks[$method][] = $callback;
     }
@@ -103,13 +99,13 @@ trait Extensible
     protected function afterExtending($method, $callback)
     {
         if (empty($this->afterExtendCallbacks[$method])) {
-            $this->afterExtendCallbacks[$method] = array();
+            $this->afterExtendCallbacks[$method] = [];
         }
         $this->afterExtendCallbacks[$method][] = $callback;
     }
 
     /**
-     * @deprecated 4.0..5.0 Extensions and methods are now lazy-loaded
+     * @deprecated 4.0.0:5.0.0 Extensions and methods are now lazy-loaded
      */
     protected function constructExtensions()
     {
@@ -139,9 +135,13 @@ trait Extensible
                 $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
                     /** @var Extensible $inst */
                     $extension = $inst->getExtensionInstance($extensionClass);
+                    if (!$extension) {
+                        return null;
+                    }
+
                     try {
                         $extension->setOwner($inst);
-                        return call_user_func_array([$extension, $method], $args);
+                        return call_user_func_array([$extension, $method], $args ?? []);
                     } finally {
                         $extension->clearOwner();
                     }
@@ -178,22 +178,22 @@ trait Extensible
             $extension = $classOrExtension;
         }
 
-        if (!preg_match('/^([^(]*)/', $extension, $matches)) {
+        if (!preg_match('/^([^(]*)/', $extension ?? '', $matches)) {
             return false;
         }
         $extensionClass = $matches[1];
-        if (!class_exists($extensionClass)) {
-            user_error(
-                sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
-                E_USER_ERROR
-            );
+        if (!class_exists($extensionClass ?? '')) {
+            throw new InvalidArgumentException(sprintf(
+                'Object::add_extension() - Can\'t find extension class for "%s"',
+                $extensionClass
+            ));
         }
 
-        if (!is_subclass_of($extensionClass, 'SilverStripe\\Core\\Extension')) {
-            user_error(
-                sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass),
-                E_USER_ERROR
-            );
+        if (!is_subclass_of($extensionClass, Extension::class)) {
+            throw new InvalidArgumentException(sprintf(
+                'Object::add_extension() - Extension "%s" is not a subclass of Extension',
+                $extensionClass
+            ));
         }
 
         // unset some caches
@@ -207,21 +207,13 @@ trait Extensible
         }
 
         Config::modify()
-            ->merge($class, 'extensions', array(
+            ->merge($class, 'extensions', [
                 $extension
-            ));
+            ]);
 
         Injector::inst()->unregisterNamedObject($class);
-
-        // load statics now for DataObject classes
-        if (is_subclass_of($class, DataObject::class)) {
-            if (!is_subclass_of($extensionClass, DataExtension::class)) {
-                user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
-            }
-        }
         return true;
     }
-
 
     /**
      * Remove an extension from a class.
@@ -250,8 +242,8 @@ trait Extensible
         $config = Config::inst()->get($class, 'extensions', Config::EXCLUDE_EXTRA_SOURCES | Config::UNINHERITED) ?: [];
         foreach ($config as $key => $candidate) {
             // extensions with parameters will be stored in config as ExtensionName("Param").
-            if (strcasecmp($candidate, $extension) === 0 ||
-                stripos($candidate, $extension.'(') === 0
+            if (strcasecmp($candidate ?? '', $extension ?? '') === 0 ||
+                stripos($candidate ?? '', $extension . '(') === 0
             ) {
                 $found = true;
                 unset($config[$key]);
@@ -291,16 +283,16 @@ trait Extensible
 
         $extensions = Config::forClass($class)->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
         if (empty($extensions)) {
-            return array();
+            return [];
         }
 
         // Clean nullified named extensions
-        $extensions = array_filter(array_values($extensions));
+        $extensions = array_filter(array_values($extensions ?? []));
 
         if ($includeArgumentString) {
             return $extensions;
         } else {
-            $extensionClassnames = array();
+            $extensionClassnames = [];
             if ($extensions) {
                 foreach ($extensions as $extension) {
                     $extensionClassnames[] = Extension::get_classname_without_arguments($extension);
@@ -339,21 +331,21 @@ trait Extensible
         }
 
         // Build a list of all sources;
-        $sources = array();
+        $sources = [];
 
         foreach ($extensions as $extension) {
-            list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
+            [$extensionClass, $extensionArgs] = ClassInfo::parse_class_spec($extension);
             // Strip service name specifier
-            $extensionClass = strtok($extensionClass, '.');
+            $extensionClass = strtok($extensionClass ?? '', '.');
             $sources[] = $extensionClass;
 
-            if (!class_exists($extensionClass)) {
+            if (!class_exists($extensionClass ?? '')) {
                 throw new InvalidArgumentException("$class references nonexistent $extensionClass in \$extensions");
             }
 
-            call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+            call_user_func([$extensionClass, 'add_to_class'], $class, $extensionClass, $extensionArgs);
 
-            foreach (array_reverse(ClassInfo::ancestry($extensionClass)) as $extensionClassParent) {
+            foreach (array_reverse(ClassInfo::ancestry($extensionClass) ?? []) as $extensionClassParent) {
                 if (ClassInfo::has_method_from($extensionClassParent, 'get_extra_config', $extensionClassParent)) {
                     $extras = $extensionClassParent::get_extra_config($class, $extensionClass, $extensionArgs);
                     if ($extras) {
@@ -390,11 +382,15 @@ trait Extensible
         $requiredExtension = Extension::get_classname_without_arguments($requiredExtension);
         $extensions = self::get_extensions($class);
         foreach ($extensions as $extension) {
-            if (strcasecmp($extension, $requiredExtension) === 0) {
+            if (strcasecmp($extension ?? '', $requiredExtension ?? '') === 0) {
                 return true;
             }
-            if (!$strict && is_subclass_of($extension, $requiredExtension)) {
+            if (!$strict && is_subclass_of($extension, $requiredExtension ?? '')) {
                 return true;
+            }
+            $inst = Injector::inst()->get($extension);
+            if ($inst instanceof $requiredExtension) {
+                return $strict ? strcasecmp(get_class($inst), $requiredExtension) === 0 : true;
             }
         }
 
@@ -418,8 +414,8 @@ trait Extensible
      */
     public function invokeWithExtensions($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
     {
-        $result = array();
-        if (method_exists($this, $method)) {
+        $result = [];
+        if (method_exists($this, $method ?? '')) {
             $thisResult = $this->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
             if ($thisResult !== null) {
                 $result[] = $thisResult;
@@ -453,20 +449,20 @@ trait Extensible
      */
     public function extend($method, &$a1 = null, &$a2 = null, &$a3 = null, &$a4 = null, &$a5 = null, &$a6 = null, &$a7 = null)
     {
-        $values = array();
+        $values = [];
 
         if (!empty($this->beforeExtendCallbacks[$method])) {
-            foreach (array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+            foreach (array_reverse($this->beforeExtendCallbacks[$method] ?? []) as $callback) {
+                $value = call_user_func_array($callback, [&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7]);
                 if ($value !== null) {
                     $values[] = $value;
                 }
             }
-            $this->beforeExtendCallbacks[$method] = array();
+            $this->beforeExtendCallbacks[$method] = [];
         }
 
         foreach ($this->getExtensionInstances() as $instance) {
-            if (method_exists($instance, $method)) {
+            if (method_exists($instance, $method ?? '')) {
                 try {
                     $instance->setOwner($this);
                     $value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
@@ -480,13 +476,13 @@ trait Extensible
         }
 
         if (!empty($this->afterExtendCallbacks[$method])) {
-            foreach (array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
-                $value = call_user_func_array($callback, array(&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7));
+            foreach (array_reverse($this->afterExtendCallbacks[$method] ?? []) as $callback) {
+                $value = call_user_func_array($callback, [&$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7]);
                 if ($value !== null) {
                     $values[] = $value;
                 }
             }
-            $this->afterExtendCallbacks[$method] = array();
+            $this->afterExtendCallbacks[$method] = [];
         }
 
         return $values;
@@ -495,17 +491,22 @@ trait Extensible
     /**
      * Get an extension instance attached to this object by name.
      *
-     * @uses hasExtension()
-     *
      * @param string $extension
-     * @return Extension
+     * @return Extension|null
      */
     public function getExtensionInstance($extension)
     {
         $instances = $this->getExtensionInstances();
-        return isset($instances[$extension])
-            ? $instances[$extension]
-            : null;
+        if (array_key_exists($extension, $instances ?? [])) {
+            return $instances[$extension];
+        }
+        // in case Injector has been used to replace an extension
+        foreach ($instances as $instance) {
+            if (is_a($instance, $extension ?? '')) {
+                return $instance;
+            }
+        }
+        return null;
     }
 
     /**
@@ -524,8 +525,7 @@ trait Extensible
      */
     public function hasExtension($extension)
     {
-        $instances = $this->getExtensionInstances();
-        return isset($instances[$extension]);
+        return (bool) $this->getExtensionInstance($extension);
     }
 
     /**
@@ -553,8 +553,16 @@ trait Extensible
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
-                    $instance = Injector::inst()->get($extension);
-                    $this->extension_instances[get_class($instance)] = $instance;
+                    $name = $extension;
+                    // Allow service names of the form "%$ServiceName"
+                    if (substr($name ?? '', 0, 2) == '%$') {
+                        $name = substr($name ?? '', 2);
+                    }
+                    $name = trim(strtok($name ?? '', '(') ?? '');
+                    if (class_exists($name ?? '')) {
+                        $name = ClassInfo::class_name($name);
+                    }
+                    $this->extension_instances[$name] = Injector::inst()->get($extension);
                 }
             }
         }

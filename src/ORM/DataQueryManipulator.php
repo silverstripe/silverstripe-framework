@@ -16,7 +16,7 @@ interface DataQueryManipulator
      * @param array $queriedColumns
      * @param SQLSelect $sqlSelect
      */
-    public function beforeGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns = [], SQLSelect $sqlSelect);
+    public function beforeGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns, SQLSelect $sqlSelect);
 
     /**
      * Invoked after getFinalisedQuery()
@@ -25,5 +25,5 @@ interface DataQueryManipulator
      * @param array $queriedColumns
      * @param SQLSelect $sqlQuery
      */
-    public function afterGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns = [], SQLSelect $sqlQuery);
+    public function afterGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns, SQLSelect $sqlQuery);
 }

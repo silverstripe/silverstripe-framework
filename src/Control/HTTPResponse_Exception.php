@@ -26,7 +26,7 @@ class HTTPResponse_Exception extends Exception
      * response.
      * @param int $statusCode
      * @param string $statusDescription
-     * @see HTTPResponse::__construct();
+     * @see HTTPResponse::__construct()
      */
     public function __construct($body = null, $statusCode = null, $statusDescription = null)
     {
@@ -49,7 +49,7 @@ class HTTPResponse_Exception extends Exception
             $this->setResponse($response);
         }
 
-        parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
+        parent::__construct((string) $this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
     }
 
     /**

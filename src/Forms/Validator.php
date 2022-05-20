@@ -169,6 +169,18 @@ abstract class Validator
     }
 
     /**
+     * When Validators are set on the form, it can affect whether or not the form cannot be cached.
+     *
+     * @see RequiredFields for an example of when you might be able to cache your form.
+     *
+     * @return bool
+     */
+    public function canBeCached(): bool
+    {
+        return false;
+    }
+
+    /**
      * Clear current result
      *
      * @return $this

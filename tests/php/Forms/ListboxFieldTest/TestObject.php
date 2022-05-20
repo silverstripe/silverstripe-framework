@@ -9,7 +9,7 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'ListboxFieldTest_DataObject';
 
-    private static $db = array(
+    private static $db = [
         'Choices' => 'Text'
-    );
+    ];
 }

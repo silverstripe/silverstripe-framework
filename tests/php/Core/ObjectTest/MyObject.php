@@ -9,5 +9,5 @@ class MyObject extends BaseObject
      * @config
      */
     private static $mystaticProperty = "MyObject";
-    static $mystaticArray = array('one');
+    static $mystaticArray = ['one'];
 }

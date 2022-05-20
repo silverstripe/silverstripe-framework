@@ -2,10 +2,11 @@
 
 namespace SilverStripe\Control\Tests;
 
-use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\HTTPRequest;
 use ReflectionMethod;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
+use SilverStripe\Control\Session;
+use SilverStripe\Dev\SapphireTest;
 
 class HTTPRequestTest extends SapphireTest
 {
@@ -16,12 +17,48 @@ class HTTPRequestTest extends SapphireTest
         $request = new HTTPRequest("GET", "admin/crm/add");
 
         /* When a rule matches, but has no variables, array("_matched" => true) is returned. */
-        $this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
+        $this->assertEquals(["_matched" => true], $request->match('admin/crm', true));
 
-        /* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
+        /* Because we shifted admin/crm off the stack, just "add" should be remaining */
         $this->assertEquals("add", $request->remaining());
 
-        $this->assertEquals(array("_matched" => true), $request->match('add', true));
+        $this->assertEquals(["_matched" => true], $request->match('add', true));
+    }
+
+    /**
+     * @useDatabase false
+     */
+    public function testWildCardMatch()
+    {
+        $request = new HTTPRequest('GET', 'admin/crm/test');
+        $this->assertEquals(['$1' => 'crm', '$2' => 'test'], $request->match('admin/$@', true));
+        $this->assertTrue($request->allParsed());
+
+        $request = new HTTPRequest('GET', 'admin/crm/test');
+        $this->assertEquals(['_matched' => true], $request->match('admin/$*', true));
+        $this->assertTrue($request->allParsed());
+        $this->assertEquals('crm/test', $request->remaining());
+
+        $request = new HTTPRequest('GET', 'admin/crm/test/part1/part2');
+        $this->assertEquals(['Action' => 'crm', '$1' => 'test', '$2' => 'part1', '$3' => 'part2'], $request->match('admin/$Action/$@', true));
+        $this->assertTrue($request->allParsed());
+
+        $request = new HTTPRequest('GET', 'admin/crm/test/part1/part2');
+        $this->assertEquals(['Action' => 'crm'], $request->match('admin/$Action/$*', true));
+        $this->assertTrue($request->allParsed());
+        $this->assertEquals('test/part1/part2', $request->remaining());
+    }
+
+    /**
+     * This test just asserts a warning is given if there is more than one wildcard parameter. Note that this isn't an
+     * enforcement of an API and we an add new behaviour in the future to allow many wildcard params if we want to
+     */
+    public function testWildCardWithFurtherParams()
+    {
+        $this->expectWarning();
+        $request = new HTTPRequest('GET', 'admin/crm/test');
+        // all parameters after the first wildcard parameter are ignored
+        $request->match('admin/$Action/$@/$Other/$*', true);
     }
 
     public function testHttpMethodOverrides()
@@ -47,7 +84,7 @@ class HTTPRequestTest extends SapphireTest
         $request = new HTTPRequest(
             'GET',
             'admin/crm',
-            array('_method' => 'DELETE')
+            ['_method' => 'DELETE']
         );
         $this->assertTrue(
             $request->isGET(),
@@ -57,74 +94,123 @@ class HTTPRequestTest extends SapphireTest
         $request = new HTTPRequest(
             'POST',
             'admin/crm',
-            array(),
-            array('_method' => 'DELETE')
-        );
-        $this->assertTrue(
-            $request->isDELETE(),
-            'POST with valid method override to DELETE'
+            [],
+            ['_method' => 'DELETE']
         );
 
-        $request = new HTTPRequest(
-            'POST',
-            'admin/crm',
-            array(),
-            array('_method' => 'put')
-        );
-        $this->assertTrue(
-            $request->isPUT(),
-            'POST with valid method override to PUT'
-        );
-
-        $request = new HTTPRequest(
-            'POST',
-            'admin/crm',
-            array(),
-            array('_method' => 'head')
-        );
-        $this->assertTrue(
-            $request->isHEAD(),
-            'POST with valid method override to HEAD '
-        );
-
-        $request = new HTTPRequest(
-            'POST',
-            'admin/crm',
-            array(),
-            array('_method' => 'head')
-        );
-        $this->assertTrue(
-            $request->isHEAD(),
-            'POST with valid method override to HEAD'
-        );
-
-        $request = new HTTPRequest(
-            'POST',
-            'admin/crm',
-            array('_method' => 'head')
-        );
         $this->assertTrue(
             $request->isPOST(),
-            'POST with invalid method override by GET parameters to HEAD'
+            '_method override is no longer honored'
         );
+
+        $this->assertFalse(
+            $request->isDELETE(),
+            'DELETE _method override is not honored'
+        );
+
+        $request = new HTTPRequest(
+            'POST',
+            'admin/crm',
+            [],
+            ['_method' => 'put']
+        );
+        $this->assertFalse(
+            $request->isPUT(),
+            'PUT _method override is not honored'
+        );
+
+        $request = new HTTPRequest(
+            'POST',
+            'admin/crm',
+            [],
+            ['_method' => 'head']
+        );
+        $this->assertFalse(
+            $request->isHEAD(),
+            'HEAD _method override is not honored'
+        );
+    }
+
+    public function detectMethodDataProvider()
+    {
+        return [
+            'Plain POST request' => ['POST', [], 'POST'],
+            'Plain GET request' => ['GET', [], 'GET'],
+            'Plain DELETE request' => ['DELETE', [], 'DELETE'],
+            'Plain PUT request' => ['PUT', [], 'PUT'],
+            'Plain HEAD request' => ['HEAD', [], 'HEAD'],
+
+            'Request with GET method override' => ['POST', ['_method' => 'GET'], 'GET'],
+            'Request with HEAD method override' => ['POST', ['_method' => 'HEAD'], 'HEAD'],
+            'Request with DELETE method override' => ['POST', ['_method' => 'DELETE'], 'DELETE'],
+            'Request with PUT method override' => ['POST', ['_method' => 'PUT'], 'PUT'],
+            'Request with POST method override' => ['POST', ['_method' => 'POST'], 'POST'],
+
+            'Request with mixed case method override' => ['POST', ['_method' => 'gEt'], 'GET']
+        ];
+    }
+
+    /**
+     * @dataProvider detectMethodDataProvider
+     */
+    public function testDetectMethod($realMethod, $post, $expected)
+    {
+        $actual = HTTPRequest::detect_method($realMethod, $post);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBadDetectMethod()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        HTTPRequest::detect_method('POST', ['_method' => 'Boom']);
+    }
+
+    public function setHttpMethodDataProvider()
+    {
+        return [
+            'POST request' => ['POST','POST'],
+            'GET request' => ['GET', 'GET'],
+            'DELETE request' => ['DELETE', 'DELETE'],
+            'PUT request' => ['PUT', 'PUT'],
+            'HEAD request' => ['HEAD', 'HEAD'],
+            'Mixed case POST' => ['gEt', 'GET'],
+        ];
+    }
+
+    /**
+     * @dataProvider setHttpMethodDataProvider
+     */
+    public function testSetHttpMethod($method, $expected)
+    {
+        $request = new HTTPRequest('GET', '/hello');
+        $returnedRequest  = $request->setHttpMethod($method);
+        $this->assertEquals($expected, $request->httpMethod());
+        $this->assertEquals($request, $returnedRequest);
+    }
+
+    public function testBadSetHttpMethod()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $request = new HTTPRequest('GET', '/hello');
+        $request->setHttpMethod('boom');
     }
 
     public function testRequestVars()
     {
-        $getVars = array(
+        $getVars = [
             'first' => 'a',
             'second' => 'b',
-        );
-        $postVars = array(
+        ];
+        $postVars = [
             'third' => 'c',
             'fourth' => 'd',
-        );
-        $requestVars = array(
+        ];
+        $requestVars = [
             'first' => 'a',
             'second' => 'b',
             'third' => 'c',
             'fourth' => 'd',
-        );
+        ];
         $request = new HTTPRequest(
             'POST',
             'admin/crm',
@@ -137,19 +223,19 @@ class HTTPRequestTest extends SapphireTest
             'GET parameters should supplement POST parameters'
         );
 
-        $getVars = array(
+        $getVars = [
             'first' => 'a',
             'second' => 'b',
-        );
-        $postVars = array(
+        ];
+        $postVars = [
             'first' => 'c',
             'third' => 'd',
-        );
-        $requestVars = array(
+        ];
+        $requestVars = [
             'first' => 'c',
             'second' => 'b',
             'third' => 'd',
-        );
+        ];
         $request = new HTTPRequest(
             'POST',
             'admin/crm',
@@ -162,33 +248,33 @@ class HTTPRequestTest extends SapphireTest
             'POST parameters should override GET parameters'
         );
 
-        $getVars = array(
-            'first' => array(
+        $getVars = [
+            'first' => [
                 'first' => 'a',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-        );
-        $postVars = array(
-            'first' => array(
+            ],
+        ];
+        $postVars = [
+            'first' => [
                 'first' => 'c',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
-        $requestVars = array(
-            'first' => array(
+            ],
+        ];
+        $requestVars = [
+            'first' => [
                 'first' => 'c',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
+            ],
+        ];
         $request = new HTTPRequest(
             'POST',
             'admin/crm',
@@ -201,34 +287,34 @@ class HTTPRequestTest extends SapphireTest
             'Nested POST parameters should override GET parameters'
         );
 
-        $getVars = array(
-            'first' => array(
+        $getVars = [
+            'first' => [
                 'first' => 'a',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-        );
-        $postVars = array(
-            'first' => array(
+            ],
+        ];
+        $postVars = [
+            'first' => [
                 'second' => 'c',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
-        $requestVars = array(
-            'first' => array(
+            ],
+        ];
+        $requestVars = [
+            'first' => [
                 'first' => 'a',
                 'second' => 'c',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
+            ],
+        ];
         $request = new HTTPRequest(
             'POST',
             'admin/crm',
@@ -244,10 +330,10 @@ class HTTPRequestTest extends SapphireTest
 
     public function testIsAjax()
     {
-        $req = new HTTPRequest('GET', '/', array('ajax' => 0));
+        $req = new HTTPRequest('GET', '/', ['ajax' => 0]);
         $this->assertFalse($req->isAjax());
 
-        $req = new HTTPRequest('GET', '/', array('ajax' => 1));
+        $req = new HTTPRequest('GET', '/', ['ajax' => 1]);
         $this->assertTrue($req->isAjax());
 
         $req = new HTTPRequest('GET', '/');
@@ -274,16 +360,25 @@ class HTTPRequestTest extends SapphireTest
         $reflectionMethod = new ReflectionMethod($req, 'getIPFromHeaderValue');
         $reflectionMethod->setAccessible(true);
 
-        $headers = array(
+        $headers = [
             '80.79.208.21, 149.126.76.1, 10.51.0.68' => '80.79.208.21',
             '52.19.19.103, 10.51.0.49' => '52.19.19.103',
             '10.51.0.49, 52.19.19.103' => '52.19.19.103',
             '10.51.0.49' => '10.51.0.49',
             '127.0.0.1, 10.51.0.49' => '127.0.0.1',
-        );
+        ];
 
         foreach ($headers as $header => $ip) {
             $this->assertEquals($ip, $reflectionMethod->invoke($req, $header));
         }
+    }
+
+    public function testHasSession()
+    {
+        $request = new HTTPRequest('GET', '/');
+        $this->assertFalse($request->hasSession());
+
+        $request->setSession($this->createMock(Session::class));
+        $this->assertTrue($request->hasSession());
     }
 }

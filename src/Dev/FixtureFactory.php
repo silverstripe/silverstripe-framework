@@ -29,7 +29,7 @@ use InvalidArgumentException;
  *  array('MyRelationName' => '=>MyRelatedClass.relation1')
  * );
  * </code>
- * Relation loading is order dependant.
+ * Relation loading is order dependent.
  */
 class FixtureFactory
 {
@@ -38,19 +38,19 @@ class FixtureFactory
      * @var array Array of fixture items, keyed by class and unique identifier,
      * with values being the generated database ID. Does not store object instances.
      */
-    protected $fixtures = array();
+    protected $fixtures = [];
 
     /**
-     * @var array Callbacks
+     * @var FixtureBlueprint[] Callbacks
      */
-    protected $blueprints = array();
+    protected $blueprints = [];
 
     /**
      * @param string $name Unique name for this blueprint
      * @param array|FixtureBlueprint $defaults Array of default values, or a blueprint instance
      * @return $this
      */
-    public function define($name, $defaults = array())
+    public function define($name, $defaults = [])
     {
         if ($defaults instanceof FixtureBlueprint) {
             $this->blueprints[$name] = $defaults;
@@ -86,7 +86,7 @@ class FixtureFactory
         $class = $blueprint->getClass();
 
         if (!isset($this->fixtures[$class])) {
-            $this->fixtures[$class] = array();
+            $this->fixtures[$class] = [];
         }
         $this->fixtures[$class][$identifier] = $obj->ID;
 
@@ -104,7 +104,7 @@ class FixtureFactory
      */
     public function createRaw($table, $identifier, $data)
     {
-        $fields = array();
+        $fields = [];
         foreach ($data as $fieldName => $fieldVal) {
             $fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
         }
@@ -174,9 +174,9 @@ class FixtureFactory
         }
 
         // If the class doesn't exist, look for a table instead
-        if (!class_exists($class)) {
+        if (!class_exists($class ?? '')) {
             $tableNames = DataObject::getSchema()->getTableNames();
-            $potential = array_search($class, $tableNames);
+            $potential = array_search($class, $tableNames ?? []);
             if (!$potential) {
                 throw new \LogicException("'$class' is neither a class nor a table name");
             }
@@ -201,24 +201,31 @@ class FixtureFactory
      * If the $class argument is set, limit clearing to items of this class.
      *
      * @param string $limitToClass
+     * @param bool $metadata Clear internal mapping as well as data.
+     * Set to false by default since sometimes data is rolled back by translations.
      */
-    public function clear($limitToClass = null)
+    public function clear($limitToClass = null, $metadata = false)
     {
-        $classes = ($limitToClass) ? array($limitToClass) : array_keys($this->fixtures);
+        $classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures ?? []);
         foreach ($classes as $class) {
             $ids = $this->fixtures[$class];
             foreach ($ids as $id => $dbId) {
-                if (class_exists($class)) {
-                    $class::get()->byId($dbId)->delete();
+                if (class_exists($class ?? '')) {
+                    $instance = DataObject::get($class)->byId($dbId);
+                    if ($instance) {
+                        $instance->delete();
+                    }
                 } else {
                     $table = $class;
-                    $delete = new SQLDelete("\"$table\"", array(
+                    $delete = new SQLDelete("\"$table\"", [
                         "\"$table\".\"ID\"" => $dbId
-                    ));
+                    ]);
                     $delete->execute();
                 }
 
-                unset($this->fixtures[$class][$id]);
+                if ($metadata) {
+                    unset($this->fixtures[$class][$id]);
+                }
             }
         }
     }
@@ -232,7 +239,7 @@ class FixtureFactory
     }
 
     /**
-     * @param String $name
+     * @param string $name
      * @return FixtureBlueprint|false
      */
     public function getBlueprint($name)
@@ -249,10 +256,10 @@ class FixtureFactory
      */
     protected function parseValue($value)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
-            if (strpos($value, '.') !== false) {
-                list($class, $identifier) = explode('.', substr($value, 2), 2);
+            if (strpos($value ?? '', '.') !== false) {
+                list($class, $identifier) = explode('.', substr($value ?? '', 2), 2);
             } else {
                 throw new \LogicException("Bad fixture lookup identifier: " . $value);
             }

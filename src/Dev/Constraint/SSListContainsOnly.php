@@ -4,10 +4,21 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
 
-if (!class_exists(PHPUnit_Framework_Constraint::class)) {
+/* -------------------------------------------------
+ *
+ * This version of SSListContains is for both phpunit5 and phpunit 9 because it extends SSListContains
+ * phpunit 6, 7 and 8 are not supported
+ *
+ * @see SilverStripe\Dev\SapphireTest
+ *
+ * -------------------------------------------------
+ */
+if (!class_exists(Constraint::class) && !class_exists(PHPUnit_Framework_Constraint::class)) {
     return;
 }
 
@@ -40,9 +51,9 @@ class SSListContainsOnly extends SSListContains implements TestOnly
      *
      * @return null|bool
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws PHPUnit_Framework_ExpectationFailedException|ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?bool
     {
         $success = true;
 
@@ -55,7 +66,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
         }
 
         //we have remaining matches?
-        if (!$this->itemNotMatching && count($this->matches) !== 0) {
+        if (!$this->itemNotMatching && count($this->matches ?? []) !== 0) {
             $success = false;
             $this->hasLeftoverItems = true;
         }
@@ -71,7 +82,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
         return null;
     }
 
-    protected function getStubForToString()
+    protected function getStubForToString(): string
     {
         return $this->itemNotMatching
             ? parent::getStubForToString()

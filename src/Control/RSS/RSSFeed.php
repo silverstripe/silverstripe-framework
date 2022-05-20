@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\RSS;
 
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -26,11 +27,11 @@ class RSSFeed extends ViewableData
      * Casting information for this object's methods.
      * Let's us use $Title.XML in templates
      */
-    private static $casting = array(
+    private static $casting = [
         "Title" => "Varchar",
         "Description" => "Varchar",
         "Link" => "Varchar",
-    );
+    ];
 
     /**
      * Holds the feed entries
@@ -157,8 +158,7 @@ class RSSFeed extends ViewableData
     {
         $title = Convert::raw2xml($title);
         Requirements::insertHeadTags(
-            '<link rel="alternate" type="application/rss+xml" title="' . $title .
-            '" href="' . $url . '" />'
+            '<link rel="alternate" type="application/rss+xml" title="' . $title . '" href="' . $url . '" />'
         );
     }
 
@@ -227,17 +227,14 @@ class RSSFeed extends ViewableData
         $response = Controller::curr()->getResponse();
 
         if (is_int($this->lastModified)) {
-            HTTP::register_modification_timestamp($this->lastModified);
+            HTTPCacheControlMiddleware::singleton()->registerModificationDate($this->lastModified);
             $response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
         }
         if (!empty($this->etag)) {
-            HTTP::register_etag($this->etag);
+            $response->addHeader('ETag', "\"{$this->etag}\"");
         }
 
-        if (!headers_sent()) {
-            HTTP::add_cache_headers();
-            $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
-        }
+        $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
 
         SSViewer::config()->update('source_file_comments', $prevState);
         return $this->renderWith($this->getTemplates());
@@ -247,7 +244,7 @@ class RSSFeed extends ViewableData
      * Set the name of the template to use. Actual template will be resolved
      * via the standard template inclusion process.
      *
-     * @param string
+     * @param string $template
      */
     public function setTemplate($template)
     {
@@ -266,7 +263,7 @@ class RSSFeed extends ViewableData
 
     /**
      * Returns the ordered list of preferred templates for rendering this object.
-     * Will prioritise any custom template first, and then templates based on class hiearchy next.
+     * Will prioritise any custom template first, and then templates based on class hierarchy next.
      *
      * @return array
      */

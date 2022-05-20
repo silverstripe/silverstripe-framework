@@ -2,14 +2,19 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Stadium;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 
@@ -25,7 +30,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         Team::class,
         Cheerleader::class,
         Player::class,
-        Permissions::class
+        Permissions::class,
+        Stadium::class,
     ];
 
     protected static $extra_controllers = [
@@ -34,18 +40,15 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
 
     public function testScaffoldSearchFields()
     {
-        $autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', array('Test'));
+        $autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', ['Test']);
         $this->assertEquals(
-            array(
-                'Name:PartialMatch',
-                'City:StartsWith',
-                'Cheerleaders.Name:StartsWith'
-            ),
-            $autoCompleter->scaffoldSearchFields(Team::class)
-        );
-        $this->assertEquals(
-            [ 'Name:StartsWith' ],
-            $autoCompleter->scaffoldSearchFields(Cheerleader::class)
+            [
+                'Name:StartsWith',
+                'City:EndsWith',
+                'Country:ExactMatch',
+                'Type:Fulltext'
+            ],
+            $autoCompleter->scaffoldSearchFields(Stadium::class)
         );
     }
 
@@ -61,36 +64,36 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $response = $this->post(
             'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search'
                 . '/?gridfield_relationsearch=Team 2',
-            array((string)$btns[0]['name'] => 1)
+            [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
-        $this->assertEquals(1, count($result));
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(1, count($result ?? []));
         $this->assertEquals(
-            array(array(
+            [[
             'label' => 'Team 2',
             'value' => 'Team 2',
             'id' => $team2->ID,
-            )),
+            ]],
             $result
         );
 
         $response = $this->post(
             'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/'
                 . 'search/?gridfield_relationsearch=Heather',
-            array((string)$btns[0]['name'] => 1)
+            [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
-        $this->assertEquals(1, count($result), "The relational filter did not work");
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(1, count($result ?? []), "The relational filter did not work");
 
         $response = $this->post(
             'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search'
                 . '/?gridfield_relationsearch=Unknown',
-            array((string)$btns[0]['name'] => 1)
+            [(string)$btns[0]['name'] => 1]
         );
         $this->assertFalse($response->isError());
-        $result = Convert::json2array($response->getBody());
+        $result = json_decode($response->getBody() ?? '', true);
         $this->assertEmpty($result, 'The output is either an empty array or boolean FALSE');
     }
 
@@ -104,27 +107,77 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         $this->assertFalse($response->isError());
         $parser = new CSSContentParser($response->getBody());
         $items = $parser->getBySelector('.grid-field .ss-gridfield-items .ss-gridfield-item');
-        $this->assertEquals(1, count($items));
+        $this->assertEquals(1, count($items ?? []));
         $this->assertEquals($team1->ID, (int)$items[0]['data-id']);
 
         $btns = $parser->getBySelector('.grid-field .action_gridfield_relationadd');
         $response = $this->post(
             'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield',
-            array(
+            [
                 'relationID' => $team2->ID,
                 (string)$btns[0]['name'] => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
         $parser = new CSSContentParser($response->getBody());
         $items = $parser->getBySelector('.grid-field .ss-gridfield-items .ss-gridfield-item');
-        $this->assertEquals(2, count($items));
+        $this->assertEquals(2, count($items ?? []));
         $this->assertListEquals(
-            array(
-            array('ID' => (int)$items[0]['data-id']),
-            array('ID' => (int)$items[1]['data-id']),
-            ),
-            new ArrayList(array($team1, $team2))
+            [
+            ['ID' => (int)$items[0]['data-id']],
+            ['ID' => (int)$items[1]['data-id']],
+            ],
+            new ArrayList([$team1, $team2])
         );
+    }
+
+    public function testRetainsCustomSort()
+    {
+        $component = new GridFieldAddExistingAutocompleter($targetFragment = 'before', ['Test']);
+        $component->setSearchFields(['Name']);
+
+        $grid = $this->getGridFieldForComponent($component);
+        $grid->setList(Team::get()->filter('Name', 'force-empty-list'));
+
+        $component->setSearchList(Team::get());
+        $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
+        $response = $component->doSearch($grid, $request);
+        $this->assertFalse($response->isError());
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(
+            ['Team 1', 'Team 2', 'Team 3', 'Team 4'],
+            array_map(
+                function ($item) {
+                    return $item['label'];
+                },
+                $result ?? []
+            )
+        );
+
+        $component->setSearchList(Team::get()->sort('Name', 'DESC'));
+        $request = new HTTPRequest('GET', '', ['gridfield_relationsearch' => 'Team']);
+        $response = $component->doSearch($grid, $request);
+        $this->assertFalse($response->isError());
+        $result = json_decode($response->getBody() ?? '', true);
+        $this->assertEquals(
+            ['Team 4', 'Team 3', 'Team 2', 'Team 1'],
+            array_map(
+                function ($item) {
+                    return $item['label'];
+                },
+                $result ?? []
+            )
+        );
+    }
+
+    protected function getGridFieldForComponent($component)
+    {
+        $config = GridFieldConfig::create()->addComponents(
+            $component,
+            new GridFieldDataColumns()
+        );
+
+        return (new GridField('testfield', 'testfield'))
+            ->setConfig($config);
     }
 }

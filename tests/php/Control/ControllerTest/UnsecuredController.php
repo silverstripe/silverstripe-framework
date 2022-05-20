@@ -10,7 +10,7 @@ class UnsecuredController extends Controller implements TestOnly
     private static $url_segment = 'UnsecuredController';
 
     // Not defined, allow access to all
-    // static $allowed_actions = array();
+    // static $allowed_actions = [];
 
     // Granted for all
     public function method1()

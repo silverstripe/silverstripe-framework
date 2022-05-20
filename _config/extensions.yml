@@ -1,0 +1,12 @@
+---
+Name: coreextensions
+---
+SilverStripe\Security\Member:
+  extensions:
+    - SilverStripe\Security\InheritedPermissionFlusher
+SilverStripe\Security\Group:
+  extensions:
+    - SilverStripe\Security\InheritedPermissionFlusher
+SilverStripe\ORM\DatabaseAdmin:
+  extensions:
+    - SilverStripe\Dev\Validation\DatabaseAdminExtension

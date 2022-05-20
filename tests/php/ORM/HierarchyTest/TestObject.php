@@ -15,14 +15,14 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'HierarchyTest_Object';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar'
-    );
+    ];
 
-    private static $extensions = array(
+    private static $extensions = [
         Hierarchy::class,
         Versioned::class,
-    );
+    ];
 
     private static $default_sort = 'Title ASC';
 

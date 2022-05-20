@@ -56,8 +56,8 @@ class SimpleForm {
      *    @access private
      */
     function _setEncodingClass($tag) {
-        if (strtolower($tag->getAttribute('method')) == 'post') {
-            if (strtolower($tag->getAttribute('enctype')) == 'multipart/form-data') {
+        if (strtolower($tag->getAttribute('method') ?? '') == 'post') {
+            if (strtolower($tag->getAttribute('enctype') ?? '') == 'multipart/form-data') {
                 return 'SimpleMultipartEncoding';
             }
             return 'SimplePostEncoding';
@@ -140,9 +140,9 @@ class SimpleForm {
      *    @access public
      */
     function addWidget(&$tag) {
-        if (strtolower($tag->getAttribute('type')) == 'submit') {
+        if (strtolower($tag->getAttribute('type') ?? '') == 'submit') {
             $this->_buttons[] = &$tag;
-        } elseif (strtolower($tag->getAttribute('type')) == 'image') {
+        } elseif (strtolower($tag->getAttribute('type') ?? '') == 'image') {
             $this->_images[] = &$tag;
         } elseif ($tag->getName()) {
             $this->_setWidget($tag);
@@ -156,9 +156,9 @@ class SimpleForm {
      *    @access private
      */
     function _setWidget(&$tag) {
-        if (strtolower($tag->getAttribute('type')) == 'radio') {
+        if (strtolower($tag->getAttribute('type') ?? '') == 'radio') {
             $this->_addRadioButton($tag);
-        } elseif (strtolower($tag->getAttribute('type')) == 'checkbox') {
+        } elseif (strtolower($tag->getAttribute('type') ?? '') == 'checkbox') {
             $this->_addCheckbox($tag);
         } else {
             $this->_widgets[] = &$tag;
@@ -173,7 +173,7 @@ class SimpleForm {
     function _addRadioButton(&$tag) {
         if (! isset($this->_radios[$tag->getName()])) {
             $this->_widgets[] = new SimpleRadioGroup();
-            $this->_radios[$tag->getName()] = count($this->_widgets) - 1;
+            $this->_radios[$tag->getName()] = count($this->_widgets ?? []) - 1;
         }
         $this->_widgets[$this->_radios[$tag->getName()]]->addWidget($tag);
     }
@@ -186,7 +186,7 @@ class SimpleForm {
     function _addCheckbox(&$tag) {
         if (! isset($this->_checkboxes[$tag->getName()])) {
             $this->_widgets[] = &$tag;
-            $this->_checkboxes[$tag->getName()] = count($this->_widgets) - 1;
+            $this->_checkboxes[$tag->getName()] = count($this->_widgets ?? []) - 1;
         } else {
             $index = $this->_checkboxes[$tag->getName()];
             if (! SimpleTestCompatibility::isA($this->_widgets[$index], 'SimpleCheckboxGroup')) {

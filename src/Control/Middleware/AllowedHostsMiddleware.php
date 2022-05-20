@@ -36,7 +36,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
     public function setAllowedHosts($allowedHosts)
     {
         if (is_string($allowedHosts)) {
-            $allowedHosts = preg_split('/ *, */', $allowedHosts);
+            $allowedHosts = preg_split('/ *, */', $allowedHosts ?? '');
         }
         $this->allowedHosts = $allowedHosts;
         return $this;
@@ -52,7 +52,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
         // check allowed hosts
         if ($allowedHosts
             && !Director::is_cli()
-            && !in_array($request->getHeader('Host'), $allowedHosts)
+            && !in_array($request->getHeader('Host'), $allowedHosts ?? [])
         ) {
             return new HTTPResponse('Invalid Host', 400);
         }

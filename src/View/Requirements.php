@@ -72,7 +72,7 @@ class Requirements implements Flushable
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_suffix_requirements($var)
     {
@@ -127,7 +127,7 @@ class Requirements implements Flushable
      * - 'async' : Boolean value to set async attribute to script tag
      * - 'defer' : Boolean value to set defer attribute to script tag
      */
-    public static function javascript($file, $options = array())
+    public static function javascript($file, $options = [])
     {
         self::backend()->javascript($file, $options);
     }
@@ -135,7 +135,7 @@ class Requirements implements Flushable
     /**
      * Register the given JavaScript code into the list of requirements
      *
-     * @param string     $script       The script content as a string (without enclosing <script> tag)
+     * @param string     $script       The script content as a string (without enclosing `<script>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public static function customScript($script, $uniquenessID = null)
@@ -156,7 +156,7 @@ class Requirements implements Flushable
     /**
      * Register the given CSS styles into the list of requirements
      *
-     * @param string     $script       CSS selectors as a string (without enclosing <style> tag)
+     * @param string     $script       CSS selectors as a string (without enclosing `<style>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public static function customCSS($script, $uniquenessID = null)
@@ -165,7 +165,7 @@ class Requirements implements Flushable
     }
 
     /**
-     * Add the following custom HTML code to the <head> section of the page
+     * Add the following custom HTML code to the `<head>` section of the page
      *
      * @param string     $html         Custom HTML code
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
@@ -194,10 +194,13 @@ class Requirements implements Flushable
      * @param string $file  The CSS file to load, relative to site root
      * @param string $media Comma-separated list of media types to use in the link tag
      *                      (e.g. 'screen,projector')
+     * @param array $options List of options. Available options include:
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public static function css($file, $media = null)
+    public static function css($file, $media = null, $options = [])
     {
-        self::backend()->css($file, $media);
+        self::backend()->css($file, $media, $options);
     }
 
     /**
@@ -331,13 +334,13 @@ class Requirements implements Flushable
      *                         'framework/javascript/lang'
      * @param bool   $return   Return all relative file paths rather than including them in
      *                         requirements
-     * @param bool   $langOnly Only include language files, not the base libraries
+     * @param bool $langOnly @deprecated 4.1.0:5.0.0 as i18n.js should be included manually in your project
      *
      * @return array
      */
     public static function add_i18n_javascript($langDir, $return = false, $langOnly = false)
     {
-        return self::backend()->add_i18n_javascript($langDir, $return, $langOnly);
+        return self::backend()->add_i18n_javascript($langDir, $return);
     }
 
     /**
@@ -386,7 +389,7 @@ class Requirements implements Flushable
      * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
      * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
      */
-    public static function combine_files($combinedFileName, $files, $options = array())
+    public static function combine_files($combinedFileName, $files, $options = [])
     {
         if (is_string($options)) {
             throw new InvalidArgumentException("Invalid $options");
@@ -446,7 +449,7 @@ class Requirements implements Flushable
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      */
     public static function set_write_js_to_body($var)
     {

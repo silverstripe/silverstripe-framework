@@ -9,7 +9,7 @@ class OtherClass extends DataObject implements TestOnly
 {
     private static $table_name = 'DBClassNameTest_OtherClass';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar'
-    );
+    ];
 }

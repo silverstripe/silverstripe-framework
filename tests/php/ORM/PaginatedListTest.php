@@ -35,7 +35,7 @@ class PaginatedListTest extends SapphireTest
         $list->setPageStart(10);
         $this->assertEquals(10, $list->getPageStart(), 'You can set the page start.');
 
-        $list = new PaginatedList(new ArrayList(), array('start' => 50));
+        $list = new PaginatedList(new ArrayList(), ['start' => 50]);
         $this->assertEquals(50, $list->getPageStart(), 'The page start can be read from the request.');
     }
 
@@ -49,10 +49,10 @@ class PaginatedListTest extends SapphireTest
 
         $list = new PaginatedList(
             new ArrayList(
-                array(
-                new ArrayData(array()),
-                new ArrayData(array())
-                )
+                [
+                new ArrayData([]),
+                new ArrayData([])
+                ]
             )
         );
         $this->assertEquals(2, $list->getTotalItems());
@@ -63,7 +63,7 @@ class PaginatedListTest extends SapphireTest
         $query = $this->getMockBuilder(SQLSelect::class)->getMock();
         $query->expects($this->once())
             ->method('getLimit')
-            ->will($this->returnValue(array('limit' => 15, 'start' => 30)));
+            ->will($this->returnValue(['limit' => 15, 'start' => 30]));
         $query->expects($this->once())
             ->method('unlimitedRowCount')
             ->will($this->returnValue(100));
@@ -94,35 +94,35 @@ class PaginatedListTest extends SapphireTest
     {
         $list = new PaginatedList(
             new ArrayList([
-                new DataObject(array('Num' => 1)),
-                new DataObject(array('Num' => 2)),
-                new DataObject(array('Num' => 3)),
-                new DataObject(array('Num' => 4)),
-                new DataObject(array('Num' => 5)),
+                new DataObject(['Num' => 1]),
+                new DataObject(['Num' => 2]),
+                new DataObject(['Num' => 3]),
+                new DataObject(['Num' => 4]),
+                new DataObject(['Num' => 5]),
             ])
         );
         $list->setPageLength(2);
 
         $this->assertListEquals(
-            array(array('Num' => 1), array('Num' => 2)),
+            [['Num' => 1], ['Num' => 2]],
             ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(2);
         $this->assertListEquals(
-            array(array('Num' => 3), array('Num' => 4)),
+            [['Num' => 3], ['Num' => 4]],
             ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(3);
         $this->assertListEquals(
-            array(array('Num' => 5)),
+            [['Num' => 5]],
             ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(999);
         $this->assertListEquals(
-            array(),
+            [],
             ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
@@ -131,11 +131,11 @@ class PaginatedListTest extends SapphireTest
         $list->setCurrentPage(1);
         $this->assertListEquals(
             [
-                array('Num' => 1),
-                array('Num' => 2),
-                array('Num' => 3),
-                array('Num' => 4),
-                array('Num' => 5),
+                ['Num' => 1],
+                ['Num' => 2],
+                ['Num' => 3],
+                ['Num' => 4],
+                ['Num' => 5],
             ],
             ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
@@ -164,27 +164,27 @@ class PaginatedListTest extends SapphireTest
 
         $list->setCurrentPage(3);
 
-        $expectAll = array(
-            array('PageNum' => 1),
-            array('PageNum' => 2),
-            array('PageNum' => 3, 'CurrentBool' => true),
-            array('PageNum' => 4),
-            array('PageNum' => 5),
-        );
+        $expectAll = [
+            ['PageNum' => 1],
+            ['PageNum' => 2],
+            ['PageNum' => 3, 'CurrentBool' => true],
+            ['PageNum' => 4],
+            ['PageNum' => 5],
+        ];
         $this->assertListEquals($expectAll, $list->Pages());
 
-        $expectLimited = array(
-            array('PageNum' => 2),
-            array('PageNum' => 3, 'CurrentBool' => true),
-            array('PageNum' => 4),
-        );
+        $expectLimited = [
+            ['PageNum' => 2],
+            ['PageNum' => 3, 'CurrentBool' => true],
+            ['PageNum' => 4],
+        ];
         $this->assertListEquals($expectLimited, $list->Pages(3));
 
         // Disable paging
         $list->setPageLength(0);
-        $expectAll = array(
-            array('PageNum' => 1, 'CurrentBool' => true),
-        );
+        $expectAll = [
+            ['PageNum' => 1, 'CurrentBool' => true],
+        ];
         $this->assertListEquals($expectAll, $list->Pages());
     }
 
@@ -196,24 +196,24 @@ class PaginatedListTest extends SapphireTest
         $list->setTotalItems(250);
         $list->setCurrentPage(6);
 
-        $expect = array(
-            array('PageNum' => 1),
-            array('PageNum' => null),
-            array('PageNum' => 4),
-            array('PageNum' => 5),
-            array('PageNum' => 6, 'CurrentBool' => true),
-            array('PageNum' => 7),
-            array('PageNum' => 8),
-            array('PageNum' => null),
-            array('PageNum' => 25),
-        );
+        $expect = [
+            ['PageNum' => 1],
+            ['PageNum' => null],
+            ['PageNum' => 4],
+            ['PageNum' => 5],
+            ['PageNum' => 6, 'CurrentBool' => true],
+            ['PageNum' => 7],
+            ['PageNum' => 8],
+            ['PageNum' => null],
+            ['PageNum' => 25],
+        ];
         $this->assertListEquals($expect, $list->PaginationSummary(4));
 
         // Disable paging
         $list->setPageLength(0);
-        $expect = array(
-            array('PageNum' => 1, 'CurrentBool' => true)
-        );
+        $expect = [
+            ['PageNum' => 1, 'CurrentBool' => true]
+        ];
         $this->assertListEquals($expect, $list->PaginationSummary(4));
     }
 
@@ -282,12 +282,30 @@ class PaginatedListTest extends SapphireTest
         $this->assertFalse($list->MoreThanOnePage());
     }
 
+    public function testFirstPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $this->assertTrue($list->FirstPage());
+        $list->setCurrentPage(2);
+        $this->assertFalse($list->FirstPage());
+    }
+
     public function testNotFirstPage()
     {
         $list = new PaginatedList(new ArrayList());
         $this->assertFalse($list->NotFirstPage());
         $list->setCurrentPage(2);
         $this->assertTrue($list->NotFirstPage());
+    }
+
+    public function testLastPage()
+    {
+        $list = new PaginatedList(new ArrayList());
+        $list->setTotalItems(50);
+
+        $this->assertFalse($list->LastPage());
+        $list->setCurrentPage(5);
+        $this->assertTrue($list->LastPage());
     }
 
     public function testNotLastPage()
@@ -329,7 +347,7 @@ class PaginatedListTest extends SapphireTest
     public function testFirstLink()
     {
         $list = new PaginatedList(new ArrayList());
-        $this->assertContains('start=0', $list->FirstLink());
+        $this->assertStringContainsString('start=0', $list->FirstLink());
     }
 
     public function testFirstLinkContainsCurrentGetParameters()
@@ -344,8 +362,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->FirstLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->FirstLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -358,11 +376,11 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList(new ArrayList());
         $list->setPageLength(10);
         $list->setTotalItems(100);
-        $this->assertContains('start=90', $list->LastLink());
+        $this->assertStringContainsString('start=90', $list->LastLink());
 
         // Disable paging
         $list->setPageLength(0);
-        $this->assertContains('start=0', $list->LastLink());
+        $this->assertStringContainsString('start=0', $list->LastLink());
     }
 
     public function testLastLinkContainsCurrentGetParameters()
@@ -377,8 +395,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->LastLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->LastLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -391,13 +409,13 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList(new ArrayList());
         $list->setTotalItems(50);
 
-        $this->assertContains('start=10', $list->NextLink());
+        $this->assertStringContainsString('start=10', $list->NextLink());
         $list->setCurrentPage(2);
-        $this->assertContains('start=20', $list->NextLink());
+        $this->assertStringContainsString('start=20', $list->NextLink());
         $list->setCurrentPage(3);
-        $this->assertContains('start=30', $list->NextLink());
+        $this->assertStringContainsString('start=30', $list->NextLink());
         $list->setCurrentPage(4);
-        $this->assertContains('start=40', $list->NextLink());
+        $this->assertStringContainsString('start=40', $list->NextLink());
         $list->setCurrentPage(5);
         $this->assertNull($list->NextLink());
 
@@ -419,8 +437,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->NextLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->NextLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);
@@ -435,11 +453,11 @@ class PaginatedListTest extends SapphireTest
 
         $this->assertNull($list->PrevLink());
         $list->setCurrentPage(2);
-        $this->assertContains('start=0', $list->PrevLink());
+        $this->assertStringContainsString('start=0', $list->PrevLink());
         $list->setCurrentPage(3);
-        $this->assertContains('start=10', $list->PrevLink());
+        $this->assertStringContainsString('start=10', $list->PrevLink());
         $list->setCurrentPage(5);
-        $this->assertContains('start=30', $list->PrevLink());
+        $this->assertStringContainsString('start=30', $list->PrevLink());
 
         // Disable paging
         $list->setPageLength(0);
@@ -458,8 +476,8 @@ class PaginatedListTest extends SapphireTest
         $list->setPageLength(10);
 
         // check the query string has correct parameters
-        $queryString = parse_url($list->PrevLink(), PHP_URL_QUERY);
-        parse_str($queryString, $queryParams);
+        $queryString = parse_url($list->PrevLink() ?? '', PHP_URL_QUERY);
+        parse_str($queryString ?? '', $queryParams);
 
         $this->assertArrayHasKey('awesomeness', $queryParams);
         $this->assertequals('nextLevel', $queryParams['awesomeness']);

@@ -44,23 +44,19 @@ class ViewableData_Debugger extends ViewableData
         // debugging info for a specific field
         $class = get_class($this->object);
         if ($field) {
-            return "<b>Debugging Information for {$class}->{$field}</b><br/>" .
-                ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) .
-                ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
+            return "<b>Debugging Information for {$class}->{$field}</b><br/>" . ($this->object->hasMethod($field) ? "Has method '$field'<br/>" : null) . ($this->object->hasField($field) ? "Has field '$field'<br/>" : null);
         }
 
         // debugging information for the entire class
         $reflector = new ReflectionObject($this->object);
         $debug = "<b>Debugging Information: all methods available in '{$class}'</b><br/><ul>";
-
         foreach ($this->object->allMethodNames() as $method) {
-            // check that the method is public
-            if ($method[0] === strtoupper($method[0]) && $method[0] != '_') {
+            if ($method[0] !== '_') {
                 if ($reflector->hasMethod($method) && $method = $reflector->getMethod($method)) {
                     if ($method->isPublic()) {
                         $debug .= "<li>\${$method->getName()}";
 
-                        if (count($method->getParameters())) {
+                        if (count($method->getParameters() ?? [])) {
                             $debug .= ' <small>(' . implode(', ', $method->getParameters()) . ')</small>';
                         }
 

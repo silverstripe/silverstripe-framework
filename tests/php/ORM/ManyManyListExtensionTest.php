@@ -9,11 +9,11 @@ class ManyManyListExtensionTest extends SapphireTest
 
     protected static $fixture_file = 'ManyManyListExtensionTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         ManyManyListTest\IndirectPrimary::class,
         ManyManyListTest\Secondary::class,
         ManyManyListTest\SecondarySub::class
-    );
+    ];
 
     // Test that when one side of a many-many relationship is added by extension, both
     // sides still see the extra fields.
@@ -30,7 +30,7 @@ class ManyManyListExtensionTest extends SapphireTest
         $secondaries = $primary->Secondary();
         $extraFields = $secondaries->getExtraFields();
 
-        $this->assertTrue(count($extraFields) > 0, 'has extra fields');
+        $this->assertTrue(count($extraFields ?? []) > 0, 'has extra fields');
         $this->assertTrue(isset($extraFields['DocumentSort']), 'has DocumentSort');
 
         // Test from the secondary (which is extended) to the primary (not extended)
@@ -40,7 +40,7 @@ class ManyManyListExtensionTest extends SapphireTest
         $primaries = $secondary->Primary();
         $extraFields = $primaries->getExtraFields();
 
-        $this->assertTrue(count($extraFields) > 0, 'has extra fields');
+        $this->assertTrue(count($extraFields ?? []) > 0, 'has extra fields');
         $this->assertTrue(isset($extraFields['DocumentSort']), 'has DocumentSort');
     }
 }

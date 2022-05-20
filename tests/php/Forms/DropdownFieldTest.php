@@ -8,6 +8,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
@@ -18,7 +19,7 @@ class DropdownFieldTest extends SapphireTest
 
     public function testGetSource()
     {
-        $source = array(1=>'one', 2 => 'two');
+        $source = [1=>'one', 2 => 'two'];
         $field = new DropdownField('Field', null, $source);
         $this->assertEquals(
             $source,
@@ -30,28 +31,28 @@ class DropdownFieldTest extends SapphireTest
         );
 
         $items = new ArrayList(
-            array(
-            array( 'ID' => 1, 'Title' => 'ichi', 'OtherField' => 'notone' ),
-            array( 'ID' => 2, 'Title' => 'ni', 'OtherField' => 'nottwo' ),
-            )
+            [
+            [ 'ID' => 1, 'Title' => 'ichi', 'OtherField' => 'notone' ],
+            [ 'ID' => 2, 'Title' => 'ni', 'OtherField' => 'nottwo' ],
+            ]
         );
         $field->setSource($items);
         $this->assertEquals(
             $field->getSource(),
-            array(
+            [
                 1 => 'ichi',
                 2 => 'ni',
-            )
+            ]
         );
 
         $map = new Map($items, 'ID', 'OtherField');
         $field->setSource($map);
         $this->assertEquals(
             $field->getSource(),
-            array(
+            [
                 1 => 'notone',
                 2 => 'nottwo',
-            )
+            ]
         );
     }
 
@@ -61,32 +62,32 @@ class DropdownFieldTest extends SapphireTest
     public function testSources()
     {
         // Array
-        $items = array('a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry');
+        $items = ['a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry'];
         $field = new DropdownField('Field', null, $items);
         $this->assertEquals($items, $field->getSource());
 
         // SS_List
         $list = new ArrayList(
-            array(
+            [
             new ArrayData(
-                array(
+                [
                 'ID' => 'a',
                 'Title' => 'Apple'
-                )
+                ]
             ),
             new ArrayData(
-                array(
+                [
                 'ID' => 'b',
                 'Title' => 'Banana'
-                )
+                ]
             ),
             new ArrayData(
-                array(
+                [
                 'ID' => 'c',
                 'Title' => 'Cranberry'
-                )
+                ]
             )
-            )
+            ]
         );
         $field2 = new DropdownField('Field', null, $list);
         $this->assertEquals($items, $field2->getSource());
@@ -97,17 +98,17 @@ class DropdownFieldTest extends SapphireTest
 
     public function testReadonlyField()
     {
-        $field = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'));
+        $field = new DropdownField('FeelingOk', 'Are you feeling ok?', [0 => 'No', 1 => 'Yes']);
         $field->setEmptyString('(Select one)');
         $field->setValue(1);
         $readonlyField = $field->performReadonlyTransformation();
-        preg_match('/Yes/', $field->Field(), $matches);
+        preg_match('/Yes/', $field->Field() ?? '', $matches);
         $this->assertEquals($matches[0], 'Yes');
     }
 
     public function testHasEmptyDefault()
     {
-        $source = array(1 => 'one');
+        $source = [1 => 'one'];
 
         // Test getSource with empty
         $field = new DropdownField('Field', null, $source);
@@ -115,9 +116,9 @@ class DropdownFieldTest extends SapphireTest
 
         $this->assertEquals(
             $field->getSource(),
-            array(
+            [
                 1 => 'one'
-            )
+            ]
         );
 
         // Test that an empty option comes through in the markup however
@@ -125,7 +126,7 @@ class DropdownFieldTest extends SapphireTest
 
         $this->assertEquals(
             2,
-            count($options),
+            count($options ?? []),
             'Two options exist in the markup, one for the source, one for empty'
         );
 
@@ -143,35 +144,100 @@ class DropdownFieldTest extends SapphireTest
         $FieldWithoutEmpty = new DropdownField('Field', null, $source);
         $this->assertEquals(
             $FieldWithoutEmpty->getSource(),
-            array(
+            [
                 1 => 'one'
-            )
+            ]
         );
+
+        // Test that an empty option does not comes through in the markup however
+        $options = $this->findOptionElements($FieldWithoutEmpty->Field());
 
         $this->assertEquals(
             1,
-            count($options),
+            count($options ?? []),
             'As hasEmptyDefault is not provided, then no default option.'
         );
     }
 
+    public function testEmpty()
+    {
+        $fieldName = 'TestField';
+        $formName = 'testForm';
+        // Create mock form
+        $form = $this->createMock(Form::class);
+        $form->method('getTemplateHelper')
+            ->willReturn(FormTemplateHelper::singleton());
+
+        $form->method('getHTMLID')
+            ->willReturn($formName);
+        
+        $source = [
+            'first' => 'value',
+            0 => 'otherValue'
+        ];
+        $field = new DropdownField($fieldName, 'Test Field', $source);
+        $field->setForm($form);
+
+        $fieldId = $field->ID();
+        $this->assertEquals($fieldId, sprintf('%s_%s', $formName, $fieldName));
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertSame($fieldId, $schemaStateDefaults['id']);
+        $this->assertSame($fieldName, $schemaStateDefaults['name']);
+        $this->assertSame('first', $schemaStateDefaults['value']);
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertSame($fieldId, $schemaDataDefaults['id']);
+        $this->assertSame($fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame(sprintf('%s_Holder', $fieldId), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test Field', $schemaDataDefaults['title']);
+        $this->assertSame('dropdown', $schemaDataDefaults['extraClass']);
+        $this->assertSame(null, $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(false, $schemaDataDefaults['data']['hasEmptyDefault']);
+
+        // Set an empty string of field
+        $field->setEmptyString('(Any)');
+
+        // Check state for default value
+        $schemaStateDefaults = $field->getSchemaStateDefaults();
+        $this->assertSame($fieldId, $schemaStateDefaults['id']);
+        $this->assertSame($fieldName, $schemaStateDefaults['name']);
+        $this->assertSame('', $schemaStateDefaults['value']);
+
+        // Check data for empty defaults
+        $schemaDataDefaults = $field->getSchemaDataDefaults();
+        $this->assertSame($fieldId, $schemaDataDefaults['id']);
+        $this->assertSame($fieldName, $schemaDataDefaults['name']);
+        $this->assertSame('text', $schemaDataDefaults['type']);
+        $this->assertSame('SingleSelect', $schemaDataDefaults['schemaType']);
+        $this->assertSame(sprintf('%s_Holder', $fieldId), $schemaDataDefaults['holderId']);
+        $this->assertSame('Test Field', $schemaDataDefaults['title']);
+        $this->assertSame('dropdown', $schemaDataDefaults['extraClass']);
+        $this->assertSame('(Any)', $schemaDataDefaults['data']['emptyString']);
+        $this->assertSame(true, $schemaDataDefaults['data']['hasEmptyDefault']);
+    }
+
     public function testZeroArraySourceNotOverwrittenByEmptyString()
     {
-        $source = array(0=>'zero');
+        $source = [0=>'zero'];
         $field = new DropdownField('Field', null, $source);
         $field->setEmptyString('select...');
         $this->assertEquals(
             $field->getSource(),
-            array(
+            [
                 0 => 'zero'
-            )
+            ]
         );
 
         $options = $this->findOptionElements($field->Field());
 
         $this->assertEquals(
             2,
-            count($options),
+            count($options ?? []),
             'Two options exist in the markup, one for the source, one for empty'
         );
     }
@@ -181,12 +247,12 @@ class DropdownFieldTest extends SapphireTest
         $field = new DropdownField(
             'Field',
             null,
-            array(
+            [
             '-1' => 'some negative',
             '0' => 'none',
             '1' => 'one',
             '2+' => 'two or more'
-            ),
+            ],
             '0'
         );
 
@@ -196,12 +262,12 @@ class DropdownFieldTest extends SapphireTest
         $field = new DropdownField(
             'Field',
             null,
-            array(
+            [
             '-1' => 'some negative',
             '0' => 'none',
             '1' => 'one',
             '2+' => 'two or more'
-            ),
+            ],
             0
         );
 
@@ -214,12 +280,12 @@ class DropdownFieldTest extends SapphireTest
         $field = new DropdownField(
             'Field',
             null,
-            array(
+            [
             '-1' => 'some negative',
             '0' => 'none',
             '1' => 'one',
             '2+' => 'two or more'
-            ),
+            ],
             '1'
         );
 
@@ -230,12 +296,12 @@ class DropdownFieldTest extends SapphireTest
         $field = new DropdownField(
             'Field',
             null,
-            array(
+            [
             '-1' => 'some negative',
             '0' => 'none',
             '1' => 'one',
             '2+' => 'two or more'
-            ),
+            ],
             1
         );
 
@@ -249,10 +315,10 @@ class DropdownFieldTest extends SapphireTest
         $field = $this->createDropdownField('(Any)');
 
         /* 3 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 3, '3 options are available');
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
         $this->assertEquals(
-            count($selectedOptions),
+            count($selectedOptions ?? []),
             1,
             'We only have 1 selected option, since a dropdown can only possibly have one!'
         );
@@ -261,9 +327,9 @@ class DropdownFieldTest extends SapphireTest
         $field = $this->createDropdownField();
 
         /* 2 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 2, '2 options are available');
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
-        $this->assertEquals(count($selectedOptions), 0, 'There are no selected options');
+        $this->assertEquals(count($selectedOptions ?? []), 0, 'There are no selected options');
     }
 
     public function testIntegerZeroValueSeelctedOptionBehaviour()
@@ -293,10 +359,10 @@ class DropdownFieldTest extends SapphireTest
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
         $this->assertEquals((string) $selectedOptions[0], 'Yes', 'The selected option is "Yes"');
         $field->setSource(
-            array(
+            [
             'Cats' => 'Cats and Kittens',
             'Dogs' => 'Dogs and Puppies'
-            )
+            ]
         );
         $field->setValue('Cats');
         $selectedOptions = $this->findSelectedOptionElements($field->Field());
@@ -311,34 +377,34 @@ class DropdownFieldTest extends SapphireTest
     {
         /* Create a field with a blank value & set 0 & 1 to disabled */
         $field = $this->createDropdownField('(Any)');
-        $field->setDisabledItems(array(0,1));
+        $field->setDisabledItems([0,1]);
 
         /* 3 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 3, '3 options are available');
 
         /* There are 2 disabled options */
         $disabledOptions = $this->findDisabledOptionElements($field->Field());
-        $this->assertEquals(count($disabledOptions), 2, 'We have 2 disabled options');
+        $this->assertEquals(count($disabledOptions ?? []), 2, 'We have 2 disabled options');
 
         /* Create a field without a blank value & set 1 to disabled, then set none to disabled (unset) */
         $field = $this->createDropdownField();
-        $field->setDisabledItems(array(1));
+        $field->setDisabledItems([1]);
 
         /* 2 options are available */
-        $this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+        $this->assertEquals(count($this->findOptionElements($field->Field()) ?? []), 2, '2 options are available');
 
         /* get disabled items returns an array of one */
         $this->assertEquals(
             $field->getDisabledItems(),
-            array( 1 )
+            [ 1 ]
         );
 
         /* unset disabled items */
-        $field->setDisabledItems(array());
+        $field->setDisabledItems([]);
 
         /* There are no disabled options anymore */
         $disabledOptions = $this->findDisabledOptionElements($field->Field());
-        $this->assertEquals(count($disabledOptions), 0, 'There are no disabled options');
+        $this->assertEquals(count($disabledOptions ?? []), 0, 'There are no disabled options');
     }
 
     /**
@@ -360,13 +426,13 @@ class DropdownFieldTest extends SapphireTest
      */
     public function arrayValueProvider()
     {
-        return array(
-            array(array()),
-            array(array(0)),
-            array(array(123)),
-            array(array('string')),
-            array('Regression-ish test.')
-        );
+        return [
+            [[]],
+            [[0]],
+            [[123]],
+            [['string']],
+            ['Regression-ish test.']
+        ];
     }
 
     /**
@@ -381,10 +447,10 @@ class DropdownFieldTest extends SapphireTest
     public function createDropdownField($emptyString = null, $value = '')
     {
         /* Set up source, with 0 and 1 integers as the values */
-        $source = array(
+        $source = [
             0 => 'No',
             1 => 'Yes'
-        );
+        ];
 
         $field = new DropdownField('Field', null, $source, $value);
 
@@ -421,7 +487,7 @@ class DropdownFieldTest extends SapphireTest
         $options = $this->findOptionElements($html);
 
         /* Find any elements that have the "selected" attribute and put them into a list */
-        $foundSelected = array();
+        $foundSelected = [];
         foreach ($options as $option) {
             $attributes = $option->attributes();
             if ($attributes) {
@@ -449,7 +515,7 @@ class DropdownFieldTest extends SapphireTest
         $options = $this->findOptionElements($html);
 
         /* Find any elements that have the "disabled" attribute and put them into a list */
-        $foundDisabled = array();
+        $foundDisabled = [];
         foreach ($options as $option) {
             $attributes = $option->attributes();
             if ($attributes) {
@@ -472,11 +538,11 @@ class DropdownFieldTest extends SapphireTest
         $field = DropdownField::create(
             'Test',
             'Testing',
-            array(
+            [
             "One" => "One",
             "Two" => "Two",
             "Five" => "Five"
-            )
+            ]
         );
         $validator = new RequiredFields();
         new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
@@ -495,7 +561,7 @@ class DropdownFieldTest extends SapphireTest
         $field->setValue('');
         $this->assertTrue($field->validate($validator));
         //disabled items shouldn't validate
-        $field->setDisabledItems(array('Five'));
+        $field->setDisabledItems(['Five']);
         $field->setValue('Five');
         $this->assertFalse($field->validate($validator));
     }
@@ -505,7 +571,7 @@ class DropdownFieldTest extends SapphireTest
      */
     public function testRequiredDropdownHasEmptyDefault()
     {
-        $field = new \SilverStripe\Forms\DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
+        $field = new DropdownField("RequiredField", "dropdown", ["item 1", "item 2"]);
 
         $form = new Form(
             Controller::curr(),
@@ -516,5 +582,34 @@ class DropdownFieldTest extends SapphireTest
         );
 
         $this->assertTrue($field->getHasEmptyDefault());
+    }
+
+    public function testEmptySourceDoesntBlockValidation()
+    {
+        // Empty source
+        $field = new DropdownField("EmptySource", "", []);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with a setEmptyString
+        $field = new DropdownField("EmptySource", "", []);
+        $field->setEmptyString('(Select one)');
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with an empty value
+        $field = new DropdownField("SourceWithBlankVal", "", [ "" => "(Choose)" ]);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
+
+        // Source with all items disabled
+        $field = new DropdownField("SourceWithBlankVal", "", [ "A" => "A", "B" => "B" ]);
+        $field->setDisabledItems([ 'A', 'B' ]);
+        $v = new RequiredFields();
+        $field->validate($v);
+        $this->assertTrue($v->getResult()->isValid());
     }
 }

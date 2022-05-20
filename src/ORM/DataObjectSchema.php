@@ -3,14 +3,18 @@
 namespace SilverStripe\ORM;
 
 use Exception;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBComposite;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\Connect\DBSchemaManager;
+use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Provides dataobject and database schema mapping functionality
@@ -97,6 +101,7 @@ class DataObjectSchema
      * @param string $class Class name (not a table).
      * @param string $field Name of field that belongs to this class (or a parent class)
      * @param string $tablePrefix Optional prefix for table (alias)
+     *
      * @return string The SQL identifier string for the corresponding column for this field
      */
     public function sqlColumnForField($class, $field, $tablePrefix = null)
@@ -115,6 +120,7 @@ class DataObjectSchema
      * the name that would be used if this table did exist.
      *
      * @param string $class
+     *
      * @return string Returns the table name, or null if there is no table
      */
     public function tableName($class)
@@ -122,25 +128,27 @@ class DataObjectSchema
         $tables = $this->getTableNames();
         $class = ClassInfo::class_name($class);
         if (isset($tables[$class])) {
-            return $tables[$class];
+            return Convert::raw2sql($tables[$class]);
         }
         return null;
     }
+
     /**
      * Returns the root class (the first to extend from DataObject) for the
      * passed class.
      *
      * @param string|object $class
+     *
      * @return string
      * @throws InvalidArgumentException
      */
     public function baseDataClass($class)
     {
-        $class = ClassInfo::class_name($class);
         $current = $class;
-        while ($next = get_parent_class($current)) {
+        while ($next = get_parent_class($current ?? '')) {
             if ($next === DataObject::class) {
-                return $current;
+                // Only use ClassInfo::class_name() to format the class if we've not used get_parent_class()
+                return ($current === $class) ? ClassInfo::class_name($current) : $current;
             }
             $current = $next;
         }
@@ -151,6 +159,7 @@ class DataObjectSchema
      * Get the base table
      *
      * @param string|object $class
+     *
      * @return string
      */
     public function baseDataTable($class)
@@ -181,6 +190,7 @@ class DataObjectSchema
      *  - UNINHERITED Limit to only this table
      *  - DB_ONLY Exclude virtual fields (such as composite fields), and only include fields with a db column.
      *  - INCLUDE_CLASS Prefix the field specification with the class name in RecordClass.Column(spec) format.
+     *
      * @return array List of fields, where the key is the field name and the value is the field specification.
      */
     public function fieldSpecs($classOrInstance, $options = 0)
@@ -199,6 +209,11 @@ class DataObjectSchema
         $db = [];
         $classes = $uninherited ? [$class] : ClassInfo::ancestry($class);
         foreach ($classes as $tableClass) {
+            // Skip irrelevant parent classes
+            if (!is_subclass_of($tableClass, DataObject::class)) {
+                continue;
+            }
+
             // Find all fields on this class
             $fields = $this->databaseFields($tableClass, false);
             // Merge with composite fields
@@ -210,7 +225,7 @@ class DataObjectSchema
             // Record specification
             foreach ($fields as $name => $specification) {
                 $prefix = $includeClass ? "{$tableClass}." : "";
-                $db[$name] =  $prefix . $specification;
+                $db[$name] = $prefix . $specification;
             }
         }
         return $db;
@@ -226,6 +241,7 @@ class DataObjectSchema
      *  - UNINHERITED Limit to only this table
      *  - DB_ONLY Exclude virtual fields (such as composite fields), and only include fields with a db column.
      *  - INCLUDE_CLASS Prefix the field specification with the class name in RecordClass.Column(spec) format.
+     *
      * @return string|null Field will be a string in FieldClass(args) format, or
      * RecordClass.FieldClass(args) format if using INCLUDE_CLASS. Will be null if no field is found.
      */
@@ -239,21 +255,22 @@ class DataObjectSchema
      * Find the class for the given table
      *
      * @param string $table
+     *
      * @return string|null The FQN of the class, or null if not found
      */
     public function tableClass($table)
     {
         $tables = $this->getTableNames();
-        $class = array_search($table, $tables, true);
+        $class = array_search($table, $tables ?? [], true);
         if ($class) {
             return $class;
         }
 
         // If there is no class for this table, strip table modifiers (e.g. _Live / _Versions)
         // from the end and re-attempt a search.
-        if (preg_match('/^(?<class>.+)(_[^_]+)$/i', $table, $matches)) {
+        if (preg_match('/^(?<class>.+)(_[^_]+)$/i', $table ?? '', $matches)) {
             $table = $matches['class'];
-            $class = array_search($table, $tables, true);
+            $class = array_search($table, $tables ?? [], true);
             if ($class) {
                 return $class;
             }
@@ -277,7 +294,7 @@ class DataObjectSchema
             $table = $this->buildTableName($class);
 
             // Check for conflicts
-            $conflict = array_search($table, $this->tableNames, true);
+            $conflict = array_search($table, $this->tableNames ?? [], true);
             if ($conflict) {
                 throw new LogicException(
                     "Multiple classes (\"{$class}\", \"{$conflict}\") map to the same table: \"{$table}\""
@@ -294,6 +311,7 @@ class DataObjectSchema
      * See dev/build errors for details in case of table name violation.
      *
      * @param string $class
+     *
      * @return string
      */
     protected function buildTableName($class)
@@ -301,9 +319,19 @@ class DataObjectSchema
         $table = Config::inst()->get($class, 'table_name', Config::UNINHERITED);
 
         // Generate default table name
-        if (!$table) {
-            $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
-            $table = str_replace('\\', $separator, trim($class, '\\'));
+        if ($table) {
+            return $table;
+        }
+
+        if (strpos($class ?? '', '\\') === false) {
+            return $class;
+        }
+
+        $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
+        $table = str_replace('\\', $separator ?? '', trim($class ?? '', '\\'));
+
+        if (!ClassInfo::classImplements($class, TestOnly::class) && $this->classHasTable($class)) {
+            DBSchemaManager::showTableNameWarning($table, $class);
         }
 
         return $table;
@@ -315,7 +343,8 @@ class DataObjectSchema
      *
      * @param string $class Class name to query from
      * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
-     * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
+     *
+     * @return array Map of fieldname to specification, similar to {@link DataObject::$db}.
      */
     public function databaseFields($class, $aggregated = true)
     {
@@ -331,8 +360,8 @@ class DataObjectSchema
         }
 
         // Recursively merge
-        $parentFields = $this->databaseFields(get_parent_class($class));
-        return array_merge($fields, array_diff_key($parentFields, $fields));
+        $parentFields = $this->databaseFields(get_parent_class($class ?? ''));
+        return array_merge($fields, array_diff_key($parentFields ?? [], $fields));
     }
 
     /**
@@ -341,6 +370,7 @@ class DataObjectSchema
      * @param string $class Class name to query from
      * @param string $field Field name
      * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+     *
      * @return string|null Field specification, or null if not a field
      */
     public function databaseField($class, $field, $aggregated = true)
@@ -366,17 +396,22 @@ class DataObjectSchema
         if (!$aggregated) {
             return $indexes;
         }
-        return array_merge($indexes, $this->databaseIndexes(get_parent_class($class)));
+        return array_merge($indexes, $this->databaseIndexes(get_parent_class($class ?? '')));
     }
 
     /**
      * Check if the given class has a table
      *
      * @param string $class
+     *
      * @return bool
      */
     public function classHasTable($class)
     {
+        if (!is_subclass_of($class, DataObject::class)) {
+            return false;
+        }
+
         $fields = $this->databaseFields($class, false);
         return !empty($fields);
     }
@@ -392,6 +427,7 @@ class DataObjectSchema
      *
      * @param string $class Name of class to check
      * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+     *
      * @return array List of composite fields and their class spec
      */
     public function compositeFields($class, $aggregated = true)
@@ -409,8 +445,8 @@ class DataObjectSchema
         }
 
         // Recursively merge
-        $parentFields = $this->compositeFields(get_parent_class($class));
-        return array_merge($compositeFields, array_diff_key($parentFields, $compositeFields));
+        $parentFields = $this->compositeFields(get_parent_class($class ?? ''));
+        return array_merge($compositeFields, array_diff_key($parentFields ?? [], $compositeFields));
     }
 
     /**
@@ -419,6 +455,7 @@ class DataObjectSchema
      * @param string $class Class name to query from
      * @param string $field Field name
      * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+     *
      * @return string|null Field specification, or null if not a field
      */
     public function compositeField($class, $field, $aggregated = true)
@@ -439,12 +476,12 @@ class DataObjectSchema
         if (isset($this->databaseFields[$class]) && isset($this->compositeFields[$class])) {
             return;
         }
-        $compositeFields = array();
-        $dbFields = array();
+        $compositeFields = [];
+        $dbFields = [];
 
         // Ensure fixed fields appear at the start
         $fixedFields = DataObject::config()->uninherited('fixed_fields');
-        if (get_parent_class($class) === DataObject::class) {
+        if (get_parent_class($class ?? '') === DataObject::class) {
             // Merge fixed with ClassName spec and custom db fields
             $dbFields = $fixedFields;
         } else {
@@ -452,9 +489,9 @@ class DataObjectSchema
         }
 
         // Check each DB value as either a field or composite field
-        $db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: array();
+        $db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: [];
         foreach ($db as $fieldName => $fieldSpec) {
-            $fieldClass = strtok($fieldSpec, '(');
+            $fieldClass = strtok($fieldSpec ?? '', '(');
             if (singleton($fieldClass) instanceof DBComposite) {
                 $compositeFields[$fieldName] = $fieldSpec;
             } else {
@@ -463,7 +500,7 @@ class DataObjectSchema
         }
 
         // Add in all has_ones
-        $hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: array();
+        $hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: [];
         foreach ($hasOne as $fieldName => $hasOneClass) {
             if ($hasOneClass === DataObject::class) {
                 $compositeFields[$fieldName] = 'PolymorphicForeignKey';
@@ -483,7 +520,7 @@ class DataObjectSchema
         }
 
         // Prevent field-less tables with only 'ID'
-        if (count($dbFields) < 2) {
+        if (count($dbFields ?? []) < 2) {
             $dbFields = [];
         }
 
@@ -499,8 +536,9 @@ class DataObjectSchema
      */
     protected function cacheDatabaseIndexes($class)
     {
-        if (!array_key_exists($class, $this->databaseIndexes)) {
+        if (!array_key_exists($class, $this->databaseIndexes ?? [])) {
             $this->databaseIndexes[$class] = array_merge(
+                $this->buildSortDatabaseIndexes($class),
                 $this->cacheDefaultDatabaseIndexes($class),
                 $this->buildCustomDatabaseIndexes($class)
             );
@@ -511,12 +549,12 @@ class DataObjectSchema
      * Get "default" database indexable field types
      *
      * @param  string $class
+     *
      * @return array
      */
     protected function cacheDefaultDatabaseIndexes($class)
     {
-        $indexes = [];
-        if (array_key_exists($class, $this->defaultDatabaseIndexes)) {
+        if (array_key_exists($class, $this->defaultDatabaseIndexes ?? [])) {
             return $this->defaultDatabaseIndexes[$class];
         }
         $this->defaultDatabaseIndexes[$class] = [];
@@ -536,6 +574,7 @@ class DataObjectSchema
      * Look for custom indexes declared on the class
      *
      * @param  string $class
+     *
      * @return array
      * @throws InvalidArgumentException If an index already exists on the class
      * @throws InvalidArgumentException If a custom index format is not valid
@@ -545,7 +584,7 @@ class DataObjectSchema
         $indexes = [];
         $classIndexes = Config::inst()->get($class, 'indexes', Config::UNINHERITED) ?: [];
         foreach ($classIndexes as $indexName => $indexSpec) {
-            if (array_key_exists($indexName, $indexes)) {
+            if (array_key_exists($indexName, $indexes ?? [])) {
                 throw new InvalidArgumentException(sprintf(
                     'Index named "%s" already exists on class %s',
                     $indexName,
@@ -582,6 +621,54 @@ class DataObjectSchema
         return $indexes;
     }
 
+    protected function buildSortDatabaseIndexes($class)
+    {
+        $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
+        $indexes = [];
+
+        if ($sort && is_string($sort)) {
+            $sort = preg_split('/,(?![^()]*+\\))/', $sort ?? '');
+            foreach ($sort as $value) {
+                try {
+                    list ($table, $column) = $this->parseSortColumn(trim($value ?? ''));
+                    $table = trim($table ?? '', '"');
+                    $column = trim($column ?? '', '"');
+                    if ($table && strtolower($table ?? '') !== strtolower(self::tableName($class) ?? '')) {
+                        continue;
+                    }
+                    if ($this->databaseField($class, $column, false)) {
+                        $indexes[$column] = [
+                            'type' => 'index',
+                            'columns' => [$column],
+                        ];
+                    }
+                } catch (InvalidArgumentException $e) {
+                }
+            }
+        }
+        return $indexes;
+    }
+
+    /**
+     * Parses a specified column into a sort field and direction
+     *
+     * @param string $column String to parse containing the column name
+     *
+     * @return array Resolved table and column.
+     */
+    protected function parseSortColumn($column)
+    {
+        // Parse column specification, considering possible ansi sql quoting
+        // Note that table prefix is allowed, but discarded
+        if (preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column ?? '', $match)) {
+            $table = $match['table'];
+            $column = $match['column'];
+        } else {
+            throw new InvalidArgumentException("Invalid sort() column");
+        }
+        return [$table, $column];
+    }
+
     /**
      * Returns the table name in the class hierarchy which contains a given
      * field column for a {@link DataObject}. If the field does not exist, this
@@ -589,6 +676,7 @@ class DataObjectSchema
      *
      * @param string $candidateClass
      * @param string $fieldName
+     *
      * @return string
      */
     public function tableForField($candidateClass, $fieldName)
@@ -607,6 +695,7 @@ class DataObjectSchema
      *
      * @param string $candidateClass
      * @param string $fieldName
+     *
      * @return string
      */
     public function classForField($candidateClass, $fieldName)
@@ -629,7 +718,7 @@ class DataObjectSchema
             if (isset($fields[$fieldName])) {
                 return $candidateClass;
             }
-            $candidateClass = get_parent_class($candidateClass);
+            $candidateClass = get_parent_class($candidateClass ?? '');
         }
         return null;
     }
@@ -640,7 +729,7 @@ class DataObjectSchema
      *
      * Standard many_many return type is:
      *
-     * array(
+     * [
      *  <manyManyClass>,        Name of class for relation. E.g. "Categories"
      *  <classname>,            The class that relation is defined in e.g. "Product"
      *  <candidateName>,        The target class of the relation e.g. "Category"
@@ -649,9 +738,11 @@ class DataObjectSchema
      *  <joinTableOrRelation>   The join table between the two classes e.g. "Product_Categories".
      *                          If the class name is 'ManyManyThroughList' then this is the name of the
      *                          has_many relation.
-     * )
+     * ]
+     *
      * @param string $class Name of class to get component for
      * @param string $component The component name
+     *
      * @return array|null
      */
     public function manyManyComponent($class, $component)
@@ -692,25 +783,25 @@ class DataObjectSchema
     }
 
 
-
     /**
      * Parse a belongs_many_many component to extract class and relationship name
      *
      * @param string $parentClass Name of class
      * @param string $component Name of relation on class
      * @param string $specification specification for this belongs_many_many
+     *
      * @return array Array with child class and relation name
      */
     protected function parseBelongsManyManyComponent($parentClass, $component, $specification)
     {
         $childClass = $specification;
         $relationName = null;
-        if (strpos($specification, '.') !== false) {
-            list($childClass, $relationName) = explode('.', $specification, 2);
+        if (strpos($specification ?? '', '.') !== false) {
+            list($childClass, $relationName) = explode('.', $specification ?? '', 2);
         }
 
         // Check child class exists
-        if (!class_exists($childClass)) {
+        if (!class_exists($childClass ?? '')) {
             throw new LogicException(
                 "belongs_many_many relation {$parentClass}.{$component} points to "
                 . "{$childClass} which does not exist"
@@ -733,7 +824,7 @@ class DataObjectSchema
         // Return relatios
         return [
             'childClass' => $childClass,
-            'relationName' => $relationName
+            'relationName' => $relationName,
         ];
     }
 
@@ -742,6 +833,7 @@ class DataObjectSchema
      *
      * @param string $class
      * @param string $component
+     *
      * @return array|null
      */
     public function manyManyExtraFieldsForComponent($class, $component)
@@ -764,7 +856,7 @@ class DataObjectSchema
                 );
                 return $this->manyManyExtraFieldsForComponent($belongs['childClass'], $belongs['relationName']);
             }
-            $class = get_parent_class($class);
+            $class = get_parent_class($class ?? '');
         }
         return null;
     }
@@ -776,6 +868,7 @@ class DataObjectSchema
      * @param string $component
      * @param bool $classOnly If this is TRUE, than any has_many relationships in the form
      * "ClassName.Field" will have the field data stripped off. It defaults to TRUE.
+     *
      * @return string|null
      */
     public function hasManyComponent($class, $component, $classOnly = true)
@@ -787,7 +880,7 @@ class DataObjectSchema
 
         // Remove has_one specifier if given
         $hasMany = $hasMany[$component];
-        $hasManyClass = strtok($hasMany, '.');
+        $hasManyClass = strtok($hasMany ?? '', '.');
 
         // Validate
         $this->checkRelationClass($class, $component, $hasManyClass, 'has_many');
@@ -799,6 +892,7 @@ class DataObjectSchema
      *
      * @param string $class
      * @param string $component
+     *
      * @return string|null
      */
     public function hasOneComponent($class, $component)
@@ -821,6 +915,7 @@ class DataObjectSchema
      * @param string $component
      * @param bool $classOnly If this is TRUE, than any has_many relationships in the
      * form "ClassName.Field" will have the field data stripped off. It defaults to TRUE.
+     *
      * @return string|null
      */
     public function belongsToComponent($class, $component, $classOnly = true)
@@ -832,7 +927,7 @@ class DataObjectSchema
 
         // Remove has_one specifier if given
         $belongsTo = $belongsTo[$component];
-        $belongsToClass = strtok($belongsTo, '.');
+        $belongsToClass = strtok($belongsTo ?? '', '.');
 
         // Validate
         $this->checkRelationClass($class, $component, $belongsToClass, 'belongs_to');
@@ -840,10 +935,26 @@ class DataObjectSchema
     }
 
     /**
+     * Check class for any unary component
+     *
+     * Alias for hasOneComponent() ?: belongsToComponent()
+     *
+     * @param string $class
+     * @param string $component
+     *
+     * @return string|null
+     */
+    public function unaryComponent($class, $component)
+    {
+        return $this->hasOneComponent($class, $component) ?: $this->belongsToComponent($class, $component);
+    }
+
+    /**
      *
      * @param string $parentClass Parent class name
      * @param string $component ManyMany name
      * @param string|array $specification Declaration of many_many relation type
+     *
      * @return array
      */
     protected function parseManyManyComponent($parentClass, $component, $specification)
@@ -858,7 +969,8 @@ class DataObjectSchema
                 'relationClass' => ManyManyThroughList::class,
                 'parentClass' => $parentClass,
                 'childClass' => $joinChildClass,
-                'parentField' => $specification['from'] . 'ID',
+                /** @internal Polymorphic many_many is experimental */
+                'parentField' => $specification['from'] . ($parentClass === DataObject::class ? '' : 'ID'),
                 'childField' => $specification['to'] . 'ID',
                 'join' => $joinClass,
             ];
@@ -892,6 +1004,7 @@ class DataObjectSchema
      *
      * @param string $childClass
      * @param string $parentClass
+     *
      * @return string|null
      */
     protected function getManyManyInverseRelationship($childClass, $parentClass)
@@ -900,9 +1013,17 @@ class DataObjectSchema
         if (!$otherManyMany) {
             return null;
         }
-        foreach ($otherManyMany as $inverseComponentName => $nextClass) {
-            if ($nextClass === $parentClass) {
+        foreach ($otherManyMany as $inverseComponentName => $manyManySpec) {
+            // Normal many-many
+            if ($manyManySpec === $parentClass) {
                 return $inverseComponentName;
+            }
+            // many-many through, inspect 'to' for the many_many
+            if (is_array($manyManySpec)) {
+                $toClass = $this->hasOneComponent($manyManySpec['through'], $manyManySpec['to']);
+                if ($toClass === $parentClass) {
+                    return $inverseComponentName;
+                }
             }
         }
         return null;
@@ -920,6 +1041,7 @@ class DataObjectSchema
      * remote object.
      * @param string $type the join type - either 'has_many' or 'belongs_to'
      * @param boolean $polymorphic Flag set to true if the remote join field is polymorphic.
+     *
      * @return string
      * @throws Exception
      */
@@ -935,7 +1057,7 @@ class DataObjectSchema
         if (empty($remoteClass)) {
             throw new Exception("Unknown $type component '$component' on class '$class'");
         }
-        if (!ClassInfo::exists(strtok($remoteClass, '.'))) {
+        if (!ClassInfo::exists(strtok($remoteClass ?? '', '.'))) {
             throw new Exception(
                 "Class '$remoteClass' not found, but used in $type component '$component' on class '$class'"
             );
@@ -943,8 +1065,8 @@ class DataObjectSchema
 
         // If presented with an explicit field name (using dot notation) then extract field name
         $remoteField = null;
-        if (strpos($remoteClass, '.') !== false) {
-            list($remoteClass, $remoteField) = explode('.', $remoteClass);
+        if (strpos($remoteClass ?? '', '.') !== false) {
+            list($remoteClass, $remoteField) = explode('.', $remoteClass ?? '');
         }
 
         // Reference remote has_one to check against
@@ -954,9 +1076,9 @@ class DataObjectSchema
         // with the same type as the current class
         if (empty($remoteField)) {
             // look for remote has_one joins on this class or any parent classes
-            $remoteRelationsMap = array_flip($remoteRelations);
-            foreach (array_reverse(ClassInfo::ancestry($class)) as $ancestryClass) {
-                if (array_key_exists($ancestryClass, $remoteRelationsMap)) {
+            $remoteRelationsMap = array_flip($remoteRelations ?? []);
+            foreach (array_reverse(ClassInfo::ancestry($class) ?? []) as $ancestryClass) {
+                if (array_key_exists($ancestryClass, $remoteRelationsMap ?? [])) {
                     $remoteField = $remoteRelationsMap[$ancestryClass];
                     break;
                 }
@@ -1000,6 +1122,7 @@ class DataObjectSchema
      * @param string $joinClass Class for the joined table
      * @param array $specification Complete many_many specification
      * @param string $key Name of key to check ('from' or 'to')
+     *
      * @return string Class that matches the given relation
      * @throws InvalidArgumentException
      */
@@ -1024,7 +1147,13 @@ class DataObjectSchema
         }
 
         // Check for polymorphic
+        /** @internal Polymorphic many_many is experimental */
         if ($relationClass === DataObject::class) {
+            // Currently polymorphic 'from' is supported.
+            if ($key === 'from') {
+                return $relationClass;
+            }
+            // @todo support polymorphic 'to'
             throw new InvalidArgumentException(
                 "many_many through relation {$parentClass}.{$component} {$key} references a polymorphic field "
                 . "{$joinClass}::{$relation} which is not supported"
@@ -1055,6 +1184,7 @@ class DataObjectSchema
      * @param string $parentClass Name of parent class
      * @param string $component Name of many_many component
      * @param array $specification Complete many_many specification
+     *
      * @return string Name of join class
      */
     protected function checkManyManyJoinClass($parentClass, $component, $specification)
@@ -1066,7 +1196,7 @@ class DataObjectSchema
             );
         }
         $joinClass = $specification['through'];
-        if (!class_exists($joinClass)) {
+        if (!class_exists($joinClass ?? '')) {
             throw new InvalidArgumentException(
                 "many_many relation {$parentClass}.{$component} has through class \"{$joinClass}\" which does not exist"
             );
@@ -1094,7 +1224,7 @@ class DataObjectSchema
                 "{$type} relation {$class}.{$component} is not a class name"
             );
         }
-        if (!class_exists($relationClass)) {
+        if (!class_exists($relationClass ?? '')) {
             throw new InvalidArgumentException(
                 "{$type} relation {$class}.{$component} references class {$relationClass} which doesn't exist"
             );

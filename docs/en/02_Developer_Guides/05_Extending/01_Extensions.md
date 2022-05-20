@@ -1,64 +1,65 @@
+---
 title: Extensions
 summary: Extensions and DataExtensions let you modify and augment objects transparently. 
+icon: code
+---
 
 # Extensions and DataExtensions
 
-An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a [Object](api:Object) or modifying existing functionality 
-without the hassle of creating a subclass. Developers can add Extensions to any [Object](api:Object) subclass within core, modules
-or even their own code to make it more reusable.
+An [Extension](api:SilverStripe\Core\Extension) allows for adding additional functionality to a class or modifying existing functionality 
+without the hassle of creating a subclass. Developers can add Extensions to any PHP class that has the [Extensible](api:SilverStripe\Core\Extensible)
+trait applied within core, modules or even their own code to make it more reusable.
 
 Extensions are defined as subclasses of either [DataExtension](api:SilverStripe\ORM\DataExtension) for extending a [DataObject](api:SilverStripe\ORM\DataObject) subclass or 
 the [Extension](api:SilverStripe\Core\Extension) class for non DataObject subclasses (such as [Controller](api:SilverStripe\Control\Controller))
 
-<div class="info" markdown="1">
-For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
+[info]
+For performance reasons a few classes are excluded from receiving extensions, including `ViewableData` 
 and `RequestHandler`. You can still apply extensions to descendants of these classes.
-</div>
+[/info]
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+
+    private static $db = [
+        'DateOfBirth' => 'DBDatetime'
+    ];
+
+    public function SayHi() 
     {
-
-        private static $db = [
-            'DateOfBirth' => 'SS_Datetime'
-        ];
-
-        public function SayHi() 
-        {
-            // $this->owner refers to the original instance. In this case a `Member`.
-            return "Hi " . $this->owner->Name;
-        }
+        // $this->owner refers to the original instance. In this case a `Member`.
+        return "Hi " . $this->owner->Name;
     }
-
+}
 ```
 
-<div class="info" markdown="1">
+[info]
 Convention is for extension class names to end in `Extension`. This isn't a requirement but makes it clearer
-</div>
+[/info]
 
-After this class has been created, it does not yet apply it to any object. We need to tell SilverStripe what classes 
+After this class has been created, it does not yet apply it to any object. We need to tell Silverstripe CMS what classes 
 we want to add the `MyMemberExtension` too. To activate this extension, add the following via the [Configuration API](../configuration).
 
-**mysite/_config/app.yml**
+**app/_config/app.yml**
 
 
 ```yml
-
-    Member:
-      extensions:
-        - MyMemberExtension
+SilverStripe\Security\Member:
+  extensions:
+    - MyMemberExtension
 ```
 
 Alternatively, we can add extensions through PHP code (in the `_config.php` file).
 
 
 ```php
-    Member::add_extension('MyMemberExtension');
+SilverStripe\Security\Member::add_extension(MyMemberExtension::class);
 ```
 
 This class now defines a `MyMemberExtension` that applies to all `Member` instances on the website. It will have 
@@ -78,39 +79,37 @@ Extra database fields can be added with a extension in the same manner as if the
 they're applied to. These will be added to the table of the base object - the extension will actually edit the $db, 
 $has_one etc.
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+
+    private static $db = [
+        'Position' => 'Varchar',
+    ];
+
+    private static $has_one = [
+        'Image' => Image::class,
+    ];
+
+    public function SayHi() 
     {
-
-        private static $db = [
-            'Position' => 'Varchar',
-        ];
-
-        private static $has_one = [
-            'Image' => 'Image',
-        ];
-
-        public function SayHi() 
-        {
-            // $this->owner refers to the original instance. In this case a `Member`.
-            return "Hi " . $this->owner->Name;
-        }
+        // $this->owner refers to the original instance. In this case a `Member`.
+        return "Hi " . $this->owner->Name;
     }
-
+}
 ```
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 
 ```ss
-
-    $CurrentMember.Position
-    $CurrentMember.Image
+$CurrentMember.Position
+$CurrentMember.Image
 ```
 
 ## Adding Methods
@@ -118,22 +117,22 @@ $has_one etc.
 Methods that have a unique name will be called as part of the `__call` method on [Object](api:Object). In the previous example
 we added a `SayHi` method which is unique to our extension.
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
-
-    <p>$CurrentMember.SayHi</p>
-
-    // "Hi Sam"
+<p>$CurrentMember.SayHi</p>
+// "Hi Sam"
 ```
 
-**mysite/code/Page.php**
+**app/src/Page.php**
 
 ```php
-    $member = Security::getCurrentUser();
-    echo $member->SayHi;
+use SilverStripe\Security\Security;
 
-    // "Hi Sam"
+$member = Security::getCurrentUser();
+echo $member->SayHi;
+
+// "Hi Sam"
 ```
 
 ## Modifying Existing Methods
@@ -146,14 +145,14 @@ through the `extend()` method of the [Extensible](api:SilverStripe\Core\Extensib
 
 
 ```php
-    public function getValidator() 
-    {
-        // ..
-        
-        $this->extend('updateValidator', $validator);
+public function getValidator() 
+{
+    // ..
+    
+    $this->extend('updateValidator', $validator);
 
-        // ..
-    }
+    // ..
+}
 ```
 
 Extension Hooks can be located anywhere in the method and provide a point for any `Extension` instances to modify the 
@@ -161,74 +160,71 @@ variables at that given point. In this case, the core function `getValidator` on
 `updateValidator` hook for developers to modify the core method. The `MyMemberExtension` would modify the core member's
 validator by defining the `updateValidator` method.
 
-**mysite/code/extensions/MyMemberExtension.php**
+**app/src/extensions/MyMemberExtension.php**
 
 
 ```php
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+    public function updateValidator($validator) 
     {
-
-        // ..
-
-        public function updateValidator($validator) 
-        {
-            // we want to make date of birth required for each member
-            $validator->addRequiredField('DateOfBirth');
-        }
+        // we want to make date of birth required for each member
+        $validator->addRequiredField('DateOfBirth');
     }
+}
 ```
 
-<div class="info" markdown="1">
+[info]
 The `$validator` parameter is passed by reference, as it is an object.
-</div>
+[/info]
 
 Another common example of when you will want to modify a method is to update the default CMS fields for an object in an 
 extension. The `CMS` provides a `updateCMSFields` Extension Hook to tie into.
 
 
 ```php
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\AssetAdmin\Forms\UploadField;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+
+    private static $db = [
+        'Position' => 'Varchar',
+    ];
+
+    private static $has_one = [
+        'Image' => 'Image',
+    ];
+
+    public function updateCMSFields(FieldList $fields) 
     {
-
-        private static $db = [
-            'Position' => 'Varchar',
-        ];
-
-        private static $has_one = [
-            'Image' => 'Image',
-        ];
-
-        public function updateCMSFields(FieldList $fields) 
-        {
-            $fields->push(new TextField('Position'));
-            $fields->push($upload = new UploadField('Image', 'Profile Image'));
-            $upload->setAllowedFileCategories('image/supported');
-        }
+        $fields->push(new TextField('Position'));
+        $fields->push($upload = new UploadField('Image', 'Profile Image'));
+        $upload->setAllowedFileCategories('image/supported');
     }
-
+}
 ```
 
-<div class="notice" markdown="1">
+[notice]
 If you're providing a module or working on code that may need to be extended by  other code, it should provide a *hook* 
 which allows an Extension to modify the results. 
-</div>
+[/notice]
 
 
 ```php
-    public function Foo() 
-    {
-        $foo = // ..
+public function Foo() 
+{
+    $foo = // ..
 
-        $this->extend('updateFoo', $foo);
+    $this->extend('updateFoo', $foo);
 
-        return $foo;
-    }
+    return $foo;
+}
 ```
 
 The convention for extension hooks is to provide an `update{$Function}` hook at the end before you return the result. If
@@ -241,31 +237,35 @@ In your [Extension](api:SilverStripe\Core\Extension) class you can only refer to
 
 
 ```php
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataExtension;
 
-    class MyMemberExtension extends DataExtension 
+class MyMemberExtension extends DataExtension 
+{
+    public function updateFoo($foo) 
     {
-
-        public function updateFoo($foo) 
-        {
-            // outputs the original class
-            var_dump($this->owner);
-        }
+        // outputs the original class
+        var_dump($this->owner);
     }
+}
 ```
+
+[notice]
+Please note that while you can read protected properties of the source object (using `$this->owner->protectedProperty`) you cannot call any of it's protected methods (`$this->owner->protectedMethod()` will not work). You also cannot access any of the source object's private properties or methods (`$this->owner->privateProperty` will not work either).
+[/notice]
 
 ## Checking to see if an Object has an Extension
 
 To see what extensions are currently enabled on an object, use the [getExtensionInstances()](api:SilverStripe\Core\Extensible::getExtensionInstances()) and 
 [hasExtension()](api:SilverStripe\Core\Extensible::hasExtension()) methods of the [Extensible](api:SilverStripe\Core\Extensible) trait.
-```php
-    $member = Security::getCurrentUser();
 
-    print_r($member->getExtensionInstances());
-    
-    if($member->hasExtension('MyCustomMemberExtension')) {
-        // ..
-    }
+```php
+$member = Security::getCurrentUser();
+
+print_r($member->getExtensionInstances());
+
+if ($member->hasExtension(MyCustomMemberExtension::class)) {
+    // ..
+}
 ```
 
 ## Extension injection points
@@ -276,52 +276,90 @@ callback to be executed immediately before and after `extend()` is called on ext
 This is useful in many cases where working with modules such as `Translatable` which operate on `DataObject` fields 
 that must exist in the `FieldList` at the time that `$this->extend('UpdateCMSFields')` is called.
 
-<div class="notice" markdown='1'>
+[notice]
 Please note that each callback is only ever called once, and then cleared, so multiple extensions to the same function 
 require that a callback is registered each time, if necessary.
-</div>
+[/notice]
 
 Example: A class that wants to control default values during object  initialization. The code needs to assign a value 
 if not specified in `self::$defaults`, but before extensions have been called:
 
 
 ```php
-    function __construct() {
-        $self = $this;
+public function __construct() 
+{
+    $this->beforeExtending('populateDefaults', function() {
+        if (empty($this->MyField)) {
+            $this->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
+        }
+    });
 
-        $this->beforeExtending('populateDefaults', function() use ($self) {
-            if(empty($self->MyField)) {
-                $self->MyField = 'Value we want as a default if not specified in $defaults, but set before extensions';
-            }
-        });
-
-        parent::__construct();
-    }
+    parent::__construct();
+}
 ```
 
 Example 2: User code can intervene in the process of extending cms fields.
 
-<div class="notice" markdown="1">
+[notice]
 This method is preferred to disabling, enabling, and calling field extensions manually.
-</div>
+[/notice]
 
 
 ```php
-    public function getCMSFields() 
-    {
+public function getCMSFields() 
+{
+    $this->beforeUpdateCMSFields(function ($fields) {
+        // Include field which must be present when updateCMSFields is called on extensions
+        $fields->addFieldToTab('Root.Main', new TextField('Detail', 'Details', null, 255));
+    });
 
-        $this->beforeUpdateCMSFields(function($fields) {
-            // Include field which must be present when updateCMSFields is called on extensions
-            $fields->addFieldToTab("Root.Main", new TextField('Detail', 'Details', null, 255));
-        });
-
-        $fields = parent::getCMSFields();
-        // ... additional fields here
-        return $fields;
-    }
+    $fields = parent::getCMSFields();
+    // ... additional fields here
+    return $fields;
+}
 ```
 
-## Related Documentaion
+## Extending extensions {#extendingextensions}
+
+Extension classes can be overloaded using the Injector, if you want to modify the way that an extension in one of
+your modules works:
+
+```yaml
+SilverStripe\Core\Injector\Injector:
+  Company\Vendor\SomeExtension:
+    class: App\Project\CustomisedSomeExtension
+```
+
+**app/src/CustomisedSomeExtension.php**
+
+```php
+namespace App\Project;
+
+use Company\Vendor\SomeExtension;
+
+class CustomisedSomeExtension extends SomeExtension
+{
+    public function someMethod()
+    {
+        $result = parent::someMethod();
+        // modify result;
+        return $result;
+    }
+}
+```
+
+[notice]
+Please note that modifications such as this should be done in YAML configuration only. It is not recommended
+to use `Config::modify()->set()` to adjust the implementation class name of an extension after the configuration
+manifest has been loaded, and may not work consistently due to the "extra methods" cache having already been
+populated.
+[/notice]
+
+## Related Lessons
+
+* [DataExtensions and SiteConfig](https://www.silverstripe.org/learn/lessons/v4/data-extensions-and-siteconfig-1)
+
+## Related Documentation
 
 * [Injector](injector/)
 

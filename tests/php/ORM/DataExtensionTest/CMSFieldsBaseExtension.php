@@ -12,10 +12,10 @@ use SilverStripe\ORM\DataExtension;
  */
 class CMSFieldsBaseExtension extends DataExtension implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'ExtendedFieldKeep' => 'Varchar(255)',
         'ExtendedFieldRemove' => 'Varchar(255)'
-    );
+    ];
 
     public function updateCMSFields(FieldList $fields)
     {
@@ -28,6 +28,10 @@ class CMSFieldsBaseExtension extends DataExtension implements TestOnly
 
         if ($grandchildField = $fields->dataFieldByName('GrandchildFieldBeforeExtension')) {
             $grandchildField->setTitle('GrandchildFieldBeforeExtension: Modified Title');
+        }
+
+        if ($grandchildPostField = $fields->dataFieldByName('GrandchildFieldAfterExtension')) {
+            $grandchildPostField->setTitle('GrandchildFieldAfterExtension: Modified Title');
         }
     }
 }

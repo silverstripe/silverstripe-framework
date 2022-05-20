@@ -29,7 +29,7 @@ class GridState extends HiddenField
 
     /**
      * @param GridField $grid
-     * @param string $value json encoded string
+     * @param string $value JSON encoded string
      */
     public function __construct($grid, $value = null)
     {
@@ -51,7 +51,7 @@ class GridState extends HiddenField
         if (is_array($d)) {
             return (object) array_map(function ($item) {
                 return GridState::array_to_object($item);
-            }, $d);
+            }, $d ?? []);
         }
 
         return $d;
@@ -59,12 +59,24 @@ class GridState extends HiddenField
 
     public function setValue($value, $data = null)
     {
-        if (is_string($value)) {
-            $this->data = new GridState_Data(json_decode($value, true));
+        // Apply the value on top of the existing defaults
+        $data = json_decode($value ?? '', true);
+        if ($data) {
+            $this->mergeValues($this->getData(), $data);
         }
-
         parent::setValue($value);
         return $this;
+    }
+
+    private function mergeValues(GridState_Data $data, array $array): void
+    {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                $this->mergeValues($data->$k, $v);
+            } else {
+                $data->$k = $v;
+            }
+        }
     }
 
     /**
@@ -94,11 +106,8 @@ class GridState extends HiddenField
      */
     public function Value()
     {
-        if (!$this->data) {
-            return json_encode(array());
-        }
-
-        return json_encode($this->data->toArray());
+        $data = $this->data ? $this->data->getChangesArray() : [];
+        return json_encode($data, JSON_FORCE_OBJECT);
     }
 
     /**

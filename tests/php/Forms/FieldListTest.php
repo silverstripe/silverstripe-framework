@@ -3,7 +3,10 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\EmailField;
@@ -32,6 +35,90 @@ use SilverStripe\Forms\HiddenField;
  */
 class FieldListTest extends SapphireTest
 {
+    public function testRecursiveWalk()
+    {
+        $fields = [
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                new TextField('Day'),
+                new TextField('Month'),
+                new TextField('Year')
+            ),
+        ];
+        $fieldList = new FieldList($fields);
+
+        $count = 0;
+
+        $fieldList->recursiveWalk(function (FormField $field) use (&$count) {
+            ++$count;
+        });
+
+        $this->assertEquals(8, $count);
+    }
+
+    public function testFlattenFields()
+    {
+        $fields = [
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            $composite = new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        ];
+        $fieldList = new FieldList($fields);
+
+        array_pop($fields);
+        array_push($fields, $composite, $day, $month, $year);
+
+        $this->assertEquals($fields, $fieldList->flattenFields()->toArray());
+    }
+
+    public function testSaveableFields()
+    {
+        $fields = [
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        ];
+        $fieldList = new FieldList($fields);
+
+        array_pop($fields);
+        array_pop($fields);
+        array_push($fields, $day, $month, $year);
+
+        $this->assertEquals($fields, array_values($fieldList->saveableFields() ?? []));
+    }
+
+    public function testFieldNames()
+    {
+        $fields = [
+            new TextField('Name'),
+            new EmailField('Email'),
+            new HiddenField('Hidden'),
+            new LiteralField('Literal', 'Literal content'),
+            new CompositeField(
+                $day = new TextField('Day'),
+                $month = new TextField('Month'),
+                $year = new TextField('Year')
+            ),
+        ];
+        $fieldList = new FieldList($fields);
+
+        $this->assertEquals(['Name', 'Email', 'Hidden', 'Day', 'Month', 'Year'], $fieldList->dataFieldNames());
+    }
 
     /**
      * Test adding a field to a tab in a set.
@@ -46,10 +133,10 @@ class FieldListTest extends SapphireTest
         $fields->addFieldToTab('Root', new TextField('Country'));
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             new EmailField('Email'),
             new TextField('Name'),
-            )
+            ]
         );
 
         /* Check that the field objects were created */
@@ -77,7 +164,7 @@ class FieldListTest extends SapphireTest
 
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             $group1 = new FieldGroup(
                 new TextField('Name'),
                 new EmailField('Email')
@@ -86,7 +173,7 @@ class FieldListTest extends SapphireTest
                 new TextField('Company'),
                 new TextareaField('Address')
             )
-            )
+            ]
         );
 
         /* Check that the field objects were created */
@@ -160,6 +247,32 @@ class FieldListTest extends SapphireTest
         $this->assertTrue($tabbedFields->hasTabSet());
     }
 
+    public function testFindTab()
+    {
+        $fields = new FieldList(
+            $root = new TabSet(
+                'Root',
+                $tab1 = new Tab('Tab1'),
+                $tab2 = new Tab('Tab2'),
+                $tab3 = new Tab('Tab3'),
+                $more = new TabSet(
+                    'More',
+                    $tab4 = new Tab('Tab4')
+                )
+            )
+        );
+
+        $this->assertEquals($fields->findTab('Root'), $root);
+        $this->assertNull($fields->findTab('Tab5'));
+
+        $this->assertNull($fields->findTab('Tab3'));
+        $this->assertEquals($fields->findTab('Root.Tab3'), $tab3);
+
+        $this->assertNull($fields->findTab('More'));
+        $this->assertEquals($fields->findTab('Root.More'), $more);
+        $this->assertEquals($fields->findTab('Root.More.Tab4'), $tab4);
+    }
+
     /**
      * Test removing an array of fields from a tab in a set.
      */
@@ -172,11 +285,11 @@ class FieldListTest extends SapphireTest
         /* We add an array of fields, using addFieldsToTab() */
         $fields->addFieldsToTab(
             'Root',
-            array(
+            [
             new TextField('Name', 'Your name'),
             new EmailField('Email', 'Email address'),
             new NumericField('Number', 'Insert a number')
-            )
+            ]
         );
 
         /* We have 3 fields inside the tab, which we just created */
@@ -185,11 +298,11 @@ class FieldListTest extends SapphireTest
         /* We remove the 3 fields from the tab */
         $fields->removeFieldsFromTab(
             'Root',
-            array(
+            [
             'Name',
             'Email',
             'Number'
-            )
+            ]
         );
 
         /* We have no fields in the tab now */
@@ -236,7 +349,7 @@ class FieldListTest extends SapphireTest
         $this->assertEquals(2, $fields->count());
 
         /* Then, we call up removeByName() to take it out again */
-        $fields->removeByName(array('Name', 'Email'));
+        $fields->removeByName(['Name', 'Email']);
 
         /* We have 0 fields in our set now, as we've just removed the one we added */
         $this->assertEquals(0, $fields->count());
@@ -369,29 +482,29 @@ class FieldListTest extends SapphireTest
         );
 
         $this->assertEquals(
-            $tabSetWithTitle->Title(),
             'My TabSet Title',
-            'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
+            $tabSetWithTitle->Title(),
+            'Existing field title should be used'
         );
 
         $tabWithoutTitle = $set->findOrMakeTab('Root.TabWithoutTitle');
         $this->assertEquals(
+            'Tab without title',
             $tabWithoutTitle->Title(),
-            'Tab Without Title',
             'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
         );
 
         $tabWithTitle = $set->findOrMakeTab('Root.TabWithTitle', 'My Tab with Title');
         $this->assertEquals(
-            $tabWithTitle->Title(),
             'My Tab with Title',
+            $tabWithTitle->Title(),
             'Setting of simple tab titles through findOrMakeTab()'
         );
 
         $childTabWithTitle = $set->findOrMakeTab('Root.TabSetWithoutTitle.NewChildTab', 'My Child Tab Title');
         $this->assertEquals(
-            $childTabWithTitle->Title(),
             'My Child Tab Title',
+            $childTabWithTitle->Title(),
             'Setting of nested tab titles through findOrMakeTab() works on last child tab'
         );
     }
@@ -502,6 +615,12 @@ class FieldListTest extends SapphireTest
 
         /* The position of the Surname field is at number 4 */
         $this->assertEquals('Surname', $fields[3]->getName());
+
+        /* Test that inserting before a field that doesn't exist simply appends
+         * Confirm that a composite field doesn't break this */
+        $fields->push(new CompositeField([ new TextField('Nested1'), new TextField('Nested2')]));
+        $this->assertTrue((bool)$fields->insertBefore('DoesNotExist', new TextField('MyName')));
+        $this->assertEquals('MyName', $fields->Last()->Name);
     }
 
     public function testInsertBeforeMultipleFields()
@@ -519,21 +638,21 @@ class FieldListTest extends SapphireTest
 
         $fields->addFieldsToTab(
             'Root.Main',
-            array(
+            [
             new TextField('NewField1'),
             new TextField('NewField2')
-            ),
+            ],
             'B'
         );
 
         $this->assertEquals(
-            array_keys($fields->dataFields()),
-            array(
+            array_keys($fields->dataFields() ?? []),
+            [
             'A',
             'NewField1',
             'NewField2',
             'B'
-            )
+            ]
         );
     }
 
@@ -575,6 +694,12 @@ class FieldListTest extends SapphireTest
 
         /* The position of the Surname field is at number 5 */
         $this->assertEquals('Surname', $fields[4]->getName());
+
+        /* Test that inserting before a field that doesn't exist simply appends
+         * Confirm that a composite field doesn't break this */
+        $fields->push(new CompositeField([ new TextField('Nested1'), new TextField('Nested2')]));
+        $this->assertTrue((bool)$fields->insertAfter('DoesNotExist', new TextField('MyName')));
+        $this->assertEquals('MyName', $fields->Last()->Name);
     }
 
     public function testrootFieldList()
@@ -922,7 +1047,7 @@ class FieldListTest extends SapphireTest
      */
     public function testChangeFieldOrder()
     {
-        $fieldNames = array('A','B','C','D','E');
+        $fieldNames = ['A','B','C','D','E'];
         $setArray = new FieldList();
         $setArgs = new FieldList();
         foreach ($fieldNames as $fN) {
@@ -930,7 +1055,7 @@ class FieldListTest extends SapphireTest
             $setArgs->push(new TextField($fN));
         }
 
-        $setArray->changeFieldOrder(array('D','B','E'));
+        $setArray->changeFieldOrder(['D','B','E']);
         $this->assertEquals(0, $setArray->fieldPosition('D'));
         $this->assertEquals(1, $setArray->fieldPosition('B'));
         $this->assertEquals(2, $setArray->fieldPosition('E'));
@@ -1050,5 +1175,19 @@ class FieldListTest extends SapphireTest
         // But they don't exclude nested HiddenField objects.  This is a limitation; you should
         // put all your HiddenFields at the top level.
         $this->assertNotNull($visible->dataFieldByName('D2'));
+    }
+
+    public function testContainerField()
+    {
+        $fieldlist = new FieldList();
+        $container = CompositeField::create();
+
+        $this->assertNull($fieldlist->getContainerField());
+
+        $fieldlist->setContainerField($container);
+        $this->assertEquals($container, $fieldlist->getContainerField());
+
+        $fieldlist->setContainerField(null);
+        $this->assertNull($fieldlist->getContainerField());
     }
 }

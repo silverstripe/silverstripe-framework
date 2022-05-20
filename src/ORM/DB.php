@@ -78,7 +78,7 @@ class DB
      * Pass an object that's a subclass of SS_Database.  This object will be used when {@link DB::query()}
      * is called.
      *
-     * @param Database $connection The connecton object to set as the connection.
+     * @param Database $connection The connection object to set as the connection.
      * @param string $name The name to give to this connection.  If you omit this argument, the connection
      * will be the default one used by the ORM.  However, you can store other named connections to
      * be accessed through DB::get_conn($name).  This is useful when you have an application that
@@ -152,7 +152,7 @@ class DB
         if ($connection) {
             return $connection->getQueryBuilder()->buildSQL($expression, $parameters);
         } else {
-            $parameters = array();
+            $parameters = [];
             return null;
         }
     }
@@ -268,7 +268,7 @@ class DB
 
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
-        return (bool)preg_match($pattern, $name);
+        return (bool)preg_match($pattern ?? '', $name ?? '');
     }
 
     /**
@@ -365,7 +365,7 @@ class DB
     public static function placeholders($input, $join = ', ')
     {
         if (is_array($input)) {
-            $number = count($input);
+            $number = count($input ?? []);
         } elseif (is_numeric($input)) {
             $number = intval($input);
         } else {
@@ -374,7 +374,7 @@ class DB
         if ($number === 0) {
             return null;
         }
-        return implode($join, array_fill(0, $number, '?'));
+        return implode($join ?? '', array_fill(0, $number ?? 0, '?'));
     }
 
     /**
@@ -385,10 +385,10 @@ class DB
      */
     public static function inline_parameters($sql, $parameters)
     {
-        $segments = preg_split('/\?/', $sql);
+        $segments = preg_split('/\?/', $sql ?? '');
         $joined = '';
         $inString = false;
-        $numSegments = count($segments);
+        $numSegments = count($segments ?? []);
         for ($i = 0; $i < $numSegments; $i++) {
             $input = $segments[$i];
             // Append next segment
@@ -399,10 +399,10 @@ class DB
             }
             // check string escape on previous fragment
             // Remove escaped backslashes, count them!
-            $input = preg_replace('/\\\\\\\\/', '', $input);
+            $input = preg_replace('/\\\\\\\\/', '', $input ?? '');
             // Count quotes
-            $totalQuotes = substr_count($input, "'"); // Includes double quote escaped quotes
-            $escapedQuotes = substr_count($input, "\\'");
+            $totalQuotes = substr_count($input ?? '', "'"); // Includes double quote escaped quotes
+            $escapedQuotes = substr_count($input ?? '', "\\'");
             if ((($totalQuotes - $escapedQuotes) % 2) !== 0) {
                 $inString = !$inString;
             }
@@ -530,7 +530,7 @@ class DB
     /**
      * Create a new table.
      * @param string $table The name of the table
-     * @param array$fields A map of field names to field types
+     * @param array $fields A map of field names to field types
      * @param array $indexes A map of indexes
      * @param array $options An map of additional options.  The available keys are as follows:
      *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine"
@@ -677,11 +677,13 @@ class DB
     }
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
+     *
+     * @param bool $quiet
      */
-    public static function quiet()
+    public static function quiet($quiet = true)
     {
-        self::get_schema()->quiet();
+        self::get_schema()->quiet($quiet);
     }
 
     /**

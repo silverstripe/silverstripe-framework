@@ -1,5 +1,8 @@
+---
 title: Bug Reports
 summary: Report bugs or problems with SilverStripe, feature requests or other issues.
+icon: bug
+---
 
 # Contributing Issues and Opinions
 
@@ -8,26 +11,25 @@ summary: Report bugs or problems with SilverStripe, feature requests or other is
 If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 
- * [Framework Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
- * [CMS Bugtracker](https://github.com/silverstripe/silverstripe-cms/issues)
- * [Documentation Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
- * Search on [http://addons.silverstripe.org/](http://addons.silverstripe.org/) for module-specific bugtrackers
- * Request features: [UserVoice](http://silverstripe.uservoice.com).
-
 Before submitting a bug:
 
- * Ask for assistance on the [forums](http://www.silverstripe.org/community/forums/), [core mailinglist](http://groups.google.com/group/silverstripe-dev) or on [IRC](http://irc.silverstripe.org/) if you're unsure if its really a bug.
- * Search for similar, existing tickets
+ * Ask for assistance in our [community channels](https://www.silverstripe.org/community) if you're unsure if it's really a bug.
+ * Search for similar, existing tickets.
+   You can [list all issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues),
+   then add your search phrase at the start of the existing search filters (for example [all issues with label "type/ux"](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-open-ux-issues))
  * Is this a security issue? Please follow our separate reporting guidelines below.
- * Is this a issue with the core framework or cms? Modules have their own issue trackers (see [http://addons.silverstripe.org/](http://addons.silverstripe.org/))
+ * Which modules does this issue belong to? Each one has its own issue tracker.
+   If you are unsure, [create an issue](https://github.com/silverstripe/silverstripe-framework/issues/new) on the the "framework" repository.
+   Note that [documentation issues](https://github.com/silverstripe/silverstripe-framework/issues) are tracked in "framework" as well. 
  * Try to reproduce your issue on a [clean installation](/getting_started/composer#using-development-versions), maybe the bug has already been fixed on an unreleased branch?
- * The bugtracker is not the place to discuss enhancements, please use the forums or mailinglist.
+ * The bugtracker is not the place to discuss enhancements, please use 
+   the ["feature ideas" forum category](https://forum.silverstripe.org/c/feature-ideas) and our [community channels](https://www.silverstripe.org/community).
    Only log enhancement tickets if they gather a large interest in the community
    and the enhancement is likely to be implemented in the next couple of months.
 
 If the issue does look like a new bug:
 
- * [Create a new ticket](https://github.com/silverstripe/silverstripe-framework/issues/new)
+ * Create an issue on the right module repository in GitHub
  * Describe the steps required to reproduce your issue, and the expected outcome. Unit tests, screenshots and screencasts can help here.
  * Describe your environment as detailed as possible: SilverStripe version, Browser, PHP version, Operating System, any installed SilverStripe modules.
  * *(optional)* [Submit a pull request](/contributing/code/#step-by-step-from-forking-to-sending-the-pull-request) which fixes the issue.
@@ -39,18 +41,16 @@ problem can collaborate with you to develop a fix.
 
 ## Feature Requests
 
-<div class="warning" markdown='1'>
+[warning]
 Please don't file "feature requests" as Github issues. If there's a new feature 
 you'd like to see in SilverStripe, you either need to write it yourself (and 
 [submit a pull request](/contributing/code/#step-by-step-from-forking-to-sending-the-pull-request) or convince somebody else to 
 write it for you. Any "wishlist" type issues without code attached can be 
 expected to be closed as soon as they're reviewed.
-</div>
+[/warning]
 
 In order to gain interest and feedback in your feature, we encourage you to 
-present it to the community through the [forums](http://www.silverstripe.org/community/forums), 
-[core mailinglist](http://groups.google.com/group/silverstripe-dev) or on 
-[IRC](http://irc.silverstripe.org/).
+present it to the community through the [community channels](https://www.silverstripe.org/community).
 
 ## Reporting Security Issues
 
@@ -58,8 +58,31 @@ Report security issues to [security@silverstripe.org](mailto:security@silverstri
 See our "[Release Process](/contributing/release_process/#security-releases)" documentation for more info, and 
 read our guide on [how to write secure code](/developer_guides/security/secure_coding/).
 
+Silverstripe CMS does not operate a *bug bounty* program.
+
 ## Sharing your Opinion
 
-* [silverstripe.org/forums](http://www.silverstripe.org/community/forums/): Forums on silverstripe.org
-* [silverstripe-dev](http://groups.google.com/group/silverstripe-dev/): Core development mailinglist
-* [silverstripe-documentation](http://groups.google.com/group/silverstripe-documentation/): Documentation mailing list
+* [forum.silverstripe.org](http://forum.silverstripe.org): Forums on silverstripe.org
+* [All issues across modules](https://www.silverstripe.org/community/contributing-to-silverstripe/github-all-core-issues)
+
+## Identifying issues and pull request relevant to your own project {#identifying-issues}
+
+Our [issue browser](https://silverstripe-github-issues.now.sh/) can be helpful to identify known issues and pending pull requests in
+[supported modules](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/).
+But you're usually only running some of these modules, and others
+from the [wider module ecosystem](https://addons.silverstripe.org).
+
+In order to only show issues and pull requests relevant to your project,
+we've written a little [composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util)
+which inspects your own `composer.lock` file dependencies,
+and searches across all Silverstripe CMS modules in there.
+
+After [installing the composer utility](https://github.com/silverstripe/silverstripe-github-issue-search-composer-util),
+use this command to pass through a lock file, and get a URL to open in your favourite browser.
+
+```
+cat /my/project/composer.lock | ss-issue-search get-url
+```
+
+Protip: You can further filter to certain [issue labels](code#labels)
+such as `label:impact/high` to make the results more relevant.

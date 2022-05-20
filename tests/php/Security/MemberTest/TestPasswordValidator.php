@@ -2,14 +2,16 @@
 
 namespace SilverStripe\Security\Tests\MemberTest;
 
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\Security\PasswordValidator;
 
-class TestPasswordValidator extends PasswordValidator
+class TestPasswordValidator extends PasswordValidator implements TestOnly
 {
     public function __construct()
     {
-        $this->minLength(7);
-        $this->checkHistoricalPasswords(6);
-        $this->characterStrength(3, array('lowercase', 'uppercase', 'digits', 'punctuation'));
+        $this->setMinLength(7);
+        $this->setHistoricCount(6);
+        $this->setMinTestScore(3);
+        $this->setTestNames(['lowercase', 'uppercase', 'digits', 'punctuation']);
     }
 }

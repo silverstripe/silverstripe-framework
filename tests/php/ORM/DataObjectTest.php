@@ -2,25 +2,29 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
 use stdClass;
-use ReflectionException;
-use InvalidArgumentException;
 
 class DataObjectTest extends SapphireTest
 {
@@ -32,7 +36,7 @@ class DataObjectTest extends SapphireTest
      *
      * @var array
      */
-    public static $extra_data_objects = array(
+    public static $extra_data_objects = [
         DataObjectTest\Team::class,
         DataObjectTest\Fixture::class,
         DataObjectTest\SubTeam::class,
@@ -57,7 +61,22 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationParent::class,
         DataObjectTest\RelationChildFirst::class,
         DataObjectTest\RelationChildSecond::class,
-    );
+        DataObjectTest\MockDynamicAssignmentDataObject::class,
+        DataObjectTest\TreeNode::class,
+    ];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $validator = Member::password_validator();
+        if ($validator) {
+            // Set low default password strength requirements so tests are not interfered with by user code
+            $validator
+                ->setMinTestScore(0)
+                ->setMinLength(6);
+        }
+    }
 
     public static function getExtraDataObjects()
     {
@@ -65,6 +84,51 @@ class DataObjectTest extends SapphireTest
             DataObjectTest::$extra_data_objects,
             ManyManyListTest::$extra_data_objects
         );
+    }
+
+    /**
+     * @dataProvider provideSingletons
+     */
+    public function testSingleton($inst, $defaultValue, $altDefaultValue)
+    {
+        $inst = $inst();
+        // Test that populateDefaults() isn't called on singletons
+        // which can lead to SQL errors during build, and endless loops
+        if ($defaultValue) {
+            $this->assertEquals($defaultValue, $inst->MyFieldWithDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithDefault);
+        }
+
+        if ($altDefaultValue) {
+            $this->assertEquals($altDefaultValue, $inst->MyFieldWithAltDefault);
+        } else {
+            $this->assertEmpty($inst->MyFieldWithAltDefault);
+        }
+    }
+
+    public function provideSingletons()
+    {
+        // because PHPUnit evaluates test providers *before* setUp methods
+        // any extensions added in the setUp methods won't be available
+        // we must return closures to generate the arguments at run time
+        return [
+            'create() static method' => [function () {
+                return DataObjectTest\Fixture::create();
+            }, 'Default Value', 'Default Value'],
+            'New object creation' => [function () {
+                return new DataObjectTest\Fixture();
+            }, 'Default Value', 'Default Value'],
+            'singleton() function' => [function () {
+                return singleton(DataObjectTest\Fixture::class);
+            }, null, null],
+            'singleton() static method' => [function () {
+                return DataObjectTest\Fixture::singleton();
+            }, null, null],
+            'Manual constructor args' => [function () {
+                return new DataObjectTest\Fixture(null, true);
+            }, null, null],
+        ];
     }
 
     public function testDb()
@@ -87,11 +151,11 @@ class DataObjectTest extends SapphireTest
 
         // Test with table required
         $this->assertEquals(
-            DataObjectTest\TeamComment::class.'.Varchar',
+            DataObjectTest\TeamComment::class . '.Varchar',
             $schema->fieldSpec(DataObjectTest\TeamComment::class, 'Name', DataObjectSchema::INCLUDE_CLASS)
         );
         $this->assertEquals(
-            DataObjectTest\TeamComment::class.'.Text',
+            DataObjectTest\TeamComment::class . '.Text',
             $schema->fieldSpec(DataObjectTest\TeamComment::class, 'Comment', DataObjectSchema::INCLUDE_CLASS)
         );
         $dbFields = $schema->fieldSpecs(DataObjectTest\ExtendedTeamComment::class);
@@ -111,13 +175,13 @@ class DataObjectTest extends SapphireTest
         );
 
         // assertEquals doesn't verify the order of array elements, so access keys manually to check order:
-        // expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+        // expected: ['Name' => 'Varchar', 'Comment' => 'HTMLText']
         $this->assertEquals(
-            array(
+            [
                 'Name',
                 'Comment'
-            ),
-            array_slice(array_keys($dbFields), 4, 2),
+            ],
+            array_slice(array_keys($dbFields ?? []), 4, 2),
             'DataObject::db returns fields in correct order'
         );
     }
@@ -126,10 +190,10 @@ class DataObjectTest extends SapphireTest
     {
         // Values can be an array...
         $player = new DataObjectTest\Player(
-            array(
-            'FirstName' => 'James',
-            'Surname' => 'Smith'
-            )
+            [
+                'FirstName' => 'James',
+                'Surname' => 'Smith'
+            ]
         );
 
         $this->assertEquals('James', $player->FirstName);
@@ -144,21 +208,45 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('John', $player->FirstName);
         $this->assertEquals('Doe', $player->Surname);
 
-        // IDs should be stored as integers, not strings
-        $player = new DataObjectTest\Player(array('ID' => '5'));
+        // Note that automatic conversion of IDs to integer no longer happens as the DB layer does that for us now
+        $player = new DataObjectTest\Player(['ID' => 5]);
         $this->assertSame(5, $player->ID);
+    }
+
+    /**
+     * @see SilverStripe\ORM\Tests\DataObjectTest\Team_Extension
+     */
+    public function testConstructHydratesAugmentedValues()
+    {
+        // When creating a DataObject from singleton, DataObject::hydrate() isn't called
+        $team = new Team([], DataObject::CREATE_SINGLETON);
+        $this->assertNull($team->CustomHydratedField);
+
+        // Similarly, when hydrating by creating a DataObject from nothing, hydrate() isn't called
+        $team2 = new Team([]);
+        $id = $team2->write();
+        $this->assertNull($team2->CustomHydratedField);
+
+        // However when rebuilding an object from the database, it is and we can expect our extension to execute
+        /** @var Team $team3 */
+        $team3 = Team::get()->byID($id);
+        $this->assertTrue($team3->CustomHydratedField);
+
+        // Also when rebuilding an object in memory, hydrate() is called and our extension should execute
+        /** @var Team $team4 */
+        $team4 = $team->newClassInstance(Team::class);
+        $this->assertTrue($team4->CustomHydratedField);
     }
 
     public function testValidObjectsForBaseFields()
     {
         $obj = new DataObjectTest\ValidatedObject();
 
-        foreach (array('Created', 'LastEdited', 'ClassName', 'ID') as $field) {
+        foreach (['Created', 'LastEdited', 'ClassName', 'ID'] as $field) {
             $helper = $obj->dbObject($field);
             $this->assertTrue(
                 ($helper instanceof DBField),
-                "for {$field} expected helper to be DBField, but was " .
-                (is_object($helper) ? get_class($helper) : "null")
+                "for {$field} expected helper to be DBField, but was " . (is_object($helper) ? get_class($helper) : "null")
             );
         }
     }
@@ -277,18 +365,18 @@ class DataObjectTest extends SapphireTest
         // Test get_one() without caching
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
-            ),
+            [
+                '"DataObjectTest_TeamComment"."Name"' => 'Joe'
+            ],
             false
         );
         $comment1->Comment = "Something Else";
 
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Joe'
-            ),
+            [
+                '"DataObjectTest_TeamComment"."Name"' => 'Joe'
+            ],
             false
         );
         $this->assertNotEquals($comment1->Comment, $comment2->Comment);
@@ -296,18 +384,18 @@ class DataObjectTest extends SapphireTest
         // Test get_one() with caching
         $comment1 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
-            ),
+            [
+                '"DataObjectTest_TeamComment"."Name"' => 'Bob'
+            ],
             true
         );
         $comment1->Comment = "Something Else";
 
         $comment2 = DataObject::get_one(
             DataObjectTest\TeamComment::class,
-            array(
-            '"DataObjectTest_TeamComment"."Name"' => 'Bob'
-            ),
+            [
+                '"DataObjectTest_TeamComment"."Name"' => 'Bob'
+            ],
             true
         );
         $this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
@@ -326,6 +414,20 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Phil', $comment->Name);
     }
 
+    public function testGetByIDCallerClass()
+    {
+        $captain1ID = $this->idFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = DataObjectTest\Player::get_by_id($captain1ID);
+        $this->assertInstanceOf(DataObjectTest\Player::class, $captain1);
+        $this->assertEquals('Captain', $captain1->FirstName);
+
+        $captain2ID = $this->idFromFixture(DataObjectTest\Player::class, 'captain2');
+        // make sure we can call from any class but get the one passed as an argument
+        $captain2 = DataObjectTest\TeamComment::get_by_id(DataObjectTest\Player::class, $captain2ID);
+        $this->assertInstanceOf(DataObjectTest\Player::class, $captain2);
+        $this->assertEquals('Captain 2', $captain2->FirstName);
+    }
+
     public function testGetCaseInsensitive()
     {
         // Test get_one() with bad case on the classname
@@ -337,9 +439,9 @@ class DataObjectTest extends SapphireTest
 
         $subteam1 = DataObject::get_one(
             strtolower(DataObjectTest\SubTeam::class),
-            array(
-            '"DataObjectTest_Team"."Title"' => 'Subteam 1'
-            ),
+            [
+                '"DataObjectTest_Team"."Title"' => 'Subteam 1'
+            ],
             true
         );
         $this->assertNotEmpty($subteam1);
@@ -519,7 +621,7 @@ class DataObjectTest extends SapphireTest
         // Test the IDs on the DataObjects are set correctly
         $this->assertListEquals($team1Comments, $team1->Comments());
 
-        // Test that has_many can be infered from the has_one via getNonReciprocalComponent
+        // Test that has_many can be inferred from the has_one via getNonReciprocalComponent
         $this->assertListEquals(
             $team1Comments,
             $team1->inferReciprocalComponent(DataObjectTest\TeamComment::class, 'Team')
@@ -538,7 +640,7 @@ class DataObjectTest extends SapphireTest
         $team1->Comments()->remove($comment2);
 
         $team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
-        $this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
+        $this->assertEquals([$comment1->ID, $newComment->ID], $team1CommentIDs);
 
         // Test that removing an item from a list doesn't remove it from the same
         // relation belonging to a different object
@@ -546,7 +648,7 @@ class DataObjectTest extends SapphireTest
         $team2 = $this->objFromFixture(DataObjectTest\Team::class, 'team2');
         $team2->Comments()->remove($comment1);
         $team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
-        $this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
+        $this->assertEquals([$comment1->ID, $newComment->ID], $team1CommentIDs);
     }
 
 
@@ -585,7 +687,7 @@ class DataObjectTest extends SapphireTest
         $team1->Fans()->remove($fan3);
 
         $team1FanIDs = $team1->Fans()->sort('ID')->column('ID');
-        $this->assertEquals(array($fan1->ID, $newFan->ID), $team1FanIDs);
+        $this->assertEquals([$fan1->ID, $newFan->ID], $team1FanIDs);
 
         // Test that removing an item from a list doesn't remove it from the same
         // relation belonging to a different object
@@ -593,7 +695,7 @@ class DataObjectTest extends SapphireTest
         $player1 = $this->objFromFixture(DataObjectTest\Player::class, 'player1');
         $player1->Fans()->remove($fan1);
         $team1FanIDs = $team1->Fans()->sort('ID')->column('ID');
-        $this->assertEquals(array($fan1->ID, $newFan->ID), $team1FanIDs);
+        $this->assertEquals([$fan1->ID, $newFan->ID], $team1FanIDs);
     }
 
 
@@ -676,6 +778,31 @@ class DataObjectTest extends SapphireTest
     }
 
     /**
+     * Test has_one used as field getter/setter
+     */
+    public function testHasOneAsField()
+    {
+        /** @var DataObjectTest\Team $team1 */
+        $team1 = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+
+        // Setter: By RelationID
+        $team1->CaptainID = $captain1->ID;
+        $team1->write();
+        $this->assertEquals($captain1->ID, $team1->Captain->ID);
+
+        // Setter: New object
+        $team1->Captain = $captain2;
+        $team1->write();
+        $this->assertEquals($captain2->ID, $team1->Captain->ID);
+
+        // Setter: Custom data (required by DataDifferencer)
+        $team1->Captain = DBField::create_field('HTMLFragment', '<p>No captain</p>');
+        $this->assertEquals('<p>No captain</p>', $team1->Captain);
+    }
+
+    /**
      * @todo Extend type change tests (e.g. '0'==NULL)
      */
     public function testChangedFields()
@@ -686,46 +813,115 @@ class DataObjectTest extends SapphireTest
 
         $this->assertEquals(
             $obj->getChangedFields(true, DataObject::CHANGE_STRICT),
-            array(
-                'FirstName' => array(
+            [
+                'FirstName' => [
                     'before' => 'Captain',
                     'after' => 'Captain-changed',
                     'level' => DataObject::CHANGE_VALUE
-                ),
-                'IsRetired' => array(
+                ],
+                'IsRetired' => [
                     'before' => 1,
                     'after' => true,
                     'level' => DataObject::CHANGE_STRICT
-                )
-            ),
+                ]
+            ],
             'Changed fields are correctly detected with strict type changes (level=1)'
         );
 
         $this->assertEquals(
             $obj->getChangedFields(true, DataObject::CHANGE_VALUE),
-            array(
-                'FirstName' => array(
-                    'before'=>'Captain',
-                    'after'=>'Captain-changed',
+            [
+                'FirstName' => [
+                    'before' => 'Captain',
+                    'after' => 'Captain-changed',
                     'level' => DataObject::CHANGE_VALUE
-                )
-            ),
+                ]
+            ],
             'Changed fields are correctly detected while ignoring type changes (level=2)'
         );
 
         $newObj = new DataObjectTest\Player();
         $newObj->FirstName = "New Player";
         $this->assertEquals(
-            array(
-                'FirstName' => array(
+            [
+                'FirstName' => [
                     'before' => null,
                     'after' => 'New Player',
                     'level' => DataObject::CHANGE_VALUE
-                )
-            ),
+                ]
+            ],
             $newObj->getChangedFields(true, DataObject::CHANGE_VALUE),
             'Initialised fields are correctly detected as full changes'
         );
+    }
+
+    public function testChangedFieldsWhenRestoringData()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $obj->FirstName = 'Captain-changed';
+        $obj->FirstName = 'Captain';
+
+        $this->assertEquals(
+            [],
+            $obj->getChangedFields(true, DataObject::CHANGE_STRICT)
+        );
+    }
+
+    public function testChangedFieldsAfterWrite()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $obj->FirstName = 'Captain-changed';
+        $obj->write();
+        $obj->FirstName = 'Captain';
+
+        $this->assertEquals(
+            [
+                'FirstName' => [
+                    'before' => 'Captain-changed',
+                    'after' => 'Captain',
+                    'level' => DataObject::CHANGE_VALUE,
+                ],
+            ],
+            $obj->getChangedFields(true, DataObject::CHANGE_VALUE)
+        );
+    }
+
+    public function testForceChangeCantBeCancelledUntilWrite()
+    {
+        $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $this->assertFalse($obj->isChanged('FirstName'));
+        $this->assertFalse($obj->isChanged('Surname'));
+
+        // Force change marks the records as changed
+        $obj->forceChange();
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // ...but not if we explicitly ask if the value has changed
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+        $this->assertFalse($obj->isChanged('Surname', DataObject::CHANGE_VALUE));
+
+        // Not overwritten by setting the value to is original value
+        $obj->FirstName = 'Captain';
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // Not overwritten by changing it to something else and back again
+        $obj->FirstName = 'Captain-changed';
+        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+
+        $obj->FirstName = 'Captain';
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+        $this->assertTrue($obj->isChanged('FirstName'));
+        $this->assertTrue($obj->isChanged('Surname'));
+
+        // Cleared after write
+        $obj->write();
+        $this->assertFalse($obj->isChanged('FirstName'));
+        $this->assertFalse($obj->isChanged('Surname'));
+
+        $obj->FirstName = 'Captain';
+        $this->assertFalse($obj->isChanged('FirstName'));
     }
 
     /**
@@ -766,6 +962,13 @@ class DataObjectTest extends SapphireTest
         $obj->FirstName = null;
         $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT));
         $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+
+        $obj->write();
+        $obj->FirstName = null;
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Unchanged property was marked as changed');
+        $obj->FirstName = 0;
+        $this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT), 'Strict (type) change was not detected');
+        $this->assertFalse($obj->isChanged('FirstName', DataObject::CHANGE_VALUE), 'Type-only change was marked as a value change');
 
         /* Test when there's not field provided */
         $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
@@ -834,6 +1037,12 @@ class DataObjectTest extends SapphireTest
             $captainID,
             DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value()
         );
+
+        // Can write to component directly
+        $this->assertEquals(false, $team->Captain()->IsRetired);
+        $team->Captain()->IsRetired = true;
+        $team->Captain()->write();
+        $this->assertEquals(true, $team->Captain()->IsRetired, 'Saves writes to components directly');
 
         /* After giving it a value, you should also be able to set it back to null */
         $team->CaptainID = '';
@@ -1065,72 +1274,90 @@ class DataObjectTest extends SapphireTest
 
         // Test logical fields (including composite)
         $teamSpecifications = $schema->fieldSpecs(DataObjectTest\Team::class);
+        $expected = [
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID'
+        ];
+        $actual = array_keys($teamSpecifications ?? []);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID'
-            ),
-            array_keys($teamSpecifications),
+            $expected,
+            $actual,
             'fieldSpecifications() contains all fields defined on instance: base, extended and foreign keys'
         );
 
         $teamFields = $schema->databaseFields(DataObjectTest\Team::class, false);
+        $expected = [
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID'
+        ];
+        $actual = array_keys($teamFields ?? []);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID'
-            ),
-            array_keys($teamFields),
+            $expected,
+            $actual,
             'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
         );
 
         $subteamSpecifications = $schema->fieldSpecs(DataObjectTest\SubTeam::class);
+        $expected = [
+            'ID',
+            'ClassName',
+            'LastEdited',
+            'Created',
+            'Title',
+            'DatabaseField',
+            'ExtendedDatabaseField',
+            'CaptainID',
+            'FounderID',
+            'HasOneRelationshipID',
+            'ExtendedHasOneRelationshipID',
+            'SubclassDatabaseField',
+            'SubclassFieldWithOverride',
+            'ParentTeamID',
+        ];
+        $actual = array_keys($subteamSpecifications ?? []);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'ClassName',
-                'LastEdited',
-                'Created',
-                'Title',
-                'DatabaseField',
-                'ExtendedDatabaseField',
-                'CaptainID',
-                'FounderID',
-                'HasOneRelationshipID',
-                'ExtendedHasOneRelationshipID',
-                'SubclassDatabaseField',
-                'ParentTeamID',
-            ),
-            array_keys($subteamSpecifications),
+            $expected,
+            $actual,
             'fieldSpecifications() on subclass contains all fields, including base, extended  and foreign keys'
         );
 
         $subteamFields = $schema->databaseFields(DataObjectTest\SubTeam::class, false);
+        $expected = [
+            'ID',
+            'SubclassDatabaseField',
+            'SubclassFieldWithOverride',
+            'ParentTeamID',
+        ];
+        $actual = array_keys($subteamFields ?? []);
+        sort($expected);
+        sort($actual);
         $this->assertEquals(
-            array(
-                'ID',
-                'SubclassDatabaseField',
-                'ParentTeamID',
-            ),
-            array_keys($subteamFields),
+            $expected,
+            $actual,
             'databaseFields() on subclass contains only fields defined on instance'
         );
     }
@@ -1190,15 +1417,13 @@ class DataObjectTest extends SapphireTest
         $summaryFields = $team->summaryFields();
 
         $this->assertEquals(
-            'Custom Title',
-            $summaryFields['Title'],
-            'Custom title is preserved'
-        );
-
-        $this->assertEquals(
-            'Captain\'s shirt number',
-            $summaryFields['Captain.ShirtNumber'],
-            'Custom title on relation is preserved'
+            [
+                'Title' => 'Custom Title',
+                'Title.UpperCase' => 'Title',
+                'Captain.ShirtNumber' => 'Captain\'s shirt number',
+                'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team',
+            ],
+            $summaryFields
         );
     }
 
@@ -1210,12 +1435,12 @@ class DataObjectTest extends SapphireTest
         $team1->CaptainID = $this->idFromFixture(DataObjectTest\Player::class, 'captain1');
 
         $team1->update(
-            array(
-            'DatabaseField' => 'Something',
-            'Captain.FirstName' => 'Jim',
-            'Captain.Email' => 'jim@example.com',
-            'Captain.FavouriteTeam.Title' => 'New and improved team 1',
-            )
+            [
+                'DatabaseField' => 'Something',
+                'Captain.FirstName' => 'Jim',
+                'Captain.Email' => 'jim@example.com',
+                'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+            ]
         );
 
         /* Test the simple case of updating fields on the object itself */
@@ -1241,10 +1466,10 @@ class DataObjectTest extends SapphireTest
         $team1->CaptainID = 0;
 
         $team1->update(
-            array(
-            'Captain.FirstName' => 'Jim',
-            'Captain.FavouriteTeam.Title' => 'New and improved team 1',
-            )
+            [
+                'Captain.FirstName' => 'Jim',
+                'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+            ]
         );
         /* Test that the captain ID has been updated */
         $this->assertGreaterThan(0, $team1->CaptainID);
@@ -1259,12 +1484,9 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
     }
 
-
-    /**
-     * @expectedException \SilverStripe\ORM\ValidationException
-     */
     public function testWritingInvalidDataObjectThrowsException()
     {
+        $this->expectException(ValidationException::class);
         $validatedObject = new DataObjectTest\ValidatedObject();
         $validatedObject->write();
     }
@@ -1341,10 +1563,7 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($schema->classHasTable(DataObject::class));
         $this->assertFalse($schema->classHasTable(ViewableData::class));
 
-        // Invalid class
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessage('Class ThisIsntADataObject does not exist');
-
+        /* Invalid class name */
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
     }
 
@@ -1408,32 +1627,33 @@ class DataObjectTest extends SapphireTest
             'Default Value',
             'Defaults are populated from overloaded populateDefaults() method'
         );
+
+        // Test populate defaults on subclasses
+        $staffObj = new DataObjectTest\Staff();
+        $this->assertEquals('Staff', $staffObj->EmploymentType);
+
+        $ceoObj = new DataObjectTest\CEO();
+        $this->assertEquals('Staff', $ceoObj->EmploymentType);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithArray()
     {
-        Config::modify()->merge(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
+        $this->expectException(\InvalidArgumentException::class);
+        Config::modify()->merge(DataObjectTest\Team::class, 'has_one', ['NotValid' => ['NoArraysAllowed']]);
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
-        Config::modify()->set(DataObjectTest\Team::class, 'has_many', array(0 => DataObjectTest\Player::class));
+        $this->expectException(\InvalidArgumentException::class);
+        Config::modify()->set(DataObjectTest\Team::class, 'has_many', [0 => DataObjectTest\Player::class]);
         DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
-        Config::modify()->merge(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
+        $this->expectException(\InvalidArgumentException::class);
+        Config::modify()->merge(DataObjectTest\Team::class, 'many_many', ['Players' => 12]);
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
 
@@ -1447,7 +1667,7 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
         $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
-        $this->assertContains('ClassName', array_keys($changedFields));
+        $this->assertContains('ClassName', array_keys($changedFields ?? []));
         $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
         $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
         $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
@@ -1459,12 +1679,37 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
 
         // Test invalid classes fail
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
         /**
- * @skipUpgrade
-*/
+         * @skipUpgrade
+         */
         $dataObject->newClassInstance('Controller');
+    }
+
+    public function testNewClassInstanceFromUnsavedDataObject()
+    {
+        $dataObject = new DataObjectTest\Team([
+            'Title' => 'Team 1'
+        ]);
+        $changedDO = $dataObject->newClassInstance(DataObjectTest\SubTeam::class);
+        $changedFields = $changedDO->getChangedFields();
+
+        // Don't write the record, it will reset changed fields
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedDO->RecordClassName, DataObjectTest\SubTeam::class);
+        $this->assertContains('ClassName', array_keys($changedFields ?? []));
+        $this->assertEquals($changedFields['ClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['ClassName']['after'], DataObjectTest\SubTeam::class);
+        $this->assertEquals($changedFields['RecordClassName']['before'], DataObjectTest\Team::class);
+        $this->assertEquals($changedFields['RecordClassName']['after'], DataObjectTest\SubTeam::class);
+
+        $changedDO->write();
+
+        $this->assertInstanceOf(DataObjectTest\SubTeam::class, $changedDO);
+        $this->assertEquals($changedDO->ClassName, DataObjectTest\SubTeam::class);
+        $this->assertNotEmpty($changedDO->ID, 'New class instance got an ID generated on write');
     }
 
     public function testMultipleManyManyWithSameClass()
@@ -1504,7 +1749,7 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(ManyManyList::class, $teamWithoutSponsor->Sponsors());
         $this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
-        // Test that belongs_many_many can be infered from with getNonReciprocalComponent
+        // Test that belongs_many_many can be inferred from with getNonReciprocalComponent
         $this->assertListEquals(
             [
                 ['Name' => 'Company corp'],
@@ -1513,7 +1758,7 @@ class DataObjectTest extends SapphireTest
             $team->inferReciprocalComponent(DataObjectTest\EquipmentCompany::class, 'SponsoredTeams')
         );
 
-        // Test that many_many can be infered from getNonReciprocalComponent
+        // Test that many_many can be inferred from getNonReciprocalComponent
         $this->assertListEquals(
             [
                 ['Title' => 'Team 1'],
@@ -1525,7 +1770,7 @@ class DataObjectTest extends SapphireTest
 
         // Check many_many_extraFields still works
         $equipmentCompany = $this->objFromFixture(DataObjectTest\EquipmentCompany::class, 'equipmentcompany1');
-        $equipmentCompany->SponsoredTeams()->add($teamWithoutSponsor, array('SponsorFee' => 1000));
+        $equipmentCompany->SponsoredTeams()->add($teamWithoutSponsor, ['SponsorFee' => 1000]);
         $sponsoredTeams = $equipmentCompany->SponsoredTeams();
         $this->assertEquals(
             1000,
@@ -1555,7 +1800,7 @@ class DataObjectTest extends SapphireTest
 
         // Check many_many_extraFields also works from the belongs_many_many side
         $sponsors = $team2->Sponsors();
-        $sponsors->add($equipmentCompany, array('SponsorFee' => 750));
+        $sponsors->add($equipmentCompany, ['SponsorFee' => 750]);
         $this->assertEquals(
             750,
             $sponsors->byID($equipmentCompany->ID)->SponsorFee,
@@ -1563,7 +1808,7 @@ class DataObjectTest extends SapphireTest
         );
 
         $subEquipmentCompany = $this->objFromFixture(DataObjectTest\SubEquipmentCompany::class, 'subequipmentcompany1');
-        $subTeam->Sponsors()->add($subEquipmentCompany, array('SponsorFee' => 1200));
+        $subTeam->Sponsors()->add($subEquipmentCompany, ['SponsorFee' => 1200]);
         $this->assertEquals(
             1200,
             $subTeam->Sponsors()->byID($subEquipmentCompany->ID)->SponsorFee,
@@ -1579,9 +1824,9 @@ class DataObjectTest extends SapphireTest
         // Get all extra fields
         $teamExtraFields = $team->manyManyExtraFields();
         $this->assertEquals(
-            array(
-            'Players' => array('Position' => 'Varchar(100)')
-            ),
+            [
+                'Players' => ['Position' => 'Varchar(100)']
+            ],
             $teamExtraFields
         );
 
@@ -1589,10 +1834,10 @@ class DataObjectTest extends SapphireTest
         $subTeam = singleton(DataObjectTest\SubTeam::class);
         $teamExtraFields = $subTeam->manyManyExtraFields();
         $this->assertEquals(
-            array(
-            'Players' => array('Position' => 'Varchar(100)'),
-            'FormerPlayers' => array('Position' => 'Varchar(100)')
-            ),
+            [
+                'Players' => ['Position' => 'Varchar(100)'],
+                'FormerPlayers' => ['Position' => 'Varchar(100)']
+            ],
             $teamExtraFields
         );
 
@@ -1600,18 +1845,18 @@ class DataObjectTest extends SapphireTest
         $teamExtraFields = $schema->manyManyExtraFieldsForComponent(DataObjectTest\Team::class, 'Players');
         $this->assertEquals(
             $teamExtraFields,
-            array(
-            'Position' => 'Varchar(100)'
-            )
+            [
+                'Position' => 'Varchar(100)'
+            ]
         );
 
         // We'll have to go through the relation to get the extra fields on Player
         $playerExtraFields = $schema->manyManyExtraFieldsForComponent(DataObjectTest\Player::class, 'Teams');
         $this->assertEquals(
             $playerExtraFields,
-            array(
-            'Position' => 'Varchar(100)'
-            )
+            [
+                'Position' => 'Varchar(100)'
+            ]
         );
 
         // Iterate through a many-many relationship and confirm that extra fields are included
@@ -1626,7 +1871,7 @@ class DataObjectTest extends SapphireTest
         $newPlayer->write();
 
         // The idea of Sam as a prop is essentially humourous.
-        $newTeam->Players()->add($newPlayer, array("Position" => "Prop"));
+        $newTeam->Players()->add($newPlayer, ["Position" => "Prop"]);
 
         // Requery and uncache everything
         $newTeam->flushCache();
@@ -1658,11 +1903,11 @@ class DataObjectTest extends SapphireTest
      */
     public function testSingularName()
     {
-        $assertions = array(
+        $assertions = [
             DataObjectTest\Player::class => 'Player',
             DataObjectTest\Team::class => 'Team',
             DataObjectTest\Fixture::class => 'Fixture',
-        );
+        ];
 
         foreach ($assertions as $class => $expectedSingularName) {
             $this->assertEquals(
@@ -1678,14 +1923,14 @@ class DataObjectTest extends SapphireTest
      */
     public function testPluralName()
     {
-        $assertions = array(
+        $assertions = [
             DataObjectTest\Player::class => 'Players',
             DataObjectTest\Team::class => 'Teams',
             DataObjectTest\Fixture::class => 'Fixtures',
             DataObjectTest\Play::class => 'Plays',
             DataObjectTest\Bogey::class => 'Bogeys',
             DataObjectTest\Ploy::class => 'Ploys',
-        );
+        ];
         i18n::set_locale('en_NZ');
         foreach ($assertions as $class => $expectedPluralName) {
             $this->assertEquals(
@@ -1746,6 +1991,43 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('1988-03-04 06:30:00', $obj->DatetimeField);
     }
 
+    /**
+     * Tests that the autogenerated ID is returned as int
+     */
+    public function testIDFieldTypeAfterInsert()
+    {
+        $obj = new DataObjectTest\Fixture();
+        $obj->write();
+
+        $this->assertIsInt($obj->ID);
+    }
+
+    /**
+     * Tests that zero values are returned with the correct types
+     */
+    public function testZeroIsFalse()
+    {
+        $obj = new DataObjectTest\Fixture();
+        $obj->MyInt = 0;
+        $obj->MyDecimal = 0.00;
+        $obj->MyCurrency = 0.00;
+        $obj->write();
+
+        $this->assertEquals(0, $obj->MyInt, 'DBInt fields should be integer on first assignment');
+        $this->assertEquals(0.00, $obj->MyDecimal, 'DBDecimal fields should be float on first assignment');
+        $this->assertEquals(0.00, $obj->MyCurrency, 'DBCurrency fields should be float on first assignment');
+
+        $obj2 = DataObjectTest\Fixture::get()->byId($obj->ID);
+
+        $this->assertEquals(0, $obj2->MyInt, 'DBInt fields should be integer');
+        $this->assertEquals(0.00, $obj2->MyDecimal, 'DBDecimal fields should be float');
+        $this->assertEquals(0.00, $obj2->MyCurrency, 'DBCurrency fields should be float');
+
+        $this->assertFalse((bool)$obj2->MyInt, 'DBInt zero fields should be falsey on fetch from DB');
+        $this->assertFalse((bool)$obj2->MyDecimal, 'DBDecimal zero fields should be falsey on fetch from DB');
+        $this->assertFalse((bool)$obj2->MyCurrency, 'DBCurrency zero fields should be falsey on fetch from DB');
+    }
+
     public function testTwoSubclassesWithTheSameFieldNameWork()
     {
         // Create two objects of different subclasses, setting the values of fields that are
@@ -1765,7 +2047,7 @@ class DataObjectTest extends SapphireTest
             "\"DataObjectTest_Team\".\"ID\" IN
 			($obj1->ID, $obj2->ID)"
         )->column("SubclassDatabaseField");
-        $this->assertEquals(array_intersect($values, array('obj1', 'obj2')), $values);
+        $this->assertEquals(array_intersect($values ?? [], ['obj1', 'obj2']), $values);
     }
 
     public function testClassNameSetForNewObjects()
@@ -1800,10 +2082,10 @@ class DataObjectTest extends SapphireTest
         $company = new DataObjectTest\Company();
 
         $this->assertEquals(
-            array (
-                'CurrentStaff'     => DataObjectTest\Staff::class,
-                'PreviousStaff'    => DataObjectTest\Staff::class
-            ),
+            [
+                'CurrentStaff' => DataObjectTest\Staff::class,
+                'PreviousStaff' => DataObjectTest\Staff::class
+            ],
             $company->hasMany(),
             'has_many strips field name data by default.'
         );
@@ -1815,16 +2097,16 @@ class DataObjectTest extends SapphireTest
         );
 
         $this->assertEquals(
-            array (
-                'CurrentStaff'     => DataObjectTest\Staff::class.'.CurrentCompany',
-                'PreviousStaff'    => DataObjectTest\Staff::class.'.PreviousCompany'
-            ),
+            [
+                'CurrentStaff' => DataObjectTest\Staff::class . '.CurrentCompany',
+                'PreviousStaff' => DataObjectTest\Staff::class . '.PreviousCompany'
+            ],
             $company->hasMany(false),
             'has_many returns field name data when $classOnly is false.'
         );
 
         $this->assertEquals(
-            DataObjectTest\Staff::class.'.CurrentCompany',
+            DataObjectTest\Staff::class . '.CurrentCompany',
             DataObject::getSchema()->hasManyComponent(DataObjectTest\Company::class, 'CurrentStaff', false),
             'has_many returns field name data on single records when $classOnly is false.'
         );
@@ -1900,7 +2182,7 @@ class DataObjectTest extends SapphireTest
     public function testBelongsTo()
     {
         $company = new DataObjectTest\Company();
-        $ceo     = new DataObjectTest\CEO();
+        $ceo = new DataObjectTest\CEO();
 
         $company->Name = 'New Company';
         $company->write();
@@ -1912,20 +2194,20 @@ class DataObjectTest extends SapphireTest
 
         $this->assertEquals($company->ID, $ceo->Company()->ID, 'belongs_to returns the right results.');
 
-        // Test belongs_to can be infered via getNonReciprocalComponent
+        // Test belongs_to can be inferred via getNonReciprocalComponent
         // Note: Will be returned as has_many since the belongs_to is ignored.
         $this->assertListEquals(
             [['Name' => 'New Company']],
             $ceo->inferReciprocalComponent(DataObjectTest\Company::class, 'CEO')
         );
 
-        // Test has_one to a belongs_to can be infered via getNonReciprocalComponent
+        // Test has_one to a belongs_to can be inferred via getNonReciprocalComponent
         $this->assertEquals(
             $ceo->ID,
             $company->inferReciprocalComponent(DataObjectTest\CEO::class, 'Company')->ID
         );
 
-        // Test automatic creation of class where no assigment exists
+        // Test automatic creation of class where no assignment exists
         $ceo = new DataObjectTest\CEO();
         $ceo->write();
 
@@ -1938,7 +2220,10 @@ class DataObjectTest extends SapphireTest
         // Write object with components
         $ceo->Name = 'Edward Scissorhands';
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->Company()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->Company()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
@@ -1951,7 +2236,7 @@ class DataObjectTest extends SapphireTest
     public function testBelongsToPolymorphic()
     {
         $company = new DataObjectTest\Company();
-        $ceo     = new DataObjectTest\CEO();
+        $ceo = new DataObjectTest\CEO();
 
         $company->write();
         $ceo->write();
@@ -1968,7 +2253,7 @@ class DataObjectTest extends SapphireTest
             'belongs_to returns the right results.'
         );
 
-        // Test automatic creation of class where no assigment exists
+        // Test automatic creation of class where no assignment exists
         $ceo = new DataObjectTest\CEO();
         $ceo->write();
 
@@ -1977,11 +2262,14 @@ class DataObjectTest extends SapphireTest
             'DataObjects across polymorphic belongs_to relations are automatically created.'
         );
         $this->assertEquals($ceo->ID, $ceo->CompanyOwned()->OwnerID, 'Remote IDs are automatically set.');
-        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically  set');
+        $this->assertInstanceOf($ceo->CompanyOwned()->OwnerClass, $ceo, 'Remote class is automatically set.');
 
-        // Write object with components
+        // Skip writing components that do not exist
         $ceo->write(false, false, false, true);
-        $this->assertTrue($ceo->CompanyOwned()->isInDB(), 'write() writes belongs_to components to the database.');
+        $this->assertFalse(
+            $ceo->CompanyOwned()->isInDB(),
+            'write() does not write belongs_to components to the database that do not already exist.'
+        );
 
         $newCEO = DataObject::get_by_id(DataObjectTest\CEO::class, $ceo->ID);
         $this->assertEquals(
@@ -1991,11 +2279,9 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testInvalidate()
     {
+        $this->expectException(\LogicException::class);
         $do = new DataObjectTest\Fixture();
         $do->write();
 
@@ -2012,9 +2298,15 @@ class DataObjectTest extends SapphireTest
 
         $map = $obj->toMap();
 
-        $this->assertArrayHasKey('ID', $map, 'Contains base fields');
-        $this->assertArrayHasKey('Title', $map, 'Contains fields from parent class');
-        $this->assertArrayHasKey('SubclassDatabaseField', $map, 'Contains fields from concrete class');
+        $this->assertArrayHasKey('ID', $map, 'Should contain ID');
+        $this->assertArrayHasKey('ClassName', $map, 'Should contain ClassName');
+        $this->assertArrayHasKey('Created', $map, 'Should contain base Created');
+        $this->assertArrayHasKey('LastEdited', $map, 'Should contain base LastEdited');
+        $this->assertArrayHasKey('Title', $map, 'Should contain fields from parent class');
+        $this->assertArrayHasKey('SubclassDatabaseField', $map, 'Should contain fields from concrete class');
+
+        $this->assertEquals('DB value of SubclassFieldWithOverride (override)', $obj->SubclassFieldWithOverride, 'Object uses custom field getter');
+        $this->assertEquals('DB value of SubclassFieldWithOverride', $map['SubclassFieldWithOverride'], 'toMap does not use custom field getter');
 
         $this->assertEquals(
             $obj->ID,
@@ -2032,8 +2324,17 @@ class DataObjectTest extends SapphireTest
             'Contains values from concrete class fields'
         );
 
-        $newObj = new DataObjectTest\SubTeam();
-        $this->assertArrayHasKey('Title', $map, 'Contains null fields');
+        $newObj = new DataObjectTest\SubTeam(['Title' => null]);
+        $this->assertArrayNotHasKey('Title', $newObj->toMap(), 'Should not contain new null fields');
+
+        $newObj->Title = '';
+        $this->assertArrayHasKey('Title', $newObj->toMap(), 'Should contain fields once they are set, even if falsey');
+
+        $newObj->Title = null;
+        $this->assertArrayNotHasKey('Title', $newObj->toMap(), 'Should not contain reset-to-null fields');
+
+        $this->objFromFixture(DataObjectTest\SubTeam::class, 'subteam3_with_empty_fields');
+        $this->assertArrayNotHasKey('SubclassDatabaseField', $newObj->toMap(), 'Should not contain null re-hydrated fields');
     }
 
     public function testIsEmpty()
@@ -2047,11 +2348,17 @@ class DataObjectTest extends SapphireTest
 
     public function testRelField()
     {
-        $captain = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
         // Test traversal of a single has_one
-        $this->assertEquals("Team 1", $captain->relField('FavouriteTeam.Title'));
+        $this->assertEquals("Team 1", $captain1->relField('FavouriteTeam.Title'));
         // Test direct field access
-        $this->assertEquals("Captain", $captain->relField('FirstName'));
+        $this->assertEquals("Captain", $captain1->relField('FirstName'));
+
+        // Test empty link
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+        $this->assertEmpty($captain2->relField('FavouriteTeam.Title'));
+        $this->assertNull($captain2->relField('FavouriteTeam.ReturnsNull'));
+        $this->assertNull($captain2->relField('FavouriteTeam.ReturnsNull.Title'));
 
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
         // Test that we can traverse more than once, and that arbitrary methods are okay
@@ -2063,24 +2370,39 @@ class DataObjectTest extends SapphireTest
         // Test that relField works on db field manipulations
         $comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment3');
         $this->assertEquals("PHIL IS A UNIQUE GUY, AND COMMENTS ON TEAM2", $comment->relField('Comment.UpperCase'));
+
+        // relField throws exception on invalid properties
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\TeamComment::class);
+        $comment->relField('Not.A.Field');
     }
 
     public function testRelObject()
     {
-        $captain = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
+        $captain1 = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
 
         // Test traversal of a single has_one
-        $this->assertInstanceOf(DBVarchar::class, $captain->relObject('FavouriteTeam.Title'));
-        $this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
+        $this->assertInstanceOf(DBVarchar::class, $captain1->relObject('FavouriteTeam.Title'));
+        $this->assertEquals("Team 1", $captain1->relObject('FavouriteTeam.Title')->getValue());
+
+        // Test empty link
+        $captain2 = $this->objFromFixture(DataObjectTest\Player::class, 'captain2');
+        $this->assertEmpty($captain2->relObject('FavouriteTeam.Title')->getValue());
+        $this->assertNull($captain2->relObject('FavouriteTeam.ReturnsNull.Title'));
 
         // Test direct field access
-        $this->assertInstanceOf(DBBoolean::class, $captain->relObject('IsRetired'));
-        $this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
+        $this->assertInstanceOf(DBBoolean::class, $captain1->relObject('IsRetired'));
+        $this->assertEquals(1, $captain1->relObject('IsRetired')->getValue());
 
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
         // Test that we can traverse more than once, and that arbitrary methods are okay
         $this->assertInstanceOf(DBVarchar::class, $player->relObject('Teams.First.Title'));
         $this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
+
+        // relObject throws exception on invalid properties
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("Not is not a relation/field on " . DataObjectTest\Player::class);
+        $player->relObject('Not.A.Field');
     }
 
     public function testLateStaticBindingStyle()
@@ -2090,16 +2412,14 @@ class DataObjectTest extends SapphireTest
         $this->assertInstanceOf(DataObjectTest\Player::class, DataObjectTest\Player::get()->first());
 
         // You can't pass arguments to LSB syntax - use the DataList methods instead.
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         DataObjectTest\Player::get(null, "\"ID\" = 1");
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testBrokenLateStaticBindingStyle()
     {
+        $this->expectException(\InvalidArgumentException::class);
         // If you call DataObject::get() you have to pass a first argument
         DataObject::get();
     }
@@ -2120,5 +2440,211 @@ class DataObjectTest extends SapphireTest
             DataObjectTest\TeamComment::class,
             ['"DataObjectTest_TeamComment"."Name"' => 'does not exists']
         ));
+    }
+
+    public function testSetFieldWithArrayOnScalarOnlyField()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $do = Company::singleton();
+        $do->FoundationYear = '1984';
+        $do->FoundationYear = ['Amount' => 123, 'Currency' => 'CAD'];
+        $this->assertEmpty($do->FoundationYear);
+    }
+
+    public function testSetFieldWithArrayOnCompositeField()
+    {
+        $do = Company::singleton();
+        $do->SalaryCap = ['Amount' => 123456, 'Currency' => 'CAD'];
+        $this->assertNotEmpty($do->SalaryCap);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesAllowed()
+    {
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = true;
+        $do->DynamicScalarOnlyField = false;
+        $do->DynamicField = true;
+
+        $do->write();
+
+        $this->assertTrue($do->StaticScalarOnlyField);
+        $this->assertFalse($do->DynamicScalarOnlyField);
+        $this->assertTrue($do->DynamicField);
+    }
+
+    public function testWriteManipulationWithNonScalarValuesDisallowed()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $do = DataObjectTest\MockDynamicAssignmentDataObject::create();
+        $do->write();
+
+        $do->StaticScalarOnlyField = false;
+        $do->DynamicScalarOnlyField = true;
+        $do->DynamicField = false;
+
+        $do->write();
+    }
+
+    public function testRecursiveWrite()
+    {
+
+        $root = $this->objFromFixture(TreeNode::class, 'root');
+        $child = $this->objFromFixture(TreeNode::class, 'child');
+        $grandchild = $this->objFromFixture(TreeNode::class, 'grandchild');
+
+        // Create a cycle ... this will test that we can't create an infinite loop
+        $root->CycleID = $grandchild->ID;
+        $root->write();
+
+        // Our count will have been set while loading our fixtures, let's reset everything back to 0
+        TreeNode::singleton()->resetCounts();
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+        $this->assertEquals(0, $root->WriteCount, 'Root node write count has been reset');
+        $this->assertEquals(0, $child->WriteCount, 'Child node write count has been reset');
+        $this->assertEquals(0, $grandchild->WriteCount, 'Grand Child node write count has been reset');
+
+        // Trigger a recursive write of the grand children
+        $grandchild->write(false, false, false, true);
+
+        // Reload the DataObject from the DB to get the new Write Counts
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+
+        $this->assertEquals(
+            1,
+            $grandchild->WriteCount,
+            'Grand child has been written once because write was directly called on it'
+        );
+        $this->assertEquals(
+            1,
+            $child->WriteCount,
+            'Child should has been written once because it is directly related to grand child'
+        );
+        $this->assertEquals(
+            1,
+            $root->WriteCount,
+            'Root should have been written once because it is indirectly related to grand child'
+        );
+    }
+
+    public function testShallowRecursiveWrite()
+    {
+        $root = $this->objFromFixture(TreeNode::class, 'root');
+        $child = $this->objFromFixture(TreeNode::class, 'child');
+        $grandchild = $this->objFromFixture(TreeNode::class, 'grandchild');
+
+        // Create a cycle ... this will test that we can't create an infinite loop
+        $root->CycleID = $grandchild->ID;
+        $root->write();
+
+        // Our count will have been set while loading our fixtures, let's reset everything back to 0
+        TreeNode::singleton()->resetCounts();
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+        $this->assertEquals(0, $root->WriteCount);
+        $this->assertEquals(0, $child->WriteCount);
+        $this->assertEquals(0, $grandchild->WriteCount);
+
+        // Recursively only affect component that have been loaded
+        $grandchild->write(false, false, false, ['recursive' => false]);
+
+        // Reload the DataObject from the DB to get the new Write Counts
+        $root = TreeNode::get()->byID($root->ID);
+        $child = TreeNode::get()->byID($child->ID);
+        $grandchild = TreeNode::get()->byID($grandchild->ID);
+
+        $this->assertEquals(
+            1,
+            $grandchild->WriteCount,
+            'Grand child was written once because write was directly called on it'
+        );
+        $this->assertEquals(
+            1,
+            $child->WriteCount,
+            'Child was written once because it is directly related grand child'
+        );
+        $this->assertEquals(
+            0,
+            $root->WriteCount,
+            'Root is 2 step remove from grand children. It was not written on a shallow recursive write.'
+        );
+    }
+
+    /**
+     * Test the different methods for creating DataObjects.
+     * Note that using anything other than the default option should generally be left to ORM interanls.
+     */
+    public function testDataObjectCreationTypes()
+    {
+
+        // Test the default (DataObject::CREATE_OBJECT)
+        // Defaults are used, changes of non-default fields are tracked
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ]);
+        $this->assertEquals('Staff', $staff->EmploymentType);
+        $this->assertEquals(['Salary'], array_keys($staff->getChangedFields() ?? []));
+
+
+        // Test hydration (DataObject::CREATE_HYDRATED)
+        // Defaults are not used, changes are not tracked
+        $staff = new DataObjectTest\Staff([
+            'ID' => 5,
+            'Salary' => 50,
+        ], DataObject::CREATE_HYDRATED);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
+        $this->assertEquals([], $staff->getChangedFields());
+
+        // Test hydration (DataObject::CREATE_HYDRATED)
+        // Defaults are not used, changes are not tracked
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_MEMORY_HYDRATED);
+        $this->assertEquals(DataObjectTest\Staff::class, $staff->ClassName);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals([], $staff->getChangedFields());
+        $this->assertFalse(
+            $staff->isInDB(),
+            'DataObject hydrated from memory without an ID are assumed to not be in the Database.'
+        );
+
+        // Test singleton (DataObject::CREATE_SINGLETON)
+        // Values are ignored
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_SINGLETON);
+        $this->assertEquals(null, $staff->EmploymentType);
+        $this->assertEquals(null, $staff->Salary);
+        $this->assertEquals([], $staff->getChangedFields());
+    }
+
+    public function testDataObjectCreationHydrateWithoutID()
+    {
+        $this->expectExceptionMessage(
+            "Hydrated records must be passed a record array including an ID."
+        );
+        // Hydrating a record without an ID should throw an exception
+        $staff = new DataObjectTest\Staff([
+            'Salary' => 50,
+        ], DataObject::CREATE_HYDRATED);
+    }
+
+    public function testDBObjectEnum()
+    {
+        $obj = new DataObjectTest\Fixture();
+        // enums are parsed correctly
+        $vals = ['25', '50', '75', '100'];
+        $this->assertSame(array_combine($vals ?? [], $vals ?? []), $obj->dbObject('MyEnum')->enumValues());
+        // enum with dots in their values are also parsed correctly
+        $vals = ['25.25', '50.00', '75.00', '100.50'];
+        $this->assertSame(array_combine($vals ?? [], $vals ?? []), $obj->dbObject('MyEnumWithDots')->enumValues());
     }
 }

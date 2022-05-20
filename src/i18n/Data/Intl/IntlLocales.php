@@ -38,7 +38,7 @@ class IntlLocales implements Locales, Resettable
      * @config
      * @var array
      */
-    private static $locales = array (
+    private static $locales =  [
         'aa_DJ' => 'Afar (Djibouti)',
         'ab_GE' => 'Abkhazian (Georgia)',
         'abr_GH' => 'Abron (Ghana)',
@@ -517,7 +517,7 @@ class IntlLocales implements Locales, Resettable
         'zh_cmn' => 'Chinese (Mandarin)',
         'zh_yue' => 'Chinese (Cantonese)',
         'zu_ZA' => 'Zulu (South Africa)'
-    );
+    ];
 
     /**
      * List of language names
@@ -528,7 +528,7 @@ class IntlLocales implements Locales, Resettable
      * @config
      * @var array
      */
-    private static $languages = array(
+    private static $languages = [
         'af' => 'Afrikaans',
         'sq' => 'Albanian',
         'ar' => 'Arabic',
@@ -611,7 +611,7 @@ class IntlLocales implements Locales, Resettable
         'xh' => 'Xhosa',
         'yi' => 'Yiddish',
         'zu' => 'Zulu',
-    );
+    ];
 
     /**
      * Config for ltr/rtr of specific locales.
@@ -643,7 +643,7 @@ class IntlLocales implements Locales, Resettable
      * could also mean "en_UK".
      * @see http://www.unicode.org/cldr/data/charts/supplemental/likely_subtags.html
      */
-    private static $likely_subtags = array(
+    private static $likely_subtags = [
         'aa' => 'aa_ET',
         'ab' => 'ab_GE',
         'ady' => 'ady_RU',
@@ -793,7 +793,7 @@ class IntlLocales implements Locales, Resettable
         'pl' => 'pl_PL',
         'pon' => 'pon_FM',
         'ps' => 'ps_AF',
-        'pt' => 'pt_BR',
+        'pt' => 'pt_PT',
         'qu' => 'qu_PE',
         'rm' => 'rm_CH',
         'rn' => 'rn_BI',
@@ -1103,7 +1103,7 @@ class IntlLocales implements Locales, Resettable
         'zh_MO' => 'zh_MO',
         'zh_TW' => 'zh_TW',
         'zu' => 'zu_ZA',
-    );
+    ];
 
 
 
@@ -1416,7 +1416,7 @@ class IntlLocales implements Locales, Resettable
         }
 
         // Default to lang_LANG
-        return strtolower($lang) . '_' . strtoupper($lang);
+        return strtolower($lang ?? '') . '_' . strtoupper($lang ?? '');
     }
 
     /**
@@ -1570,7 +1570,7 @@ class IntlLocales implements Locales, Resettable
      */
     public function countryFromLocale($locale)
     {
-        return strtolower(Locale::getRegion($locale)) ?: null;
+        return strtolower(Locale::getRegion($locale) ?? '') ?: null;
     }
 
     /**
@@ -1591,19 +1591,19 @@ class IntlLocales implements Locales, Resettable
         }
 
         // Check the configurable whitelist
-        $localeCode = strtolower($lang) . '_' . strtoupper($region);
+        $localeCode = strtolower($lang ?? '') . '_' . strtoupper($region ?? '');
         $locales = $this->getLocales();
 
-        if (array_key_exists($localeCode, $locales)
-            || array_key_exists(strtolower($localeCode), $locales)
+        if (array_key_exists($localeCode, $locales ?? [])
+            || array_key_exists(strtolower($localeCode ?? ''), $locales ?? [])
         ) {
             return true;
         }
 
         // Fallback
-        return strcasecmp($lang, $region)
-            && strcasecmp($lang, $locale)
-            && strcasecmp($region, $locale);
+        return strcasecmp($lang ?? '', $region ?? '')
+            && strcasecmp($lang ?? '', $locale ?? '')
+            && strcasecmp($region ?? '', $locale ?? '');
     }
 
     /**

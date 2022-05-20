@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Core\Tests;
 
+use Exception;
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Test various functions on the {@link Convert} class.
@@ -19,14 +19,14 @@ class ConvertTest extends SapphireTest
 
     private $previousLocaleSetting = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // clear the previous locale setting
         $this->previousLocaleSetting = null;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // If a test sets the locale, reset it on teardown
@@ -133,15 +133,10 @@ class ConvertTest extends SapphireTest
         $this->assertEquals(
             "That's absolutely correct",
             Convert::html2raw($val7),
-            "Single quotes are decoded correctly"
+            'Single quotes are decoded correctly'
         );
 
-        $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor '.
-          'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud '.
-          'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute '.
-          'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla '.
-          'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia '.
-          'deserunt mollit anim id est laborum.';
+        $val8 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' . 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud ' . 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute ' . 'irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' . 'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia ' . 'deserunt mollit anim id est laborum.';
         $this->assertEquals($val8, Convert::html2raw($val8), 'Test long text is unwrapped');
         $this->assertEquals(
             <<<PHP
@@ -222,13 +217,13 @@ PHP
      */
     public function testArray2JSON()
     {
-        $val = array(
+        $val = [
          'Joe' => 'Bloggs',
          'Tom' => 'Jones',
-         'My' => array(
+         'My' => [
           'Complicated' => 'Structure'
-         )
-        );
+         ]
+        ];
         $encoded = Convert::array2json($val);
         $this->assertEquals(
             '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}',
@@ -244,10 +239,10 @@ PHP
     {
         $val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
         $decoded = Convert::json2array($val);
-        $this->assertEquals(3, count($decoded), '3 items in the decoded array');
+        $this->assertEquals(3, count($decoded ?? []), '3 items in the decoded array');
         $this->assertContains('Bloggs', $decoded, 'Contains "Bloggs" value in decoded array');
         $this->assertContains('Jones', $decoded, 'Contains "Jones" value in decoded array');
-        $this->assertContains('Structure', $decoded['My']['Complicated']);
+        $this->assertStringContainsString('Structure', $decoded['My']['Complicated']);
     }
 
     /**
@@ -264,7 +259,7 @@ PHP
 
     /**
      * Tests {@link Convert::testRaw2URL()}
-  *
+     *
      * @todo test toASCII()
      */
     public function testRaw2URL()
@@ -278,16 +273,16 @@ PHP
 
     /**
      * Helper function for comparing characters with significant whitespaces
-  *
+     *
      * @param string $expected
      * @param string $actual
      */
     protected function assertEqualsQuoted($expected, $actual)
     {
         $message = sprintf(
-            "Expected \"%s\" but given \"%s\"",
-            addcslashes($expected, "\r\n"),
-            addcslashes($actual, "\r\n")
+            'Expected "%s" but given "%s"',
+            addcslashes($expected ?? '', "\r\n"),
+            addcslashes($actual ?? '', "\r\n")
         );
         $this->assertEquals($expected, $actual, $message);
     }
@@ -298,11 +293,11 @@ PHP
     public function testNL2OS()
     {
 
-        foreach (array("\r\n", "\r", "\n") as $nl) {
+        foreach (["\r\n", "\r", "\n"] as $nl) {
             // Base case: no action
             $this->assertEqualsQuoted(
-                "Base case",
-                Convert::nl2os("Base case", $nl)
+                'Base case',
+                Convert::nl2os('Base case', $nl)
             );
 
             // Mixed formats
@@ -375,7 +370,7 @@ PHP
         );
 
         // Array
-        $array = array('One' => 'Apple', 'Two' => 'Banana');
+        $array = ['One' => 'Apple', 'Two' => 'Banana'];
         $this->assertEquals(
             '{"One":"Apple","Two":"Banana"}',
             Convert::raw2json($array)
@@ -395,7 +390,7 @@ PHP
      */
     public function testRaw2JsonWithContext()
     {
-        $data = array('foo' => 'b"ar');
+        $data = ['foo' => 'b"ar'];
         $expected = '{"foo":"b\u0022ar"}';
         $result = Convert::raw2json($data, JSON_HEX_QUOT);
         $this->assertSame($expected, $result);
@@ -429,24 +424,24 @@ XML
         );
 
         // Test without doctype validation
-        $expected = array(
-         'result' => array(
-          "Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure",
-          array(
-        'long' => array(
-         array(
+        $expected = [
+         'result' => [
+             'Now include SOME_SUPER_LONG_STRING lots of times to expand the in-memory size of this XML structure',
+          [
+        'long' => [
+         [
           'long' => 'SOME_SUPER_LONG_STRING'
-         ),
-         array(
+         ],
+         [
           'long' => 'SOME_SUPER_LONG_STRING'
-         ),
-         array(
+         ],
+         [
           'long' => 'SOME_SUPER_LONG_STRING'
-         )
-           )
-          )
-         )
-        );
+         ]
+           ]
+             ]
+         ]
+        ];
         $result = Convert::xml2array($inputXML, false, true);
         $this->assertEquals(
             $expected,
@@ -483,17 +478,17 @@ XML
             Convert::base64url_decode(Convert::base64url_encode($data))
         );
 
-        $data = array('simple','array','¤Ø¶÷╬');
+        $data = ['simple','array','¤Ø¶÷╬'];
         $this->assertEquals(
             $data,
             Convert::base64url_decode(Convert::base64url_encode($data))
         );
 
-        $data = array(
+        $data = [
          'a'  => 'associative',
          4    => 'array',
          '☺' => '¤Ø¶÷╬'
-        );
+        ];
         $this->assertEquals(
             $data,
             Convert::base64url_decode(Convert::base64url_encode($data))
@@ -505,7 +500,7 @@ XML
         // Install a UTF-8 locale
         $this->previousLocaleSetting = setlocale(LC_CTYPE, 0);
 
-        $locales = array('en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8');
+        $locales = ['en_US.UTF-8', 'en_NZ.UTF-8', 'de_DE.UTF-8'];
         $localeInstalled = false;
         foreach ($locales as $locale) {
             if ($localeInstalled = setlocale(LC_CTYPE, $locale)) {
@@ -581,21 +576,22 @@ XML
     public function memString2BytesProvider()
     {
         return [
-            ['2048', (float)(2 * 1024)],
-            ['2k', (float)(2 * 1024)],
-            ['512M', (float)(512 * 1024 * 1024)],
-            ['512MiB', (float)(512 * 1024 * 1024)],
-            ['512 mbytes', (float)(512 * 1024 * 1024)],
-            ['512 megabytes', (float)(512 * 1024 * 1024)],
-            ['1024g', (float)(1024 * 1024 * 1024 * 1024)],
-            ['1024G', (float)(1024 * 1024 * 1024 * 1024)]
+            'infinite' => ['-1', -1],
+            'integer' => ['2048', 2 * 1024],
+            'kilo' => ['2k', 2 * 1024],
+            'mega' => ['512M', 512 * 1024 * 1024],
+            'MiB' => ['512MiB', 512 * 1024 * 1024],
+            'mbytes' => ['512 mbytes', 512 * 1024 * 1024],
+            'megabytes' => ['512 megabytes', 512 * 1024 * 1024],
+            'giga' => ['1024g', 1024 * 1024 * 1024 * 1024],
+            'G' => ['1024G', 1024 * 1024 * 1024 * 1024]
         ];
     }
 
     /**
      * Test that bytes2memstring returns a binary prefixed string representing the number of bytes
      *
-     * @param string $memString
+     * @param string $bytes
      * @param int    $expected
      * @dataProvider bytes2MemStringProvider
      */
@@ -611,11 +607,47 @@ XML
     {
         return [
             [200, '200B'],
-            [(2 * 1024), '2K'],
-            [(512 * 1024 * 1024), '512M'],
-            [(512 * 1024 * 1024 * 1024), '512G'],
-            [(512 * 1024 * 1024 * 1024 * 1024), '512T'],
-            [(512 * 1024 * 1024 * 1024 * 1024 * 1024), '512P']
+            [2 * 1024, '2K'],
+            [512 * 1024 * 1024, '512M'],
+            [512 * 1024 * 1024 * 1024, '512G'],
+            [512 * 1024 * 1024 * 1024 * 1024, '512T'],
+            [512 * 1024 * 1024 * 1024 * 1024 * 1024, '512P']
         ];
+    }
+
+    public function providerTestSlashes()
+    {
+        return [
+            ['bob/bob', '/', true, 'bob/bob'],
+            ['\\bob/bob\\', '/', true, '/bob/bob/'],
+            ['\\bob////bob\\/', '/', true, '/bob/bob/'],
+            ['bob/bob', '\\', true, 'bob\\bob'],
+            ['\\bob/bob\\', '\\', true, '\\bob\\bob\\'],
+            ['\\bob////bob\\/', '\\', true, '\\bob\\bob\\'],
+            ['bob/bob', '#', true, 'bob#bob'],
+            ['\\bob/bob\\', '#', true, '#bob#bob#'],
+            ['\\bob////bob\\/', '#', true, '#bob#bob#'],
+            ['bob/bob', '/', false, 'bob/bob'],
+            ['\\bob/bob\\', '/', false, '/bob/bob/'],
+            ['\\bob////bob\\/', '/', false, '/bob////bob//'],
+            ['bob/bob', '\\', false, 'bob\\bob'],
+            ['\\bob/bob\\', '\\', false, '\\bob\\bob\\'],
+            ['\\bob////bob\\/', '\\', false, '\\bob\\\\\\\\bob\\\\'],
+            ['bob/bob', '#', false, 'bob#bob'],
+            ['\\bob/bob\\', '#', false, '#bob#bob#'],
+            ['\\bob////bob\\/', '#', false, '#bob####bob##'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestSlashes
+     * @param string $path
+     * @param string $separator
+     * @param bool $multiple
+     * @param string $expected
+     */
+    public function testSlashes($path, $separator, $multiple, $expected)
+    {
+        $this->assertEquals($expected, Convert::slashes($path, $separator, $multiple));
     }
 }

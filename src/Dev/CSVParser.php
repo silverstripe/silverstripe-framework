@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\Reader;
 use SilverStripe\Core\Injector\Injectable;
 use Iterator;
 
@@ -19,7 +20,7 @@ use SilverStripe\Control\Director;
  * <code>
  * $parser = new CSVParser('myfile.csv');
  * $parser->mapColumns(array(
- *    'first name' => 'FirstName'
+ *    'first name' => 'FirstName',
  *    'lastname' => 'Surname',
  *    'last name' => 'Surname',
  * ));
@@ -53,7 +54,7 @@ class CSVParser implements Iterator
      *
      * @var array
      */
-    protected $columnMap = array();
+    protected $columnMap = [];
 
     /**
      * The header row used to map data in the CSV file.
@@ -109,11 +110,12 @@ class CSVParser implements Iterator
      * You can use the object returned in a foreach loop to extract the data.
      *
      * @param string $filename The name of the file.  If relative, it will be relative to the site's base dir
-     * @param string $delimiter The character for seperating columns
+     * @param string $delimiter The character for separating columns
      * @param string $enclosure The character for quoting or enclosing columns
      */
     public function __construct($filename, $delimiter = ",", $enclosure = '"')
     {
+        Deprecation::notice('5.0', __CLASS__ . ' is deprecated, use ' . Reader::class . ' instead');
         $filename = Director::getAbsFile($filename);
         $this->filename = $filename;
         $this->delimiter = $delimiter;
@@ -132,12 +134,12 @@ class CSVParser implements Iterator
      * ));
      * </code>
      *
-     * @param array
+     * @param array $columnMap
      */
     public function mapColumns($columnMap)
     {
         if ($columnMap) {
-            $lowerColumnMap = array();
+            $lowerColumnMap = [];
 
             foreach ($columnMap as $k => $v) {
                 $lowerColumnMap[strtolower($k)] = $v;
@@ -154,7 +156,7 @@ class CSVParser implements Iterator
      * If you call this function, then the first row of the CSV will be
      * included in the data returned.
      *
-     * @param array
+     * @param array $headerRow
      */
     public function provideHeaderRow($headerRow)
     {
@@ -166,8 +168,7 @@ class CSVParser implements Iterator
      */
     protected function openFile()
     {
-        ini_set('auto_detect_line_endings', 1);
-        $this->fileHandle = fopen($this->filename, 'r');
+        $this->fileHandle = fopen($this->filename ?? '', 'r');
 
         if ($this->providedHeaderRow) {
             $this->headerRow = $this->remapHeader($this->providedHeaderRow);
@@ -198,8 +199,8 @@ class CSVParser implements Iterator
         $srcRow = fgetcsv(
             $this->fileHandle,
             0,
-            $this->delimiter,
-            $this->enclosure
+            $this->delimiter ?? '',
+            $this->enclosure ?? ''
         );
 
         $this->headerRow = $this->remapHeader($srcRow);
@@ -208,13 +209,13 @@ class CSVParser implements Iterator
     /**
      * Map the contents of a header array using $this->mappedColumns.
      *
-     * @param array
+     * @param array $header
      *
      * @return array
      */
     protected function remapHeader($header)
     {
-        $mappedHeader = array();
+        $mappedHeader = [];
 
         foreach ($header as $item) {
             if (isset($this->columnMap[strtolower($item)])) {
@@ -246,22 +247,24 @@ class CSVParser implements Iterator
         $srcRow = fgetcsv(
             $this->fileHandle,
             0,
-            $this->delimiter,
-            $this->enclosure
+            $this->delimiter ?? '',
+            $this->enclosure ?? ''
         );
 
         if ($srcRow) {
-            $row = array();
+            $row = [];
 
             foreach ($srcRow as $i => $value) {
                 // Allow escaping of quotes and commas in the data
                 $value = str_replace(
-                    array('\\'.$this->enclosure,'\\'.$this->delimiter),
-                    array($this->enclosure, $this->delimiter),
-                    $value
+                    ['\\' . $this->enclosure,'\\' . $this->delimiter],
+                    [$this->enclosure, $this->delimiter],
+                    $value ?? ''
                 );
-
-                if (array_key_exists($i, $this->headerRow)) {
+                // Trim leading tab
+                // [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
+                $value = ltrim($value ?? '', "\t");
+                if (array_key_exists($i, $this->headerRow ?? [])) {
                     if ($this->headerRow[$i]) {
                         $row[$this->headerRow[$i]] = $value;
                     }
@@ -291,6 +294,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->closeFile();
@@ -300,6 +304,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->currentRow;
@@ -308,6 +313,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->rowNum;
@@ -316,6 +322,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->fetchCSVRow();
@@ -326,6 +333,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->currentRow ? true : false;

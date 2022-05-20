@@ -16,11 +16,11 @@ class MarkedSetTest extends SapphireTest
 {
     protected static $fixture_file = 'HierarchyTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         HierarchyTest\TestObject::class,
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
-    );
+    ];
 
     public static function getExtraDataObjects()
     {
@@ -31,7 +31,7 @@ class MarkedSetTest extends SapphireTest
         return [];
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,7 +59,7 @@ class MarkedSetTest extends SapphireTest
 
         // Query some objs in a different context and check their m
         $objs = DataObject::get(HierarchyTest\TestObject::class, '', '"ID" ASC');
-        $marked = $expanded = array();
+        $marked = $expanded = [];
         foreach ($objs as $obj) {
             if ($set->isMarked($obj)) {
                 $marked[] = $obj->Title;
@@ -68,8 +68,8 @@ class MarkedSetTest extends SapphireTest
                 $expanded[] = $obj->Title;
             }
         }
-        $this->assertEquals(array('Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'), $marked);
-        $this->assertEquals(array('Obj 2', 'Obj 2a', 'Obj 2b'), $expanded);
+        $this->assertEquals(['Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'], $marked);
+        $this->assertEquals(['Obj 2', 'Obj 2a', 'Obj 2b'], $expanded);
     }
 
     /**
@@ -135,17 +135,17 @@ EOT;
 
         $this->assertTreeContains(
             $html,
-            array($obj2),
+            [$obj2],
             'Contains root elements'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a),
+            [$obj2, $obj2a],
             'Contains child elements (in correct nesting)'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a, $obj2aa),
+            [$obj2, $obj2a, $obj2aa],
             'Contains grandchild elements (in correct nesting)'
         );
     }
@@ -165,17 +165,17 @@ EOT;
 
         $this->assertTreeContains(
             $html,
-            array($obj1),
+            [$obj1],
             'Contains root elements'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2),
+            [$obj2],
             'Contains root elements'
         );
         $this->assertTreeNotContains(
             $html,
-            array($obj2, $obj2a),
+            [$obj2, $obj2a],
             'Does not contains child elements because they exceed minNodeCount'
         );
     }
@@ -197,12 +197,12 @@ EOT;
 
         $this->assertTreeContains(
             $html,
-            array($obj2),
+            [$obj2],
             'Contains root elements'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a, $obj2aa),
+            [$obj2, $obj2a, $obj2aa],
             'Does contain marked children nodes regardless of configured threshold'
         );
     }
@@ -222,7 +222,7 @@ EOT;
             function ($record) use ($obj2, $obj2a, $obj2aa) {
                 // Results need to include parent hierarchy, even if we just want to
                 // match the innermost node.
-                return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+                return in_array($record->ID, [$obj2->ID, $obj2a->ID, $obj2aa->ID]);
             }
         );
         $set->markPartialTree();
@@ -232,12 +232,12 @@ EOT;
 
         $this->assertTreeNotContains(
             $html,
-            array($obj1),
+            [$obj1],
             'Does not contain root elements which dont match the filter'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a, $obj2aa),
+            [$obj2, $obj2a, $obj2aa],
             'Contains non-root elements which match the filter'
         );
     }
@@ -258,7 +258,7 @@ EOT;
             function ($record) use ($obj2, $obj2a, $obj2aa) {
                 // Results need to include parent hierarchy, even if we just want to
                 // match the innermost node.
-                return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+                return in_array($record->ID, [$obj2->ID, $obj2a->ID, $obj2aa->ID]);
             }
         );
         $set->markPartialTree();
@@ -267,12 +267,12 @@ EOT;
 
         $this->assertTreeNotContains(
             $html,
-            array($obj1, $obj2aa),
+            [$obj1, $obj2aa],
             'Does not contain root elements which dont match the filter or are limited'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a),
+            [$obj2, $obj2a],
             'Contains non-root elements which match the filter'
         );
     }
@@ -295,22 +295,22 @@ EOT;
 
         $this->assertTreeContains(
             $html,
-            array($obj1),
+            [$obj1],
             'Does contain root elements regardless of count'
         );
         $this->assertTreeContains(
             $html,
-            array($obj3),
+            [$obj3],
             'Does contain root elements regardless of count'
         );
         $this->assertTreeContains(
             $html,
-            array($obj2, $obj2a),
+            [$obj2, $obj2a],
             'Contains children which do not exceed threshold'
         );
         $this->assertTreeNotContains(
             $html,
-            array($obj3, $obj3a),
+            [$obj3, $obj3a],
             'Does not contain children which exceed threshold'
         );
     }
@@ -382,9 +382,9 @@ EOT;
 
 
     /**
-     * @param String $html    [description]
+     * @param string $html    [description]
      * @param array  $nodes   Breadcrumb path as array
-     * @param String $message
+     * @param string $message
      */
     protected function assertTreeContains($html, $nodes, $message = null)
     {
@@ -398,9 +398,9 @@ EOT;
     }
 
     /**
-     * @param String $html    [description]
+     * @param string $html    [description]
      * @param array  $nodes   Breadcrumb path as array
-     * @param String $message
+     * @param string $message
      */
     protected function assertTreeNotContains($html, $nodes, $message = null)
     {
@@ -437,8 +437,8 @@ EOT;
     protected function assertHTMLSame($expected, $actual, $message = '')
     {
         // Trim each line, strip empty lines
-        $expected = implode("\n", array_filter(array_map('trim', explode("\n", $expected))));
-        $actual = implode("\n", array_filter(array_map('trim', explode("\n", $actual))));
+        $expected = implode("\n", array_filter(array_map('trim', explode("\n", $expected ?? ''))));
+        $actual = implode("\n", array_filter(array_map('trim', explode("\n", $actual ?? ''))));
         $this->assertXmlStringEqualsXmlString($expected, $actual, $message);
     }
 }

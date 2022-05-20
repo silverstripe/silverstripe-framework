@@ -77,7 +77,7 @@ class MemberLoginForm extends BaseLoginForm
         $checkCurrentUser = true
     ) {
         $this->setController($controller);
-        $this->authenticator_class = $authenticatorClass;
+        $this->setAuthenticatorClass($authenticatorClass);
 
         $customCSS = project() . '/css/member_login.css';
         if (Director::fileExists($customCSS)) {
@@ -88,7 +88,7 @@ class MemberLoginForm extends BaseLoginForm
             // @todo find a more elegant way to handle this
             $logoutAction = Security::logout_url();
             $fields = FieldList::create(
-                HiddenField::create('AuthenticationMethod', null, $this->authenticator_class, $this)
+                HiddenField::create('AuthenticationMethod', null, $this->getAuthenticatorClass(), $this)
             );
             $actions = FieldList::create(
                 FormAction::create('logout', _t(
@@ -133,8 +133,8 @@ class MemberLoginForm extends BaseLoginForm
 
         $label = Member::singleton()->fieldLabel(Member::config()->get('unique_identifier_field'));
         $fields = FieldList::create(
-            HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
-            // Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
+            HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
+            // Regardless of what the unique identifier field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
             $emailField = TextField::create("Email", $label, null, null, $this),
@@ -153,15 +153,20 @@ class MemberLoginForm extends BaseLoginForm
             $fields->push(
                 CheckboxField::create(
                     "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
-                )->setAttribute(
-                    'title',
                     _t(
-                        'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
+                        'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN',
+                        'Keep me signed in for {count} days',
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
+                    ->setAttribute(
+                        'title',
+                        _t(
+                            'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN_TOOLTIP',
+                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.',
+                            ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
+                        )
+                    )
             );
         }
 
@@ -203,7 +208,7 @@ class MemberLoginForm extends BaseLoginForm
             $message = _t(
                 'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
-                array('name' => $member->{$this->loggedInAsField})
+                ['name' => $member->{$this->loggedInAsField}]
             );
             $this->setMessage($message, ValidationResult::TYPE_INFO);
         }
@@ -224,6 +229,6 @@ class MemberLoginForm extends BaseLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(self::class . '.AUTHENTICATORNAME', "E-mail &amp; Password");
+        return _t(self::class . '.AUTHENTICATORNAME', "E-mail & Password");
     }
 }

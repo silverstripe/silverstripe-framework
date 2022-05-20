@@ -15,7 +15,7 @@ use SilverStripe\View\ArrayData;
  *
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-class BulkLoader_Result
+class BulkLoader_Result implements \Countable
 {
     use Injectable;
 
@@ -30,31 +30,31 @@ class BulkLoader_Result
      *
      * Example:
      * <code>
-     * array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
+     * [['ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation']]
      * </code>
      *
      * @var array
      */
-    protected $created = array();
+    protected $created = [];
 
     /**
      * see {@link $created}
      *
      * @var array
      */
-    protected $updated = array();
+    protected $updated = [];
 
     /**
      * @var array (see {@link $created})
      */
-    protected $deleted = array();
+    protected $deleted = [];
 
     /**
      * Stores the last change.
      * It is in the same format as {@link $created} but with an additional key, "ChangeType", which will be set to
      * one of 3 strings: "created", "updated", or "deleted"
      */
-    protected $lastChange = array();
+    protected $lastChange = [];
 
     /**
      * Returns the count of all objects which were
@@ -62,9 +62,10 @@ class BulkLoader_Result
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function Count()
     {
-        return count($this->created) + count($this->updated);
+        return count($this->created ?? []) + count($this->updated ?? []);
     }
 
     /**
@@ -72,7 +73,7 @@ class BulkLoader_Result
      */
     public function CreatedCount()
     {
-        return count($this->created);
+        return count($this->created ?? []);
     }
 
     /**
@@ -80,7 +81,7 @@ class BulkLoader_Result
      */
     public function UpdatedCount()
     {
-        return count($this->updated);
+        return count($this->updated ?? []);
     }
 
     /**
@@ -88,7 +89,7 @@ class BulkLoader_Result
      */
     public function DeletedCount()
     {
-        return count($this->deleted);
+        return count($this->deleted ?? []);
     }
 
     /**
@@ -138,11 +139,11 @@ class BulkLoader_Result
      */
     public function addCreated($obj, $message = null)
     {
-        $this->created[] = $this->lastChange = array(
+        $this->created[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
             'Message' => $message
-        );
+        ];
         $this->lastChange['ChangeType'] = 'created';
     }
 
@@ -152,11 +153,11 @@ class BulkLoader_Result
      */
     public function addUpdated($obj, $message = null)
     {
-        $this->updated[] = $this->lastChange = array(
+        $this->updated[] = $this->lastChange = [
             'ID' => $obj->ID,
             'ClassName' => get_class($obj),
             'Message' => $message
-        );
+        ];
         $this->lastChange['ChangeType'] = 'updated';
     }
 

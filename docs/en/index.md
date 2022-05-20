@@ -1,49 +1,51 @@
-title: SilverStripe Documentation
-introduction: Welcome to the SilverStripe Developer Documentation. This website is aimed at website developers looking to learn how to build and manage web applications with the SilverStripe Framework.
+---
+title: Silverstripe Documentation 
+summary: Welcome to the Silverstripe Developer Documentation. This website is aimed at website developers looking to learn how to build and manage web applications with the Silverstripe Framework.
+---
 
-## Getting Started with SilverStripe
+## Getting Started with Silverstripe
 
-Before you start developing your first web application, you'll need to install the latest version of SilverStripe onto 
-a web server. The [Getting Started](/getting_started) section will show you what 
-[server requirements](/getting_started/server_requirements) you will need to meet and how to 
-[download and install SilverStripe](/getting_started/installation).
+Before you start developing your first web application, you'll need to install the latest version of Silverstripe onto a
+web server. The [Getting Started](/getting_started) section will show you what
+[server requirements](/getting_started/server_requirements) you will need to meet and how to
+[install Silverstripe with Composer](/getting_started/composer).
 
-To check out the features that SilverStripe offers without installing it, read the [Feature Overview](http://www.silverstripe.org/software/) 
-and play with the interactive [demo website](http://demo.silverstripe.org/).
+To check out the features that Silverstripe offers without installing it, read
+the [Feature Overview](http://www.silverstripe.org/software/)
+and play with our [interactive demos](http://silverstripe.org/try).
 
-##  Getting support
+## Getting support
 
-SilverStripe has an wide range of options for getting support. The [forums](http://www.silverstripe.org/community/forums/) 
-and [IRC channel](http://irc.silverstripe.org/) are the best places to talk and discuss questions and problems with the
-community. There are also several other websites with SilverStripe documentation to make use of. 
+Silverstripe has a wide range of options for getting support:
 
-* The [API Documentation](http://api.silverstripe.org/) contains technical reference and class information. 
-* The [User Help](http://userhelp.silverstripe.com) website contains documentation related to working within the CMS. 
+* Get help on our [Slack channel](https://www.silverstripe.org/community/slack-signup/)
+* Join our [forum](https://forum.silverstripe.org)
+* Ask technical questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/silverstripe)
+* Read the technical reference in our [API Documentation](http://api.silverstripe.org/)
+* Get a user-focused overview of the CMS features in our [User Help](http://userhelp.silverstripe.com)
+* Discuss new features, API changes and the development [roadmap](http://www.silverstripe.org/software/roadmap/)
+  on the ["feature ideas" category](https://forum.silverstripe.org/c/feature-ideas) in our forums
 
-New features, API changes and the development [roadmap](http://www.silverstripe.org/software/roadmap/) for the product are 
-discussed on the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev) along with 
-[UserVoice](http://silverstripe.uservoice.com/forums/251266-new-features).
+## Building your first Silverstripe Web application
 
+Once you have completed the [Getting Started](/getting_started) guide and have got Silverstripe installed and running,
+the following [Tutorials](http://silverstripe.org/learn/lessons) will lead through the basics and core concepts of
+Silverstripe.
 
-## Building your first SilverStripe Web application
+Make sure you know the basic concepts of PHP7 before attempting to follow the tutorials. If you have not programmed with
+PHP5 be sure to read
+the [Introduction to PHP5 (zend.com)](http://devzone.zend.com/6/php-101--php-for-the-absolute-beginner).
 
-Once you have completed the [Getting Started](/getting_started) guide and have got SilverStripe
-installed and running, the following [Tutorials](http://silverstripe.org/learn/lessons) will lead through the basics and core concepts of 
-SilverStripe.
+## Silverstripe Concepts
 
-Make sure you know the basic concepts of PHP5 before attempting to follow the tutorials. If you have not programmed with PHP5 be sure to read the [Introduction to PHP5 (zend.com)](http://devzone.zend.com/6/php-101--php-for-the-absolute-beginner).
-
-
-## SilverStripe Concepts
-
-The [Developer Guides](/developer_guides) contain more detailed documentation on certain SilverStripe topics, 'how to'
+The [Developer Guides](/developer_guides) contain more detailed documentation on certain Silverstripe topics, 'how to'
 examples and reference documentation.
 
 [CHILDREN Folder=02_Developer_Guides]
 
-## Contributing to SilverStripe
+## Contributing to Silverstripe
 
-The SilverStripe Framework, Content Management System and related websites are open source and welcome community 
+The Silverstripe Framework, Content Management System and related websites are open source and welcome community
 contributions.
 
 [CHILDREN Folder=05_Contributing]

@@ -11,9 +11,9 @@ use SilverStripe\Forms\FormField;
 class HandlingField extends FormField implements TestOnly
 {
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'actionOnField'
-    );
+    ];
 
     public function actionOnField()
     {

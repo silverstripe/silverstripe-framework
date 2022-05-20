@@ -19,7 +19,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @var array
      */
-    protected $where = array();
+    protected $where = [];
 
     /**
      * The logical connective used to join WHERE clauses. Defaults to AND.
@@ -40,7 +40,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @var array
      */
-    protected $from = array();
+    protected $from = [];
 
     /**
      * Construct a new SQLInteractExpression.
@@ -48,7 +48,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
      * @param array $where An array of WHERE clauses.
      */
-    function __construct($from = array(), $where = array())
+    function __construct($from = [], $where = [])
     {
         $this->setFrom($from);
         $this->setWhere($where);
@@ -64,7 +64,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function setFrom($from)
     {
-        $this->from = array();
+        $this->from = [];
         return $this->addFrom($from);
     }
 
@@ -81,7 +81,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         if (is_array($from)) {
             $this->from = array_merge($this->from, $from);
         } elseif (!empty($from)) {
-            $this->from[str_replace(array('"','`'), '', $from)] = $from;
+            $this->from[str_replace(['"','`'], '', $from)] = $from;
         }
 
         return $this;
@@ -133,21 +133,21 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param int $order A numerical index to control the order that joins are added to the query; lower order values
      *                   will cause the query to appear first. The default is 20, and joins created automatically by the
      *                   ORM have a value of 10.
-     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
-    public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = array())
+    public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
     {
         if (!$tableAlias) {
             $tableAlias = $table;
         }
-        $this->from[$tableAlias] = array(
+        $this->from[$tableAlias] = [
             'type' => 'LEFT',
             'table' => $table,
-            'filter' => array($onPredicate),
+            'filter' => [$onPredicate],
             'order' => $order,
             'parameters' => $parameters
-        );
+        ];
         return $this;
     }
 
@@ -161,21 +161,21 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param int $order A numerical index to control the order that joins are added to the query; lower order
      * values will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
-     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
-    public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = array())
+    public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = [])
     {
         if (!$tableAlias) {
             $tableAlias = $table;
         }
-        $this->from[$tableAlias] = array(
+        $this->from[$tableAlias] = [
             'type' => 'INNER',
             'table' => $table,
-            'filter' => array($onPredicate),
+            'filter' => [$onPredicate],
             'order' => $order,
             'parameters' => $parameters
-        );
+        ];
         return $this;
     }
 
@@ -201,7 +201,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function setJoinFilter($table, $filter)
     {
-        $this->from[$table]['filter'] = array($filter);
+        $this->from[$table]['filter'] = [$filter];
         return $this;
     }
 
@@ -223,12 +223,12 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function queriedTables()
     {
-        $tables = array();
+        $tables = [];
 
         foreach ($this->from as $key => $tableClause) {
             if (is_array($tableClause)) {
-                $table = '"'.$tableClause['table'].'"';
-            } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) {
+                $table = '"' . $tableClause['table'] . '"';
+            } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause ?? '', $matches)) {
                 $table = $matches[1];
             } else {
                 $table = $tableClause;
@@ -236,10 +236,10 @@ abstract class SQLConditionalExpression extends SQLExpression
 
             // Handle string replacements
             if ($this->replacementsOld) {
-                $table = str_replace($this->replacementsOld, $this->replacementsNew, $table);
+                $table = str_replace($this->replacementsOld ?? '', $this->replacementsNew ?? '', $table ?? '');
             }
 
-            $tables[] = preg_replace('/^"|"$/', '', $table);
+            $tables[] = preg_replace('/^"|"$/', '', $table ?? '');
         }
 
         return $tables;
@@ -256,14 +256,14 @@ abstract class SQLConditionalExpression extends SQLExpression
     }
 
     /**
-     * Retrieves the finalised list of joins
+     * Retrieves the finalized list of joins
      *
      * @todo This part of the code could be simplified
      *
      * @param array $parameters Out variable for parameters required for this query
      * @return array List of joins as a mapping from array('Alias' => 'Join Expression')
      */
-    public function getJoins(&$parameters = array())
+    public function getJoins(&$parameters = [])
     {
         if (func_num_args() == 0) {
             Deprecation::notice(
@@ -274,7 +274,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         }
 
         // Sort the joins
-        $parameters = array();
+        $parameters = [];
         $joins = $this->getOrderedJoins($this->from);
 
         // Build from clauses
@@ -283,25 +283,42 @@ abstract class SQLConditionalExpression extends SQLExpression
             // array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1",
             // "Status = 'approved'", 'order' => 20))
             if (!is_array($join)) {
+                if (empty($alias) || is_numeric($alias)) {
+                    continue;
+                }
+
+                if (preg_match('/AS\s+(?:"[^"]+"|[A-Z0-9_]+)\s*$/i', $join ?? '')) {
+                    // custom aliases override the ones defined through array keys
+                    // this is only meant to keep backward compatibility with SS <= 4.3,
+                    // to be removed in SS5
+                    continue;
+                }
+
+                $trimmedAlias = trim($alias ?? '', '"');
+
+                if ($trimmedAlias !== trim($join ?? '', '"')) {
+                    $joins[$alias] = "{$join} AS \"{$trimmedAlias}\"";
+                }
+
                 continue;
             }
 
             if (is_string($join['filter'])) {
                 $filter = $join['filter'];
-            } elseif (sizeof($join['filter']) == 1) {
+            } elseif (sizeof($join['filter'] ?? []) == 1) {
                 $filter = $join['filter'][0];
             } else {
                 $filter = "(" . implode(") AND (", $join['filter']) . ")";
             }
 
             // Ensure tables are quoted, unless the table is actually a sub-select
-            $table = preg_match('/\bSELECT\b/i', $join['table'])
+            $table = preg_match('/\bSELECT\b/i', $join['table'] ?? '')
                 ? $join['table']
                 : "\"{$join['table']}\"";
             $aliasClause = ($alias != $join['table'])
                 ? " AS \"{$alias}\""
                 : "";
-            $joins[$alias] = strtoupper($join['type']) . " JOIN " . $table . "$aliasClause ON $filter";
+            $joins[$alias] = strtoupper($join['type'] ?? '') . " JOIN " . $table . "$aliasClause ON $filter";
             if (!empty($join['parameters'])) {
                 $parameters = array_merge($parameters, $join['parameters']);
             }
@@ -321,8 +338,15 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     protected function getOrderedJoins($from)
     {
+        if (count($from ?? []) <= 1) {
+            return $from;
+        }
+
         // shift the first FROM table out from so we only deal with the JOINs
+        reset($from);
+        $baseFromAlias = key($from ?? []);
         $baseFrom = array_shift($from);
+
         $this->mergesort($from, function ($firstJoin, $secondJoin) {
             if (!is_array($firstJoin)
                 || !is_array($secondJoin)
@@ -335,7 +359,12 @@ abstract class SQLConditionalExpression extends SQLExpression
         });
 
         // Put the first FROM table back into the results
-        array_unshift($from, $baseFrom);
+        if (!empty($baseFromAlias) && !is_numeric($baseFromAlias)) {
+            $from = array_merge([$baseFromAlias => $baseFrom], $from);
+        } else {
+            array_unshift($from, $baseFrom);
+        }
+
         return $from;
     }
 
@@ -345,19 +374,19 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @see http://stackoverflow.com/q/4353739/139301
      *
-     * @param array &$array The array to sort
+     * @param array $array The array to sort (by reference)
      * @param callable|string $cmpFunction The function to use for comparison
      */
     protected function mergesort(&$array, $cmpFunction = 'strcmp')
     {
         // Arrays of size < 2 require no action.
-        if (count($array) < 2) {
+        if (count($array ?? []) < 2) {
             return;
         }
         // Split the array in half
-        $halfway = count($array) / 2;
-        $array1 = array_slice($array, 0, $halfway);
-        $array2 = array_slice($array, $halfway);
+        $halfway = floor(count($array ?? []) / 2);
+        $array1 = array_slice($array ?? [], 0, $halfway);
+        $array2 = array_slice($array ?? [], $halfway ?? 0);
         // Recurse to sort the two halves
         $this->mergesort($array1, $cmpFunction);
         $this->mergesort($array2, $cmpFunction);
@@ -367,7 +396,7 @@ abstract class SQLConditionalExpression extends SQLExpression
             return;
         }
         // Merge the two sorted arrays into a single sorted array
-        $array = array();
+        $array = [];
         $val1 = reset($array1);
         $val2 = reset($array2);
         do {
@@ -397,21 +426,20 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @see SQLConditionalExpression::addWhere() for syntax examples
      *
-     * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $where,... Unlimited additional predicates
+     * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function setWhere($where)
     {
         $where = func_num_args() > 1 ? func_get_args() : $where;
-        $this->where = array();
+        $this->where = [];
         return $this->addWhere($where);
     }
 
     /**
      * Adds a WHERE clause.
      *
-     * Note that the database will execute any parameterised queries using
+     * Note that the database will execute any parameterized queries using
      * prepared statements whenever available.
      *
      * There are several different ways of doing this.
@@ -484,8 +512,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *  ));
      * </code>
      *
-     * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $where,... Unlimited additional predicates
+     * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function addWhere($where)
@@ -501,23 +528,21 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * @see SQLConditionalExpression::addWhere()
      *
-     * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $filters,... Unlimited additional predicates
+     * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function setWhereAny($filters)
     {
         $filters = func_num_args() > 1 ? func_get_args() : $filters;
         return $this
-            ->setWhere(array())
+            ->setWhere([])
             ->addWhereAny($filters);
     }
 
     /**
      * @see SQLConditionalExpression::addWhere()
      *
-     * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
-     * @param mixed $filters,... Unlimited additional predicates
+     * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
     public function addWhereAny($filters)
@@ -526,8 +551,8 @@ abstract class SQLConditionalExpression extends SQLExpression
         $filters = $this->normalisePredicates(func_get_args());
         $this->splitQueryParameters($filters, $predicates, $parameters);
 
-        $clause = "(".implode(") OR (", $predicates).")";
-        return $this->addWhere(array($clause => $parameters));
+        $clause = "(" . implode(") OR (", $predicates) . ")";
+        return $this->addWhere([$clause => $parameters]);
     }
 
     /**
@@ -553,62 +578,63 @@ abstract class SQLConditionalExpression extends SQLExpression
     }
 
     /**
-     * Given a key / value pair, extract the predicate and any potential paramaters
-     * in a format suitable for storing internally as a list of paramaterised conditions.
+     * Given a key / value pair, extract the predicate and any potential parameters
+     * in a format suitable for storing internally as a list of parameterized conditions.
      *
      * @param string|integer $key The left hand (key index) of this condition.
      * Could be the predicate or an integer index.
      * @param mixed $value The The right hand (array value) of this condition.
-     * Could be the predicate (if non-paramaterised), or the parameter(s). Could also be
+     * Could be the predicate (if non-parameterized), or the parameter(s). Could also be
      * an array containing a nested condition in the similar format this function outputs.
      * @return array|SQLConditionGroup A single item array in the format
      * array($predicate => array($parameters)), unless it's a SQLConditionGroup
      */
     protected function parsePredicate($key, $value)
     {
-        // If a string key is given then presume this is a paramaterised condition
+        // If a string key is given then presume this is a parameterized condition
         if ($value instanceof SQLConditionGroup) {
             return $value;
         } elseif (is_string($key)) {
             // Extract the parameter(s) from the value
             if (!is_array($value) || isset($value['type'])) {
-                $parameters = array($value);
+                $parameters = [$value];
             } else {
-                $parameters = array_values($value);
+                $parameters = array_values($value ?? []);
             }
 
             // Append '= ?' if not present, parameters are given, and we have exactly one parameter
-            if (strpos($key, '?') === false) {
-                $parameterCount = count($parameters);
+            if (strpos($key ?? '', '?') === false) {
+                $parameterCount = count($parameters ?? []);
                 if ($parameterCount === 1) {
                     $key .= " = ?";
                 } elseif ($parameterCount > 1) {
-                    user_error(
-                        "Incorrect number of '?' in predicate $key. Expected $parameterCount but none given.",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Incorrect number of '?' in predicate $key. Expected $parameterCount but none given."
                     );
                 }
             }
-            return array($key => $parameters);
+            return [$key => $parameters];
         } elseif (is_array($value)) {
             // If predicates are nested one per array (as per the internal format)
             // then run a quick check over the contents and recursively parse
-            if (count($value) != 1) {
-                user_error('Nested predicates should be given as a single item array in '
-                        .  'array($predicate => array($prameters)) format)', E_USER_ERROR);
+            if (count($value ?? []) !== 1) {
+                throw new \InvalidArgumentException(
+                    'Nested predicates should be given as a single item array in '
+                        . 'array($predicate => array($parameters)) format)'
+                );
             }
             foreach ($value as $key => $pairValue) {
                 return $this->parsePredicate($key, $pairValue);
             }
         } else {
-            // Non-paramaterised condition
-            return array($value => array());
+            // Non-parameterized condition
+            return [$value => []];
         }
     }
 
     /**
      * Given a list of conditions in any user-acceptable format, convert this
-     * to an array of paramaterised predicates suitable for merging with $this->where.
+     * to an array of parameterized predicates suitable for merging with $this->where.
      *
      * Normalised predicates are in the below format, in order to avoid key collisions.
      *
@@ -628,16 +654,16 @@ abstract class SQLConditionalExpression extends SQLExpression
     protected function normalisePredicates(array $predicates)
     {
         // Since this function is called with func_get_args we should un-nest the single first parameter
-        if (count($predicates) == 1) {
+        if (count($predicates ?? []) == 1) {
             $predicates = array_shift($predicates);
         }
 
         // Ensure single predicates are iterable
         if (!is_array($predicates)) {
-            $predicates = array($predicates);
+            $predicates = [$predicates];
         }
 
-        $normalised = array();
+        $normalised = [];
         foreach ($predicates as $key => $value) {
             if (empty($value) && (empty($key) || is_numeric($key))) {
                 continue; // Ignore empty conditions
@@ -661,9 +687,9 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function splitQueryParameters($conditions, &$predicates, &$parameters)
     {
-        // Merge all filters with paramaterised queries
-        $predicates = array();
-        $parameters = array();
+        // Merge all filters with parameterized queries
+        $predicates = [];
+        $parameters = [];
         foreach ($conditions as $condition) {
             // Evaluate the result of SQLConditionGroup here
             if ($condition instanceof SQLConditionGroup) {
@@ -693,7 +719,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         $regexp = '/^(.*\.)?("|`)?ID("|`)?\s?(=|IN)/';
 
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
-            if (preg_match($regexp, $predicate)) {
+            if (preg_match($regexp ?? '', $predicate ?? '')) {
                 return true;
             }
         }
@@ -712,9 +738,9 @@ abstract class SQLConditionalExpression extends SQLExpression
     {
         $regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?(=|IN)/';
 
-        // @todo - Test this works with paramaterised queries
+        // @todo - Test this works with parameterized queries
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
-            if (preg_match($regexp, $predicate)) {
+            if (preg_match($regexp ?? '', $predicate ?? '')) {
                 return true;
             }
         }

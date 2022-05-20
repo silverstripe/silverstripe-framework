@@ -16,7 +16,7 @@ class HiddenField extends FormField
      * @param array $properties
      * @return string
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return $this->Field($properties);
     }
@@ -41,7 +41,7 @@ class HiddenField extends FormField
         return true;
     }
 
-    function SmallFieldHolder($properties = array())
+    function SmallFieldHolder($properties = [])
     {
         return $this->FieldHolder($properties);
     }

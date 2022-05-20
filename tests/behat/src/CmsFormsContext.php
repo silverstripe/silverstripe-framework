@@ -6,6 +6,8 @@ use BadMethodCallException;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Session;
+use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 use Symfony\Component\DomCrawler\Crawler;
@@ -24,6 +26,9 @@ class CmsFormsContext implements Context
 
     /**
      * Get Mink session from MinkContext
+     *
+     * @param string $name
+     * @return Session
      */
     public function getSession($name = null)
     {
@@ -39,7 +44,7 @@ class CmsFormsContext implements Context
      */
     protected function fixStepArgument($argument)
     {
-        return str_replace('\\"', '"', $argument);
+        return str_replace('\\"', '"', $argument ?? '');
     }
 
     /**
@@ -50,10 +55,10 @@ class CmsFormsContext implements Context
         $page = $this->getSession()->getPage();
 
         $form = $page->find('css', '#Form_EditForm');
-        if (trim($negative)) {
-            assertNull($form, 'I should not see an edit page form');
+        if (trim($negative ?? '')) {
+            Assert::assertNull($form, 'I should not see an edit page form');
         } else {
-            assertNotNull($form, 'I should see an edit page form');
+            Assert::assertNotNull($form, 'I should see an edit page form');
         }
     }
 
@@ -69,7 +74,11 @@ class CmsFormsContext implements Context
         $this->getSession()->evaluateScript(sprintf(
             "jQuery('#%s').entwine('ss').getEditor().setContent('%s')",
             $inputField->getAttribute('id'),
-            addcslashes($value, "'")
+            addcslashes($value ?? '', "'")
+        ));
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('#%s').entwine('ss').getEditor().save()",
+            $inputField->getAttribute('id')
         ));
     }
 
@@ -84,7 +93,7 @@ class CmsFormsContext implements Context
         $this->getSession()->evaluateScript(sprintf(
             "jQuery('#%s').entwine('ss').getEditor().insertContent('%s')",
             $inputField->getAttribute('id'),
-            addcslashes($value, "'")
+            addcslashes($value ?? '', "'")
         ));
     }
 
@@ -95,15 +104,15 @@ class CmsFormsContext implements Context
     {
         $element = $this->getHtmlField($locator);
         $actual = $element->getValue();
-        $regex = '/'.preg_quote($html, '/').'/ui';
+        $regex = '/' . preg_quote($html ?? '', '/') . '/ui';
         $failed = false;
 
-        if (trim($negative)) {
-            if (preg_match($regex, $actual)) {
+        if (trim($negative ?? '')) {
+            if (preg_match($regex ?? '', $actual ?? '')) {
                 $failed = true;
             }
         } else {
-            if (!preg_match($regex, $actual)) {
+            if (!preg_match($regex ?? '', $actual ?? '')) {
                 $failed = true;
             }
         }
@@ -141,25 +150,36 @@ class CmsFormsContext implements Context
 			if(
 				$node->firstChild
 				&& $node->firstChild->nodeType == XML_TEXT_NODE
-				&& stripos($node->firstChild->nodeValue, $text) !== FALSE
+				&& stripos($node->firstChild->nodeValue ?? '', $text ?? '') !== FALSE
 			) {
 				$matchedNode = $node;
 			}
 		}
-		assertNotNull($matchedNode);
+        Assert::assertNotNull($matchedNode);
 
-		$assertFn = $negate ? 'assertNotEquals' : 'assertEquals';
-		if($formatting == 'bold') {
-			call_user_func($assertFn, 'strong', $matchedNode->nodeName);
-		} else if($formatting == 'left aligned') {
-			if($matchedNode->getAttribute('style')) {
-				call_user_func($assertFn, 'text-align: left;', $matchedNode->getAttribute('style'));
-			}
-		} else if($formatting == 'right aligned') {
-			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));
-		}
-	}
-	// @codingStandardsIgnoreEnd
+        if ($formatting == 'bold') {
+            if ($negate) {
+                Assert::assertNotEquals('strong', $matchedNode->nodeName);
+            } else {
+                Assert::assertEquals('strong', $matchedNode->nodeName);
+            }
+        } else if ($formatting == 'left aligned') {
+            if ($matchedNode->getAttribute('class')) {
+                if ($negate) {
+                    Assert::assertNotEquals('text-left', $matchedNode->getAttribute('class'));
+                } else {
+                    Assert::assertEquals('text-left', $matchedNode->getAttribute('class'));
+                }
+            }
+        } else if ($formatting == 'right aligned') {
+            if ($negate) {
+                Assert::assertNotEquals('text-right', $matchedNode->getAttribute('class'));
+            } else {
+                Assert::assertEquals('text-right', $matchedNode->getAttribute('class'));
+            }
+        }
+    }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Selects the first textual match in the HTML editor. Does not support
@@ -171,7 +191,7 @@ class CmsFormsContext implements Context
     {
         $inputField = $this->getHtmlField($field);
         $inputFieldId = $inputField->getAttribute('id');
-        $text = addcslashes($text, "'");
+        $text = addcslashes($text ?? '', "'");
 
         $js = <<<JS
 // TODO <IE9 support
@@ -208,18 +228,19 @@ JS;
     public function iShouldSeeAField($negative, $text)
     {
         $page = $this->getSession()->getPage();
-        $els = $page->findAll('named', array('field', "'$text'"));
+        $els = $page->findAll('named', ['field', "'$text'"]);
         $matchedEl = null;
+        /** @var NodeElement $el */
         foreach ($els as $el) {
             if ($el->isVisible()) {
                 $matchedEl = $el;
             }
         }
 
-        if (trim($negative)) {
-            assertNull($matchedEl);
+        if (trim($negative ?? '')) {
+            Assert::assertNull($matchedEl);
         } else {
-            assertNotNull($matchedEl);
+            Assert::assertNotNull($matchedEl);
         }
     }
 
@@ -230,22 +251,29 @@ JS;
      */
     public function iClickOnTheHtmlFieldButton($button)
     {
-        $xpath = "//*[@aria-label='".$button."']";
+        $xpath = "//*[@aria-label='" . $button . "']";
         $session = $this->getSession();
         $element = $session->getPage()->find('xpath', $xpath);
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+            // If it can't find the exact name, find one that starts with the phrase
+            // Helpful for "Insert link" which has a conditional label for keyboard shortcut
+            $xpath = "//*[starts-with(@aria-label, '" . $button . "')]";
+            $element = $session->getPage()->find('xpath', $xpath);
+
+            if (null === $element) {
+                throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+            };
         }
 
         $element->click();
     }
 
     /*
-	 * @example Given the CMS settings has the following data
-	 *	| Title | My site title |
-	 *	| Theme | My site theme |
-	 * @Given /^the CMS settings have the following data$/
-	 */
+     * @example Given the CMS settings has the following data
+     *  | Title | My site title |
+     *  | Theme | My site theme |
+     * @Given /^the CMS settings have the following data$/
+     */
     public function theCmsSettingsHasData(TableNode $fieldsTable)
     {
         $fields = $fieldsTable->getRowsHash();
@@ -267,22 +295,23 @@ JS;
     public function iSelectValueInTreeDropdown($text, $selector)
     {
         $page = $this->getSession()->getPage();
+        /** @var NodeElement $parentElement */
         $parentElement = null;
         $this->retryThrowable(function () use (&$parentElement, &$page, $selector) {
             $parentElement = $page->find('css', $selector);
-            assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
+            Assert::assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
             $page = $this->getSession()->getPage();
         });
 
         $this->retryThrowable(function () use ($parentElement, $selector) {
             $dropdown = $parentElement->find('css', '.Select-arrow');
-            assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
+            Assert::assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
             $dropdown->click();
         });
 
         $this->retryThrowable(function () use ($text, $parentElement, $selector) {
             $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
-            assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
+            Assert::assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
             $element->click();
         });
     }
@@ -297,9 +326,36 @@ JS;
     {
         $locator = $this->fixStepArgument($locator);
         $page = $this->getSession()->getPage();
+        
+        // Searching by name is usually good...
         $element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
-        assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
+        
+        if ($element === null) {
+            $element = $this->findInputByLabelContent($locator);
+        }
+        
+        Assert::assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
+    }
+
+    protected function findInputByLabelContent($locator)
+    {
+        $page = $this->getSession()->getPage();
+        $label = $page->findAll('xpath', sprintf('//label[contains(text(), \'%s\')]', $locator));
+
+        if (empty($label)) {
+            return null;
+        }
+
+        Assert::assertCount(1, $label, sprintf(
+            'Found more than one element containing the phrase "%s".',
+            $locator
+        ));
+
+        $label = array_shift($label);
+
+        $fieldId = $label->getAttribute('for');
+        return $page->find('css', '#' . $fieldId);
     }
 
     /**
@@ -351,5 +407,92 @@ JS;
     {
         // Destroy cookie to detach session
         $this->getMainContext()->getSession()->setCookie('PHPSESSID', null);
+    }
+
+    /**
+     * @When /^I should see the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function assertIShouldSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        Assert::assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+    }
+
+    /**
+     * @When /^I should not see the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function assertIShouldNotSeeTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        Assert::assertNull($button, sprintf('Button "%s" found', $buttonLabel));
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function stepIClickTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName)
+    {
+        $button = $this->getGridFieldButton($gridFieldName, $rowName, $buttonLabel);
+        Assert::assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
+
+        $button->click();
+    }
+
+    /**
+     * Finds a button in the gridfield row
+     *
+     * @param $gridFieldName
+     * @param $rowName
+     * @param $buttonLabel
+     * @return $button
+     */
+    protected function getGridFieldButton($gridFieldName, $rowName, $buttonLabel)
+    {
+        $page = $this->getSession()->getPage();
+        $gridField = $page->find('xpath', sprintf('//*[@data-name="%s"]', $gridFieldName));
+        Assert::assertNotNull($gridField, sprintf('Gridfield "%s" not found', $gridFieldName));
+
+        $name = $gridField->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $rowName));
+        if (!$name) {
+            return null;
+        }
+
+        if ($dropdownButton = $name->getParent()->find('css', '.action-menu__toggle')) {
+            $dropdownButton->click();
+        }
+
+        $button = $name->getParent()->find('named', ['link_or_button', $buttonLabel]);
+
+        return $button;
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" option in the "([^"]*)" listbox$/
+     * @param $optionLabel
+     * @param $fieldName
+     */
+    public function stepIClickTheListBoxOption($optionLabel, $fieldName)
+    {
+        $page = $this->getSession()->getPage();
+        $listBox = $page->find('xpath', sprintf('//*[@name="%s[]"]', $fieldName));
+        Assert::assertNotNull($listBox, sprintf('The listbox %s is not found', $fieldName));
+
+        $option = $listBox->getParent()
+            ->find('css', '.chosen-choices')
+            ->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $optionLabel));
+        Assert::assertNotNull($option, sprintf('Option %s is not found', $optionLabel));
+
+        $button = $option->getParent()->find('css', 'a');
+
+        $button->click();
     }
 }

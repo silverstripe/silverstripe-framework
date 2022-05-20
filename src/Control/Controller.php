@@ -4,8 +4,10 @@ namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
+use SilverStripe\Security\BasicAuthMiddleware;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
@@ -50,7 +52,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @var array
      */
-    protected static $controller_stack = array();
+    protected static $controller_stack = [];
 
     /**
      * Assign templates for this controller.
@@ -61,6 +63,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected $templates = [];
 
     /**
+     * @deprecated 4.1.0:5.0.0 Add this controller's url to
+     * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      * @var bool
      */
     protected $basicAuthEnabled = true;
@@ -79,17 +83,17 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @var array
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action//$ID/$OtherID' => 'handleAction',
-    );
+    ];
 
     /**
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'handleAction',
         'handleIndex',
-    );
+    ];
 
     /**
      * Initialisation function that is run before any action on the controller is called.
@@ -98,6 +102,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     protected function init()
     {
+        // @todo This will be removed in 5.0 and will be controlled by middleware instead
         if ($this->basicAuthEnabled) {
             BasicAuth::protect_site_if_necessary();
         }
@@ -194,7 +199,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     public function handleRequest(HTTPRequest $request)
     {
         if (!$request) {
-            user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
+            throw new \RuntimeException('Controller::handleRequest() not passed a request!');
         }
 
         //set up the controller for the incoming request
@@ -225,7 +230,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     protected function prepareResponse($response)
     {
-        if ($response instanceof HTTPResponse) {
+        if (!is_object($response)) {
+            $this->getResponse()->setBody($response);
+        } elseif ($response instanceof HTTPResponse) {
             if (isset($_REQUEST['debug_request'])) {
                 $class = static::class;
                 Debug::message(
@@ -253,9 +260,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         //deal with content if appropriate
         ContentNegotiator::process($this->getResponse());
-
-        //add cache headers
-        HTTP::add_cache_headers($this->getResponse());
     }
 
     /**
@@ -403,11 +407,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             while ($parentClass !== parent::class) {
                 // _action templates have higher priority
                 if ($action && $action != 'index') {
-                    $actionTemplates[] = strtok($parentClass, '_') . '_' . $action;
+                    $actionTemplates[] = strtok($parentClass ?? '', '_') . '_' . $action;
                 }
                 // class templates have lower priority
-                $classTemplates[] = strtok($parentClass, '_');
-                $parentClass = get_parent_class($parentClass);
+                $classTemplates[] = strtok($parentClass ?? '', '_');
+                $parentClass = get_parent_class($parentClass ?? '');
             }
 
             // Add controller templates for inheritance chain
@@ -443,8 +447,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
         $returnURL = $fullURL;
 
-        if (($pos = strpos($fullURL, $action)) !== false) {
-            $returnURL = substr($fullURL, 0, $pos);
+        if (($pos = strpos($fullURL ?? '', $action ?? '')) !== false) {
+            $returnURL = substr($fullURL ?? '', 0, $pos);
         }
 
         return $returnURL;
@@ -467,12 +471,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         $class = static::class;
         while ($class != 'SilverStripe\\Control\\RequestHandler') {
-            $templateName = strtok($class, '_') . '_' . $action;
+            $templateName = strtok($class ?? '', '_') . '_' . $action;
             if (SSViewer::hasTemplate($templateName)) {
                 return $class;
             }
 
-            $class = get_parent_class($class);
+            $class = get_parent_class($class ?? '');
         }
 
         return null;
@@ -493,11 +497,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $parentClass = static::class;
-        $templates   = array();
+        $templates   = [];
 
         while ($parentClass != __CLASS__) {
-            $templates[] = strtok($parentClass, '_') . '_' . $action;
-            $parentClass = get_parent_class($parentClass);
+            $templates[] = strtok($parentClass ?? '', '_') . '_' . $action;
+            $parentClass = get_parent_class($parentClass ?? '');
         }
 
         return SSViewer::hasTemplate($templates);
@@ -528,9 +532,16 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Call this to disable site-wide basic authentication for a specific controller. This must be
      * called before Controller::init(). That is, you must call it in your controller's init method
      * before it calls parent::init().
+     *
+     * @deprecated 4.1.0:5.0.0 Add this controller's url to
+     * SilverStripe\Security\BasicAuthMiddleware.URLPatterns injected property instead of setting false
      */
     public function disableBasicAuth()
     {
+        Deprecation::notice(
+            '5.0',
+            'Add this controller\'s url to ' . BasicAuthMiddleware::class . '.URLPatterns injected property instead'
+        );
         $this->basicAuthEnabled = false;
     }
 
@@ -574,7 +585,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $member = Security::getCurrentUser();
         }
         if (is_array($perm)) {
-            $perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
+            $perm = array_map([$this, 'can'], $perm ?? [], array_fill(0, count($perm ?? []), $member));
             return min($perm);
         }
         if ($this->hasMethod($methodName = 'can' . $perm)) {
@@ -652,7 +663,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * Caution: All parameters are expected to be URI-encoded already.
      *
-     * @param string|array $arg,.. One or more link segments, or list of link segments as an array
+     * @param string|array $arg One or more link segments, or list of link segments as an array
      * @return string
      */
     public static function join_links($arg = null)
@@ -663,32 +674,32 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $args = func_get_args();
         }
         $result = "";
-        $queryargs = array();
+        $queryargs = [];
         $fragmentIdentifier = null;
 
         foreach ($args as $arg) {
             // Find fragment identifier - keep the last one
-            if (strpos($arg, '#') !== false) {
-                list($arg, $fragmentIdentifier) = explode('#', $arg, 2);
+            if (strpos($arg ?? '', '#') !== false) {
+                list($arg, $fragmentIdentifier) = explode('#', $arg ?? '', 2);
             }
             // Find querystrings
-            if (strpos($arg, '?') !== false) {
-                list($arg, $suffix) = explode('?', $arg, 2);
-                parse_str($suffix, $localargs);
+            if (strpos($arg ?? '', '?') !== false) {
+                list($arg, $suffix) = explode('?', $arg ?? '', 2);
+                parse_str($suffix ?? '', $localargs);
                 $queryargs = array_merge($queryargs, $localargs);
             }
             if ((is_string($arg) && $arg) || is_numeric($arg)) {
                 $arg = (string) $arg;
-                if ($result && substr($result, -1) != '/' && $arg[0] != '/') {
+                if ($result && substr($result ?? '', -1) != '/' && $arg[0] != '/') {
                     $result .= "/$arg";
                 } else {
-                    $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
+                    $result .= (substr($result ?? '', -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
                 }
             }
         }
 
         if ($queryargs) {
-            $result .= '?' . http_build_query($queryargs);
+            $result .= '?' . http_build_query($queryargs ?? []);
         }
 
         if ($fragmentIdentifier) {
@@ -703,8 +714,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'CurrentPage' => 'curr',
-        );
+        ];
     }
 }

@@ -6,7 +6,7 @@ class TestChild extends TestBase
 {
     private static $table_name = 'SQLUpdateChild';
 
-    private static $db = array(
+    private static $db = [
         'Details' => 'Varchar(255)'
-    );
+    ];
 }

@@ -3,7 +3,6 @@
 namespace SilverStripe\Dev\State;
 
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 
 class SapphireTestState implements TestState
@@ -21,6 +20,36 @@ class SapphireTestState implements TestState
     public function getStates()
     {
         return $this->states;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool|TestState
+     */
+    public function getStateByName($name)
+    {
+        $states = $this->getStates();
+        if (array_key_exists($name, $states ?? [])) {
+            return $states[$name];
+        }
+        return false;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return bool|TestState
+     */
+    public function getStateByClass($class)
+    {
+        $lClass = strtolower($class ?? '');
+        foreach ($this->getStates() as $state) {
+            if ($lClass === strtolower(get_class($state))) {
+                return $state;
+            }
+        }
+        return false;
     }
 
     /**
@@ -44,7 +73,7 @@ class SapphireTestState implements TestState
     {
         // Tear down in reverse order
         /** @var TestState $state */
-        foreach (array_reverse($this->states) as $state) {
+        foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDown($test);
         }
     }
@@ -65,7 +94,7 @@ class SapphireTestState implements TestState
     {
         // Tear down in reverse order
         /** @var TestState $state */
-        foreach (array_reverse($this->states) as $state) {
+        foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDownOnce($class);
         }
     }

@@ -10,10 +10,9 @@ use SilverStripe\Forms\SelectionGroup;
 
 class SelectionGroupTest extends SapphireTest
 {
-
-    function testFieldHolder()
+    public function testFieldHolder()
     {
-        $items = array(
+        $items = [
             new SelectionGroup_Item(
                 'one',
                 new LiteralField('one', 'one view'),
@@ -24,7 +23,7 @@ class SelectionGroupTest extends SapphireTest
                 new LiteralField('two', 'two view'),
                 'two title'
             ),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');
@@ -37,16 +36,44 @@ class SelectionGroupTest extends SapphireTest
         $this->assertEquals(' one title', (string)$listElOne->label[0]);
         $this->assertEquals(' two title', (string)$listElTwo->label[0]);
 
-        $this->assertContains('one view', (string)$listElOne->div);
-        $this->assertContains('two view', (string)$listElTwo->div);
+        $this->assertStringContainsString('one view', (string)$listElOne->div);
+        $this->assertStringContainsString('two view', (string)$listElTwo->div);
     }
 
-    function testLegacyItemsFieldHolder()
+    public function testSelectedFieldHolder()
     {
-        $items = array(
+        $items = [
+            new SelectionGroup_Item(
+                'one',
+                new LiteralField('one', 'one view'),
+                'one title'
+            ),
+            new SelectionGroup_Item(
+                'two',
+                new LiteralField('two', 'two view'),
+                'two title'
+            ),
+        ];
+        $field = new SelectionGroup('MyGroup', $items);
+        $field->setValue('two');
+
+        $parser = new CSSContentParser($field->FieldHolder());
+
+        $listEls = $parser->getBySelector('li');
+        $listElOne = $listEls[0];
+        $listElTwo = $listEls[1];
+
+        $this->assertEquals('one', (string)$listElOne->label[0]->input[0]['value']);
+        $this->assertEquals('two', (string)$listElTwo->label[0]->input[0]['value']);
+        $this->assertEquals('selected', (string)$listElTwo->attributes()->class);
+    }
+
+    public function testLegacyItemsFieldHolder()
+    {
+        $items = [
             'one' => new LiteralField('one', 'one view'),
             'two' => new LiteralField('two', 'two view'),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');
@@ -60,12 +87,12 @@ class SelectionGroupTest extends SapphireTest
         $this->assertEquals(' two', (string)$listElTwo->label[0]);
     }
 
-    function testLegacyItemsFieldHolderWithTitle()
+    public function testLegacyItemsFieldHolderWithTitle()
     {
-        $items = array(
+        $items = [
             'one//one title' => new LiteralField('one', 'one view'),
             'two//two title' => new LiteralField('two', 'two view'),
-        );
+        ];
         $field = new SelectionGroup('MyGroup', $items);
         $parser = new CSSContentParser($field->FieldHolder());
         $listEls = $parser->getBySelector('li');

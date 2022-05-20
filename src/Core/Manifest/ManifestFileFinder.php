@@ -2,16 +2,18 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use RuntimeException;
 use SilverStripe\Assets\FileFinder;
 
 /**
- * An extension to the default file finder with some extra filters to faciliate
+ * An extension to the default file finder with some extra filters to facilitate
  * autoload and template manifest generation:
  *   - Only modules with _config.php files are scanned.
  *   - If a _manifest_exclude file is present inside a directory it is ignored.
  *   - Assets and module language directories are ignored.
- *   - Module tests directories are skipped if the ignore_tests option is not
- *     set to false.
+ *   - Module tests directories are skipped if either of these conditions is meant:
+ *     - the `ignore_tests` option is not set to false.
+ *     - the module PHP CI configuration matches one of the `ignored_ci_configs`
  */
 class ManifestFileFinder extends FileFinder
 {
@@ -22,14 +24,19 @@ class ManifestFileFinder extends FileFinder
     const LANG_DIR = 'lang';
     const TESTS_DIR = 'tests';
     const VENDOR_DIR = 'vendor';
-    const RESOURCES_DIR = 'resources';
 
-    protected static $default_options = array(
+    /**
+     * @deprecated 4.4.0:5.0.0 Use global `RESOURCES_DIR` instead.
+     */
+    const RESOURCES_DIR = RESOURCES_DIR;
+
+    protected static $default_options = [
         'include_themes' => false,
         'ignore_tests' => true,
         'min_depth' => 1,
-        'ignore_dirs' => ['node_modules']
-    );
+        'ignore_dirs' => ['node_modules'],
+        'ignored_ci_configs' => []
+    ];
 
     public function acceptDir($basename, $pathname, $depth)
     {
@@ -41,6 +48,11 @@ class ManifestFileFinder extends FileFinder
         // Keep searching inside vendor
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
         if ($inVendor) {
+            // Skip nested vendor folders (e.g. vendor/silverstripe/framework/vendor)
+            if ($depth == 4 && basename($pathname ?? '') === self::VENDOR_DIR) {
+                return false;
+            }
+
             // Keep searching if we could have a subdir module
             if ($depth < 3) {
                 return true;
@@ -48,7 +60,7 @@ class ManifestFileFinder extends FileFinder
 
             // Stop searching if we are in a non-module library
             $libraryPath = $this->upLevels($pathname, $depth - 3);
-            $libraryBase = basename($libraryPath);
+            $libraryBase = basename($libraryPath ?? '');
             if (!$this->isDirectoryModule($libraryBase, $libraryPath, 3)) {
                 return false;
             }
@@ -64,6 +76,14 @@ class ManifestFileFinder extends FileFinder
             return false;
         }
 
+        // Skip if test dir inside vendor module with unexpected CI Configuration
+        if ($depth > 3 && $basename === self::TESTS_DIR && $ignoredCIConfig = $this->getOption('ignored_ci_configs')) {
+            $ciLib = $this->findModuleCIPhpConfiguration($basename, $pathname, $depth);
+            if (in_array($ciLib, $ignoredCIConfig ?? [])) {
+                return false;
+            }
+        }
+
         return parent::acceptDir($basename, $pathname, $depth);
     }
 
@@ -77,7 +97,7 @@ class ManifestFileFinder extends FileFinder
      */
     public function isInsideVendor($basename, $pathname, $depth)
     {
-        $base = basename($this->upLevels($pathname, $depth - 1));
+        $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === self::VENDOR_DIR;
     }
 
@@ -91,7 +111,7 @@ class ManifestFileFinder extends FileFinder
      */
     public function isInsideThemes($basename, $pathname, $depth)
     {
-        $base = basename($this->upLevels($pathname, $depth - 1));
+        $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === THEMES_DIR;
     }
 
@@ -142,8 +162,8 @@ class ManifestFileFinder extends FileFinder
             if ($ignored) {
                 return true;
             }
-            $pathname = dirname($pathname);
-            $basename = basename($pathname);
+            $pathname = dirname($pathname ?? '');
+            $basename = basename($pathname ?? '');
             $depth--;
         }
         return false;
@@ -191,7 +211,7 @@ class ManifestFileFinder extends FileFinder
             return null;
         }
         while ($depth--) {
-            $pathname = dirname($pathname);
+            $pathname = dirname($pathname ?? '');
         }
         return $pathname;
     }
@@ -231,15 +251,51 @@ class ManifestFileFinder extends FileFinder
 
         // Check if directory name is ignored
         $ignored = $this->getIgnoredDirs();
-        if (in_array($basename, $ignored)) {
+        if (in_array($basename, $ignored ?? [])) {
             return true;
         }
 
         // Ignore these dirs in the root only
-        if ($depth === 1 && in_array($basename, [ASSETS_DIR, self::RESOURCES_DIR])) {
+        if ($depth === 1 && in_array($basename, [ASSETS_DIR, RESOURCES_DIR])) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Find out the root of the current module and read the PHP CI configuration from tho composer file
+     *
+     * @param string $basename Name of the current folder
+     * @param string $pathname Full path the parent folder
+     * @param string $depth Depth of the current folder
+     */
+    private function findModuleCIPhpConfiguration(string $basename, string $pathname, int $depth): string
+    {
+        if ($depth < 1) {
+            // We went all the way back to the root of the project
+            return Module::CI_UNKNOWN;
+        }
+
+        // We pop the current folder and use the next entry the pathname
+        $newBasename = basename($pathname ?? '');
+        $newPathname = dirname($pathname ?? '');
+        $newDepth = $depth - 1;
+
+        if ($this->isDirectoryModule($newBasename, $newPathname, $newDepth)) {
+            // We've reached the root of the module folder, we can read the PHP CI config now
+            $module = new Module($newPathname, $this->upLevels($newPathname, $newDepth));
+            $config = $module->getCIConfig();
+
+            if (empty($config['PHP'])) {
+                // This should never happen
+                throw new RuntimeException('Module::getCIConfig() did not return a PHP CI value');
+            }
+
+            return $config['PHP'];
+        }
+
+        // We haven't reach our module root yet ... let's look up one more level
+        return $this->findModuleCIPhpConfiguration($newBasename, $newPathname, $newDepth);
     }
 }

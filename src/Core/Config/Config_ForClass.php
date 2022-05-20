@@ -109,7 +109,7 @@ class Config_ForClass
     }
 
     /**
-     * @param string
+     * @param string $class
      *
      * @return Config_ForClass
      */

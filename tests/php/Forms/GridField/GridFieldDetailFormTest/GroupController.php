@@ -18,7 +18,7 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 class GroupController extends Controller implements TestOnly
 {
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     protected $template = 'BlankPage';
 

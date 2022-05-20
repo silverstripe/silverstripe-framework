@@ -10,23 +10,25 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
     /**
      *
      * @param int $itemsPerPage - How many items per page should show up
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
+     * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($itemsPerPage = null)
+    public function __construct($itemsPerPage = null, $showPagination = null, $showAdd = null)
     {
         parent::__construct();
 
-        $this->addComponent(new GridFieldButtonRow('before'));
-        $this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
-        $this->addComponent(new GridFieldToolbarHeader());
-        $this->addComponent($sort = new GridFieldSortableHeader());
-        $this->addComponent($filter = new GridFieldFilterHeader());
-        $this->addComponent(new GridFieldDataColumns());
-        $this->addComponent(new GridFieldVersionedState([ 'Name', 'Title' ]));
-        $this->addComponent(new GridFieldEditButton());
-        $this->addComponent(new GridFieldDeleteAction());
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-        $this->addComponent(new GridFieldDetailForm());
+        $this->addComponent(GridFieldButtonRow::create('before'));
+        $this->addComponent(GridFieldAddNewButton::create('buttons-before-left'));
+        $this->addComponent(GridFieldToolbarHeader::create());
+        $this->addComponent($sort = GridFieldSortableHeader::create());
+        $this->addComponent($filter = GridFieldFilterHeader::create());
+        $this->addComponent(GridFieldDataColumns::create());
+        $this->addComponent(GridFieldEditButton::create());
+        $this->addComponent(GridFieldDeleteAction::create());
+        $this->addComponent(GridField_ActionMenu::create());
+        $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
+        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
+        $this->addComponent(GridFieldDetailForm::create(null, $showPagination, $showAdd));
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);

@@ -10,14 +10,14 @@ abstract class DBString extends DBField
     /**
      * @var array
      */
-    private static $casting = array(
-        "LimitCharacters" => "Text",
-        "LimitCharactersToClosestWord" => "Text",
-        "LimitWordCount" => "Text",
-        "LowerCase" => "Text",
-        "UpperCase" => "Text",
-        "Plain" => "Text",
-    );
+    private static $casting = [
+        'LimitCharacters' => 'Text',
+        'LimitCharactersToClosestWord' => 'Text',
+        'LimitWordCount' => 'Text',
+        'LowerCase' => 'Text',
+        'UpperCase' => 'Text',
+        'Plain' => 'Text',
+    ];
 
     /**
      * Set the default value for "nullify empty"
@@ -46,10 +46,10 @@ abstract class DBString extends DBField
     {
         parent::setOptions($options);
 
-        if (array_key_exists('nullifyEmpty', $options)) {
+        if (array_key_exists('nullifyEmpty', $options ?? [])) {
             $this->options['nullifyEmpty'] = (bool) $options['nullifyEmpty'];
         }
-        if (array_key_exists('default', $options)) {
+        if (array_key_exists('default', $options ?? [])) {
             $this->setDefaultValue($options['default']);
         }
 
@@ -77,29 +77,29 @@ abstract class DBString extends DBField
      */
     public function getNullifyEmpty()
     {
-        return $this->options['nullifyEmpty'];
+        return !empty($this->options['nullifyEmpty']);
     }
 
     /**
      * (non-PHPdoc)
-     * @see core/model/fieldtypes/DBField#exists()
+     * @see DBField::exists()
      */
     public function exists()
     {
         $value = $this->RAW();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
-        return $value || (is_string($value) && strlen($value));
+        return $value || (is_string($value) && strlen($value ?? ''));
     }
 
     public function prepValueForDB($value)
     {
         // Cast non-empty value
-        if (strlen($value)) {
+        if (is_scalar($value) && strlen($value ?? '')) {
             return (string)$value;
         }
 
         // Return "empty" value
-        if ($this->options['nullifyEmpty'] || $value === null) {
+        if ($this->getNullifyEmpty() || $value === null) {
             return null;
         }
         return '';
@@ -110,7 +110,7 @@ abstract class DBString extends DBField
      */
     public function forTemplate()
     {
-        return nl2br(parent::forTemplate());
+        return nl2br(parent::forTemplate() ?? '');
     }
 
     /**
@@ -119,16 +119,16 @@ abstract class DBString extends DBField
      * HTML tags in the string of text.
      *
      * @param int $limit Number of characters to limit by
-     * @param string $add Ellipsis to add to the end of truncated string
+     * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string
      */
-    public function LimitCharacters($limit = 20, $add = '...')
+    public function LimitCharacters($limit = 20, $add = false)
     {
         $value = $this->Plain();
-        if (mb_strlen($value) <= $limit) {
+        if (mb_strlen($value ?? '') <= $limit) {
             return $value;
         }
-        return mb_substr($value, 0, $limit) . $add;
+        return $this->addEllipsis(mb_substr($value ?? '', 0, $limit), $add);
     }
 
     /**
@@ -137,28 +137,31 @@ abstract class DBString extends DBField
      * from the field.
      *
      * @param int $limit Number of characters to limit by
-     * @param string $add Ellipsis to add to the end of truncated string
+     * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string Plain text value with limited characters
      */
-    public function LimitCharactersToClosestWord($limit = 20, $add = '...')
+    public function LimitCharactersToClosestWord($limit = 20, $add = false)
     {
         // Safely convert to plain text
         $value = $this->Plain();
 
         // Determine if value exceeds limit before limiting characters
-        if (mb_strlen($value) <= $limit) {
+        if (mb_strlen($value ?? '') <= $limit) {
             return $value;
         }
 
         // Limit to character limit
-        $value = mb_substr($value, 0, $limit);
+        $value = mb_substr($value ?? '', 0, $limit);
 
         // If value exceeds limit, strip punctuation off the end to the last space and apply ellipsis
-        $value = preg_replace(
-            '/[^\w_]+$/',
-            '',
-            mb_substr($value, 0, mb_strrpos($value, " "))
-        ) . $add;
+        $value = $this->addEllipsis(
+            preg_replace(
+                '/[^\w_]+$/',
+                '',
+                mb_substr($value ?? '', 0, mb_strrpos($value ?? '', " "))
+            ),
+            $add
+        );
         return $value;
     }
 
@@ -166,21 +169,21 @@ abstract class DBString extends DBField
      * Limit this field's content by a number of words.
      *
      * @param int $numWords Number of words to limit by.
-     * @param string $add Ellipsis to add to the end of truncated string.
+     * @param false $add Ellipsis to add to the end of truncated string.
      *
      * @return string
      */
-    public function LimitWordCount($numWords = 26, $add = '...')
+    public function LimitWordCount($numWords = 26, $add = false)
     {
         $value = $this->Plain();
-        $words = explode(' ', $value);
-        if (count($words) <= $numWords) {
+        $words = explode(' ', $value ?? '');
+        if (count($words ?? []) <= $numWords) {
             return $value;
         }
 
         // Limit
-        $words = array_slice($words, 0, $numWords);
-        return implode(' ', $words) . $add;
+        $words = array_slice($words ?? [], 0, $numWords);
+        return $this->addEllipsis(implode(' ', $words), $add);
     }
 
     /**
@@ -190,7 +193,7 @@ abstract class DBString extends DBField
      */
     public function LowerCase()
     {
-        return mb_strtolower($this->RAW());
+        return mb_strtolower($this->RAW() ?? '');
     }
 
     /**
@@ -200,7 +203,7 @@ abstract class DBString extends DBField
      */
     public function UpperCase()
     {
-        return mb_strtoupper($this->RAW());
+        return mb_strtoupper($this->RAW() ?? '');
     }
 
     /**
@@ -210,6 +213,30 @@ abstract class DBString extends DBField
      */
     public function Plain()
     {
-        return trim($this->RAW());
+        return trim($this->RAW() ?? '');
+    }
+
+    /**
+     * Swap add for defaultEllipsis if need be
+     * @param string $string
+     * @param false|string $add
+     * @return string
+     */
+    private function addEllipsis(string $string, $add): string
+    {
+        if ($add === false) {
+            $add = $this->defaultEllipsis();
+        }
+
+        return $string . $add;
+    }
+
+    /**
+     * Get the default string to indicate that a string was cut off.
+     * @return string
+     */
+    public function defaultEllipsis(): string
+    {
+        return _t(self::class . '.ELLIPSIS', '…');
     }
 }

@@ -2,11 +2,6 @@ bs:
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Da
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: KM
-  SilverStripe\Forms\DateField:
-    NOTSET: 'nije postavljeno'
-    TODAY: danas
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izaberite)
   SilverStripe\Forms\Form:
@@ -39,7 +34,7 @@ bs:
     FIRSTNAME: Ime
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
-    PASSWORD: 'Šifra'
+    PASSWORD: Šifra
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime

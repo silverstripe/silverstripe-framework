@@ -4,6 +4,7 @@ namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\DefaultAdminService;
 
@@ -15,7 +16,7 @@ class SecurityDefaultAdminTest extends SapphireTest
 
     protected $defaultPassword = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +39,7 @@ class SecurityDefaultAdminTest extends SapphireTest
         Permission::reset();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DefaultAdminService::clearDefaultAdmin();
         if ($this->defaultUsername) {
@@ -77,6 +78,7 @@ class SecurityDefaultAdminTest extends SapphireTest
         $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
         $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertNull($admin->Password);
+        $this->assertArrayHasKey($admin->PasswordEncryption, PasswordEncryptor::get_encryptors());
     }
 
     public function testFindOrCreateAdmin()

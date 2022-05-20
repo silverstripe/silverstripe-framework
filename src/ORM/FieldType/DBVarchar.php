@@ -2,10 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DB;
 
 /**
  * Class Varchar represents a variable-length string of up to 255 characters, designed to store raw text
@@ -17,11 +18,16 @@ use SilverStripe\Forms\NullableField;
 class DBVarchar extends DBString
 {
 
-    private static $casting = array(
-        "Initial" => "Text",
-        "URL" => "Text",
-    );
+    private static $casting = [
+        'Initial' => 'Text',
+        'URL' => 'Text',
+    ];
 
+    /**
+     * Max size of this field
+     *
+     * @var int
+     */
     protected $size;
 
     /**
@@ -32,14 +38,14 @@ class DBVarchar extends DBString
      * @param array $options Optional parameters, e.g. array("nullifyEmpty"=>false).
      *                       See {@link StringField::setOptions()} for information on the available options
      */
-    public function __construct($name = null, $size = 255, $options = array())
+    public function __construct($name = null, $size = 255, $options = [])
     {
         $this->size = $size ? $size : 255;
         parent::__construct($name, $options);
     }
 
     /**
-     * Allow the ability to access the size of the field programatically. This
+     * Allow the ability to access the size of the field programmatically. This
      * can be useful if you want to have text fields with a length limit that
      * is dictated by the DB field.
      *
@@ -58,21 +64,21 @@ class DBVarchar extends DBString
      */
     public function requireField()
     {
-        $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
-        $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
+        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
+        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
-        $parts = array(
-            'datatype'=>'varchar',
-            'precision'=>$this->size,
-            'character set'=> $charset,
-            'collate'=> $collation,
-            'arrayValue'=>$this->arrayValue
-        );
+        $parts = [
+            'datatype' => 'varchar',
+            'precision' => $this->size,
+            'character set' => $charset,
+            'collate' => $collation,
+            'arrayValue' => $this->arrayValue
+        ];
 
-        $values = array(
+        $values = [
             'type' => 'varchar',
             'parts' => $parts
-        );
+        ];
 
         DB::require_field($this->tableName, $this->name, $values);
     }
@@ -99,11 +105,10 @@ class DBVarchar extends DBString
     public function URL()
     {
         $value = $this->RAW();
-        if (preg_match('#^[a-zA-Z]+://#', $value)) {
+        if (preg_match('#^[a-zA-Z]+://#', $value ?? '')) {
             return $value;
-        } else {
-            return "http://" . $value;
         }
+        return 'http://' . $value;
     }
 
     /**
@@ -112,17 +117,19 @@ class DBVarchar extends DBString
      */
     public function RTF()
     {
-        return str_replace("\n", '\par ', $this->RAW());
+        return str_replace("\n", '\par ', $this->RAW() ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        if (!$this->nullifyEmpty) {
-            // Allow the user to select if it's null instead of automatically assuming empty string is
-            return new NullableField(new TextField($this->name, $title));
-        } else {
-            // Automatically determine null (empty string)
-            return parent::scaffoldFormField($title);
+        // Set field with appropriate size
+        $field = TextField::create($this->name, $title);
+        $field->setMaxLength($this->getSize());
+
+        // Allow the user to select if it's null instead of automatically assuming empty string is
+        if (!$this->getNullifyEmpty()) {
+            return NullableField::create($field);
         }
+        return $field;
     }
 }

@@ -1,3 +1,8 @@
+---
+title: CMS alternating button
+summary: Add an "active" and "neutral" state to the CMS buttons
+---
+
 # How to implement an alternating button
 
 ## Introduction
@@ -12,7 +17,7 @@ frontend.
 This how-to will walk you through creation of a "Clean-up" button with two appearances:
 
 * active: "Clean-up now" green constructive button if the actions can be performed
-* netural: "Cleaned" default button if the action does not need to be done
+* neutral: "Cleaned" default button if the action does not need to be done
 
 The controller code that goes with this example is listed in [Extend CMS Interface](extend_cms_interface).
 
@@ -28,21 +33,21 @@ Here is the configuration code for the button:
 
 
 ```php
-    public function getCMSActions() 
-    {
-        $fields = parent::getCMSActions();
+public function getCMSActions() 
+{
+    $fields = parent::getCMSActions();
 
-        $fields->fieldByName('MajorActions')->push(
-            $cleanupAction = FormAction::create('cleanup', 'Cleaned')
-                // Set up an icon for the neutral state that will use the default text.
-                ->setAttribute('data-icon', 'accept')
-                // Initialise the alternate constructive state.
-                ->setAttribute('data-icon-alternate', 'addpage')
-                ->setAttribute('data-text-alternate', 'Clean-up now')
-        );
+    $fields->fieldByName('MajorActions')->push(
+        $cleanupAction = FormAction::create('cleanup', 'Cleaned')
+            // Set up an icon for the neutral state that will use the default text.
+            ->setAttribute('data-icon', 'accept')
+            // Initialise the alternate constructive state.
+            ->setAttribute('data-icon-alternate', 'addpage')
+            ->setAttribute('data-text-alternate', 'Clean-up now')
+    );
 
-        return $fields;
-    }
+    return $fields;
+}
 ```
 
 You can control the state of the button from the backend by applying `ss-ui-alternate` class to the `FormAction`. To
@@ -55,15 +60,15 @@ Here we initialise the button based on the backend check, and assume that the bu
 
 
 ```php
-    public function getCMSActions() 
-    {
-        // ...
-        if ($this->needsCleaning()) {
-            // Will initialise the button into alternate state.
-            $cleanupAction->addExtraClass('ss-ui-alternate');
-        }
-        // ...
+public function getCMSActions() 
+{
+    // ...
+    if ($this->needsCleaning()) {
+        // Will initialise the button into alternate state.
+        $cleanupAction->addExtraClass('ss-ui-alternate');
     }
+    // ...
+}
 ```
 
 ## Frontend support
@@ -71,7 +76,7 @@ Here we initialise the button based on the backend check, and assume that the bu
 __Deprecated:__
 The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS in Silverstripe CMS](./extend_cms_interface.md#reactjs-in-silverstripe).
 
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
 frontend. You can affect the state of the button through the jQuery UI calls.
@@ -80,24 +85,21 @@ First of all, you can toggle the state of the button - execute this code in the 
 
 
 ```js
-
-    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('toggleAlternate');
+jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('toggleAlternate');
 ```
 
 Another, more useful, scenario is to check the current state.
 
 
 ```js
-
-    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
+jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
 ```
 
 You can also force the button into a specific state by using UI options.
 
 
 ```js
-
-    jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button({showingAlternate: true});
+jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button({showingAlternate: true});
 ```
 
 This will allow you to react to user actions in the CMS and give immediate feedback. Here is an example taken from the
@@ -106,24 +108,23 @@ CMS core that tracks the changes to the input fields and reacts by enabling the 
 
 
 ```js
-
-    /**
-     * Enable save buttons upon detecting changes to content.
-     * "changed" class is added by jQuery.changetracker.
-     */
-    $('.cms-edit-form .changed').entwine({
-        // This will execute when the class is added to the element.
-        onmatch: function(e) {
-            var form = this.closest('.cms-edit-form');
-            form.find('#Form_EditForm_action_save').button({showingAlternate: true});
-            form.find('#Form_EditForm_action_publish').button({showingAlternate: true});
-            this._super(e);
-        },
-        // Entwine requires us to define this, even if we don't use it.
-        onunmatch: function(e) {
-            this._super(e);
-        }
-    });
+/**
+ * Enable save buttons upon detecting changes to content.
+ * "changed" class is added by jQuery.changetracker.
+ */
+$('.cms-edit-form .changed').entwine({
+    // This will execute when the class is added to the element.
+    onmatch: function(e) {
+        var form = this.closest('.cms-edit-form');
+        form.find('#Form_EditForm_action_save').button({showingAlternate: true});
+        form.find('#Form_EditForm_action_publish').button({showingAlternate: true});
+        this._super(e);
+    },
+    // Entwine requires us to define this, even if we don't use it.
+    onunmatch: function(e) {
+        this._super(e);
+    }
+});
 ```
 
 ## Frontend hooks
@@ -139,9 +140,14 @@ extras.
 
 Continuing our example let's add a "constructive" style to our *Clean-up* button. First you need to be able to add
 custom JS code into the CMS. You can do this by adding a new source file, here
-`mysite/javascript/CMSMain.CustomActionsExtension.js`, and requiring it
-through a YAML configuration value: `LeftAndMain.extra_requirements_javascript`.
-Set it to 'mysite/javascript/CMSMain.CustomActionsExtension.js'.
+`app/javascript/CMSMain.CustomActionsExtension.js`, and requiring it
+through a YAML configuration value:
+
+```yml
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - app/javascript/CMSMain.CustomActionsExtension.js
+```
 
 You can now add the styling in response to `afterrefreshalternate` event. Let's use entwine to avoid accidental memory
 leaks. The only complex part here is how the entwine handle is constructed. `onbuttonafterrefreshalternate` can be
@@ -156,27 +162,26 @@ cases.
 
 
 ```js
+(function($) {
 
-    (function($) {
-
-        $.entwine('mysite', function($){
-            $('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').entwine({
-                /**
-                 * onafterrefreshalternate is SS-specific jQuery UI hook that is executed
-                 * every time the button is rendered (including on initialisation).
-                 */
-                onbuttonafterrefreshalternate: function() {
-                    if (this.button('option', 'showingAlternate')) {
-                        this.addClass('ss-ui-action-constructive');
-                    }
-                    else {
-                        this.removeClass('ss-ui-action-constructive');
-                    }
+    $.entwine('mysite', function($){
+        $('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').entwine({
+            /**
+             * onafterrefreshalternate is SS-specific jQuery UI hook that is executed
+             * every time the button is rendered (including on initialisation).
+             */
+            onbuttonafterrefreshalternate: function() {
+                if (this.button('option', 'showingAlternate')) {
+                    this.addClass('ss-ui-action-constructive');
                 }
-            });
+                else {
+                    this.removeClass('ss-ui-action-constructive');
+                }
+            }
         });
+    });
 
-    }(jQuery));
+}(jQuery));
 ```
 
 ## Summary

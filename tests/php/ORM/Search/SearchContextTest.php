@@ -18,7 +18,7 @@ class SearchContextTest extends SapphireTest
 
     protected static $fixture_file = 'SearchContextTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         SearchContextTest\Person::class,
         SearchContextTest\Book::class,
         SearchContextTest\Company::class,
@@ -26,19 +26,22 @@ class SearchContextTest extends SapphireTest
         SearchContextTest\Deadline::class,
         SearchContextTest\Action::class,
         SearchContextTest\AllFilterTypes::class,
-    );
+        SearchContextTest\Customer::class,
+        SearchContextTest\Address::class,
+        SearchContextTest\Order::class,
+    ];
 
     public function testResultSetFilterReturnsExpectedCount()
     {
         $person = SearchContextTest\Person::singleton();
         $context = $person->getDefaultSearchContext();
-        $results = $context->getResults(array('Name' => ''));
+        $results = $context->getResults(['Name' => '']);
         $this->assertEquals(5, $results->Count());
 
-        $results = $context->getResults(array('EyeColor' => 'green'));
+        $results = $context->getResults(['EyeColor' => 'green']);
         $this->assertEquals(2, $results->Count());
 
-        $results = $context->getResults(array('EyeColor' => 'green', 'HairColor' => 'black'));
+        $results = $context->getResults(['EyeColor' => 'green', 'HairColor' => 'black']);
         $this->assertEquals(1, $results->Count());
     }
 
@@ -63,11 +66,11 @@ class SearchContextTest extends SapphireTest
         $context = $person->getDefaultSearchContext();
 
         $this->assertEquals(
-            array(
+            [
                 "Name" => new PartialMatchFilter("Name"),
                 "HairColor" => new PartialMatchFilter("HairColor"),
                 "EyeColor" => new PartialMatchFilter("EyeColor")
-            ),
+            ],
             $context->getFilters()
         );
     }
@@ -78,9 +81,9 @@ class SearchContextTest extends SapphireTest
         $context = $book->getDefaultSearchContext();
 
         $this->assertEquals(
-            array(
+            [
                 "Title" => new PartialMatchFilter("Title")
-            ),
+            ],
             $context->getFilters()
         );
     }
@@ -91,11 +94,11 @@ class SearchContextTest extends SapphireTest
         $context = $company->getDefaultSearchContext();
 
         $this->assertEquals(
-            array(
+            [
                 "Name" => new PartialMatchFilter("Name"),
                 "Industry" => new PartialMatchFilter("Industry"),
                 "AnnualProfit" => new PartialMatchFilter("AnnualProfit")
-            ),
+            ],
             $context->getFilters()
         );
     }
@@ -106,7 +109,8 @@ class SearchContextTest extends SapphireTest
         $context = $company->getDefaultSearchContext();
         $this->assertEquals(
             new FieldList(
-                new TextField("Name", 'Name'),
+                (new TextField("Name", 'Name'))
+                    ->setMaxLength(255),
                 new TextareaField("Industry", 'Industry'),
                 new NumericField("AnnualProfit", 'The Almighty Annual Profit')
             ),
@@ -121,7 +125,7 @@ class SearchContextTest extends SapphireTest
         $project = SearchContextTest\Project::singleton();
         $context = $project->getDefaultSearchContext();
 
-        $params = array("Name" => "Blog Website", "Actions__SolutionArea" => "technical");
+        $params = ["Name" => "Blog Website", "Actions__SolutionArea" => "technical"];
 
         /** @var DataList $results */
         $results = $context->getResults($params);
@@ -145,19 +149,19 @@ class SearchContextTest extends SapphireTest
     {
         $all = SearchContextTest\AllFilterTypes::singleton();
         $context = $all->getDefaultSearchContext();
-        $params = array(
+        $params = [
             "ExactMatch" => "Match me exactly",
             "PartialMatch" => "partially",
-            "CollectionMatch" => array(
+            "CollectionMatch" => [
                 "ExistingCollectionValue",
                 "NonExistingCollectionValue",
                 4,
                 "Inline'Quotes'"
-            ),
+            ],
             "StartsWith" => "12345",
             "EndsWith" => "ijkl",
             "Fulltext" => "two"
-        );
+        ];
 
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->Count());
@@ -168,9 +172,9 @@ class SearchContextTest extends SapphireTest
     {
         $all = SearchContextTest\AllFilterTypes::singleton();
         $context = $all->getDefaultSearchContext();
-        $params = array(
+        $params = [
             "StartsWith" => "12345-6789 camelcase", // spelled lowercase
-        );
+        ];
 
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->Count());
@@ -181,9 +185,9 @@ class SearchContextTest extends SapphireTest
     {
         $all = SearchContextTest\AllFilterTypes::singleton();
         $context = $all->getDefaultSearchContext();
-        $params = array(
+        $params = [
             "EndsWith" => "IJKL", // spelled uppercase
-        );
+        ];
 
         $results = $context->getResults($params);
         $this->assertEquals(1, $results->Count());
@@ -249,5 +253,19 @@ class SearchContextTest extends SapphireTest
         // "Nothing" should come back null since there's no field for it
         $nothing = $list->find('Field', 'Nothing');
         $this->assertNull($nothing);
+    }
+
+    public function testMatchAnySearch()
+    {
+        $order1 = $this->objFromFixture(SearchContextTest\Order::class, 'order1');
+        $context = $order1->getDefaultSearchContext();
+
+        // Search should match Order's customer FirstName
+        $results = $context->getResults(['CustomFirstName' => 'Bill']);
+        $this->assertEquals(1, $results->Count());
+
+        // Search should match Order's shipping address FirstName
+        $results = $context->getResults(['CustomFirstName' => 'Bob']);
+        $this->assertEquals(1, $results->Count());
     }
 }

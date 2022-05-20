@@ -2,17 +2,16 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Member;
 
 /**
  * Tests for {@link Datetime} class.
  */
 class DBDatetimeTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         i18n::set_locale('en_NZ');
@@ -43,6 +42,22 @@ class DBDatetimeTest extends SapphireTest
         $this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
     }
 
+    public function testFixedNow()
+    {
+        $mockDate1 = '2010-01-01 10:00:00';
+        $mockDate2 = '2011-01-01 10:00:00';
+
+        DBDatetime::withFixedNow($mockDate1, function () use ($mockDate1, $mockDate2) {
+            $this->assertEquals($mockDate1, DBDatetime::now()->Rfc2822());
+
+            DBDatetime::withFixedNow($mockDate2, function () use ($mockDate2) {
+                $this->assertEquals($mockDate2, DBDatetime::now()->Rfc2822());
+            });
+
+            $this->assertEquals($mockDate1, DBDatetime::now()->Rfc2822());
+        });
+    }
+
     public function testSetNullAndZeroValues()
     {
         $date = DBDatetime::create_field('Datetime', '');
@@ -70,11 +85,33 @@ class DBDatetimeTest extends SapphireTest
         $this->assertEquals('10 Oct 3000 15 32 24', $date->Format('d MMM y H m s'));
     }
 
+    /**
+     * Coverage for dates using hindi-numerals
+     */
+    public function testHindiNumerals()
+    {
+        // Parent locale is english; Can be localised to arabic
+        $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
+        $this->assertEquals('10 Oct 1600 15 32 24', $date->Format('d MMM y H m s'));
+        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s', 'ar'));
+
+        // Parent locale is arabic; Datavalue uses ISO date
+        i18n::set_locale('ar');
+        $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
+        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s'));
+        $this->assertEquals('1600-10-10 15:32:24', $date->getValue());
+    }
+
     public function testNice()
     {
-        $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
+        $date = DBDatetime::create_field('Datetime', '2001-12-11 22:10:59');
+
         // note: Some localisation packages exclude the ',' in default medium format
-        $this->assertRegExp('#31/12/2001(,)? 10:10:59 PM#i', $date->Nice());
+        i18n::set_locale('en_NZ');
+        $this->assertMatchesRegularExpression('#11/12/2001(,)? 10:10 PM#i', $date->Nice());
+
+        i18n::set_locale('en_US');
+        $this->assertMatchesRegularExpression('#Dec 11(,)? 2001(,)? 10:10 PM#i', $date->Nice());
     }
 
     public function testDate()
@@ -86,7 +123,7 @@ class DBDatetimeTest extends SapphireTest
     public function testTime()
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
-        $this->assertRegexp('#10:10:59 PM#i', $date->Time());
+        $this->assertMatchesRegularExpression('#10:10:59 PM#i', $date->Time());
     }
 
     public function testTime24()
@@ -203,5 +240,47 @@ class DBDatetimeTest extends SapphireTest
         );
 
         DBDatetime::clear_mock_now();
+    }
+
+    public function testRfc3999()
+    {
+        // Dates should be formatted as: 2018-01-24T14:05:53+00:00
+        $date = DBDatetime::create_field('Datetime', '2010-12-31 16:58:59');
+        $this->assertEquals('2010-12-31T16:58:59+00:00', $date->Rfc3339());
+    }
+
+    /**
+     * @param string $adjustment
+     * @param string $expected
+     * @dataProvider modifyProvider
+     */
+    public function testModify($adjustment, $expected)
+    {
+        DBDatetime::set_mock_now('2019-03-03 12:00:00');
+        $result = DBDatetime::now()->modify($adjustment)->Rfc2822();
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function modifyProvider()
+    {
+        return [
+            ['+1 day', '2019-03-04 12:00:00'],
+            ['-1 day', '2019-03-02 12:00:00'],
+            ['+24 hours', '2019-03-04 12:00:00'],
+            ['-24 hours', '2019-03-02 12:00:00'],
+            ['+2 weeks', '2019-03-17 12:00:00'],
+            ['-2 weeks', '2019-02-17 12:00:00'],
+            ['+2 years', '2021-03-03 12:00:00'],
+            ['-2 years', '2017-03-03 12:00:00'],
+            ['+35 minutes', '2019-03-03 12:35:00'],
+            ['-35 minutes', '2019-03-03 11:25:00'],
+            ['+3 hours', '2019-03-03 15:00:00'],
+            ['-3 hours', '2019-03-03 09:00:00'],
+            ['+59 seconds', '2019-03-03 12:00:59'],
+            ['-59 seconds', '2019-03-03 11:59:01'],
+        ];
     }
 }

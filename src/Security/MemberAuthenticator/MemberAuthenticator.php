@@ -12,6 +12,7 @@ use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * Authenticator for the default "member" method
@@ -33,7 +34,15 @@ class MemberAuthenticator implements Authenticator
     public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null)
     {
         // Find authenticated member
-        $member = $this->authenticateMember($data, $result);
+        if (class_exists(Versioned::class)) {
+            [$member, $result] = Versioned::withVersionedMode(function () use ($data) {
+                Versioned::set_stage(Versioned::DRAFT);
+                $member = $this->authenticateMember($data, $result);
+                return [$member, $result];
+            });
+        } else {
+            $member = $this->authenticateMember($data, $result);
+        }
 
         // Optionally record every login attempt as a {@link LoginAttempt} object
         $this->recordLoginAttempt($data, $request, $member, $result->isValid());
@@ -91,6 +100,11 @@ class MemberAuthenticator implements Authenticator
         // Validate against member if possible
         if ($member && !$asDefaultAdmin) {
             $this->checkPassword($member, $data['Password'], $result);
+        } elseif (!$asDefaultAdmin) {
+            // spoof a login attempt
+            $tempMember = Member::create();
+            $tempMember->{Member::config()->get('unique_identifier_field')} = $email;
+            $tempMember->validateCanLogin($result);
         }
 
         // Emit failure to member and form (if available)
@@ -161,11 +175,14 @@ class MemberAuthenticator implements Authenticator
      * @param HTTPRequest $request
      * @param Member $member
      * @param boolean $success
+     * @return LoginAttempt|null
      */
     protected function recordLoginAttempt($data, HTTPRequest $request, $member, $success)
     {
-        if (!Security::config()->get('login_recording')) {
-            return;
+        if (!Security::config()->get('login_recording')
+            && !Member::config()->get('lock_out_after_incorrect_logins')
+        ) {
+            return null;
         }
 
         // Check email is valid
@@ -199,7 +216,12 @@ class MemberAuthenticator implements Authenticator
 
         $attempt->Email = $email;
         $attempt->IP = $request->getIP();
+
+        $this->invokeWithExtensions('updateLoginAttempt', $attempt, $data, $request);
+
         $attempt->write();
+
+        return $attempt;
     }
 
     /**

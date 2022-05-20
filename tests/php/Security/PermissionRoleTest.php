@@ -31,8 +31,8 @@ class PermissionRoleTest extends FunctionalTest
 
     public function testValidatesPrivilegedPermissions()
     {
-        $nonAdminCode = new PermissionRoleCode(array('Code' => 'CMS_ACCESS_CMSMain'));
-        $adminCode = new PermissionRoleCode(array('Code' => 'ADMIN'));
+        $nonAdminCode = new PermissionRoleCode(['Code' => 'CMS_ACCESS_CMSMain']);
+        $adminCode = new PermissionRoleCode(['Code' => 'ADMIN']);
 
         $this->logInWithPermission('APPLY_ROLES');
         $result = $nonAdminCode->validate();

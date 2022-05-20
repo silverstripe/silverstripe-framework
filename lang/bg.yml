@@ -2,10 +2,10 @@ bg:
   SilverStripe\Admin\LeftAndMain:
     VersionUnknown: непозната
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размери'
+    Dimensions: Размери
     EDIT: Промени
     EDITINFO: 'Редактирай този файл'
-    REMOVE: 'Премахни'
+    REMOVE: Премахни
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Паролата за акаунт с адрес {email} беше променена. Ако не Вие сте променили паролата си, направете го от адреса долу'
     CHANGEPASSWORDTEXT1: 'Променихте паролата си за'
@@ -19,8 +19,6 @@ bg:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Грешна заявка'
     REQUEST_ABORTED: 'Заявката беше отказана'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Непозната
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Не
     YESANSWER: Да
@@ -34,11 +32,7 @@ bg:
     LOGGED_IN_ERROR: 'Трябва да сте влезли в системата, за да промените паролата си.'
     MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не е зададена'
-    TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
@@ -48,7 +42,6 @@ bg:
     VALIDDATETIMEMINDATE: 'Датата и времето трябва да бъдат същите или след ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Избери)
-    CHOOSE_MODEL: '(Избери {name})'
     SOURCE_VALIDATION: 'Изберете стойност от списъка. {value} не е валидна опция'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
@@ -86,7 +79,6 @@ bg:
     RelationSearch: 'Търсене на връзка'
     ResetFilter: Изчистване
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Изтриване
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     EditPermissionsFailure: 'Нямате права за премахване на връзката'
@@ -98,8 +90,6 @@ bg:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити {type} {name}'
     Save: Запис
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 'Редактиране'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: от
     Page: Страница
@@ -185,18 +175,18 @@ bg:
     MEMBERS: Потребители
     NEWGROUP: 'Нова група'
     NoRoles: 'Няма намерени роли'
-    PERMISSIONS: 'Разрешения'
+    PERMISSIONS: Разрешения
     PLURALNAME: Групи
     PLURALS:
       one: Група
       other: '{count} групи'
     Parent: 'Група източник'
-    ROLES: 'Роли'
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
     RolesAddEditLink: 'Управление на ролите'
     SINGULARNAME: Група
     Sort: Сортиране
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
   SilverStripe\Security\LoginAttempt:
     Email: 'Email адрес'
@@ -212,7 +202,7 @@ bg:
     BUTTONCHANGEPASSWORD: 'Променете паролата'
     BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
-    BUTTONLOGOUT: 'Изход'
+    BUTTONLOGOUT: Изход
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
@@ -227,7 +217,6 @@ bg:
     ERRORWRONGCRED: 'Детайлите не са коректни. Моля, опитайте отново.'
     FIRSTNAME: Име
     INTERFACELANG: Език
-    KEEPMESIGNEDIN: 'Нека да остана логнат'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -236,13 +225,11 @@ bg:
     PLURALS:
       one: Потребител
       other: '{count} потребителя'
-    REMEMBERME: 'Запомни ме следващия път? (за {count} ден/дни на това устройство)'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
     SURNAME: Фамилия
     ValidationIdentifierFailed: 'Не може да се презапише съществуващия потребител #{id} с ({name} = {value}))'
-    WELCOMEBACK: 'Добре дошли отново, {firstname}'
     YOUROLDPASSWORD: 'Вашата стара парола'
     belongs_many_many_Groups: Групи
     db_Locale: 'Език на интерфейса'
@@ -274,11 +261,11 @@ bg:
     FULLADMINRIGHTS: 'Пълни административни права'
     FULLADMINRIGHTS_HELP: 'Включва и отменя другите присвоени разрешения.'
     PERMISSIONS_CATEGORY: 'Роли и права за достъп'
-    PLURALNAME: 'Разрешения'
+    PLURALNAME: Разрешения
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       other: '{count} разрешения'
-    SINGULARNAME: 'Разрешение'
+    SINGULARNAME: Разрешение
     UserPermissionsIntro: 'Присвояването на групи на този потребител ще коригира разрешенията, които има. Вижте раздела за групи за подробности относно разрешенията на отделните групи.'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
@@ -287,11 +274,11 @@ bg:
     FromRoleOnGroup: 'унаследено от роля "{roletitle}" на група "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Може да се приложи само от администратор'
-    PLURALNAME: 'Роли'
+    PLURALNAME: Роли
     PLURALS:
-      one: 'Роля'
+      one: Роля
       other: '{count} роли'
-    SINGULARNAME: 'Роля'
+    SINGULARNAME: Роля
     Title: Заглавие
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Кодове за роли с разрешения'
@@ -315,10 +302,7 @@ bg:
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
     LOGIN: 'Влезте в системата'
-    LOGOUT: 'Изход'
+    LOGOUT: Изход
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
-    NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
-    PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
-    PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'

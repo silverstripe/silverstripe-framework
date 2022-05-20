@@ -5,7 +5,7 @@ namespace SilverStripe\i18n;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 /**
- * Dynamically provide translatable entites for the {@link i18n} logic.
+ * Dynamically provide translatable entities for the {@link i18n} logic.
  * This is particularly handy for natural language strings in static variables
  * of a class definition, as the _t() method can only be used in a runtime/instance
  * context. The provideI18nEntities() method enables you to define your own entities
@@ -18,7 +18,7 @@ use SilverStripe\i18n\TextCollection\i18nTextCollector;
  * Classes must be able to be constructed without mandatory arguments, otherwise
  * this interface will have no effect.
  *
- * @uses i18nTextCollector->collectFromEntityProviders()
+ * @uses i18nTextCollector::collectFromEntityProviders()
  */
 interface i18nEntityProvider
 {
@@ -35,7 +35,7 @@ interface i18nEntityProvider
      *   public function provideI18nEntities()
      *   {
      *     $entities = [];
-     *     foreach($this->config()->get('my_static_array) as $key => $value) {
+     *     foreach($this->config()->get('my_static_array') as $key => $value) {
      *       $entities["MyTestClass.my_static_array_{$key}"] = $value;
      *     }
      *     $entities["MyTestClass.PLURALS"] = [

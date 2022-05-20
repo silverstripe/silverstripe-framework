@@ -43,7 +43,7 @@ trait UploadReceiver
 
         // filter out '' since this would be a regex problem on JS end
         $this->getValidator()->setAllowedExtensions(
-            array_filter(File::config()->allowed_extensions)
+            array_filter(File::config()->allowed_extensions ?? [])
         );
 
         // get the lower max size
@@ -97,7 +97,7 @@ trait UploadReceiver
      * for each of these categories
      *
      * @param string $category Category name
-     * @param string,... $categories Additional category names
+     * @param string ...$categories Additional category names
      * @return $this
      */
     public function setAllowedFileCategories($category)
@@ -131,7 +131,7 @@ trait UploadReceiver
      * Set custom validator for this field
      *
      * @param Upload_Validator $validator
-     * @return $this Self reference
+     * @return $this
      */
     public function setValidator(Upload_Validator $validator)
     {
@@ -143,7 +143,7 @@ trait UploadReceiver
      * Sets the upload folder name
      *
      * @param string $folderName
-     * @return $this Self reference
+     * @return $this
      */
     public function setFolderName($folderName)
     {

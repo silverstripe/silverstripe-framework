@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\CurrencyField;
+
 /**
  * Represents a decimal field containing a currency amount.
  * The currency class only supports single currencies.  For multi-currency support, use {@link Money}
@@ -17,7 +19,6 @@ namespace SilverStripe\ORM\FieldType;
  */
 class DBCurrency extends DBDecimal
 {
-
     /**
      * @config
      * @var string
@@ -34,13 +35,12 @@ class DBCurrency extends DBDecimal
      */
     public function Nice()
     {
-        // return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
+        $val = $this->config()->currency_symbol . number_format(abs($this->value ?? 0.0) ?? 0.0, 2);
         if ($this->value < 0) {
             return "($val)";
-        } else {
-            return $val;
         }
+
+        return $val;
     }
 
     /**
@@ -48,12 +48,11 @@ class DBCurrency extends DBDecimal
      */
     public function Whole()
     {
-        $val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
+        $val = $this->config()->currency_symbol . number_format(abs($this->value ?? 0.0) ?? 0.0, 0);
         if ($this->value < 0) {
             return "($val)";
-        } else {
-            return $val;
         }
+        return $val;
     }
 
     public function setValue($value, $record = null, $markChanged = true)
@@ -61,10 +60,23 @@ class DBCurrency extends DBDecimal
         $matches = null;
         if (is_numeric($value)) {
             $this->value = $value;
-        } elseif (preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
-            $this->value = str_replace(array('$',',',$this->config()->currency_symbol), '', $matches[0]);
+        } elseif (preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value ?? '', $matches)) {
+            $this->value = str_replace(['$', ',', $this->config()->currency_symbol], '', $matches[0] ?? '');
         } else {
             $this->value = 0;
         }
+
+        return $this;
+    }
+
+    /**
+     * @param string $title
+     * @param array $params
+     *
+     * @return CurrencyField
+     */
+    public function scaffoldFormField($title = null, $params = null)
+    {
+        return CurrencyField::create($this->getName(), $title);
     }
 }

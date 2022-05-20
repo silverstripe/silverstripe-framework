@@ -5,7 +5,7 @@ namespace SilverStripe\Core\Tests\ObjectTest;
 class T2 extends BaseObject
 {
     protected $failover;
-    protected $failoverArr = array();
+    protected $failoverArr = [];
 
     public function __construct()
     {

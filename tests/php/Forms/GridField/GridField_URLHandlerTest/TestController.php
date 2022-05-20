@@ -28,7 +28,7 @@ class TestController extends Controller implements TestOnly
         return Controller::join_links('GridField_URLHandlerTest_Controller', $action, '/');
     }
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     /**
      * @skipUpgrade

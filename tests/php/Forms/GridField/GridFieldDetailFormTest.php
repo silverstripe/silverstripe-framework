@@ -2,20 +2,21 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
-use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeopleGroup;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 
 /**
  * @skipUpgrade
@@ -24,17 +25,20 @@ class GridFieldDetailFormTest extends FunctionalTest
 {
     protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Person::class,
         PeopleGroup::class,
+        PolymorphicPeopleGroup::class,
         Category::class,
-    );
+    ];
 
     protected static $extra_controllers = [
         CategoryController::class,
         TestController::class,
         GroupController::class,
     ];
+
+    protected static $disable_themes = true;
 
     public function testValidator()
     {
@@ -55,28 +59,28 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'FirstName' => 'Jeremiah',
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
 
         $parser = new CSSContentParser($response->getBody());
         $errors = $parser->getBySelector('span.required');
-        $this->assertEquals(1, count($errors));
+        $this->assertEquals(1, count($errors ?? []));
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
 
         $parser = new CSSContentParser($response->getBody());
         $errors = $parser->getBySelector('span.required');
-        $this->assertEquals(2, count($errors));
+        $this->assertEquals(2, count($errors ?? []));
     }
 
     public function testAddForm()
@@ -103,11 +107,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'FirstName' => 'Jeremiah',
                 'Surname' => 'BullFrog',
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
@@ -116,6 +120,30 @@ class GridFieldDetailFormTest extends FunctionalTest
             ->sort('Name')
             ->First();
         $this->assertEquals($count + 1, $group->People()->Count());
+    }
+
+    public function testAddFormWithPolymorphicHasOne()
+    {
+        // Log in for permissions check
+        $this->logInWithPermission('ADMIN');
+        // Prepare gridfield and other objects
+        $group = new PolymorphicPeopleGroup();
+        $group->write();
+        $gridField = $group->getCMSFields()->dataFieldByName('People');
+        $gridField->setForm(new Form());
+        $detailForm = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $record = new Person();
+
+        // Trigger creation of the item edit form
+        $reflectionDetailForm = new \ReflectionClass($detailForm);
+        $reflectionMethod = $reflectionDetailForm->getMethod('getItemRequestHandler');
+        $reflectionMethod->setAccessible(true);
+        $itemrequest = $reflectionMethod->invoke($detailForm, $gridField, $record, new Controller());
+        $itemrequest->ItemEditForm();
+
+        // The polymorphic values should be pre-loaded
+        $this->assertEquals(PolymorphicPeopleGroup::class, $record->PolymorphicGroupClass);
+        $this->assertEquals($group->ID, $record->PolymorphicGroupID);
     }
 
     public function testViewForm()
@@ -164,11 +192,11 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'FirstName' => 'Bilbo',
                 'Surname' => 'Baggins',
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
@@ -176,7 +204,7 @@ class GridFieldDetailFormTest extends FunctionalTest
             ->filter('Name', 'My Group')
             ->sort('Name')
             ->First();
-        $this->assertListContains(array(array('Surname' => 'Baggins')), $group->People());
+        $this->assertListContains([['Surname' => 'Baggins']], $group->People());
     }
 
     public function testEditFormWithManyMany()
@@ -198,15 +226,15 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $response = $this->post(
             $addformurl,
-            array(
+            [
                 'Name' => 'My Favourite Group',
                 'ajax' => 1,
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
-        $person = Person::get()->sort('FirstName')->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
         $favouriteGroup = $person->FavouriteGroups()->first();
 
         $this->assertInstanceOf(PeopleGroup::class, $favouriteGroup);
@@ -237,46 +265,46 @@ class GridFieldDetailFormTest extends FunctionalTest
         // Test save of IsPublished field
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'Name' => 'Updated Category',
-                'ManyMany' => array(
+                'ManyMany' => [
                     'IsPublished' => 1,
                     'PublishedBy' => 'Richard'
-                ),
+                ],
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
-        $person = Person::get()->sort('FirstName')->First();
-        $category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
+        $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
-            array(
+            [
                 'IsPublished' => 1,
                 'PublishedBy' => 'Richard'
-            ),
+            ],
             $person->Categories()->getExtraData('', $category->ID)
         );
 
         // Test update of value with falsey value
         $response = $this->post(
             $editformurl,
-            array(
+            [
                 'Name' => 'Updated Category',
-                'ManyMany' => array(
+                'ManyMany' => [
                     'PublishedBy' => ''
-                ),
+                ],
                 'action_doSave' => 1
-            )
+            ]
         );
         $this->assertFalse($response->isError());
 
-        $person = Person::get()->sort('FirstName')->First();
-        $category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+        $person = $this->objFromFixture(Person::class, 'jane');
+        $category = $person->Categories()->filter(['Name' => 'Updated Category'])->First();
         $this->assertEquals(
-            array(
+            [
                 'IsPublished' => 0,
                 'PublishedBy' => ''
-            ),
+            ],
             $person->Categories()->getExtraData('', $category->ID)
         );
     }
@@ -403,5 +431,35 @@ class GridFieldDetailFormTest extends FunctionalTest
 
         $this->assertEquals($group->Name, (string) $title[0]);
         $this->assertEquals($group->ID, (string) $id[0]['value']);
+    }
+
+    public function testRedirectMissingRecords()
+    {
+        $origAutoFollow = $this->autoFollowRedirection;
+        $this->autoFollowRedirection = false;
+
+        // GridField is filtered people in "My Group", which doesn't include "jack"
+        $included = $this->objFromFixture(Person::class, 'joe');
+        $excluded = $this->objFromFixture(Person::class, 'jack');
+
+        $response = $this->get(sprintf(
+            'GridFieldDetailFormTest_Controller/Form/field/testfield/item/%d/edit',
+            $included->ID
+        ));
+        $this->assertFalse(
+            $response->isRedirect(),
+            'Existing records are not redirected'
+        );
+
+        $response = $this->get(sprintf(
+            'GridFieldDetailFormTest_Controller/Form/field/testfield/item/%d/edit',
+            $excluded->ID
+        ));
+        $this->assertTrue(
+            $response->isRedirect(),
+            'Non-existing records are redirected'
+        );
+
+        $this->autoFollowRedirection = $origAutoFollow;
     }
 }

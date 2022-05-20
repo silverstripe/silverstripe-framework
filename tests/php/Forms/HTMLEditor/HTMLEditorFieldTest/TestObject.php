@@ -9,9 +9,9 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'HTMLEditorFieldTest_TestObject';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
         'Content' => 'HTMLText',
         'HasBrokenFile' => 'Boolean'
-    );
+    ];
 }

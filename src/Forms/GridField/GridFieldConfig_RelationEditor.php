@@ -29,18 +29,19 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig
     {
         parent::__construct();
 
-        $this->addComponent(new GridFieldButtonRow('before'));
-        $this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
-        $this->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-right'));
-        $this->addComponent(new GridFieldToolbarHeader());
-        $this->addComponent($sort = new GridFieldSortableHeader());
-        $this->addComponent($filter = new GridFieldFilterHeader());
-        $this->addComponent(new GridFieldDataColumns());
-        $this->addComponent(new GridFieldEditButton());
-        $this->addComponent(new GridFieldDeleteAction(true));
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-        $this->addComponent(new GridFieldDetailForm());
+        $this->addComponent(GridFieldButtonRow::create('before'));
+        $this->addComponent(GridFieldAddNewButton::create('buttons-before-left'));
+        $this->addComponent(GridFieldAddExistingAutocompleter::create('buttons-before-right'));
+        $this->addComponent(GridFieldToolbarHeader::create());
+        $this->addComponent($sort = GridFieldSortableHeader::create());
+        $this->addComponent($filter = GridFieldFilterHeader::create());
+        $this->addComponent(GridFieldDataColumns::create());
+        $this->addComponent(GridFieldEditButton::create());
+        $this->addComponent(GridFieldDeleteAction::create(true));
+        $this->addComponent(GridField_ActionMenu::create());
+        $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
+        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
+        $this->addComponent(GridFieldDetailForm::create());
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);

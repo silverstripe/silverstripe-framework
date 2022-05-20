@@ -22,7 +22,7 @@ class ValidatorTest extends SapphireTest
      * @param    array $fieldNames
      * @return    Form
      */
-    protected function getForm(array $fieldNames = array())
+    protected function getForm(array $fieldNames = [])
     {
         // Setup field list now. We're only worried about names right now.
         $fieldList = new FieldList();
@@ -39,8 +39,8 @@ class ValidatorTest extends SapphireTest
         $validator = new TestValidator();
 
         // Setup a form with the fields/data we're testing (a form is a dependency for validation right now).
-        $data = array("foobar" => "");
-        $form = $this->getForm(array_keys($data)); // We only care right now about the fields we've got setup in this array.
+        $data = ["foobar" => ""];
+        $form = $this->getForm(array_keys($data ?? [])); // We only care right now about the fields we've got setup in this array.
         $form->disableSecurityToken();
         $form->setValidator($validator); // Setup validator now that we've got our form.
         $form->loadDataFrom($data); // Put data into the form so the validator can pull it back out again.

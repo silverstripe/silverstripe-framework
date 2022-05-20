@@ -4,7 +4,7 @@ namespace SilverStripe\Core\Tests\ObjectTest;
 
 class ExtensionRemoveTest extends BaseObject
 {
-    private static $extensions = array(
+    private static $extensions = [
         ExtendTest1::class,
-    );
+    ];
 }

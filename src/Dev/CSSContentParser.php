@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SimpleXMLElement;
 use tidy;
@@ -25,6 +26,7 @@ use Exception;
 class CSSContentParser
 {
     use Injectable;
+    use Configurable;
 
     protected $simpleXML = null;
 
@@ -35,28 +37,35 @@ class CSSContentParser
             $tidy = new tidy();
             $tidy->parseString(
                 $content,
-                array(
+                [
                     'output-xhtml' => true,
                     'numeric-entities' => true,
-                    'wrap' => 0, // We need this to be consistent for functional test string comparisons
-                ),
+                    'wrap' => 99999, // We need this to be consistent for functional test string comparisons
+                ],
                 'utf8'
             );
             $tidy->cleanRepair();
-            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy);
-            $tidy = str_replace('&#160;', '', $tidy);
+            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy ?? '');
+            $tidy = str_replace('&#160;', '', $tidy ?? '');
         } elseif (@shell_exec('which tidy')) {
             // using tiny through cli
-            $CLI_content = escapeshellarg($content);
-            $tidy = `echo $CLI_content | tidy --force-output 1 -n -q -utf8 -asxhtml -w 0 2> /dev/null`;
-            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy);
-            $tidy = str_replace('&#160;', '', $tidy);
+            $CLI_content = escapeshellarg($content ?? '');
+            $tidy = `echo $CLI_content | tidy --force-output 1 -n -q -utf8 -asxhtml -w 99999 2> /dev/null`;
+            $tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $tidy ?? '');
+            $tidy = str_replace('&#160;', '', $tidy ?? '');
         } else {
             // no tidy library found, hence no sanitizing
             $tidy = $content;
         }
 
-        $this->simpleXML = @simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
+        // Prevent loading of external entities to prevent XXE attacks
+        // Note: as of libxml 2.9.0 entity substitution is disabled by default so this won't be required
+        if ($this->config()->get('disable_xml_external_entities')) {
+            libxml_set_external_entity_loader(function () {
+                return null;
+            });
+        }
+        $this->simpleXML = @simplexml_load_string($tidy ?? '', 'SimpleXMLElement', LIBXML_NOWARNING);
         if (!$this->simpleXML) {
             throw new Exception('CSSContentParser::__construct(): Could not parse content.'
                 . ' Please check the PHP extension tidy is installed.');
@@ -68,7 +77,7 @@ class CSSContentParser
      * Currently the selector engine only supports querying by tag, id, and class.
      * See {@link getByXpath()} for a more direct selector syntax.
      *
-     * @param String $selector
+     * @param string $selector
      * @return SimpleXMLElement[]
      */
     public function getBySelector($selector)
@@ -80,7 +89,7 @@ class CSSContentParser
     /**
      * Allows querying the content through XPATH selectors.
      *
-     * @param String $xpath SimpleXML compatible XPATH statement
+     * @param string $xpath SimpleXML compatible XPATH statement
      * @return SimpleXMLElement[]
      */
     public function getByXpath($xpath)
@@ -92,24 +101,24 @@ class CSSContentParser
      * Converts a CSS selector into an equivalent xpath expression.
      * Currently the selector engine only supports querying by tag, id, and class.
      *
-     * @param String $selector See {@link getBySelector()}
+     * @param string $selector See {@link getBySelector()}
      * @return String XPath expression
      */
     public function selector2xpath($selector)
     {
-        $parts = preg_split('/\\s+/', $selector);
+        $parts = preg_split('/\\s+/', $selector ?? '');
         $xpath = "";
         foreach ($parts as $part) {
-            if (preg_match('/^([A-Za-z][A-Za-z0-9]*)/', $part, $matches)) {
+            if (preg_match('/^([A-Za-z][A-Za-z0-9]*)/', $part ?? '', $matches)) {
                 $xpath .= "//$matches[1]";
             } else {
                 $xpath .= "//*";
             }
-            $xfilters = array();
-            if (preg_match('/#([^#.\[]+)/', $part, $matches)) {
+            $xfilters = [];
+            if (preg_match('/#([^#.\[]+)/', $part ?? '', $matches)) {
                 $xfilters[] = "@id='$matches[1]'";
             }
-            if (preg_match('/\.([^#.\[]+)/', $part, $matches)) {
+            if (preg_match('/\.([^#.\[]+)/', $part ?? '', $matches)) {
                 $xfilters[] = "contains(@class,'$matches[1]')";
             }
             if ($xfilters) {

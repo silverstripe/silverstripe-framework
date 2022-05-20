@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
- * The action buttons are <input type="submit"> as well as <button> tags.
+ * The action buttons are `<input type="submit">` as well as <button> tags.
  *
  * Upon clicking the button below will redirect the user to doAction under the current controller.
  *
@@ -49,7 +49,7 @@ class FormAction extends FormField
     protected $schemaComponent = 'FormAction';
 
     /**
-     * Enables the use of <button> instead of <input>
+     * Enables the use of `<button>` instead of `<input>`
      * in {@link Field()} - for more customisable styling.
      *
      * @var boolean
@@ -75,7 +75,7 @@ class FormAction extends FormField
      *
      * @param string $action The method to call when the button is clicked
      * @param string $title The label on the button. This should be plain text, not escaped as HTML.
-     * @param Form form The parent form, auto-set when the field is placed inside a form
+     * @param Form $form The parent form, auto-set when the field is placed inside a form
      */
     public function __construct($action, $title = "", $form = null)
     {
@@ -125,7 +125,7 @@ class FormAction extends FormField
      */
     public function actionName()
     {
-        return substr($this->name, 7);
+        return substr($this->name ?? '', 7);
     }
 
     /**
@@ -145,15 +145,15 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $properties = array_merge(
             $properties,
-            array(
+            [
                 'Name' => $this->action,
                 'Title' => ($this->description && !$this->useButtonTag) ? $this->description : $this->Title(),
                 'UseButtonTag' => $this->useButtonTag
-            )
+            ]
         );
 
         return parent::Field($properties);
@@ -163,7 +163,7 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return $this->Field($properties);
     }
@@ -184,15 +184,20 @@ class FormAction extends FormField
 
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'disabled' => ($this->isReadonly() || $this->isDisabled()),
-                'value' => $this->Title(),
-                'type' => $this->getInputType(),
-                'title' => ($this->useButtonTag) ? $this->description : null,
-            )
+                'value'    => $this->Title(),
+                'type'     => $this->getInputType(),
+            ]
         );
+
+        // Override title with description if supplied
+        if ($this->getDescription()) {
+            $attributes['title'] = $this->getDescription();
+        }
+        return $attributes;
     }
 
     /**
@@ -220,7 +225,7 @@ class FormAction extends FormField
     /**
      * Enable or disable the rendering of this action as a <button />
      *
-     * @param boolean
+     * @param boolean $bool
      * @return $this
      */
     public function setUseButtonTag($bool)
@@ -252,7 +257,7 @@ class FormAction extends FormField
     }
 
     /**
-     * Get whether this action can be performed without vaidating the data
+     * Get whether this action can be performed without validating the data
      *
      * @return bool
      */

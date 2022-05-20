@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\Error\Notice;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -15,7 +17,7 @@ class DBDateTest extends SapphireTest
 {
     protected $oldError = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->oldError = error_reporting();
@@ -24,7 +26,7 @@ class DBDateTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->restoreNotices();
         parent::tearDown();
@@ -36,7 +38,6 @@ class DBDateTest extends SapphireTest
     protected function suppressNotices()
     {
         error_reporting(error_reporting() & ~E_USER_NOTICE);
-        \PHPUnit_Framework_Error_Notice::$enabled = false;
     }
 
     /**
@@ -45,7 +46,6 @@ class DBDateTest extends SapphireTest
     protected function restoreNotices()
     {
         error_reporting($this->oldError);
-        \PHPUnit_Framework_Error_Notice::$enabled = true;
     }
 
     public function testNiceDate()
@@ -92,21 +92,17 @@ class DBDateTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.
-     */
     public function testMDYConversion()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.");
         DBField::create_field('Date', '3/16/2003');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.
-     */
     public function testY2kCorrection()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.");
         DBField::create_field('Date', '03-03-04');
     }
 
@@ -210,7 +206,7 @@ class DBDateTest extends SapphireTest
         $date = DBField::create_field('Date', false);
         $this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
 
-        $date = DBField::create_field('Date', array());
+        $date = DBField::create_field('Date', []);
         $this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
 
         $date = DBField::create_field('Date', '0');
@@ -218,6 +214,12 @@ class DBDateTest extends SapphireTest
 
         $date = DBField::create_field('Date', 0);
         $this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+
+        $date = DBField::create_field('Date', '0000-00-00 00:00:00');
+        $this->assertNull($date->getValue(), '0000-00-00 00:00:00 is set as NULL');
+
+        $date = DBField::create_field('Date', '00/00/0000');
+        $this->assertNull($date->getValue(), '00/00/0000 is set as NULL');
     }
 
     public function testDayOfMonth()
@@ -230,6 +232,21 @@ class DBDateTest extends SapphireTest
         $this->assertEquals('10 - 20 Oct 2000', $range);
         $range = $date->RangeString(DBField::create_field('Date', '2000-10-20'), true);
         $this->assertEquals('10th - 20th Oct 2000', $range);
+    }
+
+    public function testFormatReplacesOrdinals()
+    {
+        $this->assertEquals(
+            '20th October 2000',
+            DBField::create_field('Date', '2000-10-20')->Format('{o} MMMM YYYY'),
+            'Ordinal day of month was not injected'
+        );
+
+        $this->assertEquals(
+            '20th is the 20th day of the month',
+            DBField::create_field('Date', '2000-10-20')->Format("{o} 'is the' {o} 'day of the month'"),
+            'Failed to inject multiple ordinal values into one string'
+        );
     }
 
     public function testExtendedDates()
@@ -323,5 +340,42 @@ class DBDateTest extends SapphireTest
         );
 
         DBDatetime::clear_mock_now();
+    }
+
+    public function testRfc3999()
+    {
+        // Dates should be formatted as: 2018-01-24T14:05:53+00:00
+        $date = DBDate::create_field('Date', '2010-12-31');
+        $this->assertEquals('2010-12-31T00:00:00+00:00', $date->Rfc3339());
+    }
+
+    /**
+     * @param string $adjustment
+     * @param string $expected
+     * @dataProvider modifyProvider
+     */
+    public function testModify($adjustment, $expected)
+    {
+        /** @var DBDate $dateField */
+        $dateField = DBField::create_field('Date', '2019-03-03');
+        $result = $dateField->modify($adjustment)->URLDate();
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function modifyProvider()
+    {
+        return [
+            ['+1 day', '2019-03-04'],
+            ['-1 day', '2019-03-02'],
+            ['+24 hours', '2019-03-04'],
+            ['-24 hours', '2019-03-02'],
+            ['+2 weeks', '2019-03-17'],
+            ['-2 weeks', '2019-02-17'],
+            ['+2 years', '2021-03-03'],
+            ['-2 years', '2017-03-03'],
+        ];
     }
 }

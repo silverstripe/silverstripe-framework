@@ -57,43 +57,43 @@ abstract class BulkLoader extends ViewableData
      * <code>
      * <?php
      *  // simple example
-     *  array(
+     *  [
      *      'Title',
      *      'Birthday'
-     *  )
+     *  ]
      *
      * // complex example
-     *  array(
+     *  [
      *      'first name' => 'FirstName', // custom column name
      *      null, // ignored column
      *      'RegionID', // direct has_one/has_many ID setting
      *      'OrganisationTitle', // create has_one relation to existing record using $relationCallbacks
      *      'street' => 'Organisation.StreetName', // match an existing has_one or create one and write property.
-     *  );
+     *  ];
      * ?>
      * </code>
      *
      * @var array
      */
-    public $columnMap = array();
+    public $columnMap = [];
 
     /**
      * Find a has_one relation based on a specific column value.
      *
      * <code>
      * <?php
-     * array(
-     *      'OrganisationTitle' => array(
+     * [
+     *      'OrganisationTitle' => [
      *          'relationname' => 'Organisation', // relation accessor name
      *          'callback' => 'getOrganisationByTitle',
-     *      );
-     * );
+     *      ];
+     * ];
      * ?>
      * </code>
      *
      * @var array
      */
-    public $relationCallbacks = array();
+    public $relationCallbacks = [];
 
     /**
      * Specifies how to determine duplicates based on one or more provided fields
@@ -111,18 +111,18 @@ abstract class BulkLoader extends ViewableData
      *
      *  <code>
      * <?php
-     * array(
+     * [
      *      'customernumber' => 'ID',
-     *      'phonenumber' => array(
+     *      'phonenumber' => [
      *          'callback' => 'getByImportedPhoneNumber'
-     *      )
-     * );
+     *      ]
+     * ];
      * ?>
      * </code>
      *
      * @var array
      */
-    public $duplicateChecks = array();
+    public $duplicateChecks = [];
 
     /**
      * @var Boolean $clearBeforeImport Delete ALL records before importing.
@@ -136,11 +136,11 @@ abstract class BulkLoader extends ViewableData
     }
 
     /*
-	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
-	 * Optionally truncates (clear) the table before it imports.
-	 *
-	 * @return BulkLoader_Result See {@link self::processAll()}
-	 */
+     * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
+     * Optionally truncates (clear) the table before it imports.
+     *
+     * @return BulkLoader_Result See {@link self::processAll()}
+     */
     public function load($filepath)
     {
         Environment::increaseTimeLimitTo(3600);
@@ -211,10 +211,10 @@ abstract class BulkLoader extends ViewableData
      *
      * Return Format:
      * <code>
-     * array(
-     *   'fields' => array('myFieldName'=>'myDescription'),
-     *   'relations' => array('myRelationName'=>'myDescription'),
-     * )
+     * [
+     *   'fields' => ['myFieldName'=>'myDescription'],
+     *   'relations' => ['myRelationName'=>'myDescription'],
+     * ]
      * </code>
      *
      * @todo Mix in custom column mappings
@@ -223,19 +223,30 @@ abstract class BulkLoader extends ViewableData
      **/
     public function getImportSpec()
     {
-        $spec = array();
+        $singleton = DataObject::singleton($this->objectClass);
 
         // get database columns (fieldlabels include fieldname as a key)
         // using $$includerelations flag as false, so that it only contain $db fields
-        $spec['fields'] = (array)singleton($this->objectClass)->fieldLabels(false);
+        $fields = (array)$singleton->fieldLabels(false);
 
-        $has_ones = singleton($this->objectClass)->hasOne();
-        $has_manys = singleton($this->objectClass)->hasMany();
-        $many_manys = singleton($this->objectClass)->manyMany();
+        // Merge relations
+        $relations = array_merge(
+            $singleton->hasOne(),
+            $singleton->hasMany(),
+            $singleton->manyMany()
+        );
 
-        $spec['relations'] = (array)$has_ones + (array)$has_manys + (array)$many_manys;
+        // Ensure description is string (e.g. many_many through)
+        foreach ($relations as $name => $desc) {
+            if (!is_string($desc)) {
+                $relations[$name] = $name;
+            }
+        }
 
-        return $spec;
+        return [
+            'fields' => $fields,
+            'relations' => $relations,
+        ];
     }
 
     /**

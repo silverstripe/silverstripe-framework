@@ -11,6 +11,7 @@ use SilverStripe\Core\Tests\ObjectTest\ExtendTest1;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest2;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest3;
 use SilverStripe\Core\Tests\ObjectTest\ExtendTest4;
+use SilverStripe\Core\Tests\ObjectTest\ExtendTest5;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionRemoveTest;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest;
 use SilverStripe\Core\Tests\ObjectTest\ExtensionTest2;
@@ -30,7 +31,7 @@ use SilverStripe\Versioned\Versioned;
 class ObjectTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Injector::inst()->unregisterObjects([
@@ -46,7 +47,7 @@ class ObjectTest extends SapphireTest
         $this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
         $this->assertTrue($obj->hasMethod('ExTendableMethod'), "Extension method found case-insensitive");
 
-        $objs = array();
+        $objs = [];
         $objs[] = new ObjectTest\T2();
         $objs[] = new ObjectTest\T2();
         $objs[] = new ObjectTest\T2();
@@ -63,8 +64,8 @@ class ObjectTest extends SapphireTest
 
         foreach ($objs as $i => $obj) {
             foreach ($trueMethods as $method) {
-                $methodU = strtoupper($method);
-                $methodL = strtoupper($method);
+                $methodU = strtoupper($method ?? '');
+                $methodL = strtoupper($method ?? '');
                 $this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method");
                 $this->assertTrue($obj->hasMethod($methodU), "Test that obj#$i has method $methodU");
                 $this->assertTrue($obj->hasMethod($methodL), "Test that obj#$i has method $methodL");
@@ -156,14 +157,14 @@ class ObjectTest extends SapphireTest
      */
     public function testCreateWithArgs()
     {
-        $createdObj = ObjectTest\CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
-        $this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+        $createdObj = ObjectTest\CreateTest::create('arg1', 'arg2', [], null, 'arg5');
+        $this->assertEquals($createdObj->constructArguments, ['arg1', 'arg2', [], null, 'arg5']);
     }
 
     public function testCreateLateStaticBinding()
     {
-        $createdObj = ObjectTest\CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
-        $this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+        $createdObj = ObjectTest\CreateTest::create('arg1', 'arg2', [], null, 'arg5');
+        $this->assertEquals($createdObj->constructArguments, ['arg1', 'arg2', [], null, 'arg5']);
     }
 
     /**
@@ -180,26 +181,28 @@ class ObjectTest extends SapphireTest
     public function testGetExtensions()
     {
         $this->assertEquals(
-            array(
+            [
                 'SilverStripe\\Core\\Tests\\oBjEcTTEST\\EXTENDTest1',
                 "SilverStripe\\Core\\Tests\\ObjectTest\\ExtendTest2",
-            ),
+            ],
             ExtensionTest::get_extensions()
         );
         $this->assertEquals(
-            array(
+            [
                 'SilverStripe\\Core\\Tests\\oBjEcTTEST\\EXTENDTest1',
                 "SilverStripe\\Core\\Tests\\ObjectTest\\ExtendTest2('FOO', 'BAR')",
-            ),
+            ],
             ExtensionTest::get_extensions(null, true)
         );
         $inst = new ExtensionTest();
         $extensions = $inst->getExtensionInstances();
-        $this->assertEquals(count($extensions), 2);
+        $this->assertCount(2, $extensions);
+        $this->assertArrayHasKey(ExtendTest1::class, $extensions);
         $this->assertInstanceOf(
             ExtendTest1::class,
             $extensions[ExtendTest1::class]
         );
+        $this->assertArrayHasKey(ExtendTest2::class, $extensions);
         $this->assertInstanceOf(
             ExtendTest2::class,
             $extensions[ExtendTest2::class]
@@ -288,6 +291,13 @@ class ObjectTest extends SapphireTest
             "Extensions are detected with instance hasExtension() when added through add_extension()"
         );
 
+        // load in a custom implementation
+        Injector::inst()->registerService(new ExtendTest5(), ExtendTest4::class);
+        $this->assertTrue(
+            ExtensionTest3::has_extension(ExtendTest5::class),
+            "Injected sub-extensions are detected with static has_extension() when added through add_extension()"
+        );
+
         // @todo At the moment, this does NOT remove the extension due to parameterized naming,
         //  meaning the extension will remain added in further test cases
         ExtensionTest::remove_extension(ExtendTest3::class);
@@ -371,18 +381,18 @@ class ObjectTest extends SapphireTest
         $object = new ObjectTest\ExtendTest();
         $argument = 'test';
 
-        $this->assertEquals($object->extend('extendableMethod'), array('ExtendTest2()'));
-        $this->assertEquals($object->extend('extendableMethod', $argument), array('ExtendTest2(modified)'));
+        $this->assertEquals($object->extend('extendableMethod'), ['ExtendTest2()']);
+        $this->assertEquals($object->extend('extendableMethod', $argument), ['ExtendTest2(modified)']);
         $this->assertEquals($argument, 'modified');
 
         $this->assertEquals(
-            array('ExtendTest()', 'ExtendTest2()'),
+            ['ExtendTest()', 'ExtendTest2()'],
             $object->invokeWithExtensions('extendableMethod')
         );
         $arg1 = 'test';
         $arg2 = 'bob';
         $this->assertEquals(
-            array('ExtendTest(test,bob)', 'ExtendTest2(modified,objectmodified)'),
+            ['ExtendTest(test,bob)', 'ExtendTest2(modified,objectmodified)'],
             $object->invokeWithExtensions('extendableMethod', $arg1, $arg2)
         );
         $this->assertEquals('modified', $arg1);
@@ -394,7 +404,7 @@ class ObjectTest extends SapphireTest
         $third = 3;
         $result = $object2->getResults($first, $second, $third);
         $this->assertEquals(
-            array(array('before', 'extension', 'after')),
+            [['before', 'extension', 'after']],
             $result
         );
         $this->assertEquals(31, $first);
@@ -406,7 +416,7 @@ class ObjectTest extends SapphireTest
     {
         // Simple case
         $this->assertEquals(
-            array(Versioned::class, array('Stage', 'Live')),
+            [Versioned::class, ['Stage', 'Live']],
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage','Live')")
         );
         // Case with service identifier
@@ -419,29 +429,29 @@ class ObjectTest extends SapphireTest
         );
         // String with commas
         $this->assertEquals(
-            array(Versioned::class, array('Stage,Live', 'Stage')),
+            [Versioned::class, ['Stage,Live', 'Stage']],
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage,Live','Stage')")
         );
         // String with quotes
         $this->assertEquals(
-            array(Versioned::class, array('Stage\'Stage,Live\'Live', 'Live')),
+            [Versioned::class, ['Stage\'Stage,Live\'Live', 'Live']],
             ClassInfo::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage\\'Stage,Live\\'Live','Live')")
         );
 
         // True, false and null values
         $this->assertEquals(
-            array('ClassName', array('string', true, array('string', false))),
-            ClassInfo::parse_class_spec('ClassName("string", true, array("string", false))')
+            ['ClassName', ['string', true, ['string', false]]],
+            ClassInfo::parse_class_spec('ClassName("string", true, ["string", false])')
         );
         $this->assertEquals(
-            array('ClassName', array(true, false, null)),
+            ['ClassName', [true, false, null]],
             ClassInfo::parse_class_spec('ClassName(true, false, null)')
         );
 
         // Array
         $this->assertEquals(
-            array('Enum', array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
-            ClassInfo::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')")
+            ['Enum', [['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted']],
+            ClassInfo::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
         );
         // Nested array
         $this->assertEquals(
@@ -453,12 +463,12 @@ class ObjectTest extends SapphireTest
                 ]
             ],
             ClassInfo::parse_class_spec(
-                "Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')"
+                "Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')"
             )
         );
         // 5.4 Shorthand Array
         $this->assertEquals(
-            array('Enum', array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
+            ['Enum', [['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted']],
             ClassInfo::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
         );
         // 5.4 Nested shorthand array
@@ -477,34 +487,63 @@ class ObjectTest extends SapphireTest
 
         // Associative array
         $this->assertEquals(
-            array('Varchar', array(255, array('nullifyEmpty' => false))),
-            ClassInfo::parse_class_spec("Varchar(255, array('nullifyEmpty' => false))")
+            ['Varchar', [255, ['nullifyEmpty' => false]]],
+            ClassInfo::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
         );
         // Nested associative array
         $this->assertEquals(
-            array('Test', array('string', array('nested' => array('foo' => 'bar')))),
-            ClassInfo::parse_class_spec("Test('string', array('nested' => array('foo' => 'bar')))")
+            ['Test', ['string', ['nested' => ['foo' => 'bar']]]],
+            ClassInfo::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
         );
         // 5.4 shorthand associative array
         $this->assertEquals(
-            array('Varchar', array(255, array('nullifyEmpty' => false))),
+            ['Varchar', [255, ['nullifyEmpty' => false]]],
             ClassInfo::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
         );
         // 5.4 shorthand nested associative array
         $this->assertEquals(
-            array('Test', array('string', array('nested' => array('foo' => 'bar')))),
+            ['Test', ['string', ['nested' => ['foo' => 'bar']]]],
             ClassInfo::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
         );
 
         // Namespaced class
         $this->assertEquals(
-            array('Test\MyClass', array()),
+            ['Test\MyClass', []],
             ClassInfo::parse_class_spec('Test\MyClass')
         );
         // Fully qualified namespaced class
         $this->assertEquals(
-            array('\Test\MyClass', array()),
+            ['\Test\MyClass', []],
             ClassInfo::parse_class_spec('\Test\MyClass')
         );
+    }
+
+    public function testInjectedExtensions()
+    {
+        $mockExtension = $this->createMock(TestExtension::class);
+        $mockClass = get_class($mockExtension);
+
+        $object = new ExtensionTest2();
+
+        // sanity check
+        $this->assertNotEquals(TestExtension::class, $mockClass);
+
+        $this->assertTrue($object->hasExtension(TestExtension::class));
+        $this->assertFalse($object->hasExtension($mockClass));
+        $this->assertCount(1, $object->getExtensionInstances());
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance(TestExtension::class));
+        $this->assertNotInstanceOf($mockClass, $object->getExtensionInstance(TestExtension::class));
+
+        Injector::inst()->registerService($mockExtension, TestExtension::class);
+
+        $object = new ExtensionTest2();
+
+        $this->assertTrue($object->hasExtension(TestExtension::class));
+        $this->assertTrue($object->hasExtension($mockClass));
+        $this->assertCount(1, $object->getExtensionInstances());
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance(TestExtension::class));
+        $this->assertInstanceOf($mockClass, $object->getExtensionInstance(TestExtension::class));
+        $this->assertInstanceOf(TestExtension::class, $object->getExtensionInstance($mockClass));
+        $this->assertInstanceOf($mockClass, $object->getExtensionInstance($mockClass));
     }
 }

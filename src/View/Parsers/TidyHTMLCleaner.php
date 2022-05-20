@@ -11,7 +11,7 @@ use tidy;
 class TidyHTMLCleaner extends HTMLCleaner
 {
 
-    protected $defaultConfig = array(
+    protected $defaultConfig = [
         'clean' => true,
         'output-xhtml' => true,
         'show-body-only' => true,
@@ -19,7 +19,7 @@ class TidyHTMLCleaner extends HTMLCleaner
         'doctype' => 'omit',
         'input-encoding' => 'utf8',
         'output-encoding' => 'utf8'
-    );
+    ];
 
     public function cleanHTML($content)
     {
@@ -27,6 +27,6 @@ class TidyHTMLCleaner extends HTMLCleaner
         $output = $tidy->repairString($content, $this->config);
 
         // Clean leading/trailing whitespace
-        return preg_replace('/(^\s+)|(\s+$)/', '', $output);
+        return preg_replace('/(^\s+)|(\s+$)/', '', $output ?? '');
     }
 }

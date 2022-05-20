@@ -11,3 +11,12 @@ SilverStripe\Dev\DevelopmentAdmin:
       controller: SilverStripe\Dev\TaskRunner
       links:
         tasks: 'See a list of build tasks to run'
+    confirm:
+      controller: SilverStripe\Dev\DevConfirmationController
+    config:
+      controller: Silverstripe\Dev\DevConfigController
+      links:
+        config: 'View the current config, useful for debugging'
+
+SilverStripe\Dev\CSSContentParser:
+  disable_xml_external_entities: true

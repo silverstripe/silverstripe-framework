@@ -51,7 +51,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
 
     public function conditionSQL(&$parameters)
     {
-        $parameters = array();
+        $parameters = [];
 
         // Ignore empty conditions
         $where = $this->whereQuery->getWhere();
@@ -61,6 +61,6 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
 
         // Allow database to manage joining of conditions
         $sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($this->whereQuery, $parameters);
-        return preg_replace('/^\s*WHERE\s*/i', '', $sql);
+        return preg_replace('/^\s*WHERE\s*/i', '', $sql ?? '');
     }
 }

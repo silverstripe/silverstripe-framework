@@ -2,31 +2,28 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\SortedObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
 
 class DataObjectSchemaGenerationTest extends SapphireTest
 {
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestObject::class,
-        TestIndexObject::class
-    );
+        TestIndexObject::class,
+        SortedObject::class,
+    ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Start tests
         static::start();
-
-        // enable fulltext option on this table
-        TestIndexObject::config()->update(
-            'create_table_options',
-            array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
-        );
 
         parent::setUpBeforeClass();
     }
@@ -107,9 +104,9 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Let's insert a new field here
         TestObject::config()->update(
             'db',
-            array(
+            [
             'SecretField' => 'Varchar(100)'
-            )
+            ]
         );
 
         // Verify that the above extra field triggered a schema update
@@ -205,7 +202,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $schema = DataObject::getSchema();
 
         // Test with blank entries
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $do1 = new TestObject();
         $fields = $schema->databaseFields(TestObject::class, false);
         $this->assertEquals("DBClassName", $fields['ClassName']);
@@ -221,7 +218,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of subclass
         $item1 = new TestIndexObject();
         $item1->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -234,7 +231,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of main class
         $item2 = new TestObject();
         $item2->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -249,7 +246,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $item1->write();
         $item2 = new TestObject();
         $item2->write();
-        DBClassName::clear_classname_cache();
+        DBEnum::flushCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -259,5 +256,66 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         );
         $item1->delete();
         $item2->delete();
+    }
+
+    public function testSortFieldBecomeIndexes()
+    {
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        Config::inst()->update(SortedObject::class, 'default_sort', 'Sort ASC');
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        Config::inst()->update(SortedObject::class, 'default_sort', 'Sort DESC');
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        Config::inst()->update(SortedObject::class, 'default_sort', '"Sort" DESC');
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        Config::inst()->update(SortedObject::class, 'default_sort', '"DataObjectSchemaGenerationTest_SortedObject"."Sort" ASC');
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        Config::inst()->update(SortedObject::class, 'default_sort', '"Sort" DESC, "Title" ASC');
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Sort'],
+        ], $indexes);
+        $this->assertContains([
+            'type' => 'index',
+            'columns' => ['Title'],
+        ], $indexes);
+        DataObject::getSchema()->reset();
+        // make sure that specific indexes aren't overwritten
+        Config::inst()->update(SortedObject::class, 'indexes', [
+            'Sort' => [
+                'type' => 'unique',
+                'columns' => ['Sort'],
+            ],
+        ]);
+        $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
+        $this->assertContains([
+            'type' => 'unique',
+            'columns' => ['Sort'],
+        ], $indexes);
     }
 }

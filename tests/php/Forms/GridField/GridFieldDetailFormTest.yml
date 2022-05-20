@@ -5,6 +5,9 @@ SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person:
   jane:
     FirstName: Jane
     Surname: Doe
+  jack:
+    FirstName: Jack
+    Surname: Doe
 
 SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup:
   group:

@@ -29,8 +29,7 @@ class YamlWriter implements Writer
     protected function getDumper()
     {
         if (!$this->dumper) {
-            $this->dumper = new Dumper();
-            $this->dumper->setIndentation(2);
+            $this->dumper = new Dumper(2);
         }
         return $this->dumper;
     }
@@ -45,7 +44,7 @@ class YamlWriter implements Writer
 
         // Create folder for lang files
         $langFolder = $path . '/lang';
-        if (!file_exists($langFolder)) {
+        if (!file_exists($langFolder ?? '')) {
             Filesystem::makeFolder($langFolder);
             touch($langFolder . '/_manifest_exclude');
         }
@@ -55,8 +54,8 @@ class YamlWriter implements Writer
 
         // Open the English file and write the Master String Table
         $langFile = $langFolder . '/' . $locale . '.yml';
-        if ($fh = fopen($langFile, "w")) {
-            fwrite($fh, $content);
+        if ($fh = fopen($langFile ?? '', "w")) {
+            fwrite($fh, $content ?? '');
             fclose($fh);
         } else {
             throw new LogicException("Cannot write language file! Please check permissions of $langFile");
@@ -81,7 +80,7 @@ class YamlWriter implements Writer
             $value = $this->denormaliseValue($value);
 
             // Non-nested key
-            if (strstr($entity, '.') === false) {
+            if (strstr($entity ?? '', '.') === false) {
                 $entities[$entity] = $value;
                 continue;
             }
@@ -136,8 +135,8 @@ class YamlWriter implements Writer
         // Strip non-plural keys away
         if (is_array($value)) {
             $forms = i18n::config()->uninherited('plurals');
-            $forms = array_combine($forms, $forms);
-            return array_intersect_key($value, $forms);
+            $forms = array_combine($forms ?? [], $forms ?? []);
+            return array_intersect_key($value ?? [], $forms);
         }
 
         // Parse from string
@@ -169,15 +168,15 @@ class YamlWriter implements Writer
      */
     protected function getClassKey($entity)
     {
-        $parts = explode('.', $entity);
+        $parts = explode('.', $entity ?? '');
         $class = array_shift($parts);
 
         // Ensure the `.ss` suffix gets added to the top level class rather than the key
-        if (count($parts) > 1 && reset($parts) === 'ss') {
+        if (count($parts ?? []) > 1 && reset($parts) === 'ss') {
             $class .= '.ss';
             array_shift($parts);
         }
         $key = implode('.', $parts);
-        return array($class, $key);
+        return [$class, $key];
     }
 }

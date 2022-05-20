@@ -2,15 +2,12 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
-class GridFieldImportButton implements GridField_HTMLProvider
+class GridFieldImportButton extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
-    use Injectable;
-
     /**
      * Fragment to write the button to
      */
@@ -88,9 +85,9 @@ class GridFieldImportButton implements GridField_HTMLProvider
             $button->setAttribute('data-state', 'open');
         }
 
-        return array(
+        return [
             $this->targetFragment => $button->Field()
-        );
+        ];
     }
 
     /**

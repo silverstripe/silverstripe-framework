@@ -1,0 +1,42 @@
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope:
+  one:
+    Title: 'Antelope one'
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Goat:
+  one:
+    Title: 'Goat one'
+  two:
+    Title: 'Goat two'
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Bobcat:
+  one:
+    Title: 'Bobcat one'
+    goat: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Goat.one
+  two:
+    Title: 'Bobcat two'
+    antelope: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope.one
+    self: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Bobcat.one
+    goat: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Goat.two
+  three:
+    Title: 'Bobcat three'
+    antelope: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope.one
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Caribou:
+  one:
+    Title: 'Caribou one'
+  two:
+    Title: 'Caribou two'
+DataObjectDuplicateTest_Antelope_caribou:
+  one:
+    DataObjectDuplicateTest_AntelopeID: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope.one
+    DataObjectDuplicateTest_CaribouID: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Caribou.one
+    Sort: 4
+  two:
+    DataObjectDuplicateTest_AntelopeID: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope.one
+    DataObjectDuplicateTest_CaribouID: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Caribou.two
+    Sort: 5
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Frog:
+  one:
+    Title: 'Frog one'
+SilverStripe\ORM\Tests\DataObjectDuplicationTest\Elephant:
+  one:
+    Title: 'Elephant one'
+    Parent: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Antelope.one
+    Child: =>SilverStripe\ORM\Tests\DataObjectDuplicationTest\Frog.one

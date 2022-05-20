@@ -14,7 +14,7 @@ si:
     Code: 'කාන්ඩ සංකේතය'
     Locked: 'අගුලුලාද?'
     Parent: 'මවු කාන්ඩය'
-    has_many_Permissions: 'අවසර'
+    has_many_Permissions: අවසර
     many_many_Members: සාමාජිකයින්
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'

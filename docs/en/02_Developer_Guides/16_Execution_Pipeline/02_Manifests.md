@@ -1,5 +1,7 @@
+---
 title: Manifests
 summary: Manage caches of file path maps and other expensive information
+---
 
 # Manifests
 
@@ -8,6 +10,13 @@ summary: Manage caches of file path maps and other expensive information
 Manifests help to cache information which is too expensive to generate on each request.
 Some manifests generate maps, e.g. class names to filesystem locations.
 Others store aggregate information like nested configuration graphs.
+
+Manifests are immutable for a given revision of the codebase,
+and hence should be [packaged](/server_requirements#building-packaging-deployment) during deployment.
+[Object Caching](/developer_guides/performance/caching)
+and [Partial Template Caching](/developer_guides/templates/partial_template_caching)
+are examples of mutable caches outside of manifests,
+which need to be generated and expired during runtime.
 
 ## Storage
 
@@ -23,7 +32,7 @@ they require a powerful traversal tool: [FileFinder](api:SilverStripe\Assets\Fil
 The class provides filtering abilities for files and folders, as well as
 callbacks for recursive traversal. Each manifest has its own implementation,
 for example [ManifestFileFinder](api:SilverStripe\Core\Manifest\ManifestFileFinder), adding more domain specific filtering
-like including themes, or excluding testss.
+like including themes, or excluding tests.
 
 ## PHP Class Manifest
 
@@ -56,7 +65,9 @@ a `tests/` folder, unless tests are executed.
 ## Theme Manifests
 
 The [ThemeManifest](api:SilverStripe\View\ThemeManifest) class builds a manifest of all templates present in a directory,
-in both modules and themes. Templates in `tests/` folders are automatically excluded.
+in both modules and themes. 
+
+Templates in `tests/` folders are automatically excluded.
 The chapter on [template inheritance](../templates/template_inheritance) provides more details
 on its operation.
 

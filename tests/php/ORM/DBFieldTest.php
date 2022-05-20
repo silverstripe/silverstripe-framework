@@ -2,17 +2,32 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Assets\Image;
 use SilverStripe\ORM\FieldType\DBBigInt;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBCurrency;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBDecimal;
 use SilverStripe\ORM\FieldType\DBDouble;
+use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBFloat;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
+use SilverStripe\ORM\FieldType\DBInt;
+use SilverStripe\ORM\FieldType\DBLocale;
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\FieldType\DBMultiEnum;
+use SilverStripe\ORM\FieldType\DBPercentage;
+use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\ORM\FieldType\DBTime;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBYear;
 
 /**
  * Tests for DBField objects.
@@ -116,7 +131,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals(123, $varchar->prepValueForDB(123));
 
         /* AllowEmpty Varchar behaviour */
-        $varcharField = DBVarchar::create("testfield", 50, array("nullifyEmpty"=>false));
+        $varcharField = DBVarchar::create("testfield", 50, ["nullifyEmpty"=>false]);
         $this->assertSame('0', $varcharField->prepValueForDB(0));
         $this->assertSame(null, $varcharField->prepValueForDB(null));
         $this->assertSame('', $varcharField->prepValueForDB(false));
@@ -147,7 +162,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals('123', $text->prepValueForDB(123));
 
         /* AllowEmpty Text behaviour */
-        $textField = DBText::create("testfield", array("nullifyEmpty"=>false));
+        $textField = DBText::create("testfield", ["nullifyEmpty"=>false]);
         $this->assertSame('0', $textField->prepValueForDB(0));
         $this->assertSame(null, $textField->prepValueForDB(null));
         $this->assertSame('', $textField->prepValueForDB(false));
@@ -189,6 +204,54 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals(PHP_INT_MAX, $bigInt->getValue());
     }
 
+    /**
+     * @dataProvider dataProviderPrepValueForDBArrayValue
+     */
+    public function testPrepValueForDBArrayValue($dbFieldName, $scalarValueOnly, $extraArgs = [])
+    {
+        $reflection = new \ReflectionClass($dbFieldName);
+        /**
+         * @var DBField
+         */
+        $dbField = $reflection->newInstanceArgs($extraArgs);
+        $dbField->setName('SomeField');
+        $payload = ['GREATEST(0,?)' => '2'];
+        $preparedValue = $dbField->prepValueForDB($payload);
+        $this->assertTrue(
+            !$scalarValueOnly || !is_array($preparedValue),
+            '`prepValueForDB` can not return an array if scalarValueOnly is true'
+        );
+        $this->assertEquals($scalarValueOnly, $dbField->scalarValueOnly());
+    }
+
+    public function dataProviderPrepValueForDBArrayValue()
+    {
+        return [
+            [DBBigInt::class, true],
+            [DBBoolean::class, true],
+            [DBCurrency::class, true],
+            [DBDate::class, true],
+            [DBDatetime::class, true],
+            [DBDecimal::class, true],
+            [DBDouble::class, true],
+            [DBEnum::class, true],
+            [DBFloat::class, true],
+            [DBForeignKey::class, true, ['SomeField']],
+            [DBHTMLText::class, true],
+            [DBHTMLVarchar::class, true],
+            [DBInt::class, true],
+            [DBLocale::class, true],
+            [DBMoney::class, false],
+            [DBMultiEnum::class, true, ['SomeField', ['One', 'Two', 'Three']]],
+            [DBPercentage::class, true],
+            [DBPolymorphicForeignKey::class, false, ['SomeField']],
+            [DBText::class, true],
+            [DBTime::class, true],
+            [DBVarchar::class, true],
+            [DBYear::class, true],
+        ];
+    }
+
     public function testExists()
     {
         $varcharField = new DBVarchar("testfield");
@@ -200,7 +263,7 @@ class DBFieldTest extends SapphireTest
         $varcharField->setValue(null);
         $this->assertFalse($varcharField->exists());
 
-        $varcharField = new DBVarchar("testfield", 50, array('nullifyEmpty'=>false));
+        $varcharField = new DBVarchar("testfield", 50, ['nullifyEmpty'=>false]);
         $this->assertFalse($varcharField->getNullifyEmpty());
         $varcharField->setValue('abc');
         $this->assertTrue($varcharField->exists());
@@ -218,7 +281,7 @@ class DBFieldTest extends SapphireTest
         $textField->setValue(null);
         $this->assertFalse($textField->exists());
 
-        $textField = new DBText("testfield", array('nullifyEmpty'=>false));
+        $textField = new DBText("testfield", ['nullifyEmpty'=>false]);
         $this->assertFalse($textField->getNullifyEmpty());
         $textField->setValue('abc');
         $this->assertTrue($textField->exists());
@@ -230,15 +293,15 @@ class DBFieldTest extends SapphireTest
 
     public function testStringFieldsWithMultibyteData()
     {
-        $plainFields = array('Varchar', 'Text');
-        $htmlFields = array('HTMLVarchar', 'HTMLText', 'HTMLFragment');
+        $plainFields = ['Varchar', 'Text'];
+        $htmlFields = ['HTMLVarchar', 'HTMLText', 'HTMLFragment'];
         $allFields = array_merge($plainFields, $htmlFields);
 
         $value = 'üåäöÜÅÄÖ';
         foreach ($allFields as $stringField) {
             $stringField = DBString::create_field($stringField, $value);
-            for ($i = 1; $i < mb_strlen($value); $i++) {
-                $expected = mb_substr($value, 0, $i) . '...';
+            for ($i = 1; $i < mb_strlen($value ?? ''); $i++) {
+                $expected = mb_substr($value ?? '', 0, $i) . '…';
                 $this->assertEquals($expected, $stringField->LimitCharacters($i));
             }
         }
@@ -248,10 +311,10 @@ class DBFieldTest extends SapphireTest
             $stringObj = DBString::create_field($stringField, $value);
 
             // Converted to plain text
-            $this->assertEquals('üåäö&ÜÅÄ...', $stringObj->LimitCharacters(8));
+            $this->assertEquals('üåäö&ÜÅÄ…', $stringObj->LimitCharacters(8));
 
             // But which will be safely cast in templates
-            $this->assertEquals('üåäö&amp;ÜÅÄ...', $stringObj->obj('LimitCharacters', [8])->forTemplate());
+            $this->assertEquals('üåäö&amp;ÜÅÄ…', $stringObj->obj('LimitCharacters', [8])->forTemplate());
         }
 
         $this->assertEquals('ÅÄÖ', DBText::create_field('Text', 'åäö')->UpperCase());

@@ -57,7 +57,7 @@ trait HTTPMiddlewareAware
         // Reverse middlewares
         $next = $last;
         /** @var HTTPMiddleware $middleware */
-        foreach (array_reverse($this->getMiddlewares()) as $middleware) {
+        foreach (array_reverse($this->getMiddlewares() ?? []) as $middleware) {
             $next = function ($request) use ($middleware, $next) {
                 return $middleware->process($request, $next);
             };

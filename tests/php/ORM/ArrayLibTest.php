@@ -10,29 +10,29 @@ class ArrayLibTest extends SapphireTest
 
     public function testInvert()
     {
-        $arr = array(
-            'row1' => array(
+        $arr = [
+            'row1' => [
                 'col1' =>'val1',
                 'col2' => 'val2'
-            ),
-            'row2' => array(
+            ],
+            'row2' => [
                 'col1' => 'val3',
                 'col2' => 'val4'
-            )
-        );
+            ]
+        ];
 
         $this->assertEquals(
             ArrayLib::invert($arr),
-            array(
-                'col1' => array(
+            [
+                'col1' => [
                     'row1' => 'val1',
                     'row2' => 'val3',
-                ),
-                'col2' => array(
+                ],
+                'col2' => [
                     'row1' => 'val2',
                     'row2' => 'val4',
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -40,32 +40,32 @@ class ArrayLibTest extends SapphireTest
     {
         $this->assertEquals(
             ArrayLib::valuekey(
-                array(
+                [
                     'testkey1' => 'testvalue1',
                     'testkey2' => 'testvalue2'
-                )
+                ]
             ),
-            array(
+            [
                 'testvalue1' => 'testvalue1',
                 'testvalue2' => 'testvalue2'
-            )
+            ]
         );
     }
 
     public function testArrayMapRecursive()
     {
-        $array = array(
+        $array = [
             'a ',
-            array('  b', 'c'),
-        );
-        $strtoupper = array(
+            ['  b', 'c'],
+        ];
+        $strtoupper = [
             'A ',
-            array('  B', 'C'),
-        );
-        $trim = array(
+            ['  B', 'C'],
+        ];
+        $trim = [
             'a',
-            array('b', 'c'),
-        );
+            ['b', 'c'],
+        ];
         $this->assertEquals(
             $strtoupper,
             ArrayLib::array_map_recursive('strtoupper', $array)
@@ -78,139 +78,139 @@ class ArrayLibTest extends SapphireTest
 
     public function testArrayMergeRecursive()
     {
-        $first = array(
+        $first = [
             'first' => 'a',
             'second' => 'b',
-        );
-        $second = array(
+        ];
+        $second = [
             'third' => 'c',
             'fourth' => 'd',
-        );
-        $expected = array(
+        ];
+        $expected = [
             'first' => 'a',
             'second' => 'b',
             'third' => 'c',
             'fourth' => 'd',
-        );
+        ];
         $this->assertEquals(
             $expected,
             ArrayLib::array_merge_recursive($first, $second),
             'First values should supplement second values'
         );
 
-        $first = array(
+        $first = [
             'first' => 'a',
             'second' => 'b',
-        );
-        $second = array(
+        ];
+        $second = [
             'first' => 'c',
             'third' => 'd',
-        );
-        $expected = array(
+        ];
+        $expected = [
             'first' => 'c',
             'second' => 'b',
             'third' => 'd',
-        );
+        ];
         $this->assertEquals(
             $expected,
             ArrayLib::array_merge_recursive($first, $second),
             'Second values should override first values'
         );
 
-        $first = array(
-            'first' => array(
+        $first = [
+            'first' => [
                 'first' => 'a',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-        );
-        $second = array(
-            'first' => array(
+            ],
+        ];
+        $second = [
+            'first' => [
                 'first' => 'c',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
-        $expected = array(
-            'first' => array(
+            ],
+        ];
+        $expected = [
+            'first' => [
                 'first' => 'c',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals(
             $expected,
             ArrayLib::array_merge_recursive($first, $second),
             'Nested second values should override first values'
         );
 
-        $first = array(
-            'first' => array(
+        $first = [
+            'first' => [
                 'first' => 'a',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-        );
-        $second = array(
-            'first' => array(
+            ],
+        ];
+        $second = [
+            'first' => [
                 'second' => 'c',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
-        $expected = array(
-            'first' => array(
+            ],
+        ];
+        $expected = [
+            'first' => [
                 'first' => 'a',
                 'second' => 'c',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 'second' => 'b',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 'third' => 'd',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals(
             $expected,
             ArrayLib::array_merge_recursive($first, $second),
             'Nested first values should supplement second values'
         );
 
-        $first = array(
-            'first' => array(
+        $first = [
+            'first' => [
                 0 => 'a',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 1 => 'b',
-            ),
-        );
-        $second = array(
-            'first' => array(
+            ],
+        ];
+        $second = [
+            'first' => [
                 0 => 'c',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 2 => 'd',
-            ),
-        );
-        $expected = array(
-            'first' => array(
+            ],
+        ];
+        $expected = [
+            'first' => [
                 0 => 'c',
-            ),
-            'second' => array(
+            ],
+            'second' => [
                 1 => 'b',
-            ),
-            'third' => array(
+            ],
+            'third' => [
                 2 => 'd',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals(
             $expected,
@@ -221,29 +221,118 @@ class ArrayLibTest extends SapphireTest
 
     public function testFlatten()
     {
-        $options = array(
+        $options = [
             '1' => 'one',
             '2' => 'two'
-        );
+        ];
 
         $expected = $options;
 
         $this->assertEquals($expected, ArrayLib::flatten($options));
 
-        $options = array(
-            '1' => array(
+        $options = [
+            '1' => [
                 '2' => 'two',
                 '3' => 'three'
-            ),
+            ],
             '4' => 'four'
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '2' => 'two',
             '3' => 'three',
             '4' => 'four'
-        );
+        ];
 
         $this->assertEquals($expected, ArrayLib::flatten($options));
+    }
+
+    /**
+     * Test that items can be added during iteration
+     */
+    public function testIterateVolatileAppended()
+    {
+        $initial = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => null, 'prev' => 'two' ],
+        ];
+
+        // Test new items are iterated
+        $items = $initial;
+        $seen = [];
+        foreach (ArrayLib::iterateVolatile($items) as $key => $value) {
+            $seen[$key] = $value;
+            // Append four
+            if ($key === 'three') {
+                $items['three']['next'] = 'four';
+                $items['four'] = [ 'next' => null, 'prev' => 'three'];
+            }
+            // Prepend zero won't force it to be iterated next, but it will be iterated
+            if ($key === 'one') {
+                $items['one']['next'] = 'zero';
+                $items = array_merge(
+                    ['zero' => [ 'next' => 'one', 'prev' => 'three']],
+                    $items
+                );
+            }
+        }
+        $expected = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => null, 'prev' => 'two' ],
+            'zero' => [ 'next' => 'one', 'prev' => 'three'],
+            'four' => [ 'next' => null, 'prev' => 'three']
+        ];
+        // All items are iterated (order not deterministic)
+        $this->assertEquals(
+            $expected,
+            $seen,
+            'New items are iterated over'
+        );
+    }
+
+    /**
+     * Test that items can be modified during iteration
+     */
+    public function testIterateVolatileModified()
+    {
+        $initial = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one' ],
+            'three' => [ 'next' => 'four', 'prev' => 'two' ],
+            'four' => [ 'next' => null, 'prev' => 'three' ],
+        ];
+
+        // Test new items are iterated
+        $items = $initial;
+        $seen = [];
+        foreach (ArrayLib::iterateVolatile($items) as $key => $value) {
+            $seen[$key] = $value;
+            // One modifies two
+            if ($key === 'one') {
+                $items['two']['modifiedby'] = 'one';
+            }
+            // Two removes three, preventing it from being iterated next
+            if ($key === 'two') {
+                unset($items['three']);
+            }
+            // Four removes two, but since it's already been iterated by this point
+            // it's too late.
+            if ($key === 'four') {
+                unset($items['two']);
+            }
+        }
+        $expected = [
+            'one' => [ 'next' => 'two', 'prev' => null ],
+            'two' => [ 'next' => 'three', 'prev' => 'one', 'modifiedby' => 'one' ],
+            'four' => [ 'next' => null, 'prev' => 'three' ],
+        ];
+        // All items are iterated (order not deterministic)
+        $this->assertEquals(
+            ksort($expected),
+            ksort($seen),
+            'New items are iterated over'
+        );
     }
 }

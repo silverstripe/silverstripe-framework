@@ -1,9 +1,12 @@
+---
 title: Testing Glossary
+summary: All the jargon you need to be a bonafide testing guru
+---
 
 <dl>
 <dt>Assertion<dd>A predicate statement that must be true when a test runs.
 
-<dt>Behat<dd>A behaviour-driven testing library used with SilverStripe as a higher-level alternative to the `FunctionalTest` API, see <http://behat.org>.
+<dt>Behat<dd>A behaviour-driven testing library used with Silverstripe CMS as a higher-level alternative to the `FunctionalTest` API, see <http://behat.org>.
 
 <dt>Test Case<dd>The atomic class type in most unit test frameworks. New unit tests are created by inheriting from the base test case.
 

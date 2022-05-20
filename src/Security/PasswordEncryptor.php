@@ -21,18 +21,18 @@ abstract class PasswordEncryptor
      * @var array
      * @config
      */
-    private static $encryptors = array();
+    private static $encryptors = [];
 
     /**
      * @return array Map of encryptor code to the used class.
      */
     public static function get_encryptors()
     {
-        return Config::inst()->get('SilverStripe\\Security\\PasswordEncryptor', 'encryptors');
+        return Config::inst()->get(self::class, 'encryptors');
     }
 
     /**
-     * @param String $algorithm
+     * @param string $algorithm
      * @return PasswordEncryptor
      * @throws PasswordEncryptor_NotFoundException
      */
@@ -45,8 +45,8 @@ abstract class PasswordEncryptor
             );
         }
 
-        $class=key($encryptors[$algorithm]);
-        if (!class_exists($class)) {
+        $class=key($encryptors[$algorithm] ?? []);
+        if (!class_exists($class ?? '')) {
             throw new PasswordEncryptor_NotFoundException(
                 sprintf('No class found for "%s"', $class)
             );
@@ -56,7 +56,8 @@ abstract class PasswordEncryptor
             return new $class;
         }
 
-        $arguments = $encryptors[$algorithm];
+        // Don't treat array keys as argument names - keeps PHP 7 and PHP 8 operating similarly
+        $arguments = array_values($encryptors[$algorithm] ?? []);
         return($refClass->newInstanceArgs($arguments));
     }
 
@@ -64,8 +65,8 @@ abstract class PasswordEncryptor
      * Return a string value stored in the {@link Member->Password} property.
      * The password should be hashed with {@link salt()} if applicable.
      *
-     * @param String $password Cleartext password to be hashed
-     * @param String $salt (Optional)
+     * @param string $password Cleartext password to be hashed
+     * @param string $salt (Optional)
      * @param Member $member (Optional)
      * @return String Maximum of 512 characters.
      */
@@ -83,7 +84,7 @@ abstract class PasswordEncryptor
     public function salt($password, $member = null)
     {
         $generator = new RandomGenerator();
-        return substr($generator->randomToken('sha1'), 0, 50);
+        return substr($generator->randomToken('sha1') ?? '', 0, 50);
     }
 
     /**
@@ -100,6 +101,6 @@ abstract class PasswordEncryptor
      */
     public function check($hash, $password, $salt = null, $member = null)
     {
-        return $hash === $this->encrypt($password, $salt, $member);
+        return hash_equals($hash ?? '', $this->encrypt($password, $salt, $member) ?? '');
     }
 }

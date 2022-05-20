@@ -12,8 +12,10 @@ use DOMDocument;
  * This class handles the converting of HTML fragments between a string and a DOMDocument based
  * representation.
  *
- * It's designed to allow dependancy injection to replace the standard HTML4 version with one that
+ * It's designed to allow dependency injection to replace the standard HTML4 version with one that
  * handles XHTML or HTML5 instead
+ *
+ * @mixin DOMDocument
  */
 abstract class HTMLValue extends ViewableData
 {
@@ -33,7 +35,11 @@ abstract class HTMLValue extends ViewableData
      */
     public function getContent()
     {
-        $doc = clone $this->getDocument();
+        $document = $this->getDocument();
+        if (!$document) {
+            return '';
+        }
+        $doc = clone $document;
         $xp = new DOMXPath($doc);
 
         // If there's no body, the content is empty string
@@ -43,34 +49,34 @@ abstract class HTMLValue extends ViewableData
 
         // saveHTML Percentage-encodes any URI-based attributes. We don't want this, since it interferes with
         // shortcodes. So first, save all the attribute values for later restoration.
-        $attrs = array();
+        $attrs = [];
         $i = 0;
 
         foreach ($xp->query('//body//@*') as $attr) {
-            $key = "__HTMLVALUE_".($i++);
+            $key = "__HTMLVALUE_" . ($i++);
             $attrs[$key] = $attr->value;
             $attr->value = $key;
         }
 
         // Then, call saveHTML & extract out the content from the body tag
         $res = preg_replace(
-            array(
+            [
                 '/^(.*?)<body>/is',
                 '/<\/body>(.*?)$/isD',
-            ),
+            ],
             '',
-            $doc->saveHTML()
+            $doc->saveHTML() ?? ''
         );
 
         // Then replace the saved attributes with their original versions
         $res = preg_replace_callback('/__HTMLVALUE_(\d+)/', function ($matches) use ($attrs) {
             return Convert::raw2att($attrs[$matches[0]]);
-        }, $res);
+        }, $res ?? '');
 
         // Prevent &nbsp; being encoded as literal utf-8 characters
         // Possible alternative solution: http://stackoverflow.com/questions/2142120/php-encoding-with-domdocument
         $from = mb_convert_encoding('&nbsp;', 'utf-8', 'html-entities');
-        $res = str_replace($from, '&nbsp;', $res);
+        $res = str_replace($from ?? '', '&nbsp;', $res ?? '');
 
         return $res;
     }
@@ -140,8 +146,8 @@ abstract class HTMLValue extends ViewableData
     {
         $doc = $this->getDocument();
 
-        if (method_exists($doc, $method)) {
-            return call_user_func_array(array($doc, $method), $arguments);
+        if ($doc && method_exists($doc, $method ?? '')) {
+            return call_user_func_array([$doc, $method], $arguments ?? []);
         } else {
             return parent::__call($method, $arguments);
         }

@@ -5,6 +5,7 @@ namespace SilverStripe\Security\Tests;
 use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
@@ -20,6 +21,11 @@ class GroupTest extends FunctionalTest
         TestMember::class
     ];
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     public function testGroupCodeDefaultsToTitle()
     {
         $g1 = new Group();
@@ -28,7 +34,7 @@ class GroupTest extends FunctionalTest
         $this->assertEquals('my-title', $g1->Code, 'Custom title gets converted to code if none exists already');
 
         $g2 = new Group();
-        $g2->Title = "My Title";
+        $g2->Title = "My Title and Code";
         $g2->Code = "my-code";
         $g2->write();
         $this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
@@ -56,17 +62,17 @@ class GroupTest extends FunctionalTest
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
         $checkboxSetField->setValue(
-            array(
+            [
             $adminGroup->ID => $adminGroup->ID, // keep existing relation
             $parentGroup->ID => $parentGroup->ID, // add new relation
-            )
+            ]
         );
         $form->saveInto($member);
         $updatedGroups = $member->Groups();
 
         $this->assertEquals(
             2,
-            count($updatedGroups->column()),
+            count($updatedGroups->column() ?? []),
             "Adding a toplevel group works"
         );
         $this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
@@ -76,17 +82,17 @@ class GroupTest extends FunctionalTest
         $form->loadDataFrom($member);
         $checkboxSetField = $form->Fields()->fieldByName('Groups');
         $checkboxSetField->setValue(
-            array(
+            [
             $adminGroup->ID => $adminGroup->ID, // keep existing relation
             //$parentGroup->ID => $parentGroup->ID, // remove previously set relation
-            )
+            ]
         );
         $form->saveInto($member);
         $member->flushCache();
         $updatedGroups = $member->Groups();
         $this->assertEquals(
             1,
-            count($updatedGroups->column()),
+            count($updatedGroups->column() ?? []),
             "Removing a previously added toplevel group works"
         );
         $this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
@@ -96,17 +102,18 @@ class GroupTest extends FunctionalTest
     {
         $member = $this->objFromFixture(TestMember::class, 'admin');
         $group = new Group();
+        $group->Title = 'Title';
 
         // Can save user to unsaved group
         $group->Members()->add($member);
-        $this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
 
         // Persists after writing to DB
         $group->write();
 
         /** @var Group $group */
         $group = Group::get()->byID($group->ID);
-        $this->assertEquals(array($member->ID), array_values($group->Members()->getIDList()));
+        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
     }
 
     public function testCollateAncestorIDs()
@@ -116,19 +123,20 @@ class GroupTest extends FunctionalTest
         /** @var Group $childGroup */
         $childGroup = $this->objFromFixture(Group::class, 'childgroup');
         $orphanGroup = new Group();
+        $orphanGroup->Title = 'Title';
         $orphanGroup->ParentID = 99999;
         $orphanGroup->write();
 
         $this->assertEquals(
             1,
-            count($parentGroup->collateAncestorIDs()),
+            count($parentGroup->collateAncestorIDs() ?? []),
             'Root node only contains itself'
         );
         $this->assertContains($parentGroup->ID, $parentGroup->collateAncestorIDs());
 
         $this->assertEquals(
             2,
-            count($childGroup->collateAncestorIDs()),
+            count($childGroup->collateAncestorIDs() ?? []),
             'Contains parent nodes, with child node first'
         );
         $this->assertContains($parentGroup->ID, $childGroup->collateAncestorIDs());
@@ -136,7 +144,7 @@ class GroupTest extends FunctionalTest
 
         $this->assertEquals(
             1,
-            count($orphanGroup->collateAncestorIDs()),
+            count($orphanGroup->collateAncestorIDs() ?? []),
             'Orphaned nodes dont contain invalid parent IDs'
         );
         $this->assertContains($orphanGroup->ID, $orphanGroup->collateAncestorIDs());
@@ -150,8 +158,8 @@ class GroupTest extends FunctionalTest
         /** @var Group $group */
         $group = $this->objFromFixture(Group::class, 'parentgroup');
         $groupIds = $this->allFixtureIDs(Group::class);
-        $ids = array_intersect_key($groupIds, array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
-        $this->assertEquals(array_values($ids), $group->collateFamilyIDs());
+        $ids = array_intersect_key($groupIds ?? [], array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
+        $this->assertEquals(array_values($ids ?? []), $group->collateFamilyIDs());
     }
 
     /**
@@ -159,7 +167,7 @@ class GroupTest extends FunctionalTest
      */
     public function testCannotCollateUnsavedGroupFamilyIds()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot call collateFamilyIDs on unsaved Group.');
         $group = new Group;
         $group->collateFamilyIDs();
@@ -274,5 +282,60 @@ class GroupTest extends FunctionalTest
             $result->isValid(),
             'Members with only APPLY_ROLES can\'t assign parent groups with inherited ADMIN permission'
         );
+    }
+
+    public function testGroupTitleValidation()
+    {
+        $group1 = $this->objFromFixture(Group::class, 'group1');
+
+        $newGroup = new Group();
+
+        $validators = $newGroup->getCMSCompositeValidator()->getValidators();
+        $this->assertCount(1, $validators);
+        $this->assertInstanceOf(RequiredFields::class, $validators[0]);
+        $this->assertTrue(in_array('Title', $validators[0]->getRequired() ?? []));
+
+        $newGroup->Title = $group1->Title;
+        $result = $newGroup->validate();
+        $this->assertFalse(
+            $result->isValid(),
+            'Group names cannot be duplicated'
+        );
+
+        $newGroup->Title = 'Title';
+        $result = $newGroup->validate();
+        $this->assertTrue($result->isValid());
+    }
+
+    public function testGroupTitleDuplication()
+    {
+        $group = $this->objFromFixture(Group::class, 'group1');
+        $group->Title = 'Group title modified';
+        $group->write();
+        $this->assertEquals('group-1', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Group 1';
+        $group->write();
+        $this->assertEquals('group-1-2', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $group->Title = 'Duplicate renamed';
+        $group->write();
+        $this->assertEquals('duplicate', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $group->Title = 'More renaming';
+        $group->write();
+        $this->assertEquals('duplicate-2', $group->Code);
+
+        $group = new Group();
+        $group->Title = 'Duplicate';
+        $group->write();
+        $this->assertEquals('duplicate-3', $group->Code);
     }
 }

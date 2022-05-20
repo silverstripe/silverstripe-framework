@@ -18,7 +18,7 @@ interface DataObjectInterface
 
     /**
      * Write the current object back to the database.  It should know whether this is a new object, in which case this
-     * would be an insert command, or if this is an existing object queried from the database, in which case thes would
+     * would be an insert command, or if this is an existing object queried from the database, in which case these would
      * be
      */
     public function write();

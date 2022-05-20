@@ -6,7 +6,7 @@ class TestPage extends TestSiteTree
 {
     private static $table_name = 'FixtureBlueprintTest_TestPage';
 
-    private static $db = array(
+    private static $db = [
         'PublishDate' => 'Datetime'
-    );
+    ];
 }

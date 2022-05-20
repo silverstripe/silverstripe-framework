@@ -11,7 +11,6 @@ use SilverStripe\ORM\DB;
  */
 class DBBoolean extends DBField
 {
-
     public function __construct($name = null, $defaultVal = 0)
     {
         $this->defaultVal = ($defaultVal) ? 1 : 0;
@@ -21,21 +20,21 @@ class DBBoolean extends DBField
 
     public function requireField()
     {
-        $parts=array(
-            'datatype'=>'tinyint',
-            'precision'=>1,
-            'sign'=>'unsigned',
-            'null'=>'not null',
-            'default'=>$this->defaultVal,
-            'arrayValue'=>$this->arrayValue
-        );
-        $values=array('type'=>'boolean', 'parts'=>$parts);
+        $parts = [
+            'datatype' => 'tinyint',
+            'precision' => 1,
+            'sign' => 'unsigned',
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue
+        ];
+        $values = ['type' => 'boolean', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
     public function Nice()
     {
-        return ($this->value) ? _t('SilverStripe\\ORM\\FieldType\\DBBoolean.YESANSWER', 'Yes') : _t('SilverStripe\\ORM\\FieldType\\DBBoolean.NOANSWER', 'No');
+        return ($this->value) ? _t(__CLASS__ . '.YESANSWER', 'Yes') : _t(__CLASS__ . '.NOANSWER', 'No');
     }
 
     public function NiceAsBoolean()
@@ -50,26 +49,26 @@ class DBBoolean extends DBField
             $dataObject->$fieldName = ($this->value) ? 1 : 0;
         } else {
             $class = static::class;
-            user_error("DBField::saveInto() Called on a nameless '$class' object", E_USER_ERROR);
+            throw new \RuntimeException("DBField::saveInto() Called on a nameless '$class' object");
         }
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new CheckboxField($this->name, $title);
+        return CheckboxField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)
     {
-        $anyText = _t('SilverStripe\\ORM\\FieldType\\DBBoolean.ANY', 'Any');
-        $source = array(
-            1 => _t('SilverStripe\\ORM\\FieldType\\DBBoolean.YESANSWER', 'Yes'),
-            0 => _t('SilverStripe\\ORM\\FieldType\\DBBoolean.NOANSWER', 'No')
-        );
+        $anyText = _t(__CLASS__ . '.ANY', 'Any');
+        $source = [
+            '' => $anyText,
+            1 => _t(__CLASS__ . '.YESANSWER', 'Yes'),
+            0 => _t(__CLASS__ . '.NOANSWER', 'No')
+        ];
 
-        $field = new DropdownField($this->name, $title, $source);
-        $field->setEmptyString("($anyText)");
-        return $field;
+        return (new DropdownField($this->name, $title, $source))
+            ->setEmptyString($anyText);
     }
 
     public function nullValue()
@@ -81,10 +80,12 @@ class DBBoolean extends DBField
     {
         if (is_bool($value)) {
             return $value ? 1 : 0;
-        } elseif (empty($value)) {
+        }
+        if (empty($value)) {
             return 0;
-        } elseif (is_string($value)) {
-            switch (strtolower($value)) {
+        }
+        if (is_string($value)) {
+            switch (strtolower($value ?? '')) {
                 case 'false':
                 case 'f':
                     return 0;

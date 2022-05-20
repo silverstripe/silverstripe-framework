@@ -18,6 +18,7 @@ use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 
 /**
@@ -31,7 +32,7 @@ class MemberAuthenticatorTest extends SapphireTest
     protected $defaultUsername = null;
     protected $defaultPassword = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -44,9 +45,14 @@ class MemberAuthenticatorTest extends SapphireTest
             $this->defaultPassword = null;
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
+
+        // Enforce dummy validation (this can otherwise be influenced by recipe config)
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DefaultAdminService::clearDefaultAdmin();
         if ($this->defaultUsername) {
@@ -171,10 +177,10 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNotEmpty($tempID);
         $this->assertFalse(DefaultAdminService::hasDefaultAdmin());
 
-        $result = $authenticator->authenticate(array(
+        $result = $authenticator->authenticate([
             'tempid' => $tempID,
             'Password' => 'notmypassword'
-        ), Controller::curr()->getRequest(), $validationResult);
+        ], Controller::curr()->getRequest(), $validationResult);
 
         $this->assertNull($result);
         $this->assertFalse($validationResult->isValid());
@@ -243,13 +249,12 @@ class MemberAuthenticatorTest extends SapphireTest
 
     public function testNonExistantMemberGetsLoginAttemptRecorded()
     {
-        Security::config()->set('login_recording', true);
         Member::config()
             ->set('lock_out_after_incorrect_logins', 1)
             ->set('lock_out_delay_mins', 10);
 
         $email = 'notreal@example.com';
-        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertFalse(Member::get()->filter(['Email' => $email])->exists());
         $this->assertCount(0, LoginAttempt::get());
         $authenticator = new MemberAuthenticator();
         $result = new ValidationResult();
@@ -265,19 +270,19 @@ class MemberAuthenticatorTest extends SapphireTest
         $this->assertNull($member);
         $this->assertCount(1, LoginAttempt::get());
         $attempt = LoginAttempt::get()->first();
-        $this->assertEquals($email, $attempt->Email);
+        $this->assertEmpty($attempt->Email); // Doesn't store potentially sensitive data
+        $this->assertEquals(sha1($email ?? ''), $attempt->EmailHashed);
         $this->assertEquals(LoginAttempt::FAILURE, $attempt->Status);
     }
 
     public function testNonExistantMemberGetsLockedOut()
     {
-        Security::config()->set('login_recording', true);
         Member::config()
             ->set('lock_out_after_incorrect_logins', 1)
             ->set('lock_out_delay_mins', 10);
 
         $email = 'notreal@example.com';
-        $this->assertFalse(Member::get()->filter(array('Email' => $email))->exists());
+        $this->assertFalse(Member::get()->filter(['Email' => $email])->exists());
 
         $authenticator = new MemberAuthenticator();
         $result = new ValidationResult();

@@ -8,7 +8,9 @@ namespace SilverStripe\ORM;
  * All methods in this interface are immutable - they should return new instances with the filter
  * applied, rather than applying the filter in place
  *
- * @see SS_List, Sortable, Limitable
+ * @see SS_List
+ * @see Sortable
+ * @see Limitable
  */
 interface Filterable extends SS_List
 {
@@ -22,7 +24,7 @@ interface Filterable extends SS_List
     public function canFilterBy($by);
 
     /**
-     * Return a new instance of this list that only includes items with these charactaristics
+     * Return a new instance of this list that only includes items with these characteristics
      *
      * @return Filterable
      * @example $list = $list->filter('Name', 'bob'); // only bob in the list
@@ -35,7 +37,7 @@ interface Filterable extends SS_List
     public function filter();
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -59,7 +61,7 @@ interface Filterable extends SS_List
     public function filterAny();
 
     /**
-     * Return a new instance of this list that excludes any items with these charactaristics
+     * Return a new instance of this list that excludes any items with these characteristics
      *
      * @return Filterable
      * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
@@ -72,7 +74,7 @@ interface Filterable extends SS_List
     public function exclude();
 
     /**
-     * Return a new instance of this list that excludes any items with these charactaristics
+     * Return a new instance of this list that excludes any items with these characteristics
      * Filter this List by a callback function. The function will be passed each record of the List in turn,
      * and must return true for the record to be included. Returns the filtered list.
      *

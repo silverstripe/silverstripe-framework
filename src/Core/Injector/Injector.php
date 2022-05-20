@@ -13,6 +13,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DataObject;
 
 /**
  * A simple injection manager that manages creating objects and injecting
@@ -200,7 +201,7 @@ class Injector implements ContainerInterface
     const SINGLETON = 'singleton';
 
     /**
-     * Specif ya service type prototype
+     * Specify a service type prototype
      */
     const PROTOTYPE = 'prototype';
 
@@ -212,14 +213,14 @@ class Injector implements ContainerInterface
      */
     public function __construct($config = null)
     {
-        $this->injectMap = array();
-        $this->serviceCache = array(
+        $this->injectMap = [];
+        $this->serviceCache = [
             'Injector' => $this,
-        );
+        ];
         $this->specs = [
             'Injector' => ['class' => static::class]
         ];
-        $this->autoProperties = array();
+        $this->autoProperties = [];
         $creatorClass = isset($config['creator'])
             ? $config['creator']
             : InjectionCreator::class;
@@ -348,9 +349,9 @@ class Injector implements ContainerInterface
      */
     public function setInjectMapping($class, $property, $toInject, $injectVia = 'property')
     {
-        $mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : array();
+        $mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : [];
 
-        $mapping[$property] = array('name' => $toInject, 'type' => $injectVia);
+        $mapping[$property] = ['name' => $toInject, 'type' => $injectVia];
 
         $this->injectMap[$class] = $mapping;
     }
@@ -381,11 +382,11 @@ class Injector implements ContainerInterface
      * @param array $config
      * @return $this
      */
-    public function load($config = array())
+    public function load($config = [])
     {
         foreach ($config as $specId => $spec) {
             if (is_string($spec)) {
-                $spec = array('class' => $spec);
+                $spec = ['class' => $spec];
             }
 
             $file = isset($spec['src']) ? $spec['src'] : null;
@@ -418,7 +419,7 @@ class Injector implements ContainerInterface
             }
 
             // okay, actually include it now we know we're going to use it
-            if (file_exists($file)) {
+            if (file_exists($file ?? '')) {
                 require_once $file;
             }
 
@@ -426,13 +427,13 @@ class Injector implements ContainerInterface
             // to ensure we get cached
             $spec['id'] = $id;
 
-//			We've removed this check because new functionality means that the 'class' field doesn't need to refer
-//			specifically to a class anymore - it could be a compound statement, ala SilverStripe's old Object::create
-//			functionality
+//          We've removed this check because new functionality means that the 'class' field doesn't need to refer
+//          specifically to a class anymore - it could be a compound statement, ala SilverStripe's old Object::create
+//          functionality
 //
-//			if (!class_exists($class)) {
-//				throw new Exception("Failed to load '$class' from $file");
-//			}
+//          if (!class_exists($class)) {
+//              throw new Exception("Failed to load '$class' from $file");
+//          }
 
             // store the specs for now - we lazy load on demand later on.
             $this->specs[$id] = $spec;
@@ -479,7 +480,7 @@ class Injector implements ContainerInterface
             // and reload the object; existing bindings don't get
             // updated though! (for now...)
             if (isset($this->serviceCache[$id])) {
-                $this->instantiate(array('class'=>$id), $id);
+                $this->instantiate(['class'=>$id], $id);
             }
         }
     }
@@ -509,7 +510,7 @@ class Injector implements ContainerInterface
     public function convertServiceProperty($value)
     {
         if (is_array($value)) {
-            $newVal = array();
+            $newVal = [];
             foreach ($value as $k => $v) {
                 $newVal[$k] = $this->convertServiceProperty($v);
             }
@@ -517,21 +518,36 @@ class Injector implements ContainerInterface
         }
 
         // Evaluate service references
-        if (is_string($value) && strpos($value, '%$') === 0) {
-            $id = substr($value, 2);
+        if (is_string($value) && strpos($value ?? '', '%$') === 0) {
+            $id = substr($value ?? '', 2);
             return $this->get($id);
         }
 
         // Evaluate constants surrounded by back ticks
-        if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
-            $envValue = Environment::getEnv($matches['name']);
-            if ($envValue !== false) {
-                $value = $envValue;
-            } elseif (defined($matches['name'])) {
-                $value = constant($matches['name']);
-            } else {
-                $value = null;
+        $hasBacticks = false;
+        $allMissing = true;
+        // $value must start and end with backticks, though there can be multiple
+        // things being subsituted within $value e.g. "`VAR_ONE`:`VAR_TWO`:`VAR_THREE`"
+        if (preg_match('/^`.+`$/', $value ?? '')) {
+            $hasBacticks = true;
+            preg_match_all('/`(?<name>[^`]+)`/', $value, $matches);
+            foreach ($matches['name'] as $name) {
+                $envValue = Environment::getEnv($name);
+                $val = '';
+                if ($envValue !== false) {
+                    $val = $envValue;
+                } elseif (defined($name)) {
+                    $val = constant($name);
+                }
+                $value = str_replace("`$name`", $val, $value);
+                if ($val) {
+                    $allMissing = false;
+                }
             }
+        }
+        // silverstripe sometimes explictly expects a null value rather than just an empty string
+        if ($hasBacticks && $allMissing && $value === '') {
+            return null;
         }
 
         return $value;
@@ -571,18 +587,31 @@ class Injector implements ContainerInterface
     protected function instantiate($spec, $id = null, $type = null)
     {
         if (is_string($spec)) {
-            $spec = array('class' => $spec);
+            $spec = ['class' => $spec];
         }
         $class = $spec['class'];
 
         // create the object, using any constructor bindings
-        $constructorParams = array();
+        $constructorParams = [];
         if (isset($spec['constructor']) && is_array($spec['constructor'])) {
             $constructorParams = $spec['constructor'];
         }
 
+        // If we're dealing with a DataObject singleton without specific constructor params, pass through Singleton
+        // flag as second argument
+        if ((!$type || $type !== self::PROTOTYPE)
+            && empty($constructorParams)
+            && is_subclass_of($class, DataObject::class)) {
+            $constructorParams = [null, DataObject::CREATE_SINGLETON];
+        }
+
         $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
         $object = $factory->create($class, $constructorParams);
+
+        // Handle empty factory responses
+        if (!$object) {
+            return null;
+        }
 
         // figure out if we have a specific id set or not. In some cases, we might be instantiating objects
         // that we don't manage directly; we don't want to store these in the service cache below
@@ -627,7 +656,7 @@ class Injector implements ContainerInterface
         $objtype = $asType ? $asType : get_class($object);
         $mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
 
-        $spec = empty($this->specs[$objtype]) ? array() : $this->specs[$objtype];
+        $spec = empty($this->specs[$objtype]) ? [] : $this->specs[$objtype];
 
         // first off, set any properties defined in the service specification for this
         // object type
@@ -660,7 +689,7 @@ class Injector implements ContainerInterface
                 }
 
                 // Check that the method exists and is callable
-                $objectMethod = array($object, $method[0]);
+                $objectMethod = [$object, $method[0]];
                 if (!is_callable($objectMethod)) {
                     throw new InvalidArgumentException("'$method[0]' in 'calls' entry is not a public method");
                 }
@@ -669,8 +698,8 @@ class Injector implements ContainerInterface
                 call_user_func_array(
                     $objectMethod,
                     $this->convertServiceProperty(
-                        isset($method[1]) ? $method[1] : array()
-                    )
+                        isset($method[1]) ? $method[1] : []
+                    ) ?? []
                 );
             }
         }
@@ -690,12 +719,12 @@ class Injector implements ContainerInterface
                     /* @var $propertyObject ReflectionProperty */
                     if ($propertyObject->isPublic() && !$propertyObject->getValue($object)) {
                         $origName = $propertyObject->getName();
-                        $name = ucfirst($origName);
+                        $name = ucfirst($origName ?? '');
                         if ($this->has($name)) {
                             // Pull the name out of the registry
                             $value = $this->get($name);
                             $propertyObject->setValue($object, $value);
-                            $mapping[$origName] = array('name' => $name, 'type' => 'property');
+                            $mapping[$origName] = ['name' => $name, 'type' => 'property'];
                         }
                     }
                 }
@@ -706,13 +735,13 @@ class Injector implements ContainerInterface
                 foreach ($methods as $methodObj) {
                     /* @var $methodObj ReflectionMethod */
                     $methName = $methodObj->getName();
-                    if (strpos($methName, 'set') === 0) {
-                        $pname = substr($methName, 3);
+                    if (strpos($methName ?? '', 'set') === 0) {
+                        $pname = substr($methName ?? '', 3);
                         if ($this->has($pname)) {
                             // Pull the name out of the registry
                             $value = $this->get($pname);
                             $methodObj->invoke($object, $value);
-                            $mapping[$methName] = array('name' => $pname, 'type' => 'method');
+                            $mapping[$methName] = ['name' => $pname, 'type' => 'method'];
                         }
                     }
                 }
@@ -720,7 +749,7 @@ class Injector implements ContainerInterface
 
             $injections = Config::inst()->get(get_class($object), 'dependencies');
             // If the type defines some injections, set them here
-            if ($injections && count($injections)) {
+            if ($injections && count($injections ?? [])) {
                 foreach ($injections as $property => $value) {
                     // we're checking empty in case it already has a property at this name
                     // this doesn't catch privately set things, but they will only be set by a setter method,
@@ -728,7 +757,7 @@ class Injector implements ContainerInterface
                     if (empty($object->$property)) {
                         $convertedValue = $this->convertServiceProperty($value);
                         $this->setObjectProperty($object, $property, $convertedValue);
-                        $mapping[$property] = array('service' => $value, 'type' => 'service');
+                        $mapping[$property] = ['service' => $value, 'type' => 'service'];
                     }
                 }
             }
@@ -789,8 +818,8 @@ class Injector implements ContainerInterface
      */
     protected function setObjectProperty($object, $name, $value)
     {
-        if (ClassInfo::hasMethod($object, 'set'.$name)) {
-            $object->{'set'.$name}($value);
+        if (ClassInfo::hasMethod($object, 'set' . $name)) {
+            $object->{'set' . $name}($value);
         } else {
             $object->$name = $value;
         }
@@ -846,11 +875,11 @@ class Injector implements ContainerInterface
 
         // okay, check whether we've got a compound name - don't worry about 0 index, cause that's an
         // invalid name
-        if (!strpos($name, '.')) {
+        if (!strpos($name ?? '', '.')) {
             return null;
         }
 
-        return $this->getServiceName(substr($name, 0, strrpos($name, '.')));
+        return $this->getServiceName(substr($name ?? '', 0, strrpos($name ?? '', '.')));
     }
 
     /**
@@ -869,7 +898,7 @@ class Injector implements ContainerInterface
             $registerAt = $replace;
         }
 
-        $this->specs[$registerAt] = array('class' => get_class($service));
+        $this->specs[$registerAt] = ['class' => get_class($service)];
         $this->serviceCache[$registerAt] = $service;
         return $this;
     }
@@ -904,7 +933,7 @@ class Injector implements ContainerInterface
         foreach ($this->serviceCache as $key => $object) {
             foreach ($types as $filterClass) {
                 // Prevent destructive flushing
-                if (strcasecmp($filterClass, 'object') === 0) {
+                if (strcasecmp($filterClass ?? '', 'object') === 0) {
                     throw new InvalidArgumentException("Global unregistration is not allowed");
                 }
                 if ($object instanceof $filterClass) {
@@ -1000,11 +1029,11 @@ class Injector implements ContainerInterface
     protected function normaliseArguments($name, $args = [])
     {
         // Allow service names of the form "%$ServiceName"
-        if (substr($name, 0, 2) == '%$') {
-            $name = substr($name, 2);
+        if (substr($name ?? '', 0, 2) == '%$') {
+            $name = substr($name ?? '', 2);
         }
 
-        if (strstr($name, '(')) {
+        if (strstr($name ?? '', '(')) {
             list($name, $extraArgs) = ClassInfo::parse_class_spec($name);
             if ($args) {
                 $args = array_merge($args, $extraArgs);
@@ -1012,7 +1041,7 @@ class Injector implements ContainerInterface
                 $args = $extraArgs;
             }
         }
-        $name = trim($name);
+        $name = trim($name ?? '');
         return [$name, $args];
     }
 
@@ -1064,11 +1093,11 @@ class Injector implements ContainerInterface
         }
 
         // Fail over to parent service if allowed
-        if (!$inherit || !strpos($name, '.')) {
+        if (!$inherit || !strpos($name ?? '', '.')) {
             return null;
         }
 
-        return $this->getServiceSpec(substr($name, 0, strrpos($name, '.')));
+        return $this->getServiceSpec(substr($name ?? '', 0, strrpos($name ?? '', '.')));
     }
 
     /**
@@ -1089,7 +1118,7 @@ class Injector implements ContainerInterface
      * Additional parameters are passed through as
      *
      * @param string $name
-     * @param mixed $argument,... arguments to pass to the constructor
+     * @param mixed ...$argument arguments to pass to the constructor
      * @return mixed A new instance of the specified object
      */
     public function create($name, $argument = null)

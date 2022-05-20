@@ -1,8 +1,13 @@
+---
+title: Security
+summary: Learn how to minimise vulnerabilities in your code
+icon: user-secret
+---
 # Security
 
 ## Introduction
 
-This page details notes on how to ensure that we develop secure SilverStripe applications. 
+This page details notes on how to ensure that we develop secure Silverstripe CMS applications. 
 See our "[Release Process](/contributing/release_process#security-releases) on how to report security issues.
 
 ## SQL Injection
@@ -25,41 +30,47 @@ must still be taken when working with literal values or table/column identifiers
 come from user input.
 
 Example:
-```php
-    $records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', [3]);
-    $records = MyClass::get()->where(['"ID" = ?' => 3]);
-    $records = MyClass::get()->where(['"ID"' => 3]);
-    $records = DataObject::get_by_id('MyClass', 3);
-    $records = DataObject::get_one('MyClass', ['"ID" = ?' => 3]);
-    $records = MyClass::get()->byID(3);
-    $records = SQLSelect::create()->addWhere(['"ID"' => 3])->execute();
 
+```php
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Queries\SQLSelect;
+
+$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', [3]);
+$records = MyClass::get()->where(['"ID" = ?' => 3]);
+$records = MyClass::get()->where(['"ID"' => 3]);
+$records = DataObject::get_by_id('MyClass', 3);
+$records = DataObject::get_one('MyClass', ['"ID" = ?' => 3]);
+$records = MyClass::get()->byID(3);
+$records = SQLSelect::create()->addWhere(['"ID"' => 3])->execute();
 ```
 
 Parameterised updates and inserts are also supported, but the syntax is a little different
 
 
 ```php
-    SQLInsert::create('"MyClass"')
-        ->assign('"Name"', 'Daniel')
-        ->addAssignments([
-            '"Position"' => 'Accountant',
-            '"Age"' => [
-                'GREATEST(0,?,?)' => [24, 28]
-            ]
-        ])
-        ->assignSQL('"Created"', 'NOW()')
-        ->execute();
-    DB::prepared_query(
-        'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
-        ['Daniel', 'Accountant', 24, 28]
-    );
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\DB;
 
+SQLInsert::create('"MyClass"')
+    ->assign('"Name"', 'Daniel')
+    ->addAssignments([
+        '"Position"' => 'Accountant',
+        '"Age"' => [
+            'GREATEST(0,?,?)' => [24, 28]
+        ]
+    ])
+    ->assignSQL('"Created"', 'NOW()')
+    ->execute();
+DB::prepared_query(
+    'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
+    ['Daniel', 'Accountant', 24, 28]
+);
 ```
 
 ### Automatic escaping
 
-SilverStripe internally will use parameterised queries in SQL statements wherever possible.
+Silverstripe CMS internally will use parameterised queries in SQL statements wherever possible.
 
 If necessary Silverstripe performs any required escaping through database-specific methods (see [Database::addslashes()](api:SilverStripe\ORM\Connect\Database::addslashes())).
 For [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase), this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
@@ -79,22 +90,24 @@ Data is not escaped when writing to object-properties, as inserts and updates ar
 handled via prepared statements.
 
 Example:
-```php
-    // automatically escaped/quoted
-    $members = Member::get()->filter('Name', $_GET['name']); 
-    // automatically escaped/quoted
-    $members = Member::get()->filter(['Name' => $_GET['name']]); 
-    // parameterised condition
-    $members = Member::get()->where(['"Name" = ?' => $_GET['name']]); 
-    // needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
-    $members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
+```php
+use SilverStripe\Security\Member;
+
+// automatically escaped/quoted
+$members = Member::get()->filter('Name', $_GET['name']); 
+// automatically escaped/quoted
+$members = Member::get()->filter(['Name' => $_GET['name']]); 
+// parameterised condition
+$members = Member::get()->where(['"Name" = ?' => $_GET['name']]); 
+// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
+$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 ```
 
-<div class="warning" markdown='1'>
+[warning]
 It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
-</div>
+[/warning]
 
 ### Manual escaping
 
@@ -114,19 +127,19 @@ Example:
 
 
 ```php
-    use SilverStripe\Core\Convert;
-    use SilverStripe\Forms\Form;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\Form;
 
-    class MyForm extends Form 
+class MyForm extends Form 
+{
+    public function save($RAW_data, $form) 
     {
-      public function save($RAW_data, $form) 
-      {
-            // Pass true as the second parameter of raw2sql to quote the value safely
-            $SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
-            $objs = Player::get()->where("Name = " . $SQL_data['name']);
+        // Pass true as the second parameter of raw2sql to quote the value safely
+        $SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
+        $objs = Player::get()->where("Name = " . $SQL_data['name']);
         // ...
-      }
     }
+}
 
 ```
 
@@ -135,23 +148,21 @@ Example:
 
 Example:
 
-
 ```php
-    use SilverStripe\Core\Convert;
-    use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
 
-    class MyController extends Controller 
+class MyController extends Controller 
+{
+    private static $allowed_actions = ['myurlaction'];
+    public function myurlaction($RAW_urlParams) 
     {
-      private static $allowed_actions = ['myurlaction'];
-      public function myurlaction($RAW_urlParams) 
-      {
-            // Pass true as the second parameter of raw2sql to quote the value safely
-            $SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
-            $objs = Player::get()->where("Name = " . $SQL_data['OtherID']);
+        // Pass true as the second parameter of raw2sql to quote the value safely
+        $SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
+        $objs = Player::get()->where("Name = " . $SQL_data['OtherID']);
         // ...
-      }
     }
-
+}
 ```
 
 As a rule of thumb, you should escape your data **as close to querying as possible**
@@ -160,28 +171,27 @@ passing data through, escaping should happen at the end of the chain.
 
 
 ```php
-    use SilverStripe\Core\Convert;
-    use SilverStripe\ORM\DB;
-    use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DB;
+use SilverStripe\Control\Controller;
 
-    class MyController extends Controller 
+class MyController extends Controller 
+{
+    /**
+    * @param array $RAW_data All names in an indexed array (not SQL-safe)
+    */
+    public function saveAllNames($RAW_data) 
     {
-      /**
-       * @param array $RAW_data All names in an indexed array (not SQL-safe)
-       */
-      public function saveAllNames($RAW_data) 
-      {
         // $SQL_data = Convert::raw2sql($RAW_data); // premature escaping
         foreach($RAW_data as $item) $this->saveName($item);
-      }
-    
-      public function saveName($RAW_name) 
-      {
-            $SQL_name = Convert::raw2sql($RAW_name, true);
-            DB::query("UPDATE Player SET Name = {$SQL_name}");
-      }
     }
 
+    public function saveName($RAW_name) 
+    {
+        $SQL_name = Convert::raw2sql($RAW_name, true);
+        DB::query("UPDATE Player SET Name = {$SQL_name}");
+    }
+}
 ```
 
 This might not be applicable in all cases - especially if you are building an API thats likely to be customised. If
@@ -191,34 +201,36 @@ variables ($RAW_data instead of $data).
 
 ## XSS (Cross-Site-Scripting)
 
-SilverStripe helps you guard any output against clientside attacks initiated by malicious user input, commonly known as
+Silverstripe CMS helps you guard any output against clientside attacks initiated by malicious user input, commonly known as
 XSS (Cross-Site-Scripting). With some basic guidelines, you can ensure your output is safe for a specific use case (e.g.
 displaying a blog post in HTML from a trusted author, or escaping a search parameter from an untrusted visitor before
 redisplaying it).
 
-<div class="notice" markdown='1'>
-Note: SilverStripe templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
+[notice]
+Note: Silverstripe CMS templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
 or [sanitize](http://htmlpurifier.org/) it correctly.
-</div>
+[/notice]
 
 See [http://shiflett.org/articles/foiling-cross-site-attacks](http://shiflett.org/articles/foiling-cross-site-attacks)
 for in-depth information about "Cross-Site-Scripting".
 
 ### What if I can't trust my editors?
 
-The default configuration of SilverStripe assumes some level of trust is given to your editors who have access
+The default configuration of Silverstripe CMS assumes some level of trust is given to your editors who have access
 to the CMS. Though the HTML WYSIWYG editor is configured to provide some control over the HTML an editor provides,
 this is not enforced server side, and so can be bypassed by a malicious editor. A editor that does so can use an
 XSS attack against an admin to perform any administrative action.
 
-If you can't trust your editors, SilverStripe must be configured to filter the content so that any javascript is
+If you can't trust your editors, Silverstripe CMS must be configured to filter the content so that any javascript is
 stripped out
 
 To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/developer_guides/configuration/configuration) property to
 true, e.g.
+
 ```
-    HtmlEditorField::config()->sanitise_server_side = true
+HtmlEditorField::config()->sanitise_server_side = true
 ```
+
 The built in sanitiser enforces the TinyMCE whitelist rules on the server side, and is sufficient to eliminate the
 most common XSS vectors.
 
@@ -241,22 +253,22 @@ We recommend configuring [shortcodes](/developer_guides/extending/shortcodes) th
 
 ### Escaping model properties
 
-[SSViewer](api:SilverStripe\View\SSViewer) (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
+[SSViewer](api:SilverStripe\View\SSViewer) (the Silverstripe CMS template engine) automatically takes care of escaping HTML tags from specific
 object-properties by [casting](/developer_guides/model/data_types_and_casting) its string value into a [DBField](api:SilverStripe\ORM\FieldType\DBField) object.
 
 PHP:
 
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyObject extends DataObject 
-    {
-      private static $db = [
+class MyObject extends DataObject 
+{
+    private static $db = [
         'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
         'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
-      ];
-    }
+    ];
+}
 
 ```
 
@@ -264,10 +276,10 @@ Template:
 
 
 ```php
-    <ul>
-      <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
-      <li>$MyUnescapedValue</li> // output: <b>bold</b>
-    </ul>
+<ul>
+    <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
+    <li>$MyUnescapedValue</li> // output: <b>bold</b>
+</ul>
 ```
 
 The example below assumes that data wasn't properly filtered when saving to the database, but are escaped before
@@ -282,13 +294,13 @@ Template (see above):
 
 
 ```php
-    <ul>
-      // output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
-      <li><a href="#" title="$Title.ATT">$Title</a></li>
-      <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
-      <li>$MyUnescapedValue</li> // output: <b>bold</b>
-      <li>$MyUnescapedValue.XML</li> // output: &lt;b&gt;bold&lt;b&gt;
-    </ul>
+<ul>
+    // output: <a href="#" title="foo &amp; &#quot;bar&quot;">foo &amp; "bar"</a>
+    <li><a href="#" title="$Title.ATT">$Title</a></li>
+    <li>$MyEscapedValue</li> // output: &lt;b&gt;not bold&lt;b&gt;
+    <li>$MyUnescapedValue</li> // output: <b>bold</b>
+    <li>$MyUnescapedValue.XML</li> // output: &lt;b&gt;bold&lt;b&gt;
+</ul>
 ```
 
 ### Escaping custom attributes and getters
@@ -298,37 +310,35 @@ static *$casting* array. Caution: Casting only applies when using values in a te
 
 PHP:
 
-
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyObject extends DataObject 
+class MyObject extends DataObject 
+{
+    public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
+     
+    $casting = [
+        "Title" => "Text", // forcing a casting
+        'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
+    ];
+    
+    public function TitleWithHTMLSuffix($suffix) 
     {
-        public $Title = '<b>not bold</b>'; // will be escaped due to Text casting
-         
-        $casting = [
-            "Title" => "Text", // forcing a casting
-            'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
-        ];
-        
-        public function TitleWithHTMLSuffix($suffix) 
-        {
-            // $this->Title is not casted in PHP
-            return $this->Title . '<small>(' . $suffix. ')</small>';
-        }
+        // $this->Title is not casted in PHP
+        return $this->Title . '<small>(' . $suffix. ')</small>';
     }
-
+}
 ```
 
 Template:
 
 
 ```php
-    <ul>
-      <li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
-      <li>$Title.RAW</li> // output: <b>not bold</b>
-      <li>$TitleWithHTMLSuffix</li> // output: <b>not bold</b>: <small>(...)</small>
-    </ul>
+<ul>
+    <li>$Title</li> // output: &lt;b&gt;not bold&lt;b&gt;
+    <li>$Title.RAW</li> // output: <b>not bold</b>
+    <li>$TitleWithHTMLSuffix</li> // output: <b>not bold</b>: <small>(...)</small>
+</ul>
 ```
 
 Note: Avoid generating HTML by string concatenation in PHP wherever possible to minimize risk and separate your
@@ -342,35 +352,45 @@ template, you'll need to take care of casting and escaping yourself in PHP.
 The [Convert](api:SilverStripe\Core\Convert) class has utilities for this, mainly *Convert::raw2xml()* and *Convert::raw2att()* (which is
 also used by *XML* and *ATT* in template code).
 
-PHP:
+<div class="warning" markdown='1'>
+Most of the `Convert::raw2` methods accept arrays and do not affect array keys.
+If you serialize your data, make sure to do that before you pass it to `Convert::raw2` methods.
 
+E.g.:
 
 ```php
-    use SilverStripe\Core\Convert;
-    use SilverStripe\Control\Controller;
-    use SilverStripe\ORM\FieldType\DBText;
-    use SilverStripe\ORM\FieldType\DBHTMLText;
+json_encode(Convert::raw2sql($request->getVar('multiselect')));  // WRONG!
 
-    class MyController extends Controller 
+Convert::raw2sql(json_encode($request->getVar('multiselect')));  // Correct!
+```
+</div>
+
+PHP:
+
+```php
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
+class MyController extends Controller 
+{
+    private static $allowed_actions = ['search'];
+    public function search($request) 
     {
-        private static $allowed_actions = ['search'];
-        public function search($request) 
-        {
-            $htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
-            return $this->customise([
-                'Query' => DBText::create($request->getVar('Query')),
-                'HTMLTitle' => DBHTMLText::create($htmlTitle)
-            ]);
-        }
+        $htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
+        return $this->customise([
+            'Query' => DBText::create($request->getVar('Query')),
+            'HTMLTitle' => DBHTMLText::create($htmlTitle)
+        ]);
     }
-
+}
 ```
 
 Template:
 
-
 ```php
-    <h2 title="Searching for $Query.ATT">$HTMLTitle</h2>
+<h2 title="Searching for $Query.ATT">$HTMLTitle</h2>
 ```
 
 Whenever you insert a variable into an HTML attribute within a template, use $VarName.ATT, no not $VarName.
@@ -386,29 +406,28 @@ PHP:
 
 
 ```php
-    use SilverStripe\Control\Controller;
-    use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\Control\Controller;
+use SilverStripe\ORM\FieldType\DBText;
 
-    class MyController extends Controller 
+class MyController extends Controller 
+{
+    private static $allowed_actions = ['search'];
+    public function search($request) 
     {
-        private static $allowed_actions = ['search'];
-        public function search($request) 
-        {
-            $rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
-            $rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
-            return $this->customise([
-                "RSSLink" => DBText::create($rssLink),
-            ]);
-        }
+        $rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
+        $rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
+        return $this->customise([
+            "RSSLink" => DBText::create($rssLink),
+        ]);
     }
-
+}
 ```
 
 Template:
 
 
 ```php
-    <a href="$RSSLink.ATT">RSS feed</a>
+<a href="$RSSLink.ATT">RSS feed</a>
 ```
 
 Some rules of thumb:
@@ -428,7 +447,7 @@ HtmlEditorField::$sanitise_server_side config property to true.
 
 ## Cross-Site Request Forgery (CSRF)
 
-SilverStripe has built-in countermeasures against [CSRF](http://shiflett.org/articles/cross-site-request-forgeries) identity theft for all form submissions. A form object
+Silverstripe CMS has built-in countermeasures against [CSRF](http://shiflett.org/articles/cross-site-request-forgeries) identity theft for all form submissions. A form object
 will automatically contain a `SecurityID` parameter which is generated as a secure hash on the server, connected to the
 currently active session of the user. If this form is submitted without this parameter, or if the parameter doesn't
 match the hash stored in the users session, the request is discarded.
@@ -438,7 +457,7 @@ It is also recommended to limit form submissions to the intended HTTP verb (most
 through [Form::setStrictFormMethodCheck()](api:SilverStripe\Forms\Form::setStrictFormMethodCheck()). 
 
 Sometimes you need to handle state-changing HTTP submissions which aren't handled through
-SilverStripe's form system. In this case, you can also check the current HTTP request
+Silverstripe CMS's form system. In this case, you can also check the current HTTP request
 for a valid token through [SecurityToken::checkRequest()](api:SilverStripe\Security\SecurityToken::checkRequest()).
 
 ## Casting user input
@@ -449,29 +468,29 @@ given variable is done safely, with the assumption that it's an integer.
 
 To cast the variable as an integer, place `(int)` or `(integer)` before the variable.
 
-For example: a page with the URL paramaters *mysite.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
+For example: a page with the URL parameters *example.com/home/add/1* requires that ''Director::urlParams['ID']'' be an
 integer. We cast it by adding `(int)` - ''(int)Director::urlParams['ID']''. If a value other than an integer is
-passed, such as *mysite.com/home/add/dfsdfdsfd*, then it returns 0.
+passed, such as *example.com/home/add/dfsdfdsfd*, then it returns 0.
 
 Below is an example with different ways you would use this casting technique:
 
 
 ```php
-    public function CaseStudies() 
-    {
+public function CaseStudies() 
+{
+
+    // cast an ID from URL parameters e.g. (example.com/home/action/ID)
+    $anotherID = (int)Director::urlParam['ID'];
     
-       // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
-       $anotherID = (int)Director::urlParam['ID'];
+    // perform a calculation, the prerequisite being $anotherID must be an integer
+    $calc = $anotherID + (5 - 2) / 2;
     
-       // perform a calculation, the prerequisite being $anotherID must be an integer
-       $calc = $anotherID + (5 - 2) / 2;
+    // cast the 'category' GET variable as an integer
+    $categoryID = (int)$_GET['category'];
     
-       // cast the 'category' GET variable as an integer
-       $categoryID = (int)$_GET['category'];
-    
-       // perform a byID(), which ensures the ID is an integer before querying
-       return CaseStudy::get()->byID($categoryID);
-    }
+    // perform a byID(), which ensures the ID is an integer before querying
+    return CaseStudy::get()->byID($categoryID);
+}
 ```
 
 The same technique can be employed anywhere in your PHP code you know something must be of a certain type. A list of PHP
@@ -484,32 +503,42 @@ cast types can be found here:
 *  `(array)` - cast to array
 *  `(object)` - cast to object
 
-Note that there is also a 'SilverStripe' way of casting fields on a class, this is a different type of casting to the
+Note that there is also a 'Silverstripe CMS' way of casting fields on a class, this is a different type of casting to the
 standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 
 ## Filesystem
 
-### Don't script-execution in /assets
+### Don't allow script-execution in /assets
 
 Please refer to the article on [file security](/developer_guides/files/file_security)
 for instructions on how to secure the assets folder against malicious script execution.
 
-### Don't allow access to YAML files
+### Don't run Silverstripe in the webroot
 
-YAML files are often used to store sensitive or semi-sensitive data for use by 
-SilverStripe, such as configuration files. We block access to any files
-with a `.yml` or `.yaml` extension through the default web server rewriting rules.
-If you need users to access files with this extension,
-you can bypass the rules for a specific directory.
-Here's an example for a `.htaccess` file used by the Apache web server:
-```
-    <Files *.yml>
-        Order allow,deny
-        Allow from all
-    </Files>
+Silverstripe routes all execution through a [public/ subfolder](/getting_started/directory_structure))
+by default. This enables you to keep application code and configuration outside of webserver routing.
+But since this was introduced after the 4.0, there's a fallback `.htaccess` file in place
+which allows you to set the webroot to the project root. Don't rely on this, since it increases your security surface.
 
 ```
+.htaccess <- fallback, shouldn't be used
+public/ <- this should be your webroot
+  .htaccess
+  index.php
+app/
+  _config/
+    secrets.yml <- this isn't routed if public/ is your webroot
+```
+
+### Don't place protected files in the webroot
+
+Protected files are stored in `public/assets/.protected` by default
+(assuming you're using the [public/ subfolder](/getting_started/directory_structure)).
+While default configuration is in place to avoid the webserver serving these files,
+we recommend moving them out of the webroot altogether -
+see [Server Requirements: Secure Assets](/getting_started/server_requirements#secure-assets).
+
 ### User uploaded files
 
 Certain file types are by default excluded from user upload. html, xhtml, htm, and xml files may have embedded,
@@ -531,7 +560,6 @@ take the following precautions:
    [Cookie Law and Flash Cookies](http://eucookiedirective.com/cookie-law-and-flash-cookies/).
 
 See [the Adobe Flash security page](http://www.adobe.com/devnet/flashplayer/security.html) for more information.
-	
 
 ADMIN privileged users may be allowed to override the above upload restrictions if the
 `File.apply_restrictions_to_admin` config is set to false. By default this is true, which enforces these
@@ -542,35 +570,64 @@ list of allowed extensions by adding these to the `File.allowed_extensions` conf
 
 ## Passwords
 
-SilverStripe stores passwords with a strong hashing algorithm (blowfish) by default
+Silverstripe CMS stores passwords with a strong hashing algorithm (blowfish) by default
 (see [PasswordEncryptor](api:SilverStripe\Security\PasswordEncryptor)). It adds randomness to these hashes via
 salt values generated with the strongest entropy generators available on the platform
 (see [RandomGenerator](api:SilverStripe\Security\RandomGenerator)). This prevents brute force attacks with
 [Rainbow tables](http://en.wikipedia.org/wiki/Rainbow_table).
 
-Strong passwords are a crucial part of any system security.
-So in addition to storing the password in a secure fashion,
-you can also enforce specific password policies by configuring
-a [PasswordValidator](api:SilverStripe\Security\PasswordValidator):
+Strong passwords are a crucial part of any system security. So in addition to storing the password in a secure fashion,
+you can also enforce specific password policies by configuring a 
+[PasswordValidator](api:SilverStripe\Security\PasswordValidator). This can be done through a `_config.php` file
+at runtime, or via YAML configuration.
 
+From Silverstripe CMS 4.3 onwards, the default password validation rules are configured in the framework's `passwords.yml`
+file. You will need to ensure that your config file is processed after it. For Silverstripe CMS <4.3 you will need to
+use a `_config.php` file to modify the class's config at runtime (see `_config.php` installed in your mysite/app folder
+if you're using silverstripe/recipe-core).
 
-```php
-    $validator = new PasswordValidator();
-    $validator->minLength(7);
-    $validator->checkHistoricalPasswords(6);
-    $validator->characterStrength(3, ["lowercase", "uppercase", "digits", "punctuation"]);
-    Member::set_password_validator($validator);
+```yaml
+---
+Name: mypasswords
+After: '#corepasswords'
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\PasswordValidator:
+    properties:
+      MinLength: 7
+      HistoricCount: 6
+      MinTestScore: 3
 
+# In the case someone uses `new PasswordValidator` instead of Injector, provide some safe defaults through config.
+SilverStripe\Security\PasswordValidator:
+  min_length: 7
+  historic_count: 6
+  min_test_score: 3
 ```
+
+### Configuring custom password validator tests
+
+The default password validation character strength tests can be seen in the `PasswordValidator.character_strength_tests`
+configuration property. You can add your own with YAML config, by providing a name for it and a regex pattern to match:
+
+```yaml
+SilverStripe\Security\PasswordValidator:
+  character_strength_tests:
+    contains_secret_word: '/1337pw/'
+```
+
+This will ensure that a password contains `1337pw` somewhere in the string before validation will succeed.
+
+### Other options
 
 In addition, you can tighten password security with the following configuration settings:
 
  * `Member.password_expiry_days`: Set the number of days that a password should be valid for.
  * `Member.lock_out_after_incorrect_logins`: Number of incorrect logins after which
     the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
- * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts.
- 		Only applies if `lock_out_after_incorrect_logins` is greater than 0.
+ * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts. Only applies if `lock_out_after_incorrect_logins` is greater than 0.
  * `Security.remember_username`: Set to false to disable autocomplete on login form
+ * `Session.timeout`: Set timeout to attenuate the risk of active sessions being exploited
 
 ## Clickjacking: Prevent iframe Inclusion
 
@@ -585,37 +642,39 @@ controller's `init()` method:
 
 
 ```php
-    use SilverStripe\Control\Controller;
+use SilverStripe\Control\Controller;
 
-    class MyController extends Controller 
+class MyController extends Controller 
+{
+    public function init() 
     {
-        public function init() 
-        {
-            parent::init();
-            $this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
-        }
+        parent::init();
+        $this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
     }
+}
 ```
 
 This is a recommended option to secure any controller which displays
 or submits sensitive user input, and is enabled by default in all CMS controllers,
 as well as the login form.
 
-## Request hostname forgery
+## Request hostname forgery {#request-hostname-forgery}
 
-To prevent a forged hostname appearing being used by the application, SilverStripe
+To prevent a forged hostname appearing being used by the application, Silverstripe CMS
 allows the configure of a whitelist of hosts that are allowed to access the system. By defining
 this whitelist in your `.env` file, any request presenting a `Host` header that is
 _not_ in this list will be blocked with a HTTP 400 error:
+
 ```
-    SS_ALLOWED_HOSTS="www.mysite.com,mysite.com,subdomain.mysite.com"
+SS_ALLOWED_HOSTS="www.example.com,example.com,subdomain.example.com"
 ```
+
 Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)
 that will be accessing the site.
 
-When SilverStripe is run behind a reverse proxy, it's normally necessary for this proxy to
+When Silverstripe CMS is run behind a reverse proxy, it's normally necessary for this proxy to
 use the `X-Forwarded-Host` request header to tell the webserver which hostname was originally
-requested. However, when SilverStripe is not run behind a proxy, this header can still be
+requested. However, when Silverstripe CMS is not run behind a proxy, this header can still be
 used by attackers to fool the server into mistaking its own identity.
 
 The risk of this kind of attack causing damage is especially high on sites which utilise caching
@@ -624,24 +683,27 @@ into visiting external sites.
 
 In order to prevent this kind of attack, it's necessary to whitelist trusted proxy
 server IPs using the SS_TRUSTED_PROXY_IPS define in your `.env`.
+
 ```
-    SS_TRUSTED_PROXY_IPS="127.0.0.1,192.168.0.1"
+SS_TRUSTED_PROXY_IPS="127.0.0.1,192.168.0.1"
 ```
+
 If you wish to change the headers that are used to find the proxy information, you should reconfigure the
 TrustedProxyMiddleware service:
 
 
 ```yml
+SilverStripe\Control\TrustedProxyMiddleware:
+  properties:
+    ProxyHostHeaders: X-Forwarded-Host
+    ProxySchemeHeaders: X-Forwarded-Protocol
+    ProxyIPHeaders: X-Forwarded-Ip
+```
 
-    SilverStripe\Control\TrustedProxyMiddleware:
-      properties:
-        ProxyHostHeaders: X-Forwarded-Host
-        ProxySchemeHeaders: X-Forwarded-Protocol
-        ProxyIPHeaders: X-Forwarded-Ip
-
-    SS_TRUSTED_PROXY_HOST_HEADER="HTTP_X_FORWARDED_HOST"
-    SS_TRUSTED_PROXY_IP_HEADER="HTTP_X_FORWARDED_FOR"
-    SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTOCOL"
+```
+SS_TRUSTED_PROXY_HOST_HEADER="HTTP_X_FORWARDED_HOST"
+SS_TRUSTED_PROXY_IP_HEADER="HTTP_X_FORWARDED_FOR"
+SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTOCOL"
 ```
 
 At the same time, you'll also need to define which headers you trust from these proxy IPs. Since there are multiple ways through which proxies can pass through HTTP information on the original hostname, IP and protocol, these values need to be adjusted for your specific proxy. The header names match their equivalent `$_SERVER` values.
@@ -655,38 +717,71 @@ This behaviour is enabled whenever `SS_TRUSTED_PROXY_IPS` is defined, or if the
 following in your .htaccess to ensure this behaviour is activated.
 
 ```
-    <IfModule mod_env.c>
-        # Ensure that X-Forwarded-Host is only allowed to determine the request
-        # hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your .env
-        # Note that in a future release this setting will be always on.
-        SetEnv BlockUntrustedIPs true
-    </IfModule>
+<IfModule mod_env.c>
+    # Ensure that X-Forwarded-Host is only allowed to determine the request
+    # hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your .env
+    # Note that in a future release this setting will be always on.
+    SetEnv BlockUntrustedIPs true
+</IfModule>
 ```
 
-In a future release this behaviour will be changed to be on by default, and this environment
-variable will be no longer necessary, thus it will be necessary to always set
-`SS_TRUSTED_PROXY_IPS` if using a proxy.
+As of Silverstripe CMS 4, this behaviour is on by default, and the environment variable is no longer required. For correct operation, it is necessary to always set `SS_TRUSTED_PROXY_IPS` if using a proxy.
 
 ## Secure Sessions, Cookies and TLS (HTTPS)
 
-SilverStripe recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
+Silverstripe CMS recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
 director function `forceSSL()` 
+
 ```php
-    if (!Director::isDev()) {
-        Director::forceSSL();
-    }
+use SilverStripe\Control\Director;
+
+if (!Director::isDev()) {
+    Director::forceSSL();
+}
+```
+
+`forceSSL()` will only take effect in environment types that `CanonicalURLMiddleware` is configured to apply to (by
+default, only `LIVE`). To apply this behaviour in all environment types, you'll need to update that configuration:
+
+```php
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
+
+if (!Director::isDev()) {
+    CanonicalURLMiddleware::singleton()->setEnabledEnvs(true); // You can also specify individual environment types
+    Director::forceSSL();
+}
 ```
 
 Forcing HTTPS so requires a certificate to be purchased or obtained through a vendor such as 
 [lets encrypt](https://letsencrypt.org/) and configured on your web server.
 
-We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell SilverStripe to 
+Note that by default enabling SSL will also enable `CanonicalURLMiddleware::forceBasicAuthToSSL` which will detect
+and automatically redirect any requests with basic authentication headers to first be served over HTTPS. You can
+disable this behaviour using `CanonicalURLMiddleware::singleton()->setForceBasicAuthToSSL(false)`, or via Injector
+configuration in YAML.
+
+We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell Silverstripe CMS to 
 use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie). 
 To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`
-```yml
 
-    Session:
-        cookie_secure: true
+```yml
+SilverStripe\Control\Session:
+  cookie_secure: true
+```
+
+The same treatment should be applied to the cookie responsible for remembering logins across sessions:
+
+```yml
+---
+Name: secure-alc
+Except:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler:
+    properties:
+      TokenCookieSecure: true
 ```
 
 For other cookies set by your application we should also ensure the users are provided with secure cookies by setting 
@@ -699,11 +794,13 @@ clear text and can be intercepted and stolen by an attacker who is listening on 
 - The `HTTPOnly` flag lets the browser know whether or not a cookie should be accessible by client-side JavaScript 
 code. It is best practice to set this flag unless the application is known to use JavaScript to access these cookies 
 as this prevents an attacker who achieves cross-site scripting from accessing these cookies.
+
 ```php
-    
-    Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
-        $httpOnly = false
-    );
+use SilverStripe\Control\Cookie;
+
+Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
+    $httpOnly = false
+);
 ```
 
 ## Security Headers
@@ -715,9 +812,9 @@ ensuring an HTTPS connection will provide a better and more secure user experien
 - The `Strict-Transport-Security` header instructs the browser to record that the website and assets on that website 
 MUST use a secure connection. This prevents websites from becoming insecure in the future from stray absolute links 
 or references without https from external sites. Check if your browser supports [HSTS](https://hsts.badssl.com/)
-  - `max-age` can be configured to anything in seconds: `max-age=31536000` (1 year), for roll out, consider something 
+- `max-age` can be configured to anything in seconds: `max-age=31536000` (1 year), for roll out, consider something 
   lower
-  - `includeSubDomains` to ensure all present and future sub domains will also be HTTPS
+- `includeSubDomains` to ensure all present and future sub domains will also be HTTPS
 
 For sensitive pages, such as members areas, or places where sensitive information is present, adding cache control
  headers can explicitly instruct browsers not to keep a local cached copy of content and can prevent content from 
@@ -725,32 +822,41 @@ For sensitive pages, such as members areas, or places where sensitive informatio
  
 - The headers `Cache-control: no-store` and `Pragma: no-cache` along with expiry headers of `Expires: <current date>` 
 and `Date: <current date>` will ensure that sensitive content is not stored locally or able to be retrieved by 
-unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
+unauthorised local persons. Silverstripe CMS adds the current date for every request, and we can add the other cache 
  headers to the request for our secure controllers:
  
 ```php
-    use SilverStripe\Control\HTTP;
-    use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTP;
+use SilverStripe\Control\Controller;
 
-    class MySecureController extends Controller 
+class MySecureController extends Controller 
+{
+    
+    public function init() 
     {
+        parent::init();
         
-        public function init() 
-        {
-            parent::init();
-            
-            // Add cache headers to ensure sensitive content isn't cached.
-            $this->response->addHeader('Cache-Control', 'max-age=0, must-revalidate, no-transform');
-            $this->response->addHeader('Pragma', 'no-cache'); // for HTTP 1.0 support
+        // Add cache headers to ensure sensitive content isn't cached.
+        $this->response->addHeader('Cache-Control', 'max-age=0, must-revalidate, no-transform');
+        $this->response->addHeader('Pragma', 'no-cache'); // for HTTP 1.0 support
 
-            HTTP::set_cache_age(0);
-            HTTP::add_cache_headers($this->response);
-            
-            // Add HSTS header to force TLS for document content
-            $this->response->addHeader('Strict-Transport-Security', 'max-age=86400; includeSubDomains');
-        }
+        HTTP::set_cache_age(0);
+        HTTP::add_cache_headers($this->response);
+        
+        // Add HSTS header to force TLS for document content
+        $this->response->addHeader('Strict-Transport-Security', 'max-age=86400; includeSubDomains');
     }
+}
 ```
+
+## HTTP Caching Headers
+
+Caching is hard. If you get it wrong, private or draft content might leak
+to unauthenticated users. We have created an abstraction which allows you to express
+your intent around HTTP caching without worrying too much about the details.
+See [HTTP Cache Headers](/developer_guides/performance/http_cache_headers/)
+for details on how to apply caching safely, and read Google's
+[Web Fundamentals on Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching).
 
 ##  Related
 

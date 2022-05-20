@@ -1,4 +1,7 @@
+---
 title: How to Create a Paginated List
+summary: Break up the result of a database query into multiple pages
+---
 
 # How to Create a Paginated List
 
@@ -8,64 +11,66 @@ all your record, then wraps it in a [PaginatedList](api:SilverStripe\ORM\Paginat
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 
-**mysite/code/Page.php**
+**app/src/Page.php**
 
 ```php
-	/**
-	 * Returns a paginated list of all pages in the site.
-	 */
-	public function PaginatedPages() 
-	{
-		$list = Page::get();
+use SilverStripe\ORM\PaginatedList;
 
-		return new PaginatedList($list, $this->getRequest());
-	}
+/**
+ * Returns a paginated list of all pages in the site.
+ */
+public function PaginatedPages() 
+{
+    $list = Page::get();
+
+    return new PaginatedList($list, $this->getRequest());
+}
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Note that the concept of "pages" used in pagination does not necessarily mean that we're dealing with `Page` classes, 
 it's just a term to describe a sub-collection of the list.
-</div>
+[/notice]
 
 There are two ways to generate pagination controls: [PaginatedList::Pages()](api:SilverStripe\ORM\PaginatedList::Pages()) and 
 [PaginatedList::PaginationSummary()](api:SilverStripe\ORM\PaginatedList::PaginationSummary()). In this example we will use `PaginationSummary()`.
 
 The first step is to simply list the objects in the template:
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
-	<ul>
-		<% loop $PaginatedPages %>
-			<li><a href="$Link">$Title</a></li>
-		<% end_loop %>
-	</ul>
+<ul>
+    <% loop $PaginatedPages %>
+        <li><a href="$Link">$Title</a></li>
+    <% end_loop %>
+</ul>
 ```
 By default this will display 10 pages at a time. The next step is to add pagination controls below this so the user can 
 switch between pages:
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
-	<% if $PaginatedPages.MoreThanOnePage %>
-		<% if $PaginatedPages.NotFirstPage %>
-			<a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
-		<% end_if %>
-		<% loop $PaginatedPages.Pages %>
-			<% if $CurrentBool %>
-				$PageNum
-			<% else %>
-				<% if $Link %>
-					<a href="$Link">$PageNum</a>
-				<% else %>
-					...
-				<% end_if %>
-			<% end_if %>
-			<% end_loop %>
-		<% if $PaginatedPages.NotLastPage %>
-			<a class="next" href="$PaginatedPages.NextLink">Next</a>
-		<% end_if %>
-	<% end_if %>
+<% if $PaginatedPages.MoreThanOnePage %>
+    <% if $PaginatedPages.NotFirstPage %>
+        <a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
+    <% end_if %>
+    <% loop $PaginatedPages.PaginationSummary %>
+        <% if $CurrentBool %>
+            $PageNum
+        <% else %>
+            <% if $Link %>
+                <a href="$Link">$PageNum</a>
+            <% else %>
+                ...
+            <% end_if %>
+        <% end_if %>
+    <% end_loop %>
+    <% if $PaginatedPages.NotLastPage %>
+        <a class="next" href="$PaginatedPages.NextLink">Next</a>
+    <% end_if %>
+<% end_if %>
 ```
 
 If there is more than one page, this block will render a set of pagination controls in the form 
@@ -79,23 +84,25 @@ will break the pagination. You can disable automatic limiting using the [Paginat
 when using custom lists.
 
 ```php
-	$myPreLimitedList = Page::get()->limit(10);
+use SilverStripe\ORM\PaginatedList;
 
-	$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
-	$pages->setLimitItems(false);
+$myPreLimitedList = Page::get()->limit(10);
+
+$pages = new PaginatedList($myPreLimitedList, $this->getRequest());
+$pages->setLimitItems(false);
 ```
 
 ## Setting the limit of items
 
 ```php
-	$pages = new PaginatedList(Page::get(), $this->getRequest());
-	$pages->setPageLength(25);
+$pages = new PaginatedList(Page::get(), $this->getRequest());
+$pages->setPageLength(25);
 ```
 
 If you set this limit to 0 it will disable paging entirely, effectively causing it to appear as a single page
 list.
 
-## Template Variables
+## Template Variables {#variables}
 
 | Variable | Description |
 | -------- | -------- |
@@ -103,12 +110,18 @@ list.
 | `$NextLink`, `$PrevLink` | They will return blank if there's no appropriate page to go to, so `$PrevLink` will return blank when you're on the first page. |
 | `$CurrentPage` | Current page iterated on. |
 | `$TotalPages` | The actual (limited) list of records, use in an inner loop |
+| `$FirstItem` | Returns the number of the first item being displayed on the current page. This is useful for things like “displaying 10-20”. | 
+| `$LastItem` | Returns the number of the last item being displayed on this page. | 
 | `$TotalItems` | This returns the total number of items across all pages. | 
 | `$Pages` | Total number of pages. |
 | `$PageNum` | Page number, starting at 1 (within `$Pages`) |
 | `$Link` | Links to the current controller URL, setting this page as current via a GET parameter |
+| `$FirstPage` | Returns true if you're currently on the first page |
+| `$LastPage` | Returns true if you're currently on the last page |
 | `$CurrentBool` | Returns true if you're currently on that page |
 
+## Related Lessons
+* [Lists and pagination](https://www.silverstripe.org/learn/lessons/v4/lists-and-pagination-1)
 
 ## API Documentation
 

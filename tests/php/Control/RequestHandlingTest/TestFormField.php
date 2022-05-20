@@ -10,18 +10,18 @@ use SilverStripe\Forms\FormField;
  */
 class TestFormField extends FormField implements TestOnly
 {
-    private static $url_handlers = array(
+    private static $url_handlers = [
         "POST " => "handleInPlaceEdit",
         '' => 'handleField',
         '$Action' => '$Action',
-    );
+    ];
 
     // These contain uppercase letters to test that allowed_actions doesn't need to be all lowercase
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'TEST',
         'handleField',
         'handleInPLACEEDIT',
-    );
+    ];
 
     public function test()
     {

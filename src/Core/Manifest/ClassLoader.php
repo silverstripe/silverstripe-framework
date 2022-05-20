@@ -23,7 +23,7 @@ class ClassLoader
      *
      * @var array
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return ClassLoader
@@ -61,7 +61,7 @@ class ClassLoader
      */
     public function pushManifest(ClassManifest $manifest, $exclusive = true)
     {
-        $this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
+        $this->manifests[] = ['exclusive' => $exclusive, 'instance' => $manifest];
     }
 
     /**
@@ -75,7 +75,7 @@ class ClassLoader
 
     public function registerAutoloader()
     {
-        spl_autoload_register(array($this, 'loadClass'));
+        spl_autoload_register([$this, 'loadClass']);
     }
 
     /**
@@ -102,7 +102,7 @@ class ClassLoader
      */
     public function getItemPath($class)
     {
-        foreach (array_reverse($this->manifests) as $manifest) {
+        foreach (array_reverse($this->manifests ?? []) as $manifest) {
             /** @var ClassManifest $manifestInst */
             $manifestInst = $manifest['instance'];
             if ($path = $manifestInst->getItemPath($class)) {
@@ -120,13 +120,14 @@ class ClassLoader
      *
      * @param bool $includeTests
      * @param bool $forceRegen
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false)
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         foreach ($this->manifests as $manifest) {
             /** @var ClassManifest $instance */
             $instance = $manifest['instance'];
-            $instance->init($includeTests, $forceRegen);
+            $instance->init($includeTests, $forceRegen, $ignoredCIConfigs);
         }
 
         $this->registerAutoloader();

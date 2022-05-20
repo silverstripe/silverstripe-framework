@@ -48,7 +48,8 @@ class TestMailer implements Mailer
             'From' => implode(';', array_keys($email->getFrom() ?: [])),
             'Subject' => $email->getSubject(),
             'Content' => $email->getBody(),
-            'AttachedFiles' => $attachedFiles
+            'AttachedFiles' => $attachedFiles,
+            'Headers' => $email->getSwiftMessage()->getHeaders(),
         ];
         if ($plainContent) {
             $serialised['PlainContent'] = $plainContent;
@@ -77,7 +78,7 @@ class TestMailer implements Mailer
      */
     public function clearEmails()
     {
-        $this->emailsSent = array();
+        $this->emailsSent = [];
     }
 
     /**
@@ -103,12 +104,18 @@ class TestMailer implements Mailer
         foreach ($this->emailsSent as $email) {
             $matched = true;
 
-            foreach (array('To', 'From', 'Subject', 'Content') as $field) {
-                if ($value = $compare[$field]) {
-                    if ($value[0] == '/') {
-                        $matched = preg_match($value, $email[$field]);
+            // Loop all our Email fields
+            foreach ($compare as $field => $value) {
+                $emailValue = $email[$field];
+                if ($value) {
+                    if (in_array($field, ['To', 'From'])) {
+                        $emailValue = $this->normaliseSpaces($emailValue);
+                        $value = $this->normaliseSpaces($value);
+                    }
+                    if ($value[0] === '/') {
+                        $matched = preg_match($value ?? '', $emailValue ?? '');
                     } else {
-                        $matched = ($value == $email[$field]);
+                        $matched = ($value === $emailValue);
                     }
                     if (!$matched) {
                         break;
@@ -121,5 +128,13 @@ class TestMailer implements Mailer
             }
         }
         return null;
+    }
+
+    /**
+     * @param string $value
+     */
+    private function normaliseSpaces(string $value)
+    {
+        return str_replace([', ', '; '], [',', ';'], $value ?? '');
     }
 }

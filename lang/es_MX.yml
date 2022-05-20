@@ -2,8 +2,6 @@ es_MX:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   SilverStripe\Forms\DateField:
-    NOTSET: 'no especificada'
-    TODAY: ahora
     VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
     VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
@@ -91,7 +89,6 @@ es_MX:
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
-    WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
     db_Locale: 'Interfaz Local'

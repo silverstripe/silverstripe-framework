@@ -1,11 +1,14 @@
+---
 title: Translations
 summary: Translate interface components like button labels into multiple languages.
+icon: globe
+---
 
 # Contributing Translations
 
 We are always looking for new translators. Even if a specific language already is translated and has an official 
 maintainer, we can use helping hands in reviewing and updating translations. Important: It is perfectly fine if you 
-only have time for a partial translation or quick review work - our system accomodates many people collaborating on the 
+only have time for a partial translation or quick review work - our system accommodates many people collaborating on the 
 same language.
 
 The content for UI elements (button labels, field titles) and instruction texts shown in the CMS and elsewhere is 
@@ -134,9 +137,10 @@ This also applies for any modules staying compatible with SilverStripe 2.x.
 
 ## Contact
 
-Translators have their own [mailinglist](https://groups.google.com/forum/#!forum/silverstripe-translators), but you can 
-also reach a core member on [IRC](https://irc.silverstripe.org). The transifex.com interface has a built-in discussion 
-board if you have specific comments on a translation.
+Get in touch with translators on our [community Slack](http://silverstripe.org/slack) - please join the `#translations` 
+channel. For generic translation and Transifex questions you might like to use 
+[Stack Overflow](https://stackoverflow.com/search?q=transifex). Alternatively you can start a discussion on 
+[our forum](https://forum.silverstripe.org).
 
 ## Related
 

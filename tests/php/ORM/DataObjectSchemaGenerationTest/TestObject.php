@@ -9,7 +9,7 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectSchemaGenerationTest_DO';
 
-    private static $db = array(
+    private static $db = [
         'Enum1' => 'Enum("A, B, C, D","")',
         'Enum2' => 'Enum("A, B, C, D","A")',
         'NumberField' => 'Decimal',
@@ -17,5 +17,5 @@ class TestObject extends DataObject implements TestOnly
         'TextValue' => 'Varchar',
         'Date' => 'Datetime',
         'MyNumber' => 'Int'
-    );
+    ];
 }

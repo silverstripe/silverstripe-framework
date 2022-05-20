@@ -17,41 +17,41 @@ class GroupedListTest extends SapphireTest
     {
         $list = new GroupedList(
             new ArrayList(
-                array(
-                array('Name' => 'AAA'),
-                array('Name' => 'AAA'),
-                array('Name' => 'BBB'),
-                array('Name' => 'BBB'),
-                array('Name' => 'AAA'),
-                array('Name' => 'BBB'),
-                array('Name' => 'CCC'),
-                array('Name' => 'CCC')
-                )
+                [
+                ['Name' => 'AAA'],
+                ['Name' => 'AAA'],
+                ['Name' => 'BBB'],
+                ['Name' => 'BBB'],
+                ['Name' => 'AAA'],
+                ['Name' => 'BBB'],
+                ['Name' => 'CCC'],
+                ['Name' => 'CCC']
+                ]
             )
         );
 
         $grouped = $list->groupBy('Name');
 
-        $this->assertEquals(3, count($grouped));
-        $this->assertEquals(3, count($grouped['AAA']));
-        $this->assertEquals(3, count($grouped['BBB']));
-        $this->assertEquals(2, count($grouped['CCC']));
+        $this->assertEquals(3, count($grouped ?? []));
+        $this->assertEquals(3, count($grouped['AAA'] ?? []));
+        $this->assertEquals(3, count($grouped['BBB'] ?? []));
+        $this->assertEquals(2, count($grouped['CCC'] ?? []));
     }
 
     public function testGroupedBy()
     {
         $list = new GroupedList(
             new ArrayList(
-                array(
-                array('Name' => 'AAA'),
-                array('Name' => 'AAA'),
-                array('Name' => 'BBB'),
-                array('Name' => 'BBB'),
-                array('Name' => 'AAA'),
-                array('Name' => 'BBB'),
-                array('Name' => 'CCC'),
-                array('Name' => 'CCC')
-                )
+                [
+                ['Name' => 'AAA'],
+                ['Name' => 'AAA'],
+                ['Name' => 'BBB'],
+                ['Name' => 'BBB'],
+                ['Name' => 'AAA'],
+                ['Name' => 'BBB'],
+                ['Name' => 'CCC'],
+                ['Name' => 'CCC']
+                ]
             )
         );
 
@@ -59,9 +59,9 @@ class GroupedListTest extends SapphireTest
         $first   = $grouped->first();
         $last    = $grouped->last();
 
-        $this->assertEquals(3, count($first->Children));
+        $this->assertEquals(3, count($first->Children ?? []));
         $this->assertEquals('AAA', $first->Name);
-        $this->assertEquals(2, count($last->Children));
+        $this->assertEquals(2, count($last->Children ?? []));
         $this->assertEquals('CCC', $last->Name);
     }
 
@@ -69,68 +69,68 @@ class GroupedListTest extends SapphireTest
     {
         $list = GroupedList::create(
             ArrayList::create(
-                array(
+                [
                     ArrayData::create(
-                        array(
+                        [
                         'Name' => 'AAA',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name' => 'BBB',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '222',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'BBB',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '333',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'BBB',
                         'Number' => '222',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'BBB',
                         'Number' => '333',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '333',
-                        )
+                        ]
                     )
-                )
+                ]
             )
         );
         $grouped = $list->GroupedBy('Name');
@@ -139,22 +139,22 @@ class GroupedListTest extends SapphireTest
             $children = $group->Children;
             $childGroups = $children->GroupedBy('Number');
 
-            $this->assertEquals(3, count($childGroups));
+            $this->assertEquals(3, count($childGroups ?? []));
 
             $first = $childGroups->first();
             $last  = $childGroups->last();
 
             if ($group->Name == 'AAA') {
-                $this->assertEquals(3, count($first->Children));
+                $this->assertEquals(3, count($first->Children ?? []));
                 $this->assertEquals('111', $first->Number);
-                $this->assertEquals(2, count($last->Children));
+                $this->assertEquals(2, count($last->Children ?? []));
                 $this->assertEquals('333', $last->Number);
             }
 
             if ($group->Name == 'BBB') {
-                $this->assertEquals(2, count($first->Children));
+                $this->assertEquals(2, count($first->Children ?? []));
                 $this->assertEquals('111', $first->Number);
-                $this->assertEquals(1, count($last->Children));
+                $this->assertEquals(1, count($last->Children ?? []));
                 $this->assertEquals('333', $last->Number);
             }
         }
@@ -164,32 +164,32 @@ class GroupedListTest extends SapphireTest
     {
         $list = GroupedList::create(
             ArrayList::create(
-                array(
+                [
                     ArrayData::create(
-                        array(
+                        [
                         'Name' => 'AAA',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name' => 'BBB',
                         'Number' => '111',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'AAA',
                         'Number' => '222',
-                        )
+                        ]
                     ),
                     ArrayData::create(
-                        array(
+                        [
                         'Name'   => 'BBB',
                         'Number' => '111',
-                        )
+                        ]
                     )
-                )
+                ]
             )
         );
 

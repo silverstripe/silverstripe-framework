@@ -1,5 +1,8 @@
+---
 title: SQL Queries
 summary: Write and modify direct database queries through SQLExpression subclasses.
+iconBrand: searchengin
+---
 
 # SQLSelect
 
@@ -7,11 +10,11 @@ summary: Write and modify direct database queries through SQLExpression subclass
 
 An object representing a SQL select query, which can be serialized into a SQL statement. 
 It is easier to deal with object-wrappers than string-parsing a raw SQL-query. 
-This object is used by the SilverStripe ORM internally.
+This object is used by the Silverstripe CMS ORM internally.
 
 Dealing with low-level SQL is not encouraged, since the ORM provides
-powerful abstraction APIs (see [datamodel](/developer_guides/data_model_and_orm). 
-Starting with SilverStripe 3, records in collections are lazy loaded,
+powerful abstraction APIs (see [datamodel](/developer_guides/model/data_model_and_orm)). 
+Starting with Silverstripe CMS 3, records in collections are lazy loaded,
 and these collections have the ability to run efficient SQL
 such as counts or returning a single column.
 
@@ -19,22 +22,26 @@ For example, if you want to run a simple `COUNT` SQL statement,
 the following three statements are functionally equivalent:
 
 ```php
-    // Through raw SQL.
-    $count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\Security\Member;
 
-    // Through SQLSelect abstraction layer.
-    $query = new SQLSelect();
-    $count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
+// Through raw SQL.
+$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
 
-    // Through the ORM.
-    $count = Member::get()->count();
+// Through SQLSelect abstraction layer.
+$query = new SQLSelect();
+$count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
+
+// Through the ORM.
+$count = Member::get()->count();
 ```
 
 If you do use raw SQL, you'll run the risk of breaking 
 various assumptions the ORM and code based on it have:
 
 *  Custom getters/setters (object property can differ from database column)
-*  DataObject hooks like onBeforeWrite() and onBeforeDelete()
+*  DataObject hooks like `onBeforeWrite()` and `onBeforeDelete()`
 *  Automatic casting
 *  Default values set through objects
 *  Database abstraction
@@ -42,10 +49,10 @@ various assumptions the ORM and code based on it have:
 We'll explain some ways to use *SELECT* with the full power of SQL, 
 but still maintain a connection to the ORM where possible.
 
-<div class="warning" markdown="1">
+[warning]
 Please read our [security topic](/developer_guides/security) to find out
 how to properly prepare user input and variables for use in queries
-</div>
+[/warning]
 
 ## Usage
 
@@ -55,33 +62,31 @@ Selection can be done by creating an instance of `SQLSelect`, which allows
 management of all elements of a SQL SELECT query, including columns, joined tables,
 conditional filters, grouping, limiting, and sorting.
 
-E.g.
+E.g.:
 
 ```php
-    
-    $sqlQuery = new SQLSelect();
-    $sqlQuery->setFrom('Player');
-    $sqlQuery->selectField('FieldName', 'Name');
-    $sqlQuery->selectField('YEAR("Birthday")', 'Birthyear');
-    $sqlQuery->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
-    $sqlQuery->addWhere(['YEAR("Birthday") = ?' => 1982]);
-    // $sqlQuery->setOrderBy(...);
-    // $sqlQuery->setGroupBy(...);
-    // $sqlQuery->setHaving(...);
-    // $sqlQuery->setLimit(...);
-    // $sqlQuery->setDistinct(true);
-    
-    // Get the raw SQL (optional) and parameters
-    $rawSQL = $sqlQuery->sql($parameters);
-    
-    // Execute and return a Query object
-    $result = $sqlQuery->execute();
+$sqlQuery = new SQLSelect();
+$sqlQuery->setFrom('Player');
+$sqlQuery->selectField('FieldName', 'Name');
+$sqlQuery->selectField('YEAR("Birthday")', 'Birthyear');
+$sqlQuery->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
+$sqlQuery->addWhere(['YEAR("Birthday") = ?' => 1982]);
+// $sqlQuery->setOrderBy(...);
+// $sqlQuery->setGroupBy(...);
+// $sqlQuery->setHaving(...);
+// $sqlQuery->setLimit(...);
+// $sqlQuery->setDistinct(true);
 
-    // Iterate over results
-    foreach($result as $row) {
-        echo $row['BirthYear'];
-    }
+// Get the raw SQL (optional) and parameters
+$rawSQL = $sqlQuery->sql($parameters);
 
+// Execute and return a Query object
+$result = $sqlQuery->execute();
+
+// Iterate over results
+foreach($result as $row) {
+    echo $row['BirthYear'];
+}
 ```
 
 The result of `SQLSelect::execute()` is an array lightly wrapped in a database-specific subclass of [Query](api:SilverStripe\ORM\Connect\Query). 
@@ -93,35 +98,34 @@ Deletion can be done either by calling `DB::query`/`DB::prepared_query` directly
 by creating a `SQLDelete` object, or by transforming a `SQLSelect` into a `SQLDelete`
 object instead.
 
-For example, creating a `SQLDelete` object
+For example, creating a `SQLDelete` object:
 
 ```php
-    
-    $query = SQLDelete::create()
-        ->setFrom('"SiteTree"')
-        ->setWhere(['"SiteTree"."ShowInMenus"' => 0]);
-    $query->execute();
+use SilverStripe\ORM\Queries\SQLDelete;
 
+$query = SQLDelete::create()
+    ->setFrom('"SiteTree"')
+    ->setWhere(['"SiteTree"."ShowInMenus"' => 0]);
+$query->execute();
 ```
 
-Alternatively, turning an existing `SQLSelect` into a delete
+Alternatively, turning an existing `SQLSelect` into a delete:
 
 ```php
-    
-    $query = SQLSelect::create()
-        ->setFrom('"SiteTree"')
-        ->setWhere(['"SiteTree"."ShowInMenus"' => 0])
-        ->toDelete();
-    $query->execute();
+use SilverStripe\ORM\Queries\SQLSelect;
 
+$query = SQLSelect::create()
+    ->setFrom('"SiteTree"')
+    ->setWhere(['"SiteTree"."ShowInMenus"' => 0])
+    ->toDelete();
+$query->execute();
 ```
 
-Directly querying the database
+Directly querying the database:
 
 ```php
-    
-    DB::prepared_query('DELETE FROM "SiteTree" WHERE "SiteTree"."ShowInMenus" = ?', [0]);
-
+use SilverStripe\ORM\DB;
+DB::prepared_query('DELETE FROM "SiteTree" WHERE "SiteTree"."ShowInMenus" = ?', [0]);
 ```
 
 ### INSERT/UPDATE
@@ -135,93 +139,95 @@ function which would build the INSERT and UPDATE queries on the fly. This method
 still exists, but internally uses `SQLUpdate` / `SQLInsert`, although the actual
 query construction is now done by the `DBQueryBuilder` object.
 
-Each of these classes implements the interface `SQLWriteExpression`, noting that each
+Each of these classes implement the interface `SQLWriteExpression`, noting that each
 accepts write key/value pairs in a number of similar ways. These include the following
-api methods:
+API methods:
 
  * `addAssignments` - Takes a list of assignments as an associative array of key -> value pairs,
-   but also supports SQL expressions as values if necessary.
+   but also supports SQL expressions as values if necessary
  * `setAssignments` - Replaces all existing assignments with the specified list
  * `getAssignments` - Returns all currently given assignments, as an associative array
-   in the format `array('Column' => array('SQL' => array('parameters)))`
- * `assign` - Singular form of addAssignments, but only assigns a single column value.
+   in the format `['Column' => ['SQL' => ['parameters]]]`
+ * `assign` - Singular form of addAssignments, but only assigns a single column value
  * `assignSQL` - Assigns a column the value of a specified SQL expression without parameters
-   `assignSQL('Column', 'SQL)` is shorthand for `assign('Column', array('SQL' => array()))`
+   `assignSQL('Column', 'SQL')` is shorthand for `assign('Column', ['SQL' => []])`
 
-SQLUpdate also includes the following api methods:
+SQLUpdate also includes the following API methods:
 
  * `clear` - Clears all assignments
  * `getTable` - Gets the table to update
- * `setTable` - Sets the table to update. This should be ANSI quoted.
-   E.g. `$query->setTable('"SiteTree"');`
+ * `setTable` - Sets the table to update (this should be ANSI-quoted)
+   e.g. `$query->setTable('"SiteTree"');`
 
-SQLInsert also includes the following api methods:
+SQLInsert also includes the following API methods:
  * `clear` - Clears all rows
  * `clearRow` - Clears all assignments on the current row
  * `addRow` - Adds another row of assignments, and sets the current row to the new row
  * `addRows` - Adds a number of arrays, each representing a list of assignment rows,
-   and sets the current row to the last one.
+   and sets the current row to the last one
  * `getColumns` - Gets the names of all distinct columns assigned
  * `getInto` - Gets the table to insert into
- * `setInto` - Sets the table to insert into. This should be ANSI quoted.
-   E.g. `$query->setInto('"SiteTree"');`
+ * `setInto` - Sets the table to insert into (this should be ANSI-quoted),
+   e.g. `$query->setInto('"SiteTree"');`
 
-E.g.
+E.g.:
 
 ```php
-        $update = SQLUpdate::create('"SiteTree"')->addWhere(['ID' => 3]);
+use SilverStripe\ORM\Queries\SQLUpdate;
 
-    // assigning a list of items
-    $update->addAssignments([
-        '"Title"' => 'Our Products',
-        '"MenuTitle"' => 'Products'
-    ]);
+$update = SQLUpdate::create('"SiteTree"')->addWhere(['ID' => 3]);
 
-    // Assigning a single value
-    $update->assign('"MenuTitle"', 'Products');
+// assigning a list of items
+$update->addAssignments([
+    '"Title"' => 'Our Products',
+    '"MenuTitle"' => 'Products'
+]);
 
-    // Assigning a value using parameterised expression
-    $title = 'Products';
-    $update->assign('"MenuTitle"', [
-        'CASE WHEN LENGTH("MenuTitle") > LENGTH(?) THEN "MenuTitle" ELSE ? END' =>
-            [$title, $title]
-    ]);
+// Assigning a single value
+$update->assign('"MenuTitle"', 'Products');
 
-    // Assigning a value using a pure SQL expression
-    $update->assignSQL('"Date"', 'NOW()');
+// Assigning a value using parameterised expression
+$title = 'Products';
+$update->assign('"MenuTitle"', [
+    'CASE WHEN LENGTH("MenuTitle") > LENGTH(?) THEN "MenuTitle" ELSE ? END' =>
+        [$title, $title]
+]);
 
-    // Perform the update
-    $update->execute();
+// Assigning a value using a pure SQL expression
+$update->assignSQL('"Date"', 'NOW()');
 
+// Perform the update
+$update->execute();
 ```
 
 In addition to assigning values, the SQLInsert object also supports multi-row 
 inserts. For database connectors and API that don't have multi-row insert support
 these are translated internally as multiple single row inserts.
 
-For example,
+For example:
 
 ```php
-        $insert = SQLInsert::create('"SiteTree"');
+use SilverStripe\ORM\Queries\SQLInsert;
 
-    // Add multiple rows in a single call. Note that column names do not need 
-    // to be symmetric
-    $insert->addRows([
-        ['"Title"' => 'Home', '"Content"' => '<p>This is our home page</p>'],
-        ['"Title"' => 'About Us', '"ClassName"' => 'AboutPage']
-    ]);
+$insert = SQLInsert::create('"SiteTree"');
 
-    // Adjust an assignment on the last row
-    $insert->assign('"Content"', '<p>This is about us</p>');
+// Add multiple rows in a single call. Note that column names do not need 
+// to be symmetric
+$insert->addRows([
+    ['"Title"' => 'Home', '"Content"' => '<p>This is our home page</p>'],
+    ['"Title"' => 'About Us', '"ClassName"' => 'AboutPage']
+]);
 
-    // Add another row
-    $insert->addRow(['"Title"' => 'Contact Us']);
+// Adjust an assignment on the last row
+$insert->assign('"Content"', '<p>This is about us</p>');
 
-    $columns = $insert->getColumns();
-    // $columns will be array('"Title"', '"Content"', '"ClassName"');
+// Add another row
+$insert->addRow(['"Title"' => 'Contact Us']);
 
-    $insert->execute();
+$columns = $insert->getColumns();
+// $columns will be ['"Title"', '"Content"', '"ClassName"'];
 
+$insert->execute();
 ```
 
 ### Value Checks
@@ -232,19 +238,20 @@ e.g. when you want a single column rather than a full-blown object representatio
 Example: Get the count from a relationship.
 
 ```php
-    $sqlQuery = new SQLSelect();
-    $sqlQuery->setFrom('Player');
-    $sqlQuery->addSelect('COUNT("Player"."ID")');
-    $sqlQuery->addWhere(['"Team"."ID"' => 99]);
-    $sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
-    $count = $sqlQuery->execute()->value();
+use SilverStripe\ORM\Queries\SQLSelect;
 
+$sqlQuery = new SQLSelect();
+$sqlQuery->setFrom('Player');
+$sqlQuery->addSelect('COUNT("Player"."ID")');
+$sqlQuery->addWhere(['"Team"."ID"' => 99]);
+$sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
+$count = $sqlQuery->execute()->value();
 ```
 
 Note that in the ORM, this call would be executed in an efficient manner as well:
 
 ```php
-    $count = $myTeam->Players()->count();
+$count = $myTeam->Players()->count();
 ```
 
 ### Mapping
@@ -255,37 +262,55 @@ This can be useful for creating dropdowns.
 Example: Show player names with their birth year, but set their birth dates as values.
 
 ```php
-    $sqlQuery = new SQLSelect();
-    $sqlQuery->setFrom('Player');
-    $sqlQuery->setSelect('Birthdate');
-    $sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
-    $map = $sqlQuery->execute()->map();
-    $field = new DropdownField('Birthdates', 'Birthdates', $map);
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\Forms\DropdownField;
+
+$sqlQuery = new SQLSelect();
+$sqlQuery->setFrom('Player');
+$sqlQuery->setSelect('Birthdate');
+$sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
+$map = $sqlQuery->execute()->map();
+$field = new DropdownField('Birthdates', 'Birthdates', $map);
 ```
 
 Note that going through SQLSelect is just necessary here 
 because of the custom SQL value transformation (`YEAR()`). 
-An alternative approach would be a custom getter in the object definition.
+An alternative approach would be a custom getter in the object definition:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-        private static $db = [
-            'Name' =>  'Varchar',
-            'Birthdate' => 'Date'
-        ];
-        function getNameWithBirthyear() {
-            return date('y', $this->Birthdate);
-        }
+class Player extends DataObject 
+{
+    private static $db = [
+        'Name' =>  'Varchar',
+        'Birthdate' => 'Date'
+    ];
+    function getNameWithBirthyear() {
+        return date('y', $this->Birthdate);
     }
-    $players = Player::get();
-    $map = $players->map('Name', 'NameWithBirthyear');
-
+}
+$players = Player::get();
+$map = $players->map('Name', 'NameWithBirthyear');
 ```
 
-## Related
+### Data types
+
+As of Silverstripe CMS 4.4, the following PHP types will be used to return database content:
+
+ * booleans will be an integer 1 or 0, to ensure consistency with MySQL that doesn't have native booleans
+ * integer types returned as integers
+ * floating point / decimal types returned as floats
+ * strings returned as strings
+ * dates / datetimes returned as strings
+
+Up until Silverstripe CMS 4.3, bugs meant that strings were used for every column type.
+
+## Related Lessons
+* [Building custom SQL](https://www.silverstripe.org/learn/lessons/v4/beyond-the-orm-building-custom-sql-1)
+
+
+## Related Documentation
 
 * [Introduction to the Data Model and ORM](data_model_and_orm)
 

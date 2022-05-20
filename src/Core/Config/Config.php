@@ -4,7 +4,6 @@ namespace SilverStripe\Core\Config;
 
 use InvalidArgumentException;
 use SilverStripe\Config\Collections\ConfigCollectionInterface;
-use SilverStripe\Config\Collections\DeltaConfigCollection;
 use SilverStripe\Config\Collections\MutableConfigCollectionInterface;
 
 abstract class Config
@@ -118,5 +117,24 @@ abstract class Config
     public static function forClass($class)
     {
         return new Config_ForClass($class);
+    }
+
+    /**
+     * Perform the given operation in an isolated config state.
+     * On return, the config state will be restored, so any modifications are temporary.
+     *
+     * @param callable $callback Callback to run. Will be passed the nested config state as a parameter
+     * @return mixed Result of callback
+     */
+    public static function withConfig($callback)
+    {
+        static::nest();
+        $config = static::modify();
+
+        try {
+            return $callback($config);
+        } finally {
+            static::unnest();
+        }
     }
 }

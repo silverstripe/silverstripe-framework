@@ -205,8 +205,6 @@ mappings:
   FunctionalTest: SilverStripe\Dev\FunctionalTest
   InstallerTest: SilverStripe\Dev\InstallerTest
   MigrationTask: SilverStripe\Dev\MigrationTask
-  SapphireInfo: SilverStripe\Dev\SapphireInfo
-  SapphireREPL: SilverStripe\Dev\SapphireREPL
   SapphireTest: SilverStripe\Dev\SapphireTest
   TaskRunner: SilverStripe\Dev\TaskRunner
   TestMailer: SilverStripe\Dev\TestMailer
@@ -222,6 +220,7 @@ mappings:
   CookieJar: SilverStripe\Control\CookieJar
   Director: SilverStripe\Control\Director
   FlushRequestFilter: SilverStripe\Control\Middleware\FlushMiddleware
+  HTTPCacheControl: SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
   HTTP: SilverStripe\Control\HTTP
   SS_HTTPRequest: SilverStripe\Control\HTTPRequest
   SS_HTTPResponse: SilverStripe\Control\HTTPResponse
@@ -951,11 +950,12 @@ skipConfigs:
 excludedPaths:
   - '*fixtures*'
   - '*vendor*'
-doctorTasks:
-  SilverStripe\Dev\Upgrade\UpgradeBootstrap: src/Dev/Upgrade/UpgradeBootstrap.php
 warnings:
   classes:
     'Object':
+      message: 'Replaced with traits'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
+    'SS_Object':
       message: 'Replaced with traits'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
     'SS_Log':
@@ -974,10 +974,10 @@ warnings:
       message: 'Now needs a $segment property to run it'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#buildtask-segment'
     'RestfulService':
-      message: 'Removed from core, please use Guzzle'
+      message: 'Removed from core. Please use Guzzle'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#restfulservice'
     'Oembed':
-      message: 'Removed from core, please use third party lib'
+      message: 'Removed from core. Please use third party lib'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#oembed'
     'SS_Cache':
       message: 'Using symfony/cache now'
@@ -987,7 +987,7 @@ warnings:
     'HTMLEditorField_Toolbar':
       message: 'replaced With SilverStripe\Admin\ModalController'
     'HTMLEditorField_Embed':
-      message: 'replaced with SilverStripe\AssetAdmin\Model\EmbedResource'
+      message: 'replaced with SilverStripe\View\Embed\EmbedResource'
     'HTMLEditorField_File':
       message: 'Removed'
     'HTMLEditorField_Flash':
@@ -1014,16 +1014,15 @@ warnings:
       message: 'Use SilverStripe\CMS\BatchActions\CMSBatchAction_Archive instead'
     'EncryptAllPasswordsTask':
       message: 'Removed'
+    'SapphireInfo':
+      message: 'Removed'
+    'SilverStripe\Dev\SapphireREPL':
+      message: 'Removed'
+    'SilverStripe\Dev\SapphireInfo':
+      message: 'Deprecated'
+    'SilverStripe\Dev\InstallerTest':
+      message: 'Deprecated'
   methods:
-    'setFilename()':
-      message: 'Filenames should not be set directly any more'
-      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#write-file-dataobject'
-    'SilverStripe\Assets\File::handle_shortcode()':
-      message: 'Has been removed'
-      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#file-shortcode'
-    'database_fields()':
-      message: 'Does not have a second parameter any more'
-      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-db-database-fields'
     'SilverStripe\Security\Authenticator::register()':
       message: 'Custom authenticators work differently now'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#custom-authenticators'
@@ -1032,89 +1031,140 @@ warnings:
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#custom-authenticators'
     'SilverStripe\Control\Director::setUrlParams()':
       message: 'Method removed'
-    'manyManyComponent()':
-      message: 'DataObject->manyManyComponent() moved to DataObjectSchema, access through getSchema()'
-    'belongsToComponent()':
-      message: 'DataObject->belongsToComponent() moved to DataObjectSchema, access through getSchema()'
-    'hasOneComponent()':
-      message: 'DataObject->hasOneComponent() moved to DataObjectSchema, access through getSchema()'
-    'hasManyComponent()':
-      message: 'DataObject->hasManyComponent() moved to DataObjectSchema, access through getSchema()'
-    'getRemoteJoinField()':
-      message: 'DataObject->getRemoteJoinField() moved to DataObjectSchema, access through getSchema()'
-    'has_own_table()':
-      message: 'DataObject::has_own_table() moved to DataObjectSchema->classHasTable(), access through getSchema()'
-    'database_fields()':
-      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(), access through getSchema()'
-    'database_fields()':
-      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(), access through getSchema()'
-    'manyManyExtraFieldsForComponent()':
-      message: 'DataObject::manyManyExtraFieldsForComponent() moved to DataObjectSchema, access through getSchema()'
-    'validateModelDefinitions()':
+    'SilverStripe\ORM\DataObject->manyManyComponent()':
+      message: 'DataObject->manyManyComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to manyManyComponent()'
+      replacement: 'getSchema()->manyManyComponent'
+    'SilverStripe\ORM\DataObject->belongsToComponent()':
+      message: 'DataObject->belongsToComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to belongsToComponent()'
+      replacement: 'getSchema()->belongsToComponent'
+    'SilverStripe\ORM\DataObject->hasOneComponent()':
+      message: 'DataObject->hasOneComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to hasOneComponent()'
+      replacement: 'getSchema()->hasOneComponent'
+    'SilverStripe\ORM\DataObject->hasManyComponent()':
+      message: 'DataObject->hasManyComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
+      replacement: 'getSchema()->hasManyComponent'
+    'SilverStripe\ORM\DataObject->getRemoteJoinField()':
+      message: 'DataObject->getRemoteJoinField() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to getRemoteJoinField()'
+      replacement: 'getSchema()->getRemoteJoinField'
+    'SilverStripe\ORM\DataObject::has_own_table()':
+      message: 'DataObject::has_own_table() moved to DataObjectSchema->classHasTable(). Access through getSchema().'
+      replacement: 'getSchema()->classHasTable'
+    'SilverStripe\ORM\DataObject::database_fields()':
+      message: 'DataObject::database_fields() moved to DataObjectSchema->databaseFields(). Access through getSchema()'
+      replacement: 'getSchema()->databaseFields'
+    'SilverStripe\ORM\DataObject->manyManyExtraFieldsForComponent()':
+      message: 'DataObject::manyManyExtraFieldsForComponent() moved to DataObjectSchema. Access through getSchema(). You must manually add static::class as the first argument to manyManyExtraFieldsForComponent()'
+      replacement: 'getSchema()->manyManyExtraFieldsForComponent'
+    'SilverStripe\ORM\DataObject->validateModelDefinitions()':
       message: 'Removed DataObject->validateModelDefinitions()'
-    'hasOwnTableDatabaseField()':
-      message: 'DataObject->hasOwnTableDatabaseField() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+    'SilverStripe\ORM\DataObject->hasOwnTableDatabaseField()':
+      message: 'DataObject->hasOwnTableDatabaseField() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
-    'has_own_table_database_field()':
-      message: 'DataObject::has_own_table_database_field() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+    'SilverStripe\ORM\DataObject::has_own_table_database_field()':
+      message: 'DataObject::has_own_table_database_field() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
-    'hasDatabaseFields()':
-      message: 'DataObject->hasDatabaseFields() has been replaced with DataObjectSchema::fieldSpec(), access through getSchema()'
+    'SilverStripe\ORM\DataObject->hasDatabaseField()':
+      message: 'DataObject->hasDatabaseField() has been replaced with DataObjectSchema::fieldSpec(). Access through getSchema()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#dataobject-has-own'
-    'is_composite_field()':
+    'SilverStripe\ORM\DataObject::is_composite_field()':
       message: 'Removed DataObject::is_composite_field. Use DataObjectSchema::compositeField instead.'
-    'custom_database_fields()':
+      replacement: 'getSchema()->compositeField'
+    'SilverStripe\ORM\DataObject::custom_database_fields()':
       message: 'Removed DataObject::custom_database_fields. Use DataObjectSchema::databaseFields'
+      replacement: 'getSchema()->databaseFields'
     'SilverStripe\Dev\SapphireTest->setUpOnce()':
       message: 'Renamed to setUpBeforeClass()'
+      replacement: setUpBeforeClass
     'SilverStripe\Dev\SapphireTest->tearDownOnce()':
       message: 'Renamed to tearDownAfterClass()'
+      replacement: tearDownAfterClass
     'SilverStripe\Dev\SapphireTest::is_running_tests()':
       message: 'is_running_tests() is no longer public and user code should not rely on this. Test-specific behaviour should be implemented in setUp() and tearDown()'
     'SilverStripe\Dev\SapphireTest::using_temp_db()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->isUsed()'
+      replacement: '$tempDB->isUsed'
     'SilverStripe\Dev\SapphireTest::kill_temp_db()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->kill()'
+      replacement: '$tempDB->kill'
     'SilverStripe\Dev\SapphireTest::empty_temp_db()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->clearAllData()'
+      replacement: '$tempDB->clearAllData'
     'SilverStripe\Dev\SapphireTest::create_temp_db()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->build()'
+      replacement: '$tempDB->build'
     'SilverStripe\Dev\SapphireTest::delete_all_temp_dbs()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->deleteAll()'
+      replacement: '$tempDB->deleteAll'
     'SilverStripe\Dev\SapphireTest::resetDBSchema()':
       message: 'Moved to SilverStripe\ORM\Connect\TempDatabase->resetSchema()'
-    'populateTemplate()':
+      replacement: '$tempDB->resetSchema'
+    'SilverStripe\Control\Email\Email->populateTemplate()':
       message: 'Email->populateTemplate() has been replaced with Email->setData()'
+      replacement: 'setData'
     'SilverStripe\Control\Email\Email->setTemplate()':
       message: 'Renamed to setHTMLTemplate()'
+      replacement: 'setHTMLTemplate'
+    'SilverStripe\Control\Email\Email->replyTo()':
+      message: 'Renamed to setReplyTo()'
+      replacement: 'setReplyTo'
+    'SilverStripe\Control\Email\Email->attachFile()':
+      message: 'Renamed to addAttachment()'
+      replacement: 'addAttachment'
+    'SilverStripe\Control\Email\Email->Subject()':
+      message: 'Renamed to getSubject()'
+      replacement: 'getSubject'
+    'SilverStripe\Control\Email\Email->Body()':
+      message: 'Renamed to getBody()'
+      replacement: 'getBody'
+    'SilverStripe\Control\Email\Email->From()':
+      message: 'Renamed to getFrom()'
+      replacement: 'getFrom'
+    'SilverStripe\Control\Email\Email->To()':
+      message: 'Renamed to getTo()'
+      replacement: 'getTo'
+    'SilverStripe\Control\Email\Email->Cc()':
+      message: 'Renamed to getCc()'
+      replacement: 'getCc'
+    'SilverStripe\Control\Email\Email->Bcc()':
+      message: 'Renamed to getBcc()'
+      replacement: 'getBcc'
+    'SilverStripe\Control\Email\Email->addCustomHeader()':
+      message: 'addCustomHeader() is removed'
     'SilverStripe\i18n\i18n::get_language_name()':
-      message: 'moved to SilverStripe\i18n\Data\Locales::localeName()'
-    'SilverStripe\i18n\i18n::get_locale_name()':
       message: 'moved to SilverStripe\i18n\Data\Locales::languageName()'
+      replacement: 'getData()->languageName'
+    'SilverStripe\i18n\i18n::get_locale_name()':
+      message: 'moved to SilverStripe\i18n\Data\Locales::localeName()'
+      replacement: 'getData()->localeName'
     'SilverStripe\i18n\i18n::get_language_code()':
       message: 'Removed'
     'SilverStripe\i18n\i18n::get_common_languages()':
       message: 'moved to SilverStripe\i18n\Data\Locales::getLanguages()'
+      replacement: 'getData()->getLanguages'
     'SilverStripe\i18n\i18n::get_common_locales()':
-      message: 'Removed'
+      message: 'Removed, but you can use SilverStripe\i18n\Data\Locales::getLocales() instead'
+      replacement: 'getData()->getLocales'
     'SilverStripe\i18n\i18n::get_existing_translations()':
       message: 'moved to SilverStripe\i18n\Data\Sources::getKnownLocales()'
-    'SilverStripe\i18n\i18n::get_owner_module()':
-      message: 'moved to SilverStripe\Core\Manifest\ClassManifest::getOwnerModule()'
+      replacement: 'getSources()->getKnownLocales'
     'SilverStripe\i18n\i18n::get_owner_module()':
       message: 'moved to SilverStripe\Core\Manifest\ClassManifest::getOwnerModule()'
     'SilverStripe\i18n\i18n::validate_locale()':
       message: 'moved to SilverStripe\i18n\Data\Locales::validate()'
+      replacement: 'getData()->validate'
     'SilverStripe\i18n\i18n::get_lang_from_locale()':
       message: 'moved to SilverStripe\i18n\Data\Locales::langFromLocale()'
+      replacement: 'getData()->langFromLocale'
     'SilverStripe\i18n\i18n::get_locale_from_lang()':
       message: 'moved to SilverStripe\i18n\Data\Locales::localeFromLang()'
+      replacement: 'getData()->localeFromLang'
     'SilverStripe\i18n\i18n::get_tinymce_lang()':
       message: 'moved to SilverStripe\Forms\HTMLEditor\TinyMCEConfig::get_tinymce_lang()'
     'SilverStripe\ORM\Hierarchy->getChildrenAsUL()':
-      message: 'Replaced with renderChildren()'
+      message: 'Replaced with MarkedSet::renderChildren()'
     'SilverStripe\Security\Permission::flush_permission_cache()':
       message: 'Renamed to reset()'
+      replacement: 'reset'
     'SilverStripe\View\SSViewer::set_source_file_comments()':
       message: 'Removed'
     'SilverStripe\View\SSViewer::get_source_file_comments()':
@@ -1144,17 +1194,16 @@ warnings:
     'SilverStripe\Forms\Validator->validate()':
       message: 'now returns a `ValidationResult` instance'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#form-validation'
-    'Requirements::delete_combined_files()':
+    'SilverStripe\View\Requirements::delete_combined_files()':
       message: 'Removed'
     'SilverStripe\Security\PermissionCheckboxSetField::getAssignedPermissionCodes()':
       message: 'Removed'
-    'dontEscape()':
-      message: 'FormField::dontEscape() has been removed. Escaping is now managed on a class by class basis.'
+    'SilverStripe\Forms\CompositeField::setID()':
+      message: 'ID is generated from name indirectly; Use SilverStripe\Form\FormField::setName() instead'
+      replacement: 'setName'
     'SilverStripe\Forms\FormField::createTag()':
       message: 'moved to SilverStripe\View\HTML->createTag()'
     'SilverStripe\Forms\Form->transformTo()':
-      message: 'Removed'
-    'SilverStripe\Forms\Form->callfieldmethod()':
       message: 'Removed'
     'SilverStripe\Forms\Form::single_field_required()':
       message: 'Removed'
@@ -1166,8 +1215,6 @@ warnings:
       message: 'Renamed to restoreFormState()'
     'SilverStripe\Forms\Form->resetValidation()':
       message: 'Renamed to clearFormState()'
-    'SilverStripe\Forms\Form->transformTo()':
-      message: 'Removed'
     'SilverStripe\Forms\Form->callfieldmethod()':
       message: 'Removed'
     'SilverStripe\Forms\Form->addErrorMessage()':
@@ -1176,104 +1223,76 @@ warnings:
       message: 'Use setMessage() or sessionMessage() instead'
     'SilverStripe\Forms\Form->buttonClicked()':
       message: 'Moved to FormRequestHandler'
+      replacement: 'getRequestHandler()->buttonClicked'
     'SilverStripe\Forms\Form->checkAccessAction()':
       message: 'Moved to FormRequestHandler'
+      replacement: 'getRequestHandler()->checkAccessAction'
     'SilverStripe\Forms\Form->handleField()':
       message: 'Moved to FormRequestHandler'
+      replacement: 'getRequestHandler()->handleField'
     'SilverStripe\Forms\Form->httpSubmission()':
       message: 'Moved to FormRequestHandler'
+      replacement: 'getRequestHandler()->httpSubmission'
     'SilverStripe\Forms\Form->Link()':
       message: 'Moved to FormRequestHandler'
-    'requireField()':
-      message: 'Validator::requireField() has been removed, use RequiredFields instead'
+      replacement: 'getRequestHandler()->Link'
+    'SilverStripe\Forms\Validator::requireField()':
+      message: 'Validator::requireField() has been removed. Use RequiredFields instead'
     'provideI18nEntities()':
       message: 'Return type has changed (needs to be associative)'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#i18n'
     'SilverStripe\View\Requirements_Backend::get_combined_files_enabled()':
       message: 'Renamed to getCombinedFilesEnabledO()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'getCombinedFilesEnabled'
     'SilverStripe\View\Requirements_Backend::set_combined_files_enabled()':
-      message: 'Renamed to setCombinedFilesEnabledO()'
+      message: 'Renamed to setCombinedFilesEnabled()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'setCombinedFilesEnabled'
     'SilverStripe\View\Requirements_Backend::get_suffix_requirements()':
       message: 'Renamed to getSuffixRequirements()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'getSuffixRequirements'
     'SilverStripe\View\Requirements_Backend::set_suffix_requirements()':
       message: 'Renamed to setSuffixRequirements()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'setSuffixRequirements'
     'SilverStripe\View\Requirements_Backend::get_custom_scripts()':
       message: 'Renamed to getCustomScripts()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'getCustomScripts'
     'SilverStripe\View\Requirements_Backend::unblock_all()':
       message: 'Renamed to unblockAll()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'unblockAll'
     'SilverStripe\View\Requirements_Backend::include_in_response()':
       message: 'Renamed to includeInResponse()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'includeInResponse'
     'SilverStripe\View\Requirements_Backend::combine_files()':
       message: 'Renamed to getCombinedFiles()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'getCombinedFiles'
     'SilverStripe\View\Requirements_Backend::get_combine_files()':
-      message: 'Renamed to unblockAll()'
+      message: 'Renamed to getCombinedFiles()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'getCombinedFiles'
     'SilverStripe\View\Requirements_Backend::clear_combined_files()':
       message: 'Renamed to clearCombinedFiles()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'clearCombinedFiles'
     'SilverStripe\View\Requirements_Backend::process_combined_files()':
       message: 'Renamed to processCombinedFiles()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'processCombinedFiles'
     'SilverStripe\View\Requirements_Backend::set_write_js_to_body()':
       message: 'Renamed to setWriteJavascriptToBody()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'setWriteJavascriptToBody'
     'SilverStripe\View\Requirements_Backend::set_force_js_to_bottom()':
       message: 'Renamed to setForceJSToBottom()'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
-    'SilverStripe\Assets\Filesystem::sync()':
-      message: 'Removed'
-    'SilverStripe\Assets\Folder::syncChildren()':
-      message: 'Removed'
-    'SilverStripe\Assets\Folder::constructChild()':
-      message: 'Removed'
-    'SilverStripe\Assets\Folder::addUploadToFolder()':
-      message: 'Removed'
-    'SilverStripe\Assets\File::deletedatabaseOnly()':
-      message: 'Removed'
-    'SilverStripe\Assets\File::link_shortcode_handler()':
-      message: 'Removed'
-    'SilverStripe\Assets\File::getRelativePath()':
-      message: 'Removed'
-    'SilverStripe\Assets\File::getFullPath()':
-      message: 'Removed'
-    'SilverStripe\Assets\File::setParentID()':
-      message: 'Removed'
-    'SilverStripe\Assets\Image::regenerateFormattedImages()':
-      message: 'Removed'
-    'SilverStripe\Assets\Image::getGeneratedImages()':
-      message: 'Removed'
-    'SilverStripe\Assets\Image::deleteFormattedImages()':
-      message: 'Removed'
-    'SilverStripe\Assets\Image::handle_shortcode()':
-      message: 'moved to SilverStripe\Assets\Shortcodes\ImageShortcodeProvider::handle_shortcode()'
-    'SilverStripe\Assets\Image::deleteFormattedImages()':
-      message: 'Removed'
-    'SilverStripe\Assets\Image::SetRatioSize()':
-      message: 'Renamed to Fit()'
-    'SilverStripe\Assets\Image::SetWidth()':
-      message: 'Renamed to ScaleWidth()'
-    'SilverStripe\Assets\Image::SetHeight()':
-      message: 'Renamed to ScaleHeight'
-    'SilverStripe\Assets\Image::SetSize()':
-      message: 'Renamed to Pad()'
-    'SilverStripe\Assets\Image::PaddedImage()':
-      message: 'Renamed to Pad()'
-    'SilverStripe\Assets\Image::CroppedImage()':
-      message: 'Renamed to Fill()'
-    'SilverStripe\Assets\Image::AssetLibraryPreview()':
-      message: 'Renamed to PreviewThumbnail()'
-    'SilverStripe\Assets\Image::AssetLibraryThumbnail()':
-      message: 'Renamed to CMSThumbnail()'
-    'SilverStripe\Assets\Image::deleteFormattedImages()':
-      message: 'Removed'
+      replacement: 'setForceJSToBottom'
     'SilverStripe\AssetAdmin\Controller\AssetAdmin::deleteunusedthumbnails()':
       message: 'Removed'
     'SilverStripe\AssetAdmin\Controller\AssetAdmin::getUnusedThumbnails()':
@@ -1282,6 +1301,7 @@ warnings:
       message: 'Apply validation to MoneyField instead'
     'SilverStripe\ORM\Hierarchy\Hierarchy->doAllChildrenIncludingDeleted':
       message: 'Use AllChildrenIncludingDeleted() instead'
+      replacement: 'AllChildrenIncludingDeleted'
     'past_date()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->past_date()'
     'prior_monday()':
@@ -1294,28 +1314,53 @@ warnings:
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
     'days_between()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
+    'SilverStripe\Security\Permission::get_declared_permissions_list()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::get_label_for_permission()':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission::traverse_declared_permissions()':
+      message: 'Deprecated'
+    'SilverStripe\Control\Session::get_all()':
+      message: 'Session can not be accessed statically and `get_all()` is now called `getAll()'
+    'SilverStripe\Control\Session::clear_all()':
+      message: 'Session can not be accessed statically and `clear_all()` is now called `clearAll()'
   props:
     'class':
       message: '$this->class access has been removed'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace'
     'SilverStripe\Dev\SapphireTest->requiredExtensions':
       message: 'Renamed to required_extensions'
+      replacement: 'required_extensions'
     'SilverStripe\Dev\SapphireTest->extraDataobjects':
       message: 'Renamed to extra_dataobjects'
+      replacement: 'extra_dataobjects'
     'SilverStripe\Dev\SapphireTest->extraControllers':
       message: 'Renamed to extra_controllers'
+      replacement: 'extra_controllers'
     'SilverStripe\View\Requirements_Backend->combine_files':
       message: 'Renamed to combineFiles'
+      replacement: 'combineFiles'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
     'SilverStripe\View\Requirements_Backend->combine_js_with_min':
       message: 'Renamed to $minifyCombinedFiles'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'minifyCombinedFiles'
     'SilverStripe\View\Requirements_Backend->write_header_comments':
       message: 'Renamed to writeHeaderComment'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'writeHeaderComment'
     'SilverStripe\View\Requirements_Backend->write_js_to_body':
       message: 'Renamed to writeJavascriptToBody'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
+      replacement: 'writeJavascriptToBody'
+    'SilverStripe\Forms\Formfield->dontEscape':
+      message: 'FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.'
+    'SilverStripe\Security\LoginForm->authenticator_class':
+      message: 'authenticator_class is deprecated. Use getAuthenticatorClass/setAuthenticatorClass.'
+    'SilverStripe\Security\Permission->declared_permissions':
+      message: 'Deprecated'
+    'SilverStripe\Security\Permission->declared_permissions_list':
+      message: 'Deprecated'
   functions:
     'file_get_contents()':
       message: 'Use new asset abstraction'
@@ -1324,8 +1369,6 @@ warnings:
       message: 'Use new asset abstraction'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage'
   constants:
-    'SS_TRUSTED_PROXY_HOST_HEADER':
-      message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_PROTOCOL_HEADER':
       message: 'See TrustedProxyMiddleware'
     'SS_TRUSTED_PROXY_IP_HEADER':
@@ -1333,41 +1376,186 @@ warnings:
     'SS_TRUSTED_PROXY_HOST_HEADER':
       message: 'See TrustedProxyMiddleware'
     'MODULES_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'MODULES_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'CMS_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'CMS_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'FRAMEWORK_ADMIN_THIRDPARTY_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THEMES_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THEMES_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THIRDPARTY_PATH':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
     'THIRDPARTY_DIR':
-      message: 'Path constants have been deprecated, use the Requirements and ModuleResourceLoader APIs'
+      message: 'Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths'
+    'SilverStripe\Core\Manifest\ManifestFileFinder::RESOURCES_DIR':
+      message: 'Use global const RESOURCES_DIR'
+      url: 'https://docs.silverstripe.org/en/4/changelogs/4.4.0#resources-dir'
+      replacement: 'RESOURCES_DIR'
+
+renameWarnings:
+  - Form
+
+visibilities:
+  'SilverStripe\ORM\DataObject::db':
+    visibility: private
+  'SilverStripe\ORM\DataObject::singular_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject::plural_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject::api_access':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_classname':
+    visibility: private
+  'SilverStripe\ORM\DataObject->destroyed':
+    visibility: public
+  'SilverStripe\ORM\DataObject->record':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->joinRecord':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->changed':
+    visibility: private
+  'SilverStripe\ORM\DataObject->changeForced':
+    visibility: private
+  'SilverStripe\ORM\DataObject->original':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->brokenOnDelete':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->brokenOnWrite':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::validation_enabled':
+    visibility: private
+  'SilverStripe\ORM\DataObject::_cache_get_one':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::_cache_field_labels':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::fixed_fields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::table_name':
+    visibility: private
+  'SilverStripe\ORM\DataObject->components':
+    visibility: protected
+  'SilverStripe\ORM\DataObject->unsavedRelations':
+    visibility: protected
+  'SilverStripe\ORM\DataObject::cascade_deletes':
+    visibility: private
+  'SilverStripe\ORM\DataObject::cascade_duplicates':
+    visibility: private
+  'SilverStripe\ORM\DataObject::sourceQueryParams':
+    visibility: private
+  'SilverStripe\ORM\DataObject::subclass_access':
+    visibility: private
+  'SilverStripe\ORM\DataObject::casting':
+    visibility: private
+  'SilverStripe\ORM\DataObject::create_table_options':
+    visibility: private
+  'SilverStripe\ORM\DataObject::indexes':
+    visibility: private
+  'SilverStripe\ORM\DataObject::defaults':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_records':
+    visibility: private
+  'SilverStripe\ORM\DataObject::has_one':
+    visibility: private
+  'SilverStripe\ORM\DataObject::belongs_to':
+    visibility: private
+  'SilverStripe\ORM\DataObject::has_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::many_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::many_many_extraFields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::belongs_many_many':
+    visibility: private
+  'SilverStripe\ORM\DataObject::default_sort':
+    visibility: private
+  'SilverStripe\ORM\DataObject::searchable_fields':
+    visibility: private
+  'SilverStripe\ORM\DataObject::field_labels':
+    visibility: private
+  'SilverStripe\ORM\DataObject::summary_fields':
+    visibility: private
+  'SilverStripe\Control\Director::rules':
+    visibility: private
+  'SilverStripe\Control\Director::current_page':
+    visibility: private
+  'SilverStripe\Control\Director::alternate_base_folder':
+    visibility: private
+  'SilverStripe\Control\Director::alternate_public_dir':
+    visibility: private
+  'SilverStripe\Control\Director::default_base_url':
+    visibility: private
+  'SilverStripe\Forms\GridField\GridFieldPaginator::default_items_per_page':
+    visibility: private
+  'SilverStripe\View\SSViewer::themes':
+    visibility: private
+  'SilverStripe\View\SSViewer::current_themes':
+    visibility: protected
+  'SilverStripe\View\SSViewer::theme':
+    visibility: private
+  'SilverStripe\View\SSViewer::theme_enabled':
+    visibility: private
+  'SilverStripe\View\SSViewer::global_key':
+    visibility: private
+  'SilverStripe\View\SSViewer::source_file_comments':
+    visibility: private
+  'SilverStripe\View\SSViewer::rewrite_hash_links':
+    visibility: private
+  'SilverStripe\View\SSViewer::current_rewrite_hash_links':
+    visibility: protected
+  'SilverStripe\View\SSViewer::rewriteHashlinks':
+    visibility: protected
+  'SilverStripe\View\SSViewer::template_cache_flushed':
+    visibility: private
+  'SilverStripe\View\SSViewer::cacheblock_cache_flushed':
+    visibility: private
+  'SilverStripe\View\SSViewer::topLevel':
+    visibility: protected
+  'SilverStripe\View\SSViewer::templates':
+    visibility: protected
+  'SilverStripe\View\SSViewer::chosen':
+    visibility: protected
+  'SilverStripe\View\SSViewer::subTemplates':
+    visibility: protected
+  'SilverStripe\View\SSViewer::includeRequirements':
+    visibility: protected
+  'SilverStripe\View\SSViewer::parser':
+    visibility: protected
+  'SilverStripe\View\SSViewer::partialCacheStore':
+    visibility: protected
+
+classToTraits:
+  SS_Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'
+  Object:
+    'SilverStripe\Core\Extensible': 'Extensible'
+    'SilverStripe\Core\Injector\Injectable': 'Injectable'
+    'SilverStripe\Core\Config\Configurable': 'Configurable'

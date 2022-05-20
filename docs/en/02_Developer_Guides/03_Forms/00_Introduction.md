@@ -1,14 +1,17 @@
+---
 title: Introduction to Forms
 summary: An introduction to creating a Form instance and handling submissions.
+iconBrand: wpforms
+---
 
 # Forms
 
-The HTML `Form` is the most used way to interact with a user. SilverStripe provides classes to generate forms through 
+The HTML `Form` is the most used way to interact with a user. Silverstripe CMS provides classes to generate forms through 
 the [Form](api:SilverStripe\Forms\Form) class, [FormField](api:SilverStripe\Forms\FormField) instances to capture data and submissions through [FormAction](api:SilverStripe\Forms\FormAction).
 
-<div class="notice" markdown="1">
-See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of creating a `Form`
-</div>
+[notice]
+See the [Introduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1) lesson for a step by step process of creating a `Form`
+[/notice]
 
 ## Creating a Form
 
@@ -16,18 +19,21 @@ Creating a [Form](api:SilverStripe\Forms\Form) has the following signature.
 
 
 ```php
-    $form = new Form(
-        $controller, // the Controller to render this form on 
-        $name, // name of the method that returns this form on the controller
-        FieldList $fields, // list of FormField instances 
-        FieldList $actions, // list of FormAction instances
-        $required // optional use of RequiredFields object
-    );
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FieldList;
+
+$form = new Form(
+    $controller, // the Controller to render this form on 
+    $name, // name of the method that returns this form on the controller
+    FieldList $fields, // list of FormField instances 
+    FieldList $actions, // list of FormAction instances
+    $required // optional use of RequiredFields object
+);
 ```
 
 In practice, this looks like:
 
-**mysite/code/Page.php**
+**app/src/PageController.php**
 
 ```php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -70,20 +76,20 @@ class PageController extends ContentController
 
 ```
 
-**mysite/templates/Page.ss**
+**app/templates/Page.ss**
 
 ```ss
 $HelloForm
 ```
 
-<div class="info" markdown="1">
+[info]
 The examples above use `FormField::create()` instead of the  `new` operator (`new FormField()`). These are functionally 
 equivalent, but allows PHP to chain operations like `setTitle()` without assigning the field instance to a temporary 
 variable.
-</div>
+[/info]
 
 When constructing the `Form` instance (`new Form($controller, $name)`) both controller and name are required. The
-`$controller` and `$name` are used to allow SilverStripe to calculate the origin of the `Form object`. When a user 
+`$controller` and `$name` are used to allow Silverstripe CMS to calculate the origin of the `Form object`. When a user 
 submits the `HelloForm` from your `contact-us` page the form submission will go to `contact-us/HelloForm` before any of
 the [FormAction](api:SilverStripe\Forms\FormAction). The URL is known as the `$controller` instance will know the 'contact-us' link and we provide 
 `HelloForm` as the `$name` of the form. `$name` **needs** to match the method name.
@@ -98,10 +104,10 @@ private static $allowed_actions = [
 
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Form actions (`doSayHello`), on the other hand, should _not_ be included in `$allowed_actions`; these are handled 
 separately through [Form::httpSubmission()](api:SilverStripe\Forms\Form::httpSubmission()).
-</div>
+[/notice]
 
 
 ## Adding FormFields
@@ -113,9 +119,9 @@ Some common examples are [TextField](api:SilverStripe\Forms\TextField) or [Dropd
 SilverStripe\Forms\TextField::create($name, $title, $value);
 ```
 
-<div class="info" markdown='1'>
+[info]
 A list of the common FormField subclasses is available on the [Common Subclasses](field_types/common_subclasses/) page.
-</div>
+[/info]
 
 The fields are added to the [FieldList](api:SilverStripe\Forms\FieldList) `fields` property on the `Form` and can be modified at up to the point the 
 `Form` is rendered.
@@ -167,20 +173,20 @@ Fields can be removed from the form.
 $form->getFields()->removeByName('Email');
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Forms can be tabbed (such as the CMS interface). In these cases, there are additional functions such as `addFieldToTab`
 and `removeFieldByTab` to ensure the fields are on the correct interface. See [Tabbed Forms](tabbed_forms) for more 
 information on the CMS interface.
-</div>
+[/alert]
 
 ## Modifying FormFields
 
 Each [FormField](api:SilverStripe\Forms\FormField) subclass has a number of methods you can call on it to customise its' behavior or HTML markup. The
 default `FormField` object has several methods for doing common operations. 
 
-<div class="notice" markdown="1">
+[notice]
 Most of the `set` operations will return the object back so methods can be chained.
-</div>
+[/notice]
 
 ```php
 $field = new TextField(..);
@@ -267,10 +273,10 @@ with the particular button. In the previous example, clicking the 'Another Butto
  * The `Form` instance.
  * The `Controller` instance.
 
-<div class="notice" markdown="1">
+[notice]
 If the `$action` method cannot be found on any of those or is marked as `private` or `protected`, an error will be 
 thrown.
-</div>
+[/notice]
 
 The `$action` method takes two arguments:
 
@@ -326,6 +332,8 @@ class PageController extends ContentController
 
 ```
 
+See [how_tos/handle_nested_data](How to: Handle nested form data) for more advanced use cases.
+
 ## Validation
 
 Form validation is handled by the [Validator](api:SilverStripe\Forms\Validator) class and the `validator` property on the `Form` object. The validator 
@@ -341,8 +349,10 @@ $validator = new SilverStripe\Forms\RequiredFields([
 ]);
 
 $form = new Form($this, 'MyForm', $fields, $actions, $validator);
-
 ```
+
+## Related Lessons
+* [Introduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
 
 ## API Documentation
 

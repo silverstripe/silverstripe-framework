@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -32,6 +33,7 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Map;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 
@@ -59,53 +61,52 @@ use SilverStripe\ORM\ValidationResult;
  */
 class Member extends DataObject
 {
-
-    private static $db = array(
-        'FirstName'          => 'Varchar',
-        'Surname'            => 'Varchar',
-        'Email'              => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
-        'TempIDHash'         => 'Varchar(160)', // Temporary id used for cms re-authentication
-        'TempIDExpired'      => 'Datetime', // Expiry of temp login
-        'Password'           => 'Varchar(160)',
-        'AutoLoginHash'      => 'Varchar(160)', // Used to auto-login the user on password reset
-        'AutoLoginExpired'   => 'Datetime',
+    private static $db = [
+        'FirstName' => 'Varchar',
+        'Surname' => 'Varchar',
+        'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
+        'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
+        'TempIDExpired' => 'Datetime', // Expiry of temp login
+        'Password' => 'Varchar(160)',
+        'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
+        'AutoLoginExpired' => 'Datetime',
         // This is an arbitrary code pointing to a PasswordEncryptor instance,
         // not an actual encryption algorithm.
         // Warning: Never change this field after its the first password hashing without
         // providing a new cleartext password as well.
         'PasswordEncryption' => "Varchar(50)",
-        'Salt'               => 'Varchar(50)',
-        'PasswordExpiry'     => 'Date',
-        'LockedOutUntil'     => 'Datetime',
-        'Locale'             => 'Varchar(6)',
+        'Salt' => 'Varchar(50)',
+        'PasswordExpiry' => 'Date',
+        'LockedOutUntil' => 'Datetime',
+        'Locale' => 'Varchar(6)',
         // handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
-        'FailedLoginCount'   => 'Int',
-    );
+        'FailedLoginCount' => 'Int',
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Groups' => Group::class,
-    );
+    ];
 
-    private static $has_many = array(
-        'LoggedPasswords'     => MemberPassword::class,
+    private static $has_many = [
+        'LoggedPasswords' => MemberPassword::class,
         'RememberLoginHashes' => RememberLoginHash::class,
-    );
+    ];
 
     private static $table_name = "Member";
 
     private static $default_sort = '"Surname", "FirstName"';
 
-    private static $indexes = array(
+    private static $indexes = [
         'Email' => true,
         //Removed due to duplicate null values causing MSSQL problems
         //'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true)
-    );
+    ];
 
     /**
      * @config
      * @var boolean
      */
-    private static $notify_password_change = false;
+    private static $notify_password_change = true;
 
     /**
      * All searchable database columns
@@ -118,29 +119,29 @@ class Member extends DataObject
      * with definition for different searching algorithms
      * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
      */
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'FirstName',
         'Surname',
         'Email',
-    );
+    ];
 
     /**
      * @config
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'FirstName',
         'Surname',
         'Email',
-    );
+    ];
 
     /**
      * @config
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'Name' => 'Varchar',
-    );
+    ];
 
     /**
      * Internal-use only fields
@@ -148,7 +149,7 @@ class Member extends DataObject
      * @config
      * @var array
      */
-    private static $hidden_fields = array(
+    private static $hidden_fields = [
         'AutoLoginHash',
         'AutoLoginExpired',
         'PasswordEncryption',
@@ -157,7 +158,7 @@ class Member extends DataObject
         'TempIDHash',
         'TempIDExpired',
         'Salt',
-    );
+    ];
 
     /**
      * @config
@@ -267,7 +268,7 @@ class Member extends DataObject
     public function populateDefaults()
     {
         parent::populateDefaults();
-        $this->Locale = i18n::get_locale();
+        $this->Locale = i18n::config()->get('default_locale');
     }
 
     public function requireDefaultRecords()
@@ -281,7 +282,7 @@ class Member extends DataObject
     /**
      * Get the default admin record if it exists, or creates it otherwise if enabled
      *
-     * @deprecated 4.0.0...5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
      * @return Member
      */
     public static function default_admin()
@@ -293,7 +294,7 @@ class Member extends DataObject
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @deprecated 4.0.0...5.0.0 Use Authenticator::checkPassword() instead
+     * @deprecated 4.0.0:5.0.0 Use Authenticator::checkPassword() instead
      *
      * @param  string $password
      * @return ValidationResult
@@ -311,7 +312,7 @@ class Member extends DataObject
                 break;
             }
         }
-            return $result;
+        return $result;
     }
 
     /**
@@ -350,10 +351,9 @@ class Member extends DataObject
             $result->addError(
                 _t(
                     __CLASS__ . '.ERRORLOCKEDOUT2',
-                    'Your account has been temporarily disabled because of too many failed attempts at ' .
-                    'logging in. Please try again in {count} minutes.',
+                    'Your account has been temporarily disabled because of too many failed attempts at ' . 'logging in. Please try again in {count} minutes.',
                     null,
-                    array('count' => static::config()->get('lock_out_delay_mins'))
+                    ['count' => static::config()->get('lock_out_delay_mins')]
                 )
             );
         }
@@ -382,9 +382,7 @@ class Member extends DataObject
             return false;
         }
 
-        $idField = static::config()->get('unique_identifier_field');
-        $attempts = LoginAttempt::get()
-            ->filter('Email', $this->{$idField})
+        $attempts = LoginAttempt::getByEmail($this->Email)
             ->sort('Created', 'DESC')
             ->limit($maxAttempts);
 
@@ -446,7 +444,7 @@ class Member extends DataObject
             return false;
         }
 
-        return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry);
+        return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry ?? '');
     }
 
     /**
@@ -522,10 +520,9 @@ class Member extends DataObject
             'This method is deprecated and now does not add value. Please use Security::getCurrentUser()'
         );
 
-        if ($member = Security::getCurrentUser()) {
-            if ($member && $member->exists()) {
-                return true;
-            }
+        $member = Security::getCurrentUser();
+        if ($member && $member->exists()) {
+            return true;
         }
 
         return false;
@@ -539,14 +536,30 @@ class Member extends DataObject
     {
         Deprecation::notice(
             '5.0.0',
-            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdenityStore'
+            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdentityStore'
         );
 
-        $this->extend('beforeMemberLoggedOut');
-
         Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
-        // Audit logging hook
-        $this->extend('afterMemberLoggedOut');
+    }
+
+    /**
+     * Audit logging hook, called before a member is logged out
+     *
+     * @param HTTPRequest|null $request
+     */
+    public function beforeMemberLoggedOut(HTTPRequest $request = null)
+    {
+        $this->extend('beforeMemberLoggedOut', $request);
+    }
+
+    /**
+     * Audit logging hook, called after a member is logged out
+     *
+     * @param HTTPRequest|null $request
+     */
+    public function afterMemberLoggedOut(HTTPRequest $request = null)
+    {
+        $this->extend('afterMemberLoggedOut', $request);
     }
 
     /**
@@ -600,9 +613,9 @@ class Member extends DataObject
             $generator = new RandomGenerator();
             $token = $generator->randomToken();
             $hash = $this->encryptWithUserSettings($token);
-        } while (DataObject::get_one(Member::class, array(
+        } while (DataObject::get_one(Member::class, [
             '"Member"."AutoLoginHash"' => $hash
-        )));
+        ]));
 
         $this->AutoLoginHash = $hash;
         $this->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
@@ -640,7 +653,7 @@ class Member extends DataObject
     {
         /** @var Member $member */
         $member = static::get()->filter([
-            'AutoLoginHash'                => $hash,
+            'AutoLoginHash' => $hash,
             'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
         ])->first();
 
@@ -776,7 +789,7 @@ class Member extends DataObject
      *
      * E.g.
      * <code>
-     * Member::logInAs(Security::findAnAdministrator(), function() {
+     * Member::actAs(Security::findAnAdministrator(), function() {
      *     $record->write();
      * });
      * </code>
@@ -784,6 +797,7 @@ class Member extends DataObject
      * @param Member|null|int $member Member or member ID to log in as.
      * Set to null or 0 to act as a logged out user.
      * @param callable $callback
+     * @return mixed Result of $callback
      */
     public static function actAs($member, $callback)
     {
@@ -816,11 +830,11 @@ class Member extends DataObject
             'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
         );
 
-        if ($member = Security::getCurrentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             return $member->ID;
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -833,20 +847,20 @@ class Member extends DataObject
     {
         $words = Security::config()->uninherited('word_list');
 
-        if ($words && file_exists($words)) {
-            $words = file($words);
+        if ($words && file_exists($words ?? '')) {
+            $words = file($words ?? '');
 
-            list($usec, $sec) = explode(' ', microtime());
+            list($usec, $sec) = explode(' ', microtime() ?? '');
             mt_srand($sec + ((float)$usec * 100000));
 
-            $word = trim($words[random_int(0, count($words) - 1)]);
+            $word = trim($words[random_int(0, count($words) - 1)] ?? '');
             $number = random_int(10, 999);
 
             return $word . $number;
         } else {
             $random = mt_rand();
-            $string = md5($random);
-            $output = substr($string, 0, 8);
+            $string = md5($random ?? '');
+            $output = substr($string ?? '', 0, 8);
 
             return $output;
         }
@@ -857,6 +871,11 @@ class Member extends DataObject
      */
     public function onBeforeWrite()
     {
+        // Remove any line-break or space characters accidentally added during a copy-paste operation
+        if ($this->Email) {
+            $this->Email = trim($this->Email ?? '');
+        }
+
         // If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
         // Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form),
         // but rather a last line of defense against data inconsistencies.
@@ -867,7 +886,7 @@ class Member extends DataObject
                 "\"Member\".\"$identifierField\"" => $this->$identifierField
             ];
             if ($this->ID) {
-                $filter[] = array('"Member"."ID" <> ?' => $this->ID);
+                $filter[] = ['"Member"."ID" <> ?' => $this->ID];
             }
             $existingRecord = DataObject::get_one(Member::class, $filter);
 
@@ -876,11 +895,11 @@ class Member extends DataObject
                     __CLASS__ . '.ValidationIdentifierFailed',
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
-                    array(
-                        'id'    => $existingRecord->ID,
-                        'name'  => $identifierField,
+                    [
+                        'id' => $existingRecord->ID,
+                        'name' => $identifierField,
                         'value' => $this->$identifierField
-                    )
+                    ]
                 ));
             }
         }
@@ -891,26 +910,38 @@ class Member extends DataObject
         if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
+            && $this->Email
             && static::config()->get('notify_password_change')
+            && $this->isInDB()
         ) {
-            Email::create()
+            $email = Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
-                ->setSubject(_t(__CLASS__ . '.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
-                ->send();
+                ->setSubject(_t(
+                    __CLASS__ . '.SUBJECTPASSWORDCHANGED',
+                    "Your password has been changed",
+                    'Email subject'
+                ));
+
+            $this->extend('updateChangedPasswordEmail', $email);
+            $email->send();
         }
 
         // The test on $this->ID is used for when records are initially created. Note that this only works with
-        // cleartext passwords, as we can't rehash existing passwords. Checking passwordChangesToWrite prevents
-        // recursion between changePassword and this method.
-        if ((!$this->ID && $this->Password) || ($this->isChanged('Password') && !$this->passwordChangesToWrite)) {
-            $this->changePassword($this->Password, false);
+        // cleartext passwords, as we can't rehash existing passwords.
+        if (!$this->ID || $this->isChanged('Password')) {
+            $this->encryptPassword();
         }
 
         // save locale
         if (!$this->Locale) {
-            $this->Locale = i18n::get_locale();
+            $this->Locale = i18n::config()->get('default_locale');
+        }
+
+        // Ensure FailedLoginCount is non-negative
+        if ($this->FailedLoginCount < 0) {
+            $this->FailedLoginCount = 0;
         }
 
         parent::onBeforeWrite();
@@ -931,8 +962,9 @@ class Member extends DataObject
     {
         parent::onAfterDelete();
 
-        //prevent orphaned records remaining in the DB
+        // prevent orphaned records remaining in the DB
         $this->deletePasswordLogs();
+        $this->Groups()->removeAll();
     }
 
     /**
@@ -959,16 +991,25 @@ class Member extends DataObject
      */
     public function onChangeGroups($ids)
     {
+        // Ensure none of these match disallowed list
+        $disallowedGroupIDs = $this->disallowedGroups();
+        return count(array_intersect($ids ?? [], $disallowedGroupIDs)) == 0;
+    }
+
+    /**
+     * List of group IDs this user is disallowed from
+     *
+     * @return int[] List of group IDs
+     */
+    protected function disallowedGroups()
+    {
         // unless the current user is an admin already OR the logged in user is an admin
         if (Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
-            return true;
+            return [];
         }
 
-        // If there are no admin groups in this set then it's ok
-        $adminGroups = Permission::get_groups_by_permission('ADMIN');
-        $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-
-        return count(array_intersect($ids, $adminGroupIDs)) == 0;
+        // Non-admins may not belong to admin groups
+        return Permission::get_groups_by_permission('ADMIN')->column('ID');
     }
 
 
@@ -1005,9 +1046,9 @@ class Member extends DataObject
         if (is_numeric($group)) {
             $groupCheckObj = DataObject::get_by_id(Group::class, $group);
         } elseif (is_string($group)) {
-            $groupCheckObj = DataObject::get_one(Group::class, array(
+            $groupCheckObj = DataObject::get_one(Group::class, [
                 '"Group"."Code"' => $group
-            ));
+            ]);
         } elseif ($group instanceof Group) {
             $groupCheckObj = $group;
         } else {
@@ -1039,9 +1080,9 @@ class Member extends DataObject
      */
     public function addToGroupByCode($groupcode, $title = "")
     {
-        $group = DataObject::get_one(Group::class, array(
+        $group = DataObject::get_one(Group::class, [
             '"Group"."Code"' => $groupcode
-        ));
+        ]);
 
         if ($group) {
             $this->Groups()->add($group);
@@ -1066,7 +1107,7 @@ class Member extends DataObject
      */
     public function removeFromGroupByCode($groupcode)
     {
-        $group = Group::get()->filter(array('Code' => $groupcode))->first();
+        $group = Group::get()->filter(['Code' => $groupcode])->first();
 
         if ($group) {
             $this->Groups()->remove($group);
@@ -1075,13 +1116,13 @@ class Member extends DataObject
 
     /**
      * @param array $columns Column names on the Member record to show in {@link getTitle()}.
-     * @param String $sep Separator
+     * @param string $sep Separator
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
         Deprecation::notice('5.0', 'Use Member.title_format config instead');
         if (!is_array($columns)) {
-            $columns = array($columns);
+            $columns = [$columns];
         }
         self::config()->set(
             'title_format',
@@ -1093,6 +1134,16 @@ class Member extends DataObject
     }
 
     //------------------- HELPER METHODS -----------------------------------//
+
+    /**
+     * Simple proxy method to get the Surname property of the member
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->Surname;
+    }
 
     /**
      * Get the complete name of the member, by default in the format "<Surname>, <FirstName>".
@@ -1108,12 +1159,12 @@ class Member extends DataObject
     {
         $format = static::config()->get('title_format');
         if ($format) {
-            $values = array();
+            $values = [];
             foreach ($format['columns'] as $col) {
                 $values[] = $this->getField($col);
             }
 
-            return implode($format['sep'], $values);
+            return implode($format['sep'] ?? '', $values);
         }
         if ($this->getField('ID') === 0) {
             return $this->getField('Surname');
@@ -1144,11 +1195,11 @@ class Member extends DataObject
         if (!$format) {
             $format = [
                 'columns' => ['Surname', 'FirstName'],
-                'sep'     => ' ',
+                'sep' => ' ',
             ];
         }
 
-        $columnsWithTablename = array();
+        $columnsWithTablename = [];
         foreach ($format['columns'] as $column) {
             $columnsWithTablename[] = static::getSchema()->sqlColumnForField(__CLASS__, $column);
         }
@@ -1180,7 +1231,7 @@ class Member extends DataObject
      */
     public function setName($name)
     {
-        $nameParts = explode(' ', $name);
+        $nameParts = explode(' ', $name ?? '');
         $this->Surname = array_pop($nameParts);
         $this->FirstName = join(' ', $nameParts);
     }
@@ -1199,7 +1250,7 @@ class Member extends DataObject
 
     /**
      * Return the date format based on the user's chosen locale,
-     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
+     * falling back to the default format defined by the i18n::config()->get('default_locale') config setting.
      *
      * @return string ISO date format
      */
@@ -1218,7 +1269,7 @@ class Member extends DataObject
     }
 
     /**
-     * Get user locale
+     * Get user locale, falling back to the configured default locale
      */
     public function getLocale()
     {
@@ -1227,12 +1278,12 @@ class Member extends DataObject
             return $locale;
         }
 
-        return i18n::get_locale();
+        return i18n::config()->get('default_locale');
     }
 
     /**
      * Return the time format based on the user's chosen locale,
-     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
+     * falling back to the default format defined by the i18n::config()->get('default_locale') config setting.
      *
      * @return string ISO date format
      */
@@ -1272,7 +1323,7 @@ class Member extends DataObject
     }
 
     /**
-     * @return ManyManyList
+     * @return ManyManyList|UnsavedRelationList
      */
     public function DirectGroups()
     {
@@ -1289,7 +1340,7 @@ class Member extends DataObject
      */
     public static function map_in_groups($groups = null)
     {
-        $groupIDList = array();
+        $groupIDList = [];
 
         if ($groups instanceof SS_List) {
             foreach ($groups as $group) {
@@ -1303,7 +1354,7 @@ class Member extends DataObject
 
         // No groups, return all Members
         if (!$groupIDList) {
-            return static::get()->sort(array('Surname' => 'ASC', 'FirstName' => 'ASC'))->map();
+            return static::get()->sort(['Surname' => 'ASC', 'FirstName' => 'ASC'])->map();
         }
 
         $membersList = new ArrayList();
@@ -1331,13 +1382,18 @@ class Member extends DataObject
      */
     public static function mapInCMSGroups($groups = null)
     {
+        // non-countable $groups will issue a warning when using count() in PHP 7.2+
+        if (!$groups) {
+            $groups = [];
+        }
+
         // Check CMS module exists
         if (!class_exists(LeftAndMain::class)) {
             return ArrayList::create()->map();
         }
 
-        if (count($groups) == 0) {
-            $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
+        if (count($groups ?? []) == 0) {
+            $perms = ['ADMIN', 'CMS_ACCESS_AssetAdmin'];
 
             if (class_exists(CMSMain::class)) {
                 $cmsPerms = CMSMain::singleton()->providePermissions();
@@ -1346,19 +1402,19 @@ class Member extends DataObject
             }
 
             if (!empty($cmsPerms)) {
-                $perms = array_unique(array_merge($perms, array_keys($cmsPerms)));
+                $perms = array_unique(array_merge($perms, array_keys($cmsPerms ?? [])));
             }
 
             $permsClause = DB::placeholders($perms);
             /** @skipUpgrade */
             $groups = Group::get()
                 ->innerJoin("Permission", '"Permission"."GroupID" = "Group"."ID"')
-                ->where(array(
+                ->where([
                     "\"Permission\".\"Code\" IN ($permsClause)" => $perms
-                ));
+                ]);
         }
 
-        $groupIDList = array();
+        $groupIDList = [];
 
         if ($groups instanceof SS_List) {
             foreach ($groups as $group) {
@@ -1374,9 +1430,9 @@ class Member extends DataObject
             ->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
         if ($groupIDList) {
             $groupClause = DB::placeholders($groupIDList);
-            $members = $members->where(array(
+            $members = $members->where([
                 "\"Group\".\"ID\" IN ($groupClause)" => $groupIDList
-            ));
+            ]);
         }
 
         return $members->sort('"Member"."Surname", "Member"."FirstName"')->map();
@@ -1401,8 +1457,8 @@ class Member extends DataObject
         }
 
         foreach ($memberGroups as $group) {
-            if (in_array($group->Code, $groupList)) {
-                $index = array_search($group->Code, $groupList);
+            if (in_array($group->Code, $groupList ?? [])) {
+                $index = array_search($group->Code, $groupList ?? []);
                 unset($groupList[$index]);
             }
         }
@@ -1453,8 +1509,14 @@ class Member extends DataObject
             $fields->removeByName('RememberLoginHashes');
 
             if (Permission::check('EDIT_PERMISSIONS')) {
-                $groupsMap = array();
-                foreach (Group::get() as $group) {
+                // Filter allowed groups
+                $groups = Group::get();
+                $disallowedGroupIDs = $this->disallowedGroups();
+                if ($disallowedGroupIDs) {
+                    $groups = $groups->exclude('ID', $disallowedGroupIDs);
+                }
+                $groupsMap = [];
+                foreach ($groups as $group) {
                     // Listboxfield values are escaped, use ASCII char instead of &raquo;
                     $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
                 }
@@ -1509,7 +1571,11 @@ class Member extends DataObject
         /** @skipUpgrade */
         $labels['Email'] = _t(__CLASS__ . '.EMAIL', 'Email');
         $labels['Password'] = _t(__CLASS__ . '.db_Password', 'Password');
-        $labels['PasswordExpiry'] = _t(__CLASS__ . '.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
+        $labels['PasswordExpiry'] = _t(
+            __CLASS__ . '.db_PasswordExpiry',
+            'Password Expiry Date',
+            'Password expiry date'
+        );
         $labels['LockedOutUntil'] = _t(__CLASS__ . '.db_LockedOutUntil', 'Locked out until', 'Security related date');
         $labels['Locale'] = _t(__CLASS__ . '.db_Locale', 'Interface Locale');
         if ($includerelations) {
@@ -1639,12 +1705,18 @@ class Member extends DataObject
      */
     public function validate()
     {
+        // If validation is disabled, skip this step
+        if (!DataObject::config()->uninherited('validation_enabled')) {
+            return ValidationResult::create();
+        }
+
         $valid = parent::validate();
         $validator = static::password_validator();
 
-        if (!$this->ID || $this->isChanged('Password')) {
-            if ($this->Password && $validator) {
-                $valid->combineAnd($validator->validate($this->Password, $this));
+        if ($validator) {
+            if ((!$this->ID && $this->Password) || $this->isChanged('Password')) {
+                $userValid = $validator->validate($this->Password, $this);
+                $valid->combineAnd($userValid);
             }
         }
 
@@ -1652,37 +1724,34 @@ class Member extends DataObject
     }
 
     /**
-     * Change password. This will cause rehashing according to the `PasswordEncryption` property. This method will
-     * allow extensions to perform actions and augment the validation result if required before the password is written
-     * and can check it after the write also.
+     * Change password. This will cause rehashing according to the `PasswordEncryption` property via the
+     * `onBeforeWrite()` method. This method will allow extensions to perform actions and augment the validation
+     * result if required before the password is written and can check it after the write also.
      *
-     * This method will encrypt the password prior to writing.
+     * `onBeforeWrite()` will encrypt the password prior to writing.
      *
-     * @param string $password  Cleartext password
-     * @param bool   $write     Whether to write the member afterwards
+     * @param string $password Cleartext password
+     * @param bool $write Whether to write the member afterwards
      * @return ValidationResult
      */
     public function changePassword($password, $write = true)
     {
         $this->Password = $password;
-        $valid = $this->validate();
+        $result = $this->validate();
 
-        $this->extend('onBeforeChangePassword', $password, $valid);
+        $this->extend('onBeforeChangePassword', $password, $result);
 
-        if ($valid->isValid()) {
+        if ($result->isValid()) {
             $this->AutoLoginHash = null;
 
-            $this->encryptPassword();
-
             if ($write) {
-                $this->passwordChangesToWrite = true;
                 $this->write();
             }
         }
 
-        $this->extend('onAfterChangePassword', $password, $valid);
+        $this->extend('onAfterChangePassword', $password, $result);
 
-        return $valid;
+        return $result;
     }
 
     /**
@@ -1700,7 +1769,7 @@ class Member extends DataObject
         $encryption_details = Security::encrypt_password(
             $this->Password,
             $this->Salt,
-            $this->PasswordEncryption ?: Security::config()->get('password_encryption_algorithm'),
+            $this->isChanged('PasswordEncryption') ? $this->PasswordEncryption : null,
             $this
         );
 

@@ -19,7 +19,7 @@ use SilverStripe\Forms\TextField;
  */
 class CategoryController extends Controller implements TestOnly
 {
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
     protected $template = 'BlankPage';
 
@@ -31,14 +31,14 @@ class CategoryController extends Controller implements TestOnly
     public function Form()
     {
         // GridField lists categories for a specific person
-        $person = Person::get()->sort('FirstName')->First();
+        $person = Person::get()->filter('FirstName', 'Jane')->First();
         $detailFields = singleton(Category::class)->getCMSFields();
         $detailFields->addFieldsToTab(
             'Root.Main',
-            array(
+            [
                 new CheckboxField('ManyMany[IsPublished]'),
                 new TextField('ManyMany[PublishedBy]')
-            )
+            ]
         );
         $categoriesField = new GridField('testfield', 'testfield', $person->Categories());
         $categoriesField->getConfig()->addComponent(

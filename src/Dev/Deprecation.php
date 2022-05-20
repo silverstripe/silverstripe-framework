@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -64,7 +65,7 @@ class Deprecation
      *
      * @var array
      */
-    protected static $module_version_overrides = array();
+    protected static $module_version_overrides = [];
 
     /**
      * @var int - the notice level to raise on a deprecation notice. Defaults to E_USER_DEPRECATED if that exists,
@@ -106,7 +107,7 @@ class Deprecation
             return null;
         }
 
-        $callingfile = realpath($backtrace[1]['file']);
+        $callingfile = realpath($backtrace[1]['file'] ?? '');
 
         return ModuleLoader::inst()->getManifest()->getModuleByPath($callingfile);
     }
@@ -125,13 +126,12 @@ class Deprecation
         if (!$level) {
             $level = 1;
         }
-        $called = $backtrace[$level];
+        $called = $backtrace ? $backtrace[$level] : [];
 
         if (isset($called['class'])) {
             return $called['class'] . $called['type'] . $called['function'];
-        } else {
-            return $called['function'];
         }
+        return $called['function'] ?? '';
     }
 
     /**
@@ -148,7 +148,7 @@ class Deprecation
         if (isset(self::$enabled)) {
             return self::$enabled;
         }
-        return getenv('SS_DEPRECATION_ENABLED') ?: true;
+        return Environment::getEnv('SS_DEPRECATION_ENABLED') ?: true;
     }
 
     /**
@@ -180,10 +180,10 @@ class Deprecation
         $backtrace = null;
 
         // If you pass #.#, assume #.#.0
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) {
+        if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
             $atVersion .= '.0';
         }
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion)) {
+        if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion ?? '')) {
             $checkVersion .= '.0';
         }
 
@@ -203,7 +203,7 @@ class Deprecation
         }
 
         // Check the version against the notice version
-        if ($checkVersion && version_compare($checkVersion, $atVersion, '>=')) {
+        if ($checkVersion && version_compare($checkVersion ?? '', $atVersion ?? '', '>=')) {
             // Get the calling scope
             if ($scope == Deprecation::SCOPE_METHOD) {
                 if (!$backtrace) {
@@ -226,16 +226,16 @@ class Deprecation
             }
 
             // Then raise the notice
-            if (substr($string, -1) != '.') {
+            if (substr($string ?? '', -1) != '.') {
                 $string .= ".";
             }
 
             $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
             if ($caller) {
-                user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);
+                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level ?? 0);
             } else {
-                user_error($string, $level);
+                user_error($string ?? '', $level ?? 0);
             }
         }
     }
@@ -247,12 +247,12 @@ class Deprecation
      */
     public static function dump_settings()
     {
-        return array(
+        return [
             'level' => self::$notice_level,
             'version' => self::$version,
             'moduleVersions' => self::$module_version_overrides,
             'enabled' => self::$enabled,
-        );
+        ];
     }
 
     /**

@@ -1,9 +1,12 @@
+---
 title: Form Validation
 summary: Validate form data through the server side validation API.
+icon: check-square
+---
 
 # Form Validation
 
-SilverStripe provides server-side form validation out of the box through the [Validator](api:SilverStripe\Forms\Validator) class and its' child class
+Silverstripe CMS provides server-side form validation out of the box through the [Validator](api:SilverStripe\Forms\Validator) class and its' child class
 [RequiredFields](api:SilverStripe\Forms\RequiredFields). A single `Validator` instance is set on each `Form`. Validators are implemented as an argument to 
 the [Form](api:SilverStripe\Forms\Form) constructor or through the function `setValidator`.
 
@@ -57,11 +60,11 @@ class PageController extends ContentController
 In this example we will be required to input a value for `Name` and a valid email address for `Email` before the 
 `doSubmitForm` method is called.
 
-<div class="info" markdown="1">
+[info]
 Each individual [FormField](api:SilverStripe\Forms\FormField) instance is responsible for validating the submitted content through the 
 [FormField::validate()](api:SilverStripe\Forms\FormField::validate()) method. By default, this just checks the value exists. Fields like `EmailField` override 
 `validate` to check for a specific format.
-</div>
+[/info]
 
 Subclasses of `FormField` can define their own version of `validate` to provide custom validation rules such as the 
 above example with the `Email` validation. The `validate` method on `FormField` takes a single argument of the current 
@@ -79,12 +82,12 @@ public function validate($validator)
 }
 ```
 
-The `validate` method should return `true` if the value passes any validation and `false` if SilverStripe should trigger
+The `validate` method should return `true` if the value passes any validation and `false` if Silverstripe CMS should trigger
 a validation error on the page. In addition a useful error message must be set on the given validator.
 
-<div class="notice" markdown="1">
+[notice]
 You can also override the entire `Form` validation by subclassing `Form` and defining a `validate` method on the form.
-</div>
+[/notice]
 
 Say we need a custom `FormField` which requires the user input a value in a `TextField` between 2 and 5. There would be
 two ways to go about this:
@@ -92,7 +95,7 @@ two ways to go about this:
 A custom `FormField` which handles the validation. This means the `FormField` can be reused throughout the site and have
 the same validation logic applied to it throughout.
 
-**mysite/code/CustomNumberField.php**
+**app/src/CustomNumberField.php**
 
 ```php
 use SilverStripe\Forms\TextField;
@@ -163,8 +166,10 @@ class Page_Controller extends ContentController
         $check = Member::get()->filter('Email', $data['Email'])->first();
 
         if ($check) {
-            $form->addErrorMessage('Email', 'This email already exists', 'bad');
-
+            $validationResult = new ValidationResult();
+            $validationResult->addFieldError('Email', 'This email already exists');
+            $form->setSessionValidationResult($validationResult);
+            $form->setSessionData($form->getData());
             return $this->redirectBack();
         }
 
@@ -174,9 +179,8 @@ class Page_Controller extends ContentController
         return $this->redirectBack();
     }
 }
-
 ```
-    
+
 ## Exempt validation actions
 
 In some cases you might need to disable validation for specific actions. E.g. actions which discard submitted
@@ -214,7 +218,7 @@ $field->setCustomValidationMessage('Whoops, looks like you have missed me!');
 
 ## JavaScript validation
 
-Although there are no built-in JavaScript validation handlers in SilverStripe, the `FormField` API is flexible enough 
+Although there are no built-in JavaScript validation handlers in Silverstripe CMS, the `FormField` API is flexible enough 
 to provide the information required in order to plug in custom libraries like [Parsley.js](http://parsleyjs.org/) or 
 [jQuery.Validate](http://jqueryvalidation.org/). Most of these libraries work on HTML `data-` attributes or special 
 classes added to each input. For Parsley we can structure the form like.
@@ -231,7 +235,7 @@ $field->setAttribute('data-parsley-mincheck', '2');
 
 ## Model Validation
 
-An alternative (or additional) approach to validation is to place it directly on the database model. SilverStripe 
+An alternative (or additional) approach to validation is to place it directly on the database model. Silverstripe CMS 
 provides a [DataObject::validate()](api:SilverStripe\ORM\DataObject::validate()) method to validate data at the model level. See 
 [Data Model Validation](../model/validation).
 
@@ -270,13 +274,14 @@ class MyController extends Controller
 ### Validation in the CMS
 
 In the CMS, we're not creating the forms for editing CMS records. The `Form` instance is generated for us so we cannot
-call `setValidator` easily. However, a `DataObject` can provide its' own `Validator` instance through the 
-`getCMSValidator()` method. The CMS interfaces such as [LeftAndMain](api:SilverStripe\Admin\LeftAndMain), [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) and [GridField](api:SilverStripe\Forms\GridField\GridField) will 
-respect the provided `Validator` and handle displaying error and success responses to the user. 
+call `setValidator` easily. However, a `DataObject` can provide its' own `Validator` instance/s through the 
+`getCMSCompositeValidator()` method. The CMS interfaces such as [LeftAndMain](api:SilverStripe\Admin\LeftAndMain),
+[ModelAdmin](api:SilverStripe\Admin\ModelAdmin) and [GridField](api:SilverStripe\Forms\GridField\GridField) will 
+respect the provided `Validator`/s and handle displaying error and success responses to the user. 
 
-<div class="info" markdown="1">
+[info]
 Again, custom error messages can be provided through the `FormField`
-</div>
+[/info]
 
 ```php
 use SilverStripe\CMS\Model\SiteTree;
@@ -307,6 +312,10 @@ class Page extends SiteTree
 }
 
 ```
+
+## Related Lessons
+* [Introduction to frontend forms](https://www.silverstripe.org/learn/lessons/v4/introduction-to-frontend-forms-1)
+
 
 ## API Documentation
 

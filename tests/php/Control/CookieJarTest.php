@@ -21,22 +21,22 @@ class CookieJarTest extends SapphireTest
     {
 
         //some default cookies to load
-        $defaultCookies = array(
+        $defaultCookies = [
             'cookie1' => 1,
             'cookie2' => 'cookies',
             'cookie3' => 'test',
-        );
+        ];
 
         $cookieJar = new CookieJar($defaultCookies);
 
-        //make sure all the "recieved" cookies are as expected
+        //make sure all the "received" cookies are as expected
         $this->assertEquals($defaultCookies, $cookieJar->getAll(false));
 
         //make sure there are no "phantom" cookies
         $this->assertEquals($defaultCookies, $cookieJar->getAll(true));
 
         //check an empty array is accepted
-        $cookieJar = new CookieJar(array());
+        $cookieJar = new CookieJar([]);
         $this->assertEmpty($cookieJar->getAll(false));
 
 
@@ -65,9 +65,9 @@ class CookieJarTest extends SapphireTest
 
         //PHP will replace an incoming COOKIE called 'var.with.dots' to 'var_with_dots'
         $cookieJar = new CookieJar(
-            array(
-            'var_with_dots' => 'value',
-            )
+            [
+                'var_with_dots' => 'value',
+            ]
         );
 
         $cookieJar->set('test.dots', 'dots');
@@ -86,9 +86,9 @@ class CookieJarTest extends SapphireTest
     {
         //load with a cookie
         $cookieJar = new CookieJar(
-            array(
-            'cookieExisting' => 'i woz here',
-            )
+            [
+                'cookieExisting' => 'i woz here',
+            ]
         );
 
         //set a new cookie
@@ -109,18 +109,18 @@ class CookieJarTest extends SapphireTest
 
         //check we can get all cookies
         $this->assertEquals(
-            array(
-            'cookieExisting' => 'i woz changed',
-            'cookieNew' => 'i am new',
-            ),
+            [
+                'cookieExisting' => 'i woz changed',
+                'cookieNew' => 'i am new',
+            ],
             $cookieJar->getAll()
         );
 
         //check we can get all original cookies
         $this->assertEquals(
-            array(
-            'cookieExisting' => 'i woz here',
-            ),
+            [
+                'cookieExisting' => 'i woz here',
+            ],
             $cookieJar->getAll(false)
         );
     }
@@ -132,9 +132,9 @@ class CookieJarTest extends SapphireTest
     {
         //load an existing cookie
         $cookieJar = new CookieJar(
-            array(
-            'cookieExisting' => 'i woz here',
-            )
+            [
+                'cookieExisting' => 'i woz here',
+            ]
         );
 
         //make sure it's available

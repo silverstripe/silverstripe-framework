@@ -2,13 +2,17 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use Psr\Log\InvalidArgumentException;
+use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
@@ -18,6 +22,7 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridState;
 use SilverStripe\Forms\GridField\GridState_Component;
 use SilverStripe\Forms\GridField\GridState_Data;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component2;
@@ -25,9 +30,12 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\HTMLFragments;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
+use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
+use SilverStripe\Versioned\VersionedGridFieldStateExtension;
 
 class GridFieldTest extends SapphireTest
 {
@@ -36,6 +44,15 @@ class GridFieldTest extends SapphireTest
         Cheerleader::class,
         Player::class,
         Team::class,
+    ];
+
+    protected static $illegal_extensions = [
+        GridFieldConfig_RecordEditor::class => [
+            VersionedGridFieldStateExtension::class,
+        ],
+        GridFieldConfig_Base::class => [
+            VersionedGridFieldStateExtension::class,
+        ],
     ];
 
     /**
@@ -53,7 +70,7 @@ class GridFieldTest extends SapphireTest
      */
     public function testGridFieldSetList()
     {
-        $list = ArrayList::create(array(1 => 'hello', 2 => 'goodbye'));
+        $list = ArrayList::create([1 => 'hello', 2 => 'goodbye']);
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList(), 'Testing getList');
     }
@@ -68,17 +85,16 @@ class GridFieldTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
 
-        $expectedComponents = new ArrayList(
-            array(
+        $expectedComponents = new ArrayList([
             new GridFieldToolbarHeader(),
+            new GridFieldButtonRow(),
             $sort = new GridFieldSortableHeader(),
             $filter = new GridFieldFilterHeader(),
             new GridFieldDataColumns(),
             new GridFieldPageCount('toolbar-header-right'),
             $pagination = new GridFieldPaginator(),
             new GridState_Component(),
-            )
-        );
+        ]);
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
         $pagination->setThrowExceptionOnBadDataType(false);
@@ -97,14 +113,14 @@ class GridFieldTest extends SapphireTest
         $config->addComponent(new GridFieldSortableHeader());
         $config->addComponent(new GridFieldDataColumns());
 
-        $obj = new GridField('testfield', 'testfield', ArrayList::create(array()), $config);
+        $obj = new GridField('testfield', 'testfield', ArrayList::create([]), $config);
 
         $expectedComponents = new ArrayList(
-            array(
+            [
             0 => new GridFieldSortableHeader,
             1 => new GridFieldDataColumns,
             2 => new GridState_Component,
-            )
+            ]
         );
 
         $this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
@@ -124,11 +140,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getModelClass
-     *
-     * @expectedException \LogicException
      */
     public function testGridFieldModelClassThrowsException()
     {
+        $this->expectException(LogicException::class);
         $obj = new GridField('testfield', 'testfield', ArrayList::create());
         $obj->getModelClass();
     }
@@ -140,7 +155,7 @@ class GridFieldTest extends SapphireTest
     public function testSetAndGetList()
     {
         $list = Member::get();
-        $arrayList = ArrayList::create(array(1, 2, 3));
+        $arrayList = ArrayList::create([1, 2, 3]);
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals($list, $obj->getList());
         $obj->setList($arrayList);
@@ -172,7 +187,7 @@ class GridFieldTest extends SapphireTest
         // for each reference from left to right along an isset() invocation.
         // See https://bugs.php.net/bug.php?id=62059
 
-        // Check value persistance
+        // Check value persistence
         $this->assertEquals(15, $obj->State->NoValue(15));
         $this->assertEquals(15, $obj->State->NoValue(-1));
         $obj->State->NoValue = 10;
@@ -214,11 +229,11 @@ class GridFieldTest extends SapphireTest
     public function testGetColumns()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
-        $expected = array(
+        $expected = [
             0 => 'FirstName',
             1 => 'Surname',
             2 => 'Email',
-        );
+        ];
         $this->assertEquals($expected, $obj->getColumns());
     }
 
@@ -238,9 +253,9 @@ class GridFieldTest extends SapphireTest
     public function testGetColumnContent()
     {
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $obj = new GridField('testfield', 'testfield', $list);
         $this->assertEquals('test@example.org', $obj->getColumnContent($list->first(), 'Email'));
@@ -249,15 +264,14 @@ class GridFieldTest extends SapphireTest
     /**
      * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnContentBadArguments()
     {
+        $this->expectException(InvalidArgumentException::class);
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $obj = new GridField('testfield', 'testfield', $list);
         $obj->getColumnContent($list->first(), 'non-existing');
@@ -270,12 +284,12 @@ class GridFieldTest extends SapphireTest
     public function testGetColumnAttributesEmptyArray()
     {
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $obj = new GridField('testfield', 'testfield', $list);
-        $this->assertEquals(array('class' => 'col-Email'), $obj->getColumnAttributes($list->first(), 'Email'));
+        $this->assertEquals(['class' => 'col-Email'], $obj->getColumnAttributes($list->first(), 'Email'));
     }
 
     /**
@@ -285,41 +299,38 @@ class GridFieldTest extends SapphireTest
     public function testGetColumnAttributes()
     {
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
-        $this->assertEquals(array('class' => 'css-class'), $obj->getColumnAttributes($list->first(), 'Email'));
+        $this->assertEquals(['class' => 'css-class'], $obj->getColumnAttributes($list->first(), 'Email'));
     }
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnAttributesBadArguments()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
         $obj->getColumnAttributes($list->first(), 'Non-existing');
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testGetColumnAttributesBadResponseFromComponent()
     {
+        $this->expectException(\LogicException::class);
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
@@ -333,26 +344,25 @@ class GridFieldTest extends SapphireTest
     public function testGetColumnMetadata()
     {
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
-        $this->assertEquals(array('metadata' => 'istrue'), $obj->getColumnMetadata('Email'));
+        $this->assertEquals(['metadata' => 'istrue'], $obj->getColumnMetadata('Email'));
     }
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     *
-     * @expectedException \LogicException
      */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
+        $this->expectException(\LogicException::class);
         $list = new ArrayList(
-            array(
-            new Member(array("ID" => 1, "Email" => "test@example.org"))
-            )
+            [
+            new Member(["ID" => 1, "Email" => "test@example.org"])
+            ]
         );
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
@@ -361,11 +371,10 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetColumnMetadataBadArguments()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $list = ArrayList::create();
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', $list, $config);
@@ -374,13 +383,12 @@ class GridFieldTest extends SapphireTest
 
     /**
      * @covers \SilverStripe\Forms\GridField\GridField::handleAction
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testHandleActionBadArgument()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $obj = new GridField('testfield', 'testfield');
-        $obj->handleAlterAction('prft', array(), array());
+        $obj->handleAlterAction('prft', [], []);
     }
 
     /**
@@ -390,7 +398,7 @@ class GridFieldTest extends SapphireTest
     {
         $config = GridFieldConfig::create()->addComponent(new Component);
         $obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', array(), array()));
+        $this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', [], []));
     }
 
     /**
@@ -399,8 +407,8 @@ class GridFieldTest extends SapphireTest
     public function testGetCastedValue()
     {
         $obj = new GridField('testfield', 'testfield');
-        $value = $obj->getCastedValue('This is a sentance. This ia another.', array('Text->FirstSentence'));
-        $this->assertEquals('This is a sentance.', $value);
+        $value = $obj->getCastedValue('This is a sentence. This ia another.', ['Text->FirstSentence']);
+        $this->assertEquals('This is a sentence.', $value);
     }
 
     /**
@@ -436,42 +444,42 @@ class GridFieldTest extends SapphireTest
     {
 
         new HTMLFragments(
-            array(
+            [
             "header-left-actions" => "left\$DefineFragment(nested-left)",
             "header-right-actions" => "right",
-            )
+            ]
         );
 
         new HTMLFragments(
-            array(
+            [
             "nested-left" => "[inner]",
-            )
+            ]
         );
 
 
         $config = GridFieldConfig::create()->addComponents(
             new HTMLFragments(
-                array(
+                [
                 "header" => "<tr><td><div class=\"right\">\$DefineFragment(header-right-actions)</div>"
                     . "<div class=\"left\">\$DefineFragment(header-left-actions)</div></td></tr>",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "header-left-actions" => "left",
                 "header-right-actions" => "rightone",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "header-right-actions" => "righttwo",
-                )
+                ]
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList([$field]), new FieldList());
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>",
             $field->FieldHolder()
         );
@@ -484,30 +492,30 @@ class GridFieldTest extends SapphireTest
     {
         $config = GridFieldConfig::create()->addComponents(
             new HTMLFragments(
-                array(
+                [
                 "level-one" => "first",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "before" => "<div>\$DefineFragment(level-one)</div>",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "level-one" => "<strong>\$DefineFragment(level-two)</strong>",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "level-two" => "second",
-                )
+                ]
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList([$field]), new FieldList());
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "<div>first\n<strong>second</strong></div>",
             $field->FieldHolder()
         );
@@ -515,35 +523,34 @@ class GridFieldTest extends SapphireTest
 
     /**
      * Test that circular dependencies throw an exception
-     *
-     * @expectedException \LogicException
      */
     public function testGridFieldCustomFragmentsCircularDependencyThrowsException()
     {
+        $this->expectException(\LogicException::class);
         $config = GridFieldConfig::create()->addComponents(
             new HTMLFragments(
-                array(
+                [
                 "level-one" => "first",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "before" => "<div>\$DefineFragment(level-one)</div>",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "level-one" => "<strong>\$DefineFragment(level-two)</strong>",
-                )
+                ]
             ),
             new HTMLFragments(
-                array(
+                [
                 "level-two" => "<blink>\$DefineFragment(level-one)</blink>",
-                )
+                ]
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList([$field]), new FieldList());
 
         $field->FieldHolder();
     }
@@ -555,40 +562,40 @@ class GridFieldTest extends SapphireTest
     {
         $this->logInWithPermission();
         $list = new ArrayList(
-            array(
+            [
             new Permissions(
-                array(
+                [
                 "ID" => 1,
                 "Email" => "ongi.schwimmer@example.org",
                 'Name' => 'Ongi Schwimmer'
-                )
+                ]
             ),
             new Permissions(
-                array(
+                [
                 "ID" => 2,
                 "Email" => "klaus.lozenge@example.org",
                 'Name' => 'Klaus Lozenge'
-                )
+                ]
             ),
             new Permissions(
-                array(
+                [
                 "ID" => 3,
                 "Email" => "otto.fischer@example.org",
                 'Name' => 'Otto Fischer'
-                )
+                ]
             )
-            )
+            ]
         );
 
         $config = new GridFieldConfig();
         $config->addComponent(new GridFieldDataColumns());
         $obj = new GridField('testfield', 'testfield', $list, $config);
-        $form = new Form(null, 'mockform', new FieldList(array($obj)), new FieldList());
+        $form = new Form(null, 'mockform', new FieldList([$obj]), new FieldList());
         $content = new CSSContentParser($obj->FieldHolder());
 
         $members = $content->getBySelector('.ss-gridfield-item tr');
 
-        $this->assertEquals(2, count($members));
+        $this->assertEquals(2, count($members ?? []));
 
         $this->assertEquals(
             (string)$members[0]->td[0],
@@ -616,7 +623,7 @@ class GridFieldTest extends SapphireTest
     public function testChainedDataManipulators()
     {
         $config = new GridFieldConfig();
-        $data = new ArrayList(array(1, 2, 3, 4, 5, 6));
+        $data = new ArrayList([1, 2, 3, 4, 5, 6]);
         $gridField = new GridField('testfield', 'testfield', $data, $config);
         $endList = $gridField->getManipulatedList();
         $this->assertEquals($endList->count(), 6);
@@ -628,5 +635,28 @@ class GridFieldTest extends SapphireTest
         $config->addComponent(new GridFieldPaginator(10));
         $endList = $gridField->getManipulatedList();
         $this->assertEquals($endList->count(), 10);
+    }
+
+    public function testValidationMessageInOutput()
+    {
+        $gridField = new GridField('testfield', 'testfield', new ArrayList(), new GridFieldConfig());
+        $fieldList = new FieldList([$gridField]);
+        $validator = new TestValidator();
+        $form = new Form(null, "testForm", $fieldList, new FieldList(), $validator);
+
+        // A form that fails validation should display the validation error in the FieldHolder output.
+        $form->validationResult();
+        $gridfieldOutput = $gridField->FieldHolder();
+        $this->assertStringContainsString('<p class="message ' . ValidationResult::TYPE_ERROR . '">error</p>', $gridfieldOutput);
+
+        // Clear validation error from previous assertion.
+        $validator->removeValidation();
+        $gridField->setMessage(null);
+
+        // A form that passes validation should not display a validation error in the FieldHolder output.
+        $form->setValidator(new RequiredFields());
+        $form->validationResult();
+        $gridfieldOutput = $gridField->FieldHolder();
+        $this->assertStringNotContainsString('<p class="message ' . ValidationResult::TYPE_ERROR . '">', $gridfieldOutput);
     }
 }

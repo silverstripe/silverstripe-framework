@@ -20,7 +20,7 @@ use SilverStripe\i18n\Messages\Writer;
 /**
  * SilverStripe-variant of the "gettext" tool:
  * Parses the string content of all PHP-files and SilverStripe templates
- * for ocurrences of the _t() translation method. Also uses the {@link i18nEntityProvider}
+ * for occurrences of the _t() translation method. Also uses the {@link i18nEntityProvider}
  * interface to get dynamically defined entities by executing the
  * {@link provideI18nEntities()} method on all implementors of this interface.
  *
@@ -93,7 +93,7 @@ class i18nTextCollector
      *
      * @var array
      */
-    protected $fileExtensions = array('php', 'ss');
+    protected $fileExtensions = ['php', 'ss'];
 
     /**
      * @param $locale
@@ -158,7 +158,7 @@ class i18nTextCollector
      * i18n feature, parse the _t() calls and write the resultant files
      * in the lang folder of each module.
      *
-     * @uses DataObject->collectI18nStatics()
+     * @uses DataObject::collectI18nStatics()
      *
      * @param array $restrictToModules
      * @param bool $mergeWithExisting Merge new master strings with existing
@@ -195,7 +195,7 @@ class i18nTextCollector
      * @param bool $mergeWithExisting
      * @return array
      */
-    public function collect($restrictToModules = array(), $mergeWithExisting = false)
+    public function collect($restrictToModules = [], $mergeWithExisting = false)
     {
         $entitiesByModule = $this->getEntitiesByModule();
 
@@ -213,9 +213,9 @@ class i18nTextCollector
             $modules = array_filter(array_map(function ($name) {
                 $module = ModuleLoader::inst()->getManifest()->getModule($name);
                 return $module ? $module->getName() : null;
-            }, $restrictToModules));
+            }, $restrictToModules ?? []));
             // Remove modules
-            foreach (array_diff(array_keys($entitiesByModule), $modules) as $module) {
+            foreach (array_diff(array_keys($entitiesByModule ?? []), $modules) as $module) {
                 unset($entitiesByModule[$module]);
             }
         }
@@ -257,18 +257,18 @@ class i18nTextCollector
      */
     protected function getConflicts($entitiesByModule)
     {
-        $modules = array_keys($entitiesByModule);
-        $allConflicts = array();
+        $modules = array_keys($entitiesByModule ?? []);
+        $allConflicts = [];
         // bubble-compare each group of modules
-        for ($i = 0; $i < count($modules) - 1; $i++) {
-            $left = array_keys($entitiesByModule[$modules[$i]]);
-            for ($j = $i+1; $j < count($modules); $j++) {
-                $right = array_keys($entitiesByModule[$modules[$j]]);
-                $conflicts = array_intersect($left, $right);
+        for ($i = 0; $i < count($modules ?? []) - 1; $i++) {
+            $left = array_keys($entitiesByModule[$modules[$i]] ?? []);
+            for ($j = $i+1; $j < count($modules ?? []); $j++) {
+                $right = array_keys($entitiesByModule[$modules[$j]] ?? []);
+                $conflicts = array_intersect($left ?? [], $right);
                 $allConflicts = array_merge($allConflicts, $conflicts);
             }
         }
-        return array_unique($allConflicts);
+        return array_unique($allConflicts ?? []);
     }
 
     /**
@@ -287,8 +287,8 @@ class i18nTextCollector
     protected function getBestModuleForKey($entitiesByModule, $key)
     {
         // Check classes
-        $class = current(explode('.', $key));
-        if (array_key_exists($class, $this->classModuleCache)) {
+        $class = current(explode('.', $key ?? ''));
+        if (array_key_exists($class, $this->classModuleCache ?? [])) {
             return $this->classModuleCache[$class];
         }
         $owner = $this->findModuleForClass($class);
@@ -307,7 +307,7 @@ class i18nTextCollector
         );
 
         // Fall back to framework then cms modules
-        foreach (array('framework', 'cms') as $module) {
+        foreach (['framework', 'cms'] as $module) {
             if (isset($entitiesByModule[$module][$key])) {
                 $this->classModuleCache[$class] = $module;
                 return $module;
@@ -337,23 +337,23 @@ class i18nTextCollector
         }
 
         // If we can't find a class, see if it needs to be fully qualified
-        if (strpos($class, '\\') !== false) {
+        if (strpos($class ?? '', '\\') !== false) {
             return null;
         }
 
         // Find FQN that ends with $class
         $classes = preg_grep(
-            '/'.preg_quote("\\{$class}", '\/').'$/i',
-            ClassLoader::inst()->getManifest()->getClassNames()
+            '/' . preg_quote("\\{$class}", '\/') . '$/i',
+            ClassLoader::inst()->getManifest()->getClassNames() ?? []
         );
 
         // Find all modules for candidate classes
         $modules = array_unique(array_map(function ($class) {
             $module = ClassLoader::inst()->getManifest()->getOwnerModule($class);
             return $module ? $module->getName() : null;
-        }, $classes));
+        }, $classes ?? []));
 
-        if (count($modules) === 1) {
+        if (count($modules ?? []) === 1) {
             return reset($modules);
         }
 
@@ -372,14 +372,15 @@ class i18nTextCollector
         // For each module do a simple merge of the default yml with these strings
         foreach ($entitiesByModule as $module => $messages) {
             // Load existing localisations
-            $masterFile = "{$this->basePath}/{$module}/lang/{$this->defaultLocale}.yml";
+            $masterFile = ModuleLoader::inst()->getManifest()->getModule($module)->getPath() .
+                DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $this->defaultLocale . '.yml';
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
             if ($existingMessages) {
                 $entitiesByModule[$module] = array_merge(
-                    $existingMessages,
-                    $messages
+                    $messages,
+                    $existingMessages
                 );
             }
         }
@@ -394,7 +395,7 @@ class i18nTextCollector
     protected function getEntitiesByModule()
     {
         // A master string tables array (one mst per module)
-        $entitiesByModule = array();
+        $entitiesByModule = [];
         $modules = ModuleLoader::inst()->getManifest()->getModules();
         foreach ($modules as $module) {
             // we store the master string tables
@@ -423,8 +424,8 @@ class i18nTextCollector
                     }
                     unset($spec['module']);
 
-                    // If only element is defalt, simplify
-                    if (count($spec) === 1 && !empty($spec['default'])) {
+                    // If only element is default, simplify
+                    if (count($spec ?? []) === 1 && !empty($spec['default'])) {
                         $spec = $spec['default'];
                     }
                 }
@@ -470,13 +471,13 @@ class i18nTextCollector
      */
     protected function processModule(Module $module)
     {
-        $entities = array();
+        $entities = [];
 
         // Search for calls in code files if these exists
         $fileList = $this->getFileListForModule($module);
         foreach ($fileList as $filePath) {
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $content = file_get_contents($filePath);
+            $extension = pathinfo($filePath ?? '', PATHINFO_EXTENSION);
+            $content = file_get_contents($filePath ?? '');
             // Filter based on extension
             if ($extension === 'php') {
                 $entities = array_merge(
@@ -510,7 +511,7 @@ class i18nTextCollector
         $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module->getRelativePath(), 'themes/') === 0) {
+        if (stripos($module->getRelativePath() ?? '', 'themes/') === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
@@ -550,7 +551,7 @@ class i18nTextCollector
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
 
-        $entities = array();
+        $entities = [];
 
         $tokens = token_get_all("<?php\n" . $content);
         $inTransFn = false;
@@ -558,7 +559,8 @@ class i18nTextCollector
         $inNamespace = false;
         $inClass = false; // after `class` but before `{`
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
-        $currentEntity = array();
+        $inSelf = false; // Tracks progress of collecting self::class
+        $currentEntity = [];
         $currentClass = []; // Class components
         $previousToken = null;
         $thisToken = null; // used to populate $previousToken on next iteration
@@ -568,6 +570,13 @@ class i18nTextCollector
             $thisToken = $token;
             if (is_array($token)) {
                 list($id, $text) = $token;
+
+                // PHP 8 namespace tokens
+                if (\defined('T_NAME_QUALIFIED') && in_array($id, [T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED])) {
+                    $inNamespace = true;
+                    $currentClass[] = $text;
+                    continue;
+                }
 
                 // Check class
                 if ($id === T_NAMESPACE) {
@@ -584,10 +593,20 @@ class i18nTextCollector
                 if ($id === T_CLASS) {
                     // Skip if previous token was '::'. E.g. 'Object::class'
                     if (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
+                        if ($inSelf) {
+                            // Handle self::class by allowing logic further down
+                            // for __CLASS__ to handle an array of class parts
+                            $id = T_CLASS_C;
+                            $inSelf = false;
+                        } else {
+                            // Don't handle other ::class definitions. We can't determine which
+                            // class was invoked, so parent::class is not possible at this point.
+                            continue;
+                        }
+                    } else {
+                        $inClass = true;
                         continue;
                     }
-                    $inClass = true;
-                    continue;
                 }
                 if ($inClass && $id === T_STRING) {
                     $currentClass[] = $text;
@@ -614,41 +633,47 @@ class i18nTextCollector
 
                 // If inside this translation, some elements might be unreachable
                 if (in_array($id, [T_VARIABLE, T_STATIC]) ||
-                    ($id === T_STRING && in_array($text, ['self', 'static', 'parent']))
+                    ($id === T_STRING && in_array($text, ['static', 'parent']))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
                     // Should be provided by i18nEntityProvider instead
                     $inTransFn = false;
                     $inArrayClosedBy = false;
                     $inConcat = false;
-                    $currentEntity = array();
+                    $currentEntity = [];
+                    continue;
+                }
+
+                // Start collecting self::class declarations
+                if ($id === T_STRING && $text === 'self') {
+                    $inSelf = true;
                     continue;
                 }
 
                 // Check text
                 if ($id == T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
-                    if (preg_match('/^\'(?<text>.*)\'$/s', $text, $matches)) {
+                    if (preg_match('/^\'(?<text>.*)\'$/s', $text ?? '', $matches)) {
                         $text = preg_replace_callback(
                             '/\\\\([\\\\\'])/s', // only \ and '
                             function ($input) {
-                                return stripcslashes($input[0]);
+                                return stripcslashes($input[0] ?? '');
                             },
-                            $matches['text']
+                            $matches['text'] ?? ''
                         );
-                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text, $matches)) {
+                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text ?? '', $matches)) {
                         $text = preg_replace_callback(
                             '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
                             function ($input) {
-                                return stripcslashes($input[0]);
+                                return stripcslashes($input[0] ?? '');
                             },
-                            $matches['text']
+                            $matches['text'] ?? ''
                         );
                     } else {
-                        throw new LogicException("Invalid string escape: " .$text);
+                        throw new LogicException("Invalid string escape: " . $text);
                     }
                 } elseif ($id === T_CLASS_C) {
-                    // Evaluate __CLASS__ . '.KEY' concatenation
+                    // Evaluate __CLASS__ . '.KEY' and self::class concatenation
                     $text = implode('\\', $currentClass);
                 } else {
                     continue;
@@ -729,7 +754,7 @@ class i18nTextCollector
                             trigger_error("Missing localisation default for key " . $currentEntity[0], E_USER_NOTICE);
                         }
                     }
-                    $currentEntity = array();
+                    $currentEntity = [];
                     $inArrayClosedBy = false;
                     break;
             }
@@ -754,7 +779,7 @@ class i18nTextCollector
      * @param array $parsedFiles
      * @return array $entities An array of entities representing the extracted template function calls
      */
-    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = array())
+    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = [])
     {
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
@@ -764,7 +789,7 @@ class i18nTextCollector
 
         // use the old method of getting _t() style translatable entities
         // Collect in actual template
-        if (preg_match_all('/(_t\([^\)]*?\))/ms', $content, $matches)) {
+        if (preg_match_all('/(_t\([^\)]*?\))/ms', $content ?? '', $matches)) {
             foreach ($matches[1] as $match) {
                 $entities = array_merge($entities, $this->collectFromCode($match, $fileName, $module));
             }
@@ -783,7 +808,7 @@ class i18nTextCollector
      * Allows classes which implement i18nEntityProvider to provide
      * additional translation strings.
      *
-     * Not all classes can be instanciated without mandatory arguments,
+     * Not all classes can be instantiated without mandatory arguments,
      * so entity collection doesn't work for all SilverStripe classes currently
      *
      * @uses i18nEntityProvider
@@ -793,11 +818,11 @@ class i18nTextCollector
      */
     public function collectFromEntityProviders($filePath, Module $module = null)
     {
-        $entities = array();
+        $entities = [];
         $classes = ClassInfo::classes_for_file($filePath);
         foreach ($classes as $class) {
             // Skip non-implementing classes
-            if (!class_exists($class) || !is_a($class, i18nEntityProvider::class, true)) {
+            if (!class_exists($class ?? '') || !is_a($class, i18nEntityProvider::class, true)) {
                 continue;
             }
 
@@ -813,14 +838,14 @@ class i18nTextCollector
             // Handle deprecated return syntax
             foreach ($provided as $key => $value) {
                 // Detect non-associative result for any key
-                if (is_array($value) && $value === array_values($value)) {
+                if (is_array($value) && $value === array_values($value ?? [])) {
                     Deprecation::notice('5.0', 'Non-associative translations from providei18nEntities is deprecated');
                     $entity = array_filter([
                         'default' => $value[0],
                         'comment' => isset($value[1]) ? $value[1] : null,
                         'module' => isset($value[2]) ? $value[2] : null,
                     ]);
-                    if (count($entity) === 1) {
+                    if (count($entity ?? []) === 1) {
                         $provided[$key] = $value[0];
                     } elseif ($entity) {
                         $provided[$key] = $entity;
@@ -837,7 +862,7 @@ class i18nTextCollector
     }
 
     /**
-     * Normalizes enitities with namespaces.
+     * Normalizes entities with namespaces.
      *
      * @param string $fullName
      * @param string $_namespace
@@ -846,8 +871,8 @@ class i18nTextCollector
     protected function normalizeEntity($fullName, $_namespace = null)
     {
         // split fullname into entity parts
-        $entityParts = explode('.', $fullName);
-        if (count($entityParts) > 1) {
+        $entityParts = explode('.', $fullName ?? '');
+        if (count($entityParts ?? []) > 1) {
             // templates don't have a custom namespace
             $entity = array_pop($entityParts);
             // namespace might contain dots, so we explode
@@ -862,7 +887,7 @@ class i18nTextCollector
         // and skip the processing. This is mostly used for
         // dynamically translating static properties, e.g. looping
         // through $db, which are detected by {@link collectFromEntityProviders}.
-        if ($entity && strpos('$', $entity) !== false) {
+        if ($entity && strpos('$', $entity ?? '') !== false) {
             return false;
         }
 
@@ -880,19 +905,19 @@ class i18nTextCollector
      * @param string $folderExclude Regular expression matching folder names to exclude
      * @return array $fileList An array of files
      */
-    protected function getFilesRecursive($folder, $fileList = array(), $type = null, $folderExclude = '/\/(tests)$/')
+    protected function getFilesRecursive($folder, $fileList = [], $type = null, $folderExclude = '/\/(tests)$/')
     {
         if (!$fileList) {
-            $fileList = array();
+            $fileList = [];
         }
         // Skip ignored folders
-        if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude, $folder)) {
+        if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude ?? '', $folder ?? '')) {
             return $fileList;
         }
 
-        foreach (glob($folder.'/*') as $path) {
+        foreach (glob($folder . '/*') as $path) {
             // Recurse if directory
-            if (is_dir($path)) {
+            if (is_dir($path ?? '')) {
                 $fileList = array_merge(
                     $fileList,
                     $this->getFilesRecursive($path, $fileList, $type, $folderExclude)
@@ -901,8 +926,8 @@ class i18nTextCollector
             }
 
             // Check if this extension is included
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            if (in_array($extension, $this->fileExtensions)
+            $extension = pathinfo($path ?? '', PATHINFO_EXTENSION);
+            if (in_array($extension, $this->fileExtensions ?? [])
                 && (!$type || $type === $extension)
             ) {
                 $fileList[$path] = $path;

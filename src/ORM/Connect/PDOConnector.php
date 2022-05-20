@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use PDO;
 use PDOStatement;
 use InvalidArgumentException;
@@ -10,7 +11,7 @@ use InvalidArgumentException;
 /**
  * PDO driver database connector
  */
-class PDOConnector extends DBConnector
+class PDOConnector extends DBConnector implements TransactionManager
 {
 
     /**
@@ -20,6 +21,15 @@ class PDOConnector extends DBConnector
      * @var boolean
      */
     private static $emulate_prepare = false;
+
+    /**
+     * Should we return everything as a string in order to allow transaction savepoints?
+     * This preserves the behaviour of <= 4.3, including some bugs.
+     *
+     * @config
+     * @var boolean
+     */
+    private static $legacy_types = false;
 
     /**
      * Default strong SSL cipher to be used
@@ -62,14 +72,26 @@ class PDOConnector extends DBConnector
      *
      * @var array
      */
-    protected $cachedStatements = array();
+    protected $cachedStatements = [];
+
+    /**
+     * Driver
+     * @var string
+     */
+    protected $driver = null;
+
+    /*
+     * Is a transaction currently active?
+     * @var bool
+     */
+    protected $inTransaction = false;
 
     /**
      * Flush all prepared statements
      */
     public function flushStatements()
     {
-        $this->cachedStatements = array();
+        $this->cachedStatements = [];
     }
 
     /**
@@ -77,7 +99,7 @@ class PDOConnector extends DBConnector
      * one exists for the given query
      *
      * @param string $sql
-     * @return PDOStatement
+     * @return PDOStatementHandle|false
      */
     public function getOrPrepareStatement($sql)
     {
@@ -89,14 +111,17 @@ class PDOConnector extends DBConnector
         // Generate new statement
         $statement = $this->pdoConnection->prepare(
             $sql,
-            array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+            [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
         );
 
+        // Wrap in a PDOStatementHandle, to cache column metadata
+        $statementHandle = ($statement === false) ? false : new PDOStatementHandle($statement);
+
         // Only cache select statements
-        if (preg_match('/^(\s*)select\b/i', $sql)) {
-            $this->cachedStatements[$sql] = $statement;
+        if (preg_match('/^(\s*)select\b/i', $sql ?? '')) {
+            $this->cachedStatements[$sql] = $statementHandle;
         }
-        return $statement;
+        return $statementHandle;
     }
 
     /**
@@ -106,18 +131,22 @@ class PDOConnector extends DBConnector
      */
     public static function is_emulate_prepare()
     {
-        return Config::inst()->get('SilverStripe\ORM\Connect\PDOConnector', 'emulate_prepare');
+        return self::config()->get('emulate_prepare');
     }
 
     public function connect($parameters, $selectDB = false)
     {
+        Deprecation::notice('4.5', 'Use native database drivers in favour of PDO. '
+            . 'https://github.com/silverstripe/silverstripe-framework/issues/8598');
+
         $this->flushStatements();
 
-        // Build DSN string
         // Note that we don't select the database here until explicitly
         // requested via selectDatabase
-        $driver = $parameters['driver'] . ":";
-        $dsn = array();
+        $this->driver = $parameters['driver'];
+
+        // Build DSN string
+        $dsn = [];
 
         // Typically this is false, but some drivers will request this
         if ($selectDB) {
@@ -159,11 +188,11 @@ class PDOConnector extends DBConnector
         }
 
         // Connection charset and collation
-        $connCharset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_charset');
-        $connCollation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_collation');
+        $connCharset = Config::inst()->get(MySQLDatabase::class, 'connection_charset');
+        $connCollation = Config::inst()->get(MySQLDatabase::class, 'connection_collation');
 
         // Set charset if given and not null. Can explicitly set to empty string to omit
-        if ($parameters['driver'] !== 'sqlsrv') {
+        if (!in_array($parameters['driver'], ['sqlsrv', 'pgsql'])) {
             $charset = isset($parameters['charset'])
                     ? $parameters['charset']
                     : $connCharset;
@@ -176,30 +205,45 @@ class PDOConnector extends DBConnector
         if (!isset($charset)) {
             $charset = $connCharset;
         }
-        $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation
-        );
+
+        $options = [];
+        if ($parameters['driver'] === 'mysql') {
+            $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation;
+        }
 
         // Set SSL options if they are defined
-        if (array_key_exists('ssl_key', $parameters) &&
-            array_key_exists('ssl_cert', $parameters)
+        if (array_key_exists('ssl_key', $parameters ?? []) &&
+            array_key_exists('ssl_cert', $parameters ?? [])
         ) {
             $options[PDO::MYSQL_ATTR_SSL_KEY] = $parameters['ssl_key'];
             $options[PDO::MYSQL_ATTR_SSL_CERT] = $parameters['ssl_cert'];
-            if (array_key_exists('ssl_ca', $parameters)) {
+            if (array_key_exists('ssl_ca', $parameters ?? [])) {
                 $options[PDO::MYSQL_ATTR_SSL_CA] = $parameters['ssl_ca'];
             }
             // use default cipher if not provided
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = array_key_exists('ssl_cipher', $parameters) ? $parameters['ssl_cipher'] : self::config()->get('ssl_cipher_default');
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] =
+                array_key_exists('ssl_cipher', $parameters ?? []) ?
+                $parameters['ssl_cipher'] :
+                self::config()->get('ssl_cipher_default');
         }
 
-        if (self::is_emulate_prepare()) {
+        if (static::config()->get('legacy_types')) {
+            $options[PDO::ATTR_STRINGIFY_FETCHES] = true;
             $options[PDO::ATTR_EMULATE_PREPARES] = true;
+        } else {
+            // Set emulate prepares (unless null / default)
+            $isEmulatePrepares = self::is_emulate_prepare();
+            if (isset($isEmulatePrepares)) {
+                $options[PDO::ATTR_EMULATE_PREPARES] = (bool)$isEmulatePrepares;
+            }
+
+            // Disable stringified fetches
+            $options[PDO::ATTR_STRINGIFY_FETCHES] = false;
         }
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
-            $driver.implode(';', $dsn),
+            $this->driver . ':' . implode(';', $dsn),
             empty($parameters['username']) ? '' : $parameters['username'],
             empty($parameters['password']) ? '' : $parameters['password'],
             $options
@@ -209,6 +253,18 @@ class PDOConnector extends DBConnector
         if ($this->pdoConnection && $selectDB && !empty($parameters['database'])) {
             $this->databaseName = $parameters['database'];
         }
+    }
+
+
+    /**
+     * Return the driver for this connector
+     * E.g. 'mysql', 'sqlsrv', 'pgsql'
+     *
+     * @return string
+     */
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     public function getVersion()
@@ -222,7 +278,7 @@ class PDOConnector extends DBConnector
 
         // Since the PDO library quotes the value, we should remove this to maintain
         // consistency with MySQLDatabase::escapeString
-        if (preg_match('/^\'(?<value>.*)\'$/', $value, $matches)) {
+        if (preg_match('/^\'(?<value>.*)\'$/', $value ?? '', $matches)) {
             $value = $matches['value'];
         }
         return $value;
@@ -282,7 +338,11 @@ class PDOConnector extends DBConnector
         $statement = $this->pdoConnection->query($sql);
 
         // Generate results
-        return $this->prepareResults($statement, $errorLevel, $sql);
+        if ($statement === false) {
+            $this->databaseError($this->getLastError(), $errorLevel, $sql);
+        } else {
+            return $this->prepareResults(new PDOStatementHandle($statement), $errorLevel, $sql);
+        }
     }
 
     /**
@@ -323,7 +383,8 @@ class PDOConnector extends DBConnector
     public function bindParameters(PDOStatement $statement, $parameters)
     {
         // Bind all parameters
-        for ($index = 0; $index < count($parameters); $index++) {
+        $parameterCount = count($parameters ?? []);
+        for ($index = 0; $index < $parameterCount; $index++) {
             $value = $parameters[$index];
             $phpType = gettype($value);
 
@@ -336,7 +397,7 @@ class PDOConnector extends DBConnector
             // Check type of parameter
             $type = $this->getPDOParamType($phpType);
             if ($type === PDO::PARAM_STR) {
-                $value = strval($value);
+                $value = (string) $value;
             }
 
             // Bind this value
@@ -348,53 +409,49 @@ class PDOConnector extends DBConnector
     {
         $this->beforeQuery($sql);
 
-        // Prepare statement
-        $statement = $this->getOrPrepareStatement($sql);
+        // Fetch cached statement, or create it
+        $statementHandle = $this->getOrPrepareStatement($sql);
 
-        // Bind and invoke statement safely
-        if ($statement) {
-            $this->bindParameters($statement, $parameters);
-            $statement->execute($parameters);
+        // Error handling
+        if ($statementHandle === false) {
+            $this->databaseError($this->getLastError(), $errorLevel, $sql, $this->parameterValues($parameters));
+            return null;
         }
 
+        // Bind parameters
+        $this->bindParameters($statementHandle->getPDOStatement(), $parameters);
+        $statementHandle->execute($parameters);
+
         // Generate results
-        return $this->prepareResults($statement, $errorLevel, $sql);
+        return $this->prepareResults($statementHandle, $errorLevel, $sql);
     }
 
     /**
      * Given a PDOStatement that has just been executed, generate results
      * and report any errors
      *
-     * @param PDOStatement $statement
+     * @param PDOStatementHandle $statement
      * @param int $errorLevel
      * @param string $sql
      * @param array $parameters
      * @return PDOQuery
      */
-    protected function prepareResults($statement, $errorLevel, $sql, $parameters = array())
+    protected function prepareResults(PDOStatementHandle $statement, $errorLevel, $sql, $parameters = [])
     {
 
-        // Record row-count and errors of last statement
+        // Catch error
         if ($this->hasError($statement)) {
             $this->lastStatementError = $statement->errorInfo();
-        } elseif ($statement) {
-            // Count and return results
-            $this->rowCount = $statement->rowCount();
-            return new PDOQuery($statement);
-        }
-
-        // Ensure statement is closed
-        if ($statement) {
             $statement->closeCursor();
-            unset($statement);
+
+            $this->databaseError($this->getLastError(), $errorLevel, $sql, $this->parameterValues($parameters));
+
+            return null;
         }
 
-        // Report any errors
-        if ($parameters) {
-            $parameters = $this->parameterValues($parameters);
-        }
-        $this->databaseError($this->getLastError(), $errorLevel, $sql, $parameters);
-        return null;
+        // Count and return results
+        $this->rowCount = $statement->rowCount();
+        return new PDOQuery($statement);
     }
 
     /**
@@ -437,7 +494,7 @@ class PDOConnector extends DBConnector
 
     public function getGeneratedID($table)
     {
-        return $this->pdoConnection->lastInsertId();
+        return (int) $this->pdoConnection->lastInsertId();
     }
 
     public function affectedRows()
@@ -465,5 +522,61 @@ class PDOConnector extends DBConnector
     public function isActive()
     {
         return $this->databaseName && $this->pdoConnection;
+    }
+
+    public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
+    {
+        $this->inTransaction = true;
+
+        if ($transactionMode) {
+            $this->query("SET TRANSACTION $transactionMode");
+        }
+
+        if ($this->pdoConnection->beginTransaction()) {
+            if ($sessionCharacteristics) {
+                $this->query("SET SESSION CHARACTERISTICS AS TRANSACTION $sessionCharacteristics");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function transactionEnd()
+    {
+        $this->inTransaction = false;
+        return $this->pdoConnection->commit();
+    }
+
+    public function transactionRollback($savepoint = null)
+    {
+        if ($savepoint) {
+            if ($this->supportsSavepoints()) {
+                $this->exec("ROLLBACK TO SAVEPOINT $savepoint");
+            } else {
+                throw new DatabaseException("Savepoints not supported on this PDO connection");
+            }
+        }
+
+        $this->inTransaction = false;
+        return $this->pdoConnection->rollBack();
+    }
+
+    public function transactionDepth()
+    {
+        return (int)$this->inTransaction;
+    }
+
+    public function transactionSavepoint($savepoint = null)
+    {
+        if ($this->supportsSavepoints()) {
+            $this->exec("SAVEPOINT $savepoint");
+        } else {
+            throw new DatabaseException("Savepoints not supported on this PDO connection");
+        }
+    }
+
+    public function supportsSavepoints()
+    {
+        return static::config()->get('legacy_types');
     }
 }

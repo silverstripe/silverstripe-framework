@@ -1,13 +1,11 @@
 en:
-  SilverStripe\Admin\LeftAndMain:
-    VersionUnknown: unknown
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit
     EDITINFO: 'Edit this file'
     REMOVE: Remove
   SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
+    CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT3: 'Change password'
     HELLO: Hi
@@ -16,11 +14,20 @@ en:
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET parameter'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'The URL is: "{url}"'
+    CONFIRMATION_NAME: 'URL is protected'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'The complete URL is: "{url}"'
+    CONFIRMATION_NAME: 'URL begins with "{path}"'
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Unknown
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
+    INFO_TITLE: 'Security Confirmation'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -34,8 +41,6 @@ en:
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -48,7 +53,7 @@ en:
     VALIDDATETIMEMINDATE: 'Your date has to be newer or matching the minimum allowed date and time ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choose)
-    CHOOSE_MODEL: '(Choose {name})'
+    SEARCH_OR_CHOOSE_MODEL: '(Search or choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Please enter an email address'
@@ -58,6 +63,7 @@ en:
     BAD_METHOD: 'This form requires a {method} submission'
     CSRF_EXPIRED_MESSAGE: 'Your session has expired. Please re-submit the form.'
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -78,6 +84,7 @@ en:
     LinkExisting: 'Link Existing'
     NewRecord: 'New {type}'
     NoItemsFound: 'No items found'
+    OpenFilter: 'Open search and filter'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
@@ -86,7 +93,6 @@ en:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Delete
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     EditPermissionsFailure: 'No permission to unlink record'
@@ -98,21 +104,30 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted {type} {name}'
     Save: Save
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    Saved: 'Saved {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'It seems you don''t have the necessary permissions to edit "{ObjectTitle}"'
+    NEW: 'Add new record'
+    NEXT: 'Go to next record'
+    PREVIOUS: 'Go to previous record'
+    ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Search "{name}"'
+    SearchFormFaliure: 'No search form could be generated'
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Cannot remove yourself from this group, you will lose admin rights'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: of
     Page: Page
     View: View
-  SilverStripe\Forms\GridField\GridFieldVersionedState:
-    ADDEDTODRAFTHELP: 'Item has not been published yet'
-    ADDEDTODRAFTSHORT: Draft
-    ARCHIVEDPAGEHELP: 'Item is removed from draft and live'
-    ARCHIVEDPAGESHORT: Archived
-    MODIFIEDONDRAFTHELP: 'Item has unpublished changes'
-    MODIFIEDONDRAFTSHORT: Modified
-    ONLIVEONLYSHORT: 'On live only'
-    ONLIVEONLYSHORTHELP: 'Item is published, but has been deleted from draft'
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Best fit'
+    ORIGINAL: Original
+    PIXEL_WIDTH: '{width} pixels'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -123,6 +138,8 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   SilverStripe\ORM\DataObject:
@@ -159,6 +176,10 @@ en:
       other: '{count} years'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Any
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Too many related objects; fallback field in use'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Too many children ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -179,6 +200,12 @@ en:
     SUCCESS: Success
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
     SUCCESS_TITLE: 'Login successful'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: 'Run the action'
+    EMPTY_TITLE: 'Nothing to confirm'
+    REFUSE: Cancel
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Confirm potentially dangerous action'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Default Admin'
   SilverStripe\Security\Group:
@@ -205,10 +232,12 @@ en:
     RolesAddEditLink: 'Manage roles'
     SINGULARNAME: Group
     Sort: 'Sort Order'
+    ValidationIdentifierAlreadyExists: 'A Group ({group}) already exists with the same {identifier}'
     has_many_Permissions: Permissions
     many_many_Members: Members
   SilverStripe\Security\LoginAttempt:
     Email: 'Email Address'
+    EmailHashed: 'Email Address (hashed)'
     IP: 'IP Address'
     PLURALNAME: 'Login Attempts'
     PLURALS:
@@ -236,7 +265,8 @@ en:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
-    KEEPMESIGNEDIN: 'Keep me signed in'
+    KEEP_ME_SIGNED_IN: 'Keep me signed in for {count} days'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
@@ -245,13 +275,14 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
-    REMEMBERME: 'Remember me next time? (for {count} days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
+    VALIDATIONADMINLOSTACCESS: 'Cannot remove all admin groups from your profile'
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same {identifier}'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Welcome back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
     belongs_many_many_Groups: Groups
     db_Locale: 'Interface Locale'
@@ -266,6 +297,8 @@ en:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'The provided details don''t seem to be correct. Please try again.'
     NoPassword: 'There is no password on this member.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'E-mail & Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Member Passwords'
     PLURALS:
@@ -327,7 +360,9 @@ en:
     LOGOUT: 'Log out'
     LOSTPASSWORDHEADER: 'Lost Password'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">log in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDRESETSENTHEADER: 'Password reset link sent'
+    PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'There was a problem loading the media.'

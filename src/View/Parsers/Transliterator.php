@@ -50,7 +50,7 @@ class Transliterator
      */
     protected function useStrTr($source)
     {
-        $table = array(
+        $table = [
             'Š'=>'S', 'š'=>'s', 'Đ'=>'Dj', 'đ'=>'dj', 'Ž'=>'Z', 'ž'=>'z', 'Č'=>'C', 'č'=>'c', 'Ć'=>'C', 'ć'=>'c',
             'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'Ae', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
             'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O',
@@ -80,9 +80,9 @@ class Transliterator
             'σ'=>'s', 'ς'=>'s', 'Σ'=>'S', 'τ'=>'t', 'Τ'=>'T', 'υ'=>'y', 'Υ'=>'Y', 'ύ'=>'y', 'Ύ'=>'Y', 'ὐ'=>'y',
             'φ'=>'f', 'ϕ'=>'f', 'Φ'=>'F', 'χ'=>'ch', 'Χ'=>'CH', 'ψ'=>'ps', 'Ψ'=>'PS', 'ξ'=>'x', 'Ξ'=>'X',
             'ω'=>'w', 'Ω'=>'W', 'ώ'=>'o', 'Ώ'=>'O', 'ὠ'=>'o', 'Ὠ'=>'O',
-        );
+        ];
 
-        return strtr($source, $table);
+        return strtr($source ?? '', $table ?? '');
     }
 
     /**
@@ -93,6 +93,6 @@ class Transliterator
      */
     protected function useIconv($source)
     {
-        return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source);
+        return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source ?? '');
     }
 }

@@ -9,42 +9,42 @@ use SilverStripe\ORM\DataObject;
 /**
  * @see GridField
  */
-class GridFieldDataColumns implements GridField_ColumnProvider
+class GridFieldDataColumns extends AbstractGridFieldComponent implements GridField_ColumnProvider
 {
 
     /**
      * @var array
      */
-    public $fieldCasting = array();
+    public $fieldCasting = [];
 
     /**
      * @var array
      */
-    public $fieldFormatting = array();
+    public $fieldFormatting = [];
 
     /**
      * This is the columns that will be visible
      *
      * @var array
      */
-    protected $displayFields = array();
+    protected $displayFields = [];
 
     /**
      * Modify the list of columns displayed in the table.
      * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
      *
      * @param GridField $gridField
-     * @param array - List reference of all column names.
+     * @param array $columns List reference of all column names. (by reference)
      */
     public function augmentColumns($gridField, &$columns)
     {
-        $baseColumns = array_keys($this->getDisplayFields($gridField));
+        $baseColumns = array_keys($this->getDisplayFields($gridField) ?? []);
 
         foreach ($baseColumns as $col) {
             $columns[] = $col;
         }
 
-        $columns = array_unique($columns);
+        $columns = array_unique($columns ?? []);
     }
 
     /**
@@ -55,7 +55,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     public function getColumnsHandled($gridField)
     {
-        return array_keys($this->getDisplayFields($gridField));
+        return array_keys($this->getDisplayFields($gridField) ?? []);
     }
 
     /**
@@ -154,12 +154,12 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     {
         // Find the data column for the given named column
         $columns = $this->getDisplayFields($gridField);
-        $columnInfo = $columns[$columnName];
+        $columnInfo = array_key_exists($columnName, $columns ?? []) ? $columns[$columnName] : null;
 
         // Allow callbacks
         if (is_array($columnInfo) && isset($columnInfo['callback'])) {
             $method = $columnInfo['callback'];
-            $value = $method($record);
+            $value = $method($record, $columnName, $gridField);
 
         // This supports simple FieldName syntax
         } else {
@@ -186,7 +186,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName));
+        return ['class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName ?? '')];
     }
 
     /**
@@ -208,9 +208,9 @@ class GridFieldDataColumns implements GridField_ColumnProvider
             $title = $columns[$column]['title'];
         }
 
-        return array(
+        return [
             'title' => $title,
-        );
+        ];
     }
 
     /**
@@ -222,12 +222,12 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     protected function getValueFromRelation($record, $columnName)
     {
-        $fieldNameParts = explode('.', $columnName);
+        $fieldNameParts = explode('.', $columnName ?? '');
         $tmpItem = clone($record);
-        for ($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
+        for ($idx = 0; $idx < sizeof($fieldNameParts ?? []); $idx++) {
             $methodName = $fieldNameParts[$idx];
             // Last mmethod call from $columnName return what that method is returning
-            if ($idx == sizeof($fieldNameParts) - 1) {
+            if ($idx == sizeof($fieldNameParts ?? []) - 1) {
                 return $tmpItem->XML_val($methodName);
             }
             // else get the object from this $methodName
@@ -247,20 +247,20 @@ class GridFieldDataColumns implements GridField_ColumnProvider
     protected function castValue($gridField, $fieldName, $value)
     {
         // If a fieldCasting is specified, we assume the result is safe
-        if (array_key_exists($fieldName, $this->fieldCasting)) {
+        if (array_key_exists($fieldName, $this->fieldCasting ?? [])) {
             $value = $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
         } elseif (is_object($value)) {
             // If the value is an object, we do one of two things
             if (method_exists($value, 'Nice')) {
                 // If it has a "Nice" method, call that & make sure the result is safe
-                $value = Convert::raw2xml($value->Nice());
+                $value = nl2br(Convert::raw2xml($value->Nice()) ?? '');
             } else {
                 // Otherwise call forTemplate - the result of this should already be safe
                 $value = $value->forTemplate();
             }
         } else {
             // Otherwise, just treat as a text string & make sure the result is safe
-            $value = Convert::raw2xml($value);
+            $value = nl2br(Convert::raw2xml($value) ?? '');
         }
 
         return $value;
@@ -276,17 +276,17 @@ class GridFieldDataColumns implements GridField_ColumnProvider
      */
     protected function formatValue($gridField, $item, $fieldName, $value)
     {
-        if (!array_key_exists($fieldName, $this->fieldFormatting)) {
+        if (!array_key_exists($fieldName, $this->fieldFormatting ?? [])) {
             return $value;
         }
 
         $spec = $this->fieldFormatting[$fieldName];
-        if (is_callable($spec)) {
+        if (!is_string($spec) && is_callable($spec)) {
             return $spec($value, $item);
         } else {
-            $format = str_replace('$value', "__VAL__", $spec);
-            $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
-            $format = str_replace('__VAL__', '$value', $format);
+            $format = str_replace('$value', "__VAL__", $spec ?? '');
+            $format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format ?? '');
+            $format = str_replace('__VAL__', '$value', $format ?? '');
             eval('$value = "' . $format . '";');
             return $value;
         }
@@ -306,7 +306,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider
         }
 
         foreach ($escape as $search => $replace) {
-            $value = str_replace($search, $replace, $value);
+            $value = str_replace($search ?? '', $replace ?? '', $value ?? '');
         }
         return $value;
     }

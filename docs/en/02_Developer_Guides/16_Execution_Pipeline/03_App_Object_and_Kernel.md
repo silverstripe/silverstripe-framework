@@ -1,17 +1,22 @@
+---
 title: App Object and Kernel
-summary: Provides bootstrapping and entrypoint to the SilverStripe application
+summary: Provides bootstrapping and entrypoint to the Silverstripe CMS application
+---
 
 # Kernel
 
 The [Kernel](api:SilverStripe\Core\Kernel) object provides a container for the various manifests, services, and components
-which a SilverStripe application must have available in order for requests to be executed.
+which a Silverstripe CMS application must have available in order for requests to be executed.
 
 This can be accessed in user code via Injector
 
 
 ```php
-    $kernel = Injector::inst()->get(Kernel::class);
-    echo "Current environment: " . $kernel->getEnvironment();
+use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Injector\Injector;
+
+$kernel = Injector::inst()->get(Kernel::class);
+echo "Current environment: " . $kernel->getEnvironment();
 ```
 
 ## Kernel services
@@ -39,16 +44,16 @@ you should call `->activate()` on the kernel instance you would like to unnest t
 
 
 ```php
-    $oldKernel = Injector::inst()->get(Kernel::class);
-    try {
-        // Injector::inst() / Config::inst() are automatically updated to the new kernel
-        $newKernel = $oldKernel->nest();
-        Config::modify()->set(Director::class, 'alternate_base_url', '/myurl');
-    }
-    finally {
-        // Any changes to config (or other application state) have now been reverted
-        $oldKernel->activate();
-    }
+$oldKernel = Injector::inst()->get(Kernel::class);
+try {
+    // Injector::inst() / Config::inst() are automatically updated to the new kernel
+    $newKernel = $oldKernel->nest();
+    Config::modify()->set(Director::class, 'alternate_base_url', '/myurl');
+}
+finally {
+    // Any changes to config (or other application state) have now been reverted
+    $oldKernel->activate();
+}
 ```
 
 # Application
@@ -70,7 +75,6 @@ You can customise it as required.
 
 
 ```php
-<?php
 
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequestBuilder;
@@ -92,11 +96,11 @@ $response->output();
 
 ## Custom application actions
 
-If it's necessary to boot a SilverStripe kernel and application, but not do any
+If it's necessary to boot a Silverstripe CMS kernel and application, but not do any
 request processing, you can use the Application::execute() method to invoke a custom
 application entry point.
 
-This may be necessary if using SilverStripe code within the context of a non-SilverStripe
+This may be necessary if using Silverstripe CMS code within the context of a non-Silverstripe CMS
 application.
 
 For example, the below will setup a request, session, and current controller,
@@ -105,19 +109,19 @@ routing.
 
 
 ```php
-    $request = CLIRequestBuilder::createFromEnvironment();
-    $kernel = new TestKernel(BASE_PATH);
-    $app = new HTTPApplication($kernel);
-    $app->execute($request, function (HTTPRequest $request) {
-        // Start session and execute
-        $request->getSession()->init();
-        
-        // Set dummy controller
-        $controller = Controller::create();
-        $controller->setRequest($request);
-        $controller->pushCurrent();
-        $controller->doInit();
-    }, true);
+$request = CLIRequestBuilder::createFromEnvironment();
+$kernel = new TestKernel(BASE_PATH);
+$app = new HTTPApplication($kernel);
+$app->execute($request, function (HTTPRequest $request) {
+    // Start session and execute
+    $request->getSession()->init();
+    
+    // Set dummy controller
+    $controller = Controller::create();
+    $controller->setRequest($request);
+    $controller->pushCurrent();
+    $controller->doInit();
+}, true);
 ```
 
  

@@ -1,0 +1,11 @@
+'SilverStripe\Security\Group':
+  usergroup:
+    Title: usergroup
+    Code: usergroup
+'SilverStripe\Security\Member':
+  test:
+    FirstName: Test
+    Surname: User
+    Email: testuser@example.com
+    Password: 1nitialPassword
+    Groups: '=>SilverStripe\Security\Group.usergroup'

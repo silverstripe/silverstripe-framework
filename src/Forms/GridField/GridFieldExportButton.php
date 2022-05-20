@@ -2,16 +2,18 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use League\Csv\Writer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
  */
-class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+class GridFieldExportButton extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-
     /**
      * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
      * Note that titles are only used when {@link $csvHasHeader} is set to TRUE.
@@ -39,6 +41,15 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
     protected $targetFragment;
 
     /**
+     * Set to true to disable XLS sanitisation
+     * [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
+     *
+     * @config
+     * @var bool
+     */
+    private static $xls_export_disabled = false;
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
@@ -52,6 +63,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Place the export button in a <p> tag below the field
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getHTMLFragments($gridField)
@@ -65,20 +77,21 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
         );
         $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
-        return array(
-            $this->targetFragment => $button->Field()
-        );
+        return [
+            $this->targetFragment => $button->Field(),
+        ];
     }
 
     /**
      * export is an action button
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getActions($gridField)
     {
-        return array('export');
+        return ['export'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
@@ -93,13 +106,14 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * it is also a URL
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'export' => 'handleExport',
-        );
+        ];
     }
 
     /**
@@ -107,6 +121,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      *
      * @param GridField $gridField
      * @param HTTPRequest $request
+     *
      * @return HTTPResponse
      */
     public function handleExport($gridField, $request = null)
@@ -146,31 +161,50 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
-     * @return array
+     *
+     * @return string
      */
     public function generateExportFileData($gridField)
     {
         $csvColumns = $this->getExportColumnsForGridField($gridField);
-        $fileData = array();
+
+        $csvWriter = Writer::createFromFileObject(new \SplTempFileObject());
+        $csvWriter->setDelimiter($this->getCsvSeparator());
+        $csvWriter->setEnclosure($this->getCsvEnclosure());
+        $csvWriter->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
+        $csvWriter->setOutputBOM(Writer::BOM_UTF8);
+
+        if (!Config::inst()->get(get_class($this), 'xls_export_disabled')) {
+            $csvWriter->addFormatter(function (array $row) {
+                foreach ($row as &$item) {
+                    // [SS-2017-007] Sanitise XLS executable column values with a leading tab
+                    if (preg_match('/^[-@=+].*/', $item ?? '')) {
+                        $item = "\t" . $item;
+                    }
+                }
+                return $row;
+            });
+        }
 
         if ($this->csvHasHeader) {
-            $headers = array();
+            $headers = [];
 
             // determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
             // source name as the header instead
             foreach ($csvColumns as $columnSource => $columnHeader) {
-                if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
+                if (is_array($columnHeader) && array_key_exists('title', $columnHeader ?? [])) {
                     $headers[] = $columnHeader['title'];
                 } else {
                     $headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
                 }
             }
 
-            $fileData[] = $headers;
+            $csvWriter->insertOne($headers);
+            unset($headers);
         }
 
         //Remove GridFieldPaginator as we're going to export the entire list.
-        $gridField->getConfig()->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldPaginator');
+        $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
 
         $items = $gridField->getManipulatedList();
 
@@ -181,10 +215,23 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
+        /** @var GridFieldDataColumns|null $gridFieldColumnsComponent */
+        $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $columnsHandled = ($gridFieldColumnsComponent)
+            ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
+            : [];
+
+        // Remove limit as the list may be paginated, we want the full list for the export
+        $items = $items->limit(null);
+        // Use Generator in applicable cases to reduce memory consumption
+        $items = $items instanceof DataList
+            ? $items->getGenerator()
+            : $items;
+
         /** @var DataObject $item */
-        foreach ($items->limit(null) as $item) {
+        foreach ($items as $item) {
             if (!$item->hasMethod('canView') || $item->canView()) {
-                $columnData = array();
+                $columnData = [];
 
                 foreach ($csvColumns as $columnSource => $columnHeader) {
                     if (!is_string($columnHeader) && is_callable($columnHeader)) {
@@ -195,6 +242,10 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                         }
 
                         $value = $columnHeader($relObj);
+                    } elseif ($gridFieldColumnsComponent && in_array($columnSource, $columnsHandled ?? [])) {
+                        $value = strip_tags(
+                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource) ?? ''
+                        );
                     } else {
                         $value = $gridField->getDataFieldValue($item, $columnSource);
 
@@ -206,7 +257,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
                     $columnData[] = $value;
                 }
 
-                $fileData[] = $columnData;
+                $csvWriter->insertOne($columnData);
             }
 
             if ($item->hasMethod('destroy')) {
@@ -214,13 +265,11 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             }
         }
 
-        // Convert the $fileData array into csv by capturing fputcsv's output
-        $csv = fopen('php://temp', 'r+');
-        foreach ($fileData as $line) {
-            fputcsv($csv, $line, $this->csvSeparator, $this->csvEnclosure);
+        if (method_exists($csvWriter, 'getContent')) {
+            return $csvWriter->getContent();
         }
-        rewind($csv);
-        return stream_get_contents($csv);
+
+        return (string)$csvWriter;
     }
 
     /**
@@ -233,6 +282,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param array $cols
+     *
      * @return $this
      */
     public function setExportColumns($cols)
@@ -251,6 +301,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param string $separator
+     *
      * @return $this
      */
     public function setCsvSeparator($separator)
@@ -269,6 +320,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param string $enclosure
+     *
      * @return $this
      */
     public function setCsvEnclosure($enclosure)
@@ -287,6 +339,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
     /**
      * @param boolean $bool
+     *
      * @return $this
      */
     public function setCsvHasHeader($bool)

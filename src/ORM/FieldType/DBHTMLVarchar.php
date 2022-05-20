@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
@@ -17,12 +17,12 @@ class DBHTMLVarchar extends DBVarchar
 
     private static $escape_type = 'xml';
 
-    private static $casting = array(
+    private static $casting = [
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
         "LowerCase" => "HTMLFragment",
         "UpperCase" => "HTMLFragment",
-    );
+    ];
 
     /**
      * Enable shortcode parsing on this field
@@ -69,9 +69,9 @@ class DBHTMLVarchar extends DBVarchar
      *
      * @return $this
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
-        if (array_key_exists("shortcodes", $options)) {
+        if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
         }
 
@@ -88,9 +88,8 @@ class DBHTMLVarchar extends DBVarchar
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**
@@ -102,7 +101,7 @@ class DBHTMLVarchar extends DBVarchar
     {
         return sprintf(
             '<![CDATA[%s]]>',
-            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW())
+            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW() ?? '')
         );
     }
 
@@ -116,20 +115,20 @@ class DBHTMLVarchar extends DBVarchar
     public function Plain()
     {
         // Strip out HTML
-        $text = strip_tags($this->RAW());
+        $text = strip_tags($this->RAW() ?? '');
 
         // Convert back to plain text
-        return trim(Convert::xml2raw($text));
+        return trim(Convert::xml2raw($text) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new HTMLEditorField($this->name, $title, 1);
+        return HTMLEditorField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)
     {
-        return new TextField($this->name, $title);
+        return TextField::create($this->name, $title);
     }
 
     public function getSchemaValue()
@@ -147,6 +146,6 @@ class DBHTMLVarchar extends DBVarchar
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
-        return $value || (is_string($value) && strlen($value));
+        return $value || (is_string($value) && strlen($value ?? ''));
     }
 }

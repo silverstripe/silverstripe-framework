@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use Exception;
 use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Forms\DatetimeField;
-use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
-use Exception;
-use InvalidArgumentException;
 
 /**
  * Represents a date-time field.
@@ -47,6 +46,46 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * with a "T" separator between date and time (W3C standard, e.g. for HTML5 datetime-local fields).
      */
     const ISO_DATETIME_NORMALISED = 'y-MM-dd\'T\'HH:mm:ss';
+
+    /**
+     * Flag idicating if this field is considered immutable
+     * when this is enabled setting the value of this field will return a new field instance
+     * instead updatin the old one
+     *
+     * @var bool
+     */
+    protected $immutable = false;
+
+    /**
+     * @param bool $immutable
+     * @return $this
+     */
+    public function setImmutable(bool $immutable): self
+    {
+        $this->immutable = $immutable;
+
+        return $this;
+    }
+
+    public function setValue($value, $record = null, $markChanged = true)
+    {
+        if ($this->immutable) {
+            // This field is set as immutable so we have to create a new field instance
+            // instead of just updating the value
+            $field = clone $this;
+
+            return $field
+                // This field will inherit the immutable status but we have to disable it before setting the value
+                // to avoid recursion
+                ->setImmutable(false)
+                // Update the value so the new field contains the desired value
+                ->setValue($value, $record, $markChanged)
+                // Return the immutable flag to the correct state
+                ->setImmutable(true);
+        }
+
+        return parent::setValue($value, $record, $markChanged);
+    }
 
     /**
      * Returns the standard localised date
@@ -94,7 +133,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * Return a date and time formatted as per a CMS user's settings.
      *
      * @param Member $member
-     * @return boolean | string A time and date pair formatted as per user-defined settings.
+     * @return boolean|string A time and date pair formatted as per user-defined settings.
      */
     public function FormatFromSettings($member = null)
     {
@@ -111,7 +150,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         $timeFormat = $member->getTimeFormat();
 
         // Get user format
-        return $this->Format($dateFormat . ' ' . $timeFormat);
+        return $this->Format($dateFormat . ' ' . $timeFormat, $member->getLocale());
     }
 
     public function requireField()
@@ -135,22 +174,23 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function URLDatetime()
     {
-        return rawurlencode($this->Format(self::ISO_DATETIME));
+        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
         $dateTimeFormat = $field->getDatetimeFormat();
+        $locale = $field->getLocale();
 
         // Set date formatting hints and example
-        $date = static::now()->Format($dateTimeFormat);
+        $date = static::now()->Format($dateTimeFormat, $locale);
         $field
             ->setDescription(_t(
                 'SilverStripe\\Forms\\FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
-                [ 'format' => $date ]
+                ['format' => $date]
             ))
             ->setAttribute('placeholder', $dateTimeFormat);
 
@@ -170,13 +210,11 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function now()
     {
+        $time = self::$mock_now ? self::$mock_now->Value : time();
+
         /** @var DBDatetime $now */
-        $now = null;
-        if (self::$mock_now) {
-            $now = self::$mock_now;
-        } else {
-            $now = DBField::create_field('Datetime', time());
-        }
+        $now = DBField::create_field('Datetime', $time);
+
         return $now;
     }
 
@@ -209,11 +247,32 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         self::$mock_now = null;
     }
 
+    /**
+     * Run a callback with specific time, original mock value is retained after callback
+     *
+     * @param DBDatetime|string $time
+     * @param callable $callback
+     * @return mixed
+     * @throws Exception
+     */
+    public static function withFixedNow($time, $callback)
+    {
+        $original = self::$mock_now;
+
+        try {
+            self::set_mock_now($time);
+
+            return $callback();
+        } finally {
+            self::$mock_now = $original;
+        }
+    }
+
     public static function get_template_global_variables()
     {
-        return array(
-            'Now' => array('method' => 'now', 'casting' => 'Datetime'),
-        );
+        return [
+            'Now' => ['method' => 'now', 'casting' => 'Datetime'],
+        ];
     }
 
     /**
@@ -223,9 +282,41 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param int $timeLength
      * @return IntlDateFormatter
      */
-    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::MEDIUM)
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::SHORT)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return parent::getFormatter($dateLength, $timeLength);
+    }
+
+
+    /**
+     * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @param string|null $locale The current locale, or null to use default
+     * @param string|null $pattern Custom pattern to use for this, if required
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getCustomFormatter(
+        $locale = null,
+        $pattern = null,
+        $dateLength = IntlDateFormatter::MEDIUM,
+        $timeLength = IntlDateFormatter::MEDIUM
+    ) {
+        return parent::getCustomFormatter($locale, $pattern, $dateLength, $timeLength);
+    }
+
+    /**
+     * Formatter used internally
+     *
+     * @internal
+     * @return IntlDateFormatter
+     */
+    protected function getInternalFormatter()
+    {
+        $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDatetime::ISO_DATETIME);
+        $formatter->setLenient(false);
+        return $formatter;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -11,7 +12,7 @@ use SilverStripe\View\Parsers\HTMLValue;
 
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
- * are created from <textarea> tags, which are then converted with JavaScript.
+ * are created from `<textarea>` tags, which are then converted with JavaScript.
  *
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
@@ -23,13 +24,9 @@ class HTMLEditorField extends TextareaField
         'Value' => 'HTMLText',
     ];
 
-    /**
-     * Use TinyMCE's GZIP compressor
-     *
-     * @config
-     * @var bool
-     */
-    private static $use_gzip = true;
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HTML;
+
+    protected $schemaComponent = 'HtmlEditorField';
 
     /**
      * @config
@@ -179,10 +176,18 @@ class HTMLEditorField extends TextareaField
         return $this->performReadonlyTransformation();
     }
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         // Include requirements
         $this->getEditorConfig()->init();
         return parent::Field($properties);
+    }
+
+    public function getSchemaStateDefaults()
+    {
+        $stateDefaults = parent::getSchemaStateDefaults();
+        $config = $this->getEditorConfig();
+        $stateDefaults['data'] = $config->getConfigSchemaData();
+        return $stateDefaults;
     }
 }

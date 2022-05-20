@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use ReflectionClass;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
@@ -83,12 +84,12 @@ class RequestHandler extends ViewableData
      * available.
      *
      * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
-     * the named parameter of the parsed URL wil be used to determine the method name.
+     * the named parameter of the parsed URL will be used to determine the method name.
      * @config
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action' => '$Action',
-    );
+    ];
 
 
     /**
@@ -96,7 +97,7 @@ class RequestHandler extends ViewableData
      * The variable should be an array of action names. This sample shows the different values that it can contain:
      *
      * <code>
-     * array(
+     * [
      *      // someaction can be accessed by anyone, any time
      *      'someaction',
      *      // So can otheraction
@@ -104,8 +105,8 @@ class RequestHandler extends ViewableData
      *      // restrictedaction can only be people with ADMIN privilege
      *      'restrictedaction' => 'ADMIN',
      *      // complexaction can only be accessed if $this->canComplexAction() returns true
-     *      'complexaction' '->canComplexAction'
-     *  );
+     *      'complexaction' '->canComplexAction',
+     * ];
      * </code>
      *
      * Form getters count as URL actions as well, and should be included in allowed_actions.
@@ -142,7 +143,7 @@ class RequestHandler extends ViewableData
      * action will return an array of data with which to
      * customise the controller.
      *
-     * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
+     * @param HTTPRequest $request The object that is responsible for distributing URL parsing
      * @return HTTPResponse|RequestHandler|string|array
      */
     public function handleRequest(HTTPRequest $request)
@@ -177,7 +178,7 @@ class RequestHandler extends ViewableData
 
         // Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
         if ($action[0] == '$') {
-            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)));
+            $action = str_replace("-", "_", $request->latestParam(substr($action ?? '', 1)) ?? '');
         }
 
         if (!$action) {
@@ -186,16 +187,16 @@ class RequestHandler extends ViewableData
             }
             $action = "index";
         } elseif (!is_string($action)) {
-            user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+            throw new InvalidArgumentException("Non-string method name: " . var_export($action, true));
         }
 
-        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.static::class;
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         try {
             if (!$this->hasAction($action)) {
                 return $this->httpError(404, "Action '$action' isn't available $classMessage.");
             }
-            if (!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action ?? ''), ['run', 'doinit'])) {
                 return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
             }
             $result = $this->handleAction($request, $action);
@@ -266,17 +267,19 @@ class RequestHandler extends ViewableData
                             $class = static::class;
                             $latestParams = var_export($request->latestParams(), true);
                             Debug::message(
-                                "Rule '{$rule}' matched to action '{$action}' on {$class}. ".
-                                "Latest request params: {$latestParams}"
+                                "Rule '{$rule}' matched to action '{$action}' on {$class}. " . "Latest request params: {$latestParams}"
                             );
                         }
 
-                        return array('rule' => $rule, 'action' => $action);
+                        return [
+                            'rule' => $rule,
+                            'action' => $action,
+                        ];
                     }
                 }
             }
 
-            $handlerClass = get_parent_class($handlerClass);
+            $handlerClass = get_parent_class($handlerClass ?? '');
         }
         return null;
     }
@@ -289,7 +292,7 @@ class RequestHandler extends ViewableData
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
-            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL ?? ''));
         }
 
         return $link;
@@ -306,7 +309,7 @@ class RequestHandler extends ViewableData
      */
     protected function handleAction($request, $action)
     {
-        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.static::class;
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
         if (!$this->hasMethod($action)) {
             return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
@@ -348,17 +351,17 @@ class RequestHandler extends ViewableData
         }
 
         if (is_array($actions)) {
-            if (array_key_exists('*', $actions)) {
+            if (array_key_exists('*', $actions ?? [])) {
                 throw new InvalidArgumentException("Invalid allowed_action '*'");
             }
 
             // convert all keys and values to lowercase to
             // allow for easier comparison, unless it is a permission code
-            $actions = array_change_key_case($actions, CASE_LOWER);
+            $actions = array_change_key_case($actions ?? [], CASE_LOWER);
 
             foreach ($actions as $key => $value) {
                 if (is_numeric($key)) {
-                    $actions[$key] = strtolower($value);
+                    $actions[$key] = strtolower($value ?? '');
                 }
             }
 
@@ -383,9 +386,9 @@ class RequestHandler extends ViewableData
         }
 
         // Don't allow access to any non-public methods (inspect instance plus all extensions)
-        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
-            if (!method_exists($inst, $action)) {
+            if (!method_exists($inst, $action ?? '')) {
                 continue;
             }
             $r = new ReflectionClass(get_class($inst));
@@ -395,15 +398,15 @@ class RequestHandler extends ViewableData
             }
         }
 
-        $action  = strtolower($action);
+        $action  = strtolower($action ?? '');
         $actions = $this->allowedActions();
 
         // Check if the action is defined in the allowed actions of any ancestry class
         // as either a key or value. Note that if the action is numeric, then keys are not
         // searched for actions to prevent actual array keys being recognised as actions.
         if (is_array($actions)) {
-            $isKey   = !is_numeric($action) && array_key_exists($action, $actions);
-            $isValue = in_array($action, $actions, true);
+            $isKey   = !is_numeric($action) && array_key_exists($action, $actions ?? []);
+            $isValue = in_array($action, $actions ?? [], true);
             if ($isKey || $isValue) {
                 return true;
             }
@@ -411,7 +414,7 @@ class RequestHandler extends ViewableData
 
         $actionsWithoutExtra = $this->config()->get('allowed_actions', true);
         if (!is_array($actions) || !$actionsWithoutExtra) {
-            if ($action != 'doInit' && $action != 'run' && method_exists($this, $action)) {
+            if (!in_array(strtolower($action ?? ''), ['run', 'doinit']) && method_exists($this, $action ?? '')) {
                 return true;
             }
         }
@@ -427,12 +430,12 @@ class RequestHandler extends ViewableData
      */
     protected function definingClassForAction($actionOrigCasing)
     {
-        $action = strtolower($actionOrigCasing);
+        $action = strtolower($actionOrigCasing ?? '');
 
         $definingClass = null;
-        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        $insts = array_merge([$this], (array) $this->getExtensionInstances());
         foreach ($insts as $inst) {
-            if (!method_exists($inst, $action)) {
+            if (!method_exists($inst, $action ?? '')) {
                 continue;
             }
             $r = new ReflectionClass(get_class($inst));
@@ -453,7 +456,7 @@ class RequestHandler extends ViewableData
     public function checkAccessAction($action)
     {
         $actionOrigCasing = $action;
-        $action = strtolower($action);
+        $action = strtolower($action ?? '');
 
         $isAllowed = false;
         $isDefined = false;
@@ -469,22 +472,22 @@ class RequestHandler extends ViewableData
             if ($test === true || $test === 1 || $test === '1') {
                 // TRUE should always allow access
                 $isAllowed = true;
-            } elseif (substr($test, 0, 2) == '->') {
+            } elseif (substr($test ?? '', 0, 2) == '->') {
                 // Determined by custom method with "->" prefix
-                list($method, $arguments) = ClassInfo::parse_class_spec(substr($test, 2));
-                $isAllowed = call_user_func_array(array($this, $method), $arguments);
+                list($method, $arguments) = ClassInfo::parse_class_spec(substr($test ?? '', 2));
+                $isAllowed = call_user_func_array([$this, $method], $arguments ?? []);
             } else {
                 // Value is a permission code to check the current member against
                 $isAllowed = Permission::check($test);
             }
         } elseif (is_array($allowedActions)
-            && (($key = array_search($action, $allowedActions, true)) !== false)
+            && (($key = array_search($action, $allowedActions ?? [], true)) !== false)
             && is_numeric($key)
         ) {
             // Allow numeric array notation (search for array value as action instead of key)
             $isDefined = true;
             $isAllowed = true;
-        } elseif (is_array($allowedActions) && !count($allowedActions)) {
+        } elseif (is_array($allowedActions) && !count($allowedActions ?? [])) {
             // If defined as empty array, deny action
             $isAllowed = false;
         } elseif ($allowedActions === null) {
@@ -515,10 +518,10 @@ class RequestHandler extends ViewableData
         $request = $this->getRequest();
 
         // Call a handler method such as onBeforeHTTPError404
-        $this->extend("onBeforeHTTPError{$errorCode}", $request);
+        $this->extend("onBeforeHTTPError{$errorCode}", $request, $errorMessage);
 
         // Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
-        $this->extend('onBeforeHTTPError', $errorCode, $request);
+        $this->extend('onBeforeHTTPError', $errorCode, $request, $errorMessage);
 
         // Throw a new exception
         throw new HTTPResponse_Exception($errorMessage, $errorCode);
@@ -561,13 +564,16 @@ class RequestHandler extends ViewableData
         // Check configured url_segment
         $url = $this->config()->get('url_segment');
         if ($url) {
-            return Controller::join_links($url, $action, '/');
+            $link = Controller::join_links($url, $action, '/');
+
+            // Give extensions the chance to modify by reference
+            $this->extend('updateLink', $link, $action);
+            return $link;
         }
 
         // no link defined by default
         trigger_error(
-            'Request handler '.static::class. ' does not have a url_segment defined. '.
-            'Relying on this link may be an application error',
+            'Request handler ' . static::class . ' does not have a url_segment defined. ' . 'Relying on this link may be an application error',
             E_USER_WARNING
         );
         return null;
@@ -654,9 +660,6 @@ class RequestHandler extends ViewableData
      */
     public function redirectBack()
     {
-        // Don't cache the redirect back ever
-        HTTP::set_cache_age(0);
-
         // Prefer to redirect to ?BackURL, but fall back to Referer header
         // As a last resort redirect to base url
         $url = $this->getBackURL()

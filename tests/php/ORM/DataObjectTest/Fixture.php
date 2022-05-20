@@ -9,7 +9,7 @@ class Fixture extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_Fixture';
 
-    private static $db = array(
+    private static $db = [
         // Funny field names
         'Data' => 'Varchar',
         'Duplicate' => 'Varchar',
@@ -20,19 +20,27 @@ class Fixture extends DataObject implements TestOnly
         'DatetimeField' => 'Datetime',
 
         'MyFieldWithDefault' => 'Varchar',
-        'MyFieldWithAltDefault' => 'Varchar'
-    );
+        'MyFieldWithAltDefault' => 'Varchar',
 
-    private static $defaults = array(
+        'MyInt' => 'Int',
+        'MyCurrency' => 'Currency',
+        'MyDecimal'=> 'Decimal',
+
+        // Enums
+        'MyEnum' => 'Enum("25,50,75,100", "50")',
+        'MyEnumWithDots' => 'Enum("25.25,50.00,75.00,100.50", "50.00")',
+    ];
+
+    private static $defaults = [
         'MyFieldWithDefault' => 'Default Value',
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Data' => 'Data',
         'DateField.Nice' => 'Date'
-    );
+    ];
 
-    private static $searchable_fields = array();
+    private static $searchable_fields = [];
 
     public function populateDefaults()
     {

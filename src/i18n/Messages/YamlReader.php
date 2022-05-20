@@ -28,18 +28,18 @@ class YamlReader implements Reader
     public function read($locale, $path)
     {
         try {
-            if (!file_exists($path)) {
+            if (!file_exists($path ?? '')) {
                 return [];
             }
             // Load
-            $yaml = $this->getParser()->parse(file_get_contents($path));
+            $yaml = $this->getParser()->parse(file_get_contents($path ?? ''));
             if (empty($yaml[$locale])) {
                 return [];
             }
             // Normalise messages
             return $this->normaliseMessages($yaml[$locale]);
         } catch (ParseException $exception) {
-            throw new InvalidResourceException(sprintf('Error parsing YAML, invalid file "%s"', $path), 0, $exception);
+            throw new InvalidResourceException(sprintf('Error parsing YAML, invalid file "%s". Message: %s', $path, $exception->getMessage()), 0, $exception);
         }
     }
 

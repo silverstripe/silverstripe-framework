@@ -13,8 +13,8 @@ class HTTPStreamResponseTest extends SapphireTest
     public function testReplayStream()
     {
         $path = __DIR__ . '/HTTPStreamResponseTest/testfile.txt';
-        $stream = fopen($path, 'r');
-        $response = new HTTPStreamResponse($stream, filesize($path));
+        $stream = fopen($path ?? '', 'r');
+        $response = new HTTPStreamResponse($stream, filesize($path ?? ''));
 
         // Test body (should parse stream directly into memory)
         $this->assertEquals("Test output\n", $response->getBody());
@@ -35,10 +35,10 @@ class HTTPStreamResponseTest extends SapphireTest
     public function testDirectStream()
     {
         $path = __DIR__ . '/HTTPStreamResponseTest/testfile.txt';
-        $stream = fopen($path, 'r');
+        $stream = fopen($path ?? '', 'r');
         $metadata = stream_get_meta_data($stream);
         $this->assertTrue($metadata['seekable']);
-        $response = new HTTPStreamResponse($stream, filesize($path));
+        $response = new HTTPStreamResponse($stream, filesize($path ?? ''));
 
         // Test stream output
         ob_start();

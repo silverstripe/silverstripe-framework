@@ -56,13 +56,13 @@ class GridFieldDeleteActionTest extends SapphireTest
         Permissions::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);
         $config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction());
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList([$this->gridField]), new FieldList());
     }
 
     public function testDontShowDeleteButtons()
@@ -72,11 +72,11 @@ class GridFieldDeleteActionTest extends SapphireTest
         }
         $content = new CSSContentParser($this->gridField->FieldHolder());
         // Check that there are content
-        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item')));
+        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item') ?? []));
         // Make sure that there are no delete buttons
         $this->assertEquals(
             0,
-            count($content->getBySelector('.gridfield-button-delete')),
+            count($content->getBySelector('.gridfield-button-delete') ?? []),
             'Delete buttons should not show when not logged in.'
         );
     }
@@ -85,8 +85,8 @@ class GridFieldDeleteActionTest extends SapphireTest
     {
         $this->logInWithPermission('ADMIN');
         $content = new CSSContentParser($this->gridField->FieldHolder());
-        $deleteButtons = $content->getBySelector('.gridfield-button-delete');
-        $this->assertEquals(3, count($deleteButtons), 'Delete buttons should show when logged in.');
+        $deleteButtons = $content->getBySelector('.action--delete');
+        $this->assertEquals(3, count($deleteButtons ?? []), 'Delete buttons should show when logged in.');
     }
 
     public function testActionsRequireCSRF()
@@ -95,22 +95,21 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->expectException(HTTPResponse_Exception::class);
         $this->expectExceptionMessage(_t(
             "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-            "There seems to have been a technical problem. Please click the back button, ".
-            "refresh your browser, and try again."
+            "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
         ));
         $this->expectExceptionCode(400);
         $stateID = 'testGridStateActionField';
         $request = new HTTPRequest(
             'POST',
             'url',
-            array(),
-            array(
-                'action_gridFieldAlterAction?StateID='.$stateID,
+            [],
+            [
+                'action_gridFieldAlterAction?StateID=' . $stateID,
                 'SecurityID' => null,
-            )
+            ]
         );
         $request->setSession(new Session([]));
-        $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+        $this->gridField->gridFieldAlterAction(['StateID'=>$stateID], $this->form, $request);
     }
 
     public function testDeleteActionWithoutCorrectPermission()
@@ -124,26 +123,26 @@ class GridFieldDeleteActionTest extends SapphireTest
         $session = Controller::curr()->getRequest()->getSession();
         $session->set(
             $stateID,
-            array(
+            [
                 'grid' => '',
                 'actionName' => 'deleterecord',
-                'args' => array(
+                'args' => [
                     'RecordID' => $this->idFromFixture(Team::class, 'team1')
-                )
-            )
+                ]
+            ]
         );
         $token = SecurityToken::inst();
         $request = new HTTPRequest(
             'POST',
             'url',
-            array(),
-            array(
-                'action_gridFieldAlterAction?StateID='.$stateID => true,
+            [],
+            [
+                'action_gridFieldAlterAction?StateID=' . $stateID => true,
                 $token->getName() => $token->getValue(),
-            )
+            ]
         );
         $request->setSession($session);
-        $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+        $this->gridField->gridFieldAlterAction(['StateID'=>$stateID], $this->form, $request);
         $this->assertEquals(
             3,
             $this->list->count(),
@@ -158,26 +157,26 @@ class GridFieldDeleteActionTest extends SapphireTest
         $session = Controller::curr()->getRequest()->getSession();
         $session->set(
             $stateID,
-            array(
+            [
                 'grid'=>'',
                 'actionName'=>'deleterecord',
-                'args' => array(
+                'args' => [
                     'RecordID' => $this->idFromFixture(Team::class, 'team1')
-                )
-            )
+                ]
+            ]
         );
         $token = SecurityToken::inst();
         $request = new HTTPRequest(
             'POST',
             'url',
-            array(),
-            array(
-                'action_gridFieldAlterAction?StateID='.$stateID=>true,
+            [],
+            [
+                'action_gridFieldAlterAction?StateID=' . $stateID=>true,
                 $token->getName() => $token->getValue(),
-            )
+            ]
         );
         $request->setSession($session);
-        $this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+        $this->gridField->gridFieldAlterAction(['StateID'=>$stateID], $this->form, $request);
         $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
     }
 
@@ -189,30 +188,46 @@ class GridFieldDeleteActionTest extends SapphireTest
 
         $session = Controller::curr()->getRequest()->getSession();
         $gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        new Form(null, 'mockform', new FieldList(array($gridField)), new FieldList());
+        new Form(null, 'mockform', new FieldList([$gridField]), new FieldList());
         $stateID = 'testGridStateActionField';
         $session->set(
             $stateID,
-            array(
+            [
                 'grid'=>'',
                 'actionName'=>'deleterecord',
-                'args' => array(
+                'args' => [
                     'RecordID' => $this->idFromFixture(Team::class, 'team1')
-                )
-            )
+                ]
+            ]
         );
         $token = SecurityToken::inst();
         $request = new HTTPRequest(
             'POST',
             'url',
-            array(),
-            array(
-                'action_gridFieldAlterAction?StateID='.$stateID=>true,
+            [],
+            [
+                'action_gridFieldAlterAction?StateID=' . $stateID=>true,
                 $token->getName() => $token->getValue(),
-            )
+            ]
         );
         $request->setSession($session);
-        $gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+        $gridField->gridFieldAlterAction(['StateID'=>$stateID], $this->form, $request);
         $this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
+    }
+
+    public function testMenuGroup()
+    {
+        $this->logInWithPermission('ADMIN');
+
+        $config = GridFieldConfig::create()->addComponent($action = new GridFieldDeleteAction(true));
+        $gridField = new GridField('testfield', 'testfield', $this->list, $config);
+        new Form(null, 'mockform', new FieldList([$gridField]), new FieldList());
+        $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
+        $this->assertNotNull($group, 'A menu group exists when the user can delete');
+
+        $this->logOut();
+
+        $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
+        $this->assertNull($group, 'A menu group does not exist when the user cannot delete');
     }
 }

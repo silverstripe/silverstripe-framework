@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Search;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
@@ -96,7 +97,7 @@ class SearchContext
     {
         $this->modelClass = $modelClass;
         $this->fields = ($fields) ? $fields : new FieldList();
-        $this->filters = ($filters) ? $filters : array();
+        $this->filters = ($filters) ? $filters : [];
     }
 
     /**
@@ -119,7 +120,7 @@ class SearchContext
     {
         $classes = ClassInfo::dataClassesFor($this->modelClass);
         $baseTable = DataObject::getSchema()->baseDataTable($this->modelClass);
-        $fields = array("\"{$baseTable}\".*");
+        $fields = ["\"{$baseTable}\".*"];
         if ($this->modelClass != $classes[0]) {
             $fields[] = '"' . $classes[0] . '".*';
         }
@@ -174,12 +175,31 @@ class SearchContext
         $this->setSearchParams($searchParams);
 
         foreach ($this->searchParams as $key => $value) {
-            $key = str_replace('__', '.', $key);
+            $key = str_replace('__', '.', $key ?? '');
             if ($filter = $this->getFilter($key)) {
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery(array($filter, 'apply'));
+                    $modelObj = Injector::inst()->create($this->modelClass);
+                    if (isset($modelObj->searchableFields()[$key]['match_any'])) {
+                        $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
+                            $searchFields = $modelObj->searchableFields()[$key]['match_any'];
+                            $sqlSearchFields = [];
+                            foreach ($searchFields as $dottedRelation) {
+                                $relation = substr($dottedRelation ?? '', 0, strpos($dottedRelation ?? '', '.'));
+                                $relations = explode('.', $dottedRelation ?? '');
+                                $fieldName = array_pop($relations);
+                                $relationModelName = $dataQuery->applyRelation($relation);
+                                $relationPrefix = $dataQuery->applyRelationPrefix($relation);
+                                $columnName = $modelObj->getSchema()
+                                    ->sqlColumnForField($relationModelName, $fieldName, $relationPrefix);
+                                $sqlSearchFields[$columnName] = $value;
+                            }
+                            $dataQuery = $dataQuery->whereAny($sqlSearchFields);
+                        });
+                    } else {
+                        $query = $query->alterDataQuery([$filter, 'apply']);
+                    }
                 }
             }
         }
@@ -204,7 +224,7 @@ class SearchContext
      */
     public function getResults($searchParams, $sort = false, $limit = false)
     {
-        $searchParams = array_filter((array)$searchParams, array($this, 'clearEmptySearchFields'));
+        $searchParams = array_filter((array)$searchParams, [$this, 'clearEmptySearchFields']);
 
         // getQuery actually returns a DataList
         return $this->getQuery($searchParams, $sort, $limit);

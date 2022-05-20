@@ -28,7 +28,7 @@ class CurrencyField extends TextField
             $value = 0.00;
         }
         $this->value = DBCurrency::config()->uninherited('currency_symbol')
-            . number_format((double)preg_replace('/[^0-9.\-]/', '', $value), 2);
+            . number_format((double)preg_replace('/[^0-9.\-]/', '', $value ?? ''), 2);
         return $this;
     }
     /**
@@ -38,10 +38,9 @@ class CurrencyField extends TextField
     public function dataValue()
     {
         if ($this->value) {
-            return preg_replace('/[^0-9.\-]/', '', $this->value);
-        } else {
-            return 0.00;
+            return preg_replace('/[^0-9.\-]/', '', $this->value ?? '');
         }
+        return 0.00;
     }
 
     public function Type()
@@ -54,14 +53,14 @@ class CurrencyField extends TextField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy('SilverStripe\\Forms\\CurrencyField_Readonly');
+        return $this->castedCopy(CurrencyField_Readonly::class);
     }
 
     public function validate($validator)
     {
-        $currencySymbol = preg_quote(DBCurrency::config()->uninherited('currency_symbol'));
-        $regex = '/^\s*(\-?'.$currencySymbol.'?|'.$currencySymbol.'\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
-        if (!empty($this->value) && !preg_match($regex, $this->value)) {
+        $currencySymbol = preg_quote(DBCurrency::config()->uninherited('currency_symbol') ?? '');
+        $regex = '/^\s*(\-?' . $currencySymbol . '?|' . $currencySymbol . '\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
+        if (!empty($this->value) && !preg_match($regex ?? '', $this->value ?? '')) {
             $validator->validationError(
                 $this->name,
                 _t('SilverStripe\\Forms\\Form.VALIDCURRENCY', "Please enter a valid currency"),

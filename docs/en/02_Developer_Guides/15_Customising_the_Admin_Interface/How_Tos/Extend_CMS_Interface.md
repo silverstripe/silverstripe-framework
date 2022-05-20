@@ -1,3 +1,8 @@
+---
+title: Extend the CMS interface
+summary: Customise the UI of the CMS backend
+---
+
 # How to extend the CMS interface
 
 ## Introduction
@@ -16,7 +21,7 @@ guide on [CMS Architecture](/developer_guides/customising_the_admin_interface/cm
 ## Overload a CMS template
 
 If you place a template with an identical name into your application template
-directory (usually `mysite/templates/`), it'll take priority over the built-in
+directory (usually `app/templates/`), it'll take priority over the built-in
 one.
 
 CMS templates are inherited based on their controllers, similar to subclasses of
@@ -24,25 +29,23 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_Menu.ss`
+Copy the template markup of the base implementation at `templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`
 from the `silverstripe/admin` module
-into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by
-the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
-
+into `app/templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`. It will automatically be picked up by
+the CMS logic. Add a new section into the `<ul class="cms-menu__list">`	
 
 ```ss
-
-    ...
-    <ul class="cms-menu-list">
-        <!-- ... -->
-        <li class="bookmarked-link first">
-            <a href="{$AdminURL}pages/edit/show/1">Edit "My popular page"</a>
-        </li>
-        <li class="bookmarked-link last">
-            <a href="{$AdminURL}pages/edit/show/99">Edit "My other page"</a>
-        </li>
-    </ul>
-    ...
+...
+<ul class="cms-menu-list">
+    <!-- ... -->
+    <li class="bookmarked-link first">
+        <a href="{$AdminURL}pages/edit/show/1">Edit "My popular page"</a>
+    </li>
+    <li class="bookmarked-link last">
+        <a href="{$AdminURL}pages/edit/show/99">Edit "My other page"</a>
+    </li>
+</ul>
+...
 ```
 
 Refresh the CMS interface with `admin/?flush=all`, and you should see those
@@ -53,12 +56,11 @@ hardcoded links underneath the left-hand menu. We'll make these dynamic further 
 In order to show the links a bit separated from the other menu entries,
 we'll add some CSS, and get it to load
 with the CMS interface. Paste the following content into a new file called
-`mysite/css/BookmarkedPages.css`:
+`app/css/BookmarkedPages.css`:
 
 
 ```css
-
-    .bookmarked-link.first {margin-top: 1em;}
+.bookmarked-link.first {margin-top: 1em;}
 ```
 
 Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
@@ -66,38 +68,53 @@ Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requiremen
 
 
 ```yml
-
-    LeftAndMain:
-      extra_requirements_css:
-        - mysite/css/BookmarkedPages.css
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_css:
+    - app/css/BookmarkedPages.css
 ```
+
+In order to let the frontend have the access to our `css` files, we need to `expose` them in the `composer.json`:
+
+```javascript
+    "extra": {
+        ...
+        "expose": [
+            "app/css"
+        ]
+    },
+```
+
+Then run `composer vendor-expose`. This command will publish all the `css` files under the `app/css` folder to their public-facing paths.
+
+> Note: don't forget to `flush`.
 
 ## Create a "bookmark" flag on pages
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in
 the database. For this we need to decorate the page record with a
-`DataExtension`. Create a new file called `mysite/code/BookmarkedPageExtension.php`
+`DataExtension`. Create a new file called `app/src/BookmarkedPageExtension.php`
 and insert the following code.
 
 
 ```php
-    use SilverStripe\Forms\CheckboxField;
-    use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\DataExtension;
 
-    class BookmarkedPageExtension extends DataExtension 
+class BookmarkedPageExtension extends DataExtension
+{
+
+    private static $db = [
+        'IsBookmarked' => 'Boolean'
+    ];
+
+    public function updateCMSFields(FieldList $fields)
     {
-
-        private static $db = [
-            'IsBookmarked' => 'Boolean'
-        ];
-
-        public function updateCMSFields(FieldList $fields) 
-        {
-            $fields->addFieldToTab('Root.Main',
-                new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
-            );
-        }
+        $fields->addFieldToTab('Root.Main',
+            new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
+        );
     }
+}
 
 ```
 
@@ -105,10 +122,9 @@ Enable the extension in your [configuration file](../../configuration)
 
 
 ```yml
-
-    SiteTree:
-      extensions:
-        - BookmarkedPageExtension
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - BookmarkedPageExtension
 ```
 
 In order to add the field to the database, run a `dev/build/?flush=all`.
@@ -121,48 +137,45 @@ pages from the database into the template we've already created (with hardcoded
 links)? Again, we extend a core class: The main CMS controller called
 `LeftAndMain`.
 
-Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension.php`;
+Add the following code to a new file `app/src/BookmarkedLeftAndMainExtension.php`;
 
 
 ```php
-    use Page;
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension 
+class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension
+{
+
+    public function BookmarkedPages()
     {
-
-        public function BookmarkedPages() 
-        {
-            return Page::get()->filter("IsBookmarked", 1);
-        }
+        return Page::get()->filter("IsBookmarked", 1);
     }
+}
 ```
 
 Enable the extension in your [configuration file](../../configuration)
 
 
 ```yml
-
-    LeftAndMain:
-      extensions:
-        - BookmarkedPagesLeftAndMainExtension
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - BookmarkedPagesLeftAndMainExtension
 ```
 
 As the last step, replace the hardcoded links with our list from the database.
-Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`
+Find the `<ul>` you created earlier in `app/templates/SilverStripe/Admin/Includes/LeftAndMain_MenuList.ss`
 and replace it with the following:
 
 
 ```ss
-
-    <ul class="cms-menu-list">
-        <!-- ... -->
-        <% loop $BookmarkedPages %>
-        <li class="bookmarked-link $FirstLast">
-            <li><a href="{$AdminURL}pages/edit/show/$ID">Edit "$Title"</a></li>
-        </li>
-        <% end_loop %>
-    </ul>
+<ul class="cms-menu__list">
+    <!-- ... -->
+    <% loop $BookmarkedPages %>
+    <li class="bookmarked-link $FirstLast">
+        <li><a href="{$AdminURL}pages/edit/show/$ID">Edit "$Title"</a></li>
+    </li>
+    <% end_loop %>
+</ul>
 ```
 
 ## Extending the CMS actions
@@ -175,7 +188,7 @@ The following conventions apply:
 
 * New actions can be added by redefining `getCMSActions`, or adding an extension
 with `updateCMSActions`.
-* It is required the actions are contained in a `FieldSet` (`getCMSActions`
+* It is required the actions are contained in a `FieldList` (`getCMSActions`
 returns this already).
 * Standalone buttons are created by adding a top-level `FormAction` (no such
 button is added by default).
@@ -197,7 +210,7 @@ button group (`CompositeField`) in a similar fashion.
 
 
 ```php
-    $fields->unshift(FormAction::create('normal', 'Normal button'));
+$fields->unshift(FormAction::create('normal', 'Normal button'));
 ```
 
 We can affect the existing button group by manipulating the `CompositeField`
@@ -205,7 +218,7 @@ already present in the `FieldList`.
 
 
 ```php
-    $fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
+$fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
 ```
 
 Another option is adding actions into the drop-up - best place for placing
@@ -213,7 +226,7 @@ infrequently used minor actions.
 
 
 ```php
-    $fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
+$fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
 ```
 
 We can also easily create new drop-up menus by defining new tabs within the
@@ -221,12 +234,12 @@ We can also easily create new drop-up menus by defining new tabs within the
 
 
 ```php
-    $fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
+$fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
 ```
 
-<div class="hint" markdown='1'>
+[hint]
 Empty tabs will be automatically removed from the `FieldList` to prevent clutter.
-</div>
+[/hint]
 
 To make the actions more user-friendly you can also use alternating buttons as
 detailed in the [CMS Alternating Button](cms_alternating_button)
@@ -234,7 +247,7 @@ how-to.
 
 ## React-rendered UI
 For sections of the admin that are rendered with React, Redux, and GraphQL, please refer
-to [the introduction on those concepts](../07_ReactJS_Redux_and_GraphQL.md), 
+to [the introduction on those concepts](../reactjs_redux_and_graphql/),
 as well as their respective How-To's in this section.
 
 ### Implementing handlers
@@ -245,21 +258,21 @@ applicable controller actions to it:
 
 
 ```php
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class CustomActionsExtension extends LeftAndMainExtension 
+class CustomActionsExtension extends LeftAndMainExtension
+{
+
+    private static $allowed_actions = [
+        'sampleAction'
+    ];
+
+    public function sampleAction()
     {
-        
-        private static $allowed_actions = [
-            'sampleAction'
-        ];
-        
-        public function sampleAction()
-        {
-            // Create the web
-        }
-        
+        // Create the web
     }
+
+}
 
 ```
 
@@ -267,17 +280,16 @@ The extension then needs to be registered:
 
 
 ```yaml
-
-    LeftAndMain:
-        extensions:
-            - CustomActionsExtension
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - CustomActionsExtension
 ```
 
 You can now use these handlers with your buttons:
 
 
 ```php
-    $fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
+$fields->push(FormAction::create('sampleAction', 'Perform Sample Action'));
 ```
 
 ## Summary

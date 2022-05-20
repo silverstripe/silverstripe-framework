@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM\Filters;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use Exception;
@@ -10,8 +9,7 @@ use Exception;
 /**
  * Filters by full-text matching on the given field.
  *
- * Full-text indexes are only available with MyISAM tables. The following column types are
- * supported:
+ * The following column types are supported:
  *   - Char
  *   - Varchar
  *   - Text
@@ -36,19 +34,19 @@ class FulltextFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
-        return $query->where(array($predicate => $this->getValue()));
+        return $query->where([$predicate => $this->getValue()]);
     }
 
     protected function excludeOne(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
         $predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
-        return $query->where(array($predicate => $this->getValue()));
+        return $query->where([$predicate => $this->getValue()]);
     }
 
     public function isEmpty()
     {
-        return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+        return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
     }
 
 
@@ -66,12 +64,12 @@ class FulltextFilter extends SearchFilter
     public function getDbName()
     {
         $indexes = DataObject::getSchema()->databaseIndexes($this->model);
-        if (array_key_exists($this->getName(), $indexes)) {
+        if (array_key_exists($this->getName(), $indexes ?? [])) {
             $index = $indexes[$this->getName()];
         } else {
             return parent::getDbName();
         }
-        if (is_array($index) && array_key_exists('columns', $index)) {
+        if (is_array($index) && array_key_exists('columns', $index ?? [])) {
             return $this->prepareColumns($index['columns']);
         } else {
             throw new Exception(sprintf(
@@ -92,11 +90,11 @@ class FulltextFilter extends SearchFilter
     protected function prepareColumns($columns)
     {
         $prefix = DataQuery::applyRelationPrefix($this->relation);
-        $table = DataObject::getSchema()->tableForField($this->model, current($columns));
+        $table = DataObject::getSchema()->tableForField($this->model, current($columns ?? []));
         $fullTable = $prefix . $table;
         $columns = array_map(function ($col) use ($fullTable) {
             return "\"{$fullTable}\".\"{$col}\"";
-        }, $columns);
+        }, $columns ?? []);
         return implode(',', $columns);
     }
 }

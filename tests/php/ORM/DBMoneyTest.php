@@ -13,10 +13,10 @@ class DBMoneyTest extends SapphireTest
 
     protected static $fixture_file = 'DBMoneyTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DBMoneyTest\TestObject::class,
         DBMoneyTest\TestObjectSubclass::class,
-    );
+    ];
 
     public function testMoneyFieldsReturnedAsObjects()
     {
@@ -40,13 +40,13 @@ class DBMoneyTest extends SapphireTest
         // Without changes
         $curr = $obj->obj('MyMoney');
         $changed = $obj->getChangedFields();
-        $this->assertNotContains('MyMoney', array_keys($changed));
+        $this->assertNotContains('MyMoney', array_keys($changed ?? []));
 
         // With changes
         $this->assertInstanceOf(DBMoney::class, $obj->MyMoney);
         $obj->MyMoney->setAmount(99);
         $changed = $obj->getChangedFields();
-        $this->assertContains('MyMoney', array_keys($changed), 'Field is detected as changed');
+        $this->assertContains('MyMoney', array_keys($changed ?? []), 'Field is detected as changed');
         $this->assertEquals(2, $changed['MyMoney']['level'], 'Correct change level');
     }
 
@@ -314,28 +314,28 @@ class DBMoneyTest extends SapphireTest
         $m = new DBMoney();
         $obj->MyMoney = $m;
 
-        $m->setValue(array('Amount' => 1));
+        $m->setValue(['Amount' => 1]);
         $this->assertTrue($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 1.00));
+        $m->setValue(['Amount' => 1.00]);
         $this->assertTrue($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 1.01));
+        $m->setValue(['Amount' => 1.01]);
         $this->assertTrue($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 0.99));
+        $m->setValue(['Amount' => 0.99]);
         $this->assertTrue($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 0.01));
+        $m->setValue(['Amount' => 0.01]);
         $this->assertTrue($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 0));
+        $m->setValue(['Amount' => 0]);
         $this->assertFalse($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 0.0));
+        $m->setValue(['Amount' => 0.0]);
         $this->assertFalse($obj->MyMoney->hasAmount());
 
-        $m->setValue(array('Amount' => 0.00));
+        $m->setValue(['Amount' => 0.00]);
         $this->assertFalse($obj->MyMoney->hasAmount());
     }
 
@@ -350,7 +350,7 @@ class DBMoneyTest extends SapphireTest
      */
     protected function clean($input)
     {
-        $nbsp = html_entity_decode('&nbsp;', null, 'UTF-8');
-        return str_replace(' ', $nbsp, trim($input));
+        $nbsp = html_entity_decode('&nbsp;', 0, 'UTF-8');
+        return str_replace(' ', $nbsp ?? '', trim($input ?? ''));
     }
 }

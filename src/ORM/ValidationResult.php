@@ -62,7 +62,7 @@ class ValidationResult implements Serializable
      *
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * Create a new ValidationResult.
@@ -164,12 +164,12 @@ class ValidationResult implements Serializable
         if (is_bool($cast)) {
             $cast = $cast ? self::CAST_TEXT : self::CAST_HTML;
         }
-        $metadata = array(
+        $metadata = [
             'message' => $message,
             'fieldName' => $fieldName,
             'messageType' => $messageType,
             'messageCast' => $cast,
-        );
+        ];
 
         if ($code) {
             $this->messages[$code] = $metadata;
@@ -214,10 +214,25 @@ class ValidationResult implements Serializable
         return $this;
     }
 
+    public function __serialize(): array
+    {
+        return [
+            'messages' => $this->messages,
+            'isValid' => $this->isValid()
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->messages = $data['messages'];
+        $this->isValid = $data['isValid'];
+    }
+
     /**
-     * String representation of object
+     * The __serialize() magic method will be automatically used instead of this
      *
-     * @return string the string representation of the object or null
+     * @return string
+     * @deprecated will be removed in 5.0
      */
     public function serialize()
     {
@@ -225,12 +240,15 @@ class ValidationResult implements Serializable
     }
 
     /**
-     * Constructs the object
+     * The __unserialize() magic method will be automatically used instead of this almost all the time
+     * This method will be automatically used if existing serialized data was not saved as an associative array
+     * and the PHP version used in less than PHP 9.0
      *
      * @param string $serialized
+     * @deprecated will be removed in 5.0
      */
     public function unserialize($serialized)
     {
-        list($this->messages, $this->isValid) = json_decode($serialized, true);
+        list($this->messages, $this->isValid) = json_decode($serialized ?? '', true);
     }
 }

@@ -2,13 +2,22 @@
 
 namespace SilverStripe\View\Shortcodes;
 
+use Embed\Http\NetworkException;
+use Embed\Http\RequestException;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Embed\Embeddable;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
-use Embed\Adapters\Adapter;
-use Embed\Embed;
 use SilverStripe\View\Parsers\ShortcodeParser;
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\View\Embed\EmbedContainer;
 
 /**
  * Provider for the [embed] shortcode tag used by the embedding service
@@ -25,7 +34,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     public static function get_shortcodes()
     {
-        return array('embed');
+        return ['embed'];
     }
 
     /**
@@ -40,7 +49,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      *
      * @return string
      */
-    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
+    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = [])
     {
         // Get service URL
         if (!empty($content)) {
@@ -49,6 +58,20 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $serviceURL = $arguments['url'];
         } else {
             return '';
+        }
+
+        $class = $arguments['class'] ?? '';
+        $width = $arguments['width'] ?? '';
+        $height = $arguments['height'] ?? '';
+
+        // Try to use cached result
+        $cache = static::getCache();
+        $key = static::deriveCacheKey($serviceURL, $class, $width, $height);
+        try {
+            if ($cache->has($key)) {
+                return $cache->get($key);
+            }
+        } catch (InvalidArgumentException $e) {
         }
 
         // See https://github.com/oscarotero/Embed#example-with-all-options for service arguments
@@ -60,38 +83,88 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $serviceArguments['min_image_height'] = $arguments['height'];
         }
 
-        // Allow resolver to be mocked
-        $dispatcher = null;
-        if (isset($extra['resolver'])) {
-            $dispatcher = Injector::inst()->create(
-                $extra['resolver']['class'],
-                $serviceURL,
-                $extra['resolver']['config']
-            );
+        /** @var EmbedContainer $embeddable */
+        $embeddable = Injector::inst()->create(Embeddable::class, $serviceURL);
+
+        // Only EmbedContainer is currently supported
+        if (!($embeddable instanceof EmbedContainer)) {
+            throw new \RuntimeException('Emeddable must extend EmbedContainer');
+        }
+
+        if (!empty($serviceArguments)) {
+            $embeddable->setOptions(array_merge($serviceArguments, (array) $embeddable->getOptions()));
         }
 
         // Process embed
-        $embed = Embed::create($serviceURL, $serviceArguments, $dispatcher);
+        try {
+            // this will trigger a request/response which will then be cached within $embeddable
+            $embeddable->getExtractor();
+        } catch (NetworkException | RequestException $e) {
+            $message = (Director::isDev())
+                ? $e->getMessage()
+                : _t(__CLASS__ . '.INVALID_URL', 'There was a problem loading the media.');
 
-        // Convert embed object into HTML
-        if ($embed && $embed instanceof Adapter) {
-            $result = static::embedForTemplate($embed, $arguments);
-            if ($result) {
-                return $result;
-            }
+            $attr = [
+                'class' => 'ss-media-exception embed'
+            ];
+
+            $result = HTML::createTag(
+                'div',
+                $attr,
+                HTML::createTag('p', [], $message)
+            );
+            return $result;
         }
 
+        // Convert embed object into HTML
+        $html = static::embeddableToHtml($embeddable, $arguments);
         // Fallback to link to service
-        return static::linkEmbed($arguments, $serviceURL, $serviceURL);
+        if (!$html) {
+            $result = static::linkEmbed($arguments, $serviceURL, $serviceURL);
+        }
+        // Cache result
+        if ($html) {
+            try {
+                $cache->set($key, $html);
+            } catch (InvalidArgumentException $e) {
+            }
+        }
+        return $html;
+    }
+
+    public static function embeddableToHtml(Embeddable $embeddable, array $arguments): string
+    {
+        // Only EmbedContainer is supported
+        if (!($embeddable instanceof EmbedContainer)) {
+            return '';
+        }
+        $extractor = $embeddable->getExtractor();
+        $type = $embeddable->getType();
+        if ($type === 'video' || $type === 'rich') {
+            // Attempt to inherit width (but leave height auto)
+            if (empty($arguments['width']) && $embeddable->getWidth()) {
+                $arguments['width'] = $embeddable->getWidth();
+            }
+            return static::videoEmbed($arguments, $extractor->code->html);
+        }
+        if ($type === 'photo') {
+            return static::photoEmbed($arguments, (string) $extractor->url);
+        }
+        if ($type === 'link') {
+            return static::linkEmbed($arguments, (string) $extractor->url, $extractor->title);
+        }
+        return '';
     }
 
     /**
      * @param Adapter $embed
      * @param array $arguments Additional shortcode params
      * @return string
+     * @deprecated 4.11..5.0 Use embeddableToHtml instead
      */
     public static function embedForTemplate($embed, $arguments)
     {
+        Deprecation::notice('4.11', 'Use embeddableToHtml() instead');
         switch ($embed->getType()) {
             case 'video':
             case 'rich':
@@ -99,11 +172,11 @@ class EmbedShortcodeProvider implements ShortcodeHandler
                 if (empty($arguments['width']) && $embed->getWidth()) {
                     $arguments['width'] = $embed->getWidth();
                 }
-                return self::videoEmbed($arguments, $embed->getCode());
+                return static::videoEmbed($arguments, $embed->getCode());
             case 'link':
-                return self::linkEmbed($arguments, $embed->getUrl(), $embed->getTitle());
+                return static::linkEmbed($arguments, $embed->getUrl(), $embed->getTitle());
             case 'photo':
-                return self::photoEmbed($arguments, $embed->getUrl());
+                return static::photoEmbed($arguments, $embed->getUrl());
             default:
                 return null;
         }
@@ -123,16 +196,24 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $arguments['style'] = 'width: ' . intval($arguments['width']) . 'px;';
         }
 
-        // Convert caption to <p>
-        if (!empty($arguments['caption'])) {
-            $xmlCaption = Convert::raw2xml($arguments['caption']);
-            $content .= "\n<p class=\"caption\">{$xmlCaption}</p>";
+        // override iframe dimension attributes provided by webservice with ones specified in shortcode arguments
+        foreach (['width', 'height'] as $attr) {
+            if (!($value = $arguments[$attr] ?? false)) {
+                continue;
+            }
+            foreach (['"', "'"] as $quote) {
+                $rx = "/(<iframe .*?)$attr=$quote([0-9]+)$quote([^>]+>)/";
+                $content = preg_replace($rx ?? '', "$1{$attr}={$quote}{$value}{$quote}$3", $content ?? '');
+            }
         }
-        unset($arguments['width']);
-        unset($arguments['height']);
-        unset($arguments['url']);
-        unset($arguments['caption']);
-        return HTML::createTag('div', $arguments, $content);
+
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
+            'Content' => DBField::create_field('HTMLFragment', $content)
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_video')->forTemplate();
     }
 
     /**
@@ -145,13 +226,14 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     protected static function linkEmbed($arguments, $href, $title)
     {
-        $title = !empty($arguments['caption']) ? ($arguments['caption']) : $title;
-        unset($arguments['caption']);
-        unset($arguments['width']);
-        unset($arguments['height']);
-        unset($arguments['url']);
-        $arguments['href'] = $href;
-        return HTML::createTag('a', $arguments, Convert::raw2xml($title));
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['width', 'height', 'url', 'caption']),
+            'Href' => $href,
+            'Title' => !empty($arguments['caption']) ? ($arguments['caption']) : $title
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_link')->forTemplate();
     }
 
     /**
@@ -163,8 +245,100 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     protected static function photoEmbed($arguments, $src)
     {
-        $arguments['src'] = $src;
-        unset($arguments['url']);
-        return HTML::createTag('img', $arguments);
+        $data = [
+            'Arguments' => $arguments,
+            'Attributes' => static::buildAttributeListFromArguments($arguments, ['url']),
+            'Src' => $src
+        ];
+
+        return ArrayData::create($data)->renderWith(self::class . '_photo')->forTemplate();
+    }
+
+    /**
+     * Build a list of HTML attributes from embed arguments - used to preserve backward compatibility
+     *
+     * @deprecated 4.5.0 Use {$Arguments.name} directly in shortcode templates to access argument values
+     * @param array $arguments List of embed arguments
+     * @param array $exclude List of attribute names to exclude from the resulting list
+     * @return ArrayList
+     */
+    private static function buildAttributeListFromArguments(array $arguments, array $exclude = []): ArrayList
+    {
+        $attributes = ArrayList::create();
+        foreach ($arguments as $key => $value) {
+            if (in_array($key, $exclude ?? [])) {
+                continue;
+            }
+
+            $attributes->push(ArrayData::create([
+                'Name' => $key,
+                'Value' => Convert::raw2att($value)
+            ]));
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @param ShortcodeParser $parser
+     * @param string $content
+     */
+    public static function flushCachedShortcodes(ShortcodeParser $parser, string $content): void
+    {
+        $cache = static::getCache();
+        $tags = $parser->extractTags($content);
+        foreach ($tags as $tag) {
+            if (!isset($tag['open']) || $tag['open'] != 'embed') {
+                continue;
+            }
+            $url = $tag['content'] ?? $tag['attrs']['url'] ?? '';
+            $class = $tag['attrs']['class'] ?? '';
+            $width = $tag['attrs']['width'] ?? '';
+            $height = $tag['attrs']['height'] ?? '';
+            if (!$url) {
+                continue;
+            }
+            $key = static::deriveCacheKey($url, $class, $width, $height);
+            try {
+                if (!$cache->has($key)) {
+                    continue;
+                }
+                $cache->delete($key);
+            } catch (InvalidArgumentException $e) {
+                continue;
+            }
+        }
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    private static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.EmbedShortcodeProvider');
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private static function deriveCacheKey(string $url, string $class, string $width, string $height): string
+    {
+        return implode('-', array_filter([
+            'embed-shortcode',
+            self::cleanKeySegment($url),
+            self::cleanKeySegment($class),
+            self::cleanKeySegment($width),
+            self::cleanKeySegment($height)
+        ]));
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    private static function cleanKeySegment(string $str): string
+    {
+        return preg_replace('/[^a-zA-Z0-9\-]/', '', $str ?? '');
     }
 }

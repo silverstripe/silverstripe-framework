@@ -7,12 +7,13 @@ use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\PasswordEncryptor_LegacyPHPHash;
+use SilverStripe\Security\PasswordEncryptor_NotFoundException;
 use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Tests\PasswordEncryptorTest\TestEncryptor;
 
 class PasswordEncryptorTest extends SapphireTest
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         PasswordEncryptor_Blowfish::set_cost(10);
@@ -29,11 +30,9 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertInstanceOf(TestEncryptor::class, $e);
     }
 
-    /**
-     * @expectedException \SilverStripe\Security\PasswordEncryptor_NotFoundException
-     */
     public function testCreateForCodeNotFound()
     {
+        $this->expectException(PasswordEncryptor_NotFoundException::class);
         PasswordEncryptor::create_for_algorithm('unknown');
     }
 
@@ -42,12 +41,12 @@ class PasswordEncryptorTest extends SapphireTest
         Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
-            array('test' => array(TestEncryptor::class => null))
+            ['test' => [TestEncryptor::class => null]]
         );
         $encryptors = PasswordEncryptor::get_encryptors();
-        $this->assertContains('test', array_keys($encryptors));
+        $this->assertContains('test', array_keys($encryptors ?? []));
         $encryptor = $encryptors['test'];
-        $this->assertContains(TestEncryptor::class, key($encryptor));
+        $this->assertStringContainsString(TestEncryptor::class, key($encryptor ?? []));
     }
 
     public function testEncryptorPHPHashWithArguments()
@@ -91,7 +90,7 @@ class PasswordEncryptorTest extends SapphireTest
         $password = 'mypassword';
 
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertTrue(
             $e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x'
@@ -103,7 +102,7 @@ class PasswordEncryptorTest extends SapphireTest
 
         PasswordEncryptor_Blowfish::set_cost(1);
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertNotEquals(1, PasswordEncryptor_Blowfish::get_cost());
         $this->assertEquals(4, PasswordEncryptor_Blowfish::get_cost());
@@ -114,7 +113,7 @@ class PasswordEncryptorTest extends SapphireTest
 
         PasswordEncryptor_Blowfish::set_cost(11);
         $salt = $e->salt($password);
-        $modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+        $modSalt = substr($salt ?? '', 0, 3) . str_shuffle(substr($salt ?? '', 3, strlen($salt ?? '')));
 
         $this->assertEquals(11, PasswordEncryptor_Blowfish::get_cost());
 

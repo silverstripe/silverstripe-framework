@@ -15,7 +15,7 @@ class CoreTest extends SapphireTest
 
     protected $tempPath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tempPath = Director::baseFolder() . DIRECTORY_SEPARATOR . 'silverstripe-cache';
@@ -25,12 +25,11 @@ class CoreTest extends SapphireTest
     {
         $user = TempFolder::getTempFolderUsername();
 
-        if (file_exists($this->tempPath)) {
+        if (file_exists($this->tempPath ?? '')) {
             $this->assertEquals(TempFolder::getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
         } else {
             $user = TempFolder::getTempFolderUsername();
-            $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-                preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+            $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION);
 
             // A typical Windows location for where sites are stored on IIS
             $this->assertEquals(
@@ -52,21 +51,20 @@ class CoreTest extends SapphireTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $user = TempFolder::getTempFolderUsername();
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
-            preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
-        foreach (array(
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION);
+        foreach ([
             'C--inetpub-wwwroot-silverstripe-test-project',
             '-Users-joebloggs-Sites-silverstripe-test-project',
             '-cache-var-www-silverstripe-test-project'
-        ) as $dir) {
+        ] as $dir) {
             $path = $base . $dir;
-            if (file_exists($path)) {
+            if (file_exists($path ?? '')) {
                 rmdir($path . DIRECTORY_SEPARATOR . $user);
-                rmdir($path);
+                rmdir($path ?? '');
             }
         }
     }

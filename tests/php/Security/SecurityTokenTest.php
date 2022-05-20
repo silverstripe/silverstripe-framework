@@ -93,19 +93,19 @@ class SecurityTokenTest extends SapphireTest
         $n = $t->getName();
 
         $t->setValue(null);
-        $r = new HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
+        $r = new HTTPRequest('GET', 'dummy', [$n => 'invalidtoken']);
         $this->assertFalse($t->checkRequest($r), 'Any token is invalid if no token is stored');
 
         $t->setValue(null);
-        $r = new HTTPRequest('GET', 'dummy', array($n => null));
+        $r = new HTTPRequest('GET', 'dummy', [$n => null]);
         $this->assertFalse($t->checkRequest($r), 'NULL token is invalid if no token is stored');
 
         $t->setValue('mytoken');
-        $r = new HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
+        $r = new HTTPRequest('GET', 'dummy', [$n => 'invalidtoken']);
         $this->assertFalse($t->checkRequest($r), 'Invalid token returns false');
 
         $t->setValue('mytoken');
-        $r = new HTTPRequest('GET', 'dummy', array($n => 'mytoken'));
+        $r = new HTTPRequest('GET', 'dummy', [$n => 'mytoken']);
         $this->assertTrue($t->checkRequest($r), 'Valid token returns true');
 
         $t->setValue('mytoken');

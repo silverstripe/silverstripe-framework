@@ -1,12 +1,23 @@
 ---
 Name: coreconfig
 ---
-SilverStripe\Control\HTTP:
-  cache_control:
-    max-age: 0
-    must-revalidate: "true"
-    no-transform: "true"
-  vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
 SilverStripe\Core\Manifest\VersionProvider:
   modules:
     silverstripe/framework: Framework
+---
+Name: httpconfig-dev
+Only:
+  environment: dev
+After:
+  - 'requestprocessors'
+---
+# Set dev level to disabled with a higher forcing level
+SilverStripe\Control\Middleware\HTTPCacheControlMiddleware:
+  defaultState: 'disabled'
+  defaultForcingLevel: 3
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Control\Director:
+    properties:
+      Middlewares:
+        ExecMetricMiddleware: '%$SilverStripe\Control\Middleware\ExecMetricMiddleware'

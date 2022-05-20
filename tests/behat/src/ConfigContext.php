@@ -5,6 +5,7 @@ namespace SilverStripe\Framework\Tests\Behaviour;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use InvalidArgumentException;
+use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
@@ -78,8 +79,8 @@ class ConfigContext implements Context
         }
 
         foreach ($this->activatedConfigFiles as $configFile) {
-            if (file_exists($configFile)) {
-                unlink($configFile);
+            if (file_exists($configFile ?? '')) {
+                unlink($configFile ?? '');
             }
         }
         $this->activatedConfigFiles = [];
@@ -109,23 +110,23 @@ class ConfigContext implements Context
         // Ensure site is in dev mode
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
-        assertEquals(Kernel::DEV, $kernel->getEnvironment(), "Site is in dev mode");
+        Assert::assertEquals(Kernel::DEV, $kernel->getEnvironment(), "Site is in dev mode");
 
         // Ensure file exists in specified fixture dir
         $sourceDir = $this->getConfigPath();
         $sourcePath = "{$sourceDir}/{$filename}";
-        assertFileExists($sourcePath, "Config file {$filename} exists");
+        Assert::assertFileExists($sourcePath, "Config file {$filename} exists");
 
         // Get destination
         $project = ModuleManifest::config()->get('project') ?: 'mysite';
         $mysite = ModuleLoader::getModule($project);
-        assertNotNull($mysite, 'Project exists');
+        Assert::assertNotNull($mysite, 'Project exists');
         $destPath = $mysite->getResource("_config/{$filename}")->getPath();
-        assertFileNotExists($destPath, "Config file {$filename} hasn't aleady been loaded");
+        Assert::assertFileDoesNotExist($destPath, "Config file {$filename} hasn't already been loaded");
 
         // Load
         $this->activatedConfigFiles[] = $destPath;
-        copy($sourcePath, $destPath);
+        copy($sourcePath ?? '', $destPath ?? '');
 
         // Flush website
         $this->stepIFlush();

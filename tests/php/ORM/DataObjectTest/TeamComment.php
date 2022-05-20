@@ -9,14 +9,14 @@ class TeamComment extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_TeamComment';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Comment' => 'Text'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Team' => Team::class
-    );
+    ];
 
     private static $default_sort = '"Name" ASC';
 }

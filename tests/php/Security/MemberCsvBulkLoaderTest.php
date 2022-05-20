@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\SapphireTest;
 
@@ -13,12 +14,21 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 {
     protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        PasswordValidator::singleton()
+            ->setMinLength(0)
+            ->setTestNames([]);
+    }
+
     public function testNewImport()
     {
         $loader = new MemberCsvBulkLoader();
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 2);
+        $this->assertEquals(count($created ?? []), 2);
         $this->assertEquals($created[0]->Email, 'author1@test.com');
         $this->assertEquals($created[1]->Email, 'author2@test.com');
     }
@@ -33,9 +43,9 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $loader = new MemberCsvBulkLoader();
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
+        $this->assertEquals(count($created ?? []), 1);
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
+        $this->assertEquals(count($updated ?? []), 1);
         $this->assertEquals($created[0]->Email, 'author2@test.com');
         $this->assertEquals($updated[0]->Email, 'author1@test.com');
         $this->assertEquals($updated[0]->FirstName, 'author1_first');
@@ -46,15 +56,15 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         $existinggroup = $this->objFromFixture(Group::class, 'existinggroup');
 
         $loader = new MemberCsvBulkLoader();
-        $loader->setGroups(array($existinggroup));
+        $loader->setGroups([$existinggroup]);
 
         $results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(1, count($created[0]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[0]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[0]->Groups()->column('ID'));
 
-        $this->assertEquals(1, count($created[1]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[1]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[1]->Groups()->column('ID'));
     }
 
@@ -67,17 +77,17 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 
         $newgroup = DataObject::get_one(
             Group::class,
-            array(
+            [
             '"Group"."Code"' => 'newgroup'
-            )
+            ]
         );
         $this->assertEquals($newgroup->Title, 'newgroup');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(1, count($created[0]->Groups()->column('ID')));
+        $this->assertEquals(1, count($created[0]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[0]->Groups()->column('ID'));
 
-        $this->assertEquals(2, count($created[1]->Groups()->column('ID')));
+        $this->assertEquals(2, count($created[1]->Groups()->column('ID') ?? []));
         $this->assertContains($existinggroup->ID, $created[1]->Groups()->column('ID'));
         $this->assertContains($newgroup->ID, $created[1]->Groups()->column('ID'));
     }

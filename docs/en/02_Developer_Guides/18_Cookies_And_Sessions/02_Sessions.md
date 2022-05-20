@@ -1,5 +1,8 @@
+---
 title: Sessions
 summary: A set of static methods for manipulating PHP sessions.
+icon: user
+---
 
 # Sessions
 
@@ -29,6 +32,9 @@ class MyController extends Controller
 Otherwise, if you're not in a controller, get the request as a service.
 
 ```php
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
+
 $request = Injector::inst()->get(HTTPRequest::class);
 $session = $request->getSession();
 ```
@@ -37,7 +43,7 @@ $session = $request->getSession();
 
 
 ```php
-    $session->set('MyValue', 6);
+$session->set('MyValue', 6);
 ```
 
 Saves the value of to session data. You can also save arrays or serialized objects in session (but note there may be 
@@ -45,12 +51,12 @@ size restrictions as to how much you can save).
 
 
 ```php
-    // saves an array
-    $session->set('MyArrayOfValues', ['1','2','3']);
+// saves an array
+$session->set('MyArrayOfValues', ['1','2','3']);
 
-    // saves an object (you'll have to unserialize it back)
-    $object = new Object();
-    $session->set('MyObject', serialize($object));
+// saves an object (you'll have to unserialize it back)
+$object = new Object();
+$session->set('MyObject', serialize($object));
 
 ```
 
@@ -62,24 +68,23 @@ can use this anywhere in your PHP files.
 
 
 ```php
-    echo $session->get('MyValue'); 
-    // returns 6
+echo $session->get('MyValue'); 
+// returns 6
 
-    $data = $session->get('MyArrayOfValues'); 
-    // $data = array(1,2,3)
+$data = $session->get('MyArrayOfValues'); 
+// $data = [1,2,3]
 
-    $object = unserialize($session->get('MyObject', $object)); 
-    // $object = Object()
+$object = unserialize($session->get('MyObject', $object)); 
+// $object = Object()
 
 ```
 
-## get_all
+## getAll
 
 You can also get all the values in the session at once. This is useful for debugging.
 ```php
-    $session->getAll();
-    // returns an array of all the session values.
-
+$session->getAll();
+// returns an array of all the session values.
 ```
 
 ## clear
@@ -87,13 +92,13 @@ You can also get all the values in the session at once. This is useful for debug
 Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have
 to specifically remove it.
 ```php
-    $session->clear('MyValue');
+$session->clear('MyValue');
 ```
 
-Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
+Or you can clear every single value in the session at once. Note Silverstripe CMS stores some of its own session data
 including form and page comment information. None of this is vital but `clear_all` will clear everything.
 ```php
-    $session->clearAll();
+$session->clearAll();
 ```
 
 ## Secure Session Cookie
@@ -102,12 +107,24 @@ In certain circumstances, you may want to use a different `session_name` cookie 
 
 
 ```yml
-
 SilverStripe\Control\Session:
   cookie_secure: true
 ```
 
 This uses the session_name `SECSESSID` for `https` connections instead of the default `PHPSESSID`. Doing so adds an extra layer of security to your session cookie since you no longer share `http` and `https` sessions.
+
+## Relaxing checks around user agent strings
+
+Out of the box, Silverstripe CMS will invalidate a user's session if the `User-Agent` header changes. This provides some supplemental protection against session high-jacking attacks.
+
+It is possible to disable the user agent header session validation. However, it is not recommended.
+
+To disable the user agent session check, add the following code snippet to your project's YML configuration.
+
+```yml
+SilverStripe\Control\Session:
+  strict_user_agent_check: false
+```
 
 
 ## API Documentation

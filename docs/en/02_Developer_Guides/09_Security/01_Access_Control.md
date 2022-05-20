@@ -1,11 +1,16 @@
+---
+title: Access Control
+summary: Restrict CMS access to specific groups of users
+icon: user-lock
+---
 # Access Control and Page Security
 
-There is a fairly comprehensive security mechanism in place for SilverStripe. If you want to add premium content to your
+There is a fairly comprehensive security mechanism in place for Silverstripe CMS. If you want to add premium content to your
 site you have to figure this stuff out, and it's not entirely obvious. 
 
 ## Ways to restrict access
 
-There are a number of ways to restrict access in SilverStripe.  In the security tab in the CMS you can create groups
+There are a number of ways to restrict access in Silverstripe CMS.  In the security tab in the CMS you can create groups
 that have access to certain parts.  The options can be found on the [permissions](/developer_guides/security/permissions) documentation. 
 
 Once you have groups, you can set access for each page for a particular group.  This can be:
@@ -15,7 +20,7 @@ Once you have groups, you can set access for each page for a particular group.  
 
 It is unclear how this works for data-objects that are not pages.
 
-## The Security Groups in SilverStripe
+## The Security Groups in Silverstripe CMS
 
 In the security tab you can make groups for security.  The way this was intended was as follows (this may be a counter
 intuitive):
@@ -35,7 +40,7 @@ privileges from its parent group.
 
 ## Permission checking is at class level
 
-SilverStripe provides a security mechanism via the *Permission::check* method (see [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) for examples on how
+Silverstripe CMS provides a security mechanism via the *Permission::check* method (see [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) for examples on how
 the admin screens work).
 
 (next step -- go from *Permission::checkMember*...)

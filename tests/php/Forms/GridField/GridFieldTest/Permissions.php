@@ -10,15 +10,15 @@ class Permissions extends DataObject implements TestOnly
 
     private static $table_name = 'GridFieldTest_Permissions';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Email' => 'Varchar',
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Name',
         'Email'
-    );
+    ];
 
     public function canView($member = null)
     {

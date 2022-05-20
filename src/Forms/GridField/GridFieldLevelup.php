@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
@@ -15,10 +14,8 @@ use SilverStripe\View\SSViewer;
  * hierarchical data. Requires the managed record to have a "getParent()"
  * method or has_one relationship called "Parent".
  */
-class GridFieldLevelup implements GridField_HTMLProvider
+class GridFieldLevelup extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
-    use Injectable;
-
     /**
      * @var integer - the record id of the level up to
      */
@@ -34,7 +31,7 @@ class GridFieldLevelup implements GridField_HTMLProvider
     /**
      * @var array Extra attributes for the link
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      *
@@ -62,6 +59,11 @@ class GridFieldLevelup implements GridField_HTMLProvider
 
         /** @var DataObject|Hierarchy $modelObj */
         $modelObj = DataObject::get_by_id($modelClass, $this->currentID);
+        if (!$modelObj) {
+            throw new \LogicException(
+                "Can't find object of class $modelClass ID #{$this->currentID} for GridFieldLevelup"
+            );
+        }
 
         $parent = null;
         if ($modelObj->hasMethod('getParent')) {
@@ -75,20 +77,20 @@ class GridFieldLevelup implements GridField_HTMLProvider
         }
 
         // Attributes
-        $attrs = array_merge($this->attributes, array(
-            'href' => sprintf($this->linkSpec, $parentID),
+        $attrs = array_merge($this->attributes, [
+            'href' => sprintf($this->linkSpec ?? '', $parentID),
             'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
-        ));
+        ]);
         $linkTag = HTML::createTag('a', $attrs);
 
-        $forTemplate = new ArrayData(array(
+        $forTemplate = new ArrayData([
             'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
-        ));
+        ]);
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
-            return array(
+        return [
             'before' => $forTemplate->renderWith($template),
-        );
+        ];
     }
 
     public function setAttributes($attrs)

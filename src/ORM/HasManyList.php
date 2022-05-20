@@ -18,7 +18,7 @@ class HasManyList extends RelationList
     /**
      * Create a new HasManyList object.
      * Generation of the appropriate record set is left up to the caller, using the normal
-     * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
+     * {@link DataList} methods.  Addition arguments are used to support {@link add()}
      * and {@link remove()} methods.
      *
      * @param string $dataClass The class of the DataObjects that this will list.
@@ -42,7 +42,7 @@ class HasManyList extends RelationList
     }
 
     /**
-     * @param null|int $id
+     * @param null|int|array|string $id
      * @return array
      */
     protected function foreignIDFilter($id = null)
@@ -54,9 +54,10 @@ class HasManyList extends RelationList
         // Apply relation filter
         $key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
         if (is_array($id)) {
-            return array("$key IN (".DB::placeholders($id).")"  => $id);
-        } elseif ($id !== null) {
-            return array($key => $id);
+            return ["$key IN (" . DB::placeholders($id) . ")"  => $id];
+        }
+        if ($id !== null) {
+            return [$key => $id];
         }
         return null;
     }
@@ -73,7 +74,7 @@ class HasManyList extends RelationList
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
         } elseif (!($item instanceof $this->dataClass)) {
-            user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+            throw new InvalidArgumentException("HasManyList::add() expecting a $this->dataClass object, or ID value");
         }
 
         $foreignID = $this->getForeignID();
@@ -84,7 +85,7 @@ class HasManyList extends RelationList
             return;
         }
         if (is_array($foreignID)) {
-            user_error("HasManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
+            user_error("HasManyList::add() can't be called on a list linked to multiple foreign IDs", E_USER_WARNING);
             return;
         }
 
@@ -92,6 +93,10 @@ class HasManyList extends RelationList
         $item->$foreignKey = $foreignID;
 
         $item->write();
+
+        if ($this->addCallbacks) {
+            $this->addCallbacks->call($this, $item, []);
+        }
     }
 
     /**
@@ -118,10 +123,7 @@ class HasManyList extends RelationList
     public function remove($item)
     {
         if (!($item instanceof $this->dataClass)) {
-            throw new InvalidArgumentException(
-                "HasManyList::remove() expecting a $this->dataClass object, or ID",
-                E_USER_ERROR
-            );
+            throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID");
         }
 
         // Don't remove item which doesn't belong to this list
@@ -129,11 +131,15 @@ class HasManyList extends RelationList
         $foreignKey = $this->getForeignKey();
 
         if (empty($foreignID)
-            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID))
+            || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID ?? []))
             || $foreignID == $item->$foreignKey
         ) {
             $item->$foreignKey = null;
             $item->write();
+        }
+
+        if ($this->removeCallbacks) {
+            $this->removeCallbacks->call($this, [$item->ID]);
         }
     }
 }

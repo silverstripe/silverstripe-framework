@@ -12,10 +12,10 @@ use SilverStripe\Dev\SapphireTest;
 class DBCompositeTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DBCompositeTest\TestObject::class,
         DBCompositeTest\SubclassedDBFieldObject::class,
-    );
+    ];
 
     public function testHasDatabaseFieldOnDataObject()
     {
@@ -51,10 +51,10 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('Money', $schema->compositeField(DBCompositeTest\TestObject::class, 'MyMoney'));
         $this->assertNull($schema->compositeField(DBCompositeTest\TestObject::class, 'Title'));
         $this->assertEquals(
-            array(
+            [
                 'MyMoney' => 'Money',
                 'OverriddenMoney' => 'Money'
-            ),
+            ],
             $schema->compositeFields(DBCompositeTest\TestObject::class)
         );
 
@@ -64,11 +64,11 @@ class DBCompositeTest extends SapphireTest
         $this->assertNull($schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'Title'));
         $this->assertNull($schema->compositeField(DBCompositeTest\SubclassedDBFieldObject::class, 'OtherField'));
         $this->assertEquals(
-            array(
+            [
                 'MyMoney' => 'Money',
                 'OtherMoney' => 'Money',
                 'OverriddenMoney' => 'Money',
-            ),
+            ],
             $schema->compositeFields(DBCompositeTest\SubclassedDBFieldObject::class)
         );
     }
@@ -92,7 +92,7 @@ class DBCompositeTest extends SapphireTest
         $object2->MyMoneyCurrency = 'USD';
         $this->assertEquals('USD', $object2->MyMoney->Currency);
 
-        $object2->MyMoney->setValue(array('Currency' => 'EUR', 'Amount' => 200.0));
+        $object2->MyMoney->setValue(['Currency' => 'EUR', 'Amount' => 200.0]);
         $this->assertEquals('EUR', $object2->MyMoneyCurrency);
         $this->assertEquals(200.0, $object2->MyMoneyAmount);
     }

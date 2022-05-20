@@ -2,10 +2,19 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
-use InvalidArgumentException;
+use SilverStripe\ORM\Tests\DataObjectTest\Player;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\Item;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyItem;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale;
+use SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -14,16 +23,22 @@ class ManyManyThroughListTest extends SapphireTest
     protected static $extra_dataobjects = [
         ManyManyThroughListTest\Item::class,
         ManyManyThroughListTest\JoinObject::class,
-        ManyManyThroughListTest\TestObject::class
+        ManyManyThroughListTest\TestObject::class,
+        ManyManyThroughListTest\PolyItem::class,
+        ManyManyThroughListTest\PolyJoinObject::class,
+        ManyManyThroughListTest\PolyObjectA::class,
+        ManyManyThroughListTest\PolyObjectB::class,
+        ManyManyThroughListTest\Locale::class,
+        ManyManyThroughListTest\FallbackLocale::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         DataObject::reset();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DataObject::reset();
         parent::tearDown();
@@ -66,32 +81,83 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals('join 2', $item2->getJoin()->Title);
         $this->assertEquals('join 2', $item2->ManyManyThroughListTest_JoinObject->Title);
 
-        // Test sorting on join table
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort"');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
-            ],
-            $items
-        );
+        // Check that the join record is set for new records added
+        $item3 = new Item;
+        $this->assertNull($item3->getJoin());
+        $parent->Items()->add($item3);
+        $expectedJoinObject = ManyManyThroughListTest\JoinObject::get()->filter(['ParentID' => $parent->ID, 'ChildID' => $item3->ID ])->first();
+        $this->assertEquals($expectedJoinObject->ID, $item3->getJoin()->ID);
+        $this->assertEquals(get_class($expectedJoinObject), get_class($item3->getJoin()));
+    }
 
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Sort" ASC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 1'],
-                ['Title' => 'item 2'],
+    /**
+     * @param string $sort
+     * @param array $expected
+     * @dataProvider sortingProvider
+     */
+    public function testSorting($sort, $expected)
+    {
+        /** @var ManyManyThroughListTest\TestObject $parent */
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+
+        $items = $parent->Items();
+        if ($sort) {
+            $items = $items->sort($sort);
+        }
+        $this->assertSame($expected, $items->column('Title'));
+    }
+
+    /**
+     * @return array[]
+     */
+    public function sortingProvider()
+    {
+        return [
+            'nothing passed (default)' => [
+                null,
+                ['item 2', 'item 1'],
             ],
-            $items
-        );
-        $items = $parent->Items()->sort('"ManyManyThroughListTest_JoinObject"."Title" DESC');
-        $this->assertListEquals(
-            [
-                ['Title' => 'item 2'],
-                ['Title' => 'item 1'],
+            'table with default column' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort"',
+                ['item 2', 'item 1'],
             ],
-            $items
-        );
+            'table with default column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" ASC',
+                ['item 2', 'item 1'],
+            ],
+            'table with default column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Sort" DESC',
+                ['item 1', 'item 2'],
+            ],
+            'table with column descending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" DESC',
+                ['item 2', 'item 1'],
+            ],
+            'table with column ascending' => [
+                '"ManyManyThroughListTest_JoinObject"."Title" ASC',
+                ['item 1', 'item 2'],
+            ],
+            'default column' => [
+                '"Sort"',
+                ['item 2', 'item 1'],
+            ],
+            'default column ascending' => [
+                '"Sort" ASC',
+                ['item 2', 'item 1'],
+            ],
+            'default column descending' => [
+                '"Sort" DESC',
+                ['item 1', 'item 2'],
+            ],
+            'column descending' => [
+                '"Title" DESC',
+                ['item 2', 'item 1'],
+            ],
+            'column ascending' => [
+                '"Title" ASC',
+                ['item 1', 'item 2'],
+            ],
+        ];
     }
 
     public function testAdd()
@@ -139,11 +205,10 @@ class ManyManyThroughListTest extends SapphireTest
 
     /**
      * Test validation
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testValidateModelValidatesJoinType()
     {
+        $this->expectException(\InvalidArgumentException::class);
         DataObject::reset();
         ManyManyThroughListTest\Item::config()->update(
             'db',
@@ -184,5 +249,211 @@ class ManyManyThroughListTest extends SapphireTest
             ],
             $schema->manyManyComponent(ManyManyThroughListTest\Item::class, 'Objects')
         );
+    }
+
+    /**
+     * Note: polymorphic many_many support is currently experimental
+     */
+    public function testPolymorphicManyMany()
+    {
+        /** @var ManyManyThroughListTest\PolyObjectA $objA1 */
+        $objA1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectA::class, 'obja1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB1 */
+        $objB1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB2 */
+        $objB2 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb2');
+
+        // Test various parent class queries
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'item 2'],
+        ], $objA1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB2->Items());
+
+        // Test adding items
+        $newItem = new PolyItem();
+        $newItem->Title = 'New Item';
+        $objA1->Items()->add($newItem);
+        $objB2->Items()->add($newItem);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+        ], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
+
+        // Test removing items
+        $item2 = $this->objFromFixture(ManyManyThroughListTest\PolyItem::class, 'child2');
+        $objA1->Items()->remove($item2);
+        $objB1->Items()->remove($item2);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 2'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
+
+        // Test set-by-id-list
+        $objB2->Items()->setByIDList([
+            $newItem->ID,
+            $this->idFromFixture(ManyManyThroughListTest\PolyItem::class, 'child1'),
+        ]);
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objA1->Items());
+        $this->assertListEquals([], $objB1->Items());
+        $this->assertListEquals([
+            ['Title' => 'item 1'],
+            ['Title' => 'New Item'],
+        ], $objB2->Items());
+    }
+
+    public function testGetJoinTable()
+    {
+        $joinTable = DataObject::getSchema()->tableName(PolyJoinObject::class);
+        /** @var ManyManyThroughListTest\PolyObjectA $objA1 */
+        $objA1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectA::class, 'obja1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB1 */
+        $objB1 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb1');
+        /** @var ManyManyThroughListTest\PolyObjectB $objB2 */
+        $objB2 = $this->objFromFixture(ManyManyThroughListTest\PolyObjectB::class, 'objb2');
+
+        $this->assertEquals($joinTable, $objA1->Items()->getJoinTable());
+        $this->assertEquals($joinTable, $objB1->Items()->getJoinTable());
+        $this->assertEquals($joinTable, $objB2->Items()->getJoinTable());
+    }
+
+    /**
+     * This tests that default sort works when the join table has a default sort set, and the main
+     * dataobject has a default sort set.
+     *
+     * @return void
+     */
+    public function testDefaultSortOnJoinAndMain()
+    {
+        // We have spanish mexico with two fall back locales; argentina and international sorted in that order.
+        $mexico = $this->objFromFixture(Locale::class, 'mexico');
+
+        $fallbacks = $mexico->Fallbacks();
+        $this->assertCount(2, $fallbacks);
+
+        // Ensure the default sort is is correct
+        list($first, $second) = $fallbacks;
+        $this->assertSame('Argentina', $first->Title);
+        $this->assertSame('International', $second->Title);
+
+        // Ensure that we're respecting the default sort by reversing it
+        Config::inst()->update(FallbackLocale::class, 'default_sort', '"ManyManyThroughTest_FallbackLocale"."Sort" DESC');
+
+        $reverse = $mexico->Fallbacks();
+        list($firstReverse, $secondReverse) = $reverse;
+        $this->assertSame('International', $firstReverse->Title);
+        $this->assertSame('Argentina', $secondReverse->Title);
+    }
+
+    public function testCallbackOnSetById()
+    {
+        $addedIds = [];
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+        $add = new Item();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item, $extraFields) use (&$removedIds) {
+            $addedIds[] = $item;
+        });
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->setByIDList(array_merge(
+            $base->Items()->exclude('ID', $remove->ID)->column('ID'),
+            [$add->ID]
+        ));
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testAddCallbackWithExtraFields()
+    {
+        $added = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $add = new Item();
+        $add->write();
+
+        $relation->addCallbacks()->add(function ($list, $item, $extraFields) use (&$added) {
+            $added[] = [$item, $extraFields];
+        });
+
+        $relation->add($add, ['Sort' => '99']);
+        $this->assertEquals([[$add, ['Sort' => '99']]], $added);
+    }
+
+    public function testRemoveCallbackOnRemove()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->remove($remove);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveById()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->First();
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeByID($remove->ID);
+        $this->assertEquals([$remove->ID], $removedIds);
+    }
+
+    public function testRemoveCallbackOnRemoveAll()
+    {
+        $removedIds = [];
+
+        $base = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $relation = $base->Items();
+        $remove = $relation->column('ID');
+
+        $relation->removeCallbacks()->add(function ($list, $ids) use (&$removedIds) {
+            $removedIds = $ids;
+        });
+
+        $relation->removeAll();
+        $this->assertEquals(sort($remove), sort($removedIds));
     }
 }

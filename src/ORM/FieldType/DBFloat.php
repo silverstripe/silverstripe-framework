@@ -20,13 +20,13 @@ class DBFloat extends DBField
 
     public function requireField()
     {
-        $parts = array(
-            'datatype'=>'float',
-            'null'=>'not null',
-            'default'=>$this->defaultVal,
-            'arrayValue'=>$this->arrayValue
-        );
-        $values = array('type'=>'float', 'parts'=>$parts);
+        $parts = [
+            'datatype' => 'float',
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue
+        ];
+        $values = ['type' => 'float', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
@@ -37,17 +37,17 @@ class DBFloat extends DBField
      */
     public function Nice()
     {
-        return number_format($this->value, 2);
+        return number_format($this->value ?? 0.0, 2);
     }
 
     public function Round($precision = 3)
     {
-        return round($this->value, $precision);
+        return round($this->value ?? 0.0, $precision ?? 0);
     }
 
     public function NiceRound($precision = 3)
     {
-        return number_format(round($this->value, $precision), $precision);
+        return number_format(round($this->value ?? 0.0, $precision ?? 0), $precision ?? 0);
     }
 
     public function scaffoldFormField($title = null, $params = null)
@@ -66,7 +66,9 @@ class DBFloat extends DBField
     {
         if ($value === true) {
             return 1;
-        } elseif (empty($value) || !is_numeric($value)) {
+        }
+
+        if (empty($value) || !is_numeric($value)) {
             return 0;
         }
 

@@ -19,33 +19,36 @@ class Backtrace
      * PHP's debug_backtrace() doesn't allow to inspect the argument names,
      * so all arguments of the provided functions will be filtered out.
      */
-    private static $ignore_function_args = array(
+    private static $ignore_function_args = [
         'mysql_connect',
         'mssql_connect',
         'pg_connect',
-        array('PDO', '__construct'),
-        array('mysqli', 'mysqli'),
-        array('mysqli', 'select_db'),
-        array('SilverStripe\\ORM\\DB', 'connect'),
-        array('SilverStripe\\Security\\Security', 'check_default_admin'),
-        array('SilverStripe\\Security\\Security', 'encrypt_password'),
-        array('SilverStripe\\Security\\Security', 'setDefaultAdmin'),
-        array('SilverStripe\\ORM\\DB', 'createDatabase'),
-        array('SilverStripe\\Security\\Member', 'checkPassword'),
-        array('SilverStripe\\Security\\Member', 'changePassword'),
-        array('SilverStripe\\Security\\MemberPassword', 'checkPassword'),
-        array('SilverStripe\\Security\\PasswordValidator', 'validate'),
-        array('SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'encrypt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'salt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'encrypt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'salt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'encrypt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'salt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'encrypt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'salt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'encrypt'),
-        array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'salt'),
-    );
+        ['PDO', '__construct'],
+        ['mysqli', 'mysqli'],
+        ['mysqli', 'select_db'],
+        ['mysqli', 'real_connect'],
+        ['SilverStripe\\ORM\\DB', 'connect'],
+        ['SilverStripe\\Security\\Security', 'check_default_admin'],
+        ['SilverStripe\\Security\\Security', 'encrypt_password'],
+        ['SilverStripe\\Security\\Security', 'setDefaultAdmin'],
+        ['SilverStripe\\ORM\\DB', 'createDatabase'],
+        ['SilverStripe\\Security\\Member', 'checkPassword'],
+        ['SilverStripe\\Security\\Member', 'changePassword'],
+        ['SilverStripe\\Security\\MemberAuthenticator\\MemberAuthenticator', 'checkPassword'],
+        ['SilverStripe\\Security\\MemberPassword', 'checkPassword'],
+        ['SilverStripe\\Security\\PasswordValidator', 'validate'],
+        ['SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'encrypt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'salt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'encrypt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'salt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'encrypt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'salt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'encrypt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'salt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'encrypt'],
+        ['SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'salt'],
+        ['*', 'updateValidatePassword'],
+    ];
 
     /**
      * Return debug_backtrace() results with functions filtered
@@ -69,7 +72,7 @@ class Backtrace
      */
     public static function filter_backtrace($bt, $ignoredFunctions = null)
     {
-        $defaultIgnoredFunctions = array(
+        $defaultIgnoredFunctions = [
             'SilverStripe\\Logging\\Log::log',
             'SilverStripe\\Dev\\Backtrace::backtrace',
             'SilverStripe\\Dev\\Backtrace::filtered_backtrace',
@@ -87,7 +90,7 @@ class Backtrace
             'SilverStripe\\Dev\\Debug::showError',
             'SilverStripe\\Dev\\Debug::backtrace',
             'exceptionHandler'
-        );
+        ];
 
         if ($ignoredFunctions) {
             foreach ($ignoredFunctions as $ignoredFunction) {
@@ -95,7 +98,7 @@ class Backtrace
             }
         }
 
-        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions)) {
+        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions ?? [])) {
             array_shift($bt);
         }
 
@@ -106,12 +109,15 @@ class Backtrace
             $match = false;
             if (!empty($bt[$i]['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
-                    if (is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) {
+                    if (is_array($fnSpec) &&
+                        ('*' == $fnSpec[0] || $bt[$i]['class'] == $fnSpec[0]) &&
+                        $bt[$i]['function'] == $fnSpec[1]
+                    ) {
                         $match = true;
                     }
                 }
             } else {
-                if (in_array($bt[$i]['function'], $ignoredArgs)) {
+                if (in_array($bt[$i]['function'], $ignoredArgs ?? [])) {
                     $match = true;
                 }
             }
@@ -168,17 +174,17 @@ class Backtrace
         }
 
         if ($showArgs && isset($item['args'])) {
-            $args = array();
+            $args = [];
             foreach ($item['args'] as $arg) {
                 if (!is_object($arg) || method_exists($arg, '__toString')) {
                     $sarg = is_array($arg) ? 'Array' : strval($arg);
-                    $args[] = (strlen($sarg) > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
+                    $args[] = (strlen($sarg ?? '') > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
                 } else {
                     $args[] = get_class($arg);
                 }
             }
 
-            $funcName .= "(" . implode(", ", $args)  .")";
+            $funcName .= "(" . implode(", ", $args) . ")";
         }
 
         return $funcName;
@@ -203,7 +209,7 @@ class Backtrace
             if ($plainText) {
                 $result .= self::full_func_name($item, true) . "\n";
                 if (isset($item['line']) && isset($item['file'])) {
-                    $result .= basename($item['file']) . ":$item[line]\n";
+                    $result .= basename($item['file'] ?? '') . ":$item[line]\n";
                 }
                 $result .= "\n";
             } else {
@@ -212,7 +218,7 @@ class Backtrace
                 } else {
                     $name = self::full_func_name($item, true);
                 }
-                $result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
+                $result .= "<li><b>" . htmlentities($name ?? '', ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
                 $result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';
                 $result .= isset($item['line']) ? ":$item[line]" : '';
                 $result .= "</li>\n";

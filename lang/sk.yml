@@ -1,7 +1,29 @@
 sk:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: neznáma
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Rozmery
+    EDIT: Editovať
+    EDITINFO: 'Editovať súbor'
+    REMOVE: Odstrániť
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Heslo pre účet s e-mailovou adresou {email} bolo zmenené. Ak ste nemenili vaše heslo, tak ho zmeňte pomocou odkazu uvedeného nižšie, prosím.'
+    CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
+    CHANGEPASSWORDTEXT3: 'Zmeniť heslo'
+    HELLO: Ahoj
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Ahoj
+    TEXT1: 'Tu je váš'
+    TEXT2: 'odkaz na resetovanie hesla'
+    TEXT3: pre
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Neplatná požiadavka'
+    REQUEST_ABORTED: 'Požiadavka prerušená'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Žiadne dostupné možnosti'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Heslá musia byť nejmenej {min} znakov dlhé.'
     BETWEEN: 'Heslá musia byť {min} až {max} znakov dlhé.'
@@ -10,17 +32,12 @@ sk:
     LOGGED_IN_ERROR: 'Pre zmenu vášho hesla musíte byť prihlásený.'
     MAXIMUM: 'Heslá musia byť najviac {max} znakov dlhé.'
     SHOWONCLICKTITLE: 'Zmeniť heslo'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: nezadané
-    TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: '(Vyberte si)'
-    CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosím zadajte platnú e-mailovú adresu'
@@ -34,6 +51,8 @@ sk:
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
   SilverStripe\Forms\FormField:
     NONE: žiadne
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Hlavné
   SilverStripe\Forms\GridField\GridField:
     Add: 'Pridať {name}'
     CSVEXPORT: 'Exportovať do CSV'
@@ -52,7 +71,6 @@ sk:
     RelationSearch: 'Vzťah hľadania'
     ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Zmazať
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     EditPermissionsFailure: 'Žiadne oprávnenie pre odpojenie záznamu'
@@ -64,8 +82,8 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané {type} {name}'
     Save: Uložiť
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: Editovať
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Stránka
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -104,6 +122,8 @@ sk:
     INVALIDUSER: '<p>Neplatný užívateľ. <a target="_top" href="{link}">Prosím overte sa znovu tu</a> pre pokračovanie.</p>'
     SUCCESS: Úspešné
     SUCCESSCONTENT: '<p>Úspešné prihlásenie. Ak nebudete automaticky presmerovaní <a target="_top" href="{link}">kliknite tu</a></p>'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Predvolený administrátor'
   SilverStripe\Security\Group:
     AddRole: 'Pridať úlohu pre túto skupinu'
     Code: 'Kód skupiny'
@@ -113,6 +133,7 @@ sk:
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
     HierarchyPermsError: 'Nie je možné pripojiť nadriadenú skupinu "{group}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     Locked: 'Zamknuté?'
+    MEMBERS: Členovia
     NoRoles: 'Nenašli sa úlohy'
     PLURALNAME: Skupiny
     Parent: 'Nadradená skupina'
@@ -145,7 +166,6 @@ sk:
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
     FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
-    KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
@@ -156,7 +176,6 @@ sk:
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorom ({name} = {value})'
-    WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_Locale: 'Lokalizácia rozhrania'
@@ -168,7 +187,7 @@ sk:
     SINGULARNAME: 'Heslo člena'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: {chars}'
-    PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové hoslo, prosím'
+    PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové heslo, prosím'
     TOOSHORT: 'Heslo je príliš krátke, musí byť {minimum} alebo viacej znakov dlhé'
   SilverStripe\Security\Permission:
     AdminGroup: Administrátor
@@ -202,7 +221,4 @@ sk:
     LOGIN: Prihlásiť
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
-    NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je vypršala jeho platnosť.</p><p>Môžete požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo po <a href="{link2}">prihlásení</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
-    PASSWORDSENTHEADER: 'Odkaz na resetovanie hesla bol odoslaný na ''{email}'''
-    PASSWORDSENTTEXT: 'Ďakujeme! Resetovací odkaz bol odoslaný na ''''{email}'''', pokiaľ účet existuje pre túto emailovú adresu.'

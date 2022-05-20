@@ -43,7 +43,13 @@ class Environment
     public static function getVariables()
     {
         // Suppress return by-ref
-        return array_merge($GLOBALS, [ 'env' => static::$env ]);
+        $vars = [ 'env' => static::$env ];
+        // needs to use a for loop, using `array_merge([], $GLOBALS);` left reference traces somehow
+        foreach ($GLOBALS as $varName => $varValue) {
+            $vars[$varName] = $varValue;
+        }
+
+        return $vars;
     }
 
     /**
@@ -59,7 +65,7 @@ class Environment
             }
             $GLOBALS[$varName] = $varValue;
         }
-        if (array_key_exists('env', $vars)) {
+        if (array_key_exists('env', $vars ?? [])) {
             static::$env = $vars['env'];
         }
     }
@@ -146,7 +152,7 @@ class Environment
             $currTimeLimit = ini_get('max_execution_time');
             // Only increase if its smaller
             if ($currTimeLimit > 0 && $currTimeLimit < $timeLimit) {
-                set_time_limit($timeLimit);
+                set_time_limit($timeLimit ?? 0);
             }
         }
         return true;
@@ -179,11 +185,11 @@ class Environment
     public static function getEnv($name)
     {
         switch (true) {
-            case array_key_exists($name, static::$env):
+            case  is_array(static::$env) && array_key_exists($name, static::$env):
                 return static::$env[$name];
-            case array_key_exists($name, $_ENV):
+            case  is_array($_ENV) && array_key_exists($name, $_ENV):
                 return $_ENV[$name];
-            case array_key_exists($name, $_SERVER):
+            case  is_array($_SERVER) && array_key_exists($name, $_SERVER):
                 return $_SERVER[$name];
             default:
                 return getenv($name);
@@ -200,7 +206,7 @@ class Environment
     public static function putEnv($string)
     {
         // Parse name-value pairs
-        $envVars = parse_ini_string($string) ?: [];
+        $envVars = parse_ini_string($string ?? '') ?: [];
         foreach ($envVars as $name => $value) {
             self::setEnv($name, $value);
         }
@@ -215,5 +221,15 @@ class Environment
     public static function setEnv($name, $value)
     {
         static::$env[$name] = $value;
+    }
+
+    /**
+     * Returns true if this script is being run from the command line rather than the web server
+     *
+     * @return bool
+     */
+    public static function isCli()
+    {
+        return in_array(strtolower(php_sapi_name() ?? ''), ['cli', 'phpdbg']);
     }
 }

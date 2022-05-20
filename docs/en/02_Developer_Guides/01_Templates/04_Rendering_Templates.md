@@ -1,5 +1,8 @@
+---
 title: Rendering data to a template
-summary: Call and render SilverStripe templates manually.
+summary: Call and render Silverstripe CMS templates manually.
+icon: code
+---
 
 # Rendering data to a template
 
@@ -10,7 +13,7 @@ subclasses).
 
 The following will render the given data into a template. Given the template:
 
-**mysite/templates/Coach_Message.ss**
+**app/templates/Coach_Message.ss**
     
 ```ss
 <strong>$Name</strong> is the $Role on our team.
@@ -19,7 +22,7 @@ The following will render the given data into a template. Given the template:
 Our application code can render into that view using `renderWith`. This method is called on the [ViewableData](api:SilverStripe\View\ViewableData) 
 instance with a template name or an array of templates to render. 
 
-**mysite/code/Page.php**
+**app/src/Page.php**
 
 ```php
 $arrayData = new SilverStripe\View\ArrayData([
@@ -32,11 +35,24 @@ echo $arrayData->renderWith('Coach_Message');
 // returns "<strong>John</strong> is the Head Coach on our team."
 
 ```
+If your template is a Layout template that needs to be rendered into the main Page template (to include a header and footer, for example), you need to render your Layout template into a string, and pass that as the Layout parameter to the Page template.
 
-<div class="info" markdown="1">
-Most classes in SilverStripe you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
+```php
+$data = [
+    'Title' => 'Message from the Head Coach'
+];
+
+return $this->customise([
+    'Layout' => $this
+                ->customise($data)
+                ->renderWith(['Template\Path\From\templates\Layout\Coach_Message'])
+])->renderWith(['Page']);
+```
+
+[info]
+Most classes in Silverstripe CMS you want in your template extend `ViewableData` and allow you to call `renderWith`. This 
 includes [Controller](api:SilverStripe\Control\Controller), [FormField](api:SilverStripe\Forms\FormField) and [DataObject](api:SilverStripe\ORM\DataObject) instances.
-</div>
+[/info]
 
 ```php
 $controller->renderWith(['MyController', 'MyBaseController']);
@@ -99,3 +115,9 @@ class PageController extends ContentController
 }
 
 ```
+
+## Related Lessons
+* [Controller actions/DataObjects as pages](https://www.silverstripe.org/learn/lessons/v4/controller-actions-dataobjects-as-pages-1)
+* [AJAX behaviour and ViewableData](https://www.silverstripe.org/learn/lessons/v4/ajax-behaviour-and-viewabledata-1)
+* [Dealing with arbitrary template data](https://www.silverstripe.org/learn/lessons/v4/dealing-with-arbitrary-template-data-1)
+* [Creating filtered views](https://www.silverstripe.org/learn/lessons/v4/creating-filtered-views-1)

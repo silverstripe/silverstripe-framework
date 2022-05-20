@@ -79,7 +79,7 @@ class TabSet extends CompositeField
         }
 
         // Normalise children list
-        if (count($tabs) === 1 && (is_array($tabs[0]) || $tabs[0] instanceof FieldList)) {
+        if (count($tabs ?? []) === 1 && (is_array($tabs[0]) || $tabs[0] instanceof FieldList)) {
             $tabs = $tabs[0];
         }
 
@@ -106,9 +106,8 @@ class TabSet extends CompositeField
     {
         if ($this->tabSet) {
             return $this->tabSet->ID() . '_' . $this->id . '_set';
-        } else {
-            return $this->id;
         }
+        return $this->id;
     }
 
     /**
@@ -130,7 +129,7 @@ class TabSet extends CompositeField
      * @param array $properties
      * @return DBHTMLText|string
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         $obj = $properties ? $this->customise($properties) : $this;
 
@@ -179,13 +178,17 @@ class TabSet extends CompositeField
 
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             $this->attributes,
-            array(
+            [
                 'id' => $this->ID(),
                 'class' => $this->extraClass()
-            )
+            ]
         );
+
+        $this->extend('updateAttributes', $attributes);
+
+        return $attributes;
     }
 
     /**
@@ -219,14 +222,15 @@ class TabSet extends CompositeField
      *
      * @param string $insertBefore Name of the field to insert before
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
-    public function insertBefore($insertBefore, $field)
+    public function insertBefore($insertBefore, $field, $appendIfMissing = true)
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
         }
-        return parent::insertBefore($insertBefore, $field);
+        return parent::insertBefore($insertBefore, $field, $appendIfMissing);
     }
 
     /**
@@ -234,13 +238,29 @@ class TabSet extends CompositeField
      *
      * @param string $insertAfter Name of the field to insert after
      * @param FormField $field The form field to insert
+     * @param bool $appendIfMissing
      * @return FormField|null
      */
-    public function insertAfter($insertAfter, $field)
+    public function insertAfter($insertAfter, $field, $appendIfMissing = true)
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
         }
-        return parent::insertAfter($insertAfter, $field);
+        return parent::insertAfter($insertAfter, $field, $appendIfMissing);
+    }
+
+    /**
+     * Sets an additional default for $schemaData.
+     * The existing keys are immutable. HideNav is added in this overriding method to ensure it is not ignored by
+     * {@link setSchemaData()}
+     * It allows hiding of the navigation in the Tabs.js React component.
+     *
+     * @return array
+     */
+    public function getSchemaStateDefaults()
+    {
+        $defaults = parent::getSchemaStateDefaults();
+        $defaults['hideNav'] = false;
+        return $defaults;
     }
 }

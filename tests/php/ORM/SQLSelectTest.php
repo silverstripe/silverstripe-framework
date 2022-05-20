@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
@@ -15,21 +16,21 @@ class SQLSelectTest extends SapphireTest
 
     protected static $fixture_file = 'SQLSelectTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
         SQLSelectTest\TestChild::class
-    );
+    ];
 
     protected $oldDeprecation = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->oldDeprecation = Deprecation::dump_settings();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Deprecation::restore_settings($this->oldDeprecation);
         parent::tearDown();
@@ -42,19 +43,19 @@ class SQLSelectTest extends SapphireTest
         $qry = SQLSelectTest\TestObject::get()->dataQuery()->getFinalisedQuery();
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $count = $qry->count('"SQLSelectTest_DO"."ID"');
-        $this->assertEquals(count($ids), $count);
-        $this->assertInternalType("int", $count);
+        $this->assertEquals(count($ids ?? []), $count);
+        $this->assertIsInt($count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
-            $qry->setSelect(array(
+            $qry->setSelect([
                 'Date' => 'MAX("Date")',
                 'Common' => '"Common"',
-            ));
+            ]);
             $qry->setGroupBy('"Common"');
             $qry->setHaving('"Date" > 2012-02-01');
             $count = $qry->count('"SQLSelectTest_DO"."ID"');
             $this->assertEquals(1, $count);
-            $this->assertInternalType("int", $count);
+            $this->assertIsInt($count);
         }
     }
     public function testUnlimitedRowCount()
@@ -64,18 +65,18 @@ class SQLSelectTest extends SapphireTest
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $qry->setLimit(1);
         $count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
-        $this->assertEquals(count($ids), $count);
-        $this->assertInternalType("int", $count);
+        $this->assertEquals(count($ids ?? []), $count);
+        $this->assertIsInt($count);
         // Test without column - SQLSelect has different logic for this
         $count = $qry->unlimitedRowCount();
         $this->assertEquals(2, $count);
-        $this->assertInternalType("int", $count);
+        $this->assertIsInt($count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
             $qry->setHaving('"Date" > 2012-02-01');
             $count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
             $this->assertEquals(1, $count);
-            $this->assertInternalType("int", $count);
+            $this->assertIsInt($count);
         }
     }
 
@@ -97,7 +98,7 @@ class SQLSelectTest extends SapphireTest
     public function testSelectFromUserSpecifiedFields()
     {
         $query = new SQLSelect();
-        $query->setSelect(array("Name", "Title", "Description"));
+        $query->setSelect(["Name", "Title", "Description"]);
         $query->setFrom("MyTable");
         $this->assertSQLEquals("SELECT Name, Title, Description FROM MyTable", $query->sql($parameters));
     }
@@ -105,7 +106,7 @@ class SQLSelectTest extends SapphireTest
     public function testSelectWithWhereClauseFilter()
     {
         $query = new SQLSelect();
-        $query->setSelect(array("Name","Meta"));
+        $query->setSelect(["Name","Meta"]);
         $query->setFrom("MyTable");
         $query->setWhere("Name = 'Name'");
         $query->addWhere("Meta = 'Test'");
@@ -117,9 +118,9 @@ class SQLSelectTest extends SapphireTest
 
     public function testSelectWithConstructorParameters()
     {
-        $query = new SQLSelect(array("Foo", "Bar"), "FooBarTable");
+        $query = new SQLSelect(["Foo", "Bar"], "FooBarTable");
         $this->assertSQLEquals("SELECT Foo, Bar FROM FooBarTable", $query->sql($parameters));
-        $query = new SQLSelect(array("Foo", "Bar"), "FooBarTable", array("Foo = 'Boo'"));
+        $query = new SQLSelect(["Foo", "Bar"], "FooBarTable", ["Foo = 'Boo'"]);
         $this->assertSQLEquals("SELECT Foo, Bar FROM FooBarTable WHERE (Foo = 'Boo')", $query->sql($parameters));
     }
 
@@ -157,7 +158,7 @@ class SQLSelectTest extends SapphireTest
     public function testSelectWithChainedFilterParameters()
     {
         $query = new SQLSelect();
-        $query->setSelect(array("Name","Meta"))->setFrom("MyTable");
+        $query->setSelect(["Name","Meta"])->setFrom("MyTable");
         $query->setWhere("Name = 'Name'")->addWhere("Meta = 'Test'")->addWhere("Beta != 'Gamma'");
         $this->assertSQLEquals(
             "SELECT Name, Meta FROM MyTable WHERE (Name = 'Name') AND (Meta = 'Test') AND (Beta != 'Gamma')",
@@ -209,12 +210,12 @@ class SQLSelectTest extends SapphireTest
 
         $query = new SQLSelect();
         $query->setFrom("MyTable");
-        $query->setOrderBy(array('MyName' => 'desc'));
+        $query->setOrderBy(['MyName' => 'desc']);
         $this->assertSQLEquals('SELECT * FROM MyTable ORDER BY MyName DESC', $query->sql($parameters));
 
         $query = new SQLSelect();
         $query->setFrom("MyTable");
-        $query->setOrderBy(array('MyName' => 'desc', 'Color'));
+        $query->setOrderBy(['MyName' => 'desc', 'Color']);
         $this->assertSQLEquals('SELECT * FROM MyTable ORDER BY MyName DESC, Color ASC', $query->sql($parameters));
 
         $query = new SQLSelect();
@@ -267,59 +268,23 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    public function testZeroLimit()
-    {
-        $query = new SQLSelect();
-        $query->setFrom("MyTable");
-        $query->setLimit(0);
-
-        $this->assertSQLEquals(
-            'SELECT * FROM MyTable',
-            $query->sql($parameters)
-        );
-    }
-
-    public function testZeroLimitWithOffset()
-    {
-        if (!(DB::get_conn() instanceof MySQLDatabase || DB::get_conn() instanceof SQLite3Database
-            || DB::get_conn() instanceof PostgreSQLDatabase)
-        ) {
-            $this->markTestIncomplete();
-        }
-
-        $query = new SQLSelect();
-        $query->setFrom("MyTable");
-        $query->setLimit(0, 99);
-
-        $this->assertSQLEquals(
-            'SELECT * FROM MyTable LIMIT 0 OFFSET 99',
-            $query->sql($parameters)
-        );
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeLimit()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(-10);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeOffset()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(1, -10);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNegativeOffsetAndLimit()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $query = new SQLSelect();
         $query->setLimit(-10, -10);
     }
@@ -340,12 +305,12 @@ class SQLSelectTest extends SapphireTest
 
         $this->assertSQLEquals('SELECT * FROM MyTable ORDER BY Name ASC', $query->sql($parameters));
 
-        $query->setOrderBy(array("Name" => "ASC"));
+        $query->setOrderBy(["Name" => "ASC"]);
         $query->reverseOrderBy();
 
         $this->assertSQLEquals('SELECT * FROM MyTable ORDER BY Name DESC', $query->sql($parameters));
 
-        $query->setOrderBy(array("Name" => 'DESC', 'Color' => 'asc'));
+        $query->setOrderBy(["Name" => 'DESC', 'Color' => 'asc']);
         $query->reverseOrderBy();
 
         $this->assertSQLEquals('SELECT * FROM MyTable ORDER BY Name ASC, Color DESC', $query->sql($parameters));
@@ -376,14 +341,14 @@ class SQLSelectTest extends SapphireTest
         );
 
         $query = new SQLSelect();
-        $query->setWhere(array('"ID"' => 4));
+        $query->setWhere(['"ID"' => 4]);
         $this->assertTrue(
             $query->filtersOnID(),
             "filtersOnID() is true with parameterised quoted column name"
         );
 
         $query = new SQLSelect();
-        $query->setWhere(array('"ID" = ?' => 4));
+        $query->setWhere(['"ID" = ?' => 4]);
         $this->assertTrue(
             $query->filtersOnID(),
             "filtersOnID() is true with parameterised quoted column name"
@@ -397,7 +362,7 @@ class SQLSelectTest extends SapphireTest
         );
 
         $query = new SQLSelect();
-        $query->setWhere(array('"ID" IN ?' => array(1,2)));
+        $query->setWhere(['"ID" IN ?' => [1,2]]);
         $this->assertTrue(
             $query->filtersOnID(),
             "filtersOnID() is true with parameterised WHERE ID IN"
@@ -478,8 +443,8 @@ class SQLSelectTest extends SapphireTest
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID');
 
         $this->assertSQLEquals(
-            'SELECT * FROM MyTable '.
-            'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 '.
+            'SELECT * FROM MyTable ' .
+            'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 ' .
             'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -490,8 +455,8 @@ class SQLSelectTest extends SapphireTest
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table2');
 
         $this->assertSQLEquals(
-            'SELECT * FROM MyTable '.
-            'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 '.
+            'SELECT * FROM MyTable ' .
+            'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 ' .
             'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -516,7 +481,7 @@ class SQLSelectTest extends SapphireTest
         $query->setOrderBy('COALESCE(Mlt.MyLastTableCount, 0) DESC');
 
         $this->assertSQLEquals(
-            'SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable '.
+            'SELECT *, COALESCE(Mlt.MyLastTableCount, 0) AS "_SortColumn0" FROM MyTable ' .
             'INNER JOIN (SELECT * FROM MyOtherTable) AS "Mot" ON Mot.MyTableID = MyTable.ID ' .
             'LEFT JOIN (SELECT MyLastTable.MyOtherTableID, COUNT(1) as MyLastTableCount FROM MyLastTable '
             . 'GROUP BY MyOtherTableID) AS "Mlt" ON Mlt.MyOtherTableID = Mot.ID ' .
@@ -531,14 +496,14 @@ class SQLSelectTest extends SapphireTest
         $query->setFrom('MyTable');
 
         $query->setWhereAny(
-            array(
+            [
             'Monkey' => 'Chimp',
             'Color' => 'Brown'
-            )
+            ]
         );
         $sql = $query->sql($parameters);
         $this->assertSQLEquals("SELECT * FROM MyTable WHERE ((Monkey = ?) OR (Color = ?))", $sql);
-        $this->assertEquals(array('Chimp', 'Brown'), $parameters);
+        $this->assertEquals(['Chimp', 'Brown'], $parameters);
     }
 
     public function testSelectFirst()
@@ -549,7 +514,7 @@ class SQLSelectTest extends SapphireTest
         $query->setOrderBy('"Name"');
         $result = $query->firstRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -561,10 +526,10 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom('"SQLSelectTest_DO"');
         $query->setOrderBy('"Name"');
-        $query->setWhere(array('"Name"' => 'Nonexistent Object'));
+        $query->setWhere(['"Name"' => 'Nonexistent Object']);
         $result = $query->firstRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -578,7 +543,7 @@ class SQLSelectTest extends SapphireTest
         $query->setLimit(1, 1);
         $result = $query->firstRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -595,7 +560,7 @@ class SQLSelectTest extends SapphireTest
         $query->setOrderBy('"Name"');
         $result = $query->lastRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -607,10 +572,10 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom('"SQLSelectTest_DO"');
         $query->setOrderBy('"Name"');
-        $query->setWhere(array("\"Name\" = 'Nonexistent Object'"));
+        $query->setWhere(["\"Name\" = 'Nonexistent Object'"]);
         $result = $query->lastRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -624,7 +589,7 @@ class SQLSelectTest extends SapphireTest
         $query->setLimit(1);
         $result = $query->lastRow()->execute();
 
-        $records = array();
+        $records = [];
         foreach ($result as $row) {
             $records[] = $row;
         }
@@ -644,7 +609,7 @@ class SQLSelectTest extends SapphireTest
 
         $queryClone = $query->aggregate('COUNT(*)', 'cnt');
         $result = $queryClone->execute();
-        $this->assertEquals(array(2), $result->column('cnt'));
+        $this->assertEquals([2], $result->column('cnt'));
     }
 
     /**
@@ -655,12 +620,12 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom('"SQLSelectTest_DO"');
         $query->setOrderBy('Common');
-        $query->setLimit(array());
+        $query->setLimit([]);
 
         $aggregate = $query->aggregate('MAX("ID")');
         $limit = $aggregate->getLimit();
-        $this->assertEquals(array(), $aggregate->getOrderBy());
-        $this->assertEquals(array(), $limit);
+        $this->assertEquals([], $aggregate->getOrderBy());
+        $this->assertEquals([], $limit);
 
         $query = new SQLSelect();
         $query->setFrom('"SQLSelectTest_DO"');
@@ -669,8 +634,8 @@ class SQLSelectTest extends SapphireTest
 
         $aggregate = $query->aggregate('MAX("ID")');
         $limit = $aggregate->getLimit();
-        $this->assertEquals(array('Common' => 'ASC'), $aggregate->getOrderBy());
-        $this->assertEquals(array('start' => 0, 'limit' => 2), $limit);
+        $this->assertEquals(['Common' => 'ASC'], $aggregate->getOrderBy());
+        $this->assertEquals(['start' => 0, 'limit' => 2], $limit);
     }
 
     /**
@@ -682,13 +647,13 @@ class SQLSelectTest extends SapphireTest
     public function testOrderByContainingAggregateAndLimitOffset()
     {
         $query = new SQLSelect();
-        $query->setSelect(array('"Name"', '"Meta"'));
+        $query->setSelect(['"Name"', '"Meta"']);
         $query->setFrom('"SQLSelectTest_DO"');
-        $query->setOrderBy(array('MAX("Date")'));
-        $query->setGroupBy(array('"Name"', '"Meta"'));
+        $query->setOrderBy(['MAX("Date")']);
+        $query->setGroupBy(['"Name"', '"Meta"']);
         $query->setLimit('1', '1');
 
-        $records = array();
+        $records = [];
         foreach ($query->execute() as $record) {
             $records[] = $record;
         }
@@ -706,11 +671,11 @@ class SQLSelectTest extends SapphireTest
     {
         if (DB::get_conn() instanceof MySQLDatabase) {
             $query = new SQLSelect();
-            $query->setSelect(array('"Name"', '"Meta"'));
+            $query->setSelect(['"Name"', '"Meta"']);
             $query->setFrom('"SQLSelectTest_DO"');
-            $query->setOrderBy(array('MID("Name", 8, 1) DESC', '"Name" ASC'));
+            $query->setOrderBy(['MID("Name", 8, 1) DESC', '"Name" ASC']);
 
-            $records = array();
+            $records = [];
             foreach ($query->execute() as $record) {
                 $records[] = $record;
             }
@@ -736,10 +701,10 @@ class SQLSelectTest extends SapphireTest
 
         // Test replacement of select
         $query->setSelect(
-            array(
+            [
             'Field' => '"Field"',
             'AnotherAlias' => '"AnotherField"'
-            )
+            ]
         );
         $this->assertSQLEquals(
             'SELECT "Field", "AnotherField" AS "AnotherAlias" FROM "MyTable"',
@@ -748,9 +713,9 @@ class SQLSelectTest extends SapphireTest
 
         // Check that ' as ' selects don't get mistaken as aliases
         $query->addSelect(
-            array(
+            [
             'Relevance' => "MATCH (Title, MenuTitle) AGAINST ('Two as One')"
-            )
+            ]
         );
         $this->assertSQLEquals(
             'SELECT "Field", "AnotherField" AS "AnotherAlias", MATCH (Title, MenuTitle) AGAINST (' .
@@ -777,16 +742,16 @@ class SQLSelectTest extends SapphireTest
     public function testParameterisedInnerJoins()
     {
         $query = new SQLSelect();
-        $query->setSelect(array('"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"'));
+        $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
         $query->setFrom('"SQLSelectTest_DO"');
         $query->addInnerJoin(
             '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
             '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
             'SubSelect',
             20,
-            array('%MyName%')
+            ['%MyName%']
         );
-        $query->addWhere(array('"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+        $query->addWhere(['"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00']);
 
         $this->assertSQLEquals(
             'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
@@ -796,23 +761,23 @@ class SQLSelectTest extends SapphireTest
 			WHERE ("SQLSelectTest_DO"."Date" > ?)',
             $query->sql($parameters)
         );
-        $this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
+        $this->assertEquals(['%MyName%', '2012-08-08 12:00'], $parameters);
         $query->execute();
     }
 
     public function testParameterisedLeftJoins()
     {
         $query = new SQLSelect();
-        $query->setSelect(array('"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"'));
+        $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
         $query->setFrom('"SQLSelectTest_DO"');
         $query->addLeftJoin(
             '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
             '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
             'SubSelect',
             20,
-            array('%MyName%')
+            ['%MyName%']
         );
-        $query->addWhere(array('"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00'));
+        $query->addWhere(['"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00']);
 
         $this->assertSQLEquals(
             'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
@@ -822,7 +787,43 @@ class SQLSelectTest extends SapphireTest
 			WHERE ("SQLSelectTest_DO"."Date" > ?)',
             $query->sql($parameters)
         );
-        $this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
+        $this->assertEquals(['%MyName%', '2012-08-08 12:00'], $parameters);
         $query->execute();
+    }
+
+    public function testBaseTableAliases()
+    {
+        $query = SQLSelect::create('*', ['"MyTableAlias"' => '"MyTable"']);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['MyTableAlias' => '"MyTable"']);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals('SELECT * FROM "MyTable" AS "MyTableAlias"', $sql);
+
+        $query = SQLSelect::create('*', ['"MyTableAlias"' => '"MyTable"']);
+        $query->addLeftJoin('OtherTable', '"Thing" = "OtherThing"', 'OtherTableAlias');
+        $sql = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT *
+              FROM "MyTable" AS "MyTableAlias"
+              LEFT JOIN "OtherTable" AS "OtherTableAlias" ON "Thing" = "OtherThing"',
+            $sql
+        );
+
+        $query = SQLSelect::create('*', [
+            'MyTableAlias' => '"MyTable"',
+            'ignoredAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
+        ]);
+        $sql = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT * FROM "MyTable" AS "MyTableAlias" , ' .
+            '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"',
+            $sql
+        );
     }
 }

@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 /**
  * TextareaField creates a multi-line text field,
  * allowing more data to be entered than a standard
- * text field. It creates the <textarea> tag in the
+ * text field. It creates the `<textarea>` tag in the
  * form HTML.
  *
  * <code>
@@ -24,13 +24,13 @@ class TextareaField extends FormField
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'Value' => 'Text',
-        'ValueEntities' => 'HTMLFragment(array(\'shortcodes\' => false))',
-    );
-    
+        'ValueEntities' => 'HTMLFragment([\'shortcodes\' => false])',
+    ];
+
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
-    
+
     /**
      * Visible number of text lines.
      *
@@ -46,18 +46,22 @@ class TextareaField extends FormField
     protected $cols = 20;
 
     /**
+     * @var int
+     */
+    protected $maxLength;
+
+    /**
      * Set textarea specific schema data
      */
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-        
         $data['data']['rows'] = $this->getRows();
         $data['data']['columns'] = $this->getColumns();
-        
+        $data['data']['maxlength'] =  $this->getMaxLength();
         return $data;
     }
-    
+
     /**
      * Set the number of rows in the textarea
      *
@@ -107,19 +111,45 @@ class TextareaField extends FormField
     }
 
     /**
+     * @param int $maxLength
+     * @return $this
+     */
+    public function setMaxLength($maxLength)
+    {
+        $this->maxLength = $maxLength;
+
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getMaxLength()
+    {
+        return $this->maxLength;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getAttributes()
     {
-        return array_merge(
+        $attributes = array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'rows' => $this->getRows(),
                 'cols' => $this->getColumns(),
                 'value' => null,
-                'type' => null
-            )
+                'type' => null,
+            ]
         );
+
+        $maxLength = $this->getMaxLength();
+        if ($maxLength) {
+            $attributes['maxlength'] = $maxLength;
+        }
+
+        return $attributes;
     }
 
 
@@ -144,6 +174,6 @@ class TextareaField extends FormField
      */
     public function ValueEntities()
     {
-        return htmlentities($this->Value(), ENT_COMPAT, 'UTF-8');
+        return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8');
     }
 }

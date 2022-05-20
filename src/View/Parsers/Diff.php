@@ -47,7 +47,7 @@ class Diff extends \Diff
         }
 
         // Remove empty <ins /> and <del /> tags because browsers hate them
-        $content = preg_replace('/<(ins|del)[^>]*\/>/', '', $content);
+        $content = preg_replace('/<(ins|del)[^>]*\/>/', '', $content ?? '');
 
         return $content;
     }
@@ -68,7 +68,7 @@ class Diff extends \Diff
         $diff = new Diff($set1, $set2);
 
         $tagStack[1] = $tagStack[2] = 0;
-        $rechunked[1] = $rechunked[2] = array();
+        $rechunked[1] = $rechunked[2] = [];
 
         // Go through everything, converting edited tags (and their content) into single chunks.  Otherwise
         // the generated HTML gets crusty
@@ -115,11 +115,11 @@ class Diff extends \Diff
                             && !$tagStack[$listName]
                             && isset($item[0])
                             && $item[0] == "<"
-                            && substr($item, 0, 2) != "</"
+                            && substr($item ?? '', 0, 2) != "</"
                         ) {
                             $tagStack[$listName] = 1;
                         } elseif ($tagStack[$listName]) {
-                            if (substr($item, 0, 2) == "</") {
+                            if (substr($item ?? '', 0, 2) == "</") {
                                 $tagStack[$listName]--;
                             } elseif (isset($item[0]) && $item[0] == "<") {
                                 $tagStack[$listName]++;
@@ -174,23 +174,23 @@ class Diff extends \Diff
             $content = $content ? "true" : "false";
         }
         if (is_array($content)) {
+            $content = array_filter($content ?? [], 'is_scalar');
             // Convert array to CSV
             $content = implode(',', $content);
         }
 
-        $content = str_replace(array("&nbsp;", "<", ">"), array(" "," <", "> "), $content);
-        $candidateChunks = preg_split("/[\t\r\n ]+/", $content);
+        $content = str_replace(["&nbsp;", "<", ">"], [" "," <", "> "], $content ?? '');
+        $candidateChunks = preg_split("/[\t\r\n ]+/", $content ?? '');
         $chunks = [];
-        while ($chunk = each($candidateChunks)) {
-            $item = $chunk['value'];
+        for ($i = 0; $i < count($candidateChunks ?? []); $i++) {
+            $item = $candidateChunks[$i];
             if (isset($item[0]) && $item[0] == "<") {
                 $newChunk = $item;
                 while ($item[strlen($item)-1] != ">") {
-                    $chunk = each($candidateChunks);
-                    if ($chunk === false) {
+                    if (++$i >= count($candidateChunks ?? [])) {
                         break;
                     }
-                    $item = $chunk['value'];
+                    $item = $candidateChunks[$i];
                     $newChunk .= ' ' . $item;
                 }
                 $chunks[] = $newChunk;

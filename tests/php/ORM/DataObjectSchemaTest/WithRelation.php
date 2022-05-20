@@ -6,7 +6,7 @@ class WithRelation extends NoFields
 {
     private static $table_name = 'DataObjectSchemaTest_WithRelation';
 
-    private static $has_one = array(
+    private static $has_one = [
         'Relation' => HasFields::Class
-    );
+    ];
 }

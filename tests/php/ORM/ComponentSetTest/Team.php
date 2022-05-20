@@ -9,11 +9,11 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'ComponentSetTest_Team';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Players' => Player::class
-    );
+    ];
 }

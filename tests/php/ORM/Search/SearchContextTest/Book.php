@@ -9,8 +9,8 @@ class Book extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Book';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
         'Summary' => 'Varchar'
-    );
+    ];
 }

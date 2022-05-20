@@ -15,21 +15,21 @@ class Project extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Project';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar'
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Deadline' => Deadline::class,
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'Actions' => Action::class,
-    );
+    ];
 
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Name' => 'PartialMatchFilter',
         'Actions.SolutionArea' => 'ExactMatchFilter',
         'Actions.Description' => 'PartialMatchFilter'
-    );
+    ];
 }

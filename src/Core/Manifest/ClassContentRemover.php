@@ -23,18 +23,18 @@ class ClassContentRemover
     {
 
         // Use PHP's built in method to strip comments and whitespace
-        $contents = php_strip_whitespace($filePath);
+        $contents = php_strip_whitespace($filePath ?? '');
 
-        if (!trim($contents)) {
+        if (!trim($contents ?? '')) {
             return $contents;
         }
 
-        if (!preg_match('/\b(?:class|interface|trait)/i', $contents)) {
+        if (!preg_match('/\b(?:class|interface|trait)/i', $contents ?? '')) {
             return '';
         }
 
         // tokenize the file contents
-        $tokens = token_get_all($contents);
+        $tokens = token_get_all($contents ?? '');
         $cleanContents = '';
         $depth = 0;
         $startCounting = false;
@@ -81,6 +81,6 @@ class ClassContentRemover
         }
 
         // return cleaned class
-        return trim($cleanContents);
+        return trim($cleanContents ?? '');
     }
 }

@@ -27,8 +27,8 @@ class LostPasswordHandler extends RequestHandler
      * @var array
      */
     private static $url_handlers = [
-        'passwordsent/$EmailAddress' => 'passwordsent',
-        ''                           => 'lostpassword',
+        'passwordsent' => 'passwordsent',
+        '' => 'lostpassword',
     ];
 
     /**
@@ -44,7 +44,12 @@ class LostPasswordHandler extends RequestHandler
         'passwordsent',
     ];
 
-    private $link = null;
+    /**
+     * Link to this handler
+     *
+     * @var string
+     */
+    protected $link = null;
 
     /**
      * @param string $link The URL to recreate this request handler
@@ -59,16 +64,14 @@ class LostPasswordHandler extends RequestHandler
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
      *
-     * @param string $action
+     * @param string|null $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -98,27 +101,17 @@ class LostPasswordHandler extends RequestHandler
      */
     public function passwordsent()
     {
-        $request = $this->getRequest();
-        $email = Convert::raw2xml(rawurldecode($request->param('EmailAddress')));
-        if ($request->getExtension()) {
-            $email = $email . '.' . Convert::raw2xml($request->getExtension());
-        }
-
         $message = _t(
-            'SilverStripe\\Security\\Security.PASSWORDSENTTEXT',
-            "Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
-            . " address.",
-            ['email' => Convert::raw2xml($email)]
+            'SilverStripe\\Security\\Security.PASSWORDRESETSENTTEXT',
+            "Thank you. A reset link has been sent, provided an account exists for this email address."
         );
 
         return [
-            'Title'   => _t(
-                'SilverStripe\\Security\\Security.PASSWORDSENTHEADER',
-                "Password reset link sent to '{email}'",
-                array('email' => $email)
+            'Title' => _t(
+                'SilverStripe\\Security\\Security.PASSWORDRESETSENTHEADER',
+                "Password reset link sent"
             ),
             'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
-            'Email'   => $email
         ];
     }
 
@@ -179,7 +172,7 @@ class LostPasswordHandler extends RequestHandler
 
         // Allow vetoing forgot password requests
         $results = $this->extend('forgotPassword', $member);
-        if ($results && is_array($results) && in_array(false, $results, true)) {
+        if ($results && is_array($results) && in_array(false, $results ?? [], true)) {
             return $this->redirectToLostPassword();
         }
 
@@ -249,22 +242,20 @@ class LostPasswordHandler extends RequestHandler
             ))
             ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
             ->setTo($member->Email);
+
+        $member->extend('updateForgotPasswordEmail', $email);
         return $email->send();
     }
 
     /**
-     * Avoid information disclosure by displaying the same status, regardless wether the email address actually exists
+     * Avoid information disclosure by displaying the same status, regardless whether the email address actually exists
      *
      * @param array $data
      * @return HTTPResponse
      */
     protected function redirectToSuccess(array $data)
     {
-        $link = Controller::join_links(
-            $this->link('passwordsent'),
-            rawurlencode($data['Email']),
-            '/'
-        );
+        $link = $this->link('passwordsent');
 
         return $this->redirect($this->addBackURLParam($link));
     }

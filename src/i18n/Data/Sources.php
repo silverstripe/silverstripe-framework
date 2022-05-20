@@ -74,7 +74,7 @@ class Sources implements Resettable
         // Search sorted modules (receives absolute paths)
         foreach ($this->getSortedModules() as $module => $path) {
             $langPath = "{$path}/lang/";
-            if (is_dir($langPath)) {
+            if (is_dir($langPath ?? '')) {
                 $paths[] = $langPath;
             }
         }
@@ -87,7 +87,7 @@ class Sources implements Resettable
             }
             $path = $locator->getPath($theme);
             $langPath = BASE_PATH . "/{$path}/lang/";
-            if (is_dir($langPath)) {
+            if (is_dir($langPath ?? '')) {
                 $paths[] = $langPath;
             }
         }
@@ -116,10 +116,10 @@ class Sources implements Resettable
 
         $locales = [];
         foreach ($this->getLangDirs() as $langPath) {
-            $langFiles = scandir($langPath);
+            $langFiles = scandir($langPath ?? '');
             foreach ($langFiles as $langFile) {
-                $locale = pathinfo($langFile, PATHINFO_FILENAME);
-                $ext = pathinfo($langFile, PATHINFO_EXTENSION);
+                $locale = pathinfo($langFile ?? '', PATHINFO_FILENAME);
+                $ext = pathinfo($langFile ?? '', PATHINFO_EXTENSION);
                 if ($locale && $ext === 'yml') {
                     $locales[$locale] = $locale;
                 }
@@ -143,7 +143,7 @@ class Sources implements Resettable
         $allLocales = $localesData->getLocales();
 
         // Find installed locales
-        $locales = array();
+        $locales = [];
         foreach ($this->getLangFiles() as $locale) {
             // Normalize locale to include likely region tag, avoid repetition in locale labels
             $fullLocale = $localesData->localeFromLang($locale);

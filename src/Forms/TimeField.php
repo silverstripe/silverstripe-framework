@@ -91,7 +91,7 @@ class TimeField extends TextField
      * This can be set explicitly. If not, this will be generated from the current locale
      * with the current time length.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
     public function getTimeFormat()
     {
@@ -112,7 +112,7 @@ class TimeField extends TextField
      * Set time format in CLDR standard format.
      * Only applicable with {@link setHTML5(false)}.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      * @param string $format
      * @return $this
      */
@@ -373,6 +373,14 @@ class TimeField extends TextField
     {
         /** @var TimeField_Readonly $result */
         $result = $this->castedCopy(TimeField_Readonly::class);
+        $result
+            ->setValue(false)
+            ->setHTML5($this->html5)
+            ->setTimeFormat($this->timeFormat)
+            ->setTimezone($this->getTimezone())
+            ->setLocale($this->locale)
+            ->setTimeLength($this->timeLength)
+            ->setValue($this->value);
         return $result;
     }
 
@@ -395,7 +403,7 @@ class TimeField extends TextField
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
-            $fromFormatter->setPattern(str_replace(':ss', '', DBTime::ISO_TIME));
+            $fromFormatter->setPattern(str_replace(':ss', '', DBTime::ISO_TIME ?? ''));
             $timestamp = $fromFormatter->parse($time);
         }
 
@@ -449,7 +457,7 @@ class TimeField extends TextField
         $timestamp = $formatter->parse($time);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($time, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($time ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }
@@ -490,7 +498,7 @@ class TimeField extends TextField
         $currentTimezone = date_default_timezone_get();
         try {
             if ($timezone) {
-                date_default_timezone_set($timezone);
+                date_default_timezone_set($timezone ?? '');
             }
             return $callback();
         } finally {

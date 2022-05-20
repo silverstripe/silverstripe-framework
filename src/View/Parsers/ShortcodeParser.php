@@ -30,10 +30,10 @@ class ShortcodeParser
 
     public function img_shortcode($attrs)
     {
-        return "<img src='".$attrs['src']."'>";
+        return "<img src='" . $attrs['src'] . "'>";
     }
 
-    protected static $instances = array();
+    protected static $instances = [];
 
     protected static $active_instance = 'default';
 
@@ -46,7 +46,7 @@ class ShortcodeParser
      *     [1] => name_of_shortcode_handler_method
      * )
      */
-    protected $shortcodes = array();
+    protected $shortcodes = [];
 
     // --------------------------------------------------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ class ShortcodeParser
      */
     public function registered($shortcode)
     {
-        return array_key_exists($shortcode, $this->shortcodes);
+        return array_key_exists($shortcode, $this->shortcodes ?? []);
     }
 
     /**
@@ -150,7 +150,7 @@ class ShortcodeParser
      */
     public function clear()
     {
-        $this->shortcodes = array();
+        $this->shortcodes = [];
     }
 
     /**
@@ -163,7 +163,7 @@ class ShortcodeParser
      * @param array $extra
      * @return mixed
      */
-    public function callShortcode($tag, $attributes, $content, $extra = array())
+    public function callShortcode($tag, $attributes, $content, $extra = [])
     {
         if (!$tag || !isset($this->shortcodes[$tag])) {
             return false;
@@ -184,16 +184,16 @@ class ShortcodeParser
      *
      * @return bool|mixed|string
      */
-    public function getShortcodeReplacementText($tag, $extra = array(), $isHTMLAllowed = true)
+    public function getShortcodeReplacementText($tag, $extra = [], $isHTMLAllowed = true)
     {
         $content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
 
         // Missing tag
         if ($content === false) {
             if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
-                user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERROR);
+                throw new \InvalidArgumentException('Unknown shortcode tag ' . $tag['open']);
             } elseif (self::$error_behavior == self::WARN && $isHTMLAllowed) {
-                $content = '<strong class="warning">'.$tag['text'].'</strong>';
+                $content = '<strong class="warning">' . $tag['text'] . '</strong>';
             } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
                 return '';
             } else {
@@ -253,25 +253,25 @@ class ShortcodeParser
      */
     protected static $marker_class = '--ss-shortcode-marker';
 
-    protected static $block_level_elements = array(
+    protected static $block_level_elements = [
         'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
         'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
         'pre', 'section', 'table', 'ul'
-    );
+    ];
 
     protected static $attrrx = '
 		([^\s\/\'"=,]+)       # Name
 		\s* = \s*
 		(?:
-			(?:\'([^\']+)\') | # Value surrounded by \'
-			(?:"([^"]+)")    | # Value surrounded by "
+			(?:\'([^\']*)\') | # Value surrounded by \'
+			(?:"([^"]*)")    | # Value surrounded by "
 			([^\s,\]]+)          # Bare value
 		)
 ';
 
     protected static function attrrx()
     {
-        return '/'.self::$attrrx.'/xS';
+        return '/' . self::$attrrx . '/xS';
     }
 
     protected static $tagrx = '
@@ -296,7 +296,7 @@ class ShortcodeParser
 
     protected static function tagrx()
     {
-        return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
+        return '/' . sprintf(self::$tagrx, self::$attrrx) . '/xS';
     }
 
     const WARN = 'warn';
@@ -319,10 +319,10 @@ class ShortcodeParser
      */
     public function extractTags($content)
     {
-        $tags = array();
+        $tags = [];
 
         // Step 1: perform basic regex scan of individual tags
-        if (preg_match_all(static::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+        if (preg_match_all(static::tagrx() ?? '', $content ?? '', $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             foreach ($matches as $match) {
                 // Ignore any elements
                 if (empty($match['open'][0]) && empty($match['close'][0])) {
@@ -330,15 +330,15 @@ class ShortcodeParser
                 }
 
                 // Pull the attributes out into a key/value hash
-                $attrs = array();
+                $attrs = [];
 
                 if (!empty($match['attrs'][0])) {
-                    preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
+                    preg_match_all(static::attrrx() ?? '', $match['attrs'][0] ?? '', $attrmatches, PREG_SET_ORDER);
 
                     foreach ($attrmatches as $attr) {
                         $name = '';
                         $value = '';
-                        $parts = array_values(array_filter($attr));
+                        $parts = array_values(array_filter($attr ?? []));
                         //the first element in the array is the complete delcaration (`id=1`) - we don't need this
                         array_shift($parts);
 
@@ -351,39 +351,37 @@ class ShortcodeParser
                 }
 
                 // And store the indexes, tag details, etc
-                $tags[] = array(
+                $tags[] = [
                     'text' => $match[0][0],
                     's' => $match[0][1],
-                    'e' => $match[0][1] + strlen($match[0][0]),
+                    'e' => $match[0][1] + strlen($match[0][0] ?? ''),
                     'open' =>  isset($match['open'][0]) ? $match['open'][0] : null,
                     'close' => isset($match['close'][0]) ? $match['close'][0] : null,
                     'attrs' => $attrs,
                     'content' => '',
                     'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
-                );
+                ];
             }
         }
 
         // Step 2: cluster open/close tag pairs into single entries
-        $i = count($tags);
+        $i = count($tags ?? []);
         while ($i--) {
             if (!empty($tags[$i]['close'])) {
                 // If the tag just before this one isn't the related opening tag, throw an error
                 $err = null;
 
                 if ($i == 0) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" is the first found tag, so has no related open tag';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" is the first found tag, so has no related open tag';
                 } elseif (!$tags[$i-1]['open']) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" preceded by another close tag "'.
-                            $tags[$i-1]['close'].'"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" preceded by another close tag "' . $tags[$i-1]['close'] . '"';
                 } elseif ($tags[$i]['close'] != $tags[$i-1]['open']) {
-                    $err = 'Close tag "'.$tags[$i]['close'].'" doesn\'t match preceding open tag "'.
-                            $tags[$i-1]['open'].'"';
+                    $err = 'Close tag "' . $tags[$i]['close'] . '" doesn\'t match preceding open tag "' . $tags[$i-1]['open'] . '"';
                 }
 
                 if ($err) {
                     if (self::$error_behavior == self::ERROR) {
-                        user_error($err, E_USER_ERROR);
+                        throw new \Exception($err);
                     }
                 } else {
                     if ($tags[$i]['escaped']) {
@@ -399,8 +397,8 @@ class ShortcodeParser
                     }
 
                     // Otherwise, grab content between tags, save in opening tag & delete the closing one
-                    $tags[$i-1]['text'] = substr($content, $tags[$i-1]['s'], $tags[$i]['e'] - $tags[$i-1]['s']);
-                    $tags[$i-1]['content'] = substr($content, $tags[$i-1]['e'], $tags[$i]['s'] - $tags[$i-1]['e']);
+                    $tags[$i-1]['text'] = substr($content ?? '', $tags[$i-1]['s'] ?? 0, $tags[$i]['e'] - $tags[$i-1]['s']);
+                    $tags[$i-1]['content'] = substr($content ?? '', $tags[$i-1]['e'] ?? 0, $tags[$i]['s'] - $tags[$i-1]['e']);
                     $tags[$i-1]['e'] = $tags[$i]['e'];
 
                     unset($tags[$i]);
@@ -419,7 +417,7 @@ class ShortcodeParser
             }
         }
 
-        return array_values($tags);
+        return array_values($tags ?? []);
     }
 
     /**
@@ -438,16 +436,16 @@ class ShortcodeParser
         // The start index of the next tag, remembered as we step backwards through the list
         $li = null;
 
-        $i = count($tags);
+        $i = count($tags ?? []);
         while ($i--) {
             if ($li === null) {
-                $tail = substr($content, $tags[$i]['e']);
+                $tail = substr($content ?? '', $tags[$i]['e'] ?? 0);
             } else {
-                $tail = substr($content, $tags[$i]['e'], $li - $tags[$i]['e']);
+                $tail = substr($content ?? '', $tags[$i]['e'] ?? 0, $li - $tags[$i]['e']);
             }
 
             if ($tags[$i]['escaped']) {
-                $str = substr($content, $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
+                $str = substr($content ?? '', $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
             } else {
                 $str = $generator($i, $tags[$i]) . $tail . $str;
             }
@@ -455,7 +453,7 @@ class ShortcodeParser
             $li = $tags[$i]['s'];
         }
 
-        return substr($content, 0, $tags[0]['s']) . $str;
+        return substr($content ?? '', 0, $tags[0]['s']) . $str;
     }
 
     /**
@@ -474,11 +472,11 @@ class ShortcodeParser
         for ($i = 0; $i < $attributes->length; $i++) {
             $node = $attributes->item($i);
             $tags = $this->extractTags($node->nodeValue);
-            $extra = array('node' => $node, 'element' => $node->ownerElement);
+            $extra = ['node' => $node, 'element' => $node->ownerElement];
 
             if ($tags) {
                 $node->nodeValue = $this->replaceTagsWithText(
-                    $node->nodeValue,
+                    htmlspecialchars($node->nodeValue ?? ''),
                     $tags,
                     function ($idx, $tag) use ($parser, $extra) {
                         return $parser->getShortcodeReplacementText($tag, $extra, false);
@@ -502,11 +500,11 @@ class ShortcodeParser
             $markerClass = self::$marker_class;
 
             $content = $this->replaceTagsWithText($content, $tags, function ($idx, $tag) use ($markerClass) {
-                return '<img class="'.$markerClass.'" data-tagid="'.$idx.'" />';
+                return '<img class="' . $markerClass . '" data-tagid="' . $idx . '" />';
             });
         }
 
-        return array($content, $tags);
+        return [$content, $tags];
     }
 
     /**
@@ -515,7 +513,7 @@ class ShortcodeParser
      */
     protected function findParentsForMarkers($nodes)
     {
-        $parents = array();
+        $parents = [];
 
         /** @var DOMElement $node */
         foreach ($nodes as $node) {
@@ -524,10 +522,10 @@ class ShortcodeParser
             do {
                 $parent = $parent->parentNode;
             } while ($parent instanceof DOMElement &&
-                !in_array(strtolower($parent->tagName), self::$block_level_elements)
+                !in_array(strtolower($parent->tagName ?? ''), self::$block_level_elements)
             );
 
-            $node->setAttribute('data-parentid', count($parents));
+            $node->setAttribute('data-parentid', count($parents ?? []));
             $parents[] = $parent;
         }
 
@@ -575,8 +573,8 @@ class ShortcodeParser
         } elseif ($location == self::AFTER) {
             // Move after block parent
             $this->insertAfter($node, $parent);
-        } // Split parent at node
-        elseif ($location == self::SPLIT) {
+        } elseif ($location == self::SPLIT) {
+            // Split parent at node
             $at = $node;
             $splitee = $node->parentNode;
 
@@ -595,18 +593,17 @@ class ShortcodeParser
             }
 
             $this->insertAfter($node, $parent);
-        } // Do nothing
-        elseif ($location == self::INLINE) {
-            if (in_array(strtolower($node->tagName), self::$block_level_elements)) {
+        } elseif ($location == self::INLINE) {
+            // Do nothing
+            if (in_array(strtolower($node->tagName ?? ''), self::$block_level_elements)) {
                 user_error(
-                    'Requested to insert block tag '.$node->tagName.
-                    ' inline - probably this will break HTML compliance',
+                    'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
                 );
             }
             // NOP
         } else {
-            user_error('Unknown value for $location argument '.$location, E_USER_ERROR);
+            throw new \UnexpectedValueException('Unknown value for $location argument ' . $location);
         }
     }
 
@@ -641,7 +638,6 @@ class ShortcodeParser
      */
     public function parse($content)
     {
-
         $this->extend('onBeforeParse', $content);
 
         $continue = true;
@@ -649,11 +645,11 @@ class ShortcodeParser
         // If no shortcodes defined, don't try and parse any
         if (!$this->shortcodes) {
             $continue = false;
-        } // If no content, don't try and parse it
-        elseif (!trim($content)) {
+        } elseif (!trim($content ?? '')) {
+            // If no content, don't try and parse it
             $continue = false;
-        } // If no shortcode tag, don't try and parse it
-        elseif (strpos($content, '[') === false) {
+        } elseif (strpos($content ?? '', '[') === false) {
+            // If no shortcode tag, don't try and parse it
             $continue = false;
         }
 
@@ -668,7 +664,7 @@ class ShortcodeParser
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {
                 if (self::$error_behavior == self::ERROR) {
-                    user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERROR);
+                    throw new \Exception('Couldn\'t decode HTML when processing short codes');
                 } else {
                     $continue = false;
                 }
@@ -680,7 +676,7 @@ class ShortcodeParser
             $this->replaceAttributeTagsWithContent($htmlvalue);
 
             // Find all the element scoped shortcode markers
-            $shortcodes = $htmlvalue->query('//img[@class="'.self::$marker_class.'"]');
+            $shortcodes = $htmlvalue->query('//img[@class="' . self::$marker_class . '"]');
 
             // Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
             $parents = $this->findParentsForMarkers($shortcodes);
@@ -710,9 +706,8 @@ class ShortcodeParser
 
                 if (!$parent) {
                     if ($location !== self::INLINE) {
-                        user_error(
-                            "Parent block for shortcode couldn't be found, but location wasn't INLINE",
-                            E_USER_ERROR
+                        throw new \RuntimeException(
+                            "Parent block for shortcode couldn't be found, but location wasn't INLINE"
                         );
                     }
                 } else {
@@ -729,12 +724,12 @@ class ShortcodeParser
             $content = preg_replace_callback(
                 // Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
                 // hasn't been heavily modified
-                '/<img[^>]+class="'.preg_quote(self::$marker_class).'"[^>]+data-tagid="([^"]+)"[^>]+>/i',
+                '/<img[^>]+class="' . preg_quote(self::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]*>/i',
                 function ($matches) use ($tags, $parser) {
                     $tag = $tags[$matches[1]];
                     return $parser->getShortcodeReplacementText($tag);
                 },
-                $content
+                $content ?? ''
             );
         }
 

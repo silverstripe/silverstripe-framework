@@ -19,12 +19,12 @@ class DBMoney extends DBComposite
     protected $locale = null;
 
     /**
-     * @param array
+     * @var array<string,string>
      */
-    private static $composite_db = array(
-        "Currency" => "Varchar(3)",
-        "Amount" => 'Decimal(19,4)'
-    );
+    private static $composite_db = [
+        'Currency' => 'Varchar(3)',
+        'Amount' => 'Decimal(19,4)'
+    ];
 
     /**
      * Get currency formatter

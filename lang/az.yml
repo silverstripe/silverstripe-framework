@@ -1,9 +1,6 @@
 az:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parolu dəyiş'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'təyin edilməyib'
-    TODAY: 'bu gün'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçin)
   SilverStripe\Forms\Form:

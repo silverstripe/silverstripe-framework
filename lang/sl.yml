@@ -1,7 +1,46 @@
 sl:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: neznana
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimenzije
+    EDIT: Uredi
+    EDITINFO: 'Urejanje datoteke'
+    REMOVE: Odstrani
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Geslo za uporabnika {email} smo spremenili. Če gesla niste želeli spremeniti, kliknite spodnjo povezavo.'
+    CHANGEPASSWORDTEXT1: 'Spremenili ste gaslo za '
+    CHANGEPASSWORDTEXT3: 'Spremeni geslo'
+    HELLO: Pozdravljeni!
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Pozdravljeni!
+    TEXT1: 'Spodaj boste našli'
+    TEXT2: 'povezavo za ponovno nastavitev gesla'
+    TEXT3: za
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" parameter GET'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'Naslov URL je "{url}"'
+    CONFIRMATION_NAME: 'Naslov URL je zaščiten'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'Popoln naslov URL je "{url}"'
+    CONFIRMATION_NAME: 'Naslov URL se začne z "{path}"'
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Neveljavni zahtevek'
+    REQUEST_ABORTED: 'Zahtevek prekinjen'
+  SilverStripe\Dev\DevConfirmationController:
+    INFO_DESCRIPTION: 'Potrdite potencialno škodljivo akcijo'
+    INFO_TITLE: 'Varnostno preverjanje'
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: NE
+    YESANSWER: DA
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Možnosti ni na voljo'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
     BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
+    CURRENT_PASSWORD_ERROR: 'Geslo, ki ste ga vnesli, ni pravilno.'
+    CURRENT_PASSWORD_MISSING: 'Vnesti morate vaše trenutno geslo.'
+    LOGGED_IN_ERROR: 'Za spremembo gesla morate biti prijavljeni.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
   SilverStripe\Forms\DateField:
@@ -10,28 +49,44 @@ sl:
     VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
     VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
     VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
+  SilverStripe\Forms\DatetimeField:
+    VALIDDATEMAXDATETIME: 'Datum se mora ujemati ali biti starejši od predpisanega ({datetime})'
+    VALIDDATETIMEFORMAT: 'Datum vnesite v pravilni obliki ({format}).'
+    VALIDDATETIMEMINDATE: 'Datum se mora ujemati ali biti novejši od predpisanega ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izberi)
+    SEARCH_OR_CHOOSE_MODEL: '(Poiščite ali izberite {name})'
+    SOURCE_VALIDATION: 'Izberite vrednost s seznama. {value} ni dovoljen vnos.'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prosim, vpišite e-naslov.'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Podatkov o datoteki nismo pridobili'
   SilverStripe\Forms\Form:
+    BAD_METHOD: 'Obrazec zahteva uporabo metode {method}'
     CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
+    CSRF_FAILED_MESSAGE: 'Zdi se, da je prišlo je do tehnične napake. Kliknite gumb za nazaj, osvežite stran in poskusite ponovno.'
+    FIELDISREQUIRED: 'Polje {name} morate izpolniti'
     VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
     VALIDATIONPASSWORDSNOTEMPTY: 'Vpišite geslo (dvakrat) v za to predvideni polji'
     VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
   SilverStripe\Forms\FormField:
+    EXAMPLE: 'npr. {format}'
     NONE: brez
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Osnovno
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvozi kot CSV-datoteko'
+    CSVIMPORT: 'Uvozi CSV'
     Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
     NewRecord: 'Novih {type}'
     NoItemsFound: 'Ni rezultatov'
+    OpenFilter: 'Odpri iskalnik s filtrom'
     PRINTEDAT: 'Tiskano pri'
     PRINTEDBY: Natisnil
     PlaceHolder: 'Poišči {type} '
@@ -40,68 +95,190 @@ sl:
     RelationSearch: 'Povezano iskanje'
     ResetFilter: Ponastavi
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
+    DeletePermissionsFailure: 'Nimate dovoljenja za brisanje'
+    EditPermissionsFailure: 'Nimate dovoljenja za odstranjevanje povezave'
     UnlinkRelation: 'Odstrani povezavo'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
-    DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
+    DeletePermissionsFailure: 'Nimate dovoljenja za brisanje'
     Deleted: 'Izbrisanih {type} {name}'
     Save: Shrani
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+    Saved: 'Shranjeno {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    EditPermissionsFailure: 'Zdi se, da nimate dovoljenja, ki je potrebno za urejanje "{ObjectTitle}"'
+    NEW: 'Dodaj nov zapis'
+    NEXT: 'Naslednji zapis'
+    PREVIOUS: 'Prejšnji zapis'
+    ViewPermissionsFailure: 'Zdi se, da nimate dovoljenja, ki je potrebno za ogled "{ObjectTitle}"'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Uredi
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Išči "{name}"'
+    SearchFormFaliure: 'Ni nam uspelo pripraviti obrazca za iskanje'
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Ne moremo vas odstraniti iz te skupine, saj boste izgubili administratorske pravice'
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: od
+    Page: Stran
+    View: Prikaži
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Prikaži
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Optimalna dimenzija'
+    ORIGINAL: 'Izvorna dimenzija'
+    PIXEL_WIDTH: '{width} točk'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Znesek
     FIELDLABELCURRENCY: Valuta
+    INVALID_CURRENCY: 'Valuta {currency} ni na seznamu dovoljenih valut.'
+  SilverStripe\Forms\MultiSelectField:
+    SOURCE_VALIDATION: 'Izberite vrednosti s seznama. Izbira {value} ni dovoljena.'
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Prazno polje'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Vrednost za {name} ne sme presegati predpisanega števila znakov ({maxLength}).'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: Objekti
+    PLURALS:
+      one: Objekt
+      two: '{count} objekta'
+      few: '{count} objekti'
+      other: '{count} objekti'
+    SINGULARNAME: Objekt
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Katerikoli
+    NOANSWER: Ne
+    YESANSWER: Da
   SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} dan'
+      two: '{count} dni'
+      few: '{count} dni'
+      other: '{count} dni'
+    HOURS_SHORT_PLURALS:
+      one: '{count} ura'
+      two: '{count} uri'
+      few: '{count} ur'
+      other: '{count} ur'
     LessThanMinuteAgo: 'manj kot minuta'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} minuta'
+      two: '{count} minuti'
+      few: '{count} minut'
+      other: '{count} minut'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} mesec'
+      two: '{count} meseca'
+      few: '{count} mesecev'
+      other: '{count} mesecev'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sekunda'
+      two: '{count} sekundi'
+      few: '{count} sekund'
+      other: '{count} sekund'
     TIMEDIFFAGO: 'pred {difference}'
     TIMEDIFFIN: 'v {difference}'
+    YEARS_SHORT_PLURALS:
+      one: '{count} let'
+      two: '{count} leti'
+      few: '{count} let'
+      other: '{count} let'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Katerikoli
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Vnosov je preveč, da bi jih lahko ustrezno prikazali, zato je uporabljeno sistemsko polje. '
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
+  SilverStripe\ORM\Hierarchy:
+    LIMITED_TITLE: 'Preveč ({count}) elementov v hierarhiji'
+  SilverStripe\ORM\Hierarchy\Hierarchy:
+    InfiniteLoopNotAllowed: 'Pojavila se je neskončna zanka v hierarhiji "{type}". Izberite drugo stran kot nadrejeno za razrešitev težave.'
+    LIMITED_TITLE: 'Preveč ({count}) elementov v hierarhiji'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Neveljaven vnos'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Vpišite uporabniško ime in geslo.'
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
+  SilverStripe\Security\CMSMemberLoginForm:
+    PASSWORDEXPIRED: '<p>Vaše geslo je poteklo. <a target="_top" href="{link}">Izberite novo.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    INVALIDUSER: '<p>Neveljavni uporabnik. Za nadaljevanje se <a target="_top" href="{link}">ponovno prijavite</a>.</p>'
+    LOGIN_MESSAGE: '<p>Vaša seja je zaradi neaktivnosti potekla.</p>'
+    LOGIN_TITLE: 'Po prijavi boste lahko nadaljevali, kjer ste prenehali.'
+    SUCCESS: 'Uspešna prijava'
+    SUCCESSCONTENT: '<p>Uspešno ste se prijavili. Če ne boste samodejno preusmerjeni, <a target="_top" href="{link}">kliknite za nadaljevanje.</a></p>'
+    SUCCESS_TITLE: 'Uspešno ste se prijavili'
+  SilverStripe\Security\Confirmation\Form:
+    CONFIRM: Potrdi
+    EMPTY_TITLE: 'Ničesar ni za potrditev'
+    REFUSE: Prekliči
+  SilverStripe\Security\Confirmation\Handler:
+    FORM_TITLE: 'Potrdite potencialno škodljivo akcijo'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Privzeti administrator'
   SilverStripe\Security\Group:
     AddRole: 'Skupinam pripiši vloge'
     Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
     DefaultGroupTitleContentAuthors: 'Avtorji vsebine'
     Description: Opis
+    GROUPNAME: 'Ime skupine'
     GroupReminder: 'Če izberete nadrejeno skupino, bo ta skupina prevzela vse njene vloge'
+    HierarchyPermsError: 'Nadrejeni skupini "{group}" ne moremo zagotoviti posebnih dovoljenj (zahteva dovoljenje administratorja).'
     Locked: 'Zaklenjeno za urejanje?'
+    MEMBERS: Uporabniki
+    NEWGROUP: 'Nova skupina'
     NoRoles: 'Ni najdenih vlog'
+    PERMISSIONS: Dovoljenja
+    PLURALNAME: Skupine
+    PLURALS:
+      one: Skupina
+      two: '{count} skupini'
+      few: '{count} skupin'
+      other: '{count} skupin'
     Parent: 'Nadrejena skupina'
+    ROLES: Vloga
+    ROLESDESCRIPTION: 'Vloge zajemajo določen nabor dovoljenj in jih lahko dodelimo skupinam. <br />Skupine lahko prevzemajo vloge od nadrejenih skupin.'
     RolesAddEditLink: 'Dodaj in uredi vloge'
+    SINGULARNAME: Skupina
     Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
   SilverStripe\Security\LoginAttempt:
+    Email: E-naslov
+    EmailHashed: 'E-naslov (šifriran)'
     IP: IP-naslov
+    PLURALNAME: 'Poskusov prijave'
+    PLURALS:
+      one: 'Poskus prijave'
+      two: '{count} poskusa prijave'
+      few: '{count} poskusov prijave'
+      other: '{count} poskusov prijave'
+    SINGULARNAME: 'Poskus prijave'
     Status: Stanje
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
     BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
+    BUTTONLOGOUT: Odjava
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
     CONFIRMPASSWORD: 'Potrdi geslo'
+    CURRENT_PASSWORD: 'Trenutno geslo'
+    EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-naslov
     EMPTYNEWPASSWORD: 'Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno.'
     ENTEREMAIL: 'Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla.'
+    ERRORLOCKEDOUT2: 'Vaš uporabniški račun smo zaradi več neuspešnih poskusov prijave začasno blokirali. Poskusite ponovno čez {count} minute.'
     ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
     ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
@@ -110,37 +287,113 @@ sl:
     LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo
+    PASSWORDEXPIRED: 'Vaše geslo je poteklo. Izberite novo.'
+    PLURALNAME: Uporabniki
+    PLURALS:
+      one: Uporabnik
+      two: '{count} uporabnika'
+      few: '{count} uporabnikov'
+      other: '{count} uporabnikov'
+    SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'
     SURNAME: Priimek
-    WELCOMEBACK: 'Ponovno pozdravljeni, {firstname}'
+    VALIDATIONADMINLOSTACCESS: 'Ne moremo odstraniti vseh administratorskih skupin z vašega računa.'
+    VALIDATIONMEMBEREXISTS: 'Uporabnik z uporabniškim imenom {identifier} že obstaja.'
+    ValidationIdentifierFailed: 'Za obstoječega uporabnika #{id} ne moremo uporabiti identifikatorja, ki že obstaja ({name} = {value})).'
+    WELCOMEBACK: 'Ponovno pozdravljeni, {firstname}!'
     YOUROLDPASSWORD: 'Staro geslo'
     belongs_many_many_Groups: Skupine
     db_Locale: 'Lokalizacija vmesnika'
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
+    KEEP_ME_SIGNED_IN: 'Ohranjaj prijavo naslednjih ({count}) dni.'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'V tem brskalniku boste ostali prijavljeni naslednjih ({count}) dni. Uporabite to možnost samo, če uporabljate brskalnik, v katerem je to varno.'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    AUTHENTICATORNAME: 'Obrazec za prijavo v sistem'
+    BUTTONFORGOTPASSWORD: 'Ne poznam gesla'
+    BUTTONLOGIN: 'Ponovna prijava'
+    BUTTONLOGOUT: Odjava
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Zdi se, da vneseni podatki niso pravi. Poskusite ponovno.'
+    NoPassword: 'Ta uporabnik nima določenega gesla.'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'E-naslov in geslo'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: Gesla
+    PLURALS:
+      one: Geslo
+      two: '{count} gesli'
+      few: '{count} gesel'
+      other: '{count} gesel'
+    SINGULARNAME: Geslo
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: 'Izboljšajte geslo tako, da dodate nekaj izmed znakov: {chars}'
+    PREVPASSWORD: 'To geslo ste v preteklosti že uporabljali, izberite tako geslo, ki ga še niste.'
+    TOOSHORT: 'Geslo je prekratko. Izberite geslo, ki je dolgo vsaj {minimum} znakov.'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'Dostop do sistema za urejanje'
     CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
+    PERMISSIONS_CATEGORY: 'Vloge in dovoljenja za dostop'
+    PLURALNAME: Dovoljenja
+    PLURALS:
+      one: Dovoljenje
+      two: '{count} dovoljenji'
+      few: '{count} dovoljenj'
+      other: '{count} dovoljenj'
+    SINGULARNAME: Dovoljenje
+    UserPermissionsIntro: 'Z dodelitvijo skupine uporabniku boste vplivali na nabor njegovih dovoljenj. Za pregled dovoljenj, ki jih ima posamezna skupina, preverite stran s podrobnejšimi nastavitvami za izbrano skupino.'
   SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: 'dodeljeno "{title}"'
     FromGroup: 'Privzeto iz skupine "{title}"'
+    FromRole: 'prevzeto od vloge "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "{roletitle}" na skupino "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 'Dodeli jo lahko samo administrator'
+    PLURALNAME: Vloge
+    PLURALS:
+      one: Vloga
+      two: '{count} vlogi'
+      few: '{count} vlog'
+      other: '{count} vlog'
+    SINGULARNAME: Vloga
     Title: Naslov
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Šifra dovoljenja'
+    PLURALS:
+      one: 'Šifra dovoljenja'
+      two: '{count} šifri dovoljenja'
+      few: '{count} šifer dovoljenja'
+      other: '{count} šifer dovoljenja'
+    PermsError: 'Šifri "{code}" ne moremo zagotoviti posebnih dovoljenj (zahteva dovoljenje administratorja).'
+    SINGULARNAME: 'Šifra dovoljenja'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Kriptirane prijave'
+    PLURALS:
+      one: 'Kriptirana prijava'
+      two: '{count} kriptirani prijavi'
+      few: '{count} kriptiranih prijav'
+      other: '{count} kriptiranih prijav'
+    SINGULARNAME: 'Kriptirana prijava'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
     BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'
     CHANGEPASSWORDBELOW: 'Spodaj lahko spremenite svoje geslo.'
     CHANGEPASSWORDHEADER: 'Spremenite geslo'
+    CONFIRMLOGOUT: 'S klikom na gumb spodaj potrdite, da se želite odjaviti.'
     ENTERNEWPASSWORD: 'Vpišite novo geslo.'
     ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
     LOGIN: Prijava
+    LOGOUT: Odjava
     LOSTPASSWORDHEADER: 'Izgubljeno geslo'
     NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
-    NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Povezava za ponovno nastavitev ne deluje ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Lahko zahtevate novo povezavo</a> ali pa si geslo spremenite po <a href="{link2}">prijavi</a>.</p>'
     NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
-    PASSWORDSENTHEADER: 'Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}''.'
-    PASSWORDSENTTEXT: 'Hvala! Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}'', ki je naveden kot e-naslov vašega računa. '
+    PASSWORDRESETSENTHEADER: 'Povezavo za ponovno nastavitev gesla smo vam poslali po e-pošti.'
+    PASSWORDRESETSENTTEXT: 'Povezavo za ponovno nastavitev gesla smo vam poslali po e-pošti, če uporabnik s tem e-naslovom obstaja.'
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Težava pri nalaganju datoteke zaradi napačnega naslova URL. '

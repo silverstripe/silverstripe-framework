@@ -12,7 +12,7 @@ use SilverStripe\Security\Security;
  */
 class SecuredController extends Controller implements TestOnly
 {
-    private static $allowed_actions = array('index');
+    private static $allowed_actions = ['index'];
 
     public function index()
     {

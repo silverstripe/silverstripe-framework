@@ -9,8 +9,8 @@ class TestBase extends DataObject implements TestOnly
 {
     private static $table_name = 'SQLUpdateTestBase';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
         'Description' => 'Text'
-    );
+    ];
 }

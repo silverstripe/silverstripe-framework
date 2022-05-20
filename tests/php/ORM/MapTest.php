@@ -28,11 +28,11 @@ class MapTest extends SapphireTest
         $map = new Map($list, 'Name', 'Comment');
 
         $this->assertEquals(
-            array(
+            [
             'This is a team comment by Bob',
             'This is a team comment by Joe',
             'Phil is a unique guy, and comments on team2'
-            ),
+            ],
             $map->values()
         );
 
@@ -40,12 +40,12 @@ class MapTest extends SapphireTest
         $map->push('Push', 'Item');
 
         $this->assertEquals(
-            array(
+            [
             'This is a team comment by Bob',
             'This is a team comment by Joe',
             'Phil is a unique guy, and comments on team2',
             'Item'
-            ),
+            ],
             $map->values()
         );
 
@@ -53,9 +53,9 @@ class MapTest extends SapphireTest
         $map->push('Push', 'Pushed value');
 
         $this->assertEquals(
-            array(
+            [
             'Pushed value'
-            ),
+            ],
             $map->values()
         );
 
@@ -63,9 +63,9 @@ class MapTest extends SapphireTest
         $map->unshift('Unshift', 'Unshift item');
 
         $this->assertEquals(
-            array(
+            [
             'Unshift item'
-            ),
+            ],
             $map->values()
         );
     }
@@ -116,9 +116,9 @@ class MapTest extends SapphireTest
         $list = TeamComment::get();
         $map = new Map($list, 'Name', 'Comment');
         $this->assertEquals(
-            array("Joe" => "This is a team comment by Joe",
+            ["Joe" => "This is a team comment by Joe",
             "Bob" => "This is a team comment by Bob",
-            "Phil" => "Phil is a unique guy, and comments on team2"),
+            "Phil" => "Phil is a unique guy, and comments on team2"],
             $map->toArray()
         );
     }
@@ -128,36 +128,36 @@ class MapTest extends SapphireTest
         $list = TeamComment::get()->sort('Name');
         $map = new Map($list, 'Name', 'Comment');
         $this->assertEquals(
-            array(
+            [
             'Bob',
             'Joe',
             'Phil'
-            ),
+            ],
             $map->keys()
         );
 
         $map->unshift('Unshift', 'Item');
 
         $this->assertEquals(
-            array(
+            [
             'Unshift',
             'Bob',
             'Joe',
             'Phil'
-            ),
+            ],
             $map->keys()
         );
 
         $map->push('Push', 'Item');
 
         $this->assertEquals(
-            array(
+            [
             'Unshift',
             'Bob',
             'Joe',
             'Phil',
             'Push'
-            ),
+            ],
             $map->keys()
         );
 
@@ -165,9 +165,9 @@ class MapTest extends SapphireTest
         $map->push('Push', 'Item');
 
         $this->assertEquals(
-            array(
+            [
             'Push'
-            ),
+            ],
             $map->keys()
         );
 
@@ -175,9 +175,9 @@ class MapTest extends SapphireTest
         $map->unshift('Unshift', 'Item');
 
         $this->assertEquals(
-            array(
+            [
             'Unshift'
-            ),
+            ],
             $map->keys()
         );
     }
@@ -187,14 +187,14 @@ class MapTest extends SapphireTest
         $list = Team::get()->sort('Title');
         $map = new Map($list, 'ID', 'MyTitle');
         $this->assertEquals(
-            array(
+            [
             'Team Subteam 1',
             'Team Subteam 2',
             'Team Subteam 3',
             'Team Team 1',
             'Team Team 2',
             'Team Team 3'
-            ),
+            ],
             $map->values()
         );
     }
@@ -207,11 +207,11 @@ class MapTest extends SapphireTest
         $map->unshift(-1, '(All)');
 
         $this->assertEquals(
-            array(
+            [
             -1 => "(All)",
             "Joe" => "This is a team comment by Joe",
             "Bob" => "This is a team comment by Bob",
-            "Phil" => "Phil is a unique guy, and comments on team2"),
+            "Phil" => "Phil is a unique guy, and comments on team2"],
             $map->toArray()
         );
 
@@ -221,45 +221,45 @@ class MapTest extends SapphireTest
         $this->assertEquals('(Select)', $map[0]);
 
         $this->assertEquals(
-            array(
+            [
             0 => "(Select)",
             -1 => "(All)",
             "Joe" => "This is a team comment by Joe",
             "Bob" => "This is a team comment by Bob",
-            "Phil" => "Phil is a unique guy, and comments on team2"),
+            "Phil" => "Phil is a unique guy, and comments on team2"],
             $map->toArray()
         );
 
         $map->unshift("Bob", "Replaced");
         $this->assertEquals(
-            array(
+            [
             "Bob" => "Replaced",
             0 => "(Select)",
             -1 => "(All)",
             "Joe" => "This is a team comment by Joe",
-            "Phil" => "Phil is a unique guy, and comments on team2"),
+            "Phil" => "Phil is a unique guy, and comments on team2"],
             $map->toArray()
         );
 
         $map->unshift("Phil", "Replaced as well");
         $this->assertEquals(
-            array(
+            [
             "Phil" => "Replaced as well",
             "Bob" => "Replaced",
             0 => "(Select)",
             -1 => "(All)",
-            "Joe" => "This is a team comment by Joe"),
+            "Joe" => "This is a team comment by Joe"],
             $map->toArray()
         );
 
         $map->unshift("Joe", "Replaced the last one");
         $this->assertEquals(
-            array(
+            [
             "Joe" => "Replaced the last one",
             "Phil" => "Replaced as well",
             "Bob" => "Replaced",
             0 => "(Select)",
-            -1 => "(All)"),
+            -1 => "(All)"],
             $map->toArray()
         );
     }
@@ -272,12 +272,12 @@ class MapTest extends SapphireTest
         $map->push(1, '(All)');
 
         $this->assertEquals(
-            array(
+            [
             "Joe" => "This is a team comment by Joe",
             "Bob" => "This is a team comment by Bob",
             "Phil" => "Phil is a unique guy, and comments on team2",
             1 => "(All)"
-            ),
+            ],
             $map->toArray()
         );
     }

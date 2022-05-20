@@ -19,7 +19,7 @@ class ConfigLoader
     /**
      * @var ConfigCollectionInterface[] map of config collections
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self
@@ -83,7 +83,7 @@ class ConfigLoader
      */
     public function countManifests()
     {
-        return count($this->manifests);
+        return count($this->manifests ?? []);
     }
 
     /**

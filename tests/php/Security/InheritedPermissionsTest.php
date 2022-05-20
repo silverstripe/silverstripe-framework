@@ -8,9 +8,12 @@ use SilverStripe\Security\Group;
 use SilverStripe\Security\InheritedPermissions;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PermissionChecker;
-use SilverStripe\Security\Test\InheritedPermissionsTest\TestPermissionNode;
-use SilverStripe\Security\Test\InheritedPermissionsTest\TestDefaultPermissionChecker;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\TestDefaultPermissionChecker;
+use SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode;
 use SilverStripe\Versioned\Versioned;
+use Psr\SimpleCache\CacheInterface;
+use ReflectionClass;
 
 class InheritedPermissionsTest extends SapphireTest
 {
@@ -18,6 +21,7 @@ class InheritedPermissionsTest extends SapphireTest
 
     protected static $extra_dataobjects = [
         TestPermissionNode::class,
+        UnstagedNode::class,
     ];
 
     /**
@@ -25,20 +29,40 @@ class InheritedPermissionsTest extends SapphireTest
      */
     protected $rootPermissions = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
+        $this->rootPermissions = new TestDefaultPermissionChecker();
 
         // Register root permissions
-        $permission = InheritedPermissions::create(TestPermissionNode::class)
+        $permission1 = InheritedPermissions::create(TestPermissionNode::class)
             ->setGlobalEditPermissions(['TEST_NODE_ACCESS'])
-            ->setDefaultPermissions($this->rootPermissions = new TestDefaultPermissionChecker());
+            ->setDefaultPermissions($this->rootPermissions);
         Injector::inst()->registerService(
-            $permission,
-            PermissionChecker::class.'.testpermissions'
+            $permission1,
+            PermissionChecker::class . '.testpermissions'
         );
 
         // Reset root permission
+        $permission2 = InheritedPermissions::create(UnstagedNode::class)
+            ->setGlobalEditPermissions(['TEST_NODE_ACCESS'])
+            ->setDefaultPermissions($this->rootPermissions);
+        Injector::inst()->registerService(
+            $permission2,
+            PermissionChecker::class . '.unstagedpermissions'
+        );
+
+        parent::setUp();
+
+        $permission1->clearCache();
+        $permission2->clearCache();
+    }
+
+    protected function tearDown(): void
+    {
+        Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.testpermissions');
+        Injector::inst()->unregisterNamedObject(PermissionChecker::class . '.unstagedpermissions');
+        $this->rootPermissions = null;
+        parent::tearDown();
     }
 
     public function testEditPermissions()
@@ -127,6 +151,8 @@ class InheritedPermissionsTest extends SapphireTest
         $protected = $this->objFromFixture(TestPermissionNode::class, 'protected');
         $protectedChild = $this->objFromFixture(TestPermissionNode::class, 'protected-child');
         $editor = $this->objFromFixture(Member::class, 'editor');
+        $restricted = $this->objFromFixture(TestPermissionNode::class, 'restricted-page');
+        $admin = $this->objFromFixture(Member::class, 'admin');
 
         // Not logged in user can only access Inherit or Anyone pages
         Member::actAs(
@@ -155,6 +181,52 @@ class InheritedPermissionsTest extends SapphireTest
         $this->assertTrue($history->canView($editor));
 
         TestPermissionNode::getInheritedPermissions()->clearCache();
+        $this->rootPermissions->setCanView(false);
+
+        $this->assertFalse($history->canView($editor));
+
+        // Ensure admins can view everything, even if only a certain group is allowed to view it
+        $this->assertTrue($restricted->canView($admin));
+    }
+
+    public function testUnstagedViewPermissions()
+    {
+        $history = $this->objFromFixture(UnstagedNode::class, 'history');
+        $contact = $this->objFromFixture(UnstagedNode::class, 'contact');
+        $contactForm = $this->objFromFixture(UnstagedNode::class, 'contact-form');
+        $secret = $this->objFromFixture(UnstagedNode::class, 'secret');
+        $secretNested = $this->objFromFixture(UnstagedNode::class, 'secret-nested');
+        $protected = $this->objFromFixture(UnstagedNode::class, 'protected');
+        $protectedChild = $this->objFromFixture(UnstagedNode::class, 'protected-child');
+        $editor = $this->objFromFixture(Member::class, 'editor');
+
+        // Not logged in user can only access Inherit or Anyone pages
+        Member::actAs(
+            null,
+            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm) {
+                $this->assertTrue($history->canView());
+                $this->assertTrue($contact->canView());
+                $this->assertTrue($contactForm->canView());
+                // Protected
+                $this->assertFalse($secret->canView());
+                $this->assertFalse($secretNested->canView());
+                $this->assertFalse($protected->canView());
+                $this->assertFalse($protectedChild->canView());
+            }
+        );
+
+        // Editor can view pages restricted to logged in users
+        $this->assertTrue($secret->canView($editor));
+        $this->assertTrue($secretNested->canView($editor));
+
+        // Cannot read admin-only pages
+        $this->assertFalse($protected->canView($editor));
+        $this->assertFalse($protectedChild->canView($editor));
+
+        // Check root permissions
+        $this->assertTrue($history->canView($editor));
+
+        UnstagedNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanView(false);
 
         $this->assertFalse($history->canView($editor));
@@ -265,5 +337,113 @@ class InheritedPermissionsTest extends SapphireTest
             $this->assertFalse($historyGallery->canView());
             $this->assertFalse($history->canView());
         });
+    }
+
+    public function testPermissionsPersistCache()
+    {
+        /* @var CacheInterface $cache */
+        $cache = Injector::inst()->create(CacheInterface::class . '.InheritedPermissions');
+        $cache->clear();
+
+        $member = $this->objFromFixture(Member::class, 'editor');
+
+        /** @var TestPermissionNode $history */
+        $history = $this->objFromFixture(TestPermissionNode::class, 'history');
+        /** @var TestPermissionNode $historyGallery */
+        $historyGallery = $this->objFromFixture(TestPermissionNode::class, 'history-gallery');
+        $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
+
+        $viewKey = $this->generateCacheKey($permissionChecker, InheritedPermissions::VIEW, $member->ID);
+        $editKey = $this->generateCacheKey($permissionChecker, InheritedPermissions::EDIT, $member->ID);
+
+        $this->assertNull($cache->get($editKey));
+        $this->assertNull($cache->get($viewKey));
+
+        $permissionChecker->canEditMultiple([$history->ID, $historyGallery->ID], $member);
+        $this->assertNull($cache->get($editKey));
+        $this->assertNull($cache->get($viewKey));
+
+        unset($permissionChecker);
+        $this->assertTrue(is_array($cache->get($editKey)));
+        $this->assertNull($cache->get($viewKey));
+        $this->assertArrayHasKey($history->ID, $cache->get($editKey));
+        $this->assertArrayHasKey($historyGallery->ID, $cache->get($editKey));
+
+        $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
+        $permissionChecker->canViewMultiple([$history->ID], $member);
+        $this->assertNotNull($cache->get($editKey));
+        $this->assertNull($cache->get($viewKey));
+
+        unset($permissionChecker);
+        $this->assertTrue(is_array($cache->get($viewKey)));
+        $this->assertTrue(is_array($cache->get($editKey)));
+        $this->assertArrayHasKey($history->ID, $cache->get($viewKey));
+        $this->assertArrayNotHasKey($historyGallery->ID, $cache->get($viewKey));
+    }
+
+    public function testPermissionsFlushCache()
+    {
+        /* @var CacheInterface $cache */
+        $cache = Injector::inst()->create(CacheInterface::class . '.InheritedPermissions');
+        $cache->clear();
+
+        $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
+        $member1 = $this->objFromFixture(Member::class, 'editor');
+        $member2 = $this->objFromFixture(Member::class, 'admin');
+        $editKey1 = $this->generateCacheKey($permissionChecker, InheritedPermissions::EDIT, $member1->ID);
+        $editKey2 = $this->generateCacheKey($permissionChecker, InheritedPermissions::EDIT, $member2->ID);
+        $viewKey1 = $this->generateCacheKey($permissionChecker, InheritedPermissions::VIEW, $member1->ID);
+        $viewKey2 = $this->generateCacheKey($permissionChecker, InheritedPermissions::VIEW, $member2->ID);
+
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+            $this->assertNull($cache->get($key));
+        }
+
+        /** @var TestPermissionNode $history */
+        $history = $this->objFromFixture(TestPermissionNode::class, 'history');
+        /** @var TestPermissionNode $historyGallery */
+        $historyGallery = $this->objFromFixture(TestPermissionNode::class, 'history-gallery');
+
+        $permissionChecker->canEditMultiple([$history->ID, $historyGallery->ID], $member1);
+        $permissionChecker->canViewMultiple([$history->ID, $historyGallery->ID], $member1);
+        $permissionChecker->canEditMultiple([$history->ID, $historyGallery->ID], $member2);
+        $permissionChecker->canViewMultiple([$history->ID, $historyGallery->ID], $member2);
+
+        unset($permissionChecker);
+
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+            $this->assertNotNull($cache->get($key));
+        }
+        $permissionChecker = new InheritedPermissions(TestPermissionNode::class, $cache);
+
+        // Non existent ID
+        $permissionChecker->flushMemberCache('dummy');
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+            $this->assertNotNull($cache->get($key));
+        }
+
+        // Precision strike
+        $permissionChecker->flushMemberCache([$member1->ID]);
+        // Member1 should be clear
+        $this->assertNull($cache->get($editKey1));
+        $this->assertNull($cache->get($viewKey1));
+        // Member 2 is unaffected
+        $this->assertNotNull($cache->get($editKey2));
+        $this->assertNotNull($cache->get($viewKey2));
+
+        // Nuclear
+        $permissionChecker->flushMemberCache();
+        foreach ([$editKey1, $editKey2, $viewKey1, $viewKey2] as $key) {
+            $this->assertNull($cache->get($key));
+        }
+    }
+
+    protected function generateCacheKey(InheritedPermissions $inst, $type, $memberID)
+    {
+        $reflection = new ReflectionClass(InheritedPermissions::class);
+        $method = $reflection->getMethod('generateCacheKey');
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($inst, [$type, $memberID]);
     }
 }

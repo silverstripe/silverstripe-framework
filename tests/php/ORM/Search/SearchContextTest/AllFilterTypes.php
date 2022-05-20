@@ -9,7 +9,7 @@ class AllFilterTypes extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_AllFilterTypes';
 
-    private static $db = array(
+    private static $db = [
         'ExactMatch' => 'Varchar',
         'PartialMatch' => 'Varchar',
         'SubstringMatch' => 'Varchar',
@@ -18,14 +18,14 @@ class AllFilterTypes extends DataObject implements TestOnly
         'EndsWith' => 'Varchar',
         'HiddenValue' => 'Varchar',
         'FulltextField' => 'Text',
-    );
+    ];
 
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'ExactMatch' => 'ExactMatchFilter',
         'PartialMatch' => 'PartialMatchFilter',
         'CollectionMatch' => 'ExactMatchFilter',
         'StartsWith' => 'StartsWithFilter',
         'EndsWith' => 'EndsWithFilter',
         'FulltextField' => 'FulltextFilter',
-    );
+    ];
 }

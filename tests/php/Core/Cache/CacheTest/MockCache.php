@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Core\Test\Cache\CacheTest;
+namespace SilverStripe\Core\Tests\Cache\CacheTest;
 
 use SilverStripe\Dev\TestOnly;
 

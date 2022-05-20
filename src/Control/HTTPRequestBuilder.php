@@ -28,16 +28,20 @@ class HTTPRequestBuilder
      *
      * @param array $variables
      * @param string $input Request body
+     * @param string|null $url Provide specific url (relative to base)
      * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input)
+    public static function createFromVariables(array $variables, $input, $url = null)
     {
-        // Remove query parameters (they're retained separately through $server['_GET']
-        $url = parse_url($variables['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
+        // Infer URL from REQUEST_URI unless explicitly provided
+        if (!isset($url)) {
+            // Remove query parameters (they're retained separately through $server['_GET']
+            $url = parse_url($variables['_SERVER']['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
-        // Remove base folders from the URL if webroot is hosted in a subfolder
-        if (substr(strtolower($url), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
-            $url = substr($url, strlen(BASE_URL));
+            // Remove base folders from the URL if webroot is hosted in a subfolder
+            if (substr(strtolower($url ?? ''), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {
+                $url = substr($url ?? '', strlen(BASE_URL));
+            }
         }
 
         // Build request
@@ -82,12 +86,12 @@ class HTTPRequestBuilder
      */
     public static function extractRequestHeaders(array $server)
     {
-        $headers = array();
+        $headers = [];
         foreach ($server as $key => $value) {
-            if (substr($key, 0, 5) == 'HTTP_') {
-                $key = substr($key, 5);
-                $key = strtolower(str_replace('_', ' ', $key));
-                $key = str_replace(' ', '-', ucwords($key));
+            if (substr($key ?? '', 0, 5) == 'HTTP_') {
+                $key = substr($key ?? '', 5);
+                $key = strtolower(str_replace('_', ' ', $key ?? '') ?? '');
+                $key = str_replace(' ', '-', ucwords($key ?? ''));
                 $headers[$key] = $value;
             }
         }
@@ -97,6 +101,27 @@ class HTTPRequestBuilder
         }
         if (isset($server['CONTENT_LENGTH'])) {
             $headers['Content-Length'] = $server['CONTENT_LENGTH'];
+        }
+
+        // Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
+        // Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
+        // REDIRECT_HTTP_AUTHORIZATION
+        $authHeader = null;
+        if (isset($headers['Authorization'])) {
+            $authHeader = $headers['Authorization'];
+        } elseif (isset($server['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $authHeader = $server['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+
+        // Ensure basic auth is available via headers
+        if (isset($server['PHP_AUTH_USER']) && isset($server['PHP_AUTH_PW'])) {
+            // Shift PHP_AUTH_* into headers so they are available via request
+            $headers['PHP_AUTH_USER'] = $server['PHP_AUTH_USER'];
+            $headers['PHP_AUTH_PW'] = $server['PHP_AUTH_PW'];
+        } elseif ($authHeader && preg_match('/Basic\s+(?<token>.*)$/i', $authHeader ?? '', $matches)) {
+            list($name, $password) = explode(':', base64_decode($matches['token'] ?? '') ?? '');
+            $headers['PHP_AUTH_USER'] = $name;
+            $headers['PHP_AUTH_PW'] = $password;
         }
 
         return $headers;
@@ -110,16 +135,6 @@ class HTTPRequestBuilder
      */
     public static function cleanEnvironment(array $variables)
     {
-        // IIS will sometimes generate this.
-        if (!empty($variables['_SERVER']['HTTP_X_ORIGINAL_URL'])) {
-            $variables['_SERVER']['REQUEST_URI'] = $variables['_SERVER']['HTTP_X_ORIGINAL_URL'];
-        }
-
-        // Override REQUEST_METHOD
-        if (isset($variables['_SERVER']['X-HTTP-Method-Override'])) {
-            $variables['_SERVER']['REQUEST_METHOD'] = $variables['_SERVER']['X-HTTP-Method-Override'];
-        }
-
         // Merge $_FILES into $_POST
         $variables['_POST'] = array_merge((array)$variables['_POST'], (array)$variables['_FILES']);
 

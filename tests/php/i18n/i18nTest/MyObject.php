@@ -11,14 +11,14 @@ class MyObject extends DataObject implements TestOnly
 {
     private static $table_name = 'i18nTest_MyObject';
 
-    private static $db = array(
+    private static $db = [
         'FirstProperty' => 'Varchar',
         'SecondProperty' => 'Int'
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'Relation' => Group::class
-    );
+    ];
 
     private static $singular_name = "My Object";
 
@@ -28,7 +28,7 @@ class MyObject extends DataObject implements TestOnly
     {
         $entities = parent::provideI18nEntities();
         return array_merge($entities, [
-            LeftAndMain::class.'.OTHER_TITLE' => [
+            LeftAndMain::class . '.OTHER_TITLE' => [
                 'default' => 'Other title',
                 'module' => 'admin',
             ],

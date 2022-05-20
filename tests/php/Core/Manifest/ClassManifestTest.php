@@ -27,7 +27,7 @@ class ClassManifestTest extends SapphireTest
      */
     protected $manifestTests;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -76,6 +76,7 @@ class ClassManifestTest extends SapphireTest
             'classd' => "{$this->base}/module/classes/ClassD.php",
             'classe' => "{$this->base}/module/classes/ClassE.php",
             'vendorclassa' => "{$this->base}/vendor/silverstripe/modulec/code/VendorClassA.php",
+            'vendorclassx' => "{$this->base}/vendor/silverstripe/modulecbetter/code/VendorClassX.php",
         ];
         $this->assertEquals($expect, $this->manifest->getClasses());
     }
@@ -90,6 +91,7 @@ class ClassManifestTest extends SapphireTest
                 'classd' => 'ClassD',
                 'classe' => 'ClassE',
                 'vendorclassa' => 'VendorClassA',
+                'vendorclassx' => 'VendorClassX',
             ],
             $this->manifest->getClassNames()
         );
@@ -137,10 +139,10 @@ class ClassManifestTest extends SapphireTest
 
     public function testGetInterfaces()
     {
-        $expect = array(
+        $expect = [
             'interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
             'interfaceb' => "{$this->base}/module/interfaces/InterfaceB.php"
-        );
+        ];
         $this->assertEquals($expect, $this->manifest->getInterfaces());
     }
 

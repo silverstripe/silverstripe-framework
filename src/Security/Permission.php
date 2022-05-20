@@ -26,23 +26,23 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
     // the (1) after Type specifies the DB default value which is needed for
     // upgrades from older SilverStripe versions
-    private static $db = array(
+    private static $db = [
         "Code" => "Varchar(255)",
         "Arg" => "Int",
         "Type" => "Int(1)"
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "Group" => Group::class,
-    );
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         "Code" => true
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         "Type" => 1
-    );
+    ];
 
     private static $table_name = "Permission";
 
@@ -69,6 +69,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Method to globally disable "strict" checking, which means a permission
      * will be granted if the key does not exist at all.
      *
+     * @deprecated 4.4.0
      * @var array
      */
     private static $declared_permissions = null;
@@ -76,6 +77,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     /**
      * Linear list of declared permissions in the system.
      *
+     * @deprecated 4.4.0
      * @var array
      */
     private static $declared_permissions_list = null;
@@ -102,18 +104,18 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @config
      * @var array;
      */
-    private static $hidden_permissions = array();
+    private static $hidden_permissions = [];
 
     /**
      * @config These permissions can only be applied by ADMIN users, to prevent
      * privilege escalation on group assignments and inheritance.
      * @var array
      */
-    private static $privileged_permissions = array(
+    private static $privileged_permissions = [
         'ADMIN',
         'APPLY_ROLES',
         'EDIT_PERMISSIONS'
-    );
+    ];
 
     /**
      * Check that the current member has the given permission.
@@ -144,7 +146,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Permissions cache.  The format is a map, where the keys are member IDs, and the values are
      * arrays of permission codes.
      */
-    private static $cache_permissions = array();
+    private static $cache_permissions = [];
 
     /**
      * Flush the permission cache, for example if you have edited group membership or a permission record.
@@ -152,13 +154,13 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function reset()
     {
-        self::$cache_permissions = array();
+        self::$cache_permissions = [];
     }
 
     /**
      * Check that the given member has the given permission.
      *
-     * @param int|Member memberID The ID of the member to check. Leave blank for the current member.
+     * @param int|Member $member The ID of the member to check. Leave blank for the current member.
      *  Alternatively you can use a member object.
      * @param string|array $code Code of the permission to check (case-sensitive)
      * @param string $arg Optional argument (e.g. a permissions for a specific page)
@@ -181,7 +183,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         // Turn the code into an array as we may need to add other permsissions to the set we check
         if (!is_array($code)) {
-            $code = array($code);
+            $code = [$code];
         }
 
         // Check if admin should be treated as holding all permissions
@@ -196,11 +198,11 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if ($permCode === 'CMS_ACCESS') {
                     foreach (self::$cache_permissions[$memberID] as $perm) {
                         //if they have admin rights OR they have an explicit access to the CMS then give permission
-                        if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm, 0, 11) === 'CMS_ACCESS_') {
+                        if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm ?? '', 0, 11) === 'CMS_ACCESS_') {
                             return true;
                         }
                     }
-                } elseif (substr($permCode, 0, 11) === 'CMS_ACCESS_' && !in_array('CMS_ACCESS_LeftAndMain', $code)) {
+                } elseif (substr($permCode ?? '', 0, 11) === 'CMS_ACCESS_' && !in_array('CMS_ACCESS_LeftAndMain', $code ?? [])) {
                     //cms_access_leftandmain means access to all CMS areas
                     $code[] = 'CMS_ACCESS_LeftAndMain';
                 }
@@ -212,17 +214,17 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             }
 
             // Multiple $code values - return true if at least one matches, ie, intersection exists
-            return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
+            return (bool)array_intersect($code ?? [], self::$cache_permissions[$memberID]);
         }
 
         // Code filters
-        $codeParams = is_array($code) ? $code : array($code);
+        $codeParams = is_array($code) ? $code : [$code];
         $codeClause = DB::placeholders($codeParams);
-        $adminParams = $adminImpliesAll ? array('ADMIN') : array();
+        $adminParams = $adminImpliesAll ? ['ADMIN'] : [];
         $adminClause = $adminImpliesAll ?  ", ?" : '';
 
         // The following code should only be used if you're not using the "any" arg.  This is kind
-        // of obselete functionality and could possibly be deprecated.
+        // of obsolete functionality and could possibly be deprecated.
         $groupParams = self::groupList($memberID);
         if (empty($groupParams)) {
             return false;
@@ -231,20 +233,20 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         // Arg component
         $argClause = "";
-        $argParams = array();
+        $argParams = [];
         switch ($arg) {
             case "any":
                 break;
             case "all":
                 $argClause = " AND \"Arg\" = ?";
-                $argParams = array(-1);
+                $argParams = [-1];
                 break;
             default:
                 if (is_numeric($arg)) {
                     $argClause = "AND \"Arg\" IN (?, ?) ";
-                    $argParams = array(-1, $arg);
+                    $argParams = [-1, $arg];
                 } else {
-                    user_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 
@@ -261,7 +263,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             array_merge(
                 $codeParams,
                 $adminParams,
-                array(self::GRANT_PERMISSION),
+                [self::GRANT_PERMISSION],
                 $groupParams,
                 $argParams
             )
@@ -280,7 +282,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 					\"Code\" IN ($codeClause) AND
 					\"Type\" = ?
 				)",
-                array_merge($codeParams, array(self::GRANT_PERMISSION))
+                array_merge($codeParams, [self::GRANT_PERMISSION])
             )->value();
 
             if (!$hasPermission) {
@@ -316,18 +318,18 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
 				INNER JOIN \"Group_Roles\" GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
 				WHERE \"GroupID\" IN ($groupCSV)
-			")->column());
+			")->column() ?? []);
 
             $denied = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
 				WHERE \"Type\" = " . self::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-			")->column());
+			")->column() ?? []);
 
-            return array_diff($allowed, $denied);
+            return array_diff($allowed ?? [], $denied);
         }
 
-        return array();
+        return [];
     }
 
 
@@ -357,10 +359,10 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         if ($member) {
             // Build a list of the IDs of the groups.  Most of the heavy lifting
             // is done by Member::Groups
-            // NOTE: This isn't effecient; but it's called once per session so
+            // NOTE: This isn't efficient; but it's called once per session so
             // it's a low priority to fix.
             $groups = $member->Groups();
-            $groupList = array();
+            $groupList = [];
 
             if ($groups) {
                 foreach ($groups as $group) {
@@ -406,10 +408,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if (is_numeric($arg)) {
                     $perm->Arg = $arg;
                 } else {
-                    user_error(
-                        "Permission::checkMember: bad arg '$arg'",
-                        E_USER_ERROR
-                    );
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 
@@ -444,10 +443,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 if (is_numeric($arg)) {
                     $perm->Arg = $arg;
                 } else {
-                    user_error(
-                        "Permission::checkMember: bad arg '$arg'",
-                        E_USER_ERROR
-                    );
+                    throw new \InvalidArgumentException("Permission::checkMember: bad arg '$arg'");
                 }
         }
 
@@ -469,11 +465,11 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             return new ArrayList();
         }
 
-        $groupIDs = array();
+        $groupIDs = [];
         foreach ($toplevelGroups as $group) {
             $familyIDs = $group->collateFamilyIDs();
             if (is_array($familyIDs)) {
-                $groupIDs = array_merge($groupIDs, array_values($familyIDs));
+                $groupIDs = array_merge($groupIDs, array_values($familyIDs ?? []));
             }
         }
 
@@ -484,7 +480,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         $groupClause = DB::placeholders($groupIDs);
         /** @skipUpgrade */
         $members = Member::get()
-            ->where(array("\"Group\".\"ID\" IN ($groupClause)" => $groupIDs))
+            ->where(["\"Group\".\"ID\" IN ($groupClause)" => $groupIDs])
             ->leftJoin("Group_Members", '"Member"."ID" = "Group_Members"."MemberID"')
             ->leftJoin("Group", '"Group_Members"."GroupID" = "Group"."ID"');
 
@@ -498,16 +494,16 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function get_groups_by_permission($codes)
     {
-        $codeParams = is_array($codes) ? $codes : array($codes);
+        $codeParams = is_array($codes) ? $codes : [$codes];
         $codeClause = DB::placeholders($codeParams);
 
         // Via Roles are groups that have the permission via a role
         /** @skipUpgrade */
         return Group::get()
-            ->where(array(
+            ->where([
                 "\"PermissionRoleCode\".\"Code\" IN ($codeClause) OR \"Permission\".\"Code\" IN ($codeClause)"
                 => array_merge($codeParams, $codeParams)
-            ))
+            ])
             ->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
             ->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
             ->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
@@ -523,7 +519,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param bool $grouped Group results into an array of permission groups.
      * @return array Returns an array of all available permission codes. The
-     *  array indicies are the permission codes as used in
+     *  array indices are the permission codes as used in
      *  {@link Permission::check()}. The value is a description
      *  suitable for using in an interface.
      */
@@ -531,16 +527,16 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     {
         $classes = ClassInfo::implementorsOf('SilverStripe\\Security\\PermissionProvider');
 
-        $allCodes = array();
-        $adminCategory = _t(__CLASS__.'.AdminGroup', 'Administrator');
-        $allCodes[$adminCategory]['ADMIN'] = array(
-            'name' => _t(__CLASS__.'.FULLADMINRIGHTS', 'Full administrative rights'),
+        $allCodes = [];
+        $adminCategory = _t(__CLASS__ . '.AdminGroup', 'Administrator');
+        $allCodes[$adminCategory]['ADMIN'] = [
+            'name' => _t(__CLASS__ . '.FULLADMINRIGHTS', 'Full administrative rights'),
             'help' => _t(
                 'SilverStripe\\Security\\Permission.FULLADMINRIGHTS_HELP',
                 'Implies and overrules all other assigned permissions.'
             ),
             'sort' => 100000
-        );
+        ];
 
         if ($classes) {
             foreach ($classes as $class) {
@@ -568,27 +564,27 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                             }
 
                             if (!isset($allCodes[$v['category']])) {
-                                $allCodes[$v['category']] = array();
+                                $allCodes[$v['category']] = [];
                             }
 
-                            $allCodes[$v['category']][$k] = array(
+                            $allCodes[$v['category']][$k] = [
                             'name' => $v['name'],
                             'help' => isset($v['help']) ? $v['help'] : null,
                             'sort' => isset($v['sort']) ? $v['sort'] : 0
-                            );
+                            ];
                         } else {
-                            $allCodes['Other'][$k] = array(
+                            $allCodes['Other'][$k] = [
                             'name' => $v,
                             'help' => null,
                             'sort' => 0
-                            );
+                            ];
                         }
                     }
                 }
             }
         }
 
-        $flatCodeArray = array();
+        $flatCodeArray = [];
         foreach ($allCodes as $category) {
             foreach ($category as $code => $permission) {
                 $flatCodeArray[] = $code;
@@ -598,12 +594,12 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         if ($otherPerms) {
             foreach ($otherPerms as $otherPerm) {
-                if (!in_array($otherPerm, $flatCodeArray)) {
-                    $allCodes['Other'][$otherPerm] = array(
+                if (!in_array($otherPerm, $flatCodeArray ?? [])) {
+                    $allCodes['Other'][$otherPerm] = [
                     'name' => $otherPerm,
                     'help' => null,
                     'sort' => 0
-                    );
+                    ];
                 }
             }
         }
@@ -615,10 +611,10 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         ksort($allCodes);
 
-        $returnCodes = array();
+        $returnCodes = [];
         foreach ($allCodes as $category => $permissions) {
             if ($grouped) {
-                uasort($permissions, array(__CLASS__, 'sort_permissions'));
+                uasort($permissions, [__CLASS__, 'sort_permissions']);
                 $returnCodes[$category] = $permissions;
             } else {
                 $returnCodes = array_merge($returnCodes, $permissions);
@@ -639,7 +635,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     {
         if ($a['sort'] == $b['sort']) {
             // Same sort value, do alpha instead
-            return strcmp($a['name'], $b['name']);
+            return strcmp($a['name'] ?? '', $b['name'] ?? '');
         } else {
             // Just numeric.
             return $a['sort'] < $b['sort'] ? -1 : 1;
@@ -650,6 +646,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Get a linear list of the permissions in the system.
      *
      * @return array Linear list of declared permissions in the system.
+     * @deprecated 4.4.0
      */
     public static function get_declared_permissions_list()
     {
@@ -661,7 +658,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             return self::$declared_permissions_list;
         }
 
-        self::$declared_permissions_list = array();
+        self::$declared_permissions_list = [];
 
         self::traverse_declared_permissions(self::$declared_permissions, self::$declared_permissions_list);
 
@@ -673,11 +670,12 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param string $perm Permission code
      * @return string Label for the given permission, or the permission itself if the label doesn't exist
+     * @deprecated 4.4.0
      */
     public static function get_label_for_permission($perm)
     {
         $list = self::get_declared_permissions_list();
-        if (array_key_exists($perm, $list)) {
+        if (array_key_exists($perm, $list ?? [])) {
             return $list[$perm];
         }
         return $perm;
@@ -690,6 +688,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param array $declared Nested structure of permissions.
      * @param array $list List of permissions in the structure. The result will be
      *              written to this array.
+     * @deprecated 4.4.0
      */
     protected static function traverse_declared_permissions($declared, &$list)
     {
@@ -717,20 +716,20 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'HasPerm' => 'check'
-        );
+        ];
     }
 
     public function provideI18nEntities()
     {
-        $keys = parent::provideI18nEntities(); // TODO: Change the autogenerated stub
+        $keys = parent::provideI18nEntities();
 
         // Localise all permission categories
-        $keys[__CLASS__.'.AdminGroup'] = 'Administrator';
-        $keys[__CLASS__.'.CMS_ACCESS_CATEGORY'] = 'CMS Access';
-        $keys[__CLASS__.'.CONTENT_CATEGORY'] = 'Content permissions';
-        $keys[__CLASS__.'.PERMISSIONS_CATEGORY'] = 'Roles and access permissions';
+        $keys[__CLASS__ . '.AdminGroup'] = 'Administrator';
+        $keys[__CLASS__ . '.CMS_ACCESS_CATEGORY'] = 'CMS Access';
+        $keys[__CLASS__ . '.CONTENT_CATEGORY'] = 'Content permissions';
+        $keys[__CLASS__ . '.PERMISSIONS_CATEGORY'] = 'Roles and access permissions';
         return $keys;
     }
 }

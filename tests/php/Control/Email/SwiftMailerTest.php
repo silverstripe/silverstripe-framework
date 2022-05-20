@@ -21,16 +21,16 @@ class SwiftMailerTest extends SapphireTest
         $this->assertEquals($swift, $mailer->getSwiftMailer());
 
         SwiftMailer::config()->remove('swift_plugins');
-        SwiftMailer::config()->update('swift_plugins', array(Swift_Plugins_AntiFloodPlugin::class));
+        SwiftMailer::config()->update('swift_plugins', [Swift_Plugins_AntiFloodPlugin::class]);
 
         /** @var Swift_MailTransport $transport */
         $transport = $this->getMockBuilder(Swift_MailTransport::class)->getMock();
         $transport
             ->expects($this->once())
             ->method('registerPlugin')
-            ->willReturnCallback(function ($plugin) {
-                $this->assertInstanceOf(Swift_Plugins_AntiFloodPlugin::class, $plugin);
-            });
+            ->with(
+                $this->isInstanceOf(Swift_Plugins_AntiFloodPlugin::class)
+            );
 
         /** @var Swift_Mailer $swift */
         $swift = $this->getMockBuilder(Swift_Mailer::class)->disableOriginalConstructor()->getMock();
@@ -52,11 +52,11 @@ class SwiftMailerTest extends SapphireTest
         $email->setSubject('Subject');
 
         $mailer = $this->getMockBuilder(SwiftMailer::class)
-            ->setMethods(array('sendSwift'))
+            ->setMethods(['sendSwift'])
             ->getMock();
-        $mailer->expects($this->once())->method('sendSwift')->willReturnCallback(function ($message) {
-            $this->assertInstanceOf(Swift_Message::class, $message);
-        });
+        $mailer->expects($this->once())->method('sendSwift')->with(
+            $this->isInstanceOf(Swift_Message::class)
+        );
 
         $mailer->send($email);
     }

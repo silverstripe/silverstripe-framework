@@ -26,22 +26,22 @@ class FormRequestHandler extends RequestHandler
      * @config
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'handleField',
         'httpSubmission',
         'forTemplate',
-    );
+    ];
 
     /**
      * @config
      * @var array
      */
-    private static $url_handlers = array(
+    private static $url_handlers = [
         'field/$FieldName!' => 'handleField',
         'POST ' => 'httpSubmission',
         'GET ' => 'httpSubmission',
         'HEAD ' => 'httpSubmission',
-    );
+    ];
 
     /**
      * Form model being handled
@@ -85,15 +85,15 @@ class FormRequestHandler extends RequestHandler
 
         // Respect FormObjectLink() method
         if ($controller->hasMethod("FormObjectLink")) {
-            return Controller::join_links(
-                $controller->FormObjectLink($this->form->getName()),
-                $action,
-                '/'
-            );
+            $base = $controller->FormObjectLink($this->form->getName());
+        } else {
+            $base = Controller::join_links($controller->Link(), $this->form->getName());
         }
 
-        // Default form link
-        return Controller::join_links($controller->Link(), $this->form->getName(), $action, '/');
+        // Join with action and decorate
+        $link = Controller::join_links($base, $action, '/');
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -131,7 +131,7 @@ class FormRequestHandler extends RequestHandler
         }
 
         // Ensure we only process saveable fields (non structural, readonly, or disabled)
-        $allowedFields = array_keys($this->form->Fields()->saveableFields());
+        $allowedFields = array_keys($this->form->Fields()->saveableFields() ?? []);
 
         // Populate the form
         $this->form->loadDataFrom($vars, true, $allowedFields);
@@ -144,8 +144,7 @@ class FormRequestHandler extends RequestHandler
             if (empty($vars[$securityID])) {
                 $this->httpError(400, _t(
                     "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
-                    "There seems to have been a technical problem. Please click the back button, ".
-                    "refresh your browser, and try again."
+                    "There seems to have been a technical problem. Please click the back button, " . "refresh your browser, and try again."
                 ));
             } else {
                 // Clear invalid token on refresh
@@ -158,7 +157,6 @@ class FormRequestHandler extends RequestHandler
                         "SilverStripe\\Forms\\Form.CSRF_EXPIRED_MESSAGE",
                         "Your session has expired. Please re-submit the form."
                     ));
-
                 // Return the user
                 return $this->redirectBack();
             }
@@ -167,17 +165,17 @@ class FormRequestHandler extends RequestHandler
         // Determine the action button clicked
         $funcName = null;
         foreach ($vars as $paramName => $paramVal) {
-            if (substr($paramName, 0, 7) == 'action_') {
+            if (substr($paramName ?? '', 0, 7) == 'action_') {
                 // Break off querystring arguments included in the action
-                if (strpos($paramName, '?') !== false) {
-                    list($paramName, $paramVars) = explode('?', $paramName, 2);
-                    $newRequestParams = array();
-                    parse_str($paramVars, $newRequestParams);
+                if (strpos($paramName ?? '', '?') !== false) {
+                    list($paramName, $paramVars) = explode('?', $paramName ?? '', 2);
+                    $newRequestParams = [];
+                    parse_str($paramVars ?? '', $newRequestParams);
                     $vars = array_merge((array)$vars, (array)$newRequestParams);
                 }
 
                 // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(array('/^action_/','/_x$|_y$/'), '', $paramName);
+                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName ?? '');
                 break;
             }
         }
@@ -219,7 +217,7 @@ class FormRequestHandler extends RequestHandler
 
         // Action handlers may throw ValidationExceptions.
         try {
-            // Or we can use the Valiator attached to the form
+            // Or we can use the Validator attached to the form
             $result = $this->form->validationResult();
             if (!$result->isValid()) {
                 return $this->getValidationErrorResponse($result);
@@ -227,27 +225,29 @@ class FormRequestHandler extends RequestHandler
 
             // First, try a handler method on the controller (has been checked for allowed_actions above already)
             $controller = $this->form->getController();
+            $args = [$funcName, $request, $vars];
             if ($controller && $controller->hasMethod($funcName)) {
-                return $controller->$funcName($vars, $this->form, $request, $this);
+                $controller->setRequest($request);
+                return $this->invokeFormHandler($controller, ...$args);
             }
 
             // Otherwise, try a handler method on the form request handler.
             if ($this->hasMethod($funcName)) {
-                return $this->$funcName($vars, $this->form, $request, $this);
+                return $this->invokeFormHandler($this, ...$args);
             }
 
             // Otherwise, try a handler method on the form itself
             if ($this->form->hasMethod($funcName)) {
-                return $this->form->$funcName($vars, $this->form, $request, $this);
+                return $this->invokeFormHandler($this->form, ...$args);
             }
 
             // Check for inline actions
             $field = $this->checkFieldsForAction($this->form->Fields(), $funcName);
             if ($field) {
-                return $field->$funcName($vars, $this->form, $request, $this);
+                return $this->invokeFormHandler($field, ...$args);
             }
         } catch (ValidationException $e) {
-            // The ValdiationResult contains all the relevant metadata
+            // The ValidationResult contains all the relevant metadata
             $result = $e->getResult();
             $this->form->loadMessagesFrom($result);
             return $this->getValidationErrorResponse($result);
@@ -257,12 +257,11 @@ class FormRequestHandler extends RequestHandler
         $legacyActions = $this->form->config()->get('allowed_actions');
         if ($legacyActions) {
             throw new BadMethodCallException(
-                "allowed_actions are not valid on Form class " . get_class($this->form) .
-                ". Implement these in subclasses of " . static::class . " instead"
+                "allowed_actions are not valid on Form class " . get_class($this->form) . ". Implement these in subclasses of " . static::class . " instead"
             );
         }
 
-        return $this->httpError(404);
+        return $this->httpError(404, "Could not find a suitable form-action callback function");
     }
 
     /**
@@ -360,7 +359,7 @@ class FormRequestHandler extends RequestHandler
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
-            return Controller::join_links($link, '?BackURL=' . urlencode($backURL));
+            return Controller::join_links($link, '?BackURL=' . urlencode($backURL ?? ''));
         }
         return $link;
     }
@@ -376,9 +375,9 @@ class FormRequestHandler extends RequestHandler
     {
         // Ajax form submissions accept json encoded errors by default
         $acceptType = $this->getRequest()->getHeader('Accept');
-        if (strpos($acceptType, 'application/json') !== false) {
+        if (strpos($acceptType ?? '', 'application/json') !== false) {
             // Send validation errors back as JSON with a flag at the start
-            $response = new HTTPResponse(Convert::array2json($result->getMessages()));
+            $response = new HTTPResponse(json_encode($result->getMessages()));
             $response->addHeader('Content-Type', 'application/json');
             return $response;
         }
@@ -474,7 +473,7 @@ class FormRequestHandler extends RequestHandler
         $actions = $this->form->Actions()->dataFields();
 
         $fieldsAndActions = array_merge($fields, $actions);
-        $actions = array_filter($fieldsAndActions, function ($fieldOrAction) {
+        $actions = array_filter($fieldsAndActions ?? [], function ($fieldOrAction) {
             return $fieldOrAction instanceof FormAction;
         });
 
@@ -516,5 +515,21 @@ class FormRequestHandler extends RequestHandler
     public function forTemplate()
     {
         return $this->form->forTemplate();
+    }
+
+    /**
+     * @param $subject
+     * @param string $funcName
+     * @param HTTPRequest $request
+     * @param array $vars
+     * @return mixed
+     */
+    private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars)
+    {
+        $this->extend('beforeCallFormHandler', $request, $funcName, $vars, $this->form, $subject);
+        $result = $subject->$funcName($vars, $this->form, $request, $this);
+        $this->extend('afterCallFormHandler', $request, $funcName, $vars, $this->form, $subject, $result);
+
+        return $result;
     }
 }

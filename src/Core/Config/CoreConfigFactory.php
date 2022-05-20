@@ -105,7 +105,7 @@ class CoreConfigFactory
         foreach ($modules as $module) {
             // Load from _config dirs
             $path = $module->getPath() . '/_config';
-            if (is_dir($path)) {
+            if (is_dir($path ?? '')) {
                 $dirs[] = $path;
             }
         }
@@ -152,11 +152,11 @@ class CoreConfigFactory
             return true;
         };
         $constantdefined = function ($const, $value = null) {
-            if (!defined($const)) {
+            if (!defined($const ?? '')) {
                 return false;
             }
             if ($value) {
-                return constant($const) === $value;
+                return constant($const ?? '') === $value;
             }
             return true;
         };
@@ -182,6 +182,9 @@ class CoreConfigFactory
             })
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::inst()->getManifest()->moduleExists($module);
+            })
+            ->addRule('extensionloaded', function ($extension) {
+                return extension_loaded($extension ?? '');
             });
     }
 }

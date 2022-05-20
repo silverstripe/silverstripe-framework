@@ -6,12 +6,24 @@ use SilverStripe\Core\Convert;
 use Iterator;
 
 /**
- * Abstract query-result class.
+ * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
+ * result.
+ *
+ * The map should be keyed by the column names, and the values should use the following types:
+ *
+ *  - boolean returned as integer 1 or 0 (to ensure consistency with MySQL that doesn't have native booleans)
+ *  - integer types returned as integers
+ *  - floating point / decimal types returned as floats
+ *  - strings returned as strings
+ *  - dates / datetimes returned as strings
+ *
+ * Note that until SilverStripe 4.3, bugs meant that strings were used for every column type.
+ *
  * Once again, this should be subclassed by an actual database implementation.  It will only
  * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object
  * that's returned by DB::SS_Query
  *
- * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
+ * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
  */
@@ -19,14 +31,14 @@ abstract class Query implements Iterator
 {
 
     /**
-     * The current record in the interator.
+     * The current record in the iterator.
      *
      * @var array
      */
     protected $currentRecord = null;
 
     /**
-     * The number of the current row in the interator.
+     * The number of the current row in the iterator.
      *
      * @var int
      */
@@ -48,7 +60,7 @@ abstract class Query implements Iterator
      */
     public function column($column = null)
     {
-        $result = array();
+        $result = [];
 
         while ($record = $this->next()) {
             if ($column) {
@@ -69,7 +81,7 @@ abstract class Query implements Iterator
      */
     public function keyedColumn()
     {
-        $column = array();
+        $column = [];
         foreach ($this as $record) {
             $val = $record[key($record)];
             $column[$val] = $val;
@@ -84,7 +96,7 @@ abstract class Query implements Iterator
      */
     public function map()
     {
-        $column = array();
+        $column = [];
         foreach ($this as $record) {
             $key = reset($record);
             $val = next($record);
@@ -156,16 +168,16 @@ abstract class Query implements Iterator
      * Iterator function implementation. Rewind the iterator to the first item and return it.
      * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
      *
-     * @return array
+     * @return void
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         if ($this->queryHasBegun && $this->numRecords() > 0) {
             $this->queryHasBegun = false;
             $this->currentRecord = null;
-            return $this->seek(0);
+            $this->seek(0);
         }
-        return null;
     }
 
     /**
@@ -173,6 +185,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if (!$this->currentRecord) {
@@ -198,6 +211,7 @@ abstract class Query implements Iterator
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->rowNum;
@@ -209,6 +223,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->queryHasBegun = true;
@@ -222,6 +237,7 @@ abstract class Query implements Iterator
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         if (!$this->queryHasBegun) {

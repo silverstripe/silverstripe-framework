@@ -2,7 +2,6 @@
 
 namespace SilverStripe\i18n\Tests;
 
-use PHPUnit_Framework_Error_Notice;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
@@ -20,7 +19,7 @@ class i18nTextCollectorTest extends SapphireTest
      */
     protected $alternateBaseSavePath = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->setupManifest();
@@ -29,9 +28,9 @@ class i18nTextCollectorTest extends SapphireTest
         Filesystem::makeFolder($this->alternateBaseSavePath);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
-        if (is_dir($this->alternateBaseSavePath)) {
+        if (is_dir($this->alternateBaseSavePath ?? '')) {
             Filesystem::removeFolder($this->alternateBaseSavePath);
         }
 
@@ -60,13 +59,13 @@ _t(
 "Line 5");
 PHP;
         $this->assertEquals(
-            array(
+            [
                 'Test.CONCATENATED' => [
                     'default' => "Line 1 and Line '2' and Line \"3\"",
                     'comment' => 'Comment'
                 ],
                 'Test.CONCATENATED2' => "Line \"4\" and Line 5"
-            ),
+            ],
             $c->collectFromCode($php, null, $module)
         );
     }
@@ -114,8 +113,8 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
-        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
+        $this->expectNotice();
+        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
 
         $c->collectFromTemplate($html, null, $mymodule);
     }
@@ -189,8 +188,8 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
-        $this->expectExceptionMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
+        $this->expectNotice();
+        $this->expectNoticeMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
 
         $c->collectFromTemplate($html, 'Test', $mymodule);
     }
@@ -323,13 +322,21 @@ class MyClass extends Base implements SomeService {
             "Slash=\\\\, Quote=\\""
         );
     }
+    public function getMagicConstantStringFromSelf()
+    {
+        return _t(
+            self::class . '.SELF_CLASS',
+            'Self Class'
+        );
+    }
 }
 PHP;
         $this->assertEquals(
             [
                 'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines",
                 'SilverStripe\\Framework\\MyClass.ANOTHER_STRING' => 'Slash=\\, Quote=\'',
-                'SilverStripe\\Framework\\MyClass.DOUBLE_STRING' => 'Slash=\\, Quote="'
+                'SilverStripe\\Framework\\MyClass.DOUBLE_STRING' => 'Slash=\\, Quote="',
+                'SilverStripe\\Framework\\Core\\MyClass.SELF_CLASS' => 'Self Class',
             ],
             $c->collectFromCode($php, null, $mymodule)
         );
@@ -380,11 +387,11 @@ PHP;
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
 _t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
-	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
-		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 _t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
 	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
@@ -417,11 +424,11 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
-        $this->expectException(PHPUnit_Framework_Error_Notice::class);
-        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
+        $this->expectNotice();
+        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
 
         $php = <<<PHP
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
         $c->setWarnOnEmptyDefault(true);
         $c->collectFromCode($php, null, $mymodule);
@@ -434,7 +441,7 @@ PHP;
 
         $php = <<<PHP
 _t(static::class.'.KEY1', 'Default');
-_t(self::class.'.KEY2', 'Default');
+_t(parent::class.'.KEY1', 'Default');
 _t('Collectable.KEY4', 'Default');
 PHP;
 
@@ -452,7 +459,7 @@ PHP;
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
-        $html = file_get_contents($templateFilePath);
+        $html = file_get_contents($templateFilePath ?? '');
         $matches = $c->collectFromTemplate($html, $templateFilePath, $mymodule);
 
         $this->assertArrayHasKey('i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
@@ -534,32 +541,32 @@ PHP;
         // i18ntestmodule
         $moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.yml';
         $this->assertTrue(
-            file_exists($moduleLangFile),
+            file_exists($moduleLangFile ?? ''),
             'Master language file can be written to modules /lang folder'
         );
 
-        $moduleLangFileContent = file_get_contents($moduleLangFile);
-        $this->assertContains(
+        $moduleLangFileContent = file_get_contents($moduleLangFile ?? '');
+        $this->assertStringContainsString(
             "    ADDITION: Addition\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    ENTITY: 'Entity with \"Double Quotes\"'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    MAINTEMPLATE: 'Main Template'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    OTHERENTITY: 'Other Entity'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    WITHNAMESPACE: 'Include Entity with Namespace'\n",
             $moduleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    NONAMESPACE: 'Include Entity without Namespace'\n",
             $moduleLangFileContent
         );
@@ -567,15 +574,15 @@ PHP;
         // i18nothermodule
         $otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.yml';
         $this->assertTrue(
-            file_exists($otherModuleLangFile),
+            file_exists($otherModuleLangFile ?? ''),
             'Master language file can be written to modules /lang folder'
         );
-        $otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
-        $this->assertContains(
+        $otherModuleLangFileContent = file_get_contents($otherModuleLangFile ?? '');
+        $this->assertStringContainsString(
             "    ENTITY: 'Other Module Entity'\n",
             $otherModuleLangFileContent
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "    MAINTEMPLATE: 'Main Template Other Module'\n",
             $otherModuleLangFileContent
         );
@@ -688,7 +695,7 @@ PHP;
         $conflictsA = $collector->getConflicts_Test($data2);
         sort($conflictsA);
         $this->assertEquals(
-            array('i18ntestmodule.THREE', 'i18ntestmodule.TWO'),
+            ['i18ntestmodule.THREE', 'i18ntestmodule.TWO'],
             $conflictsA
         );
 
@@ -696,7 +703,7 @@ PHP;
         unset($data2['module3']);
         $conflictsB = $collector->getConflicts_Test($data2);
         $this->assertEquals(
-            array('i18ntestmodule.THREE'),
+            ['i18ntestmodule.THREE'],
             $conflictsB
         );
     }
@@ -714,7 +721,7 @@ PHP;
                 'i18nothermodule',
                 'i18ntestmodule',
             ],
-            array_keys($modules)
+            array_keys($modules ?? [])
         );
 
         $this->assertEquals('i18ntestmodule', $collector->findModuleForClass_Test('i18nTestNamespacedClass'));
@@ -737,7 +744,7 @@ PHP;
         // Non-standard modules can't be safely filtered, so just index everything
         $nonStandardFiles = $collector->getFileListForModule_Test('i18nnonstandardmodule');
         $nonStandardRoot = $this->alternateBasePath . '/i18nnonstandardmodule';
-        $this->assertEquals(3, count($nonStandardFiles));
+        $this->assertEquals(3, count($nonStandardFiles ?? []));
         $this->assertArrayHasKey("{$nonStandardRoot}/_config.php", $nonStandardFiles);
         $this->assertArrayHasKey("{$nonStandardRoot}/phpfile.php", $nonStandardFiles);
         $this->assertArrayHasKey("{$nonStandardRoot}/template.ss", $nonStandardFiles);
@@ -745,7 +752,7 @@ PHP;
         // Normal module should have predictable dir structure
         $testFiles = $collector->getFileListForModule_Test('i18ntestmodule');
         $testRoot = $this->alternateBasePath . '/i18ntestmodule';
-        $this->assertEquals(7, count($testFiles));
+        $this->assertEquals(7, count($testFiles ?? []));
         // Code in code folder is detected
         $this->assertArrayHasKey("{$testRoot}/code/i18nTestModule.php", $testFiles);
         $this->assertArrayHasKey("{$testRoot}/code/subfolder/_config.php", $testFiles);
@@ -759,7 +766,7 @@ PHP;
         // Standard modules with code in odd places should only have code in those directories detected
         $otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
         $otherRoot = $this->alternateBasePath . '/i18nothermodule';
-        $this->assertEquals(4, count($otherFiles));
+        $this->assertEquals(4, count($otherFiles ?? []));
         // Only detect well-behaved files
         $this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
         $this->assertArrayHasKey("{$otherRoot}/code/i18nProviderClass.php", $otherFiles);

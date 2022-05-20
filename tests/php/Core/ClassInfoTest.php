@@ -2,13 +2,22 @@
 
 namespace SilverStripe\Core\Tests;
 
+use DateTime;
+use Exception;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
+use SilverStripe\Core\Tests\ClassInfoTest\BaseObject;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest2;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest3;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest1;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest2;
 use SilverStripe\Core\Tests\ClassInfoTest\GrandChildClass;
 use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
+use SilverStripe\Core\Tests\ClassInfoTest\HasMethod;
 use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
 use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
 use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
@@ -19,7 +28,7 @@ use SilverStripe\View\ViewableData;
 class ClassInfoTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         BaseClass::class,
         BaseDataClass::class,
         ChildClass::class,
@@ -28,9 +37,13 @@ class ClassInfoTest extends SapphireTest
         NoFields::class,
         WithCustomTable::class,
         WithRelation::class,
-    );
+        BaseObject::class,
+        ExtendTest::class,
+        ExtendTest2::class,
+        ExtendTest3::class,
+    ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ClassInfo::reset_db_cache();
@@ -54,6 +67,10 @@ class ClassInfoTest extends SapphireTest
             'silverstripe\\core\\tests\\classinfotest\\childclass' => ChildClass::class,
             'silverstripe\\core\\tests\\classinfotest\\grandchildclass' => GrandChildClass::class,
         ];
+        $subclassesWithoutBase = [
+            'silverstripe\\core\\tests\\classinfotest\\childclass' => ChildClass::class,
+            'silverstripe\\core\\tests\\classinfotest\\grandchildclass' => GrandChildClass::class,
+        ];
         $this->assertEquals(
             $subclasses,
             ClassInfo::subclassesFor(BaseClass::class),
@@ -64,6 +81,11 @@ class ClassInfoTest extends SapphireTest
             $subclasses,
             ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass'),
             'ClassInfo::subclassesFor() is acting in a case sensitive way when it should not'
+        );
+        ClassInfo::reset_db_cache();
+        $this->assertEquals(
+            $subclassesWithoutBase,
+            ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass', false)
         );
     }
 
@@ -85,8 +107,8 @@ class ClassInfoTest extends SapphireTest
 
     public function testNonClassName()
     {
-        $this->expectException(ReflectionException::class);
-        $this->expectExceptionMessage('Class IAmAClassThatDoesNotExist does not exist');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches('/Class "?IAmAClassThatDoesNotExist"? does not exist/');
         $this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
     }
 
@@ -157,16 +179,16 @@ class ClassInfoTest extends SapphireTest
             'silverstripe\\core\\tests\\classinfotest\\withrelation' => WithRelation::class,
             'silverstripe\\core\\tests\\classinfotest\\withcustomtable' => WithCustomTable::class,
         ];
-        $classes = array(
+        $classes = [
             BaseDataClass::class,
             NoFields::class,
             HasFields::class,
-        );
+        ];
 
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[0]));
         ClassInfo::reset_db_cache();
-        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtoupper($classes[0])));
+        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtoupper($classes[0] ?? '')));
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
 
@@ -178,6 +200,157 @@ class ClassInfoTest extends SapphireTest
         ClassInfo::reset_db_cache();
         $this->assertEquals($expect, ClassInfo::dataClassesFor($classes[2]));
         ClassInfo::reset_db_cache();
-        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2])));
+        $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2] ?? '')));
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionUsingConfiguredExtensions()
+    {
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest1::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns class with extensions applied via class config'
+        );
+
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest1::class, ExtendTest::class, true),
+            'ClassInfo::testClassesWithExtension() returns class with extensions applied via class config, including the base class'
+        );
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionUsingDynamicallyAddedExtensions()
+    {
+        $this->assertEquals(
+            [],
+            ClassInfo::classesWithExtension(ExtensionTest2::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns no classes for extension that hasn\'t been applied yet.'
+        );
+
+        ExtendTest::add_extension(ExtensionTest2::class);
+
+        $expect = [
+            'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
+        ];
+        $this->assertEquals(
+            $expect,
+            ClassInfo::classesWithExtension(ExtensionTest2::class, ExtendTest::class),
+            'ClassInfo::testClassesWithExtension() returns class with extra extension dynamically added'
+        );
+    }
+
+    /**
+     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
+     */
+    public function testClassesWithExtensionWithDynamicallyRemovedExtensions()
+    {
+        ExtendTest::remove_extension(ExtensionTest1::class);
+
+        $this->assertEquals(
+            [],
+            ClassInfo::classesWithExtension(ExtensionTest1::class, BaseObject::class),
+            'ClassInfo::testClassesWithExtension() returns no classes after an extension being removed'
+        );
+    }
+
+    /** @dataProvider provideHasMethodCases */
+    public function testHasMethod($object, $method, $output)
+    {
+        $this->assertEquals(
+            $output,
+            ClassInfo::hasMethod($object, $method)
+        );
+    }
+
+    public function provideHasMethodCases()
+    {
+        return [
+            'Basic object' => [
+                new DateTime(),
+                'format',
+                true,
+            ],
+            'CustomMethod object' => [
+                new HasMethod(),
+                'example',
+                true,
+            ],
+            'Class Name' => [
+                'DateTime',
+                'format',
+                true,
+            ],
+            'FQCN' => [
+                '\DateTime',
+                'format',
+                true,
+            ],
+            'Invalid FQCN' => [
+                '--GreatTime',
+                'format',
+                false,
+            ],
+            'Integer' => [
+                1,
+                'format',
+                false,
+            ],
+            'Array' => [
+                ['\DateTime'],
+                'format',
+                false,
+            ],
+        ];
+    }
+
+    /** @dataProvider provideClassSpecCases */
+    public function testParseClassSpec($input, $output)
+    {
+        $this->assertEquals(
+            $output,
+            ClassInfo::parse_class_spec($input)
+        );
+    }
+
+    public function provideClassSpecCases()
+    {
+        return [
+            'Standard class' => [
+                'SimpleClass',
+                ['SimpleClass', []],
+            ],
+            'Namespaced class' => [
+                'Foo\\Bar\\NamespacedClass',
+                ['Foo\\Bar\\NamespacedClass', []],
+            ],
+            'Namespaced class with service name' => [
+                'Foo\\Bar\\NamespacedClass.withservicename',
+                ['Foo\\Bar\\NamespacedClass.withservicename', []],
+            ],
+            'Namespaced class with argument' => [
+                'Foo\\Bar\\NamespacedClass(["with-arg" => true])',
+                ['Foo\\Bar\\NamespacedClass', [["with-arg" => true]]],
+            ],
+            'Namespaced class with service name and argument' => [
+                'Foo\\Bar\\NamespacedClass.withmodifier(["and-arg" => true])',
+                ['Foo\\Bar\\NamespacedClass.withmodifier', [["and-arg" => true]]],
+            ],
+        ];
     }
 }

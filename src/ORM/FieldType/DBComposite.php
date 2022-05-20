@@ -8,10 +8,10 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
- * Apply this interface to any {@link DBField} that doesn't have a 1-1 mapping with a database field.
+ * Extend this class when designing a {@link DBField} that doesn't have a 1-1 mapping with a database field.
  * This includes multi-value fields and transformed fields
  *
- * @todo Unittests for loading and saving composite values (see GIS module for existing similiar unittests)
+ * @todo Unittests for loading and saving composite values (see GIS module for existing similar unittests)
  *
  * Example with a combined street name and number:
  * <code>
@@ -25,9 +25,8 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 abstract class DBComposite extends DBField
 {
-
     /**
-     * Similiar to {@link DataObject::$db},
+     * Similar to {@link DataObject::$db},
      * holds an array of composite field names.
      * Don't include the fields "main name",
      * it will be prefixed in {@link requireField()}.
@@ -35,14 +34,41 @@ abstract class DBComposite extends DBField
      * @config
      * @var array
      */
-    private static $composite_db = array();
+    private static $composite_db = [];
+
+    /**
+     * Marker as to whether this record has changed
+     * Only used when deference to the parent object isn't possible
+     */
+    protected $isChanged = false;
 
     /**
      * Either the parent dataobject link, or a record of saved values for each field
      *
      * @var array|DataObject
      */
-    protected $record = array();
+    protected $record = [];
+
+    public function __set($property, $value)
+    {
+        // Prevent failover / extensions from hijacking composite field setters
+        // by intentionally avoiding hasMethod()
+        if ($this->hasField($property) && !method_exists($this, "set$property")) {
+            $this->setField($property, $value);
+            return;
+        }
+        parent::__set($property, $value);
+    }
+
+    public function __get($property)
+    {
+        // Prevent failover / extensions from hijacking composite field getters
+        // by intentionally avoiding hasMethod()
+        if ($this->hasField($property) && !method_exists($this, "get$property")) {
+            return $this->getField($property);
+        }
+        return parent::__get($property);
+    }
 
     /**
      * Write all nested fields into a manipulation
@@ -93,10 +119,14 @@ abstract class DBComposite extends DBField
     }
 
 
+    /**
+     * Returns true if this composite field has changed.
+     * For fields bound to a DataObject, this will be cleared when the DataObject is written.
+     */
     public function isChanged()
     {
         // When unbound, use the local changed flag
-        if (! ($this->record instanceof DataObject)) {
+        if (!$this->record instanceof DataObject) {
             return $this->isChanged;
         }
 
@@ -211,7 +241,7 @@ abstract class DBComposite extends DBField
 
         // Check bound object
         if ($this->record instanceof DataObject) {
-            $key = $this->getName().$field;
+            $key = $this->getName() . $field;
             return $this->record->getField($key);
         }
 
@@ -243,7 +273,7 @@ abstract class DBComposite extends DBField
         // Non-db fields get assigned as normal properties
         if (!$this->hasField($field)) {
             parent::setField($field, $value);
-            
+
             return $this;
         }
 
@@ -301,12 +331,17 @@ abstract class DBComposite extends DBField
         if ($type = $this->getIndexType()) {
             $columns = array_map(function ($name) {
                 return $this->getName() . $name;
-            }, array_keys((array) static::config()->get('composite_db')));
+            }, array_keys((array) $this->compositeDatabaseFields()));
 
             return [
                 'type' => $type,
                 'columns' => $columns,
             ];
         }
+    }
+
+    public function scalarValueOnly()
+    {
+        return false;
     }
 }

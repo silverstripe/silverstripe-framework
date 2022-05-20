@@ -96,14 +96,14 @@ class ModuleResourceLoader implements TemplateGlobalProvider
     public function resolveResource($resource)
     {
         // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
-        if (!preg_match('#^ *(?<module>[^/: ]+/[^/: ]+) *: *(?<resource>[^ ]*)$#', $resource, $matches)) {
+        if (!preg_match('#^ *(?<module>[^/: ]+/[^/: ]+) *: *(?<resource>[^ ]*)$#', $resource ?? '', $matches)) {
             return $resource;
         }
         $module = $matches['module'];
         $resource = $matches['resource'];
         $moduleObj = ModuleLoader::getModule($module);
         if (!$moduleObj) {
-            throw new InvalidArgumentException("Can't find module '$module'");
+            throw new InvalidArgumentException("Can't find module '$module', the composer.json file may be missing from the modules installation directory");
         }
         $resourceObj = $moduleObj->getResource($resource);
 

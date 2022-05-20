@@ -15,12 +15,13 @@ class GridFieldConfig_Base extends GridFieldConfig
     public function __construct($itemsPerPage = null)
     {
         parent::__construct();
-        $this->addComponent(new GridFieldToolbarHeader());
-        $this->addComponent($sort = new GridFieldSortableHeader());
-        $this->addComponent($filter = new GridFieldFilterHeader());
-        $this->addComponent(new GridFieldDataColumns());
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+        $this->addComponent(GridFieldToolbarHeader::create());
+        $this->addComponent(GridFieldButtonRow::create('before'));
+        $this->addComponent($sort = GridFieldSortableHeader::create());
+        $this->addComponent($filter = GridFieldFilterHeader::create());
+        $this->addComponent(GridFieldDataColumns::create());
+        $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
+        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
 
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);

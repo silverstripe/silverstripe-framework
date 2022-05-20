@@ -24,14 +24,14 @@ trait CustomMethods
      *
      * @var array
      */
-    protected $extra_method_registers = array();
+    protected $extra_method_registers = [];
 
     /**
      * Non-custom methods
      *
      * @var array
      */
-    protected static $built_in_methods = array();
+    protected static $built_in_methods = [];
 
     /**
      * Attempts to locate and call a method dynamically added to a class at runtime if a default cannot be located
@@ -145,7 +145,7 @@ trait CustomMethods
      */
     public function hasMethod($method)
     {
-        return method_exists($this, $method) || $this->getExtraMethodConfig($method);
+        return method_exists($this, $method ?? '') || $this->getExtraMethodConfig($method);
     }
 
     /**
@@ -177,11 +177,11 @@ trait CustomMethods
     {
         $class = static::class;
         if (!isset(self::$built_in_methods[$class])) {
-            self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($this));
+            self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($this ?? ''));
         }
 
         if ($custom && isset(self::$extra_methods[$class])) {
-            return array_merge(self::$built_in_methods[$class], array_keys(self::$extra_methods[$class]));
+            return array_merge(self::$built_in_methods[$class], array_keys(self::$extra_methods[$class] ?? []));
         } else {
             return self::$built_in_methods[$class];
         }
@@ -207,7 +207,7 @@ trait CustomMethods
         } else {
             $class = get_class($extension);
             if (!isset(self::$built_in_methods[$class])) {
-                self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($extension));
+                self::$built_in_methods[$class] = array_map('strtolower', get_class_methods($extension ?? ''));
             }
             $methods = self::$built_in_methods[$class];
         }
@@ -242,13 +242,13 @@ trait CustomMethods
                     . ' callSetOwnerFirst will be removed in 5.0'
                 );
             }
-            $methodInfo = array(
+            $methodInfo = [
                 'property' => $property,
                 'index' => $index,
                 'callSetOwnerFirst' => $extension instanceof Extension,
-            );
+            ];
 
-            $newMethods = array_fill_keys($methods, $methodInfo);
+            $newMethods = array_fill_keys($methods ?? [], $methodInfo);
 
             if (isset(self::$extra_methods[$class])) {
                 self::$extra_methods[$class] =
@@ -279,9 +279,16 @@ trait CustomMethods
         $methods = $this->findMethodsFromExtension($extension);
         if ($methods) {
             foreach ($methods as $method) {
+                if (!isset(self::$extra_methods[$class][$method])) {
+                    continue;
+                }
+
                 $methodInfo = self::$extra_methods[$class][$method];
 
-                if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
+                // always check for property, AND
+                // check for index only if provided
+                if ((isset($methodInfo['property']) && $methodInfo['property'] === $property) &&
+                    (!$index || ($index && isset($methodInfo['index']) && $methodInfo['index'] === $index))) {
                     unset(self::$extra_methods[$class][$method]);
                 }
             }
@@ -301,10 +308,10 @@ trait CustomMethods
      */
     protected function addWrapperMethod($method, $wrap)
     {
-        self::$extra_methods[static::class][strtolower($method)] = array(
+        self::$extra_methods[static::class][strtolower($method)] = [
             'wrap' => $wrap,
             'method' => $method
-        );
+        ];
     }
 
     /**

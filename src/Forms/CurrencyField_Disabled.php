@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBCurrency;
 
 /**
  * Readonly version of a {@link CurrencyField}.
@@ -13,16 +14,17 @@ class CurrencyField_Disabled extends CurrencyField
     protected $disabled = true;
 
     /**
-     * overloaded to display the correctly formated value for this datatype
+     * Overloaded to display the correctly formatted value for this data type
      *
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         if ($this->value) {
             $val = Convert::raw2xml($this->value);
-            $val = _t('SilverStripe\\Forms\\CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/', "", $val), 2);
+            $val = DBCurrency::config()->get('currency_symbol')
+                . number_format(preg_replace('/[^0-9.-]/', '', $val ?? '') ?? 0.0, 2);
             $valforInput = Convert::raw2att($val);
         } else {
             $valforInput = '';

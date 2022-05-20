@@ -1,9 +1,13 @@
+---
+title: Customise the CMS Menu
+summary: Make custom changes to the left hand menu in the CMS
+---
 # How to customise the CMS Menu
 
 ## Adding an administration panel
 
 Every time you add a new extension of the [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) class to the CMS,
-SilverStripe will automatically create a new [CMSMenuItem](api:SilverStripe\Admin\CMSMenuItem) for it
+Silverstripe CMS will automatically create a new [CMSMenuItem](api:SilverStripe\Admin\CMSMenuItem) for it
 
 The most popular extension of LeftAndMain is a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) class, so
 for a more detailed introduction to creating new `ModelAdmin` interfaces, read
@@ -16,19 +20,19 @@ provide a custom title and icon.
 
 ### Defining a Custom Icon
 
-First we'll need a custom icon. For this purpose SilverStripe uses 16x16
+First we'll need a custom icon. For this purpose Silverstripe CMS uses 16x16
 black-and-transparent PNG graphics. In this case we'll place the icon in
-`mysite/images`, but you are free to use any location.
+`app/images`, but you are free to use any location.
 
 
 ```php
-    use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Admin\ModelAdmin;
 
-    class ProductAdmin extends ModelAdmin 
-    {
-        // ...
-        private static $menu_icon = 'mysite/images/product-icon.png';
-    }
+class ProductAdmin extends ModelAdmin
+{
+    // ...
+    private static $menu_icon = 'app/images/product-icon.png';
+}
 ```
 
 ### Defining a Custom Title
@@ -39,13 +43,13 @@ controller, removing the "Admin" bit at the end.
 
 
 ```php
-    use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Admin\ModelAdmin;
 
-    class ProductAdmin extends ModelAdmin 
-    {
-        // ...
-        private static $menu_title = 'My Custom Admin';
-    }
+class ProductAdmin extends ModelAdmin
+{
+    // ...
+    private static $menu_title = 'My Custom Admin';
+}
 ```
 
 In order to localize the menu title in different languages, use the
@@ -66,37 +70,36 @@ button configuration.
 
 
 ```php
-    use SilverStripe\Admin\CMSMenu;
-    use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Admin\LeftAndMainExtension;
 
-    class CustomLeftAndMain extends LeftAndMainExtension 
+class CustomLeftAndMain extends LeftAndMainExtension
+{
+
+    public function init()
     {
+        // unique identifier for this item. Will have an ID of Menu-$ID
+        $id = 'LinkToGoogle';
 
-        public function init() 
-        {
-            // unique identifier for this item. Will have an ID of Menu-$ID
-            $id = 'LinkToGoogle';
+        // your 'nice' title
+        $title = 'Google';
 
-            // your 'nice' title
-            $title = 'Google';
+        // the link you want to item to go to
+        $link = 'http://google.com';
 
-            // the link you want to item to go to
-            $link = 'http://google.com';
+        // priority controls the ordering of the link in the stack. The
+        // lower the number, the lower in the list
+        $priority = -2;
 
-            // priority controls the ordering of the link in the stack. The
-            // lower the number, the lower in the list
-            $priority = -2;
+        // Add your own attributes onto the link. In our case, we want to
+        // open the link in a new window (not the original)
+        $attributes = [
+            'target' => '_blank'
+        ];
 
-            // Add your own attributes onto the link. In our case, we want to
-            // open the link in a new window (not the original)
-            $attributes = [
-                'target' => '_blank'
-            ];
-
-            CMSMenu::add_link($id, $title, $link, $priority, $attributes);
-        }
+        CMSMenu::add_link($id, $title, $link, $priority, $attributes);
     }
-
+}
 ```
 
 To have the link appear, make sure you add the extension to the `LeftAndMain`
@@ -105,7 +108,45 @@ class. For more information about configuring extensions see the
 
 
 ```php
-    LeftAndMain::add_extension('CustomLeftAndMain')
+LeftAndMain::add_extension('CustomLeftAndMain')
+```
+
+## Customising the CMS help menu
+
+The CMS help menu links in the south toolbar are configurable via your [configuration file](../../configuration).
+You can edit, add or remove existing links as shown in the examples below:
+
+```yml
+# app/_config/config.yml
+SilverStripe\Admin\LeftAndMain:
+  help_links:
+    # Edit an existing link
+    'CMS User help': 'https://example.com'
+    # Add a new link
+    'Additional link': 'https://example.org'
+    # Remove an existing link
+    'Feedback': ''
+```
+
+## Customising the CMS form actions
+
+The `Previous`, `Next` and `Add` actions on the edit form are visible by default but can be hidden globally by adding the following `.yml` config:
+
+```yml
+SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+  formActions:
+    showPagination: false
+    showAdd: false
+```
+
+You can also override this for a specific `GridField` instance when using the `GridFieldConfig_RecordEditor` constructor:
+
+```php
+$grid = GridField::create(
+    "pages", 
+    "All Pages", 
+    SiteTree::get(), 
+    GridFieldConfig_RecordEditor::create(null, false, false));
 ```
 
 ## Related

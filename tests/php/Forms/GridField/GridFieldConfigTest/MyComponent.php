@@ -9,6 +9,6 @@ class MyComponent implements GridField_URLHandler, TestOnly
 {
     public function getURLHandlers($gridField)
     {
-        return array();
+        return [];
     }
 }

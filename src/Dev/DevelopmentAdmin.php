@@ -28,19 +28,36 @@ use Exception;
 class DevelopmentAdmin extends Controller
 {
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '' => 'index',
         'build/defaults' => 'buildDefaults',
         'generatesecuretoken' => 'generatesecuretoken',
         '$Action' => 'runRegisteredController',
-    );
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'index',
         'buildDefaults',
         'runRegisteredController',
         'generatesecuretoken',
-    );
+    ];
+
+    /**
+     * Controllers for dev admin views
+     *
+     * e.g [
+     *     'urlsegment' => [
+     *         'controller' => 'SilverStripe\Dev\DevelopmentAdmin',
+     *         'links' => [
+     *             'urlsegment' => 'description',
+     *             ...
+     *         ]
+     *     ]
+     * ]
+     *
+     * @var array
+     */
+    private static $registered_controllers = [];
 
     /**
      * Assume that CLI equals admin permissions
@@ -52,13 +69,25 @@ class DevelopmentAdmin extends Controller
      */
     private static $allow_all_cli = true;
 
+    /**
+     * Deny all non-cli requests (browser based ones) to dev admin
+     *
+     * @config
+     * @var bool
+     */
+    private static $deny_non_cli = false;
+
     protected function init()
     {
         parent::init();
 
+        if (static::config()->get('deny_non_cli') && !Director::is_cli()) {
+            return $this->httpError(404);
+        }
+
         // Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
-        $requestedDevBuild = (stripos($this->getRequest()->getURL(), 'dev/build') === 0)
-            && (stripos($this->getRequest()->getURL(), 'dev/build/defaults') === false);
+        $requestedDevBuild = (stripos($this->getRequest()->getURL() ?? '', 'dev/build') === 0)
+            && (stripos($this->getRequest()->getURL() ?? '', 'dev/build/defaults') === false);
 
         // We allow access to this controller regardless of live-status or ADMIN permission only
         // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
@@ -118,21 +147,21 @@ class DevelopmentAdmin extends Controller
         $controllerClass = null;
 
         $baseUrlPart = $request->param('Action');
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
         if (isset($reg[$baseUrlPart])) {
             $controllerClass = $reg[$baseUrlPart]['controller'];
         }
 
-        if ($controllerClass && class_exists($controllerClass)) {
+        if ($controllerClass && class_exists($controllerClass ?? '')) {
             return $controllerClass::create();
         }
 
-        $msg = 'Error: no controller registered in '.__CLASS__.' for: '.$request->param('Action');
+        $msg = 'Error: no controller registered in ' . static::class . ' for: ' . $request->param('Action');
         if (Director::is_cli()) {
             // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
             throw new Exception($msg);
         } else {
-            $this->httpError(500, $msg);
+            $this->httpError(404, $msg);
         }
     }
 
@@ -140,20 +169,22 @@ class DevelopmentAdmin extends Controller
 
 
     /*
-	 * Internal methods
-	 */
+     * Internal methods
+     */
 
     /**
      * @return array of url => description
      */
     protected static function get_links()
     {
-        $links = array();
+        $links = [];
 
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
         foreach ($reg as $registeredController) {
-            foreach ($registeredController['links'] as $url => $desc) {
-                $links[$url] = $desc;
+            if (isset($registeredController['links'])) {
+                foreach ($registeredController['links'] as $url => $desc) {
+                    $links[$url] = $desc;
+                }
             }
         }
         return $links;
@@ -161,7 +192,7 @@ class DevelopmentAdmin extends Controller
 
     protected function getRegisteredController($baseUrlPart)
     {
-        $reg = Config::inst()->get(__CLASS__, 'registered_controllers');
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
 
         if (isset($reg[$baseUrlPart])) {
             $controllerClass = $reg[$baseUrlPart]['controller'];
@@ -175,8 +206,8 @@ class DevelopmentAdmin extends Controller
 
 
     /*
-	 * Unregistered (hidden) actions
-	 */
+     * Unregistered (hidden) actions
+     */
 
     /**
      * Build the default data, calling requireDefaultRecords on all

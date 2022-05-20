@@ -18,10 +18,10 @@ class OptionsetFieldTest extends SapphireTest
         $f = new OptionsetField(
             'Test',
             false,
-            array(0 => 'Zero', 1 => 'One')
+            [0 => 'Zero', 1 => 'One']
         );
 
-        $f->setDisabledItems(array(0));
+        $f->setDisabledItems([0]);
         $p = new CSSContentParser($f->Field());
         $item0 = $p->getBySelector('#Test_0');
         $item1 = $p->getBySelector('#Test_1');
@@ -43,11 +43,11 @@ class OptionsetFieldTest extends SapphireTest
         $field = OptionsetField::create(
             'Test',
             'Testing',
-            array(
+            [
             "One" => "One",
             "Two" => "Two",
             "Five" => "Five"
-            )
+            ]
         );
         $validator = new RequiredFields('Test');
         $form = new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
@@ -67,19 +67,19 @@ class OptionsetFieldTest extends SapphireTest
         $this->assertFalse($form->validationResult()->isValid());
 
         //disabled items shouldn't validate
-        $field->setDisabledItems(array('Five'));
+        $field->setDisabledItems(['Five']);
         $field->setValue('Five');
         $this->assertFalse($field->validate($validator));
     }
 
     public function testReadonlyField()
     {
-        $sourceArray = array(0 => 'No', 1 => 'Yes');
+        $sourceArray = [0 => 'No', 1 => 'Yes'];
         $field = new OptionsetField('FeelingOk', 'are you feeling ok?', $sourceArray, 1);
         $field->setEmptyString('(Select one)');
         $field->setValue(1);
         $readonlyField = $field->performReadonlyTransformation();
-        preg_match('/Yes/', $readonlyField->Field(), $matches);
+        preg_match('/Yes/', $readonlyField->Field() ?? '', $matches);
         $this->assertEquals($matches[0], 'Yes');
     }
 
@@ -88,18 +88,18 @@ class OptionsetFieldTest extends SapphireTest
         $field1 = new OptionsetField(
             'Options',
             'Options',
-            array(
+            [
             1 => 'One',
             2 => 'Two & Three',
             3 => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six')
-            )
+            ]
         );
         $fieldHTML = (string)$field1->Field();
-        $this->assertContains('One', $fieldHTML);
-        $this->assertContains('Two &amp; Three', $fieldHTML);
-        $this->assertNotContains('Two & Three', $fieldHTML);
-        $this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
-        $this->assertNotContains('Four & Five & Six', $fieldHTML);
+        $this->assertStringContainsString('One', $fieldHTML);
+        $this->assertStringContainsString('Two &amp; Three', $fieldHTML);
+        $this->assertStringNotContainsString('Two & Three', $fieldHTML);
+        $this->assertStringContainsString('Four &amp; Five &amp; Six', $fieldHTML);
+        $this->assertStringNotContainsString('Four & Five & Six', $fieldHTML);
     }
 
     /**
@@ -119,8 +119,8 @@ class OptionsetFieldTest extends SapphireTest
         $this->assertTrue($field->Required());
 
         $attributes = $field->getAttributes();
-        $this->assertFalse(array_key_exists("name", $attributes));
-        $this->assertFalse(array_key_exists("required", $attributes));
-        $this->assertTrue(array_key_exists("role", $attributes));
+        $this->assertFalse(array_key_exists("name", $attributes ?? []));
+        $this->assertFalse(array_key_exists("required", $attributes ?? []));
+        $this->assertTrue(array_key_exists("role", $attributes ?? []));
     }
 }

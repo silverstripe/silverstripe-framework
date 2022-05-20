@@ -25,7 +25,7 @@ class ApcuCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = array())
+    public function create($service, array $params = [])
     {
         $namespace = isset($params['namespace'])
             ? $params['namespace'] . '_' . md5(BASE_PATH)

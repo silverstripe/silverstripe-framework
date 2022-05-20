@@ -15,7 +15,7 @@ class ModuleLoader
     /**
      * @var ModuleManifest[] Module manifests
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self
@@ -83,7 +83,7 @@ class ModuleLoader
      */
     public function countManifests()
     {
-        return count($this->manifests);
+        return count($this->manifests ?? []);
     }
 
     /**
@@ -91,11 +91,12 @@ class ModuleLoader
      *
      * @param bool $includeTests
      * @param bool $forceRegen
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false)
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         foreach ($this->manifests as $manifest) {
-            $manifest->init($includeTests, $forceRegen);
+            $manifest->init($includeTests, $forceRegen, $ignoredCIConfigs);
         }
     }
 }

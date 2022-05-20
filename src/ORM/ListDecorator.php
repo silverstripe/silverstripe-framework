@@ -52,21 +52,25 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
 
     // PROXIED METHODS ---------------------------------------------------------
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return $this->list->offsetExists($key);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->list->offsetGet($key);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         $this->list->offsetSet($key, $value);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         $this->list->offsetUnset($key);
@@ -92,6 +96,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         $this->list->remove($itemObject);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->list->getIterator();
@@ -117,6 +122,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->count();
     }
 
+    #[\ReturnTypeWillChange]
     public function Count()
     {
         return $this->list->count();
@@ -140,6 +146,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     public function column($value = 'ID')
     {
         return $this->list->column($value);
+    }
+
+    public function columnUnique($value = "ID")
+    {
+        return $this->list->columnUnique($value);
     }
 
     public function each($callback)
@@ -168,8 +179,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function sort()
     {
-        $args = func_get_args();
-        return call_user_func_array(array($this->list, 'sort'), $args);
+        return $this->list->sort(...func_get_args());
     }
 
     public function canFilterBy($by)
@@ -178,7 +188,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     }
 
     /**
-     * Filter the list to include items with these charactaristics
+     * Filter the list to include items with these characteristics
      *
      * @example $list->filter('Name', 'bob'); // only bob in list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -187,12 +197,11 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function filter()
     {
-        $args = func_get_args();
-        return call_user_func_array(array($this->list, 'filter'), $args);
+        return $this->list->filter(...func_get_args());
     }
 
     /**
-     * Return a copy of this list which contains items matching any of these charactaristics.
+     * Return a copy of this list which contains items matching any of these characteristics.
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -215,7 +224,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function filterAny()
     {
-        return call_user_func_array(array($this->list, __FUNCTION__), func_get_args());
+        return $this->list->filterAny(...func_get_args());
     }
 
     /**
@@ -237,7 +246,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         }
         $output = ArrayList::create();
         foreach ($this->list as $item) {
-            if (call_user_func($callback, $item, $this->list)) {
+            if ($callback($item, $this->list)) {
                 $output->push($item);
             }
         }
@@ -272,7 +281,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     }
 
     /**
-     * Exclude the list to not contain items with these charactaristics
+     * Exclude the list to not contain items with these characteristics
      *
      * @example $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -281,8 +290,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      */
     public function exclude()
     {
-        $args = func_get_args();
-        return call_user_func_array(array($this->list, 'exclude'), $args);
+        return $this->list->exclude(...func_get_args());
     }
 
     public function debug()

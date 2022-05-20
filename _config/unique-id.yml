@@ -1,0 +1,6 @@
+---
+Name: unique-id
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\ORM\UniqueKey\UniqueKeyInterface:
+    class: SilverStripe\ORM\UniqueKey\UniqueKeyService

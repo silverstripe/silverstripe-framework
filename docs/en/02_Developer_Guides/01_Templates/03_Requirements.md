@@ -1,5 +1,8 @@
+---
 title: Requirements
 summary: How to include and require other assets in your templates such as javascript and CSS files.
+iconBrand: js
+---
 
 # Requirements
 
@@ -8,23 +11,86 @@ coding any references in the `<head>` tag of your template, as it enables a more
 [Requirements](api:SilverStripe\View\Requirements) class.
 
 The examples below are using certain folder naming conventions (CSS files in `css/`, JavaScript files in `javascript/`).
-SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
+Silverstripe CMS core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
 The `Requirements` class can work with arbitrary file paths.
+
+## Exposing static assets
+
+Before requiring static asset files in PHP code or in a template, those assets need to be "exposed". This process allows Silverstripe CMS projects and Silverstripe CMS modules to make static asset files available via the web server from locations that would otherwise be blocked from web server access, such as the `vendor` folder.
+
+### Configuring your project "exposed" folders
+
+Exposed assets are made available in your web root in a dedicated "resources" directory. Prior to Silverstripe CMS 4.4, the name of this directory was hardcoded to `resources`. In Silverstripe CMS 4.4 and above, the name of the resources directory can be configured by defining the `extra.resources-dir` key in your `composer.json`. Silverstripe CMS projects created from `silverstripe/installer` 4.4 and above will automatically be configured to use `_resources` as their resource directory.
+
+Each folder that needs to be exposed must be entered under the `extra.expose` key in your `composer.json` file. Module developers should use a path relative to the root of their module (don't include the "vendor/package-developer/package-name" path).
+
+This is a sample Silverstripe CMS project `composer.json` file configured to expose some assets.
+
+```json
+{
+    "name": "app/myproject",
+    "type": "silverstripe-project",
+    "require": {
+        "silverstripe/recipe-cms": "4.4.x-dev"
+    },
+    "extra": {
+        "resources-dir": "_resources",
+        "expose": [
+            "app/client/dist",
+            "app/images"
+        ]
+    }
+}
+```
+
+Files contained inside the `app/client/dist` and `app/images` will be made publicly available under the `_resources` directory.
+
+Silverstripe CMS projects should not track the "resources" directory in their source control system.
+
+### Exposing assets in the web root {#exposing-assets-webroot}
+
+Silverstripe CMS projects ship with [silverstripe/vendor-plugin](https://github.com/silverstripe/vendor-plugin).
+This Composer plugin automatically tries to expose assets from your project and installed modules after installation, or after an update.
+
+Developers can explicitly expose static assets by calling `composer vendor-expose`. This is necessary after updating your `resources-dir` or `expose` configuration in your `composer.json` file.
+
+`composer vendor-expose` accepts an optional `method` argument (e.g.: `composer vendor-expose auto`). This controls how the files are exposed in the "resources" directory:
+* `none` disables all symlink / copy
+* `copy` copies the exposed files
+* `symlink` create symbolic links to the exposed folder
+* `junction` uses a junction (Windows only)
+* `auto` creates symbolic links (or junctions on Windows), but fails over to copy.
+
+### Referencing exposed assets
+
+When referencing exposed static assets, use either the project file path (relative to the project root folder) or a module name and relative file path to that module's root folder. E.g.:
+
+```php
+// When referencing project files, use the same path defined in your `composer.json` file.
+Requirements::javascript('app/client/dist/bundle.js');
+
+// When referencing theme files, use a path relative to the root of your project
+Requirements::javascript('themes/simple/javascript/script.js');
+
+// When referencing files from a module, you need to prefix the path with the module name.
+Requirements::javascript('silverstripe/admin:client/dist/js/bundle.js');
+```
+
+When rendered in HTML code, these URLs will be rewritten to their matching path inside the "resources" directory.
 
 ## Template Requirements API
 
 **<my-module-dir>/templates/SomeTemplate.ss**
 
-```ss
-
-    <% require css("<my-module-dir>/css/some_file.css") %>
-    <% require themedCSS("some_themed_file") %>
-    <% require javascript("<my-module-dir>/javascript/some_file.js") %>
+```
+<% require css("<my-module-dir>/css/some_file.css") %>
+<% require themedCSS("some_themed_file") %>
+<% require javascript("<my-module-dir>/javascript/some_file.js") %>
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Requiring assets from the template is restricted compared to the PHP API.
-</div>
+[/alert]
 
 ## PHP Requirements API
 
@@ -50,6 +116,8 @@ class MyCustomController extends Controller
 ### CSS Files
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::css($path, $media);
 ```
 
@@ -90,7 +158,7 @@ Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides
     '<my-module-dir>/javascript/src/main.js',
     '<my-module-dir>/javascript/src/functions.js'
 ]]);
-Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
+Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will skip this file
 ```
 
 You can also use the second argument to add the 'async' and/or 'defer attributes to the script tag generated:
@@ -107,7 +175,7 @@ Requirements::javascript(
 
 ### Custom Inline CSS or Javascript
 
-You can also quote custom script directly. This may seem a bit ugly, but is useful when you need to transfer some kind
+You can also quote custom scripts directly. This may seem a bit ugly, but is useful when you need to transfer some kind
 of 'configuration' from the database in a raw format.  You'll need to use the `heredoc` syntax to quote JS and CSS, 
 this is generally speaking the best way to do these things - it clearly marks the copy as belonging to a different
 language.
@@ -141,10 +209,10 @@ Requirements::combine_files(
 );
 ```
 
-<div class="alert" markdown='1'>
+[alert]
 To make debugging easier in your local environment, combined files is disabled when running your application in `dev`
 mode. You can re-enable dev combination by setting `Requirements_Backend.combine_in_dev` to true.
-</div>
+[/alert]
 
 ### Configuring combined file storage
 
@@ -175,10 +243,10 @@ You can also use any of the below options in order to tweak this behaviour:
 
 In some cases it may be necessary to create a new storage backend for combined files, if the default location
 is not appropriate. Normally a single backend is used for all site assets, so a number of objects must be
-replaced. For instance, the below will set a new set of dependencies to write to `mysite/javascript/combined`
+replaced. For instance, the below will set a new set of dependencies to write to `app/javascript/combined`
 
 
-```yaml
+```yml
 ---
 Name: myrequirements
 ---
@@ -193,7 +261,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Assets\Flysystem\PublicAdapter.custom-adapter:
     class: SilverStripe\Assets\Flysystem\PublicAssetAdapter
     constructor:
-      Root: ./mysite/javascript
+      Root: ./app/javascript
   # Set flysystem filesystem that uses this adapter
   League\Flysystem\Filesystem.custom-filesystem:
     class: 'League\Flysystem\Filesystem'
@@ -223,7 +291,7 @@ and production environments.
 ### Combined CSS Files
 
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
-the third paramter of the `combine_files` function:
+the third parameter of the `combine_files` function:
 
 ```php
 $loader = SilverStripe\View\ThemeResourceLoader::inst();
@@ -240,15 +308,15 @@ SilverStripe\View\Requirements::combine_files('print.css', $printStylesheets, 'p
 By default, all requirements files are flushed (deleted) when ?flush querystring parameter is set.
 This can be disabled by setting the `Requirements.disable_flush_combined` config to `true`.
 
-<div class="alert" markdown='1'>
+[alert]
 When combining CSS files, take care of relative urls, as these will not be re-written to match
 the destination location of the resulting combined CSS.
-</div>
+[/alert]
 
 ### Combined JS Files
 
 You can also add the 'async' and/or 'defer' attributes to combined Javascript files as you would with the 
-`Requirements::javascript` call - use the third paramter of the `combine_files` function:
+`Requirements::javascript` call - use the third parameter of the `combine_files` function:
 
 ```php
 $loader = SilverStripe\View\ThemeResourceLoader::inst();
@@ -301,10 +369,10 @@ SilverStripe\Core\Injector\Injector:
       Minifier: %$MyProject\MyMinifier
 ```
 
-<div class="alert" markdown='1'>
+[alert]
 While the framework does afford you the option of minification at runtime, we recommend using one of many frontend build
 tools to do this for you, e.g. [Webpack](https://webpack.github.io/), [Gulp](http://gulpjs.com/), or [Grunt](https://gruntjs.com/).
-</div>
+[/alert]
 
 
 ## Clearing assets
@@ -319,9 +387,9 @@ Clears all defined requirements. You can also clear specific requirements.
 Requirements::clear('modulename/javascript/some-lib.js');
 ```
 
-<div class="alert" markdown="1">
+[alert]
 Depending on where you call this command, a Requirement might be *re-included* afterwards.
-</div>
+[/alert]
 
 ## Blocking
 
@@ -333,34 +401,34 @@ One common example is to block the core `jquery.js` added by various form fields
 version in a custom location. This assumes you have tested your application with the newer version.
 
 ```php
-Requirements::block('silverstripe-admin/thirdparty/jquery/jquery.js');
+Requirements::block('silverstripe/admin:thirdparty/jquery/jquery.js');
 ```
 
-<div class="alert" markdown="1">
+[alert]
 The CMS also uses the `Requirements` system, and its operation can be affected by `block()` calls. Avoid this by 
 limiting the scope of your blocking operations, e.g. in `init()` of your controller.
-</div>
+[/alert]
 
 ## Inclusion Order
 
 Requirements acts like a stack, where everything is rendered sequentially in the order it was included. There is no way
 to change inclusion-order, other than using *Requirements::clear* and rebuilding the whole set of requirements. 
 
-<div class="alert" markdown="1">
+[alert]
 Inclusion order is both relevant for CSS and Javascript files in terms of dependencies, inheritance and overlays - be 
 careful when messing with the order of requirements.
-</div>
+[/alert]
 
 ## Javascript placement
 
-By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
+By default, Silverstripe CMS includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
 ```php
 Requirements::set_force_js_to_bottom(true);
 ```
 
-`Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
+`Requirements.force_js_to_bottom`, will force Silverstripe CMS to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
 
 If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,
@@ -372,7 +440,7 @@ Requirements::set_write_js_to_body(false);
 
 ## Direct resource urls
 
-In templates you can use the `$resourcePath()` or `$resourceURL()` helper methods to inject links to
+In templates, you can use the `$resourcePath()` or `$resourceURL()` helper methods to inject links to
 resources directly. If you want to link to resources within a specific module you can use 
 the `vendor/module:some/path/to/file.jpg` syntax.
 
@@ -390,6 +458,10 @@ In PHP you can directly resolve these urls using the `ModuleResourceLoader` help
 $file = ModuleResourceLoader::singleton()
   ->resolveURL('silverstripe/admin:client/dist/images/spinner.gif');
 ```
+
+## Related Lessons
+* [Creating your first theme](https://www.silverstripe.org/learn/lessons/v4/creating-your-first-theme-1)
+* [AJAX behaviour and ViewableData](https://www.silverstripe.org/learn/lessons/v4/ajax-behaviour-and-viewabledata-1)
 
 ## API Documentation
 

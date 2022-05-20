@@ -1,0 +1,18 @@
+'SilverStripe\Security\Group':
+  admingroup:
+    Code: admingroup
+  otheradmingroup:
+    Code: otheradmingroup
+SilverStripe\Security\Member:
+  admin:
+    FirstName: Admin
+    Groups:
+      - '=>SilverStripe\Security\Group.admingroup'
+      - '=>SilverStripe\Security\Group.otheradmingroup'
+'SilverStripe\Security\Permission':
+  admincode:
+    Code: ADMIN
+    Group: '=>SilverStripe\Security\Group.admingroup'
+  otheradmincode:
+    Code: ADMIN
+    Group: '=>SilverStripe\Security\Group.otheradmingroup'

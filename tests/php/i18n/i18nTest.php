@@ -17,13 +17,13 @@ class i18nTest extends SapphireTest
 {
     use i18nTestManifest;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->setupManifest();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->tearDownManifest();
         parent::tearDown();
@@ -55,7 +55,7 @@ class i18nTest extends SapphireTest
                 'es_AR',
                 'es_ES',
             ],
-            array_keys($translations)
+            array_keys($translations ?? [])
         );
 
         // Test indeterminate locales
@@ -81,17 +81,17 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyProperty' => 'MyProperty' ],
+            [ i18nTest\TestDataObject::class . '.MyProperty' => 'MyProperty' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class . '.MyProperty' => 'Mein Attribut' ],
             'de_DE'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestDataObject::class.'.MyUntranslatedProperty' => 'Mein Attribut' ],
+            [ i18nTest\TestDataObject::class . '.MyUntranslatedProperty' => 'Mein Attribut' ],
             'en_US'
         );
 
@@ -102,7 +102,7 @@ class i18nTest extends SapphireTest
             $obj->fieldLabel('MyProperty')
         );
         $this->assertEquals(
-            'My Untranslated Property',
+            'My untranslated property',
             $obj->fieldLabel('MyUntranslatedProperty')
         );
     }
@@ -113,12 +113,12 @@ class i18nTest extends SapphireTest
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class.'.MyProperty' => 'Untranslated' ],
+            [ i18nTest\TestObject::class . '.MyProperty' => 'Untranslated' ],
             'en_US'
         );
         $provider->getTranslator()->addResource(
             'array',
-            [ i18nTest\TestObject::class.'.my_translatable_property' => 'Übersetzt' ],
+            [ i18nTest\TestObject::class . '.my_translatable_property' => 'Übersetzt' ],
             'de_DE'
         );
 
@@ -173,11 +173,11 @@ class i18nTest extends SapphireTest
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData([
             'TestProperty' => 'TestPropertyValue'
         ])));
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("Layout Template\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("Layout Template no namespace\n"),
             $parsedHtml
         );
@@ -201,43 +201,43 @@ class i18nTest extends SapphireTest
 
         i18n::set_locale('de_DE');
         $viewer = new SSViewer('i18nTestModule');
-        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
-        $this->assertContains(
+        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Main Template\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Layout Template\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Layout Template no namespace\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS My replacement: TestPropertyValue\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Include Entity with Namespace\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Include Entity without Namespace\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS My include replacement: TestPropertyValue\n"),
             $parsedHtml
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS My include replacement no namespace: TestPropertyValue\n"),
             $parsedHtml
         );
         // Check plurals
-        $this->assertContains('Single: An item', $parsedHtml);
-        $this->assertContains('Multiple: 4 items', $parsedHtml);
-        $this->assertContains('None: 0 items', $parsedHtml);
+        $this->assertStringContainsString('Single: An item', $parsedHtml);
+        $this->assertStringContainsString('Multiple: 4 items', $parsedHtml);
+        $this->assertStringContainsString('None: 0 items', $parsedHtml);
 
         i18n::set_locale($oldLocale);
     }
@@ -260,11 +260,11 @@ class i18nTest extends SapphireTest
 
         // Test missing entity key
         $translated = i18n::_t(
-            $entity.'_DOES_NOT_EXIST',
+            $entity . '_DOES_NOT_EXIST',
             $default,
-            array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye")
+            ["name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"]
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Hello Mark welcome. But it is late, bye",
             $translated,
             "Testing fallback to the translation default (but using the injection array)"
@@ -276,7 +276,7 @@ class i18nTest extends SapphireTest
             $default,
             ["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "TRANS Hello Paul good you are here. But it is late, see you",
             $translated,
             "Testing entity, default string and injection array"
@@ -289,7 +289,7 @@ class i18nTest extends SapphireTest
             "New context (this should be ignored)",
             ["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "TRANS Hello Steffen willkommen. But it is late, wiedersehen",
             $translated,
             "Full test of translation, using default, context and injection array"
@@ -326,22 +326,22 @@ class i18nTest extends SapphireTest
 
         $viewer = new SSViewer('i18nTestModule');
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("Hello Mark welcome. But it is late, bye\n"),
             $parsedHtml,
             "Testing fallback to the translation default (but using the injection array)"
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os("TRANS Hello Paul good you are here. But it is late, see you\n"),
             $parsedHtml,
             "Testing entity, default string and injection array"
         );
 
         //test injected calls
-        $this->assertContains(
+        $this->assertStringContainsString(
             Convert::nl2os(
-                "TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n"
+                "TRANS Hello " . Director::absoluteBaseURL() . " " . i18n::get_locale() . ". But it is late, global calls\n"
             ),
             $parsedHtml,
             "Testing a translation with just entity and injection array, but with global variables injected in"
@@ -470,7 +470,7 @@ class i18nTest extends SapphireTest
     {
         i18n::config()->update(
             'common_languages',
-            array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
+            ['de_CGN' => ['name' => 'German (Cologne)', 'native' => 'K&ouml;lsch']]
         );
         $this->assertEquals('German', i18n::getData()->languageName('de_CGN'));
         $this->assertEquals('Deutsch', i18n::with_locale('de_CGN', function () {

@@ -27,7 +27,7 @@ abstract class SelectField extends FormField
      *
      * @var array
      */
-    protected $disabledItems = array();
+    protected $disabledItems = [];
 
     /**
      * @param string $name The field name
@@ -35,7 +35,7 @@ abstract class SelectField extends FormField
      * @param array|ArrayAccess $source A map of the dropdown items
      * @param mixed $value The current value
      */
-    public function __construct($name, $title = null, $source = array(), $value = null)
+    public function __construct($name, $title = null, $source = [], $value = null)
     {
         $this->setSource($source);
         if (!isset($title)) {
@@ -100,14 +100,14 @@ abstract class SelectField extends FormField
         if ($this->isDisabled()) {
             return true;
         }
-        return in_array($value, $this->getDisabledItems());
+        return in_array($value, $this->getDisabledItems() ?? []);
     }
 
     public function getAttributes()
     {
         return array_merge(
             parent::getAttributes(),
-            array('type' => null, 'value' => null)
+            ['type' => null, 'value' => null]
         );
     }
 
@@ -118,7 +118,7 @@ abstract class SelectField extends FormField
      */
     protected function getSourceValues()
     {
-        return array_keys($this->getSource());
+        return array_keys($this->getSource() ?? []);
     }
 
     /**
@@ -130,9 +130,9 @@ abstract class SelectField extends FormField
      */
     public function getValidValues()
     {
-        $valid = array_diff($this->getSourceValues(), $this->getDisabledItems());
+        $valid = array_diff($this->getSourceValues() ?? [], $this->getDisabledItems());
         // Renumber indexes from 0
-        return array_values($valid);
+        return array_values($valid ?? []);
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class SelectField extends FormField
             $source = $source->toArray();
         }
         if (!is_array($source) && !($source instanceof ArrayAccess)) {
-            user_error('$source passed in as invalid type', E_USER_ERROR);
+            throw new \InvalidArgumentException('$source passed in as invalid type');
         }
 
         return $source;
@@ -190,12 +190,12 @@ abstract class SelectField extends FormField
     {
         // Empty values
         if (empty($values)) {
-            return array();
+            return [];
         }
 
         // Direct array
         if (is_array($values)) {
-            return array_values($values);
+            return array_values($values ?? []);
         }
 
         // Extract lists
@@ -203,7 +203,7 @@ abstract class SelectField extends FormField
             return $values->column('ID');
         }
 
-        return array(trim($values));
+        return [trim($values ?? '')];
     }
 
     /**
@@ -260,7 +260,7 @@ abstract class SelectField extends FormField
      *
      * @see FormField::castedCopy()
      *
-     * @param String $classOrCopy
+     * @param string $classOrCopy
      * @return FormField
      */
     public function castedCopy($classOrCopy)

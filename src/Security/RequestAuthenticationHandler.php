@@ -74,10 +74,19 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      */
     public function logOut(HTTPRequest $request = null)
     {
+        $member = Security::getCurrentUser();
+        if ($member) {
+            $member->beforeMemberLoggedOut($request);
+        }
+
         foreach ($this->getHandlers() as $handler) {
             $handler->logOut($request);
         }
 
         Security::setCurrentUser(null);
+
+        if ($member) {
+            $member->afterMemberLoggedOut($request);
+        }
     }
 }

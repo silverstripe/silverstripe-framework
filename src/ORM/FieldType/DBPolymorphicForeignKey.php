@@ -11,15 +11,15 @@ class DBPolymorphicForeignKey extends DBComposite
 {
     private static $index = true;
 
-    private static $composite_db = array(
+    private static $composite_db = [
         'ID' => 'Int',
         'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
-    );
+    ];
 
     public function scaffoldFormField($title = null, $params = null)
     {
         // Opt-out of form field generation - Scaffolding should be performed on
-        // the has_many end, or set programatically.
+        // the has_many end, or set programmatically.
         // @todo - Investigate suitable FormField
         return null;
     }
@@ -70,10 +70,10 @@ class DBPolymorphicForeignKey extends DBComposite
     {
         // Map dataobject value to array
         if ($value instanceof DataObject) {
-            $value = array(
+            $value = [
                 'ID' => $value->ID,
                 'Class' => get_class($value),
-            );
+            ];
         }
 
         parent::setValue($value, $record, $markChanged);
@@ -83,7 +83,7 @@ class DBPolymorphicForeignKey extends DBComposite
     {
         $id = $this->getIDValue();
         $class = $this->getClassValue();
-        if ($id && $class && is_subclass_of($class, 'SilverStripe\ORM\DataObject')) {
+        if ($id && $class && is_subclass_of($class, DataObject::class)) {
             return DataObject::get_by_id($class, $id);
         }
         return null;

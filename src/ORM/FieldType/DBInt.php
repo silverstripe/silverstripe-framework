@@ -3,8 +3,8 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\NumericField;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -21,11 +21,20 @@ class DBInt extends DBField
     }
 
     /**
+     * Ensure int values are always returned.
+     * This is for mis-configured databases that return strings.
+     */
+    public function getValue()
+    {
+        return (int) $this->value;
+    }
+
+    /**
      * Returns the number, with commas added as appropriate, eg “1,000”.
      */
     public function Formatted()
     {
-        return number_format($this->value);
+        return number_format($this->value ?? 0.0);
     }
 
     public function requireField()
@@ -45,7 +54,7 @@ class DBInt extends DBField
     {
         $output = new ArrayList();
         for ($i = 0; $i < $this->value; $i++) {
-            $output->push(new ArrayData(array( 'Number' => $i + 1 )));
+            $output->push(ArrayData::create(['Number' => $i + 1]));
         }
 
         return $output;
@@ -58,7 +67,7 @@ class DBInt extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new NumericField($this->name, $title);
+        return NumericField::create($this->name, $title);
     }
 
     public function nullValue()

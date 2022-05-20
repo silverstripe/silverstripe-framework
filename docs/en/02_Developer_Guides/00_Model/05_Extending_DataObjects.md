@@ -1,5 +1,7 @@
+---
 title: Extending DataObjects
 summary: Modify the data model without using subclasses.
+---
 
 # Extending DataObjects
 
@@ -19,39 +21,36 @@ a `ModelAdmin` record.
 Example: Disallow creation of new players if the currently logged-in player is not a team-manager.
 
 ```php
-    use SilverStripe\Security\Security;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Security;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
+class Player extends DataObject 
+{
+    private static $has_many = [
+        'Teams' => 'Team',
+    ];
+    
+    public function onBeforeWrite() 
     {
-
-      private static $has_many = [
-        "Teams"=>"Team"
-      ];
-    
-      public function onBeforeWrite() 
-      {
         // check on first write action, aka "database row creation" (ID-property is not set)
-        if(!$this->isInDb()) {
-          $currentPlayer = Security::getCurrentUser();
-
-          if(!$currentPlayer->IsTeamManager()) {
-            user_error('Player-creation not allowed', E_USER_ERROR);
-            exit();
-          }
+        if (!$this->isInDb()) {
+            $currentPlayer = Security::getCurrentUser();
+        
+            if (!$currentPlayer->IsTeamManager()) {
+                throw new \Exception('Player-creation not allowed');
+            }
         }
-    
+        
         // check on every write action
-        if(!$this->record['TeamID']) {
-            user_error('Cannot save player without a valid team', E_USER_ERROR);
-            exit();
+        if (!$this->record['TeamID']) {
+            throw new \Exception('Cannot save player without a valid team');
         }
-    
+        
         // CAUTION: You are required to call the parent-function, otherwise
         // SilverStripe will not execute the request.
         parent::onBeforeWrite();
-      }
     }
+}
 
 ```
 
@@ -63,31 +62,33 @@ Example: Checking for a specific [permission](permissions) to delete this type o
 member is logged in who belongs to a group containing the permission "PLAYER_DELETE".
 
 ```php
-    use SilverStripe\Security\Permission;
-    use SilverStripe\Security\Security;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-      private static $has_many = [
+class Player extends DataObject 
+{
+    
+    private static $has_many = [
         "Teams" => "Team"
-      ];
+    ];
     
-      public function onBeforeDelete() 
-      {
+    public function onBeforeDelete() 
+    {
         if(!Permission::check('PLAYER_DELETE')) {
-          Security::permissionFailure($this);
-          exit();
+            Security::permissionFailure($this);
+            exit();
         }
-    
+        
         parent::onBeforeDelete();
-      }
     }
-
+}
 ```
 
-<div class="notice" markdown='1'>
+[notice]
 Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check `$this->isInDb()` to toggle 
 these two modes, as shown in the example above.
-</div>
+[/notice]
+
+## Related Lessons
+* [Working with data relationships - $has_many](https://www.silverstripe.org/learn/lessons/v4/working-with-data-relationships-has-many-1)

@@ -7,16 +7,27 @@ use SilverStripe\ORM\DataExtension;
 
 class Team_Extension extends DataExtension implements TestOnly
 {
-    private static $db = array(
-        'ExtendedDatabaseField' => 'Varchar'
-    );
+    private static $summary_fields = [
+        'Title' => 'Custom Title', // override non-associative 'Title'
+    ];
 
-    private static $has_one = array(
+    private static $db = [
+        'ExtendedDatabaseField' => 'Varchar'
+    ];
+
+    private static $has_one = [
         'ExtendedHasOneRelationship' => Player::class
-    );
+    ];
 
     public function getExtendedDynamicField()
     {
         return "extended dynamic field";
+    }
+
+    public function augmentHydrateFields()
+    {
+        return [
+            'CustomHydratedField' => true,
+        ];
     }
 }

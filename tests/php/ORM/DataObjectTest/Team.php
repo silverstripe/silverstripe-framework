@@ -10,6 +10,9 @@ use SilverStripe\ORM\ManyManyList;
 /**
  * @property string Title
  * @property string DatabaseField
+ * @property array SalaryCap
+ * @property string FoundationYear
+ * @property bool CustomHydratedField
  * @method Player Captain()
  * @method Player Founder()
  * @method Player HasOneRelationship()
@@ -25,45 +28,45 @@ class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_Team';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
-        'DatabaseField' => 'HTMLVarchar'
-    );
+        'DatabaseField' => 'HTMLVarchar',
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "Captain" => Player::class,
         "Founder" => Player::class,
         'HasOneRelationship' => Player::class,
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'SubTeams' => SubTeam::class,
         'Comments' => TeamComment::class,
-        'Fans' => Fan::class.'.Favourite', // Polymorphic - Team fans
-        'PlayerFans' => Player::class.'.FavouriteTeam'
-    );
+        'Fans' => Fan::class . '.Favourite', // Polymorphic - Team fans
+        'PlayerFans' => Player::class . '.FavouriteTeam'
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         'Players' => Player::class
-    );
+    ];
 
-    private static $many_many_extraFields = array(
-        'Players' => array(
+    private static $many_many_extraFields = [
+        'Players' => [
             'Position' => 'Varchar(100)'
-        )
-    );
+        ]
+    ];
 
-    private static $belongs_many_many = array(
-        'Sponsors' => EquipmentCompany::class.'.SponsoredTeams',
-        'EquipmentSuppliers' => EquipmentCompany::class.'.EquipmentCustomers'
-    );
+    private static $belongs_many_many = [
+        'Sponsors' => EquipmentCompany::class . '.SponsoredTeams',
+        'EquipmentSuppliers' => EquipmentCompany::class . '.EquipmentCustomers'
+    ];
 
-    private static $summary_fields = array(
-        'Title' => 'Custom Title',
+    private static $summary_fields = [
+        'Title', // Overridden by Team_Extension
         'Title.UpperCase' => 'Title',
         'Captain.ShirtNumber' => 'Captain\'s shirt number',
         'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
-    );
+    ];
 
     private static $default_sort = '"Title"';
 
@@ -79,5 +82,10 @@ class Team extends DataObject implements TestOnly
     public function getDynamicField()
     {
         return 'dynamicfield';
+    }
+
+    public function ReturnsNull()
+    {
+        return null;
     }
 }

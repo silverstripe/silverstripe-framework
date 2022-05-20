@@ -10,8 +10,8 @@ class AllMethodNames extends DataExtension implements TestOnly
 {
     public function allMethodNames()
     {
-        return array(
+        return [
             strtolower('getTestValueWith_' . ClassInfo::shortName($this->owner))
-        );
+        ];
     }
 }

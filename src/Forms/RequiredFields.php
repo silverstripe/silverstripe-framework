@@ -23,7 +23,7 @@ class RequiredFields extends Validator
     protected $required;
 
     /**
-     * Pass each field to be validated as a seperate argument to the constructor
+     * Pass each field to be validated as a separate argument to the constructor
      * of this object. (an array of elements are ok).
      */
     public function __construct()
@@ -35,7 +35,7 @@ class RequiredFields extends Validator
         if (!empty($required)) {
             $this->required = ArrayLib::valuekey($required);
         } else {
-            $this->required = array();
+            $this->required = [];
         }
 
         parent::__construct();
@@ -44,18 +44,19 @@ class RequiredFields extends Validator
     /**
      * Clears all the validation from this object.
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function removeValidation()
     {
         parent::removeValidation();
-        $this->required = array();
+        $this->required = [];
 
         return $this;
     }
 
     /**
      * Debug helper
+     * @return string
      */
     public function debug()
     {
@@ -112,22 +113,22 @@ class RequiredFields extends Validator
                 if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
                     $error = true;
                 } else {
-                    $error = (count($value)) ? false : true;
+                    $error = (count($value ?? [])) ? false : true;
                 }
             } else {
                 // assume a string or integer
-                $error = (strlen($value)) ? false : true;
+                $error = (strlen($value ?? '')) ? false : true;
             }
 
             if ($formField && $error) {
                 $errorMessage = _t(
                     'SilverStripe\\Forms\\Form.FIELDISREQUIRED',
                     '{name} is required',
-                    array(
+                    [
                         'name' => strip_tags(
                             '"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'
                         )
-                    )
+                    ]
                 );
 
                 if ($msg = $formField->getCustomValidationMessage()) {
@@ -152,7 +153,7 @@ class RequiredFields extends Validator
      *
      * @param string $field
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function addRequiredField($field)
     {
@@ -166,7 +167,7 @@ class RequiredFields extends Validator
      *
      * @param string $field
      *
-     * @return RequiredFields
+     * @return $this
      */
     public function removeRequiredField($field)
     {
@@ -179,7 +180,7 @@ class RequiredFields extends Validator
      * Add {@link RequiredField} objects together
      *
      * @param RequiredFields $requiredFields
-     * @return RequiredFields
+     * @return $this
      */
     public function appendRequiredFields($requiredFields)
     {
@@ -212,6 +213,14 @@ class RequiredFields extends Validator
      */
     public function getRequired()
     {
-        return array_values($this->required);
+        return array_values($this->required ?? []);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeCached(): bool
+    {
+        return count($this->getRequired() ?? []) === 0;
     }
 }

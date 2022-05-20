@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
  */
 class PhpSyntaxTest extends SapphireTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->markTestSkipped('This needs to be written to include only core php files, not test/thirdparty files');
@@ -20,23 +20,23 @@ class PhpSyntaxTest extends SapphireTest
         // Ignore this test completely if running the test suite on windows
         // TODO: Make it work on all platforms, by building an alternative to find | grep.
         $returnCode = 0;
-        $output = array();
+        $output = [];
         exec("which find && which grep && which php", $output, $returnCode);
         if ($returnCode != 0) {
             $this->markTestSkipped("Only works on *nix based systems");
             return;
         }
 
-        $settingTests = array('short_open_tag=Off','short_open_tag=On -d asp_tags=On');
+        $settingTests = ['short_open_tag=Off','short_open_tag=On -d asp_tags=On'];
 
         $files = $this->getAllFiles('php');
-        $files[] = FRAMEWORK_PATH.'/src/Dev/Install/config-form.html';
+        $files[] = FRAMEWORK_PATH . '/src/Dev/Install/config-form.html';
 
         foreach ($files as $i => $file) {
-            $CLI_file = escapeshellarg($file);
+            $CLI_file = escapeshellarg($file ?? '');
             foreach ($settingTests as $settingTest) {
                 $returnCode = 0;
-                $output = array();
+                $output = [];
                 exec("php -l -d $settingTest $CLI_file", $output, $returnCode);
                 $hasErrors = ($returnCode != 0
                     && strpos('No syntax errors detected', implode("\n", $output)) === false);

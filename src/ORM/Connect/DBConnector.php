@@ -21,7 +21,7 @@ abstract class DBConnector
      * @config
      * @var array
      */
-    private static $write_operations = array('insert', 'update', 'delete', 'replace');
+    private static $write_operations = ['insert', 'update', 'delete', 'replace'];
 
     /**
      * List of operations to treat as DDL
@@ -29,7 +29,7 @@ abstract class DBConnector
      * @config
      * @var array
      */
-    private static $ddl_operations = array('alter', 'drop', 'create', 'truncate');
+    private static $ddl_operations = ['alter', 'drop', 'create', 'truncate'];
 
     /**
      * Error handler for database errors.
@@ -44,7 +44,7 @@ abstract class DBConnector
      * @param array $parameters Parameters passed to the query
      * @throws DatabaseException
      */
-    protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = array())
+    protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = [])
     {
         // Prevent errors when error checking is set at zero level
         if (empty($errorLevel)) {
@@ -63,7 +63,7 @@ abstract class DBConnector
             // in code, such as credential checking during installation
             throw new DatabaseException($msg, 0, null, $sql, $parameters);
         } else {
-            user_error($msg, $errorLevel);
+            user_error($msg ?? '', $errorLevel ?? 0);
         }
     }
 
@@ -116,15 +116,14 @@ abstract class DBConnector
      */
     protected function isQueryType($sql, $type)
     {
-        if (!preg_match('/^(?<operation>\w+)\b/', $sql, $matches)) {
+        if (!preg_match('/^(?<operation>\w+)\b/', $sql ?? '', $matches)) {
             return false;
         }
         $operation = $matches['operation'];
         if (is_array($type)) {
-            return in_array(strtolower($operation), $type);
-        } else {
-            return strcasecmp($sql, $type) === 0;
+            return in_array(strtolower($operation ?? ''), $type ?? []);
         }
+        return strcasecmp($sql ?? '', $type ?? '') === 0;
     }
 
     /**
@@ -135,7 +134,7 @@ abstract class DBConnector
      */
     protected function parameterValues($parameters)
     {
-        $values = array();
+        $values = [];
         foreach ($parameters as $value) {
             $values[] = is_array($value) ? $value['value'] : $value;
         }

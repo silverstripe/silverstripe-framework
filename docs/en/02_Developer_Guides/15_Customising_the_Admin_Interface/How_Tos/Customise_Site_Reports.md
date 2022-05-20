@@ -1,5 +1,8 @@
+---
 title: Customise site reports
 summary: Creating your own custom data or content reports.
+---
+
 # Customise site reports
 
 ## Introduction
@@ -25,44 +28,43 @@ Modules may come with their own additional reports.
 
 ## Creating custom reports
 
-Custom reports can be created quickly and easily. A general knowledge of SilverStripe's
+Custom reports can be created quickly and easily. A general knowledge of Silverstripe CMS's
 [datamodel and ORM](../../model/data_model_and_orm) is useful before creating a custom report. 
 
-Inside the *mysite/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
+Inside the *app/code* folder create a file called *CustomSideReport.php*. Inside this file we can add our site reports. 
 
 The following example will create a report to list every page on the current site.
 
-###CustomSideReport.php
+**CustomSideReport.php**
+
 ```php
-    use Page;
-    use SilverStripe\Reports\Report;
+use SilverStripe\Reports\Report;
 
-    class CustomSideReport_NameOfReport extends Report 
+class CustomSideReport_NameOfReport extends Report 
+{
+    
+    // the name of the report
+    public function title() 
     {
-        
-        // the name of the report
-        public function title() 
-        {
-            return 'All Pages';
-        }
-        
-        // what we want the report to return
-        public function sourceRecords($params = null) 
-        {
-            return Page::get()->sort('Title');
-        }
-        
-        // which fields on that object we want to show
-        public function columns() 
-        {
-            $fields = [
-                'Title' => 'Title'
-            ];
-            
-            return $fields;
-        }
+        return 'All Pages';
     }
-
+    
+    // what we want the report to return
+    public function sourceRecords($params = null) 
+    {
+        return Page::get()->sort('Title');
+    }
+    
+    // which fields on that object we want to show
+    public function columns() 
+    {
+        $fields = [
+            'Title' => 'Title'
+        ];
+        
+        return $fields;
+    }
+}
 ```
 
 More useful reports can be created by changing the `DataList` returned in the `sourceRecords` function.

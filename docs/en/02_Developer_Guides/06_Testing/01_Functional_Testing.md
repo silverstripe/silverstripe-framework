@@ -1,5 +1,7 @@
+---
 title: Functional Testing
 summary: Test controllers, forms and HTTP responses.
+---
 
 # Functional Testing
 
@@ -8,8 +10,9 @@ core idea of these tests is the same as `SapphireTest` unit tests but `Functiona
 creating [HTTPRequest](api:SilverStripe\Control\HTTPRequest), receiving [HTTPResponse](api:SilverStripe\Control\HTTPResponse) objects and modifying the current user session.
 
 ## Get
+
 ```php
-    $page = $this->get($url);
+$page = $this->get($url);
 ```
 
 Performs a GET request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
@@ -17,18 +20,29 @@ of the response.
 
 ## Post
 ```php
-    $page = $this->post($url);
+$page = $this->post($url);
 ```
 
 Performs a POST request on $url and retrieves the [HTTPResponse](api:SilverStripe\Control\HTTPResponse). This also changes the current page to the value
 of the response.
 
+<div class="notice" markdown="1">
+**Compatibility Notice:** Previous versions of Silverstripe CMS would send a GET request if `post()` was called with no POST variables supplied in the second argument.
+Silverstripe CMS 4.6 and later always sends a POST request for consistency.
+</div>
+
+## Other Requests
+```php
+$page = $this->sendRequest('PUT', $url);
+```
+
+Performs a request on $url with the HTTP method provided (useful for PUT, PATCH, DELETE, etc.). This also changes the current page to the value of the response.
+
 ## Submit
 
 
 ```php
-    $submit = $this->submitForm($formID, $button = null, $data = []);
-
+$submit = $this->submitForm($formID, $button = null, $data = []);
 ```
 
 Submits the given form (`#ContactForm`) on the current page and returns the [HTTPResponse](api:SilverStripe\Control\HTTPResponse).
@@ -37,14 +51,19 @@ Submits the given form (`#ContactForm`) on the current page and returns the [HTT
 
 
 ```php
-    $this->logInAs($member);
+$this->logInAs($member);
 ```
 
-Logs a given user in, sets the current session. To log all users out pass `null` to the method.
+Logs a given user in, sets the current session.
 
+When doing a functional testing it's important to use `$this->logInAs($member);` rather than simply `Security::setCurrentUser($member);` or `$this->session()->set('loggedInAs', $member->ID);` as the latter two will not run any logic contained inside login authenticators.
+
+## LogOut
+
+Log out the current user, destroys the current session.
 
 ```php
-    $this->logInAs(null);
+$this->logOut();
 ```
 
 ## Assertions
@@ -55,10 +74,9 @@ The `FunctionalTest` class also provides additional asserts to validate your tes
 
 
 ```php
-    $this->assertPartialMatchBySelector('p.good',[
-        'Test save was successful'
-    ]);
-
+$this->assertPartialMatchBySelector('p.good',[
+    'Test save was successful'
+]);
 ```
 
 Asserts that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
@@ -70,10 +88,9 @@ assertion fails if one of the expectedMatches fails to appear.
 
 
 ```php
-    $this->assertExactMatchBySelector("#MyForm_ID p.error", [
-        "That email address is invalid."
-    ]);
-
+$this->assertExactMatchBySelector("#MyForm_ID p.error", [
+    "That email address is invalid."
+]);
 ```
 
 Asserts that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
@@ -81,36 +98,35 @@ selector will be applied to the HTML of the most recent page. The full HTML of e
 assertion fails if one of the expectedMatches fails to appear. 
 
 ### assertPartialHTMLMatchBySelector
-```php
-    $this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", [
-        "That email address is invalid."
-    ]);
 
+```php
+$this->assertPartialHTMLMatchBySelector("#MyForm_ID p.error", [
+    "That email address is invalid."
+]);
 ```
 
 Assert that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
 selector will be applied to the HTML of the most recent page. The content of every matching tag will be examined. The 
 assertion fails if one of the expectedMatches fails to appear.
 
-<div class="notice" markdown="1">
+[notice]
 `&amp;nbsp;` characters are stripped from the content; make sure that your assertions take this into account.
-</div>
+[/notice]
 
 ### assertExactHTMLMatchBySelector
 ```php
-    $this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", [
-        "That email address is invalid."
-    ]);
-
+$this->assertExactHTMLMatchBySelector("#MyForm_ID p.error", [
+    "That email address is invalid."
+]);
 ```
 
 Assert that the most recently queried page contains a number of content tags specified by a CSS selector. The given CSS 
 selector will be applied to the HTML of the most recent page.  The full HTML of every matching tag will be examined. The 
 assertion fails if one of the expectedMatches fails to appear.
 
-<div class="notice" markdown="1">
+[notice]
 `&amp;nbsp;` characters are stripped from the content; make sure that your assertions take this into account.
-</div>
+[/notice]
 
 ## Related Documentation
 

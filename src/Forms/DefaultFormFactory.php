@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use InvalidArgumentException;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Extensible;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Default form builder class.
@@ -30,6 +31,7 @@ class DefaultFormFactory implements FormFactory
      * @param string $name
      * @param array $context
      * @return Form
+     * @throws InvalidArgumentException When required context is missing
      */
     public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
     {
@@ -95,15 +97,21 @@ class DefaultFormFactory implements FormFactory
      */
     protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
     {
-        $validator = null;
-        if ($context['Record']->hasMethod('getCMSValidator')) {
-            // @todo Deprecate or formalise support for getCMSValidator()
-            $validator = $context['Record']->getCMSValidator();
+        if (!$context['Record'] instanceof DataObject) {
+            return null;
         }
 
-        // Extend validator
-        $this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
-        return $validator;
+        $compositeValidator = $context['Record']->getCMSCompositeValidator();
+
+        // Extend validator - legacy support, will be removed in 5.0.0
+        foreach ($compositeValidator->getValidators() as $validator) {
+            $this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
+        }
+
+        // Extend validator - forward support, will be supported beyond 5.0.0
+        $this->invokeWithExtensions('updateCMSCompositeValidator', $compositeValidator);
+
+        return $compositeValidator;
     }
 
     /**

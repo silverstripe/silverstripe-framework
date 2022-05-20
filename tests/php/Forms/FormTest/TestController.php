@@ -29,11 +29,11 @@ class TestController extends Controller implements TestOnly
         }
     }
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action//$ID/$OtherID' => "handleAction",
-    );
+    ];
 
     protected $template = 'BlankPage';
 
@@ -55,7 +55,7 @@ class TestController extends Controller implements TestOnly
             new FieldList(
                 new EmailField('Email'),
                 new TextField('SomeRequiredField'),
-                new CheckboxSetField('Boxes', null, array('1' => 'one', '2' => 'two')),
+                new CheckboxSetField('Boxes', null, ['1' => 'one', '2' => 'two']),
                 new NumericField('Number'),
                 TextField::create('ReadonlyField')
                     ->setReadonly(true)
@@ -73,7 +73,7 @@ class TestController extends Controller implements TestOnly
                 'SomeRequiredField'
             )
         );
-        $form->setValidationExemptActions(array('doSubmitValidationExempt'));
+        $form->setValidationExemptActions(['doSubmitValidationExempt']);
         $form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 
         return $form;

@@ -45,9 +45,19 @@ class HTMLTest extends SapphireTest
         $this->assertEquals('<a title="HTML &amp; Text">Some <strong>content!</strong></a>', $tag);
     }
 
+    public function testImgTag()
+    {
+        $tag = HTML::createTag('img', [
+            'src' => 'example.png',
+            'alt' => '',
+        ]);
+
+        $this->assertEquals('<img src="example.png" alt="" />', $tag);
+    }
+
     public function testVoidContentError()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Void element \"link\" cannot have content");
 
         HTML::createTag('link', [

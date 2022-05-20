@@ -79,8 +79,8 @@ class ContentNegotiator
 
         // Disable content negotiation for other content types
         if ($contentType
-            && substr($contentType, 0, 9) != 'text/html'
-            && substr($contentType, 0, 21) != 'application/xhtml+xml'
+            && substr($contentType ?? '', 0, 9) != 'text/html'
+            && substr($contentType ?? '', 0, 21) != 'application/xhtml+xml'
         ) {
             return false;
         }
@@ -88,7 +88,7 @@ class ContentNegotiator
         if (ContentNegotiator::getEnabled()) {
             return true;
         } else {
-            return (substr($response->getBody(), 0, 5) == '<' . '?xml');
+            return (substr($response->getBody() ?? '', 0, 5) == '<' . '?xml');
         }
     }
 
@@ -124,11 +124,11 @@ class ContentNegotiator
             return;
         }
 
-        $mimes = array(
+        $mimes = [
             "xhtml" => "application/xhtml+xml",
             "html" => "text/html",
-        );
-        $q = array();
+        ];
+        $q = [];
         if (headers_sent()) {
             $chosenFormat = static::config()->get('default_format');
         } elseif (isset($_GET['forceFormat'])) {
@@ -136,12 +136,12 @@ class ContentNegotiator
         } else {
             // The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml. We put this
             // special case in here so that designers don't get worried that their templates are HTML4.
-            if (isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
+            if (isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 14) == 'W3C_Validator/') {
                 $chosenFormat = "xhtml";
             } else {
                 foreach ($mimes as $format => $mime) {
-                    $regExp = '/' . str_replace(array('+', '/'), array('\+', '\/'), $mime) . '(;q=(\d+\.\d+))?/i';
-                    if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
+                    $regExp = '/' . str_replace(['+', '/'], ['\+', '\/'], $mime ?? '') . '(;q=(\d+\.\d+))?/i';
+                    if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp ?? '', $_SERVER['HTTP_ACCEPT'] ?? '', $matches)) {
                         $preference = isset($matches[2]) ? $matches[2] : 1;
                         if (!isset($q[$preference])) {
                             $q[$preference] = $format;
@@ -189,17 +189,17 @@ class ContentNegotiator
         $content = preg_replace(
             '/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/',
             '<base href="$1" />',
-            $content
+            $content ?? ''
         );
 
-        $content = str_replace('&nbsp;', '&#160;', $content);
-        $content = str_replace('<br>', '<br />', $content);
-        $content = str_replace('<hr>', '<hr />', $content);
-        $content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
-        $content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
-        $content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content);
-        $content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
-        $content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
+        $content = str_replace('&nbsp;', '&#160;', $content ?? '');
+        $content = str_replace('<br>', '<br />', $content ?? '');
+        $content = str_replace('<hr>', '<hr />', $content ?? '');
+        $content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content ?? '');
+        $content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content ?? '');
+        $content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content ?? '');
+        $content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content ?? '');
+        $content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content ?? '');
 
         $response->setBody($content);
     }
@@ -226,20 +226,20 @@ class ContentNegotiator
         $response->addHeader("Vary", "Accept");
 
         $content = $response->getBody();
-        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml');
+        $hasXMLHeader = (substr($content ?? '', 0, 5) == '<' . '?xml');
 
         // Fix base tag
         $content = preg_replace(
             '/<base href="([^"]*)" \/>/',
             '<base href="$1"><!--[if lte IE 6]></base><![endif]-->',
-            $content
+            $content ?? ''
         );
 
-        $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
+        $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content ?? '');
         $content = str_replace(
-            array('/>', 'xml:lang', 'application/xhtml+xml'),
-            array('>', 'lang', 'text/html'),
-            $content
+            ['/>', 'xml:lang', 'application/xhtml+xml'],
+            ['>', 'lang', 'text/html'],
+            $content ?? ''
         );
 
         // Only replace the doctype in templates with the xml header
@@ -247,10 +247,10 @@ class ContentNegotiator
             $content = preg_replace(
                 '/<!DOCTYPE[^>]+>/',
                 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
-                $content
+                $content ?? ''
             );
         }
-        $content = preg_replace('/<html xmlns="[^"]+"/', '<html ', $content);
+        $content = preg_replace('/<html xmlns="[^"]+"/', '<html ', $content ?? '');
 
         $response->setBody($content);
     }

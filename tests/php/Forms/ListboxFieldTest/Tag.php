@@ -9,7 +9,11 @@ class Tag extends DataObject implements TestOnly
 {
     private static $table_name = 'ListboxFieldTest_Tag';
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Articles' => Article::class
-    );
+    ];
+
+    private static $db = [
+        'Title' => 'Varchar',
+    ];
 }

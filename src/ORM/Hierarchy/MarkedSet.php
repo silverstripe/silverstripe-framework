@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Hierarchy;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
@@ -89,7 +90,7 @@ class MarkedSet
      * Create an empty set with the given class
      *
      * @param DataObject $rootNode Root node for this set. To collect the entire tree,
-     * pass in a singelton object.
+     * pass in a singleton object.
      * @param string $childrenMethod Override children method
      * @param string $numChildrenMethod Override children counting method
      * @param int $nodeCountThreshold Minimum threshold for number nodes to mark
@@ -332,7 +333,7 @@ class MarkedSet
         $parentNode->setField('markingClasses', $this->markingClasses($data['node']));
 
         // Evaluate custom context
-        if (is_callable($context)) {
+        if (!is_string($context) && is_callable($context)) {
             $context = call_user_func($context, $data['node']);
         }
         if ($context) {
@@ -459,9 +460,9 @@ class MarkedSet
 
         // Build markedNodes for this subtree until we reach the threshold
         // foreach can't handle an ever-growing $nodes list
-        while (list(, $node) = each($this->markedNodes)) {
+        foreach (ArrayLib::iterateVolatile($this->markedNodes) as $node) {
             $children = $this->markChildren($node);
-            if ($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
+            if ($nodeCountThreshold && sizeof($this->markedNodes ?? []) > $nodeCountThreshold) {
                 // Undo marking children as opened since they're lazy loaded
                 /** @var DataObject|Hierarchy $child */
                 foreach ($children as $child) {
@@ -482,10 +483,10 @@ class MarkedSet
      */
     public function setMarkingFilter($parameterName, $parameterValue)
     {
-        $this->markingFilter = array(
+        $this->markingFilter = [
             "parameter" => $parameterName,
             "value" => $parameterValue
-        );
+        ];
         return $this;
     }
 
@@ -498,9 +499,9 @@ class MarkedSet
      */
     public function setMarkingFilterFunction($callback)
     {
-        $this->markingFilter = array(
+        $this->markingFilter = [
             "func" => $callback,
-        );
+        ];
         return $this;
     }
 
@@ -528,7 +529,7 @@ class MarkedSet
             $value = $this->markingFilter['value'];
 
             if (is_array($value)) {
-                return in_array($node->$parameterName, $value);
+                return in_array($node->$parameterName, $value ?? []);
             } else {
                 return $node->$parameterName == $value;
             }
@@ -653,7 +654,7 @@ class MarkedSet
      */
     public function markedNodeIDs()
     {
-        return array_keys($this->markedNodes);
+        return array_keys($this->markedNodes ?? []);
     }
 
     /**

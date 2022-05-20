@@ -1,13 +1,16 @@
+---
 title: Files
 summary: Upload, manage and manipulate files and images.
 introduction: Upload, manage and manipulate files and images.
+icon: folder-open
+---
 
 # Files
 
 ## Introduction
 
 File management and abstraction is provided by the [silverstripe/assets](https://github.com/silverstripe/silverstripe-assets).
-This provides the basis for the storage of all non-static files and resources usable by a SilverStripe web application.
+This provides the basis for the storage of all non-static files and resources usable by a Silverstripe CMS web application.
 
 By default the [api:SilverStripe\Assets\File] has these characteristics:
 

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\ORM\DB;
 
 /**
  * Represents a Decimal field.
@@ -45,7 +45,7 @@ class DBDecimal extends DBField
         $this->wholeSize = is_int($wholeSize) ? $wholeSize : 9;
         $this->decimalSize = is_int($decimalSize) ? $decimalSize : 2;
 
-        $this->defaultValue = number_format((float) $defaultValue, $decimalSize);
+        $this->defaultValue = number_format((float) $defaultValue, $decimalSize ?? 0);
 
         parent::__construct($name);
     }
@@ -55,7 +55,7 @@ class DBDecimal extends DBField
      */
     public function Nice()
     {
-        return number_format($this->value, $this->decimalSize);
+        return number_format($this->value ?? 0.0, $this->decimalSize ?? 0);
     }
 
     /**
@@ -63,22 +63,22 @@ class DBDecimal extends DBField
      */
     public function Int()
     {
-        return floor($this->value);
+        return floor($this->value ?? 0.0);
     }
 
     public function requireField()
     {
-        $parts = array(
+        $parts = [
             'datatype' => 'decimal',
             'precision' => "$this->wholeSize,$this->decimalSize",
             'default' => $this->defaultValue,
             'arrayValue' => $this->arrayValue
-        );
+        ];
 
-        $values = array(
+        $values = [
             'type' => 'decimal',
             'parts' => $parts
-        );
+        ];
 
         DB::require_field($this->tableName, $this->name, $values);
     }
@@ -88,9 +88,11 @@ class DBDecimal extends DBField
         $fieldName = $this->name;
 
         if ($fieldName) {
-            $dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value);
+            $dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value ?? '');
         } else {
-            user_error("DBField::saveInto() Called on a nameless '" . static::class . "' object", E_USER_ERROR);
+            throw new \UnexpectedValueException(
+                "DBField::saveInto() Called on a nameless '" . static::class . "' object"
+            );
         }
     }
 
@@ -124,7 +126,7 @@ class DBDecimal extends DBField
             return 0;
         }
 
-        if (ctype_digit($value)) {
+        if (ctype_digit((string) $value)) {
             return (int)$value;
         }
 

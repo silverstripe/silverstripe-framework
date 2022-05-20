@@ -2,35 +2,30 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
+use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
-use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 class HTMLEditorFieldTest extends FunctionalTest
 {
     protected static $fixture_file = 'HTMLEditorFieldTest.yml';
 
-    protected static $use_draft_site = true;
-
     protected static $extra_dataobjects = [
         TestObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,12 +50,12 @@ class HTMLEditorFieldTest extends FunctionalTest
         foreach ($files as $file) {
             $fromPath = __DIR__ . '/HTMLEditorFieldTest/images/' . $file->Name;
             $destPath = TestAssetStore::getLocalPath($file); // Only correct for test asset store
-            Filesystem::makeFolder(dirname($destPath));
-            copy($fromPath, $destPath);
+            Filesystem::makeFolder(dirname($destPath ?? ''));
+            copy($fromPath ?? '', $destPath ?? '');
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         TestAssetStore::reset();
         parent::tearDown();
@@ -73,18 +68,17 @@ class HTMLEditorFieldTest extends FunctionalTest
             'base_dir',
             'silverstripe/framework: tests/php/Forms/HTMLEditor/TinyMCECombinedGeneratorTest/tinymce'
         );
-        HtmlEditorField::config()->set('use_gzip', false);
 
         // Test special characters
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
         // Test shortcodes
         $inputText = "Shortcode: [file_link id=4]";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+        $this->assertStringContainsString('Shortcode: [file_link id=4]', $field->Field());
     }
 
     public function testBasicSaving()
@@ -128,19 +122,19 @@ class HTMLEditorFieldTest extends FunctionalTest
         $parser = new CSSContentParser($obj->dbObject('Content')->forTemplate());
         $xml = $parser->getByXpath('//img');
         $this->assertEquals(
-            'example',
+            '',
             (string)$xml[0]['alt'],
-            'Alt tags are added by default based on filename'
+            'Alt attribute is always present, even if empty'
         );
         $this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
         $this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
         $this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
         $neededFilename
-            = '/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg';
+            = '/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg';
 
         $this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
-        $this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');
+        $this->assertTrue(file_exists(PUBLIC_PATH . DIRECTORY_SEPARATOR . $neededFilename), 'File for resized image exists');
         $this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
     }
 
@@ -186,7 +180,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
 </span>
 
 
@@ -203,7 +197,7 @@ EOS
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
 </span>
 
 	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />

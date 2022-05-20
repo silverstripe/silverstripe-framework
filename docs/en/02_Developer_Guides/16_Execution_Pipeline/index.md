@@ -1,11 +1,15 @@
-summary: An overview of the steps involved in delivering a SilverStripe web page.
+---
+title: Execution pipeline
+summary: An overview of the steps involved in delivering a Silverstripe CMS web page.
+icon: route
+---
 
 # Execution Pipeline
 
 ## Introduction
 
 In order to transform a HTTP request or a commandline exeuction into a response,
-SilverStripe needs to boot its core and run through several stages of processing.
+Silverstripe CMS needs to boot its core and run through several stages of processing.
 
 ## Request Rewriting
 
@@ -15,7 +19,7 @@ The implementation depends on your web server; we'll show you the most common on
 Apache with [mod_rewrite](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html).
 Check our [installation guides](/getting_started/installation) on how other web servers like IIS or nginx handle rewriting.
 
-The standard SilverStripe project ships with a `.htaccess` file in your webroot for this purpose.
+The standard Silverstripe CMS project ships with a `.htaccess` file in your webroot for this purpose.
 By default, requests will be passed through for files existing on the filesystem.
 Some access control is in place to deny access to potentially sensitive files in the webroot, such as YAML configuration files.
 If no file can be directly matched, control is handed off to `index.php`.
@@ -31,7 +35,7 @@ tasks silently in the background.
   * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_PATH`)
 
 All requests go through `index.php`, which sets up the core [Kernel](api:SilverStripe\Core\Kernel) and [HTTPApplication](api:SilverStripe\Control\HTTPApplication)
-objects. See [/developer_guides/execution_pipeline/app_object_and_kernel] for details on this.
+objects. See [App Object and Kernel](/developer_guides/execution_pipeline/app_object_and_kernel) for details on this.
 The main process follows:
 
  
@@ -65,6 +69,8 @@ and determines the controller, action and any argument to be used ([Routing](../
  * The [RequestProcessor](api:SilverStripe\Control\RequestProcessor) is called to post-process the request to allow 
 further filtering before content is sent to the end user
  * The response is output to the client
+
+See [App Object and Kernel](app_object_and_kernel) for details.
 
 ## Request Preprocessing and Postprocessing
 

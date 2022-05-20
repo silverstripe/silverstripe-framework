@@ -13,7 +13,7 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 
 /**
- * A basic HTML wrapper for stylish rendering of a developement info view.
+ * A basic HTML wrapper for stylish rendering of a development info view.
  * Used to output error messages, and test results.
  */
 class DebugView
@@ -29,93 +29,93 @@ class DebugView
      */
     private static $columns = 100;
 
-    protected static $error_types = array(
-        0 => array(
+    protected static $error_types = [
+        0 => [
             'title' => 'Emergency',
             'class' => 'error'
-        ),
-        1 => array(
+        ],
+        1 => [
             'title' => 'Alert',
             'class' => 'error'
-        ),
-        2 => array(
+        ],
+        2 => [
             'title' => 'Critical',
             'class' => 'error'
-        ),
-        3 => array(
+        ],
+        3 => [
             'title' => 'Error',
             'class' => 'error'
-        ),
-        4 =>  array(
+        ],
+        4 =>  [
             'title' => 'Warning',
             'class' => 'warning'
-        ),
-        5 => array(
+        ],
+        5 => [
             'title' => 'Notice',
             'class' => 'notice'
-        ),
-        6 => array(
+        ],
+        6 => [
             'title' => 'Information',
             'class' => 'info'
-        ),
-        7=> array(
+        ],
+        7=> [
             'title' => 'SilverStripe\\Dev\\Debug',
             'class' => 'debug'
-        ),
-        E_USER_ERROR => array(
+        ],
+        E_USER_ERROR => [
             'title' => 'User Error',
             'class' => 'error'
-        ),
-        E_CORE_ERROR => array(
+        ],
+        E_CORE_ERROR => [
             'title' => 'Core Error',
             'class' => 'error'
-        ),
-        E_NOTICE => array(
+        ],
+        E_NOTICE => [
             'title' => 'Notice',
             'class' => 'notice'
-        ),
-        E_USER_NOTICE => array(
+        ],
+        E_USER_NOTICE => [
             'title' => 'User Notice',
             'class' => 'notice'
-        ),
-        E_DEPRECATED => array(
+        ],
+        E_DEPRECATED => [
             'title' => 'Deprecated',
             'class' => 'notice'
-        ),
-        E_USER_DEPRECATED => array(
+        ],
+        E_USER_DEPRECATED => [
             'title' => 'User Deprecated',
             'class' => 'notice'
-        ),
-        E_CORE_ERROR => array(
+        ],
+        E_CORE_ERROR => [
             'title' => 'Core Error',
             'class' => 'error'
-        ),
-        E_WARNING => array(
+        ],
+        E_WARNING => [
             'title' => 'Warning',
             'class' => 'warning'
-        ),
-        E_CORE_WARNING => array(
+        ],
+        E_CORE_WARNING => [
             'title' => 'Core Warning',
             'class' => 'warning'
-        ),
-        E_USER_WARNING => array(
+        ],
+        E_USER_WARNING => [
             'title' => 'User Warning',
             'class' => 'warning'
-        ),
-        E_STRICT => array(
+        ],
+        E_STRICT => [
             'title' => 'Strict Notice',
             'class' => 'notice'
-        ),
-        E_RECOVERABLE_ERROR => array(
+        ],
+        E_RECOVERABLE_ERROR => [
             'title' => 'Recoverable Error',
             'class' => 'warning'
-        )
-    );
+        ]
+    ];
 
-    protected static $unknown_error = array(
+    protected static $unknown_error = [
         'title' => 'Unknown Error',
         'class' => 'error'
-    );
+    ];
 
     /**
      * Generate breadcrumb links to the URL path being displayed
@@ -124,15 +124,15 @@ class DebugView
      */
     public function Breadcrumbs()
     {
-        $basePath = str_replace(Director::protocolAndHost(), '', Director::absoluteBaseURL());
+        $basePath = str_replace(Director::protocolAndHost() ?? '', '', Director::absoluteBaseURL() ?? '');
         $relPath = parse_url(
-            substr($_SERVER['REQUEST_URI'], strlen($basePath), strlen($_SERVER['REQUEST_URI'])),
+            substr($_SERVER['REQUEST_URI'] ?? '', strlen($basePath ?? ''), strlen($_SERVER['REQUEST_URI'] ?? '')),
             PHP_URL_PATH
         );
-        $parts = explode('/', $relPath);
+        $parts = explode('/', $relPath ?? '');
         $base = Director::absoluteBaseURL();
         $pathPart = "";
-        $pathLinks = array();
+        $pathLinks = [];
         foreach ($parts as $part) {
             if ($part != '') {
                 $pathPart .= "$part/";
@@ -222,7 +222,8 @@ class DebugView
         $debugCSS = ModuleResourceLoader::singleton()
             ->resolveURL('silverstripe/framework:client/styles/debug.css');
         $output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';
-        $output .= '<link rel="stylesheet" type="text/css" href="'. $debugCSS .'" />';
+        $output .= '<link rel="stylesheet" type="text/css" href="' . $debugCSS . '" />';
+        $output .= '<meta name="robots" content="noindex">';
         $output .= '</head>';
         $output .= '<body>';
 
@@ -269,16 +270,16 @@ class DebugView
      * @param string $httpRequest the kind of request
      * @param int $errno Codenumber of the error
      * @param string $errstr The error message
-     * @param string $errfile The name of the soruce code file where the error occurred
-     * @param int $errline The line number on which the error occured
+     * @param string $errfile The name of the source code file where the error occurred
+     * @param int $errline The line number on which the error occurred
      * @return string
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
         $errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
-        $httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
+        $httpRequestEnt = htmlentities($httpRequest ?? '', ENT_COMPAT, 'UTF-8');
         if (ini_get('html_errors')) {
-            $errstr = strip_tags($errstr);
+            $errstr = strip_tags($errstr ?? '');
         } else {
             $errstr = Convert::raw2xml($errstr);
         }
@@ -303,7 +304,7 @@ class DebugView
         $output = '<div class="info"><h3>Source</h3>';
         $output .= '<pre>';
         foreach ($lines as $offset => $line) {
-            $line = htmlentities($line, ENT_COMPAT, 'UTF-8');
+            $line = htmlentities($line ?? '', ENT_COMPAT, 'UTF-8');
             if ($offset == $errline) {
                 $output .= "<span>$offset</span> <span class=\"error\">$line</span>";
             } else {
@@ -350,7 +351,7 @@ class DebugView
      */
     protected function formatCaller($caller)
     {
-        $return = basename($caller['file']) . ":" . $caller['line'];
+        $return = basename($caller['file'] ?? '') . ":" . $caller['line'];
         if (!empty($caller['class']) && !empty($caller['function'])) {
             $return .= " - {$caller['class']}::{$caller['function']}()";
         }
@@ -367,9 +368,9 @@ class DebugView
     public function renderVariable($val, $caller)
     {
         $output = '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
-        $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller). " - </span>\n";
+        $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller) . " - </span>\n";
         if (is_string($val)) {
-            $output .= wordwrap($val, self::config()->columns);
+            $output .= wordwrap($val ?? '', self::config()->columns ?? 0);
         } else {
             $output .= var_export($val, true);
         }
@@ -382,11 +383,11 @@ class DebugView
     {
         $header = '';
         if ($showHeader) {
-            $file = basename($caller['file']);
+            $file = basename($caller['file'] ?? '');
             $line = $caller['line'];
             $header .= "<b>Debug (line {$line} of {$file}):</b>\n";
         }
-        return "<p class=\"message warning\">\n" . $header . Convert::raw2xml($message) . "</p>\n";
+        return "<p class=\"alert alert-warning\">\n" . $header . Convert::raw2xml($message) . "</p>\n";
     }
 
     /**
@@ -421,7 +422,7 @@ class DebugView
     public function debugVariableText($val)
     {
         // Check debug
-        if (ClassInfo::hasMethod($val, 'debug')) {
+        if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
             return $val->debug();
         }
 

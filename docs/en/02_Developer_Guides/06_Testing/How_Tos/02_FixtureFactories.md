@@ -1,4 +1,8 @@
+---
 title: How to use a FixtureFactory
+summary: Provide context to your tests with database fixtures
+icon: industry
+---
 
 # How to use a FixtureFactory
 
@@ -10,40 +14,40 @@ with information that we need.
 
 
 ```php
-    use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Injector\Injector;
 
-    class MyObjectTest extends SapphireTest 
-    {
+class MyObjectTest extends SapphireTest 
+{
 
-        protected $factory;
+    protected $factory;
 
-        function __construct() {
-            parent::__construct();
+    function __construct() {
+        parent::__construct();
 
-            $factory = Injector::inst()->create('FixtureFactory');
+        $factory = Injector::inst()->create('FixtureFactory');
 
-            // Defines a "blueprint" for new objects
-            $factory->define('MyObject', [
-                'MyProperty' => 'My Default Value'
-            ]);
+        // Defines a "blueprint" for new objects
+        $factory->define('MyObject', [
+            'MyProperty' => 'My Default Value'
+        ]);
 
-            $this->factory = $factory;
-        }
-
-        function testSomething() {
-            $MyObjectObj = $this->factory->createObject(
-                'MyObject',
-                ['MyOtherProperty' => 'My Custom Value']
-            );
-
-            echo $MyObjectObj->MyProperty;
-            // returns "My Default Value"
-
-            echo $myPageObj->MyOtherProperty;
-            // returns "My Custom Value"
-        }
+        $this->factory = $factory;
     }
 
+    function testSomething() {
+        $MyObjectObj = $this->factory->createObject(
+            'MyObject',
+            ['MyOtherProperty' => 'My Custom Value']
+        );
+
+        echo $MyObjectObj->MyProperty;
+        // returns "My Default Value"
+
+        echo $MyObjectObj->MyOtherProperty;
+        // returns "My Custom Value"
+    }
+}
 ```
 
 ## Related Documentation

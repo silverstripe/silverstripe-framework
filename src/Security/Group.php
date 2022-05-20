@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -11,13 +12,17 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldGroupDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
@@ -51,43 +56,40 @@ use SilverStripe\ORM\UnsavedRelationList;
 class Group extends DataObject
 {
 
-    private static $db = array(
+    private static $db = [
         "Title" => "Varchar(255)",
         "Description" => "Text",
         "Code" => "Varchar(255)",
         "Locked" => "Boolean",
         "Sort" => "Int",
         "HtmlEditorConfig" => "Text"
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "Parent" => Group::class,
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         "Permissions" => Permission::class,
         "Groups" => Group::class,
-    );
+    ];
 
-    private static $many_many = array(
+    private static $many_many = [
         "Members" => Member::class,
         "Roles" => PermissionRole::class,
-    );
+    ];
 
-    private static $extensions = array(
+    private static $extensions = [
         Hierarchy::class,
-    );
+    ];
 
     private static $table_name = "Group";
 
-    public function populateDefaults()
-    {
-        parent::populateDefaults();
-
-        if (!$this->Title) {
-            $this->Title = _t(__CLASS__.'.NEWGROUP', "New Group");
-        }
-    }
+    private static $indexes = [
+        'Title' => true,
+        'Code' => true,
+        'Sort' => true,
+    ];
 
     public function getAllChildren()
     {
@@ -101,6 +103,16 @@ class Group extends DataObject
         }
 
         return $doSet;
+    }
+
+    private function getDecodedBreadcrumbs()
+    {
+        $list = Group::get()->exclude('ID', $this->ID);
+        $groups = ArrayList::create();
+        foreach ($list as $group) {
+            $groups->push(['ID' => $group->ID, 'Title' => $group->getBreadcrumbs(' » ')]);
+        }
+        return $groups;
     }
 
     /**
@@ -117,18 +129,18 @@ class Group extends DataObject
                 "Root",
                 new Tab(
                     'Members',
-                    _t(__CLASS__.'.MEMBERS', 'Members'),
+                    _t(__CLASS__ . '.MEMBERS', 'Members'),
                     new TextField("Title", $this->fieldLabel('Title')),
                     $parentidfield = DropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+                        $this->getDecodedBreadcrumbs()
                     )->setEmptyString(' '),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),
                 $permissionsTab = new Tab(
                     'Permissions',
-                    _t(__CLASS__.'.PERMISSIONS', 'Permissions'),
+                    _t(__CLASS__ . '.PERMISSIONS', 'Permissions'),
                     $permissionsField = new PermissionCheckboxSetField(
                         'Permissions',
                         false,
@@ -147,22 +159,25 @@ class Group extends DataObject
         if ($this->ID) {
             $group = $this;
             $config = GridFieldConfig_RelationEditor::create();
-            $config->addComponent(new GridFieldButtonRow('after'));
-            $config->addComponents(new GridFieldExportButton('buttons-after-left'));
-            $config->addComponents(new GridFieldPrintButton('buttons-after-left'));
+            $config->addComponent(GridFieldButtonRow::create('after'));
+            $config->addComponents(GridFieldExportButton::create('buttons-after-left'));
+            $config->addComponents(GridFieldPrintButton::create('buttons-after-left'));
+            $config->removeComponentsByType(GridFieldDeleteAction::class);
+            $config->addComponent(GridFieldGroupDeleteAction::create($this->ID), GridFieldPageCount::class);
+
             /** @var GridFieldAddExistingAutocompleter $autocompleter */
             $autocompleter = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
             /** @skipUpgrade */
             $autocompleter
                 ->setResultsFormat('$Title ($Email)')
-                ->setSearchFields(array('FirstName', 'Surname', 'Email'));
+                ->setSearchFields(['FirstName', 'Surname', 'Email']);
             /** @var GridFieldDetailForm $detailForm */
             $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
-                ->setValidator(Member_Validator::create())
                 ->setItemEditFormCallback(function ($form) use ($group) {
                     /** @var Form $form */
                     $record = $form->getRecord();
+                    $form->setValidator($record->getValidator());
                     $groupsField = $form->Fields()->dataFieldByName('DirectGroups');
                     if ($groupsField) {
                         // If new records are created in a group context,
@@ -189,7 +204,7 @@ class Group extends DataObject
         // Only add a dropdown for HTML editor configurations if more than one is available.
         // Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
         $editorConfigMap = HTMLEditorConfig::get_available_configs_map();
-        if (count($editorConfigMap) > 1) {
+        if (count($editorConfigMap ?? []) > 1) {
             $fields->addFieldToTab(
                 'Root.Permissions',
                 new DropdownField(
@@ -211,14 +226,14 @@ class Group extends DataObject
             PermissionRole::get()->count() &&
             class_exists(SecurityAdmin::class)
         ) {
-            $fields->findOrMakeTab('Root.Roles', _t(__CLASS__.'.ROLES', 'Roles'));
+            $fields->findOrMakeTab('Root.Roles', _t(__CLASS__ . '.ROLES', 'Roles'));
             $fields->addFieldToTab(
                 'Root.Roles',
                 new LiteralField(
                     "",
                     "<p>" .
                     _t(
-                        __CLASS__.'.ROLESDESCRIPTION',
+                        __CLASS__ . '.ROLESDESCRIPTION',
                         "Roles are predefined sets of permissions, and can be assigned to groups.<br />"
                         . "They are inherited from parent groups if required."
                     ) . '<br />' .
@@ -226,7 +241,7 @@ class Group extends DataObject
                         '<a href="%s" class="add-role">%s</a>',
                         SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
                         // TODO This should include #Root_Roles to switch directly to the tab,
-                        // but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
+                        // but tabstrip.js doesn't display tabs when directly addressed through a URL pragma
                         _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"
@@ -251,8 +266,8 @@ class Group extends DataObject
                 $groupRoleIDs = $groupRoles->column('ID') + $inheritedRoles->column('ID');
                 $inheritedRoleIDs = $inheritedRoles->column('ID');
             } else {
-                $groupRoleIDs = array();
-                $inheritedRoleIDs = array();
+                $groupRoleIDs = [];
+                $inheritedRoleIDs = [];
             }
 
             $rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
@@ -280,7 +295,7 @@ class Group extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Title'] = _t(__CLASS__.'.GROUPNAME', 'Group name');
+        $labels['Title'] = _t(__CLASS__ . '.GROUPNAME', 'Group name');
         $labels['Description'] = _t('SilverStripe\\Security\\Group.Description', 'Description');
         $labels['Code'] = _t('SilverStripe\\Security\\Group.Code', 'Group Code', 'Programmatical code identifying a group');
         $labels['Locked'] = _t('SilverStripe\\Security\\Group.Locked', 'Locked?', 'Group is locked in the security administration area');
@@ -299,7 +314,7 @@ class Group extends DataObject
      * including all members which are "inherited" from children groups of this record.
      * See {@link DirectMembers()} for retrieving members without any inheritance.
      *
-     * @param String $filter
+     * @param string $filter
      * @return ManyManyList
      */
     public function Members($filter = '')
@@ -321,11 +336,12 @@ class Group extends DataObject
                 $query->removeFilterOn('Group_Members');
             });
         }
-        // Now set all children groups as a new foreign key
-        $groups = Group::get()->byIDs($this->collateFamilyIDs());
-        $result = $result->forForeignID($groups->column('ID'))->where($filter);
 
-        return $result;
+        // Now set all children groups as a new foreign key
+        $familyIDs = $this->collateFamilyIDs();
+        $result = $result->forForeignID($familyIDs);
+
+        return $result->where($filter);
     }
 
     /**
@@ -348,8 +364,8 @@ class Group extends DataObject
             throw new \InvalidArgumentException("Cannot call collateFamilyIDs on unsaved Group.");
         }
 
-        $familyIDs = array();
-        $chunkToAdd = array($this->ID);
+        $familyIDs = [];
+        $chunkToAdd = [$this->ID];
 
         while ($chunkToAdd) {
             $familyIDs = array_merge($familyIDs, $chunkToAdd);
@@ -386,7 +402,7 @@ class Group extends DataObject
      */
     public function inGroup($group)
     {
-        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs());
+        return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs() ?? []);
     }
 
     /**
@@ -411,9 +427,9 @@ class Group extends DataObject
         if (empty($candidateIDs)) {
             return false;
         }
-        $matches = array_intersect($candidateIDs, $ancestorIDs);
+        $matches = array_intersect($candidateIDs ?? [], $ancestorIDs);
         if ($requireAll) {
-            return count($candidateIDs) === count($matches);
+            return count($candidateIDs ?? []) === count($matches ?? []);
         }
         return !empty($matches);
     }
@@ -437,7 +453,7 @@ class Group extends DataObject
     }
 
     /**
-     * This isn't a decendant of SiteTree, but needs this in case
+     * This isn't a descendant of SiteTree, but needs this in case
      * the group is "reorganised";
      */
     public function cmsCleanup_parentChanged()
@@ -460,7 +476,7 @@ class Group extends DataObject
      */
     public function getTreeTitle()
     {
-        $title = htmlspecialchars($this->Title, ENT_QUOTES);
+        $title = htmlspecialchars($this->Title ?? '', ENT_QUOTES);
         $this->extend('updateTreeTitle', $title);
         return $title;
     }
@@ -468,11 +484,20 @@ class Group extends DataObject
     /**
      * Overloaded to ensure the code is always descent.
      *
-     * @param string
+     * @param string $val
      */
     public function setCode($val)
     {
-        $this->setField("Code", Convert::raw2url($val));
+        $currentGroups = Group::get()
+            ->map('Code', 'Title')
+            ->toArray();
+        $code = Convert::raw2url($val);
+        $count = 2;
+        while (isset($currentGroups[$code])) {
+            $code = Convert::raw2url($val . '-' . $count);
+            $count++;
+        }
+        $this->setField("Code", $code);
     }
 
     public function validate()
@@ -487,7 +512,7 @@ class Group extends DataObject
                 ->filter('GroupID', $this->Parent()->collateAncestorIDs())
                 ->column('Code');
             $privilegedCodes = Permission::config()->get('privileged_permissions');
-            if (array_intersect($inheritedCodes, $privilegedCodes)) {
+            if (array_intersect($inheritedCodes ?? [], $privilegedCodes)) {
                 $result->addError(
                     _t(
                         'SilverStripe\\Security\\Group.HierarchyPermsError',
@@ -498,7 +523,43 @@ class Group extends DataObject
             }
         }
 
+        $currentGroups = Group::get()
+            ->filter('ID:not', $this->ID)
+            ->map('Code', 'Title')
+            ->toArray();
+
+        if (isset($currentGroups[$this->Code])) {
+            $result->addError(
+                _t(
+                    'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
+                    'A Group ({group}) already exists with the same {identifier}',
+                    ['group' => $this->Code, 'identifier' => 'Code']
+                )
+            );
+        }
+
+        if (in_array($this->Title, $currentGroups ?? [])) {
+            $result->addError(
+                _t(
+                    'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
+                    'A Group ({group}) already exists with the same {identifier}',
+                    ['group' => $this->Title, 'identifier' => 'Title']
+                )
+            );
+        }
+
         return $result;
+    }
+
+    public function getCMSCompositeValidator(): CompositeValidator
+    {
+        $validator = parent::getCMSCompositeValidator();
+
+        $validator->addValidator(RequiredFields::create([
+            'Title'
+        ]));
+
+        return $validator;
     }
 
     public function onBeforeWrite()
@@ -508,7 +569,7 @@ class Group extends DataObject
         // Only set code property when the group has a custom title, and no code exists.
         // The "Code" attribute is usually treated as a more permanent identifier than database IDs
         // in custom application logic, so can't be changed after its first set.
-        if (!$this->Code && $this->Title != _t(__CLASS__.'.NEWGROUP', "New Group")) {
+        if (!$this->Code && $this->Title != _t(__CLASS__ . '.NEWGROUP', "New Group")) {
             $this->setCode($this->Title);
         }
     }
@@ -556,7 +617,7 @@ class Group extends DataObject
                 // without this check, a user would be able to add himself to an administrators group
                 // with just access to the "Security" admin interface
                 Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") &&
-                !Permission::get()->filter(array('GroupID' => $this->ID, 'Code' => 'ADMIN'))->exists()
+                !Permission::get()->filter(['GroupID' => $this->ID, 'Code' => 'ADMIN'])->exists()
             )
         ) {
             return true;
@@ -613,6 +674,8 @@ class Group extends DataObject
     /**
      * Returns all of the children for the CMS Tree.
      * Filters to only those groups that the current user can edit
+     *
+     * @return ArrayList
      */
     public function AllChildrenIncludingDeleted()
     {
@@ -622,6 +685,7 @@ class Group extends DataObject
 
         if ($children) {
             foreach ($children as $child) {
+                /** @var DataObject $child */
                 if ($child->canView()) {
                     $filteredChildren->push($child);
                 }

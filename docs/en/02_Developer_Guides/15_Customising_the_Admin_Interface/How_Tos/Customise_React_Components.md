@@ -1,3 +1,7 @@
+---
+title: Customising React components
+summary: Learn how to use Injector to override React-rendered form fields
+---
 # Customising React Components
 
 In this tutorial, we'll customise some form elements rendered with React to have some new features.
@@ -7,7 +11,7 @@ In this tutorial, we'll customise some form elements rendered with React to have
 Let's add a character count to the `TextField` component. `TextField` is a built-in component in the admin area. Because the `TextField` component is fetched 
 through Injector, we can override it and augment it with our own functionality.
 
-First, let's create our [higher order component](../07_ReactJS_Redux_and_GraphQL.md#customising-react-components-with-injector).
+First, let's create our [higher order component](../reactjs_redux_and_graphql#customising-react-components-with-injector).
 
 __my-module/js/components/CharacterCounter.js__
 ```js
@@ -25,7 +29,7 @@ const CharacterCounter = (TextField) => (props) => {
 export default CharacterCounter;
 ```
 
-Now let's add this higher order component to []Injector](../07_ReactJS_Redux_and_GraphQL.md#the-injector-api). 
+Now let's add this higher order component to [Injector](../reactjs_redux_and_graphql#the-injector-api). 
 
 __my-module/js/main.js__
 ```js
@@ -37,19 +41,19 @@ Injector.transform('character-count-transform', (updater) => {
 });
 ```
 
-The last thing we'll have to do is [transpile our code](../06_Javascript_Development.md#es6-and-build-tools) and load the resulting bundle file
+The last thing we'll have to do is [transpile our code](../javascript_development#es6-and-build-tools) and load the resulting bundle file
 into the admin page.
 
 __my-module/\_config/config.yml__
 
 ```yaml
-    ---
-    Name: my-module
-    ---
-    SilverStripe\Admin\LeftAndMain:
-      extra_requirements_javascript:
-        # The name of this file will depend on how you've configured your build process
-        - 'my-module/js/dist/main.bundle.js'
+---
+Name: my-module
+---
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    # The name of this file will depend on how you've configured your build process
+    - 'my-module/js/dist/main.bundle.js'
 ```
 Now that the customisation is applied, our text fields look like this:
 
@@ -61,6 +65,7 @@ Let's add another customisation to TextField. If the text goes beyond a specifie
 length, let's throw a warning in the UI.
 
 __my-module/js/components/TextLengthChecker.js__
+
 ```js
 const TextLengthCheker = (TextField) => (props) => {  
   const {limit, value } = props;
@@ -86,6 +91,7 @@ For the purposes of demonstration, let's imagine this customisation comes from a
 module.
 
 __my-module/js/main.js__
+
 ```js
 import Injector from 'lib/Injector';
 import TextLengthChecker from './components/TextLengthChecker';

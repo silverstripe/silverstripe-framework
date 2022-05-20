@@ -11,25 +11,25 @@ class Company extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Company';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Industry' => 'Varchar',
         'AnnualProfit' => 'Int'
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Industry'
-    );
+    ];
 
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Name' => 'PartialMatchFilter',
-        'Industry' => array(
+        'Industry' => [
             'field' => TextareaField::class
-        ),
-        'AnnualProfit' => array(
+        ],
+        'AnnualProfit' => [
             'field' => NumericField::class,
             'filter' => 'PartialMatchFilter',
             'title' => 'The Almighty Annual Profit'
-        )
-    );
+        ]
+    ];
 }

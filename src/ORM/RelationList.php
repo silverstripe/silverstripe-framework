@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use Exception;
+use Sminnee\CallbackList\CallbackList;
 
 /**
  * A DataList that represents a relation.
@@ -11,6 +12,79 @@ use Exception;
  */
 abstract class RelationList extends DataList implements Relation
 {
+    /**
+     * @var CallbackList|null
+     */
+    protected $addCallbacks;
+
+    /**
+     * @var CallbackList|null
+     */
+    protected $removeCallbacks;
+
+    /**
+     * Manage callbacks which are called after the add() action is completed.
+     * Each callback will be passed (RelationList $this, DataObject|int $item, array $extraFields).
+     * If a relation methods is manually defined, this can be called to adjust the behaviour
+     * when adding records to this list.
+     *
+     * Needs to be defined through an overloaded relationship getter
+     * to ensure it is set consistently. These getters return a new object
+     * every time they're called.
+     *
+     * Note that subclasses of RelationList must implement the callback for it to function
+     *
+     * @return this
+     */
+    public function addCallbacks(): CallbackList
+    {
+        if (!$this->addCallbacks) {
+            $this->addCallbacks = new CallbackList();
+        }
+
+        return $this->addCallbacks;
+    }
+
+    /**
+     * Manage callbacks which are called after the remove() action is completed.
+     * Each Callback will be passed (RelationList $this, [int] $removedIds).
+     *
+     * Needs to be defined through an overloaded relationship getter
+     * to ensure it is set consistently. These getters return a new object
+     * every time they're called. Example:
+     *
+     * ```php
+     * class MyObject extends DataObject()
+     * {
+     *   private static $many_many = [
+     *     'MyRelationship' => '...',
+     *   ];
+     *   public function MyRelationship()
+     *   {
+     *     $list = $this->getManyManyComponents('MyRelationship');
+     *     $list->removeCallbacks()->add(function ($removedIds) {
+     *       // ...
+     *     });
+     *     return $list;
+     *   }
+     * }
+     * ```
+     *
+     * If a relation methods is manually defined, this can be called to adjust the behaviour
+     * when adding records to this list.
+     *
+     * Subclasses of RelationList must implement the callback for it to function
+     *
+     * @return this
+     */
+    public function removeCallbacks(): CallbackList
+    {
+        if (!$this->removeCallbacks) {
+            $this->removeCallbacks = new CallbackList();
+        }
+
+        return $this->removeCallbacks;
+    }
 
     /**
      * Any number of foreign keys to apply to this list
@@ -28,8 +102,8 @@ abstract class RelationList extends DataList implements Relation
 
         // Remove `Foreign.` query parameters for created objects,
         // as this would interfere with relations on those objects.
-        foreach (array_keys($params) as $key) {
-            if (stripos($key, 'Foreign.') === 0) {
+        foreach (array_keys($params ?? []) as $key) {
+            if (stripos($key ?? '', 'Foreign.') === 0) {
                 unset($params[$key]);
             }
         }
@@ -48,7 +122,7 @@ abstract class RelationList extends DataList implements Relation
     public function forForeignID($id)
     {
         // Turn a 1-element array into a simple value
-        if (is_array($id) && sizeof($id) == 1) {
+        if (is_array($id) && sizeof($id ?? []) == 1) {
             $id = reset($id);
         }
 
@@ -62,7 +136,7 @@ abstract class RelationList extends DataList implements Relation
                 try {
                     $query->removeFilterOn($currentFilter);
                 } catch (Exception $e) {
-/* NOP */
+                    /* NOP */
                 }
             }
 

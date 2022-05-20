@@ -9,7 +9,7 @@ use SilverStripe\ORM\Tests\DataExtensionTest\RelatedObject;
 class Faves extends DataExtension implements TestOnly
 {
 
-    private static $many_many = array(
+    private static $many_many = [
         'Faves' => RelatedObject::class
-    );
+    ];
 }

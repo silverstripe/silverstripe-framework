@@ -14,9 +14,11 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBField;
 
 class Requirements_Backend
 {
@@ -55,7 +57,7 @@ class Requirements_Backend
      *
      * @var array
      */
-    protected $javascript = array();
+    protected $javascript = [];
 
     /**
      * Map of included scripts to array of contained files.
@@ -63,36 +65,36 @@ class Requirements_Backend
      *
      * @var array Map of providing filepath => array(provided filepaths)
      */
-    protected $providedJavascript = array();
+    protected $providedJavascript = [];
 
     /**
      * Paths to all required CSS files relative to the docroot.
      *
      * @var array
      */
-    protected $css = array();
+    protected $css = [];
 
     /**
      * All custom javascript code that is inserted into the page's HTML
      *
      * @var array
      */
-    protected $customScript = array();
+    protected $customScript = [];
 
     /**
-     * All custom CSS rules which are inserted directly at the bottom of the HTML <head> tag
+     * All custom CSS rules which are inserted directly at the bottom of the HTML `<head>` tag
      *
      * @var array
      */
-    protected $customCSS = array();
+    protected $customCSS = [];
 
     /**
-     * All custom HTML markup which is added before the closing <head> tag, e.g. additional
+     * All custom HTML markup which is added before the closing `<head>` tag, e.g. additional
      * metatags.
      *
      * @var array
      */
-    protected $customHeadTags = array();
+    protected $customHeadTags = [];
 
     /**
      * Remembers the file paths or uniquenessIDs of all Requirements cleared through
@@ -100,7 +102,7 @@ class Requirements_Backend
      *
      * @var array
      */
-    protected $disabled = array();
+    protected $disabled = [];
 
     /**
      * The file paths (relative to docroot) or uniquenessIDs of any included requirements which
@@ -112,7 +114,7 @@ class Requirements_Backend
      *
      * @var array
      */
-    protected $blocked = array();
+    protected $blocked = [];
 
     /**
      * A list of combined files registered via {@link combine_files()}. Keys are the output file
@@ -120,7 +122,7 @@ class Requirements_Backend
      *
      * @var array
      */
-    protected $combinedFiles = array();
+    protected $combinedFiles = [];
 
     /**
      * Use the injected minification service to minify any javascript file passed to {@link combine_files()}.
@@ -146,8 +148,8 @@ class Requirements_Backend
     protected $combinedFilesFolder = null;
 
     /**
-     * Put all JavaScript includes at the bottom of the template before the closing <body> tag,
-     * rather than the default behaviour of placing them at the end of the <head> tag. This means
+     * Put all JavaScript includes at the bottom of the template before the closing `<body>` tag,
+     * rather than the default behaviour of placing them at the end of the `<head>` tag. This means
      * script downloads won't block other HTTP requests, which can be a performance improvement.
      *
      * @var bool
@@ -221,7 +223,7 @@ class Requirements_Backend
     /**
      * Gets the minification service for this backend
      *
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @return Requirements_Minifier
      */
     public function getMinifier()
@@ -304,7 +306,7 @@ class Requirements_Backend
      * filemtime. This has the benefit of allowing the browser to cache the URL infinitely,
      * while automatically busting this cache every time the file is changed.
      *
-     * @param bool
+     * @param bool $var
      */
     public function setSuffixRequirements($var)
     {
@@ -325,7 +327,7 @@ class Requirements_Backend
      * Set whether you want to write the JS to the body of the page rather than at the end of the
      * head tag.
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setWriteJavascriptToBody($var)
@@ -348,7 +350,7 @@ class Requirements_Backend
     /**
      * Forces the JavaScript requirements to the end of the body, right before the closing tag
      *
-     * @param bool
+     * @param bool $var
      * @return $this
      */
     public function setForceJSToBottom($var)
@@ -398,8 +400,10 @@ class Requirements_Backend
      * - 'async' : Boolean value to set async attribute to script tag
      * - 'defer' : Boolean value to set defer attribute to script tag
      * - 'type' : Override script type= value.
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function javascript($file, $options = array())
+    public function javascript($file, $options = [])
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
@@ -414,30 +418,35 @@ class Requirements_Backend
 
         // make sure that async/defer is set if it is set once even if file is included multiple times
         $async = (
-            isset($options['async']) && isset($options['async']) == true
+            isset($options['async']) && $options['async']
             || (
                 isset($this->javascript[$file])
                 && isset($this->javascript[$file]['async'])
-                && $this->javascript[$file]['async'] == true
+                && $this->javascript[$file]['async']
             )
         );
         $defer = (
-            isset($options['defer']) && isset($options['defer']) == true
+            isset($options['defer']) && $options['defer']
             || (
                 isset($this->javascript[$file])
                 && isset($this->javascript[$file]['defer'])
-                && $this->javascript[$file]['defer'] == true
+                && $this->javascript[$file]['defer']
             )
         );
-        $this->javascript[$file] = array(
+        $integrity = $options['integrity'] ?? null;
+        $crossorigin = $options['crossorigin'] ?? null;
+
+        $this->javascript[$file] = [
             'async' => $async,
             'defer' => $defer,
             'type' => $type,
-        );
+            'integrity' => $integrity,
+            'crossorigin' => $crossorigin,
+        ];
 
         // Record scripts included in this file
         if (isset($options['provides'])) {
-            $this->providedJavascript[$file] = array_values($options['provides']);
+            $this->providedJavascript[$file] = array_values($options['provides'] ?? []);
         }
     }
 
@@ -469,8 +478,8 @@ class Requirements_Backend
      */
     public function getProvidedScripts()
     {
-        $providedScripts = array();
-        $includedScripts = array();
+        $providedScripts = [];
+        $includedScripts = [];
         foreach ($this->javascript as $script => $options) {
             // Ignore scripts that are explicitly blocked
             if (isset($this->blocked[$script])) {
@@ -501,7 +510,7 @@ class Requirements_Backend
     public function getJavascript()
     {
         return array_diff_key(
-            $this->javascript,
+            $this->javascript ?? [],
             $this->getBlocked(),
             $this->getProvidedScripts()
         );
@@ -520,7 +529,7 @@ class Requirements_Backend
     /**
      * Register the given JavaScript code into the list of requirements
      *
-     * @param string $script The script content as a string (without enclosing <script> tag)
+     * @param string $script The script content as a string (without enclosing `<script>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public function customScript($script, $uniquenessID = null)
@@ -539,13 +548,13 @@ class Requirements_Backend
      */
     public function getCustomScripts()
     {
-        return array_diff_key($this->customScript, $this->blocked);
+        return array_diff_key($this->customScript ?? [], $this->blocked);
     }
 
     /**
      * Register the given CSS styles into the list of requirements
      *
-     * @param string $script CSS selectors as a string (without enclosing <style> tag)
+     * @param string $script CSS selectors as a string (without enclosing `<style>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
     public function customCSS($script, $uniquenessID = null)
@@ -564,11 +573,11 @@ class Requirements_Backend
      */
     public function getCustomCSS()
     {
-        return array_diff_key($this->customCSS, $this->blocked);
+        return array_diff_key($this->customCSS ?? [], $this->blocked);
     }
 
     /**
-     * Add the following custom HTML code to the <head> section of the page
+     * Add the following custom HTML code to the `<head>` section of the page
      *
      * @param string $html Custom HTML code
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
@@ -589,7 +598,7 @@ class Requirements_Backend
      */
     public function getCustomHeadTags()
     {
-        return array_diff_key($this->customHeadTags, $this->blocked);
+        return array_diff_key($this->customHeadTags ?? [], $this->blocked);
     }
 
     /**
@@ -602,18 +611,24 @@ class Requirements_Backend
      */
     public function javascriptTemplate($file, $vars, $uniquenessID = null)
     {
-        $script = file_get_contents(Director::getAbsFile($file));
-        $search = array();
-        $replace = array();
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
+        $absolutePath = Director::getAbsFile($file);
+        if (!file_exists($absolutePath ?? '')) {
+            throw new InvalidArgumentException("Javascript template file {$file} does not exist");
+        }
+
+        $script = file_get_contents($absolutePath ?? '');
+        $search = [];
+        $replace = [];
 
         if ($vars) {
             foreach ($vars as $k => $v) {
                 $search[] = '$' . $k;
-                $replace[] = str_replace("\\'", "'", Convert::raw2js($v));
+                $replace[] = str_replace("\\'", "'", Convert::raw2js($v) ?? '');
             }
         }
 
-        $script = str_replace($search, $replace, $script);
+        $script = str_replace($search ?? '', $replace ?? '', $script ?? '');
         $this->customScript($script, $uniquenessID);
     }
 
@@ -623,14 +638,22 @@ class Requirements_Backend
      * @param string $file The CSS file to load, relative to site root
      * @param string $media Comma-separated list of media types to use in the link tag
      *                      (e.g. 'screen,projector')
+     * @param array $options List of options. Available options include:
+     * - 'integrity' : SubResource Integrity hash
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function css($file, $media = null)
+    public function css($file, $media = null, $options = [])
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
-        $this->css[$file] = array(
-            "media" => $media
-        );
+        $integrity = $options['integrity'] ?? null;
+        $crossorigin = $options['crossorigin'] ?? null;
+
+        $this->css[$file] = [
+            "media" => $media,
+            "integrity" => $integrity,
+            "crossorigin" => $crossorigin,
+        ];
     }
 
     /**
@@ -650,7 +673,7 @@ class Requirements_Backend
      */
     public function getCSS()
     {
-        return array_diff_key($this->css, $this->blocked);
+        return array_diff_key($this->css ?? [], $this->blocked);
     }
 
     /**
@@ -733,10 +756,14 @@ class Requirements_Backend
      * Note that blocking should be used sparingly because it's hard to trace where an file is
      * being blocked from.
      *
-     * @param string|int $fileOrID
+     * @param string|int $fileOrID Relative path from webroot, module resource reference or
+     *                             requirement API ID
      */
     public function block($fileOrID)
     {
+        if (is_string($fileOrID)) {
+            $fileOrID = ModuleResourceLoader::singleton()->resolvePath($fileOrID);
+        }
         $this->blocked[$fileOrID] = $fileOrID;
     }
 
@@ -755,7 +782,7 @@ class Requirements_Backend
      */
     public function unblockAll()
     {
-        $this->blocked = array();
+        $this->blocked = [];
     }
 
     /**
@@ -778,7 +805,7 @@ class Requirements_Backend
         }
 
         // Skip if content isn't injectable, or there is nothing to inject
-        $tagsAvailable = preg_match('#</head\b#', $content);
+        $tagsAvailable = preg_match('#</head\b#', $content ?? '');
         $hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
         if (!$tagsAvailable || !$hasFiles) {
             return $content;
@@ -801,6 +828,12 @@ class Requirements_Backend
             }
             if (!empty($attributes['defer'])) {
                 $htmlAttributes['defer'] = 'defer';
+            }
+            if (!empty($attributes['integrity'])) {
+                $htmlAttributes['integrity'] = $attributes['integrity'];
+            }
+            if (!empty($attributes['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $attributes['crossorigin'];
             }
             $jsRequirements .= HTML::createTag('script', $htmlAttributes);
             $jsRequirements .= "\n";
@@ -825,6 +858,12 @@ class Requirements_Backend
             ];
             if (!empty($params['media'])) {
                 $htmlAttributes['media'] = $params['media'];
+            }
+            if (!empty($params['integrity'])) {
+                $htmlAttributes['integrity'] = $params['integrity'];
+            }
+            if (!empty($params['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $params['crossorigin'];
             }
             $requirements .= HTML::createTag('link', $htmlAttributes);
             $requirements .= "\n";
@@ -856,9 +895,9 @@ class Requirements_Backend
 
     /**
      * Given a block of HTML, insert the given scripts at the bottom before
-     * the closing </body> tag
+     * the closing `</body>` tag
      *
-     * @param string $jsRequirements String containing one or more javascript <script /> tags
+     * @param string $jsRequirements String containing one or more javascript `<script />` tags
      * @param string $content HTML body
      * @return string Merged HTML
      */
@@ -869,15 +908,15 @@ class Requirements_Backend
         $content = preg_replace(
             '/(<\/body[^>]*>)/i',
             $this->escapeReplacement($jsRequirements) . '\\1',
-            $content
+            $content ?? ''
         );
         return $content;
     }
 
     /**
-     * Given a block of HTML, insert the given scripts inside the <body></body>
+     * Given a block of HTML, insert the given scripts inside the `<body></body>`
      *
-     * @param string $jsRequirements String containing one or more javascript <script /> tags
+     * @param string $jsRequirements String containing one or more javascript `<script />` tags
      * @param string $content HTML body
      * @return string Merged HTML
      */
@@ -885,24 +924,24 @@ class Requirements_Backend
     {
         // If your template already has script tags in the body, then we try to put our script
         // tags just before those. Otherwise, we put it at the bottom.
-        $bodyTagPosition = stripos($content, '<body');
-        $scriptTagPosition = stripos($content, '<script', $bodyTagPosition);
+        $bodyTagPosition = stripos($content ?? '', '<body');
+        $scriptTagPosition = stripos($content ?? '', '<script', $bodyTagPosition ?? 0);
 
-        $commentTags = array();
+        $commentTags = [];
         $canWriteToBody = ($scriptTagPosition !== false)
             &&
             // Check that the script tag is not inside a html comment tag
             !(
-                preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $scriptTagPosition)
+                preg_match('/.*(?|(<!--)|(-->))/U', $content ?? '', $commentTags, 0, $scriptTagPosition ?? 0)
                 &&
                 $commentTags[1] == '-->'
             );
 
         if ($canWriteToBody) {
             // Insert content before existing script tags
-            $content = substr($content, 0, $scriptTagPosition)
+            $content = substr($content ?? '', 0, $scriptTagPosition)
                 . $jsRequirements
-                . substr($content, $scriptTagPosition);
+                . substr($content ?? '', $scriptTagPosition ?? 0);
         } else {
             // Insert content at bottom of page otherwise
             $content = $this->insertScriptsAtBottom($jsRequirements, $content);
@@ -912,7 +951,7 @@ class Requirements_Backend
     }
 
     /**
-     * Given a block of HTML, insert the given code inside the <head></head> block
+     * Given a block of HTML, insert the given code inside the `<head></head>` block
      *
      * @param string $jsRequirements String containing one or more html tags
      * @param string $content HTML body
@@ -923,7 +962,7 @@ class Requirements_Backend
         $content = preg_replace(
             '/(<\/head>)/i',
             $this->escapeReplacement($jsRequirements) . '\\1',
-            $content
+            $content ?? ''
         );
         return $content;
     }
@@ -936,7 +975,7 @@ class Requirements_Backend
      */
     protected function escapeReplacement($replacement)
     {
-        return addcslashes($replacement, '\\$');
+        return addcslashes($replacement ?? '', '\\$');
     }
 
     /**
@@ -948,29 +987,29 @@ class Requirements_Backend
     public function includeInResponse(HTTPResponse $response)
     {
         $this->processCombinedFiles();
-        $jsRequirements = array();
-        $cssRequirements = array();
+        $jsRequirements = [];
+        $cssRequirements = [];
 
         foreach ($this->getJavascript() as $file => $attributes) {
             $path = $this->pathForFile($file);
             if ($path) {
-                $jsRequirements[] = str_replace(',', '%2C', $path);
+                $jsRequirements[] = str_replace(',', '%2C', $path ?? '');
             }
         }
 
-        if (count($jsRequirements)) {
+        if (count($jsRequirements ?? [])) {
             $response->addHeader('X-Include-JS', implode(',', $jsRequirements));
         }
 
         foreach ($this->getCSS() as $file => $params) {
             $path = $this->pathForFile($file);
             if ($path) {
-                $path = str_replace(',', '%2C', $path);
+                $path = str_replace(',', '%2C', $path ?? '');
                 $cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
             }
         }
 
-        if (count($cssRequirements)) {
+        if (count($cssRequirements ?? [])) {
             $response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
         }
     }
@@ -991,35 +1030,41 @@ class Requirements_Backend
     {
         $langDir = ModuleResourceLoader::singleton()->resolvePath($langDir);
 
-        $files = array();
-        $base = Director::baseFolder() . '/';
+        $files = [];
+        $candidates = [
+            'en',
+            'en_US',
+            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')),
+            i18n::config()->get('default_locale'),
+            i18n::getData()->langFromLocale(i18n::get_locale()),
+            i18n::get_locale(),
+            strtolower(DBField::create_field('Locale', i18n::get_locale())->RFC1766() ?? ''),
+            strtolower(DBField::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766() ?? '')
+        ];
 
-        if (substr($langDir, -1) != '/') {
-            $langDir .= '/';
-        }
-
-        $candidates = array(
-            'en.js',
-            'en_US.js',
-            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')) . '.js',
-            i18n::config()->get('default_locale') . '.js',
-            i18n::getData()->langFromLocale(i18n::get_locale()) . '.js',
-            i18n::get_locale() . '.js',
+        $candidates = array_map(
+            function ($candidate) {
+                return $candidate . '.js';
+            },
+            $candidates ?? []
         );
+
         foreach ($candidates as $candidate) {
-            if (file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
-                $files[] = $langDir . $candidate;
+            $relativePath = Path::join($langDir, $candidate);
+            $absolutePath = Director::getAbsFile($relativePath);
+            if (file_exists($absolutePath ?? '')) {
+                $files[] = $relativePath;
             }
         }
 
         if ($return) {
             return $files;
-        } else {
-            foreach ($files as $file) {
-                $this->javascript($file);
-            }
-            return null;
         }
+
+        foreach ($files as $file) {
+            $this->javascript($file);
+        }
+        return null;
     }
 
     /**
@@ -1031,7 +1076,7 @@ class Requirements_Backend
     protected function pathForFile($fileOrUrl)
     {
         // Since combined urls could be root relative, treat them as urls here.
-        if (preg_match('{^(//)|(http[s]?:)}', $fileOrUrl) || Director::is_root_relative_url($fileOrUrl)) {
+        if (preg_match('{^(//)|(http[s]?:)}', $fileOrUrl ?? '') || Director::is_root_relative_url($fileOrUrl)) {
             return $fileOrUrl;
         } else {
             return Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($fileOrUrl);
@@ -1091,11 +1136,11 @@ class Requirements_Backend
      * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
      * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
      */
-    public function combineFiles($combinedFileName, $files, $options = array())
+    public function combineFiles($combinedFileName, $files, $options = [])
     {
         if (is_string($options)) {
             Deprecation::notice('4.0', 'Parameter media is deprecated. Use options array instead.');
-            $options = array('media' => $options);
+            $options = ['media' => $options];
         }
         // Skip this combined files if already included
         if (isset($this->combinedFiles[$combinedFileName])) {
@@ -1103,7 +1148,7 @@ class Requirements_Backend
         }
 
         // Add all files to necessary type list
-        $paths = array();
+        $paths = [];
         $combinedType = null;
         foreach ($files as $file) {
             // Get file details
@@ -1118,7 +1163,7 @@ class Requirements_Backend
             }
             switch ($type) {
                 case 'css':
-                    $this->css($path, (isset($options['media']) ? $options['media'] : null));
+                    $this->css($path, (isset($options['media']) ? $options['media'] : null), $options);
                     break;
                 case 'js':
                     $this->javascript($path, $options);
@@ -1133,7 +1178,7 @@ class Requirements_Backend
         // Duplicate check
         foreach ($this->combinedFiles as $existingCombinedFilename => $combinedItem) {
             $existingFiles = $combinedItem['files'];
-            $duplicates = array_intersect($existingFiles, $paths);
+            $duplicates = array_intersect($existingFiles ?? [], $paths);
             if ($duplicates) {
                 throw new InvalidArgumentException(sprintf(
                     "Requirements_Backend::combine_files(): Already included file(s) %s in combined file '%s'",
@@ -1143,11 +1188,11 @@ class Requirements_Backend
             }
         }
 
-        $this->combinedFiles[$combinedFileName] = array(
+        $this->combinedFiles[$combinedFileName] = [
             'files' => $paths,
             'type' => $combinedType,
             'options' => $options,
-        );
+        ];
     }
 
     /**
@@ -1160,7 +1205,7 @@ class Requirements_Backend
     {
         // Array with path and type keys
         if (is_array($file) && isset($file['path']) && isset($file['type'])) {
-            return array($file['path'], $file['type']);
+            return [$file['path'], $file['type']];
         }
 
         // Extract value from indexed array
@@ -1170,7 +1215,7 @@ class Requirements_Backend
             // See if there's a type specifier
             if ($file) {
                 $type = array_shift($file);
-                return array($path, $type);
+                return [$path, $type];
             }
 
             // Otherwise convent to string
@@ -1178,7 +1223,7 @@ class Requirements_Backend
         }
 
         $type = File::get_file_extension($file);
-        return array($file, $type);
+        return [$file, $type];
     }
 
     /**
@@ -1190,7 +1235,7 @@ class Requirements_Backend
      */
     public function getCombinedFiles()
     {
-        return array_diff_key($this->combinedFiles, $this->blocked);
+        return array_diff_key($this->combinedFiles ?? [], $this->blocked);
     }
 
     /**
@@ -1219,7 +1264,7 @@ class Requirements_Backend
      */
     public function clearCombinedFiles()
     {
-        $this->combinedFiles = array();
+        $this->combinedFiles = [];
     }
 
     /**
@@ -1246,7 +1291,7 @@ class Requirements_Backend
             if (!isset($this->blocked[$combinedFile])) {
                 // Filter files for blocked / provided
                 $filteredFileList = array_diff(
-                    $fileList,
+                    $fileList ?? [],
                     $this->getBlocked(),
                     $providedScripts
                 );
@@ -1260,12 +1305,16 @@ class Requirements_Backend
             $included = false;
             switch ($type) {
                 case 'css': {
-                    $newCSS = array(); // Assoc array of css file => spec
+                    $newCSS = []; // Assoc array of css file => spec
                     foreach ($this->getAllCSS() as $css => $spec) {
                         if (!in_array($css, $fileList)) {
                             $newCSS[$css] = $spec;
                         } elseif (!$included && $combinedURL) {
-                            $newCSS[$combinedURL] = array('media' => (isset($options['media']) ? $options['media'] : null));
+                            $newCSS[$combinedURL] = [
+                                'media' => $options['media'] ?? null,
+                                'integrity' => $options['integrity'] ?? null,
+                                'crossorigin' => $options['crossorigin'] ?? null,
+                            ];
                             $included = true;
                         }
                         // If already included, or otherwise blocked, then don't add into CSS
@@ -1275,7 +1324,7 @@ class Requirements_Backend
                 }
                 case 'js': {
                     // Assoc array of file => attributes
-                    $newJS = array();
+                    $newJS = [];
                     foreach ($this->getAllJavascript() as $script => $attributes) {
                         if (!in_array($script, $fileList)) {
                             $newJS[$script] = $attributes;
@@ -1340,9 +1389,12 @@ MESSAGE
                 function () use ($fileList, $minify, $type) {
                     // Physically combine all file content
                     $combinedData = '';
-                    $base = Director::baseFolder() . '/';
                     foreach ($fileList as $file) {
-                        $fileContent = file_get_contents($base . $file);
+                        $filePath = Director::getAbsFile($file);
+                        if (!file_exists($filePath ?? '')) {
+                            throw new InvalidArgumentException("Combined file {$file} does not exist");
+                        }
+                        $fileContent = file_get_contents($filePath ?? '');
                         // Use configured minifier
                         if ($minify) {
                             $fileContent = $this->minifier->minify($fileContent, $type, $file);
@@ -1362,7 +1414,7 @@ MESSAGE
         // Since url won't be automatically suffixed, add it in here
         if ($hashQuerystring && $this->getSuffixRequirements()) {
             $hash = $this->hashOfFiles($fileList);
-            $q = stripos($combinedURL, '?') === false ? '?' : '&';
+            $q = stripos($combinedURL ?? '', '?') === false ? '?' : '&';
             $combinedURL .= "{$q}m={$hash}";
         }
 
@@ -1378,10 +1430,10 @@ MESSAGE
      */
     protected function hashedCombinedFilename($combinedFile, $fileList)
     {
-        $name = pathinfo($combinedFile, PATHINFO_FILENAME);
+        $name = pathinfo($combinedFile ?? '', PATHINFO_FILENAME);
         $hash = $this->hashOfFiles($fileList);
         $extension = File::get_file_extension($combinedFile);
-        return $name . '-' . substr($hash, 0, 7) . '.' . $extension;
+        return $name . '-' . substr($hash ?? '', 0, 7) . '.' . $extension;
     }
 
     /**
@@ -1414,16 +1466,16 @@ MESSAGE
     protected function hashOfFiles($fileList)
     {
         // Get hash based on hash of each file
-        $base = Director::baseFolder() . '/';
         $hash = '';
         foreach ($fileList as $file) {
-            if (file_exists($base . $file)) {
-                $hash .= sha1_file($base . $file);
+            $absolutePath = Director::getAbsFile($file);
+            if (file_exists($absolutePath ?? '')) {
+                $hash .= sha1_file($absolutePath ?? '');
             } else {
                 throw new InvalidArgumentException("Combined file {$file} does not exist");
             }
         }
-        return sha1($hash);
+        return sha1($hash ?? '');
     }
 
     /**

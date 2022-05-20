@@ -1,13 +1,18 @@
+---
+title: CMS Architecture
+summary: An overview of the code architecture of the CMS
+icon: sitemap
+---
 # CMS Architecture
 
 ## Introduction
 
-A lot can be achieved in SilverStripe by adding properties and form fields
+A lot can be achieved in Silverstripe CMS by adding properties and form fields
 to your own page types (via [SiteTree::getCMSFields()](api:SilverStripe\CMS\Model\SiteTree::getCMSFields())), as well as creating
 your own data management interfaces through [ModelAdmin](api:SilverStripe\Admin\ModelAdmin). But sometimes
 you'll want to go deeper and tailor the underlying interface to your needs as well.
 For example, to build a personalized CMS dashboard, or content "slots" where authors
-can drag their content into. At its core, SilverStripe is a web application
+can drag their content into. At its core, Silverstripe CMS is a web application
 built on open standards and common libraries, so lots of the techniques should
 feel familiar to you. This is just a quick run down to get you started
 with some special conventions.
@@ -17,7 +22,7 @@ For a more practical-oriented approach to CMS customizations, refer to the
 
 ## Installation
 
-In order to contribute to the core frontend code, you need [NodeJS 4.x](https://nodejs.org/).
+In order to contribute to the core frontend code, you need [NodeJS](https://nodejs.org/).
 This will install the package manager necessary to download frontend requirements.
 Once NodeJS is ready to go, you can download those requirements:
 
@@ -41,7 +46,7 @@ Check our [build tooling](/contributing/build_tooling) docs for more details.
 
 
 ```
-(cd framework && yarn run build && yarn run css)
+cd vendor/silverstripe/admin && yarn build
 ```
 
 ## Coding Conventions
@@ -50,23 +55,61 @@ Please follow our [CSS](/contributing/css_coding_conventions)
 and [JavaScript](/contributing/javascript_coding_conventions)
 coding conventions.
 
+
+## Pattern library
+
+A pattern library is a collection of user interface design elements, this helps developers and designers collaborate and to provide a quick preview of elements as they were intended without the need to build an entire interface to see it.
+Components built in React and used by the CMS are actively being added to the pattern library.
+The pattern library can be used to preview React components without including them in the Silverstripe CMS.
+
+### Viewing the latest pattern library
+
+The easiest way to access the pattern library is to view it online. The pattern library for the latest Silverstripe CMS 4 development branch is automatically built and deployed. Note that this may include new components that are not yet available in a stable release.
+
+[Browse the Silverstripe CMS pattern library online](https://silverstripe.github.io/silverstripe-pattern-lib/).
+
+### Running the pattern library
+
+If you're developing a new React component, running the pattern library locally is a good way to interact with it. 
+
+The pattern library is built from the `silverstripe/admin` module, but it also requires `silverstripe/asset-admin`, `silversrtipe/cms` and `silverstripe/campaign-admin`.
+
+To run the pattern library locally, you'll need a Silverstripe CMS project based on `silverstripe/recipe-cms` and `yarn` installed locally. The pattern library requires the JS source files so you'll need to use the `--prefer-source` flag when installing your dependencies with Composer.
+
+```bash
+composer install --prefer-source
+(cd vendor/silverstripe/asset-admin && yarn install)
+(cd vendor/silverstripe/campaign-admin && yarn install)
+(cd vendor/silverstripe/cms && yarn install)
+cd vendor/silverstripe/admin && yarn install && yarn pattern-lib
+```
+
+The pattern library will be available at [http://localhost:6006](http://localhost:6006). The JS source files will be watched, so every time you make a change to a JavaScript file, the pattern library will automatically update itself.
+
+If you want to build a static version of the pattern library, you can replace `yarn pattern-lib` with `yarn build-storybook`. This will output the pattern library files to a `storybook-static` folder.
+
+The Silverstripe CMS pattern library is built using the [StoryBook JS library](https://storybook.js.org/). You can read the StoryBook documentation to learn about more advanced features and customisation options. 
+
 ## The Admin URL
 
-The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[AdminRootController](api:SilverStripe\Admin\AdminRootController)` and clear the old rule like in the example below.
+The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting the `$url_base` config for the [AdminRootController](api:SilverStripe\Admin\AdminRootController), creating your own [Director](api:SilverStripe\Control\Director) routing rule and clearing the old rule as per the example below:
 
 
 ```yml
 
-    ---
-    Name: myadmin
-    After:
-        - '#adminroutes'
-    ---
-    Director:
-        rules:
-            'admin': ''
-            'newAdmin': 'AdminRootController'
-    ---
+---
+Name: myadmin
+After:
+  - '#adminroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'admin': ''
+    'newAdmin': 'SilverStripe\Admin\AdminRootController'
+    
+SilverStripe\Admin\AdminRootController:
+  url_base: 'newAdmin'    
+---
 ```
 
 When extending the CMS or creating modules, you can take advantage of various functions that will return the configured admin URL (by default 'admin/' is returned):
@@ -75,28 +118,26 @@ In PHP you should use:
 
 
 ```php
-    AdminRootController::admin_url()
+SilverStripe\Admin\AdminRootController::admin_url()
 ```
 
 When writing templates use:
 
 
 ```ss
-
-    $AdminURL
+$AdminURL
 ```
 
-And in JavaScript, this is avaible through the `ss` namespace
+And in JavaScript, this is available through the `ss` namespace
 
 
 ```js
-
-    ss.config.adminUrl
+ss.config.adminUrl
 ```
 
 ### Multiple Admin URL and overrides
 
-You can also create your own classes that extend the `[AdminRootController](api:SilverStripe\Admin\AdminRootController)` to create multiple or custom admin areas, with a `Director.rules` for each one.
+You can also create your own classes that extend the [AdminRootController](api:SilverStripe\Admin\AdminRootController) to create multiple or custom admin areas, with a `Director.rules` for each one.
 
 ## Templates and Controllers
 
@@ -142,7 +183,7 @@ Refer to [Layout reference](/developer_guides/customising_the_admin_interface/cm
 
 ## Forms
 
-SilverStripe constructs forms and its fields within PHP,
+Silverstripe CMS constructs forms and its fields within PHP,
 mainly through the [getCMSFields()](api:SilverStripe\ORM\DataObject::getCMSFields()) method.
 This in turn means that the CMS loads these forms as HTML via Ajax calls,
 e.g. after saving a record (which requires a form refresh), or switching the section in the CMS.
@@ -162,45 +203,45 @@ Basic example form in a CMS controller subclass:
 
 
 ```php
-    use SilverStripe\Forms\TabSet;
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\Tab;
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\Forms\FormAction;
-    use SilverStripe\Admin\LeftAndMain;
-    use SilverStripe\Admin\LeftAndMainFormRequestHandler;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\LeftAndMainFormRequestHandler;
 
-    class MyAdmin extends LeftAndMain 
-    {
-        function getEditForm() {
-            return Form::create(
-                $this,
-                'EditForm',
-                new FieldList(
-                    TabSet::create(
-                        'Root',
-                        Tab::create('Main',
-                            TextField::create('MyText')
-                        )
-                    )->setTemplate('CMSTabset')
-                ),
-                new FieldList(
-                    FormAction::create('doSubmit')
-                )
+class MyAdmin extends LeftAndMain 
+{
+    public function getEditForm() {
+        return Form::create(
+            $this,
+            'EditForm',
+            new FieldList(
+                TabSet::create(
+                    'Root',
+                    Tab::create('Main',
+                        TextField::create('MyText')
+                    )
+                )->setTemplate('CMSTabset')
+            ),
+            new FieldList(
+                FormAction::create('doSubmit')
             )
-                // Use a custom request handler
-                ->setRequestHandler(
-                    LeftAndMainFormRequestHandler::create($form)
-                )
-                // JS and CSS use this identifier
-                ->setHTMLID('Form_EditForm')
-                // Render correct responses on validation errors
-                ->setResponseNegotiator($this->getResponseNegotiator());
-                // Required for correct CMS layout
-                ->addExtraClass('cms-edit-form')
-                ->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-        }
+        )
+            // Use a custom request handler
+            ->setRequestHandler(
+                LeftAndMainFormRequestHandler::create($form)
+            )
+            // JS and CSS use this identifier
+            ->setHTMLID('Form_EditForm')
+            // Render correct responses on validation errors
+            ->setResponseNegotiator($this->getResponseNegotiator());
+            // Required for correct CMS layout
+            ->addExtraClass('cms-edit-form')
+            ->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
     }
+}
 ```
 
 Note: Usually you don't need to worry about these settings,
@@ -212,7 +253,7 @@ correctly configured form.
 __Deprecated:__
 The following documentation regarding Entwine applies to legacy code only.
 If you're developing new functionality in React powered sections please refer to
-[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+[ReactJS in Silverstripe CMS](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
 
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
@@ -261,10 +302,10 @@ so as a developer just declare your dependencies through the [Requirements](api:
 
 ## Client-side routing
 
-SilverStripe uses the HTML5 browser history to modify the URL without a complete
+Silverstripe CMS uses the HTML5 browser history to modify the URL without a complete
 window refresh. We us the below systems in combination to achieve this:
   * [Page.js](https://github.com/visionmedia/page.js) routing library is used for most
-    cms sections, which provides additional SilverStripe specific functionality via the
+    cms sections, which provides additional Silverstripe CMS specific functionality via the
     `vendor/silverstripe/admin/client/src/lib/Router.js` wrapper.
 	The router is available on `window.ss.router` and provides the same API as
 	described in the
@@ -306,48 +347,48 @@ routing mechanism for this section. However, there are two major differences:
 Firstly, `reactRouter` must be passed as a boolean flag to indicate that this section is
 controlled by the react section, and thus should suppress registration of a page.js route
 for this section.
-```php
-    public function getClientConfig() 
-    {
-        return array_merge(parent::getClientConfig(), [
-            'reactRouter' => true
-        ]);
-    }
 
+```php
+public function getClientConfig() 
+{
+    return array_merge(parent::getClientConfig(), [
+        'reactRouter' => true
+    ]);
+}
 ```
 
 Secondly, you should ensure that your react CMS section triggers route registration on the client side
 with the reactRouteRegister component. This will need to be done on the `DOMContentLoaded` event
 to ensure routes are registered before window.load is invoked. 
-```js
 
-    import { withRouter } from 'react-router';
-    import ConfigHelpers from 'lib/Config';
-    import reactRouteRegister from 'lib/ReactRouteRegister';
-    import MyAdmin from './MyAdmin';
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        const sectionConfig = ConfigHelpers.getSection('MyAdmin');
-    
-        reactRouteRegister.add({
-            path: sectionConfig.url,
-            component: withRouter(MyAdminComponent),
-            childRoutes: [
-                { path: 'form/:id/:view', component: MyAdminComponent },
-            ],
-        });
+```js
+import { withRouter } from 'react-router';
+import ConfigHelpers from 'lib/Config';
+import reactRouteRegister from 'lib/ReactRouteRegister';
+import MyAdmin from './MyAdmin';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+
+    reactRouteRegister.add({
+        path: sectionConfig.url,
+        component: withRouter(MyAdminComponent),
+        childRoutes: [
+            { path: 'form/:id/:view', component: MyAdminComponent },
+        ],
     });
+});
 ```
 
 Child routes can be registered post-boot by using `ReactRouteRegister` in the same way.
-```js
 
-    // Register a nested url under `sectionConfig.url`
-    const sectionConfig = ConfigHelpers.getSection('MyAdmin');
-    reactRouteRegister.add({
-        path: 'nested',
-        component: NestedComponent,
-    }, [ sectionConfig.url ]);
+```js
+// Register a nested url under `sectionConfig.url`
+const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+reactRouteRegister.add({
+    path: 'nested',
+    component: NestedComponent,
+}, [ sectionConfig.url ]);
 ```
 
 ## PJAX: Partial template replacement through Ajax
@@ -375,57 +416,57 @@ in a single Ajax request.
 
 
 ```php
-    use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\LeftAndMain;
 
-    // mysite/code/MyAdmin.php
-    class MyAdmin extends LeftAndMain 
+// app/src/MyAdmin.php
+class MyAdmin extends LeftAndMain 
+{
+    private static $url_segment = 'myadmin';
+    public function getResponseNegotiator() 
     {
-        private static $url_segment = 'myadmin';
-        public function getResponseNegotiator() 
-        {
-            $negotiator = parent::getResponseNegotiator();
-            $controller = $this;
-            // Register a new callback
-            $negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
-                return $controller->MyRecordInfo();
-            });
-            return $negotiator;
-        }
-        public function MyRecordInfo() 
-        {
-            return $this->renderWith('MyRecordInfo');
-        }
+        $negotiator = parent::getResponseNegotiator();
+        $controller = $this;
+        // Register a new callback
+        $negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
+            return $controller->MyRecordInfo();
+        });
+        return $negotiator;
     }
+    public function MyRecordInfo() 
+    {
+        return $this->renderWith('MyRecordInfo');
+    }
+}
 ```
 
 ```js
-    // MyAdmin.ss
-    <% include SilverStripe\\Admin\\CMSBreadcrumbs %>
-    <div>Static content (not affected by update)</div>
-    <% include MyRecordInfo %>
-    <a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
-        Update record info
-    </a>
+// MyAdmin.ss
+<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
+<div>Static content (not affected by update)</div>
+<% include MyRecordInfo %>
+<a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
+    Update record info
+</a>
 ```    
 
 ```ss
-    // MyRecordInfo.ss
-    <div data-pjax-fragment="MyRecordInfo">
-        Current Record: $currentPage.Title
-    </div>
+// MyRecordInfo.ss
+<div data-pjax-fragment="MyRecordInfo">
+    Current Record: $currentPage.Title
+</div>
 ```
 
 A click on the link will cause the following (abbreviated) ajax HTTP request:
 
 ```
-    GET /admin/myadmin HTTP/1.1
-    X-Pjax:MyRecordInfo,Breadcrumbs
-    X-Requested-With:XMLHttpRequest
+GET /admin/myadmin HTTP/1.1
+X-Pjax:MyRecordInfo,Breadcrumbs
+X-Requested-With:XMLHttpRequest
 ```
 ... and result in the following response:
 
 ```
-    {"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
+{"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
 ```
 Keep in mind that the returned view isn't always decided upon when the Ajax request
 is fired, so the server might decide to change it based on its own logic,
@@ -434,9 +475,11 @@ sending back different `X-Pjax` headers and content.
 On the client, you can set your preference through the `data-pjax-target` attributes
 on links or through the `X-Pjax` header. For firing off an Ajax request that is
 tracked in the browser history, use the `pjax` attribute on the state data.
+
 ```js
-    $('.cms-container').loadPanel(ss.config.adminUrl+'pages', null, {pjax: 'Content'});
+$('.cms-container').loadPanel(ss.config.adminUrl+'pages', null, {pjax: 'Content'});
 ```
+
 ## Loading lightweight PJAX fragments
 
 Normal navigation between URLs in the admin section of the Framework occurs through `loadPanel` and `submitForm`.
@@ -450,17 +493,21 @@ unrelated to the main flow.
 
 In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
 parallel as you want. This will not disturb the main navigation.
+
 ```js
-        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1');
-        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2');
-        $('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment3');
+$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1');
+$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2');
+$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment3');
 ```
+
 The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
 result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
 
 You can also load multiple fragments in one request, as long as they are to the same controller (i.e. URL):
 
-		$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2,Fragment3');
+```js
+$('.cms-container').loadFragment(ss.config.adminUrl+'foobar/', 'Fragment2,Fragment3');
+```
 
 This counts as a separate request type from the perspective of the request tracking, so will not abort the singular
 `Fragment2` nor `Fragment3`.
@@ -470,23 +517,27 @@ has been found on an element (this element will get completely replaced). Afterw
 will be triggered. In case of a request error a `loadfragmenterror` will be raised and DOM will not be touched.
 
 You can hook up a response handler that obtains all the details of the XHR request via Entwine handler:
+
 ```js
-        'from .cms-container': {
-            onafterloadfragment: function(e, data) {
-                // Say 'success'!
-                alert(data.status);
-            }
-        }
+'from .cms-container': {
+    onafterloadfragment: function(e, data) {
+        // Say 'success'!
+        alert(data.status);
+    }
+}
 ```
+
 Alternatively you can use the jQuery deferred API:
+
 ```js
-        $('.cms-container')
-            .loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1')
-            .success(function(data, status, xhr) {
-                // Say 'success'!
-                alert(status);
-            });
+$('.cms-container')
+    .loadFragment(ss.config.adminUrl+'foobar/', 'Fragment1')
+    .success(function(data, status, xhr) {
+        // Say 'success'!
+        alert(status);
+    });
 ```
+
 ## Ajax Redirects
 
 Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,
@@ -508,26 +559,26 @@ without affecting the response body.
 
 
 ```php
-    use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\LeftAndMain;
 
-    class MyController extends LeftAndMain 
-    {
+class MyController extends LeftAndMain 
+{
     class myaction() 
     {
-            // ...
-            $this->getResponse()->addHeader('X-Controller', 'MyOtherController');
-            return $html;
-        }
+        // ...
+        $this->getResponse()->addHeader('X-Controller', 'MyOtherController');
+        return $html;
     }
+}
 ```
 
 Built-in headers are:
 
-  * `X-Title`: Set window title (requires URL encoding)
-	* `X-Controller`: PHP class name matching a menu entry, which is marked active
-	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
-	* `X-Status`: Extended status information, used for an information popover.
-	* `X-Reload`: Force a full page reload based on `X-ControllerURL`
+ * `X-Title`: Set window title (requires URL encoding)
+ * `X-Controller`: PHP class name matching a menu entry, which is marked active
+ * `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
+ * `X-Status`: Extended status information, used for an information popover.
+ * `X-Reload`: Force a full page reload based on `X-ControllerURL`
 
 ## Special Links
 
@@ -540,7 +591,7 @@ To avoid repetition, we've written some helpers for various use cases:
 
 ## Buttons
 
-SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
+Silverstripe CMS automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
 These icon identifiers relate to icon files in `vendor/silverstripe/framework/admin/images/sprites/src/btn-icons`,
@@ -572,12 +623,12 @@ which is picked up by the menu:
 
 
 ```php
-    public function mycontrollermethod() 
-    {
-        // .. logic here
-        $this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
-        return 'my response';
-    }
+public function mycontrollermethod() 
+{
+    // .. logic here
+    $this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
+    return 'my response';
+}
 ```
 
 This is usually handled by the existing [LeftAndMain](api:SilverStripe\Admin\LeftAndMain) logic,
@@ -626,29 +677,29 @@ Form template with custom tab navigation (trimmed down):
 
 ```ss
 
-    <form $FormAttributes data-layout-type="border">
+<form $FormAttributes data-layout-type="border">
 
-        <div class="cms-content-header north">
-            <% if Fields.hasTabset %>
-                <% with Fields.fieldByName('Root') %>
-                <div class="cms-content-header-tabs">
-                    <ul>
-                    <% loop Tabs %>
-                        <li><a href="#$id">$Title</a></li>
-                    <% end_loop %>
-                    </ul>
-                </div>
-                <% end_with %>
-            <% end_if %>
-        </div>
+    <div class="cms-content-header north">
+        <% if Fields.hasTabset %>
+            <% with Fields.fieldByName('Root') %>
+            <div class="cms-content-header-tabs">
+                <ul>
+                <% loop Tabs %>
+                    <li><a href="#$id">$Title</a></li>
+                <% end_loop %>
+                </ul>
+            </div>
+            <% end_with %>
+        <% end_if %>
+    </div>
 
-        <div class="cms-content-fields center">
-            <fieldset>
-                <% loop Fields %>$FieldHolder<% end_loop %>
-            </fieldset>
-        </div>
+    <div class="cms-content-fields center">
+        <fieldset>
+            <% loop Fields %>$FieldHolder<% end_loop %>
+        </fieldset>
+    </div>
 
-    </form>
+</form>
 ```
 
 Tabset template without tab navigation (e.g. `CMSTabset.ss`)
@@ -656,19 +707,19 @@ Tabset template without tab navigation (e.g. `CMSTabset.ss`)
 
 ```ss
 
-    <div $AttributesHTML>
-        <% loop Tabs %>
-            <% if Tabs %>
-                $FieldHolder
-            <% else %>
-                <div $AttributesHTML>
-                    <% loop Fields %>
-                        $FieldHolder
-                    <% end_loop %>
-                </div>
-            <% end_if %>
-        <% end_loop %>
-    </div>
+<div $AttributesHTML>
+    <% loop Tabs %>
+        <% if Tabs %>
+            $FieldHolder
+        <% else %>
+            <div $AttributesHTML>
+                <% loop Fields %>
+                    $FieldHolder
+                <% end_loop %>
+            </div>
+        <% end_if %>
+    <% end_loop %>
+</div>
 ```
 
 Lazy loading works based on the `href` attribute of the tab navigation.
@@ -682,20 +733,20 @@ and load the HTML content into the main view. Example:
 
 ```ss
 
-    <div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
-        <ul>
-            <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-                <a href="{$AdminURL}mytabs/tab1" class="cms-panel-link">
-                    Tab1
-                </a>
-            </li>
-            <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
-                <a href="{$AdminURL}mytabs/tab2" class="cms-panel-link">
-                    Tab2
-                </a>
-            </li>
-        </ul>
-    </div>
+<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
+    <ul>
+        <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+            <a href="{$AdminURL}mytabs/tab1" class="cms-panel-link">
+                Tab1
+            </a>
+        </li>
+        <li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+            <a href="{$AdminURL}mytabs/tab2" class="cms-panel-link">
+                Tab2
+            </a>
+        </li>
+    </ul>
+</div>
 ```
 
 The URL endpoints `{$AdminURL}mytabs/tab1` and `{$AdminURL}mytabs/tab2`

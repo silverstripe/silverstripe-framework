@@ -10,10 +10,10 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
 
     public static function get_template_global_variables()
     {
-        return array(
+        return [
             'ModulePath',
             'List' => 'getDataList'
-        );
+        ];
     }
 
     /**
@@ -23,7 +23,7 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
      */
     public static function ModulePath($name)
     {
-        // BC for a couple fo the key modules in the old syntax. Reduces merge brittleness but can
+        // BC for a couple of the key modules in the old syntax. Reduces merge brittleness but can
         // be removed before 4.0 stable
         $legacyMapping = [
             'framework' => 'silverstripe/framework',

@@ -9,16 +9,16 @@ class Person extends DataObject implements TestOnly
 {
     private static $table_name = 'SearchContextTest_Person';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Email' => 'Varchar',
         'HairColor' => 'Varchar',
         'EyeColor' => 'Varchar'
-    );
+    ];
 
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Name',
         'HairColor',
         'EyeColor'
-    );
+    ];
 }

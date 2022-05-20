@@ -9,7 +9,7 @@ class Player extends DataObject implements TestOnly
 {
     private static $table_name = 'DataExtensionTest_Player';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar'
-    );
+    ];
 }

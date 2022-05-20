@@ -25,7 +25,7 @@ use SilverStripe\Security\Security;
  * </code>
  *
  * Date formats all follow CLDR standard format codes
- * @link http://userguide.icu-project.org/formatparse/datetime
+ * @link https://unicode-org.github.io/icu/userguide/format_parse/datetime
  */
 class DBDate extends DBField
 {
@@ -33,6 +33,12 @@ class DBDate extends DBField
      * Standard ISO format string for date in CLDR standard format
      */
     const ISO_DATE = 'y-MM-dd';
+
+    /**
+     * Fixed locale to use for ISO date formatting. This is necessary to prevent
+     * locale-specific numeric localisation breaking internal date strings.
+     */
+    const ISO_LOCALE = 'en_US';
 
     public function setValue($value, $record = null, $markChanged = true)
     {
@@ -67,15 +73,17 @@ class DBDate extends DBField
         } else {
             // Convert US date -> iso, fix y2k, etc
             $value = $this->fixInputDate($value);
-            $source = strtotime($value); // convert string to timestamp
+            if (is_null($value)) {
+                return null;
+            }
+            $source = strtotime($value ?? ''); // convert string to timestamp
         }
         if ($value === false) {
             return false;
         }
 
         // Format as iso8601
-        $formatter = $this->getFormatter();
-        $formatter->setPattern($this->getISOFormat());
+        $formatter = $this->getInternalFormatter();
         return $formatter->format($source);
     }
 
@@ -200,7 +208,43 @@ class DBDate extends DBField
      */
     public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
     {
-        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+        return $this->getCustomFormatter(null, null, $dateLength, $timeLength);
+    }
+
+    /**
+     * Return formatter in a given locale. Useful if localising in a format other than the current locale.
+     *
+     * @param string|null $locale The current locale, or null to use default
+     * @param string|null $pattern Custom pattern to use for this, if required
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getCustomFormatter(
+        $locale = null,
+        $pattern = null,
+        $dateLength = IntlDateFormatter::MEDIUM,
+        $timeLength = IntlDateFormatter::NONE
+    ) {
+        $locale = $locale ?: i18n::get_locale();
+        $formatter = IntlDateFormatter::create($locale, $dateLength, $timeLength);
+        if ($pattern) {
+            $formatter->setPattern($pattern);
+        }
+        return $formatter;
+    }
+
+    /**
+     * Formatter used internally
+     *
+     * @internal
+     * @return IntlDateFormatter
+     */
+    protected function getInternalFormatter()
+    {
+        $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDate::ISO_DATE);
+        $formatter->setLenient(false);
+        return $formatter;
     }
 
     /**
@@ -214,19 +258,29 @@ class DBDate extends DBField
     }
 
     /**
-     * Return the date using a particular formatting string.
+     * Return the date using a particular formatting string. Use {o} to include an ordinal representation
+     * for the day of the month ("1st", "2nd", "3rd" etc)
      *
-     * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
+     * @param string $format Format code string. See https://unicode-org.github.io/icu/userguide/format_parse/datetime
+     * @param string $locale Custom locale to use (add to signature in 5.0)
      * @return string The date in the requested format
      */
     public function Format($format)
     {
+        // Note: soft-arg uses func_get_args() to respect semver. Add to signature in 5.0
+        $locale = func_num_args() > 1 ? func_get_arg(1) : null;
+
         if (!$this->value) {
             return null;
         }
-        $formatter = $this->getFormatter();
-        $formatter->setPattern($format);
-        return $formatter->format($this->getTimestamp());
+
+        // Replace {o} with ordinal representation of day of the month
+        if (strpos($format ?? '', '{o}') !== false) {
+            $format = str_replace('{o}', "'{$this->DayOfMonth(true)}'", $format ?? '');
+        }
+
+        $formatter = $this->getCustomFormatter($locale, $format);
+        return $formatter->Format($this->getTimestamp());
     }
 
     /**
@@ -237,7 +291,7 @@ class DBDate extends DBField
     public function getTimestamp()
     {
         if ($this->value) {
-            return strtotime($this->value);
+            return strtotime($this->value ?? '');
         }
         return 0;
     }
@@ -260,8 +314,7 @@ class DBDate extends DBField
         }
 
         // Get user format
-        $format = $member->getDateFormat();
-        return $this->Format($format);
+        return $this->Format($member->getDateFormat(), $member->getLocale());
     }
 
     /**
@@ -282,11 +335,11 @@ class DBDate extends DBField
 
         if ($y1 != $y2) {
             return "$d1 $m1 $y1 - $d2 $m2 $y2";
-        } elseif ($m1 != $m2) {
-            return "$d1 $m1 - $d2 $m2 $y1";
-        } else {
-            return "$d1 - $d2 $m1 $y1";
         }
+        if ($m1 != $m2) {
+            return "$d1 $m1 - $d2 $m2 $y1";
+        }
+        return "$d1 - $d2 $m1 $y1";
     }
 
     /**
@@ -309,7 +362,9 @@ class DBDate extends DBField
      */
     public function Rfc2822()
     {
-        return $this->Format('y-MM-dd HH:mm:ss');
+        $formatter = $this->getInternalFormatter();
+        $formatter->setPattern('y-MM-dd HH:mm:ss');
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
@@ -319,19 +374,7 @@ class DBDate extends DBField
      */
     public function Rfc3339()
     {
-        $date = $this->Format('y-MM-dd\\THH:mm:ss');
-        if (!$date) {
-            return null;
-        }
-
-        $matches = array();
-        if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $this->getTimestamp()), $matches)) {
-            $date .= $matches[1].$matches[2].':'.$matches[3];
-        } else {
-            $date .= 'Z';
-        }
-
-        return $date;
+        return date('c', $this->getTimestamp());
     }
 
     /**
@@ -350,19 +393,18 @@ class DBDate extends DBField
         $now = DBDatetime::now()->getTimestamp();
         if ($timestamp <= $now) {
             return _t(
-                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFAGO',
+                __CLASS__ . '.TIMEDIFFAGO',
                 "{difference} ago",
                 'Natural language time difference, e.g. 2 hours ago',
-                array('difference' => $this->TimeDiff($includeSeconds, $significance))
-            );
-        } else {
-            return _t(
-                'SilverStripe\\ORM\\FieldType\\DBDate.TIMEDIFFIN',
-                "in {difference}",
-                'Natural language time difference, e.g. in 2 hours',
-                array('difference' => $this->TimeDiff($includeSeconds, $significance))
+                ['difference' => $this->TimeDiff($includeSeconds, $significance)]
             );
         }
+        return _t(
+            __CLASS__ . '.TIMEDIFFIN',
+            "in {difference}",
+            'Natural language time difference, e.g. in 2 hours',
+            ['difference' => $this->TimeDiff($includeSeconds, $significance)]
+        );
     }
 
     /**
@@ -380,20 +422,24 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         if ($ago < 60 && !$includeSeconds) {
-            return _t('SilverStripe\\ORM\\FieldType\\DBDate.LessThanMinuteAgo', 'less than a minute');
-        } elseif ($ago < $significance * 60 && $includeSeconds) {
-            return $this->TimeDiffIn('seconds');
-        } elseif ($ago < $significance * 3600) {
-            return $this->TimeDiffIn('minutes');
-        } elseif ($ago < $significance * 86400) {
-            return $this->TimeDiffIn('hours');
-        } elseif ($ago < $significance * 86400 * 30) {
-            return $this->TimeDiffIn('days');
-        } elseif ($ago < $significance * 86400 * 365) {
-            return $this->TimeDiffIn('months');
-        } else {
-            return $this->TimeDiffIn('years');
+            return _t(__CLASS__ . '.LessThanMinuteAgo', 'less than a minute');
         }
+        if ($ago < $significance * 60 && $includeSeconds) {
+            return $this->TimeDiffIn('seconds');
+        }
+        if ($ago < $significance * 3600) {
+            return $this->TimeDiffIn('minutes');
+        }
+        if ($ago < $significance * 86400) {
+            return $this->TimeDiffIn('hours');
+        }
+        if ($ago < $significance * 86400 * 30) {
+            return $this->TimeDiffIn('days');
+        }
+        if ($ago < $significance * 86400 * 365) {
+            return $this->TimeDiffIn('months');
+        }
+        return $this->TimeDiffIn('years');
     }
 
     /**
@@ -413,50 +459,50 @@ class DBDate extends DBField
         $time = $this->getTimestamp();
         $ago = abs($time - $now);
         switch ($format) {
-            case "seconds":
+            case 'seconds':
                 $span = $ago;
                 return _t(
-                    __CLASS__.'.SECONDS_SHORT_PLURALS',
+                    __CLASS__ . '.SECONDS_SHORT_PLURALS',
                     '{count} sec|{count} secs',
                     ['count' => $span]
                 );
 
-            case "minutes":
-                $span = round($ago/60);
+            case 'minutes':
+                $span = round($ago / 60);
                 return _t(
-                    __CLASS__.'.MINUTES_SHORT_PLURALS',
+                    __CLASS__ . '.MINUTES_SHORT_PLURALS',
                     '{count} min|{count} mins',
                     ['count' => $span]
                 );
 
-            case "hours":
-                $span = round($ago/3600);
+            case 'hours':
+                $span = round($ago / 3600);
                 return _t(
-                    __CLASS__.'.HOURS_SHORT_PLURALS',
+                    __CLASS__ . '.HOURS_SHORT_PLURALS',
                     '{count} hour|{count} hours',
                     ['count' => $span]
                 );
 
-            case "days":
-                $span = round($ago/86400);
+            case 'days':
+                $span = round($ago / 86400);
                 return _t(
-                    __CLASS__.'.DAYS_SHORT_PLURALS',
+                    __CLASS__ . '.DAYS_SHORT_PLURALS',
                     '{count} day|{count} days',
                     ['count' => $span]
                 );
 
-            case "months":
-                $span = round($ago/86400/30);
+            case 'months':
+                $span = round($ago / 86400 / 30);
                 return _t(
-                    __CLASS__.'.MONTHS_SHORT_PLURALS',
+                    __CLASS__ . '.MONTHS_SHORT_PLURALS',
                     '{count} month|{count} months',
                     ['count' => $span]
                 );
 
-            case "years":
-                $span = round($ago/86400/365);
+            case 'years':
+                $span = round($ago / 86400 / 365);
                 return _t(
-                    __CLASS__.'.YEARS_SHORT_PLURALS',
+                    __CLASS__ . '.YEARS_SHORT_PLURALS',
                     '{count} year|{count} years',
                     ['count' => $span]
                 );
@@ -468,8 +514,8 @@ class DBDate extends DBField
 
     public function requireField()
     {
-        $parts=array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
-        $values=array('type'=>'date', 'parts'=>$parts);
+        $parts = ['datatype' => 'date', 'arrayValue' => $this->arrayValue];
+        $values = ['type' => 'date', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
@@ -479,7 +525,7 @@ class DBDate extends DBField
      */
     public function InPast()
     {
-        return strtotime($this->value) < DBDatetime::now()->getTimestamp();
+        return strtotime($this->value ?? '') < DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -488,7 +534,7 @@ class DBDate extends DBField
      */
     public function InFuture()
     {
-        return strtotime($this->value) > DBDatetime::now()->getTimestamp();
+        return strtotime($this->value ?? '') > DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -501,13 +547,32 @@ class DBDate extends DBField
     }
 
     /**
+     * Adjusts the current instance by the given adjustment, in a PHP `strtotime()` style date/time modifier.
+     *
+     * Example:
+     *
+     * <code>
+     * DBDatetime::now()->modify('+ 3 days')->Format()
+     * DBDatetime::now()->modify('-10 weeks')->Format()
+     * </code>
+     *
+     * @param string $adjustment PHP strtotime style
+     * @return $this
+     */
+    public function modify(string $adjustment): self
+    {
+        $modifiedTime = strtotime($adjustment ?? '', $this->getTimestamp());
+        return $this->setValue($modifiedTime);
+    }
+
+    /**
      * Returns a date suitable for insertion into a URL and use by the system.
      *
      * @return string
      */
     public function URLDate()
     {
-        return rawurlencode($this->Format(self::ISO_DATE));
+        return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
@@ -527,10 +592,13 @@ class DBDate extends DBField
     protected function fixInputDate($value)
     {
         // split
-        list($year, $month, $day, $time) = $this->explodeDateString($value);
+        [$year, $month, $day, $time] = $this->explodeDateString($value);
 
+        if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
+            return null;
+        }
         // Validate date
-        if (!checkdate($month, $day, $year)) {
+        if (!checkdate($month ?? 0, $day ?? 0, $year ?? 0)) {
             throw new InvalidArgumentException(
                 "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
@@ -551,7 +619,7 @@ class DBDate extends DBField
         // split on known delimiters (. / -)
         if (!preg_match(
             '#^(?<first>\\d+)[-/\\.](?<second>\\d+)[-/\\.](?<third>\\d+)(?<time>.*)$#',
-            $value,
+            $value ?? '',
             $matches
         )) {
             throw new InvalidArgumentException(
@@ -566,9 +634,9 @@ class DBDate extends DBField
         ];
         // Flip d-m-y to y-m-d
         if ($parts[0] < 1000 && $parts[2] > 1000) {
-            $parts = array_reverse($parts);
+            $parts = array_reverse($parts ?? []);
         }
-        if ($parts[0] < 1000) {
+        if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
             throw new InvalidArgumentException(
                 "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );

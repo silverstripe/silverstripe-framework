@@ -39,22 +39,22 @@ class PermissionTest extends SapphireTest
         $members = Member::get()->byIDs($this->allFixtureIDs(Member::class));
         foreach ($members as $member) {
             $this->assertTrue(Permission::checkMember($member, 'CMS_ACCESS'));
-            $this->assertTrue(Permission::checkMember($member, array('CMS_ACCESS', 'CMS_ACCESS_Security')));
-            $this->assertTrue(Permission::checkMember($member, array('CMS_ACCESS_Security', 'CMS_ACCESS')));
+            $this->assertTrue(Permission::checkMember($member, ['CMS_ACCESS', 'CMS_ACCESS_Security']));
+            $this->assertTrue(Permission::checkMember($member, ['CMS_ACCESS_Security', 'CMS_ACCESS']));
         }
 
         $member = new Member();
         $member->update(
-            array(
+            [
             'FirstName' => 'No CMS',
             'Surname' => 'Access',
             'Email' => 'no-access@example.com',
-            )
+            ]
         );
         $member->write();
         $this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS'));
-        $this->assertFalse(Permission::checkMember($member, array('CMS_ACCESS', 'CMS_ACCESS_Security')));
-        $this->assertFalse(Permission::checkMember($member, array('CMS_ACCESS_Security', 'CMS_ACCESS')));
+        $this->assertFalse(Permission::checkMember($member, ['CMS_ACCESS', 'CMS_ACCESS_Security']));
+        $this->assertFalse(Permission::checkMember($member, ['CMS_ACCESS_Security', 'CMS_ACCESS']));
     }
 
     public function testLeftAndMainAccessAll()
@@ -89,18 +89,18 @@ class PermissionTest extends SapphireTest
     {
         $member = $this->objFromFixture(Member::class, 'access');
         $permissions = Permission::permissions_for_member($member->ID);
-        $this->assertEquals(4, count($permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_AssetAdmin', $permissions));
-        $this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions));
-        $this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions));
+        $this->assertEquals(4, count($permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_AssetAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions ?? []));
+        $this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions ?? []));
 
         $group = $this->objFromFixture("SilverStripe\\Security\\Group", "access");
 
         Permission::deny($group->ID, "CMS_ACCESS_MyAdmin");
         $permissions = Permission::permissions_for_member($member->ID);
-        $this->assertEquals(3, count($permissions));
-        $this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions));
+        $this->assertEquals(3, count($permissions ?? []));
+        $this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions ?? []));
     }
 
     public function testRolesAndPermissionsFromParentGroupsAreInherited()
@@ -128,8 +128,8 @@ class PermissionTest extends SapphireTest
         $accessMember = $this->objFromFixture(Member::class, 'access');
         $accessAuthor = $this->objFromFixture(Member::class, 'author');
 
-        $result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
-        $resultIDs = $result ? $result->column() : array();
+        $result = Permission::get_members_by_permission(['CMS_ACCESS_SecurityAdmin']);
+        $resultIDs = $result ? $result->column() : [];
 
         $this->assertContains(
             $accessMember->ID,
@@ -143,14 +143,14 @@ class PermissionTest extends SapphireTest
     public function testHiddenPermissions()
     {
         $permissionCheckboxSet = new PermissionCheckboxSetField('Permissions', 'Permissions', Permission::class, 'GroupID');
-        $this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
+        $this->assertStringContainsString('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-        Config::modify()->merge(Permission::class, 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
+        Config::modify()->merge(Permission::class, 'hidden_permissions', ['CMS_ACCESS_LeftAndMain']);
 
-        $this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
+        $this->assertStringNotContainsString('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
         Config::inst()->remove(Permission::class, 'hidden_permissions');
-        $this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
+        $this->assertStringContainsString('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
     }
 
     public function testEmptyMemberFails()

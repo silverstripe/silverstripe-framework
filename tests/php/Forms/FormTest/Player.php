@@ -13,19 +13,19 @@ class Player extends DataObject implements TestOnly
 
     private static $table_name = 'FormTest_Player';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Biography' => 'Text',
         'Birthday' => 'Date'
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Teams' => Team::class
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'FavouriteTeam' => Team::class
-    );
+    ];
 
     public function getBirthdayYear()
     {

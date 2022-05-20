@@ -9,7 +9,7 @@ class PlayerContract extends DataObject implements TestOnly
 {
     private static $table_name = 'CsvBulkLoaderTest_PlayerContract';
 
-    private static $db = array(
+    private static $db = [
         'Amount' => 'Currency',
-    );
+    ];
 }

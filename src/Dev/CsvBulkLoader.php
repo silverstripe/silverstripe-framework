@@ -2,9 +2,10 @@
 
 namespace SilverStripe\Dev;
 
+use League\Csv\MapIterator;
+use League\Csv\Reader;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
-use Exception;
 
 /**
  * Utility class to facilitate complex CSV-imports by defining column-mappings
@@ -67,35 +68,102 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processAll($filepath, $preview = false)
     {
-        $filepath = Director::getAbsFile($filepath);
-        $files = $this->splitFile($filepath);
+        $this->extend('onBeforeProcessAll', $filepath, $preview);
 
-        $result = null;
-        $last = null;
+        $result = BulkLoader_Result::create();
 
         try {
-            foreach ($files as $file) {
-                $last = $file;
+            $filepath = Director::getAbsFile($filepath);
+            $csvReader = Reader::createFromPath($filepath, 'r');
+            $csvReader->setDelimiter($this->delimiter);
 
-                $next = $this->processChunk($file, $preview);
-
-                if ($result instanceof BulkLoader_Result) {
-                    $result->merge($next);
-                } else {
-                    $result = $next;
-                }
-
-                @unlink($file);
+            // league/csv 9
+            if (method_exists($csvReader, 'skipInputBOM')) {
+                $csvReader->skipInputBOM();
+            // league/csv 8
+            } else {
+                $csvReader->stripBom(true);
             }
-        } catch (Exception $e) {
-            $failedMessage = sprintf("Failed to parse %s", $last);
+
+            $tabExtractor = function ($row, $rowOffset) {
+                foreach ($row as &$item) {
+                    // [SS-2017-007] Ensure all cells with leading tab and then [@=+] have the tab removed on import
+                    if (preg_match("/^\t[\-@=\+]+.*/", $item ?? '')) {
+                        $item = ltrim($item ?? '', "\t");
+                    }
+                }
+                return $row;
+            };
+
+            if ($this->columnMap) {
+                $headerMap = $this->getNormalisedColumnMap();
+
+                $remapper = function ($row, $rowOffset) use ($headerMap, $tabExtractor) {
+                    $row = $tabExtractor($row, $rowOffset);
+                    foreach ($headerMap as $column => $renamedColumn) {
+                        if ($column == $renamedColumn) {
+                            continue;
+                        }
+                        if (array_key_exists($column, $row ?? [])) {
+                            if (strpos($renamedColumn ?? '', '_ignore_') !== 0) {
+                                $row[$renamedColumn] = $row[$column];
+                            }
+                            unset($row[$column]);
+                        }
+                    }
+                    return $row;
+                };
+            } else {
+                $remapper = $tabExtractor;
+            }
+
+            if ($this->hasHeaderRow) {
+                if (method_exists($csvReader, 'fetchAssoc')) {
+                    $rows = $csvReader->fetchAssoc(0, $remapper);
+                } else {
+                    $csvReader->setHeaderOffset(0);
+                    $rows = new MapIterator($csvReader->getRecords(), $remapper);
+                }
+            } elseif ($this->columnMap) {
+                if (method_exists($csvReader, 'fetchAssoc')) {
+                    $rows = $csvReader->fetchAssoc($headerMap, $remapper);
+                } else {
+                    $rows = new MapIterator($csvReader->getRecords($headerMap), $remapper);
+                }
+            }
+
+            foreach ($rows as $row) {
+                $this->processRecord($row, $this->columnMap, $result, $preview);
+            }
+        } catch (\Exception $e) {
+            $failedMessage = sprintf("Failed to parse %s", $filepath);
             if (Director::isDev()) {
                 $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
             }
             print $failedMessage . PHP_EOL;
         }
 
+        $this->extend('onAfterProcessAll', $result, $preview);
+
         return $result;
+    }
+
+    protected function getNormalisedColumnMap()
+    {
+        $map = [];
+        foreach ($this->columnMap as $column => $newColumn) {
+            if (strpos($newColumn ?? '', "->") === 0) {
+                $map[$column] = $column;
+            } elseif (is_null($newColumn)) {
+                // the column map must consist of unique scalar values
+                // `null` can be present multiple times and is not scalar
+                // so we name it in a standard way so we can remove it later
+                $map[$column] = '_ignore_' . $column;
+            } else {
+                $map[$column] = $newColumn;
+            }
+        }
+        return $map;
     }
 
     /**
@@ -108,9 +176,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function splitFile($path, $lines = null)
     {
-        $previous = ini_get('auto_detect_line_endings');
-
-        ini_set('auto_detect_line_endings', true);
+        Deprecation::notice('5.0', 'splitFile is deprecated, please process files using a stream');
 
         if (!is_int($lines)) {
             $lines = $this->config()->get("lines");
@@ -118,23 +184,23 @@ class CsvBulkLoader extends BulkLoader
 
         $new = $this->getNewSplitFileName();
 
-        $to = fopen($new, 'w+');
-        $from = fopen($path, 'r');
+        $to = fopen($new ?? '', 'w+');
+        $from = fopen($path ?? '', 'r');
 
         $header = null;
 
         if ($this->hasHeaderRow) {
             $header = fgets($from);
-            fwrite($to, $header);
+            fwrite($to, $header ?? '');
         }
 
-        $files = array();
+        $files = [];
         $files[] = $new;
 
         $count = 0;
 
         while (!feof($from)) {
-            fwrite($to, fgets($from));
+            fwrite($to, fgets($from) ?? '');
 
             $count++;
 
@@ -144,11 +210,11 @@ class CsvBulkLoader extends BulkLoader
                 // get a new temporary file name, to write the next lines to
                 $new = $this->getNewSplitFileName();
 
-                $to = fopen($new, 'w+');
+                $to = fopen($new ?? '', 'w+');
 
                 if ($this->hasHeaderRow) {
                     // add the headers to the new file
-                    fwrite($to, $header);
+                    fwrite($to, $header ?? '');
                 }
 
                 $files[] = $new;
@@ -156,10 +222,7 @@ class CsvBulkLoader extends BulkLoader
                 $count = 0;
             }
         }
-
         fclose($to);
-
-        ini_set('auto_detect_line_endings', $previous);
 
         return $files;
     }
@@ -169,7 +232,8 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function getNewSplitFileName()
     {
-        return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class), true) . '.csv';
+        Deprecation::notice('5.0', 'getNewSplitFileName is deprecated, please name your files yourself');
+        return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class) ?? '', true) . '.csv';
     }
 
     /**
@@ -180,6 +244,7 @@ class CsvBulkLoader extends BulkLoader
      */
     protected function processChunk($filepath, $preview = false)
     {
+        Deprecation::notice('5.0', 'processChunk is deprecated, please process rows individually');
         $results = BulkLoader_Result::create();
 
         $csv = new CSVParser(
@@ -195,7 +260,7 @@ class CsvBulkLoader extends BulkLoader
             // same callback
             $map = [];
             foreach ($this->columnMap as $k => $v) {
-                if (strpos($v, "->") === 0) {
+                if (strpos($v ?? '', "->") === 0) {
                     $map[$k] = $k;
                 } else {
                     $map[$k] = $v;
@@ -271,9 +336,9 @@ class CsvBulkLoader extends BulkLoader
                     $obj->write();
                     $obj->flushCache(); // avoid relation caching confusion
                 }
-            } elseif (strpos($fieldName, '.') !== false) {
+            } elseif (strpos($fieldName ?? '', '.') !== false) {
                 // we have a relation column with dot notation
-                list($relationName, $columnName) = explode('.', $fieldName);
+                [$relationName, $columnName] = explode('.', $fieldName ?? '');
                 // always gives us an component (either empty or existing)
                 $relationObj = $obj->getComponent($relationName);
                 if (!$preview) {
@@ -300,16 +365,18 @@ class CsvBulkLoader extends BulkLoader
             // look up the mapping to see if this needs to map to callback
             $mapped = $this->columnMap && isset($this->columnMap[$fieldName]);
 
-            if ($mapped && strpos($this->columnMap[$fieldName], '->') === 0) {
-                $funcName = substr($this->columnMap[$fieldName], 2);
+            if ($mapped && strpos($this->columnMap[$fieldName] ?? '', '->') === 0) {
+                $funcName = substr($this->columnMap[$fieldName] ?? '', 2);
 
                 $this->$funcName($obj, $val, $record);
             } elseif ($obj->hasMethod("import{$fieldName}")) {
                 $obj->{"import{$fieldName}"}($val, $record);
             } else {
-                $obj->update(array($fieldName => $val));
+                $obj->update([$fieldName => $val]);
             }
         }
+
+        $isChanged = $obj->isChanged();
 
         // write record
         if (!$preview) {
@@ -321,18 +388,21 @@ class CsvBulkLoader extends BulkLoader
 
         // save to results
         if ($existingObj) {
+            // We mark as updated regardless of isChanged, since custom formatters and importers
+            // might have affected relationships and other records.
             $results->addUpdated($obj, $message);
         } else {
             $results->addCreated($obj, $message);
         }
+
+        $this->extend('onAfterProcessRecord', $obj, $preview, $isChanged);
 
         $objID = $obj->ID;
 
         $obj->destroy();
 
         // memory usage
-        unset($existingObj);
-        unset($obj);
+        unset($existingObj, $obj);
 
         return $objID;
     }
@@ -375,15 +445,19 @@ class CsvBulkLoader extends BulkLoader
                 } elseif ($SNG_objectClass->hasMethod($duplicateCheck['callback'])) {
                     $existingRecord = $SNG_objectClass->{$duplicateCheck['callback']}($record[$fieldName], $record);
                 } else {
-                    user_error("CsvBulkLoader::processRecord():"
-                        . " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
+                    throw new \RuntimeException(
+                        "CsvBulkLoader::processRecord():"
+                        . " {$duplicateCheck['callback']} not found on importer or object class."
+                    );
                 }
 
                 if ($existingRecord) {
                     return $existingRecord;
                 }
             } else {
-                user_error('CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks', E_USER_ERROR);
+                throw new \InvalidArgumentException(
+                    'CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks'
+                );
             }
         }
 

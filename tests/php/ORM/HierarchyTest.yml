@@ -53,3 +53,20 @@ SilverStripe\ORM\Tests\HierarchyTest\HideTestObject:
 SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject:
   obj4b:
     Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HideTestObject.obj4
+SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject:
+  obj5:
+    Title: Obj 5
+SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject:
+  obj5a:
+    Title: Obj 5a
+  obj5b:
+    Title: Obj 5b
+  obj5aa:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.obj5a
+    Title: Obj 5aa
+  obj5ab:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.obj5a
+    Title: Obj 5ab
+  obj5ba:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.obj5b
+    Title: Obj 5ba

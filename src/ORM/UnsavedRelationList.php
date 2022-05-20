@@ -46,7 +46,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @var array
      */
-    protected $extraFields = array();
+    protected $extraFields = [];
 
     /**
      * Create a new UnsavedRelationList
@@ -82,10 +82,6 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function changeToList(RelationList $list)
     {
         foreach ($this->items as $key => $item) {
-            if (is_object($item)) {
-                /** @var DataObject $item */
-                $item->write();
-            }
             $list->add($item, $this->extraFields[$key]);
         }
     }
@@ -99,10 +95,10 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function push($item, $extraFields = null)
     {
         if ((is_object($item) && !$item instanceof $this->dataClass)
-            || (!is_object($item) && !is_numeric($item))) {
+            || (!is_object($item) && !is_numeric($item))
+        ) {
             throw new InvalidArgumentException(
-                "UnsavedRelationList::add() expecting a $this->dataClass object, or ID value",
-                E_USER_ERROR
+                "UnsavedRelationList::add() expecting a $this->dataClass object, or ID value"
             );
         }
         if (is_object($item) && $item->ID) {
@@ -127,6 +123,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->toArray());
@@ -140,7 +137,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function toArray()
     {
-        $items = array();
+        $items = [];
         foreach ($this->items as $key => $item) {
             if (is_numeric($item)) {
                 $item = DataObject::get_by_id($this->dataClass, $item);
@@ -172,20 +169,19 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function removeAll()
     {
-        $this->items = array();
-        $this->extraFields = array();
+        $this->items = [];
+        $this->extraFields = [];
     }
 
     /**
      * Remove the items from this list with the given IDs
      *
      * @param array $items
-     * @param array $items
      * @return $this
      */
     public function removeMany($items)
     {
-        $this->items = array_diff($this->items, $items);
+        $this->items = array_diff($this->items ?? [], $items);
         return $this;
     }
 
@@ -196,7 +192,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function removeDuplicates($field = 'ID')
     {
-        $this->items = array_unique($this->items);
+        $this->items = array_unique($this->items ?? []);
     }
 
     /**
@@ -223,14 +219,14 @@ class UnsavedRelationList extends ArrayList implements Relation
         // Get a list of IDs of our current items - if it's not a number then object then assume it's a DO.
         $ids = array_map(function ($obj) {
             return is_numeric($obj) ? $obj : $obj->ID;
-        }, $this->items);
+        }, $this->items ?? []);
 
         // Strip out duplicates and anything resolving to False.
-        $ids = array_filter(array_unique($ids));
+        $ids = array_filter(array_unique($ids ?? []));
 
         // Change the array from (1, 2, 3) to (1 => 1, 2 => 2, 3 => 3)
         if ($ids) {
-            $ids = array_combine($ids, $ids);
+            $ids = array_combine($ids ?? [], $ids ?? []);
         }
 
         return $ids;
@@ -280,15 +276,41 @@ class UnsavedRelationList extends ArrayList implements Relation
     }
 
     /**
+     * Returns a unique array of a single field value for all items in the list.
+     *
+     * @param  string $colName
+     * @return array
+     */
+    public function columnUnique($colName = "ID")
+    {
+        $list = new ArrayList($this->toArray());
+        return $list->columnUnique($colName);
+    }
+
+    /**
      * Returns a copy of this list with the relationship linked to the given foreign ID.
      * @param int|array $id An ID or an array of IDs.
-     * @return static
+     * @return Relation
      */
     public function forForeignID($id)
     {
-        $class = singleton($this->baseClass);
-        $class->ID = 1;
-        return $class->{$this->relationName}()->forForeignID($id);
+        $singleton = DataObject::singleton($this->baseClass);
+        /** @var Relation $relation */
+        $relation = $singleton->{$this->relationName}($id);
+        return $relation;
+    }
+
+    /**
+     * @param string $relationName
+     * @return Relation
+     */
+    public function relation($relationName)
+    {
+        $ids = $this->column('ID');
+        $singleton = DataObject::singleton($this->dataClass);
+        /** @var Relation $relation */
+        $relation = $singleton->$relationName($ids);
+        return $relation;
     }
 
     /**
@@ -299,7 +321,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      */
     public function dbObject($fieldName)
     {
-        return singleton($this->dataClass)->dbObject($fieldName);
+        return DataObject::singleton($this->dataClass)->dbObject($fieldName);
     }
 
     protected function extractValue($item, $key)

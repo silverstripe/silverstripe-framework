@@ -19,12 +19,12 @@ class Permission_Group
 
     /**
      * Associative array of permissions in this permission group. The array
-     * indicies are the permission codes as used in
+     * indices are the permission codes as used in
      * {@link Permission::check()}. The value is suitable for using in an
      * interface.
      * @var string
      */
-    protected $permissions = array();
+    protected $permissions = [];
 
 
     /**
@@ -33,7 +33,7 @@ class Permission_Group
      * @param string $name Text that could be used as label used in an
      *                     interface
      * @param array $permissions Associative array of permissions in this
-     *                           permission group. The array indicies are the
+     *                           permission group. The array indices are the
      *                           permission codes as used in
      *                           {@link Permission::check()}. The value is
      *                           suitable for using in an interface.
@@ -59,7 +59,7 @@ class Permission_Group
      * Get permissions
      *
      * @return array Associative array of permissions in this permission
-     *               group. The array indicies are the permission codes as
+     *               group. The array indices are the permission codes as
      *               used in {@link Permission::check()}. The value is
      *               suitable for using in an interface.
      */

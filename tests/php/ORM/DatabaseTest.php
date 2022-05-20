@@ -15,9 +15,9 @@ use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 class DatabaseTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         MyObject::class,
-    );
+    ];
 
     protected $usesDatabase = true;
 
@@ -143,17 +143,17 @@ class DatabaseTest extends SapphireTest
 
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'Can aquire lock'
+            'Can acquire lock'
         );
-        // $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly aquire the same lock');
+        // $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly acquire the same lock');
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'The same lock can be aquired multiple times in the same connection'
+            'The same lock can be acquired multiple times in the same connection'
         );
 
         $this->assertTrue(
             $db->getLock('DatabaseTestOtherLock'),
-            'Can aquire different lock'
+            'Can acquire different lock'
         );
         $db->releaseLock('DatabaseTestOtherLock');
 
@@ -163,7 +163,7 @@ class DatabaseTest extends SapphireTest
 
         $this->assertTrue(
             $db->getLock('DatabaseTest'),
-            'Can aquire lock after releasing it'
+            'Can acquire lock after releasing it'
         );
         $db->releaseLock('DatabaseTest');
     }
@@ -180,55 +180,117 @@ class DatabaseTest extends SapphireTest
             return $this->markTestSkipped('MSSQLDatabase doesn\'t support inspecting locks');
         }
 
-        $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock before first aquiring one');
+        $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock before first acquiring one');
         $db->getLock('DatabaseTest');
-        $this->assertFalse($db->canLock('DatabaseTest'), 'Can\'t lock after aquiring one');
+        $this->assertFalse($db->canLock('DatabaseTest'), 'Can\'t lock after acquiring one');
         $db->releaseLock('DatabaseTest');
         $this->assertTrue($db->canLock('DatabaseTest'), 'Can lock again after releasing it');
     }
 
-    public function testTransactions()
+    public function testFieldTypes()
     {
-        $conn = DB::get_conn();
-        if (!$conn->supportsTransactions()) {
-            $this->markTestSkipped("DB Doesn't support transactions");
-            return;
+        // Scaffold some data
+        $obj = new MyObject();
+        $obj->MyField = "value";
+        $obj->MyInt = 5;
+        $obj->MyFloat = 6.0;
+
+        // Note: in non-PDO SQLite, whole numbers of a decimal field will be returned as integers rather than floats
+        $obj->MyDecimal = 7.1;
+        $obj->MyBoolean = true;
+        $obj->write();
+
+        $record = DB::prepared_query(
+            'SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ?',
+            [ $obj->ID ]
+        )->record();
+
+        // IDs and ints are returned as ints
+        $this->assertIsInt($record['ID'], 'Primary key should be integer');
+        $this->assertIsInt($record['MyInt'], 'DBInt fields should be integer');
+
+        $this->assertIsFloat($record['MyFloat'], 'DBFloat fields should be float');
+        $this->assertIsFloat($record['MyDecimal'], 'DBDecimal fields should be float');
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertIsInt($record['MyBoolean'], 'DBBoolean fields should be int');
+
+        // Strings and enums are returned as strings
+        $this->assertIsString($record['MyField'], 'DBVarchar fields should be string');
+        $this->assertIsString($record['ClassName'], 'DBEnum fields should be string');
+
+        // Dates are returned as strings
+        $this->assertIsString($record['Created'], 'DBDatetime fields should be string');
+
+
+        // Ensure that the same is true when calling a query a second time (cached prepared statement)
+
+        $record = DB::prepared_query(
+            'SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ?',
+            [ $obj->ID ]
+        )->record();
+
+        // IDs and ints are returned as ints
+        $this->assertIsInt($record['ID'], 'Primary key should be integer (2nd call)');
+        $this->assertIsInt($record['MyInt'], 'DBInt fields should be integer (2nd call)');
+
+        $this->assertIsFloat($record['MyFloat'], 'DBFloat fields should be float (2nd call)');
+        $this->assertIsFloat($record['MyDecimal'], 'DBDecimal fields should be float (2nd call)');
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertIsInt($record['MyBoolean'], 'DBBoolean fields should be int (2nd call)');
+
+        // Strings and enums are returned as strings
+        $this->assertIsString($record['MyField'], 'DBVarchar fields should be string (2nd call)');
+        $this->assertIsString($record['ClassName'], 'DBEnum fields should be string (2nd call)');
+
+        // Dates are returned as strings
+        $this->assertIsString($record['Created'], 'DBDatetime fields should be string (2nd call)');
+
+
+        // Ensure that the same is true when using non-prepared statements
+        $record = DB::query('SELECT * FROM "DatabaseTest_MyObject" WHERE "ID" = ' . (int)$obj->ID)->record();
+
+        // IDs and ints are returned as ints
+        $this->assertIsInt($record['ID'], 'Primary key should be integer (non-prepared)');
+        $this->assertIsInt($record['MyInt'], 'DBInt fields should be integer (non-prepared)');
+
+        $this->assertIsFloat($record['MyFloat'], 'DBFloat fields should be float (non-prepared)');
+        $this->assertIsFloat($record['MyDecimal'], 'DBDecimal fields should be float (non-prepared)');
+
+        // Booleans are returned as ints – we follow MySQL's lead
+        $this->assertIsInt($record['MyBoolean'], 'DBBoolean fields should be int (non-prepared)');
+
+        // Strings and enums are returned as strings
+        $this->assertIsString($record['MyField'], 'DBVarchar fields should be string (non-prepared)');
+        $this->assertIsString($record['ClassName'], 'DBEnum fields should be string (non-prepared)');
+
+        // Dates are returned as strings
+        $this->assertIsString($record['Created'], 'DBDatetime fields should be string (non-prepared)');
+
+        // Booleans selected directly are ints
+        $result = DB::query('SELECT TRUE')->first();
+        $this->assertIsInt(reset($result));
+    }
+
+    /**
+     * Test that repeated iteration of a query returns all records.
+     * See https://github.com/silverstripe/silverstripe-framework/issues/9097
+     */
+    public function testRepeatedIteration()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
         }
 
-        // Test that successful transactions are comitted
-        $obj = new DatabaseTest\MyObject();
-        $failed = false;
-        $conn->withTransaction(
-            function () use (&$obj) {
-                $obj->MyField = 'Save 1';
-                $obj->write();
-            },
-            function () use (&$failed) {
-                $failed = true;
-            }
-        );
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertFalse($failed);
+        $query = DB::query('SELECT "MyInt", "MyField" FROM "DatabaseTest_MyObject" ORDER BY "MyInt"');
 
-        // Test failed transactions are rolled back
-        $ex = null;
-        $failed = false;
-        try {
-            $conn->withTransaction(
-                function () use (&$obj) {
-                    $obj->MyField = 'Save 2';
-                    $obj->write();
-                    throw new Exception("error");
-                },
-                function () use (&$failed) {
-                    $failed = true;
-                }
-            );
-        } catch (Exception $ex) {
-        }
-        $this->assertTrue($failed);
-        $this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
-        $this->assertInstanceOf('Exception', $ex);
-        $this->assertEquals('error', $ex->getMessage());
+        $this->assertEquals($inputData, $query->map());
+        $this->assertEquals($inputData, $query->map());
     }
 }

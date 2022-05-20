@@ -19,14 +19,14 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var array $firstItems
      */
-    protected $firstItems = array();
+    protected $firstItems = [];
 
     /**
      * @see Map::push()
      *
      * @var array $lastItems
      */
-    protected $lastItems = array();
+    protected $lastItems = [];
 
     /**
      * Construct a new map around an SS_list.
@@ -69,7 +69,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function toArray()
     {
-        $array = array();
+        $array = [];
 
         foreach ($this as $k => $v) {
             $array[$k] = $v;
@@ -85,7 +85,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function keys()
     {
-        return array_keys($this->toArray());
+        return array_keys($this->toArray() ?? []);
     }
 
     /**
@@ -95,7 +95,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function values()
     {
-        return array_values($this->toArray());
+        return array_values($this->toArray() ?? []);
     }
 
     /**
@@ -110,9 +110,9 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     public function unshift($key, $value)
     {
         $oldItems = $this->firstItems;
-        $this->firstItems = array(
+        $this->firstItems = [
             $key => $value
-        );
+        ];
 
         if ($oldItems) {
             $this->firstItems = $this->firstItems + $oldItems;
@@ -132,9 +132,9 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     {
         $oldItems = $this->lastItems;
 
-        $this->lastItems = array(
+        $this->lastItems = [
             $key => $value
-        );
+        ];
 
         if ($oldItems) {
             $this->lastItems = $this->lastItems + $oldItems;
@@ -150,6 +150,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -170,6 +171,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -202,6 +204,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (isset($this->firstItems[$key])) {
@@ -212,10 +215,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
             $this->lastItems[$key] = $value;
         }
 
-        user_error(
-            'Map is read-only. Please use $map->push($key, $value) to append values',
-            E_USER_ERROR
-        );
+        throw new \BadMethodCallException('Map is read-only. Please use $map->push($key, $value) to append values');
     }
 
     /**
@@ -229,6 +229,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var string $key
      * @var mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if (isset($this->firstItems[$key])) {
@@ -243,9 +244,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
             return;
         }
 
-        user_error(
-            "Map is read-only. Unset cannot be called on keys derived from the DataQuery",
-            E_USER_ERROR
+        throw new \BadMethodCallException(
+            'Map is read-only. Unset cannot be called on keys derived from the DataQuery'
         );
     }
 
@@ -257,6 +257,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return Map_Iterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new Map_Iterator(
@@ -274,10 +275,11 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->list->count() +
-            count($this->firstItems) +
-            count($this->lastItems);
+            count($this->firstItems ?? []) +
+            count($this->lastItems ?? []);
     }
 }

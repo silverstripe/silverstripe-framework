@@ -13,7 +13,7 @@ use SilverStripe\View\HTML;
  * button is selected. Each item is defined through {@link SelectionGroup_Item}.
  *
  * @example <code>
- * $items = array(
+ * $items = [
  *  new SelectionGroup_Item(
  *      'one',
  *      new LiteralField('one', 'one view'),
@@ -24,7 +24,7 @@ use SilverStripe\View\HTML;
  *      new LiteralField('two', 'two view'),
  *      'two title'
  *  ),
- * );
+ * ];
  * $field = new SelectionGroup('MyGroup', $items);
  * </code>
  *
@@ -47,15 +47,15 @@ class SelectionGroup extends CompositeField
             $this->setValue($value);
         }
 
-        $selectionItems = array();
+        $selectionItems = [];
 
         foreach ($items as $key => $item) {
             if ($item instanceof SelectionGroup_Item) {
                 $selectionItems[] = $item;
             } else {
                 // Convert legacy format
-                if (strpos($key, '//') !== false) {
-                    list($key,$title) = explode('//', $key, 2);
+                if (strpos($key ?? '', '//') !== false) {
+                    list($key,$title) = explode('//', $key ?? '', 2);
                 } else {
                     $title = null;
                 }
@@ -77,7 +77,7 @@ class SelectionGroup extends CompositeField
     {
         $items = parent::FieldList()->toArray();
         $count = 0;
-        $newItems = array();
+        $newItems = [];
 
         /** @var SelectionGroup_Item $item */
         foreach ($items as $item) {
@@ -91,21 +91,22 @@ class SelectionGroup extends CompositeField
 
             $itemID = $this->ID() . '_' . (++$count);
             // @todo Move into SelectionGroup_Item.ss template at some point.
-            $extra = array(
+            $extra = [
                 "RadioButton" => DBField::create_field('HTMLFragment', HTML::createTag(
                     'input',
-                    array(
+                    [
                         'class' => 'selector',
                         'type' => 'radio',
                         'id' => $itemID,
                         'name' => $this->name,
                         'value' => $item->getValue(),
                         'checked' => $checked,
-                    )
+                        'disabled' => $item->isDisabled()
+                    ]
                 )),
                 "RadioLabel" => $item->getTitle(),
                 "Selected" => $firstSelected,
-            );
+            ];
             $newItems[] = $item->customise($extra);
         }
 
@@ -117,7 +118,7 @@ class SelectionGroup extends CompositeField
         return true;
     }
 
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return parent::FieldHolder($properties);
     }

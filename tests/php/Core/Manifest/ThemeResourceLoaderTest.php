@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
@@ -32,7 +33,7 @@ class ThemeResourceLoaderTest extends SapphireTest
     /**
      * Set up manifest before each test
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -54,9 +55,12 @@ class ThemeResourceLoaderTest extends SapphireTest
         // New Loader for that root
         $this->loader = new ThemeResourceLoader($this->base);
         $this->loader->addSet('$default', $this->manifest);
+
+        // Ensure the cache is flushed between tests
+        ThemeResourceLoader::flush();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ModuleLoader::inst()->popManifest();
         parent::tearDown();
@@ -210,10 +214,10 @@ class ThemeResourceLoaderTest extends SapphireTest
     public function testFindTemplatesInApplication()
     {
         // TODO: replace with one that doesn't create temporary files (so bad)
-        $templates = array(
+        $templates = [
             $this->base . '/myproject/templates/Page.ss',
             $this->base . '/myproject/templates/Layout/Page.ss'
-        );
+        ];
         $this->createTestTemplates($templates);
 
         $this->assertEquals(
@@ -302,14 +306,14 @@ class ThemeResourceLoaderTest extends SapphireTest
     protected function createTestTemplates($templates)
     {
         foreach ($templates as $template) {
-            file_put_contents($template, '');
+            file_put_contents($template ?? '', '');
         }
     }
 
     protected function removeTestTemplates($templates)
     {
         foreach ($templates as $template) {
-            unlink($template);
+            unlink($template ?? '');
         }
     }
 
@@ -376,5 +380,29 @@ class ThemeResourceLoaderTest extends SapphireTest
     public function testGetPath($name, $path)
     {
         $this->assertEquals($path, $this->loader->getPath($name));
+    }
+
+    public function testFindTemplateWithCacheMiss()
+    {
+        $mockCache = $this->createMock(CacheInterface::class);
+        $mockCache->expects($this->once())->method('has')->willReturn(false);
+        $mockCache->expects($this->never())->method('get');
+        $mockCache->expects($this->once())->method('set');
+
+        $loader = new ThemeResourceLoader();
+        $loader->setCache($mockCache);
+        $loader->findTemplate('Page', ['$default']);
+    }
+
+    public function testFindTemplateWithCacheHit()
+    {
+        $mockCache = $this->createMock(CacheInterface::class);
+        $mockCache->expects($this->once())->method('has')->willReturn(true);
+        $mockCache->expects($this->never())->method('set');
+        $mockCache->expects($this->once())->method('get')->willReturn('mock_template.ss');
+
+        $loader = new ThemeResourceLoader();
+        $loader->setCache($mockCache);
+        $this->assertSame('mock_template.ss', $loader->findTemplate('Page', ['$default']));
     }
 }

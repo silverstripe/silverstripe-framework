@@ -48,7 +48,7 @@ class Parser extends SSTemplateParser
         $this->string = $string;
         $this->pos = 0;
         $this->depth = 0;
-        $this->regexps = array();
+        $this->regexps = [];
         $this->warnIfEmpty = $warnIfEmpty;
     }
 
@@ -61,7 +61,7 @@ class Parser extends SSTemplateParser
     public function Translate_Entity(&$res, $sub)
     {
         // Collapse escaped slashes
-        $this->currentEntityKey = str_replace('\\\\', '\\', $sub['text']); // key
+        $this->currentEntityKey = str_replace('\\\\', '\\', $sub['text'] ?? ''); // key
     }
 
     public function Translate_Default(&$res, $sub)
@@ -93,7 +93,7 @@ class Parser extends SSTemplateParser
         }
 
         // If only default is set, simplify
-        if (count($entity) === 1 && !empty($entity['default'])) {
+        if (count($entity ?? []) === 1 && !empty($entity['default'])) {
             $entity = $entity['default'];
         }
 
@@ -111,7 +111,7 @@ class Parser extends SSTemplateParser
     {
         // Run the parser and throw away the result
         $parser = new Parser($template, $warnIfEmpty);
-        if (substr($template, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+        if (substr($template ?? '', 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
             $parser->pos = 3;
         }
         $parser->match_TopTemplate();

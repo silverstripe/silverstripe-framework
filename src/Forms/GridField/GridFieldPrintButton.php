@@ -16,7 +16,7 @@ use SilverStripe\View\Requirements;
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  */
-class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+class GridFieldPrintButton extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     use Extensible;
 
@@ -53,7 +53,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Place the print button in a <p> tag below the field
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -70,21 +70,21 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
         $button->addExtraClass('font-icon-print grid-print-button btn btn-secondary');
 
-        return array(
+        return [
             $this->targetFragment =>  $button->Field(),
-        );
+        ];
     }
 
     /**
      * Print is an action button.
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
     public function getActions($gridField)
     {
-        return array('print');
+        return ['print'];
     }
 
     /**
@@ -106,14 +106,14 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Print is accessible via the url
      *
-     * @param GridField
+     * @param GridField $gridField
      * @return array
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'print' => 'handlePrint',
-        );
+        ];
     }
 
     /**
@@ -133,7 +133,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         $this->extend('updatePrintData', $data);
 
         if ($data) {
-            return $data->renderWith(get_class($gridField)."_print");
+            return $data->renderWith([
+                get_class($gridField) . '_print',
+                GridField::class . '_print',
+            ]);
         }
 
         return null;
@@ -142,7 +145,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the columns to print
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -153,7 +156,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
         }
 
         /** @var GridFieldDataColumns $dataCols */
-        $dataCols = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
+        $dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         if ($dataCols) {
             return $dataCols->getDisplayFields($gridField);
         }
@@ -164,7 +167,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
     /**
      * Return the title of the printed page
      *
-     * @param GridField
+     * @param GridField $gridField
      *
      * @return array
      */
@@ -211,46 +214,47 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
             $header = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
-                $header->push(new ArrayData(array(
+                $header->push(new ArrayData([
                     "CellString" => $label,
-                )));
+                ]));
             }
         }
 
         $items = $gridField->getManipulatedList();
         $itemRows = new ArrayList();
 
+        /** @var GridFieldDataColumns $gridFieldColumnsComponent */
+        $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
             $itemRow = new ArrayList();
 
             foreach ($printColumns as $field => $label) {
-                $value = $gridField->getDataFieldValue($item, $field);
+                $value = $gridFieldColumnsComponent
+                    ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
+                    : $gridField->getDataFieldValue($item, $field);
 
-                if ($item->escapeTypeForField($field) != 'xml') {
-                    $value = Convert::raw2xml($value);
-                }
-
-                $itemRow->push(new ArrayData(array(
+                $itemRow->push(new ArrayData([
                     "CellString" => $value,
-                )));
+                ]));
             }
 
-            $itemRows->push(new ArrayData(array(
+            $itemRows->push(new ArrayData([
                 "ItemRow" => $itemRow
-            )));
+            ]));
             if ($item->hasMethod('destroy')) {
                 $item->destroy();
             }
         }
 
-        $ret = new ArrayData(array(
+        $ret = new ArrayData([
             "Title" => $this->getTitle($gridField),
             "Header" => $header,
             "ItemRows" => $itemRows,
             "Datetime" => DBDatetime::now(),
             "Member" => Security::getCurrentUser(),
-        ));
+        ]);
 
         return $ret;
     }

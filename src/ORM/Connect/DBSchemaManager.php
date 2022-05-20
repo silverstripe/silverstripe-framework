@@ -2,12 +2,13 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBPrimaryKey;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
-use Exception;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
 
 /**
  * Represents and handles all schema management for a database
@@ -51,6 +52,22 @@ abstract class DBSchemaManager
     protected $supressOutput = false;
 
     /**
+     * @var array<string,string>
+     */
+    protected static $table_name_warnings = [];
+
+    /**
+     * @param string $table
+     * @param string $class
+     *
+     * @deprecated 4.0.0:5.0.0
+     */
+    public static function showTableNameWarning($table, $class)
+    {
+        static::$table_name_warnings[$table] = $class;
+    }
+
+    /**
      * Injector injection point for database controller
      *
      * @param Database $database
@@ -83,11 +100,13 @@ abstract class DBSchemaManager
     protected $schemaUpdateTransaction;
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
+     *
+     * @param bool $quiet
      */
-    public function quiet()
+    public function quiet($quiet = true)
     {
-        $this->supressOutput = true;
+        $this->supressOutput = $quiet;
     }
 
     /**
@@ -129,14 +148,14 @@ abstract class DBSchemaManager
         $this->schemaIsUpdating = true;
 
         // Update table list
-        $this->tableList = array();
+        $this->tableList = [];
         $tables = $this->tableList();
         foreach ($tables as $table) {
             $this->tableList[strtolower($table)] = $table;
         }
 
         // Clear update list for client code to mess around with
-        $this->schemaUpdateTransaction = array();
+        $this->schemaUpdateTransaction = [];
 
         /** @var Exception $error */
         $error = null;
@@ -222,13 +241,13 @@ abstract class DBSchemaManager
      */
     public function transCreateTable($table, $options = null, $advanced_options = null)
     {
-        $this->schemaUpdateTransaction[$table] = array(
+        $this->schemaUpdateTransaction[$table] = [
             'command' => 'create',
-            'newFields' => array(),
-            'newIndexes' => array(),
+            'newFields' => [],
+            'newIndexes' => [],
             'options' => $options,
             'advancedOptions' => $advanced_options
-        );
+        ];
     }
 
     /**
@@ -306,14 +325,14 @@ abstract class DBSchemaManager
     protected function transInitTable($table)
     {
         if (!isset($this->schemaUpdateTransaction[$table])) {
-            $this->schemaUpdateTransaction[$table] = array(
+            $this->schemaUpdateTransaction[$table] = [
                 'command' => 'alter',
-                'newFields' => array(),
-                'newIndexes' => array(),
-                'alteredFields' => array(),
-                'alteredIndexes' => array(),
+                'newFields' => [],
+                'newIndexes' => [],
+                'alteredFields' => [],
+                'alteredIndexes' => [],
                 'alteredOptions' => ''
-            );
+            ];
         }
     }
 
@@ -328,7 +347,7 @@ abstract class DBSchemaManager
      * @param array $indexSchema A list of indexes to create. See {@link requireIndex()}
      * The values of the array can be one of:
      *   - true: Create a single column index on the field named the same as the index.
-     *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
+     *   - ['fields' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
      *     control over the index.
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
      * @param array $options Create table options (ENGINE, etc.)
@@ -339,7 +358,7 @@ abstract class DBSchemaManager
         $fieldSchema = null,
         $indexSchema = null,
         $hasAutoIncPK = true,
-        $options = array(),
+        $options = [],
         $extensions = false
     ) {
         if (!isset($this->tableList[strtolower($table)])) {
@@ -357,9 +376,9 @@ abstract class DBSchemaManager
             $tableOptionsChanged = false;
             // Check for DB constant on the schema class
             $dbIDName = sprintf('%s::ID', static::class);
-            $dbID = defined($dbIDName) ? constant($dbIDName) : null;
+            $dbID = defined($dbIDName ?? '') ? constant($dbIDName) : null;
             if ($dbID && isset($options[$dbID])) {
-                if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
+                if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID] ?? '', $alteredEngineMatches)) {
                     $alteredEngine = $alteredEngineMatches[1];
                     $tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->first();
                     $tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
@@ -381,11 +400,11 @@ abstract class DBSchemaManager
             foreach ($fieldSchema as $fieldName => $fieldSpec) {
                 //Is this an array field?
                 $arrayValue = '';
-                if (strpos($fieldSpec, '[') !== false) {
+                if (strpos($fieldSpec ?? '', '[') !== false) {
                     //If so, remove it and store that info separately
-                    $pos = strpos($fieldSpec, '[');
-                    $arrayValue = substr($fieldSpec, $pos);
-                    $fieldSpec = substr($fieldSpec, 0, $pos);
+                    $pos = strpos($fieldSpec ?? '', '[');
+                    $arrayValue = substr($fieldSpec ?? '', $pos ?? 0);
+                    $fieldSpec = substr($fieldSpec ?? '', 0, $pos);
                 }
 
                 /** @var DBField $fieldObj */
@@ -409,6 +428,27 @@ abstract class DBSchemaManager
                 $this->requireIndex($table, $indexName, $indexSpec);
             }
         }
+
+        // Check and display notice about $table_name
+        static $table_name_info_sent = false;
+
+        if (isset(static::$table_name_warnings[$table])) {
+            if (!$table_name_info_sent) {
+                $this->alterationMessage(
+                    <<<'MESSAGE'
+<strong>Please note:</strong> It is strongly recommended to define a
+table_name for all namespaced models. Not defining a table_name may cause generated table
+names to be too long and may not be supported by your current database engine. The generated
+naming scheme will also change when upgrading to SilverStripe 5.0 and potentially break.
+MESSAGE
+                    ,
+                    'error'
+                );
+                $table_name_info_sent = true;
+            }
+
+            $this->alterationMessage('table_name not set for class ' . static::$table_name_warnings[$table], 'notice');
+        }
     }
 
     /**
@@ -417,16 +457,21 @@ abstract class DBSchemaManager
      */
     public function dontRequireTable($table)
     {
-        if (isset($this->tableList[strtolower($table)])) {
-            $suffix = '';
-            while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
-                $suffix = $suffix
-                        ? ((int)$suffix + 1)
-                        : 2;
-            }
-            $this->renameTable($table, "_obsolete_{$table}$suffix");
-            $this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix", "obsolete");
+        if (!isset($this->tableList[strtolower($table)])) {
+            return;
         }
+        $prefix = "_obsolete_{$table}";
+        $suffix = '';
+        $renameTo = $prefix . $suffix;
+        while (isset($this->tableList[strtolower($renameTo)])) {
+            $suffix = $suffix
+                    ? ((int)$suffix + 1)
+                    : 2;
+            $renameTo = $prefix . $suffix;
+        }
+        $renameFrom = $this->tableList[strtolower($table)];
+        $this->renameTable($renameFrom, $renameTo);
+        $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
     }
 
     /**
@@ -435,7 +480,7 @@ abstract class DBSchemaManager
      * The keys of the array are the names of the index.
      * The values of the array can be one of:
      *  - true: Create a single column index on the field named the same as the index.
-     *  - array('type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB'): This gives you full
+     *  - ['type' => 'index|unique|fulltext', 'value' => 'FieldA, FieldB']: This gives you full
      *    control over the index.
      *
      * @param string $table The table name.
@@ -490,11 +535,11 @@ abstract class DBSchemaManager
     {
         // Remove any leading/trailing brackets and outlying modifiers
         // E.g. 'unique (Title, "QuotedColumn");' => 'Title, "QuotedColumn"'
-        $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec);
+        $containedSpec = preg_replace('/(.*\(\s*)|(\s*\).*)/', '', $spec ?? '');
 
         // Split potentially quoted modifiers
-        // E.g. 'Title, "QuotedColumn"' => array('Title', 'QuotedColumn')
-        return preg_split('/"?\s*,\s*"?/', trim($containedSpec, '(") '));
+        // E.g. 'Title, "QuotedColumn"' => ['Title', 'QuotedColumn']
+        return preg_split('/"?\s*,\s*"?/', trim($containedSpec ?? '', '(") '));
     }
 
     /**
@@ -536,8 +581,8 @@ abstract class DBSchemaManager
         // check array spec
         if (is_array($spec) && isset($spec['type'])) {
             return $spec['type'];
-        } elseif (!is_array($spec) && preg_match('/(?<type>\w+)\s*\(/', $spec, $matchType)) {
-            return strtolower($matchType['type']);
+        } elseif (!is_array($spec) && preg_match('/(?<type>\w+)\s*\(/', $spec ?? '', $matchType)) {
+            return strtolower($matchType['type'] ?? '');
         } else {
             return 'index';
         }
@@ -559,10 +604,10 @@ abstract class DBSchemaManager
     {
         // Return already converted spec
         if (!is_array($indexSpec)
-            || !array_key_exists('type', $indexSpec)
-            || !array_key_exists('columns', $indexSpec)
+            || !array_key_exists('type', $indexSpec ?? [])
+            || !array_key_exists('columns', $indexSpec ?? [])
             || !is_array($indexSpec['columns'])
-            || array_key_exists('value', $indexSpec)
+            || array_key_exists('value', $indexSpec ?? [])
         ) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -597,7 +642,7 @@ abstract class DBSchemaManager
             return false;
         }
         $fields = $this->fieldList($tableName);
-        return array_key_exists($fieldName, $fields);
+        return array_key_exists($fieldName, $fields ?? []);
     }
 
     /**
@@ -632,7 +677,7 @@ abstract class DBSchemaManager
         // collations.
         // TODO: move this to the MySQLDatabase file, or drop it altogether?
         if (!$this->database->supportsCollations()) {
-            $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec);
+            $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec ?? '');
         }
 
         if (!isset($this->tableList[strtolower($table)])) {
@@ -673,33 +718,33 @@ abstract class DBSchemaManager
         } elseif ($fieldValue != $specValue) {
             // If enums/sets are being modified, then we need to fix existing data in the table.
             // Update any records where the enum is set to a legacy value to be set to the default.
-            foreach (array('enum', 'set') as $enumtype) {
-                if (preg_match("/^$enumtype/i", $specValue)) {
-                    $newStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $spec_orig);
-                    $new = preg_split("/'\\s*,\\s*'/", $newStr);
+            $enumValuesExpr = "/^(enum|set)\\s*\\(['\"](?<values>[^'\"]+)['\"]\\).*/i";
+            if (preg_match($enumValuesExpr ?? '', $specValue ?? '', $specMatches)
+                && preg_match($enumValuesExpr ?? '', $spec_orig ?? '', $oldMatches)
+            ) {
+                $new = preg_split("/'\\s*,\\s*'/", $specMatches['values'] ?? '');
+                $old = preg_split("/'\\s*,\\s*'/", $oldMatches['values'] ?? '');
 
-                    $oldStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $fieldValue);
-                    $old = preg_split("/'\\s*,\\s*'/", $oldStr);
-
-                    $holder = array();
-                    foreach ($old as $check) {
-                        if (!in_array($check, $new)) {
-                            $holder[] = $check;
-                        }
+                $holder = [];
+                foreach ($old as $check) {
+                    if (!in_array($check, $new ?? [])) {
+                        $holder[] = $check;
                     }
-                    if (count($holder)) {
-                        $default = explode('default ', $spec_orig);
-                        $default = $default[1];
-                        $query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
-                        for ($i = 0; $i + 1 < count($holder); $i++) {
-                            $query .= "'{$holder[$i]}', ";
-                        }
-                        $query .= "'{$holder[$i]}')";
-                        $this->query($query);
+                }
+
+                if (count($holder ?? [])) {
+                    // Get default pre-escaped for SQL. We just use this directly, as we don't have a real way to
+                    // de-encode SQL values
+                        $default = explode('default ', $spec_orig ?? '');
+                    $defaultSQL = isset($default[1]) ? $default[1] : 'NULL';
+                    // Reset to default any value in that is in the old enum, but not the new one
+                    $placeholders = DB::placeholders($holder);
+                    $query = "UPDATE \"{$table}\" SET \"{$field}\" = {$defaultSQL} WHERE \"{$field}\" IN ({$placeholders})";
+                    $this->preparedQuery($query, $holder);
                         $amount = $this->database->affectedRows();
-                        $this->alterationMessage("Changed $amount rows to default value of field $field"
-                                . " (Value: $default)");
-                    }
+                    $this->alterationMessage(
+                        "Changed $amount rows to default value of field $field (Value: $defaultSQL)"
+                    );
                 }
             }
             $this->transAlterField($table, $field, $spec_orig);
@@ -719,7 +764,7 @@ abstract class DBSchemaManager
     public function dontRequireField($table, $fieldName)
     {
         $fieldList = $this->fieldList($table);
-        if (array_key_exists($fieldName, $fieldList)) {
+        if (array_key_exists($fieldName, $fieldList ?? [])) {
             $suffix = '';
             while (isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
                 $suffix = $suffix
@@ -745,51 +790,45 @@ abstract class DBSchemaManager
         if (!$this->supressOutput) {
             if (Director::is_cli()) {
                 switch ($type) {
-                    case "created":
-                    case "changed":
-                    case "repaired":
-                        $sign = "+";
+                    case 'created':
+                    case 'changed':
+                    case 'repaired':
+                        $sign = '+';
                         break;
-                    case "obsolete":
-                    case "deleted":
+                    case 'obsolete':
+                    case 'deleted':
                         $sign = '-';
                         break;
-                    case "notice":
+                    case 'notice':
                         $sign = '*';
                         break;
-                    case "error":
-                        $sign = "!";
+                    case 'error':
+                        $sign = '!';
                         break;
                     default:
-                        $sign = " ";
+                        $sign = ' ';
                 }
-                $message = strip_tags($message);
+                $message = strip_tags($message ?? '');
                 echo "  $sign $message\n";
             } else {
                 switch ($type) {
-                    case "created":
-                        $class = "success";
+                    case 'created':
+                        $class = 'success';
                         break;
-                    case "obsolete":
-                        $class = "error";
+                    case 'obsolete':
+                    case 'error':
+                    case 'deleted':
+                        $class = 'error';
                         break;
-                    case "notice":
-                        $class = "warning";
+                    case 'notice':
+                        $class = 'warning';
                         break;
-                    case "error":
-                        $class = "error";
-                        break;
-                    case "deleted":
-                        $class = "error";
-                        break;
-                    case "changed":
-                        $class = "info";
-                        break;
-                    case "repaired":
-                        $class = "info";
+                    case 'changed':
+                    case 'repaired':
+                        $class = 'info';
                         break;
                     default:
-                        $class = "";
+                        $class = '';
                 }
                 echo "<li class=\"$class\">$message</li>";
             }
@@ -823,7 +862,7 @@ abstract class DBSchemaManager
     {
         // Check if table exists
         $tables = $this->tableList();
-        if (!array_key_exists(strtolower($tableName), $tables)) {
+        if (!array_key_exists(strtolower($tableName ?? ''), $tables ?? [])) {
             return;
         }
 
@@ -835,7 +874,7 @@ abstract class DBSchemaManager
 
         $this->alterationMessage(
             "Table $tableName: renamed from $currentName",
-            "repaired"
+            'repaired'
         );
 
         // Rename via temp table to avoid case-sensitivity issues
@@ -855,13 +894,13 @@ abstract class DBSchemaManager
 
 
     /*
-	 * This is a lookup table for data types.
-	 * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
-	 * So this is a DB-specific list of equivilents.
-	 *
-	 * @param string $type
-	 * @return string
-	 */
+     * This is a lookup table for data types.
+     * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
+     * So this is a DB-specific list of equivilents.
+     *
+     * @param string $type
+     * @return string
+     */
     abstract public function dbDataType($type);
 
     /**
@@ -899,8 +938,7 @@ abstract class DBSchemaManager
      *
      * @param string $tableName The name of the table.
      * @param string $indexName The name of the index.
-     * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()}
-     *                          for more details.
+     * @param array $indexSpec The specification of the index, see Database::requireIndex() for more details.
      * @todo Find out where this is called from - Is it even used? Aren't indexes always dropped and re-added?
      */
     abstract public function alterIndex($tableName, $indexName, $indexSpec);
@@ -922,7 +960,7 @@ abstract class DBSchemaManager
      * Return the list of indexes in a table.
      *
      * @param string $table The table name.
-     * @return array[array] List of current indexes in the table, each in standard
+     * @return array[] List of current indexes in the table, each in standard
      * array form. The key for this array should be predictable using the indexKey
      * method
      */
@@ -1117,10 +1155,10 @@ abstract class DBSchemaManager
     abstract public function varchar($values);
 
     /*
-	 * Returns data type for 'year' column
-	 *
-	 * @param array $values Contains a tokenised list of info about this data type
-	 * @return string
-	 */
+     * Returns data type for 'year' column
+     *
+     * @param array $values Contains a tokenised list of info about this data type
+     * @return string
+     */
     abstract public function year($values);
 }

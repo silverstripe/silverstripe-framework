@@ -7,14 +7,19 @@ use SilverStripe\ORM\DataObject;
 
 class Staff extends DataObject implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Salary' => 'BigInt',
-    );
+        'EmploymentType' => 'Varchar',
+    ];
 
     private static $table_name = 'DataObjectTest_Staff';
 
-    private static $has_one = array(
+    private static $has_one = [
         'CurrentCompany' => Company::class,
         'PreviousCompany' => Company::class
-    );
+    ];
+
+    private static $defaults = [
+        'EmploymentType' => 'Staff',
+    ];
 }

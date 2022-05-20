@@ -6,7 +6,7 @@ use mysqli_result;
 use mysqli_stmt;
 
 /**
- * Provides a record-view for mysqli statements
+ * Provides a record-view for mysqli prepared statements
  *
  * By default streams unbuffered data, but seek(), rewind(), or numRecords() will force the statement to
  * buffer itself and sacrifice any potential performance benefit.
@@ -40,25 +40,33 @@ class MySQLStatement extends Query
      *
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
+
+    /**
+     * Map of column types, keyed by column name
+     *
+     * @var array
+     */
+    protected $types = [];
 
     /**
      * List of bound variables in the current row
      *
      * @var array
      */
-    protected $boundValues = array();
+    protected $boundValues = [];
 
     /**
      * Binds this statement to the variables
      */
     protected function bind()
     {
-        $variables = array();
+        $variables = [];
 
         // Bind each field
         while ($field = $this->metadata->fetch_field()) {
             $this->columns[] = $field->name;
+            $this->types[$field->name] = $field->type;
             // Note that while boundValues isn't initialised at this point,
             // later calls to $this->statement->fetch() Will populate
             // $this->boundValues later with the next result.
@@ -71,7 +79,7 @@ class MySQLStatement extends Query
         // Buffer all results
         $this->statement->store_result();
 
-        call_user_func_array(array($this->statement, 'bind_result'), $variables);
+        call_user_func_array([$this->statement, 'bind_result'], $variables ?? []);
     }
 
     /**
@@ -97,8 +105,12 @@ class MySQLStatement extends Query
     public function seek($row)
     {
         $this->rowNum = $row - 1;
+
+        // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
         $this->statement->data_seek($row);
-        return $this->next();
+        $result = $this->next();
+        $this->statement->data_seek($row);
+        return $result;
     }
 
     public function numRecords()
@@ -114,15 +126,14 @@ class MySQLStatement extends Query
         }
 
         // Dereferenced row
-        $row = array();
+        $row = [];
         foreach ($this->boundValues as $key => $value) {
+            $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
+            if (in_array($this->types[$key], $floatTypes ?? [])) {
+                $value = (float)$value;
+            }
             $row[$key] = $value;
         }
         return $row;
-    }
-
-    public function rewind()
-    {
-        return $this->seek(0);
     }
 }

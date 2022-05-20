@@ -9,7 +9,7 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'TransactionTest_Object';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)'
-    );
+    ];
 }

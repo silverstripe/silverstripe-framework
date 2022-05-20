@@ -10,9 +10,9 @@ class EnumFieldTest extends SapphireTest
 {
     public function testAnyFieldIsPresentInSearchField()
     {
-        $values = array (
+        $values =  [
                 'Key' => 'Value'
-        );
+        ];
         $enumField = new DBEnum('testField', $values);
 
         $searchField = $enumField->scaffoldSearchField();
@@ -41,7 +41,7 @@ class EnumFieldTest extends SapphireTest
 
         $this->assertEquals(
             ArrayLib::valuekey(
-                array(
+                [
                 '',
                 '0',
                 'Item1',
@@ -51,7 +51,7 @@ class EnumFieldTest extends SapphireTest
                 'item 5
 			still 5',
                 'trailing comma'
-                )
+                ]
             ),
             $enum->enumValues()
         );

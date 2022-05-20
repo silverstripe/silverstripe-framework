@@ -18,7 +18,7 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
      *
      * @var array
      */
-    protected $configs = array();
+    protected $configs = [];
 
     public function locateConfigFor($name)
     {
@@ -29,8 +29,8 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
         }
 
         // If config is in `%$Source` format then inherit from the named config
-        if (is_string($config) && stripos($config, '%$') === 0) {
-            $name = substr($config, 2);
+        if (is_string($config) && stripos($config ?? '', '%$') === 0) {
+            $name = substr($config ?? '', 2);
             return $this->locateConfigFor($name);
         }
 
@@ -47,7 +47,7 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
     protected function configFor($name)
     {
         // Return cached result
-        if (array_key_exists($name, $this->configs)) {
+        if (array_key_exists($name, $this->configs ?? [])) {
             return $this->configs[$name];
         }
 

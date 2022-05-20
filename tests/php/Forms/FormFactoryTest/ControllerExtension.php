@@ -8,6 +8,7 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 
 /**
@@ -40,8 +41,9 @@ class ControllerExtension extends Extension
         if (empty($context['Record'])) {
             return;
         }
+        /** @var Versioned|DataObject $record */
         $record = $context['Record'];
-        if ($record->hasExtension(Versioned::class)) {
+        if ($record->hasExtension(Versioned::class) && $record->hasStages()) {
             $actions->push(new FormAction('publish', 'Publish'));
         }
     }
@@ -60,8 +62,9 @@ class ControllerExtension extends Extension
         if (empty($context['Record'])) {
             return;
         }
+        /** @var Versioned|DataObject $record */
         $record = $context['Record'];
-        if ($record->hasExtension(Versioned::class)) {
+        if ($record->hasExtension(Versioned::class) && $record->hasStages()) {
             $link = $controller->Link('preview');
             $fields->unshift(
                 new LiteralField(

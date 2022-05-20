@@ -10,7 +10,9 @@ class Company extends DataObject implements TestOnly
     private static $table_name = 'DataObjectTest_Company';
 
     private static $db = [
-        'Name' => 'Varchar'
+        'Name' => 'Varchar',
+        'MarketValue' => 'Money',
+        'FoundationYear' => 'Year'
     ];
 
     private static $has_one = [
@@ -19,8 +21,8 @@ class Company extends DataObject implements TestOnly
         'Owner' => DataObject::class // polymorphic
     ];
 
-    private static $has_many = array(
-        'CurrentStaff' => Staff::class.'.CurrentCompany',
-        'PreviousStaff' => Staff::class.'.PreviousCompany'
-    );
+    private static $has_many = [
+        'CurrentStaff' => Staff::class . '.CurrentCompany',
+        'PreviousStaff' => Staff::class . '.PreviousCompany'
+    ];
 }

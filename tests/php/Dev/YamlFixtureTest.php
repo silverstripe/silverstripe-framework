@@ -15,10 +15,10 @@ use SilverStripe\Control\Director;
 class YamlFixtureTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestDataObject::class,
         DataObjectRelation::class,
-    );
+    ];
 
     public function testAbsoluteFixturePath()
     {
@@ -39,17 +39,15 @@ class YamlFixtureTest extends SapphireTest
     public function testStringFixture()
     {
         $absPath = __DIR__ . '/YamlFixtureTest.yml';
-        $string = file_get_contents($absPath);
+        $string = file_get_contents($absPath ?? '');
         $obj = Injector::inst()->create(YamlFixture::class, $string);
         $this->assertEquals($string, $obj->getFixtureString());
         $this->assertNull($obj->getFixtureFile());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testFailsWithInvalidFixturePath()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $invalidPath = ltrim(FRAMEWORK_DIR . '/tests/testing/invalid.yml', '/');
         $obj = Injector::inst()->create(YamlFixture::class, $invalidPath);
     }

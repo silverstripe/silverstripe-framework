@@ -142,8 +142,8 @@ class DiffEngine
 
     public function diff($from_lines, $to_lines)
     {
-        $n_from = sizeof($from_lines);
-        $n_to = sizeof($to_lines);
+        $n_from = sizeof($from_lines ?? []);
+        $n_to = sizeof($to_lines ?? []);
 
         $this->xchanged = $this->ychanged = array();
         $this->xv = $this->yv = array();
@@ -187,7 +187,7 @@ class DiffEngine
         }
 
         // Find the LCS.
-        $this->compareseq(0, sizeof($this->xv), 0, sizeof($this->yv));
+        $this->compareseq(0, sizeof($this->xv ?? []), 0, sizeof($this->yv ?? []));
 
         // Merge edits when possible
         $this->shift_boundaries($from_lines, $this->xchanged, $this->ychanged);
@@ -283,14 +283,17 @@ class DiffEngine
                     continue;
                 $matches = $ymatches[$line];
                 reset($matches);
-                while (list ($junk, $y) = each($matches))
+                $pointer = 0;
+                foreach ($matches as $y) {
+                    $pointer++;
                     if (empty($this->in_seq[$y])) {
                         $k = $this->lcs_pos($y);
                         assert($k > 0);
                         $ymids[$k] = $ymids[$k - 1];
                         break;
                     }
-                while (list ($junk, $y) = each($matches)) {
+                }
+                foreach (array_slice($matches ?? [], $pointer ?? 0) as $y) {
                     if ($y > $this->seq[$k - 1]) {
                         assert($y < $this->seq[$k]);
                         // Optimization: this is a common case:
@@ -418,9 +421,9 @@ class DiffEngine
         $i = 0;
         $j = 0;
 
-        assert(sizeof($lines) == sizeof($changed));
-        $len = sizeof($lines);
-        $other_len = sizeof($other_changed);
+        assert(sizeof($lines ?? []) == sizeof($changed ?? []));
+        $len = sizeof($lines ?? []);
+        $other_len = sizeof($other_changed ?? []);
 
         while (1) {
             /*
@@ -571,7 +574,7 @@ class Diff
 
         foreach ($this->edits as $edit) {
             if ($edit->orig)
-                array_splice($lines, sizeof($lines), 0, $edit->orig);
+                array_splice($lines, sizeof($lines ?? []), 0, $edit->orig);
         }
         return $lines;
     }
@@ -590,7 +593,7 @@ class Diff
 
         foreach ($this->edits as $edit) {
             if ($edit->final)
-                array_splice($lines, sizeof($lines), 0, $edit->final);
+                array_splice($lines, sizeof($lines ?? []), 0, $edit->final);
         }
         return $lines;
     }
@@ -627,8 +630,8 @@ class MappedDiff
                          $mapped_from_lines, $mapped_to_lines)
     {
 
-        assert(sizeof($from_lines) == sizeof($mapped_from_lines));
-        assert(sizeof($to_lines) == sizeof($mapped_to_lines));
+        assert(sizeof($from_lines ?? []) == sizeof($mapped_from_lines ?? []));
+        assert(sizeof($to_lines ?? []) == sizeof($mapped_to_lines ?? []));
 
         parent::__construct($mapped_from_lines, $mapped_to_lines);
 
@@ -638,14 +641,14 @@ class MappedDiff
         for ($i = 0, $max = sizeof($this->edits); $i < $max; $i++) {
             $orig = &$this->edits[$i]->orig;
             if (is_array($orig)) {
-                $orig = array_slice($from_lines, $xi, sizeof($orig));
-                $xi += sizeof($orig);
+                $orig = array_slice($from_lines ?? [], $xi ?? 0, sizeof($orig ?? []));
+                $xi += sizeof($orig ?? []);
             }
 
             $final = &$this->edits[$i]->final;
             if (is_array($final)) {
-                $final = array_slice($to_lines, $yi, sizeof($final));
-                $yi += sizeof($final);
+                $final = array_slice($to_lines ?? [], $yi ?? 0, sizeof($final ?? []));
+                $yi += sizeof($final ?? []);
             }
         }
     }
@@ -699,11 +702,11 @@ class DiffFormatter
         foreach ($diff->edits as $edit) {
             if ($edit->type == 'copy') {
                 if (is_array($block)) {
-                    if (sizeof($edit->orig) <= $nlead + $ntrail) {
+                    if (sizeof($edit->orig ?? []) <= $nlead + $ntrail) {
                         $block[] = $edit;
                     } else {
                         if ($ntrail) {
-                            $context = array_slice($edit->orig, 0, $ntrail);
+                            $context = array_slice($edit->orig ?? [], 0, $ntrail);
                             $block[] = new DiffOp_Copy($context);
                         }
                         $this->block($x0, $ntrail + $xi - $x0,
@@ -715,9 +718,9 @@ class DiffFormatter
                 $context = $edit->orig;
             } else {
                 if (!is_array($block)) {
-                    $context = array_slice($context, max(0, sizeof($context) - $nlead));
-                    $x0 = $xi - sizeof($context);
-                    $y0 = $yi - sizeof($context);
+                    $context = array_slice($context ?? [], max(0, sizeof($context ?? []) - $nlead) ?? 0);
+                    $x0 = $xi - sizeof($context ?? []);
+                    $y0 = $yi - sizeof($context ?? []);
                     $block = array();
                     if ($context)
                         $block[] = new DiffOp_Copy($context);
@@ -726,9 +729,9 @@ class DiffFormatter
             }
 
             if ($edit->orig)
-                $xi += sizeof($edit->orig);
+                $xi += sizeof($edit->orig ?? []);
             if ($edit->final)
-                $yi += sizeof($edit->final);
+                $yi += sizeof($edit->final ?? []);
         }
 
         if (is_array($block))

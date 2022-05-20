@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 use DOMAttr;
 use DOMElement;
-use DOMNode;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
@@ -18,15 +18,28 @@ use stdClass;
  */
 class HTMLEditorSanitiser
 {
+    use Configurable;
     use Injectable;
 
-    /** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
-    protected $elements = array();
-    /** @var [stdClass] - Sequential list of whitelist element rules where the element name is a pattern */
-    protected $elementPatterns = array();
+    /**
+     * rel attribute to add to link elements which have a target attribute (usually "_blank")
+     * this is to done to prevent reverse tabnabbing - see https://www.owasp.org/index.php/Reverse_Tabnabbing
+     * noopener includes the behaviour we want, though some browsers don't yet support it and rely
+     * upon using noreferrer instead - see https://caniuse.com/rel-noopener for current browser compatibility
+     * set this to null if you would like to disable this behaviour
+     * set this to an empty string if you would like to remove rel attributes that were previously set
+     *
+     * @var string
+     */
+    private static $link_rel_value = 'noopener noreferrer';
 
-    /** @var [stdClass] - The list of attributes that apply to all further whitelisted elements added */
-    protected $globalAttributes = array();
+    /** @var stdClass - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
+    protected $elements = [];
+    /** @var stdClass - Sequential list of whitelist element rules where the element name is a pattern */
+    protected $elementPatterns = [];
+
+    /** @var stdClass - The list of attributes that apply to all further whitelisted elements added */
+    protected $globalAttributes = [];
 
     /**
      * Construct a sanitiser from a given HTMLEditorConfig
@@ -57,7 +70,7 @@ class HTMLEditorSanitiser
      */
     protected function patternToRegex($str)
     {
-        return '/^' . preg_replace('/([?+*])/', '.$1', $str) . '$/';
+        return '/^' . preg_replace('/([?+*])/', '.$1', $str ?? '') . '$/';
     }
 
     /**
@@ -74,8 +87,8 @@ class HTMLEditorSanitiser
         $attrRuleRegExp = '/^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/';
         $hasPatternsRegExp = '/[*?+]/';
 
-        foreach (explode(',', $validElements) as $validElement) {
-            if (preg_match($elementRuleRegExp, $validElement, $matches)) {
+        foreach (explode(',', $validElements ?? '') as $validElement) {
+            if (preg_match($elementRuleRegExp ?? '', $validElement ?? '', $matches)) {
                 $prefix = isset($matches[1]) ? $matches[1] : null;
                 $elementName = isset($matches[2]) ? $matches[2] : null;
                 $outputName = isset($matches[3]) ? $matches[3] : null;
@@ -83,14 +96,14 @@ class HTMLEditorSanitiser
 
                 // Create the new element
                 $element = new stdClass();
-                $element->attributes = array();
-                $element->attributePatterns = array();
+                $element->attributes = [];
+                $element->attributePatterns = [];
 
-                $element->attributesRequired = array();
-                $element->attributesDefault = array();
-                $element->attributesForced = array();
+                $element->attributesRequired = [];
+                $element->attributesDefault = [];
+                $element->attributesForced = [];
 
-                foreach (array('#' => 'paddEmpty', '-' => 'removeEmpty') as $match => $means) {
+                foreach (['#' => 'paddEmpty', '-' => 'removeEmpty'] as $match => $means) {
                     $element->$means = ($prefix === $match);
                 }
 
@@ -101,8 +114,8 @@ class HTMLEditorSanitiser
 
                 // Attributes defined
                 if ($attrData) {
-                    foreach (explode('|', $attrData) as $attr) {
-                        if (preg_match($attrRuleRegExp, $attr, $matches)) {
+                    foreach (explode('|', $attrData ?? '') as $attr) {
+                        if (preg_match($attrRuleRegExp ?? '', $attr ?? '', $matches)) {
                             $attr = new stdClass();
 
                             $attrType = isset($matches[1]) ? $matches[1] : null;
@@ -114,30 +127,29 @@ class HTMLEditorSanitiser
                             if ($attrType === '!') {
                                 $element->attributesRequired[] = $attrName;
                                 $attr->required = true;
-                            } // Denied from global
-                            elseif ($attrType === '-') {
+                            } elseif ($attrType === '-') {
+                                // Denied from global
                                 unset($element->attributes[$attrName]);
                                 continue;
                             }
 
                             // Default value
                             if ($prefix) {
-                                // Default value
-                                if ($prefix === '=') {
+                                if ($prefix === '=') { // Default value
                                     $element->attributesDefault[$attrName] = $value;
                                     $attr->defaultValue = $value;
-                                } // Forced value
-                                elseif ($prefix === ':') {
+                                } elseif ($prefix === ':') {
+                                    // Forced value
                                     $element->attributesForced[$attrName] = $value;
                                     $attr->forcedValue = $value;
-                                } // Required values
-                                elseif ($prefix === '<') {
-                                    $attr->validValues = explode('?', $value);
+                                } elseif ($prefix === '<') {
+                                    // Required values
+                                    $attr->validValues = explode('?', $value ?? '');
                                 }
                             }
 
                             // Check for attribute patterns
-                            if (preg_match($hasPatternsRegExp, $attrName)) {
+                            if (preg_match($hasPatternsRegExp ?? '', $attrName ?? '')) {
                                 $attr->pattern = $this->patternToRegex($attrName);
                                 $element->attributePatterns[] = $attr;
                             } else {
@@ -159,7 +171,7 @@ class HTMLEditorSanitiser
                 }
 
                 // Add pattern or exact element
-                if (preg_match($hasPatternsRegExp, $elementName)) {
+                if (preg_match($hasPatternsRegExp ?? '', $elementName ?? '')) {
                     $element->pattern = $this->patternToRegex($elementName);
                     $this->elementPatterns[] = $element;
                 } else {
@@ -180,7 +192,7 @@ class HTMLEditorSanitiser
             return $this->elements[$tag];
         }
         foreach ($this->elementPatterns as $element) {
-            if (preg_match($element->pattern, $tag)) {
+            if (preg_match($element->pattern ?? '', $tag ?? '')) {
                 return $element;
             }
         }
@@ -190,7 +202,7 @@ class HTMLEditorSanitiser
     /**
      * Given an attribute name, return the rule structure for that attribute
      *
-     * @param stdClass $elementRule
+     * @param object $elementRule
      * @param string $name The attribute name
      * @return stdClass The attribute rule
      */
@@ -200,7 +212,7 @@ class HTMLEditorSanitiser
             return $elementRule->attributes[$name];
         }
         foreach ($elementRule->attributePatterns as $attribute) {
-            if (preg_match($attribute->pattern, $name)) {
+            if (preg_match($attribute->pattern ?? '', $name ?? '')) {
                 return $attribute;
             }
         }
@@ -211,7 +223,7 @@ class HTMLEditorSanitiser
      * Given a DOMElement and an element rule, check if that element passes the rule
      * @param DOMElement $element The element to check
      * @param stdClass $rule The rule to check against
-     * @return bool true if the element passes (and so can be kept), false if it fails (and so needs stripping)
+     * @return bool True if the element passes (and so can be kept), false if it fails (and so needs stripping)
      */
     protected function elementMatchesRule($element, $rule = null)
     {
@@ -259,7 +271,7 @@ class HTMLEditorSanitiser
         }
 
         // If the rule has a set of valid values, check them to see if this attribute is one
-        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues)) {
+        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues ?? [])) {
             return false;
         }
 
@@ -279,6 +291,7 @@ class HTMLEditorSanitiser
             return;
         }
 
+        $linkRelValue = $this->config()->get('link_rel_value');
         $doc = $html->getDocument();
 
         /** @var DOMElement $el */
@@ -290,8 +303,8 @@ class HTMLEditorSanitiser
                 // If it's a script or style, we don't keep contents
                 if ($el->tagName === 'script' || $el->tagName === 'style') {
                     $el->parentNode->removeChild($el);
-                } // Otherwise we replace this node with all it's children
-                else {
+                } else {
+                    // Otherwise we replace this node with all it's children
                     // First, create a new fragment with all of $el's children moved into it
                     $frag = $doc->createDocumentFragment();
                     while ($el->firstChild) {
@@ -301,8 +314,8 @@ class HTMLEditorSanitiser
                     // Then replace $el with the frags contents (which used to be it's children)
                     $el->parentNode->replaceChild($frag, $el);
                 }
-            } // Otherwise tidy the element
-            else {
+            } else {
+                // Otherwise tidy the element
                 // First, if we're supposed to pad & this element is empty, fix that
                 if ($elementRule->paddEmpty && !$el->firstChild) {
                     $el->nodeValue = '&nbsp;';
@@ -333,6 +346,32 @@ class HTMLEditorSanitiser
                     $el->setAttribute($attr, $forced);
                 }
             }
+
+            if ($el->tagName === 'a' && $linkRelValue !== null) {
+                $this->addRelValue($el, $linkRelValue);
+            }
+        }
+    }
+
+    /**
+     * Adds rel="noopener noreferrer" to link elements with a target attribute
+     *
+     * @param DOMElement $el
+     * @param string|null $linkRelValue
+     */
+    private function addRelValue(DOMElement $el, $linkRelValue)
+    {
+        // user has checked the checkbox 'open link in new window'
+        if ($el->getAttribute('target') && $el->getAttribute('rel') !== $linkRelValue) {
+            if ($linkRelValue !== '') {
+                $el->setAttribute('rel', $linkRelValue);
+            } else {
+                $el->removeAttribute('rel');
+            }
+        } elseif ($el->getAttribute('rel') === $linkRelValue && !$el->getAttribute('target')) {
+            // user previously checked 'open link in new window' and noopener was added,
+            // now user has unchecked the checkbox so we can remove noopener
+            $el->removeAttribute('rel');
         }
     }
 }

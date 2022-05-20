@@ -1,0 +1,149 @@
+de_DE:
+  SilverStripe\Admin\LeftAndMain:
+    VersionUnknown: Unbekannt
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Maße
+    EDIT: Bearbeiten
+    EDITINFO: 'Datei bearbeiten'
+    REMOVE: Entfernen
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Das Passwort für das Konto mit der E-Mail-Adresse {email} wurde geändert. Wenn Sie Ihr Passwort nicht geändert haben, ändern Sie bitte Ihr Passwort mit folgendem Link'
+    CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort für geändert'
+    CHANGEPASSWORDTEXT3: 'Passwort ändern'
+    HELLO: Hallo
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hallo
+    TEXT1: 'Hier ist dein'
+    TEXT2: 'Link zum Zurücksetzen des Passworts'
+    TEXT3: für
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Nein
+    YESANSWER: Ja
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Keine Optionen vorhanden'
+  SilverStripe\Forms\ConfirmedPasswordField:
+    ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
+    BETWEEN: 'Passwörter müssen {min} bis {max} Zeichen lang sein.'
+    SHOWONCLICKTITLE: 'Passwort ändern'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Auswählen)
+  SilverStripe\Forms\GridField\GridField:
+    Add: '{name} hinzufügen'
+    CSVEXPORT: 'Als CSV exportieren'
+    CSVIMPORT: 'CSV importieren'
+    Filter: Filtern
+    FilterBy: 'Filtern nach'
+    Print: Drucken
+    ResetFilter: Zurücksetzen
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Löschen
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Abbrechen
+    Save: Speichern
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Seite
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Betrag
+    FIELDLABELCURRENCY: Währung
+    INVALID_CURRENCY: 'Die Währung {currency} ist nicht in der Liste der erlauben Währungen'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: DatenObjekte
+    PLURALS:
+      one: 'Ein DatenObjekt'
+      other: '{count} DatenObjekte'
+    SINGULARNAME: DatenObjekt
+  SilverStripe\ORM\FieldType\DBBoolean:
+    NOANSWER: Nein
+    YESANSWER: Ja
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} Tag'
+      other: '{count} Tage'
+    HOURS_SHORT_PLURALS:
+      one: '{count} Stunde'
+      other: '{count} Stunden'
+    LessThanMinuteAgo: 'weniger als 1 Minute'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} Minute'
+      other: '{count} Minuten'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} Monat'
+      other: '{count} Monate'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} Sekunde'
+      other: '{count} Sekunden'
+    TIMEDIFFAGO: 'vor {difference}'
+    TIMEDIFFIN: 'in {difference}'
+    YEARS_SHORT_PLURALS:
+      one: '{count} Jahr'
+      other: '{count} Jahre'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Bitte geben Sie einen Benutzernamen und ein Passwort ein'
+    ERRORNOTADMIN: 'Dieser Benutzer ist kein Administrator'
+    ERRORNOTREC: 'Dieser Benutzer bzw. dieses Passwort ist unbekannt'
+  SilverStripe\Security\CMSMemberLoginForm:
+    PASSWORDEXPIRED: '<p>Ihr Passwort ist abgelaufen. <a target="_top" href="{link}">Bitte wählen Sie ein neues Passwort.</a></p>'
+  SilverStripe\Security\CMSSecurity:
+    SUCCESS_TITLE: 'Login erfolgreich'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Standard Administrator'
+  SilverStripe\Security\Group:
+    DefaultGroupTitleAdministrators: Administratoren
+    DefaultGroupTitleContentAuthors: Inhaltsautoren
+    Description: Beschreibung
+    GROUPNAME: Gruppenname
+    MEMBERS: Mitglieder
+    NEWGROUP: 'Neue Gruppe'
+    NoRoles: 'Keine Rollen gefunden'
+    PLURALNAME: Gruppen
+    PLURALS:
+      one: 'Eine Gruppe'
+      other: '{count} Gruppen'
+    SINGULARNAME: Gruppe
+    Sort: Sortierreihenfolge
+    has_many_Permissions: Rechte
+    many_many_Members: Mitglieder
+  SilverStripe\Security\LoginAttempt:
+    Email: 'E-Mail Adresse'
+    EmailHashed: 'E-Mail Adresse (gehasht)'
+    IP: 'IP Adresse'
+    PLURALNAME: Loginversuche
+    PLURALS:
+      one: 'Ein Loginversuch'
+      other: '{count} Loginversuche'
+    SINGULARNAME: Loginversuch
+    Status: Status
+  SilverStripe\Security\Member:
+    ADDGROUP: 'Gruppe hinzufügen'
+    BUTTONCHANGEPASSWORD: 'Passwort ändern'
+    BUTTONLOGIN: Einloggen
+    BUTTONLOGINOTHER: 'Als jemand anderes einloggen'
+    BUTTONLOGOUT: Ausloggen
+    BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
+    CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
+    CONFIRMPASSWORD: 'Passwort bestätigen'
+    CURRENT_PASSWORD: 'Aktuelles Passwort'
+    EDIT_PASSWORD: 'Neues Passwort'
+    EMAIL: E-Mail
+    EMPTYNEWPASSWORD: 'Das neue Passwort kann nicht leer sein, bitte versuchen Sie es erneut'
+    ENTEREMAIL: 'Bitte geben Sie Ihre E-Mail Adresse an. Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts.'
+    FIRSTNAME: Vorname
+    NEWPASSWORD: 'Neues Passwort'
+    PASSWORD: Passwort
+    PASSWORDEXPIRED: 'Ihr Passwort ist abgelaufen. Bitte wählen Sie ein neues Passwort.'
+    PLURALNAME: Mitglieder
+    PLURALS:
+      one: 'Ein Mitglied'
+      other: '{count} Mitglieder'
+    SINGULARNAME: Mitglied
+    SURNAME: Nachname
+    YOUROLDPASSWORD: 'Ihr altes Passwort'
+    belongs_many_many_Groups: Grouppen
+    db_Password: Passwort
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Passwort vergessen'
+  SilverStripe\Security\Permission:
+    AdminGroup: Administrator
+  SilverStripe\Security\Security:
+    LOGIN: Einloggen
+    LOGOUT: Ausloggen

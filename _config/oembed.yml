@@ -1,0 +1,14 @@
+---
+Name: coreoembed
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\View\Embed\Embeddable:
+    class: SilverStripe\View\Embed\EmbedContainer
+  Psr\Http\Client\ClientInterface.oembed:
+    class: GuzzleHttp\Client
+  Embed\Http\Crawler:
+    constructor:
+      - '%$Psr\Http\Client\ClientInterface.oembed'
+  Embed\Embed:
+    constructor:
+      - '%$Embed\Http\Crawler'

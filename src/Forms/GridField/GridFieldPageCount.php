@@ -12,7 +12,7 @@ use LogicException;
  *
  * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
  */
-class GridFieldPageCount implements GridField_HTMLProvider
+class GridFieldPageCount extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
     use Configurable;
 
@@ -51,8 +51,7 @@ class GridFieldPageCount implements GridField_HTMLProvider
 
         if (!$paginator && GridFieldPageCount::config()->uninherited('require_paginator')) {
             throw new LogicException(
-                static::class . " relies on a GridFieldPaginator to be added " .
-                "to the same GridField, but none are present."
+                static::class . " relies on a GridFieldPaginator to be added " . "to the same GridField, but none are present."
             );
         }
 
@@ -69,9 +68,9 @@ class GridFieldPageCount implements GridField_HTMLProvider
         $paginator = $this->getPaginator($gridField);
         if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
             $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
-            return array(
+            return [
                 $this->targetFragment => $forTemplate->renderWith($template)
-            );
+            ];
         }
 
         return null;

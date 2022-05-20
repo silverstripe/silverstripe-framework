@@ -9,7 +9,7 @@ class Player extends Member implements TestOnly
 {
     private static $table_name = 'ComponentSetTest_Player';
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Teams' => Team::class
-    );
+    ];
 }

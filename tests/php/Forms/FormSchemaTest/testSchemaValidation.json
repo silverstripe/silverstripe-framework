@@ -37,7 +37,9 @@
                 }
             },
             "attributes": [],
-            "data": []
+            "data": {
+              "maxlength": 40
+            }
         },
         {
             "name": "Date",
@@ -64,7 +66,8 @@
             "data": {
                 "html5": true,
                 "min": null,
-                "max": null
+                "max": null,
+                "maxlength": null
             }
         },
         {
@@ -88,7 +91,9 @@
                 "numeric": true
             },
             "attributes": [],
-            "data": []
+            "data": {
+                "maxlength": null
+            }
         },
         {
             "name": "Money",
@@ -111,7 +116,9 @@
                 "currency": true
             },
             "attributes": [],
-            "data": []
+            "data": {
+                "maxlength": null
+            }
         },
         {
             "name": "SecurityID",

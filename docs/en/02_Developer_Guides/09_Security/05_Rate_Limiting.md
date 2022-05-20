@@ -1,15 +1,18 @@
+---
 title: Rate Limiting
-summary: SilverStripe's in built rate limiting features
+summary: Silverstripe CMS's in built rate limiting features
+icon: tachometer-alt
+---
 
 # Rate Limiting
 
-SilverStripe Framework comes with a [Middleware](developer_guides/controllers/middlewares/) that provides rate limiting
-for the Security controller. This provides added protection to a potentially vulnerable part of a SilverStripe application
+Silverstripe CMS comes with a [Middleware](../controllers/middlewares/) that provides rate limiting
+for the Security controller. This provides added protection to a potentially vulnerable part of a Silverstripe CMS application
 where an attacker is free to bombard your login forms or other Security endpoints.
 
 ## Applying rate limiting to controllers
 
-You can apply rate limiting to other specific controllers or your entire SilverStripe application. When applying rate
+You can apply rate limiting to other specific controllers or your entire Silverstripe CMS application. When applying rate
 limiting to other controllers you can define custom limits for each controller.
 
 First, you need to define your rate limit middleware with the required settings:
@@ -42,6 +45,15 @@ Finally, you need to define the custom routing:
 Director:
   rules:
     'MyController//$Action/$ID/$OtherID': '%$MyRateLimitedController'
+```
+
+Or if you want to apply your middleware to a specific route:
+
+```yml
+SilverStripe\Control\Director:
+  rules:
+    special/section:
+      Controller: %$MyRateLimitedController
 ```
 
 ## Applying rate limiting across an entire application

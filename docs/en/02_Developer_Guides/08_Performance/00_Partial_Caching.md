@@ -1,132 +1,119 @@
+---
 title: Partial Caching
-summary: Cache SilverStripe templates to reduce database queries.
+summary: Cache Silverstripe CMS templates to reduce database queries.
+icon: tachometer-alt
+---
 
 # Partial Caching
 
-Partial caching is a feature that allows the caching of just a portion of a page.
+[Partial template caching](../templates/partial_template_caching) is a feature that allows caching of rendered portions a template.
+
+
+## Cache block conditionals
+
+Use conditions whenever possible. The cache tag supports defining conditions via either `if` or `unless` keyword.
+Those are optional, however is highly recommended.
+
+[warning]
+Avoid performing heavy computations in conditionals, as they are evaluated for every template rendering.
+[/warning]
+
+If you cache without conditions:
+  - your cache backend will always be queried for the cache block (on every template render)
+  - your cache may be cluttered with heaps of redundant and useless data (especially the default filesystem backend)
+
+As an example, if you use `$DataObject->ID` as a key for the block, consider adding a condition that ID is greater than zero:
+
 ```ss
-
-    <% cached 'CacheKey' %>
-    $DataTable
-    ...
-    <% end_cached %>
+<% cached $MenuItem.ID if $MenuItem.ID > 0 %>
 ```
 
-Each cache block has a cache key. A cache key is an unlimited number of comma separated variables and quoted strings. 
-Every time the cache key returns a different result, the contents of the block are recalculated. If the cache key is 
-the same as a previous render, the cached value stored last time is used.
-
-Since the above example contains just one argument as the cache key, a string (which will be the same every render) it
-will invalidate the cache after a given amount of time has expired (default 10 minutes).
-
-Here are some more complex examples:
-
+To cache the contents of a page for all anonymous users, but dynamically calculate the contents for logged in members,
+ use something like:
 
 ```ss
-
-    <% cached 'database', $LastEdited %> 
-        <!-- that updates every time the record changes. -->
-    <% end_cached %>
-    
-    <% cached 'loginblock', $CurrentMember.ID %>
-        <!-- cached unique to the user. i.e for user 2, they will see a different cache to user 1 -->
-    <% end_cached %>
-
-    <% cached 'loginblock', $LastEdited, $CurrentMember.isAdmin %>
-        <!-- recached when block object changes, and if the user is admin -->
-    <% end_cached %>
+<% cached unless $CurrentUser %>
 ```
 
-An additional global key is incorporated in the cache lookup. The default value for this is 
-`$CurrentReadingMode, $CurrentUser.ID`. This ensures that the current [Versioned](api:SilverStripe\Versioned\Versioned) state and user ID are used. 
-This may be configured by changing the config value of `SSViewer.global_key`. It is also necessary to flush the 
-template caching when modifying this config, as this key is cached within the template itself.
-
-For example, to ensure that the cache is configured to respect another variable, and if the current logged in
-user does not influence your template content, you can update this key as below;
-
-**mysite/_config/app.yml**
-
-
-```yaml
-
-    SilverStripe\View\SSViewer:
-        global_key: '$CurrentReadingMode, $Locale'
-```
 
 ## Aggregates
 
-Often you want to invalidate a cache when any object in a set of objects change, or when the objects in a relationship 
-change. To do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
-on sets of [DataObject](api:SilverStripe\ORM\DataObject)s - the most useful for us being the `max` aggregate.
+Sometimes you may want to invalidate cache when any object in a set changes, or when objects in a relationship
+change. To do this, you may use [DataList](api:SilverStripe\ORM\DataList) aggregate methods (which we call Aggregates).
+These perform SQL aggregate queries on sets of [DataObject](api:SilverStripe\ORM\DataObject)s.
 
-For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
+Here are some useful methods of the [DataList](api:SilverStripe\ORM\DataList) class:
+  - `int count()` : Return the number of items in this DataList
+  - `mixed max(string $fieldName)` : Return the maximum value of the given field in this DataList
+  - `mixed min(string $fieldName)` : Return the minimum value of the given field in this DataList
+  - `mixed avg(string $fieldName)` : Return the average value of the given field in this DataList
+  - `mixed sum(string $fieldName)` : Return the sum of the values of the given field in this DataList
+
+To construct a `DataList` over a `DataObject`, we have a global template variable called `$List`.
+
+For example, if we have a menu, we may want that menu to update whenever _any_ page is edited, but would like to cache it
 otherwise. By using aggregates, we do that like this:
 
-
 ```ss
-
-    <% cached 'navigation', $List('SiteTree').max('LastEdited'), $List('SiteTree').count() %>
+<% cached
+     'navigation',
+     $List('SilverStripe\CMS\Model\SiteTree').max('LastEdited'),
+     $List('SilverStripe\CMS\Model\SiteTree').count()
+%>
 ```
 
 The cache for this will update whenever a page is added, removed or edited.
 
-If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added 
-or edited
+[note]
+The use of the fully qualified classname is necessary.
+[/note]
 
+[note]
+The use of both `.max('LastEdited')` and `.count()` makes sure we check for any object
+edited or deleted since the cache was last built.
+[/note]
 
-```ss
+[warning]
+Be careful using aggregates. Remember that the database is usually one of the performance bottlenecks.
+Keep in mind that every key of every cached block is recalculated for every template render, regardless of caching
+result. Aggregating SQL queries are usually produce more load on the database than simple select queries,
+especially if you query records by Primary Key or join tables using database indices properly.
 
-    <% cached 'categorylist', $List('Category').max('LastEdited'), $List('Category').count() %>
-```
+Sometimes it may be cheaper to not cache altogether, rather than cache a block using a bunch of heavy aggregating SQL
+queries.
 
-<div class="notice" markdown="1">
-Note the use of both `.max('LastEdited')` and `.count()` - this takes care of both the case where an object has been 
-edited since the cache was last built, and also when an object has been deleted since the cache was last built.
-</div>
-
-We can also calculate aggregates on relationships. The logic for that can get a bit complex, so we can extract that on 
-to the controller so it's not cluttering up our template.
-
-## Cache key calculated in controller
-
-If your caching logic is complex or re-usable, you can define a method on your controller to generate a cache key 
-fragment.
-
-For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
-`Page::$many_many = array('Slides' => 'Slide')` changes. In `PageController`:
-
-
-```php
-    public function SliderCacheKey() 
-    {
-        $fragments = [
-            'Page-Slides',
-            $this->ID,
-            // identify which objects are in the list and their sort order
-            implode('-', $this->Slides()->Column('ID')),
-            $this->Slides()->max('LastEdited')
-        ];
-        return implode('-_-', $fragments);
-    }
-
-```
-
-Then reference that function in the cache key:
-
+Let us consider two versions:
 
 ```ss
+# Version 1 (bad)
 
-    <% cached $SliderCacheKey %>
+<% cached
+    $List('SilverStripe\CMS\Model\SiteTree').max('LastEdited'),
+    $List('SilverStripe\CMS\Model\SiteTree').count()
+%>
+    Parent title is: $Me.Parent.Title
+<% end_cached %>
 ```
 
-The example above would work for both a has_many and many_many relationship.
+```ss
+# Version 2 (better performance than Version 1)
 
-## Cache blocks and template changes
+Parent title is: $Me.Parent.Title
+```
 
-In addition to the key elements passed as parameters to the cached control, the system automatically includes the
-template name and a sha1 hash of the contents of the cache block in the key. This means that any time the template is
-changed the cached contents will automatically refreshed.
+`Version 1` always generates two heavy aggregating SQL queries for the database on every
+template render.  
+`Version 2` always generates a single and more performant SQL query fetching the record by its Primary Key.
+
+[/warning]
+
+[warning]
+If you use the same aggregate in a template more than once, it will be recalculated every time
+unless you move it out into a separate
+[controller method](../templates/partial_template_caching/#cache-key-calculated-in-controller).
+[Object Caching](../templates/caching/#object-caching) only works for single variables and not for chained expressions.
+[/warning]
+
 
 ## Purposely stale data
 
@@ -138,8 +125,7 @@ For instance, if we show some blog statistics, but are happy having them be slig
 
 
 ```ss
-
-    <% cached 'blogstatistics', $Blog.ID %>
+<% cached 'blogstatistics', $Blog.ID %>
 ```
 
 which will invalidate after the cache lifetime expires. If you need more control than that (cache lifetime is
@@ -147,152 +133,50 @@ configurable only on a site-wide basis), you could add a special function to you
 
 
 ```php
-    public function BlogStatisticsCounter() 
-    {
-        return (int)(time() / 60 / 5); // Returns a new number every five minutes
-    }
+public function BlogStatisticsCounter() 
+{
+    return (int)(time() / 60 / 5); // Returns a new number every five minutes
+}
 ```
 
- 
+
 and then use it in the cache key
 
 
 ```ss
-
-    <% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
+<% cached 'blogstatistics', $Blog.ID, $BlogStatisticsCounter %>
 ```
 
-## Cache block conditionals
 
-You may wish to conditionally enable or disable caching. To support this, in cached tags you may (after any key
-arguments) specify 'if' or 'unless' followed by a standard template variable argument. If 'if' is used, the resultant
-value must be true for that block to be cached. Conversely if 'unless' is used, the result must be false.
+## Cache backend
 
-Following on from the previous example, you might wish to only cache slightly-stale data if the server is experiencing
-heavy load:
+The template engine uses [Injector](../extending/injector) service `Psr\SimpleCache\CacheInterface.cacheblock` as
+caching backend. The default definition of that service is very conservative and relies on the server filesystem.  
+This is the most common denominator for most of the applications out there. However,
+this is not the most robust neither performant cache implementation. If you have a better solution
+available on your platform, you should consider tuning that setting for your application.  
+All you need to do to swap the cache backend for partial template cache blocks is to redefine this service for the Injector.
 
+Here's an example of how it could be done:
 
-```ss
+```yml
+# app/_config/cache.yml
 
-    <% cached 'blogstatistics', $Blog.ID if $HighLoad %>
+---
+Name: app-cache
+After:
+  - 'corecache'
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.cacheblock: '%$App\Cache\Service.memcached'
 ```
 
-By adding a `HighLoad` function to your `PageController`, you could enable or disable caching dynamically.
+[note]
+For the above example to work it is necessary to have the Injector service `App\Cache\Service.memcached` defined somewhere in the configs.
+[/note]
 
-To cache the contents of a page for all anonymous users, but dynamically calculate the contents for logged in members,
- use something like:
-
-
-```ss
-
-    <% cached unless $CurrentUser %>
-```
-
-## Uncached
-
-The template tag 'uncached' can be used - it is the exact equivalent of a cached block with an if condition that always 
-returns false. The key and conditionals in an uncached tag are ignored, so you can easily temporarily disable a 
-particular cache block by changing just the tag, leaving the key and conditional intact.
-
-
-```ss
-
-    <% uncached %>
-```
-
-## Nested cache blocks
-
-You can also nest independent cache blocks  Any nested cache blocks are calculated independently from their containing 
-block, regardless of the cached state of that container.
-
-This allows you to wrap an entire page in a cache block on the page's LastEdited value, but still keep a member-specific
-portion dynamic, without having to include any member info in the page's cache key.
-
-An example:
-
-
-```ss
-
-    <% cached $LastEdited %>
-      Our wonderful site
-    
-      <% cached $Member.ID %>
-        Welcome $Member.Name
-      <% end_cached %>
-    
-      $ASlowCalculation
-    <% end_cached %>
-```
-
-This will cache the entire outer section until the next time the page is edited, but will display a different welcome
-message depending on the logged in member.
-
-Cache conditionals and the uncached tag also work in the same nested manner. Since Member.Name is fast to calculate, you
-could also write the last example as:
-
-
-```ss
-
-    <% cached $LastEdited %>
-      Our wonderful site
-    
-      <% uncached %>
-        Welcome $Member.Name
-      <% end_uncached %>
-    
-      $ASlowCalculation
-    <% end_cached %>
-```
-
-<div class="warning" markdown="1">
-Currently a nested cache block can not be contained within an if or loop block. The template engine will throw an error
-letting you know if you've done this. You can often get around this using aggregates or by un-nesting the block.
-</div>
-
-Failing example:
-
-
-```ss
-
-    <% cached $LastEdited %>
-    
-      <% loop $Children %>
-        <% cached $LastEdited %>
-          $Name
-        <% end_cached %>
-      <% end_loop %>
-    
-    <% end_cached %>
-```
-
-Can be re-written as:
-
-
-```ss
-
-    <% cached $LastEdited %>
-    
-      <% cached $AllChildren.max('LastEdited') %>
-        <% loop $Children %>
-          $Name
-        <% end_loop %>
-      <% end_cached %>
-    
-    <% end_cached %>
-```
-
-Or:
-
-
-```ss
-
-    <% cached $LastEdited %>
-        (other code)
-    <% end_cached %>
-    
-    <% loop $Children %>
-        <% cached $LastEdited %>
-          $Name
-        <% end_cached %>
-    <% end_loop %>
-```
+[warning]
+The default filesystem cache backend does not support auto cleanup of the residual files with expired cache records.
+If your project relies on Template Caching heavily (e.g. thousands of cache records daily), you may want to keep en eye on the
+filesystem storage. Sooner or later its capacity may be exhausted.
+[/warning]

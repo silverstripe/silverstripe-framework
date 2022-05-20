@@ -11,6 +11,7 @@ use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
 use BadMethodCallException;
 use Exception;
+use SilverStripe\Dev\Backtrace;
 
 /**
  * Abstract database connectivity class.
@@ -18,6 +19,22 @@ use Exception;
  */
 abstract class Database
 {
+
+    const PARTIAL_QUERY = 'partial_query';
+    const FULL_QUERY = 'full_query';
+
+    /**
+     * To use, call from _config.php
+     * Example:
+     * <code>
+     * Database::setWhitelistQueryArray([
+     *      'Qualmark' => 'partial_query',
+     *      'SELECT "Version" FROM "SiteTree_Live" WHERE "ID" = ?' => 'full_query',
+     * ])
+     * </code>
+     * @var array
+     */
+    protected static $whitelist_array = [];
 
     /**
      * Database connector object
@@ -173,7 +190,7 @@ abstract class Database
 
     /**
      * Determines if the query should be previewed, and thus interrupted silently.
-     * If so, this function also displays the query via the debuging system.
+     * If so, this function also displays the query via the debugging system.
      * Subclasess should respect the results of this call for each query, and not
      * execute any queries that generate a true response.
      *
@@ -204,23 +221,73 @@ abstract class Database
      * @param array $parameters Parameters for any parameterised query
      * @return mixed Result of query
      */
-    protected function benchmarkQuery($sql, $callback, $parameters = array())
+    protected function benchmarkQuery($sql, $callback, $parameters = [])
     {
         if (isset($_REQUEST['showqueries']) && Director::isDev()) {
+            $displaySql = true;
             $this->queryCount++;
             $starttime = microtime(true);
             $result = $callback($sql);
             $endtime = round(microtime(true) - $starttime, 4);
             // replace parameters as closely as possible to what we'd expect the DB to put in
-            if (strtolower($_REQUEST['showqueries']) == 'inline') {
+            if (in_array(strtolower($_REQUEST['showqueries'] ?? ''), ['inline', 'backtrace'])) {
                 $sql = DB::inline_parameters($sql, $parameters);
+            } elseif (strtolower($_REQUEST['showqueries'] ?? '') === 'whitelist') {
+                $displaySql = false;
+                foreach (self::$whitelist_array as $query => $searchType) {
+                    $fullQuery = ($searchType === self::FULL_QUERY && $query === $sql);
+                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql ?? '', $query ?? '') !== false);
+                    if (!$fullQuery && !$partialQuery) {
+                        continue;
+                    }
+                    $sql = DB::inline_parameters($sql, $parameters);
+                    $this->displayQuery($sql, $endtime);
+                }
             }
-            $queryCount = sprintf("%04d", $this->queryCount);
-            Debug::message("\n$queryCount: $sql\n{$endtime}s\n", false);
+
+            if ($displaySql) {
+                $this->displayQuery($sql, $endtime);
+            }
+
+            // Show a backtrace if ?showqueries=backtrace
+            if ($_REQUEST['showqueries'] === 'backtrace') {
+                Backtrace::backtrace();
+            }
             return $result;
-        } else {
-            return $callback($sql);
         }
+        return $callback($sql);
+    }
+
+    /**
+     * Display query message
+     *
+     * @param mixed $query
+     * @param float $endtime
+     */
+    protected function displayQuery($query, $endtime)
+    {
+        $queryCount = sprintf("%04d", $this->queryCount);
+        Debug::message("\n$queryCount: $query\n{$endtime}s\n", false);
+    }
+
+    /**
+     * Add the sql queries that need to be partially or fully matched
+     *
+     * @param array $whitelistArray
+     */
+    public static function setWhitelistQueryArray($whitelistArray)
+    {
+        self::$whitelist_array = $whitelistArray;
+    }
+
+    /**
+     * Get the sql queries that need to be partially or fully matched
+     *
+     * @return array
+     */
+    public static function getWhitelistQueryArray()
+    {
+        return self::$whitelist_array;
     }
 
     /**
@@ -281,11 +348,11 @@ abstract class Database
     {
         // Split string into components
         if (!is_array($value)) {
-            $value = explode($separator, $value);
+            $value = explode($separator ?? '', $value ?? '');
         }
 
         // Implode quoted column
-        return '"' . implode('"'.$separator.'"', $value) . '"';
+        return '"' . implode('"' . $separator . '"', $value) . '"';
     }
 
     /**
@@ -296,7 +363,7 @@ abstract class Database
      */
     protected function escapeColumnKeys($fieldValues)
     {
-        $out = array();
+        $out = [];
         foreach ($fieldValues as $field => $value) {
             $out[$this->escapeIdentifier($field)] = $value;
         }
@@ -340,7 +407,7 @@ abstract class Database
                     if (!empty($writeInfo['where'])) {
                         $query->addWhere($writeInfo['where']);
                     } elseif (!empty($writeInfo['id'])) {
-                        $query->addWhere(array('"ID"' => $writeInfo['id']));
+                        $query->addWhere(['"ID"' => $writeInfo['id']]);
                     }
 
                     // Test to see if this update query shouldn't, in fact, be an insert
@@ -363,16 +430,15 @@ abstract class Database
                     break;
 
                 default:
-                    user_error(
-                        "SS_Database::manipulate() Can't recognise command '{$writeInfo['command']}'",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "SS_Database::manipulate() Can't recognise command '{$writeInfo['command']}'"
                     );
             }
         }
     }
 
     /**
-     * Enable supression of database messages.
+     * Enable suppression of database messages.
      */
     public function quiet()
     {
@@ -412,14 +478,14 @@ abstract class Database
         $clause = $isNull
             ? "%s IS NULL"
             : "%s IS NOT NULL";
-        return sprintf($clause, $field);
+        return sprintf($clause ?? '', $field);
     }
 
     /**
      * Generate a WHERE clause for text matching.
      *
-     * @param String $field Quoted field name
-     * @param String $value Escaped search. Can include percentage wildcards.
+     * @param string $field Quoted field name
+     * @param string $value Escaped search. Can include percentage wildcards.
      * Ignored if $parameterised is true.
      * @param boolean $exact Exact matches or wildcard support.
      * @param boolean $negate Negate the clause.
@@ -442,7 +508,7 @@ abstract class Database
      * function to return an SQL datetime expression that can be used with the adapter in use
      * used for querying a datetime in a certain format
      *
-     * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
+     * @param string $date to be formatted, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
      *                     field name, e.g. '"SiteTree"."Created"'
      * @param string $format to be used, supported specifiers:
      * %Y = Year (four digits)
@@ -460,7 +526,7 @@ abstract class Database
      * function to return an SQL datetime expression that can be used with the adapter in use
      * used for querying a datetime addition
      *
-     * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
+     * @param string $date can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
      *                      e.g. '"SiteTree"."Created"'
      * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes,
      *                         +1 YEAR
@@ -479,14 +545,14 @@ abstract class Database
 
     /**
      * function to return an SQL datetime expression that can be used with the adapter in use
-     * used for querying a datetime substraction
+     * used for querying a datetime subtraction
      *
-     * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
+     * @param string $date1 can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
      *                       e.g. '"SiteTree"."Created"'
-     * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime
+     * @param string $date2 to be subtracted of $date1, can be either 'now', literal datetime
      *                      like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
      * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which
-     *                is the result of the substraction
+     *                is the result of the subtraction
      */
     abstract public function datetimeDifferenceClause($date1, $date2);
 
@@ -578,6 +644,31 @@ abstract class Database
     abstract public function supportsTransactions();
 
     /**
+     * Does this database support savepoints in transactions
+     * By default it is assumed that they don't unless they are explicitly enabled.
+     *
+     * @return boolean Flag indicating support for savepoints in transactions
+     */
+    public function supportsSavepoints()
+    {
+        return false;
+    }
+
+
+    /**
+     * Determines if the used database supports given transactionMode as an argument to startTransaction()
+     * If transactions are completely unsupported, returns false.
+     *
+     * @param string $mode
+     * @return bool
+     */
+    public function supportsTransactionMode(string $mode): bool
+    {
+        // Default implementation: assume all modes are a supported.
+        return $this->supportsTransactions();
+    }
+
+    /**
      * Invoke $callback within a transaction
      *
      * @param callable $callback Callback to run
@@ -617,14 +708,14 @@ abstract class Database
     }
 
     /*
-	 * Determines if the current database connection supports a given list of extensions
-	 *
-	 * @param array $extensions List of extensions to check for support of. The key of this array
-	 * will be an extension name, and the value the configuration for that extension. This
-	 * could be one of partitions, tablespaces, or clustering
-	 * @return boolean Flag indicating support for all of the above
-	 * @todo Write test cases
-	 */
+     * Determines if the current database connection supports a given list of extensions
+     *
+     * @param array $extensions List of extensions to check for support of. The key of this array
+     * will be an extension name, and the value the configuration for that extension. This
+     * could be one of partitions, tablespaces, or clustering
+     * @return boolean Flag indicating support for all of the above
+     * @todo Write test cases
+     */
     public function supportsExtensions($extensions)
     {
         return false;
@@ -654,22 +745,40 @@ abstract class Database
      *
      * @param string|boolean $savepoint Name of savepoint, or leave empty to rollback
      * to last savepoint
+     * @return bool|null Boolean is returned if success state is known, or null if
+     * unknown. Note: For error checking purposes null should not be treated as error.
      */
     abstract public function transactionRollback($savepoint = false);
 
     /**
      * Commit everything inside this transaction so far
      *
-     * @param boolean $chain
+     * @param bool $chain
+     * @return bool|null Boolean is returned if success state is known, or null if
+     * unknown. Note: For error checking purposes null should not be treated as error.
      */
     abstract public function transactionEnd($chain = false);
+
+    /**
+     * Return depth of current transaction
+     *
+     * @return int Nesting level, or 0 if not in a transaction
+     */
+    public function transactionDepth()
+    {
+        // Placeholder error for transactional DBs that don't expose depth
+        if ($this->supportsTransactions()) {
+            user_error(get_class($this) . " does not support transactionDepth", E_USER_WARNING);
+        }
+        return 0;
+    }
 
     /**
      * Determines if the used database supports application-level locks,
      * which is different from table- or row-level locking.
      * See {@link getLock()} for details.
      *
-     * @return boolean Flag indicating that locking is available
+     * @return bool Flag indicating that locking is available
      */
     public function supportsLocks()
     {
@@ -681,7 +790,7 @@ abstract class Database
      * See {@link supportsLocks()} to check if locking is generally supported.
      *
      * @param string $name Name of the lock
-     * @return boolean
+     * @return bool
      */
     public function canLock($name)
     {
@@ -703,7 +812,7 @@ abstract class Database
      *
      * @param string $name Name of lock
      * @param integer $timeout Timeout in seconds
-     * @return boolean
+     * @return bool
      */
     public function getLock($name, $timeout = 5)
     {
@@ -715,7 +824,7 @@ abstract class Database
      * (if the execution aborts (e.g. due to an error) all locks are automatically released).
      *
      * @param string $name Name of the lock
-     * @return boolean Flag indicating whether the lock was successfully released
+     * @return bool Flag indicating whether the lock was successfully released
      */
     public function releaseLock($name)
     {
@@ -756,7 +865,7 @@ abstract class Database
      * Determine if the database with the specified name exists
      *
      * @param string $name Name of the database to check for
-     * @return boolean Flag indicating whether this database exists
+     * @return bool Flag indicating whether this database exists
      */
     public function databaseExists($name)
     {
@@ -778,12 +887,12 @@ abstract class Database
      * database if it doesn't exist in the current schema.
      *
      * @param string $name Name of the database
-     * @param boolean $create Flag indicating whether the database should be created
+     * @param bool $create Flag indicating whether the database should be created
      * if it doesn't exist. If $create is false and the database doesn't exist
      * then an error will be raised
-     * @param int|boolean $errorLevel The level of error reporting to enable for the query, or false if no error
+     * @param int|bool $errorLevel The level of error reporting to enable for the query, or false if no error
      * should be raised
-     * @return boolean Flag indicating success
+     * @return bool Flag indicating success
      */
     public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR)
     {
@@ -794,10 +903,10 @@ abstract class Database
             return $this->connector->selectDatabase($name);
         }
 
-        // Check DB creation permisson
+        // Check DB creation permission
         if (!$create) {
             if ($errorLevel !== false) {
-                user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
+                user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel ?? 0);
             }
             // Unselect database
             $this->connector->unloadDatabase();

@@ -7,7 +7,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 
 /**
- * A basic HTML wrapper for stylish rendering of a developement info view.
+ * A basic HTML wrapper for stylish rendering of a development info view.
  * Used to output error messages, and test results.
  *
  * @todo Perhaps DebugView should be an interface / ABC, implemented by HTMLDebugView and CliDebugView?
@@ -69,7 +69,7 @@ class CliDebugView extends DebugView
         foreach ($lines as $offset => $line) {
             $output .= ($offset == $errline) ? "* " : "  ";
             $output .= str_pad("$offset:", 5);
-            $output .= wordwrap($line, self::config()->columns, "\n       ");
+            $output .= wordwrap($line ?? '', self::config()->columns ?? 0, "\n       ");
         }
         $output .= "\n";
 
@@ -92,7 +92,7 @@ class CliDebugView extends DebugView
 
     public function renderParagraph($text)
     {
-        return wordwrap($text, self::config()->columns) . "\n\n";
+        return wordwrap($text ?? '', self::config()->columns ?? 0) . "\n\n";
     }
 
     /**
@@ -105,10 +105,10 @@ class CliDebugView extends DebugView
      */
     public function renderInfo($title, $subtitle, $description = null)
     {
-        $output = wordwrap(strtoupper($title), self::config()->columns) . "\n";
-        $output .= wordwrap($subtitle, self::config()->columns) . "\n";
-        $output .= str_repeat('-', min(self::config()->columns, max(strlen($title), strlen($subtitle)))) . "\n";
-        $output .= wordwrap($description, self::config()->columns) . "\n\n";
+        $output = wordwrap(strtoupper($title ?? ''), self::config()->columns ?? 0) . "\n";
+        $output .= wordwrap($subtitle ?? '', self::config()->columns ?? 0) . "\n";
+        $output .= str_repeat('-', min(self::config()->columns, max(strlen($title ?? ''), strlen($subtitle ?? ''))) ?? 0) . "\n";
+        $output .= wordwrap($description ?? '', self::config()->columns ?? 0) . "\n\n";
 
         return $output;
     }
@@ -116,17 +116,17 @@ class CliDebugView extends DebugView
     public function renderVariable($val, $caller)
     {
         $output = PHP_EOL;
-        $output .= CLI::text(str_repeat('=', self::config()->columns), 'green');
+        $output .= CLI::text(str_repeat('=', self::config()->columns ?? 0), 'green');
         $output .= PHP_EOL;
         $output .= CLI::text($this->formatCaller($caller), 'blue', null, true);
-        $output .= PHP_EOL.PHP_EOL;
+        $output .= PHP_EOL . PHP_EOL;
         if (is_string($val)) {
-            $output .= wordwrap($val, self::config()->columns);
+            $output .= wordwrap($val ?? '', self::config()->columns ?? 0);
         } else {
             $output .= var_export($val, true);
         }
         $output .= PHP_EOL;
-        $output .= CLI::text(str_repeat('=', self::config()->columns), 'green');
+        $output .= CLI::text(str_repeat('=', self::config()->columns ?? 0), 'green');
         $output .= PHP_EOL;
 
         return $output;
@@ -160,7 +160,7 @@ class CliDebugView extends DebugView
     public function debugVariableText($val)
     {
         // Check debug
-        if (ClassInfo::hasMethod($val, 'debug')) {
+        if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
             return $val->debug();
         }
 
@@ -176,7 +176,7 @@ class CliDebugView extends DebugView
 
         // Format object
         if (is_object($val)) {
-            return var_export($val, true);
+            return print_r($val, true);
         }
 
         // Format bool
@@ -186,7 +186,7 @@ class CliDebugView extends DebugView
 
         // Format text
         if (is_string($val)) {
-            return wordwrap($val, self::config()->columns);
+            return wordwrap($val ?? '', self::config()->columns ?? 0);
         }
 
         // Other
@@ -197,7 +197,7 @@ class CliDebugView extends DebugView
     {
         $header = '';
         if ($showHeader) {
-            $file = basename($caller['file']);
+            $file = basename($caller['file'] ?? '');
             $line = $caller['line'];
             $header .= "Debug (line {$line} of {$file}):\n";
         }

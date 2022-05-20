@@ -31,11 +31,11 @@ class FieldList extends ArrayList
      * If this fieldlist is owned by a parent field (e.g. CompositeField)
      * this is the parent field.
      *
-     * @var FieldList|FormField
+     * @var CompositeField
      */
     protected $containerField;
 
-    public function __construct($items = array())
+    public function __construct($items = [])
     {
         if (!is_array($items) || func_num_args() > 1) {
             $items = func_get_args();
@@ -59,6 +59,38 @@ class FieldList extends ArrayList
     }
 
     /**
+     * Iterate over each field in the current list recursively
+     *
+     * @param callable $callback
+     */
+    public function recursiveWalk(callable $callback)
+    {
+        $stack = $this->toArray();
+        while (!empty($stack)) {
+            /** @var FormField $field */
+            $field = array_shift($stack);
+            $callback($field);
+            if ($field instanceof CompositeField) {
+                $stack = array_merge($field->getChildren()->toArray(), $stack);
+            }
+        }
+    }
+
+    /**
+     * Return a flattened list of all fields
+     *
+     * @return static
+     */
+    public function flattenFields()
+    {
+        $fields = [];
+        $this->recursiveWalk(function (FormField $field) use (&$fields) {
+            $fields[] = $field;
+        });
+        return static::create($fields);
+    }
+
+    /**
      * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
      * as well as heading / help text fields.
      *
@@ -66,8 +98,19 @@ class FieldList extends ArrayList
      */
     public function dataFields()
     {
-        if (!$this->sequentialSet) {
-            $this->collateDataFields($this->sequentialSet);
+        if (empty($this->sequentialSet)) {
+            $fields = [];
+            $this->recursiveWalk(function (FormField $field) use (&$fields) {
+                if (!$field->hasData()) {
+                    return;
+                }
+                $name = $field->getName();
+                if (isset($fields[$name])) {
+                    $this->fieldNameError($field, __FUNCTION__);
+                }
+                $fields[$name] = $field;
+            });
+            $this->sequentialSet = $fields;
         }
         return $this->sequentialSet;
     }
@@ -77,10 +120,57 @@ class FieldList extends ArrayList
      */
     public function saveableFields()
     {
-        if (!$this->sequentialSaveableSet) {
-            $this->collateDataFields($this->sequentialSaveableSet, true);
+        if (empty($this->sequentialSaveableSet)) {
+            $fields = [];
+            $this->recursiveWalk(function (FormField $field) use (&$fields) {
+                if (!$field->canSubmitValue()) {
+                    return;
+                }
+                $name = $field->getName();
+                if (isset($fields[$name])) {
+                    $this->fieldNameError($field, __FUNCTION__);
+                }
+                $fields[$name] = $field;
+            });
+            $this->sequentialSaveableSet = $fields;
         }
         return $this->sequentialSaveableSet;
+    }
+
+    /**
+     * Return array of all field names
+     *
+     * @return array
+     */
+    public function dataFieldNames()
+    {
+        return array_keys($this->dataFields() ?? []);
+    }
+
+    /**
+     * Trigger an error for duplicate field names
+     *
+     * @param FormField $field
+     * @param $functionName
+     */
+    protected function fieldNameError(FormField $field, $functionName)
+    {
+        if ($this->form) {
+            $errorSuffix = sprintf(
+                " in your '%s' form called '%s'",
+                get_class($this->form),
+                $this->form->getName()
+            );
+        } else {
+            $errorSuffix = '';
+        }
+
+        throw new \RuntimeException(sprintf(
+            "%s() I noticed that a field called '%s' appears twice%s",
+            $functionName,
+            $field->getName(),
+            $errorSuffix
+        ));
     }
 
     protected function flushFieldsCache()
@@ -89,10 +179,16 @@ class FieldList extends ArrayList
         $this->sequentialSaveableSet = null;
     }
 
+    /**
+     * @deprecated 4.1.0:5.0.0 Please use dataFields or saveableFields
+     * @param $list
+     * @param bool $saveableOnly
+     */
     protected function collateDataFields(&$list, $saveableOnly = false)
     {
+        Deprecation::notice('5.0', 'Please use dataFields or SaveableFields');
         if (!isset($list)) {
-            $list = array();
+            $list = [];
         }
         /** @var FormField $field */
         foreach ($this as $field) {
@@ -114,9 +210,8 @@ class FieldList extends ArrayList
                     } else {
                         $errSuffix = '';
                     }
-                    user_error(
-                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.",
-                        E_USER_ERROR
+                    throw new \RuntimeException(
+                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix."
                     );
                 }
                 $list[$name] = $field;
@@ -132,6 +227,8 @@ class FieldList extends ArrayList
      *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
      * @param FormField $field The {@link FormField} object to add to the end of that tab.
      * @param string $insertBefore The name of the field to insert before.  Optional.
+     *
+     * @return $this
      */
     public function addFieldToTab($tabName, $field, $insertBefore = null)
     {
@@ -147,6 +244,8 @@ class FieldList extends ArrayList
         } else {
             $tab->push($field);
         }
+
+        return $this;
     }
 
     /**
@@ -154,10 +253,11 @@ class FieldList extends ArrayList
      * This is most commonly used when overloading getCMSFields()
      *
      * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
-     *                        or TabSet.Tab.Subtab.
-     * This function will create any missing tabs.
+     *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
      * @param array $fields An array of {@link FormField} objects.
      * @param string $insertBefore Name of field to insert before
+     *
+     * @return $this
      */
     public function addFieldsToTab($tabName, $fields, $insertBefore = null)
     {
@@ -178,6 +278,8 @@ class FieldList extends ArrayList
                 $tab->push($field);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -185,14 +287,20 @@ class FieldList extends ArrayList
      *
      * @param string $tabName The name of the tab
      * @param string $fieldName The name of the field
+     *
+     * @return $this
      */
     public function removeFieldFromTab($tabName, $fieldName)
     {
         $this->flushFieldsCache();
 
         // Find the tab
-        $tab = $this->findOrMakeTab($tabName);
-        $tab->removeByName($fieldName);
+        $tab = $this->findTab($tabName);
+        if ($tab) {
+            $tab->removeByName($fieldName);
+        }
+
+        return $this;
     }
 
     /**
@@ -200,18 +308,22 @@ class FieldList extends ArrayList
      *
      * @param string $tabName The name of the Tab or TabSet field
      * @param array $fields A list of fields, e.g. array('Name', 'Email')
+     *
+     * @return $this
      */
     public function removeFieldsFromTab($tabName, $fields)
     {
         $this->flushFieldsCache();
 
         // Find the tab
-        $tab = $this->findOrMakeTab($tabName);
-
-        // Add the fields to the end of this set
-        foreach ($fields as $field) {
-            $tab->removeByName($field);
+        if ($tab = $this->findTab($tabName)) {
+            // Remove the fields from this set
+            foreach ($fields as $field) {
+                $tab->removeByName($field);
+            }
         }
+
+        return $this;
     }
 
     /**
@@ -222,6 +334,8 @@ class FieldList extends ArrayList
      * @param boolean $dataFieldOnly If this is true, then a field will only
      * be removed if it's a data field.  Dataless fields, such as tabs, will
      * be left as-is.
+     *
+     * @return $this
      */
     public function removeByName($fieldName, $dataFieldOnly = false)
     {
@@ -234,7 +348,7 @@ class FieldList extends ArrayList
             foreach ($fieldName as $field) {
                 $this->removeByName($field, $dataFieldOnly);
             }
-            return;
+            return $this;
         }
 
         $this->flushFieldsCache();
@@ -245,12 +359,14 @@ class FieldList extends ArrayList
             }
 
             if (($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
-                array_splice($this->items, $i, 1);
+                array_splice($this->items, $i ?? 0, 1);
                 break;
             } elseif ($child instanceof CompositeField) {
                 $child->removeByName($fieldName, $dataFieldOnly);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -258,14 +374,16 @@ class FieldList extends ArrayList
      *
      * @param string $fieldName The name of the field to replace
      * @param FormField $newField The field object to replace with
-     * @return boolean TRUE field was successfully replaced
+     * @param boolean $dataFieldOnly If this is true, then a field will only be replaced if it's a data field.  Dataless
+     *                               fields, such as tabs, will be not be considered for replacement.
+     * @return bool TRUE field was successfully replaced
      *                   FALSE field wasn't found, nothing changed
      */
-    public function replaceField($fieldName, $newField)
+    public function replaceField($fieldName, $newField, $dataFieldOnly = true)
     {
         $this->flushFieldsCache();
         foreach ($this as $i => $field) {
-            if ($field->getName() == $fieldName && $field->hasData()) {
+            if ($field->getName() == $fieldName && (!$dataFieldOnly || $field->hasData())) {
                 $this->items[$i] = $newField;
                 return true;
             } elseif ($field instanceof CompositeField) {
@@ -282,7 +400,7 @@ class FieldList extends ArrayList
      *
      * @param string $fieldName Name of field to rename title of
      * @param string $newFieldTitle New title of field
-     * @return boolean
+     * @return bool
      */
     public function renameField($fieldName, $newFieldTitle)
     {
@@ -297,7 +415,7 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasTabSet()
     {
@@ -308,6 +426,28 @@ class FieldList extends ArrayList
         }
 
         return false;
+    }
+
+    /**
+     * Returns the specified tab object, if it exists
+     *
+     * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
+     * @return Tab|null The found or null
+     */
+    public function findTab($tabName)
+    {
+        $parts = explode('.', $tabName ?? '');
+        $last_idx = count($parts ?? []) - 1;
+
+        $currentPointer = $this;
+
+        foreach ($parts as $k => $part) {
+            $parentPointer = $currentPointer;
+            /** @var FormField $currentPointer */
+            $currentPointer = $currentPointer->fieldByName($part);
+        }
+
+        return $currentPointer;
     }
 
     /**
@@ -325,8 +465,8 @@ class FieldList extends ArrayList
      */
     public function findOrMakeTab($tabName, $title = null)
     {
-        $parts = explode('.', $tabName);
-        $last_idx = count($parts) - 1;
+        $parts = explode('.', $tabName ?? '');
+        $last_idx = count($parts ?? []) - 1;
         // We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
         // add it to TabSet and Tab too.
         $currentPointer = $this;
@@ -349,10 +489,9 @@ class FieldList extends ArrayList
                         ? " named '{$parentPointer->getName()}'"
                         : null;
                     $parentPointerClass = get_class($parentPointer);
-                    user_error(
+                    throw new \InvalidArgumentException(
                         "FieldList::addFieldToTab() Tried to add a tab to object"
-                        . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist.",
-                        E_USER_ERROR
+                        . " '{$parentPointerClass}'{$withName} - '{$part}' didn't exist."
                     );
                 }
             }
@@ -368,18 +507,21 @@ class FieldList extends ArrayList
      * @todo Implement similarly to dataFieldByName() to support nested sets - or merge with dataFields()
      *
      * @param string $name
-     * @return FormField
+     * @return FormField|null
      */
     public function fieldByName($name)
     {
-        if (strpos($name, '.') !== false) {
-            list($name, $remainder) = explode('.', $name, 2);
+        $fullName = $name;
+        if (strpos($name ?? '', '.') !== false) {
+            list($name, $remainder) = explode('.', $name ?? '', 2);
         } else {
             $remainder = null;
         }
 
         foreach ($this as $child) {
-            if (trim($name) == trim($child->getName()) || $name == $child->id) {
+            if (trim($fullName ?? '') == trim($child->getName() ?? '') || $fullName == $child->id) {
+                return $child;
+            } elseif (trim($name ?? '') == trim($child->getName() ?? '') || $name == $child->id) {
                 if ($remainder) {
                     if ($child instanceof CompositeField) {
                         return $child->fieldByName($remainder);
@@ -404,13 +546,13 @@ class FieldList extends ArrayList
      * Use this if you're using nested FormFields.
      *
      * @param string $name The name of the field to return
-     * @return FormField instance
+     * @return FormField|null
      */
     public function dataFieldByName($name)
     {
         if ($dataFields = $this->dataFields()) {
             foreach ($dataFields as $child) {
-                if (trim($name) == trim($child->getName()) || $name == $child->id) {
+                if (trim($name ?? '') == trim($child->getName() ?? '') || $name == $child->id) {
                     return $child;
                 }
             }
@@ -420,17 +562,19 @@ class FieldList extends ArrayList
 
     /**
      * Inserts a field before a particular field in a FieldList.
+     * Will traverse CompositeFields depth-first to find the matching $name, and insert before the first match
      *
      * @param string $name Name of the field to insert before
      * @param FormField $item The form field to insert
-     * @return FormField|false
+     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
+     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertBefore($name, $item)
+    public function insertBefore($name, $item, $appendIfMissing = true)
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
             Deprecation::notice('5.0', 'Incorrect order of arguments for insertBefore');
-            list($item, $name) = array($name, $item);
+            list($item, $name) = [$name, $item];
         }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -438,15 +582,21 @@ class FieldList extends ArrayList
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i, 0, array($item));
+                array_splice($this->items, $i ?? 0, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
-                $ret = $child->insertBefore($name, $item);
+                $ret = $child->insertBefore($name, $item, false);
                 if ($ret) {
                     return $ret;
                 }
             }
             $i++;
+        }
+
+        // $name not found, append if needed
+        if ($appendIfMissing) {
+            $this->push($item);
+            return $item;
         }
 
         return false;
@@ -454,17 +604,19 @@ class FieldList extends ArrayList
 
     /**
      * Inserts a field after a particular field in a FieldList.
+     * Will traverse CompositeFields depth-first to find the matching $name, and insert after the first match
      *
      * @param string $name Name of the field to insert after
      * @param FormField $item The form field to insert
-     * @return FormField|false
+     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
+     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertAfter($name, $item)
+    public function insertAfter($name, $item, $appendIfMissing = true)
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
             Deprecation::notice('5.0', 'Incorrect order of arguments for insertAfter');
-            list($item, $name) = array($name, $item);
+            list($item, $name) = [$name, $item];
         }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -472,15 +624,21 @@ class FieldList extends ArrayList
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
-                array_splice($this->items, $i+1, 0, array($item));
+                array_splice($this->items, $i+1, 0, [$item]);
                 return $item;
             } elseif ($child instanceof CompositeField) {
-                $ret = $child->insertAfter($name, $item);
+                $ret = $child->insertAfter($name, $item, false);
                 if ($ret) {
                     return $ret;
                 }
             }
             $i++;
+        }
+
+        // $name not found, append if needed
+        if ($appendIfMissing) {
+            $this->push($item);
+            return $item;
         }
 
         return false;
@@ -600,7 +758,7 @@ class FieldList extends ArrayList
     }
 
     /**
-     * Transform this FieldList with a given tranform method,
+     * Transform this FieldList with a given transform method,
      * e.g. $this->transform(new ReadonlyTransformation())
      *
      * @param FormTransformation $trans
@@ -631,7 +789,15 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @param $field
+     * @return CompositeField|null
+     */
+    public function getContainerField()
+    {
+        return $this->containerField;
+    }
+
+    /**
+     * @param CompositeField|null $field
      * @return $this
      */
     public function setContainerField($field)
@@ -651,18 +817,24 @@ class FieldList extends ArrayList
     }
 
     /**
-     * Transform the named field into a readonly feld.
+     * Transform the named field into a readonly field.
      *
-     * @param string|FormField
+     * @param string|array|FormField $field
      */
     public function makeFieldReadonly($field)
     {
-        $fieldName = ($field instanceof FormField) ? $field->getName() : $field;
-        $srcField = $this->dataFieldByName($fieldName);
-        if ($srcField) {
-            $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
-        } else {
-            user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+        if (!is_array($field)) {
+            $field = [$field];
+        }
+
+        foreach ($field as $item) {
+            $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
+            $srcField = $this->dataFieldByName($fieldName);
+            if ($srcField) {
+                $this->replaceField($fieldName, $srcField->performReadonlyTransformation());
+            } else {
+                user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list", E_USER_WARNING);
+            }
         }
     }
 
@@ -683,15 +855,15 @@ class FieldList extends ArrayList
         }
 
         // Build a map of fields indexed by their name.  This will make the 2nd step much easier.
-        $fieldMap = array();
+        $fieldMap = [];
         foreach ($this->dataFields() as $field) {
             $fieldMap[$field->getName()] = $field;
         }
 
-        // Iterate through the ordered list	of names, building a new array to be put into $this->items.
+        // Iterate through the ordered list of names, building a new array to be put into $this->items.
         // While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
         // Unrecognised field names are okay; just ignore them
-        $fields = array();
+        $fields = [];
         foreach ($fieldNames as $fieldName) {
             if (isset($fieldMap[$fieldName])) {
                 $fields[] = $fieldMap[$fieldName];
@@ -712,7 +884,7 @@ class FieldList extends ArrayList
      * Find the numerical position of a field within
      * the children collection. Doesn't work recursively.
      *
-     * @param string|FormField
+     * @param string|FormField $field
      * @return int Position in children collection (first position starts with 0).
      * Returns FALSE if the field can't be found.
      */

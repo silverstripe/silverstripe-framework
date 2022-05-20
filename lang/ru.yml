@@ -1,7 +1,7 @@
 ru:
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 'Размеры'
-    EDIT: 'Редактировать'
+    Dimensions: Размеры
+    EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
     REMOVE: Удалить
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -30,11 +30,7 @@ ru:
     LOGGED_IN_ERROR: 'Вы должны войти в систему, чтобы изменить Ваш пароль.'
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить пароль'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
-    NOTSET: 'не установлено'
-    TODAY: сегодня
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
     VALIDDATEMINDATE: 'Требуется значение даты, совпадающее с минимальным ({date}) или более новое'
@@ -44,7 +40,6 @@ ru:
     VALIDDATETIMEMINDATE: 'Установите дату не ранее ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Выберите)
-    CHOOSE_MODEL: '(Выберите {name})'
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
@@ -82,7 +77,6 @@ ru:
     RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Удалить
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     EditPermissionsFailure: 'Не достаточно прав для удаления записи'
@@ -93,9 +87,7 @@ ru:
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено {type} {name}'
-    Save: 'Сохранить'
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
-    EDIT: 'Редактировать'
+    Save: Сохранить
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница
@@ -203,7 +195,7 @@ ru:
       many: '{count} групп'
       other: '{count} групп'
     Parent: 'Родительская группа'
-    ROLES: 'Роли'
+    ROLES: Роли
     ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
     RolesAddEditLink: 'Добавить/редактировать роли'
     SINGULARNAME: Группа
@@ -241,7 +233,6 @@ ru:
     ERRORWRONGCRED: 'Похоже, что указанные данные не верны. Пожалуйста, повторите попытку позже.'
     FIRSTNAME: Имя
     INTERFACELANG: 'Язык интерфейса'
-    KEEPMESIGNEDIN: 'Запомните меня'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
     PASSWORD: Пароль
@@ -252,13 +243,11 @@ ru:
       few: '{count} участника'
       many: '{count} участников'
       other: '{count} участников'
-    REMEMBERME: 'Запомнить меня? (на {count} дней на этом устройстве)'
     SINGULARNAME: Пользователь
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
-    WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
     db_Locale: 'Локаль интерфейса'
@@ -294,7 +283,7 @@ ru:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
     PLURALNAME: 'Права доступа'
     PLURALS:
-      one: 'Разрешение'
+      one: Разрешение
       few: '{count} разрешения'
       many: '{count} разрешений'
       other: '{count} разрешений'
@@ -307,13 +296,13 @@ ru:
     FromRoleOnGroup: 'перенято из роли "{roletitle}" для группы "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Может применяться только администратором'
-    PLURALNAME: 'Роли'
+    PLURALNAME: Роли
     PLURALS:
-      one: 'Роль'
+      one: Роль
       few: '{count} роли'
       many: '{count} ролей'
       other: '{count} ролей'
-    SINGULARNAME: 'Роль'
+    SINGULARNAME: Роль
     Title: Название
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
@@ -340,11 +329,8 @@ ru:
     CONFIRMLOGOUT: 'Нажмите кнопку ниже чтобы подтвердить что вы хотите выйти из системы.'
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
-    LOGIN: 'Вход'
+    LOGIN: Вход
     LOGOUT: Выйти
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
-    NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p> '
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
-    PASSWORDSENTHEADER: 'Ссылка для переустановки пароля выслана на ''{email}'''
-    PASSWORDSENTTEXT: 'Ссылка переустановки пароля была выслана на адрес ''{email}'' (письмо дойдет до получателя только в том случае, если аккаунт с таким электронным адресом действительно зарегистрирован).'

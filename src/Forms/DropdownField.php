@@ -6,7 +6,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
- * Dropdown field, created from a <select> tag.
+ * Dropdown field, created from a select tag.
  *
  * <b>Setting a $has_one relation</b>
  *
@@ -28,7 +28,7 @@ use SilverStripe\View\ArrayData;
  *
  * <b>Populate with Array</b>
  *
- * Example model defintion:
+ * Example model definition:
  * <code>
  * class MyObject extends DataObject {
  *   static $db = array(
@@ -105,12 +105,12 @@ class DropdownField extends SingleSelectField
             $disabled = 'disabled';
         }
 
-        return new ArrayData(array(
-            'Title' => $title,
+        return new ArrayData([
+            'Title' => (string)$title,
             'Value' => $value,
             'Selected' => $selected,
             'Disabled' => $disabled,
-        ));
+        ]);
     }
 
     /**
@@ -128,18 +128,18 @@ class DropdownField extends SingleSelectField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $options = array();
+        $options = [];
 
         // Add all options
         foreach ($this->getSourceEmpty() as $value => $title) {
             $options[] = $this->getFieldOption($value, $title);
         }
 
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'Options' => new ArrayList($options)
-        ));
+        ]);
 
         return parent::Field($properties);
     }

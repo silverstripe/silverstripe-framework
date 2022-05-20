@@ -15,8 +15,9 @@ use Exception;
  * $chain = new ErrorControlChain();
  * $chain->then($callback1)->then($callback2)->thenIfErrored($callback3)->execute();
  *
- * WARNING: This class is experimental and designed specifically for use pre-startup.
- * It will likely be heavily refactored before the release of 3.2
+ * @internal This class is designed specifically for use pre-startup and may change without warning
+ *
+ * @deprecated 5.0 To be removed in SilverStripe 5.0
  */
 class ErrorControlChain
 {
@@ -34,7 +35,7 @@ class ErrorControlChain
      *
      * @var array
      */
-    protected $steps = array();
+    protected $steps = [];
 
     /**
      * True if errors should be hidden
@@ -123,10 +124,10 @@ class ErrorControlChain
      */
     public function then($callback, $onErrorState = false)
     {
-        $this->steps[] = array(
+        $this->steps[] = [
             'callback' => $callback,
             'onErrorState' => $onErrorState
-        );
+        ];
         return $this;
     }
 
@@ -181,18 +182,18 @@ class ErrorControlChain
     {
         $error = error_get_last();
         $message = $error ? $error['message'] : '';
-        return stripos($message, 'memory') !== false && stripos($message, 'exhausted') !== false;
+        return stripos($message ?? '', 'memory') !== false && stripos($message ?? '', 'exhausted') !== false;
     }
 
-    static $transtable = array(
+    static $transtable = [
         'k' => 1024,
         'm' => 1048576,
         'g' => 1073741824
-    );
+    ];
 
     protected function translateMemstring($memString)
     {
-        $char = strtolower(substr($memString, -1));
+        $char = strtolower(substr($memString ?? '', -1));
         $fact = isset(self::$transtable[$char]) ? self::$transtable[$char] : 1;
         return ((int)$memString) * $fact;
     }
@@ -217,7 +218,7 @@ class ErrorControlChain
 
     public function execute()
     {
-        register_shutdown_function(array($this, 'handleFatalError'));
+        register_shutdown_function([$this, 'handleFatalError']);
         $this->handleFatalErrors = true;
 
         $this->originalDisplayErrors = $this->getDisplayErrors();

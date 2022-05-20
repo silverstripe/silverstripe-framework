@@ -35,7 +35,7 @@ class i18nTextCollectorTask extends BuildTask
      * It will search for existent modules that use the i18n feature, parse the _t() calls
      * and write the resultant files in the lang folder of each module.
      *
-     * @uses DataObject->collectI18nStatics()
+     * @uses DataObject::collectI18nStatics()
      *
      * @param HTTPRequest $request
      */
@@ -79,6 +79,6 @@ class i18nTextCollectorTask extends BuildTask
         }
 
         // merge=0 or merge=false will disable merge
-        return !in_array($merge, array('0', 'false'));
+        return !in_array($merge, ['0', 'false']);
     }
 }

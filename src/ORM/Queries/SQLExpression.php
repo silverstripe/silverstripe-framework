@@ -19,14 +19,14 @@ abstract class SQLExpression
      * query SQL.
      * @var array
      */
-    protected $replacementsOld = array();
+    protected $replacementsOld = [];
 
     /**
      * Keep an internal register of find/replace pairs to execute when it's time to actually get the
      * query SQL.
      * @var array
      */
-    protected $replacementsNew = array();
+    protected $replacementsNew = [];
 
     /**
      * Swap some text in the SQL query with another.
@@ -88,7 +88,7 @@ abstract class SQLExpression
      * @param array $parameters Out variable for parameters required for this query
      * @return string The completed SQL query
      */
-    public function sql(&$parameters = array())
+    public function sql(&$parameters = [])
     {
         // Build each component as needed
         $sql = DB::build_sql($this, $parameters);
@@ -98,7 +98,7 @@ abstract class SQLExpression
         }
 
         if ($this->replacementsOld) {
-            $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+            $sql = str_replace($this->replacementsOld ?? '', $this->replacementsNew ?? '', $sql ?? '');
         }
 
         return $sql;
@@ -125,7 +125,7 @@ abstract class SQLExpression
     {
         $target = array_keys(get_object_vars($object));
         foreach (get_object_vars($this) as $variable => $value) {
-            if (in_array($variable, $target)) {
+            if (in_array($variable, $target ?? [])) {
                 $object->$variable = $value;
             }
         }

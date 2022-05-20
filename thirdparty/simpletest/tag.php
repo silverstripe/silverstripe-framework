@@ -32,7 +32,7 @@ class SimpleTag {
      *                               converted to lower case.
      */
     function __construct($name, $attributes) {
-        $this->_name = strtolower(trim($name));
+        $this->_name = strtolower(trim($name ?? ''));
         $this->_attributes = $attributes;
         $this->_content = '';
     }
@@ -102,7 +102,7 @@ class SimpleTag {
      *    @access public
      */
     function getAttribute($label) {
-        $label = strtolower($label);
+        $label = strtolower($label ?? '');
         if (! isset($this->_attributes[$label])) {
             return false;
         }
@@ -307,7 +307,7 @@ class SimpleWidget extends SimpleTag {
      *    @access public
      */
     function setLabel($label) {
-        $this->_label = trim($label);
+        $this->_label = trim($label ?? '');
     }
 
     /**
@@ -317,7 +317,7 @@ class SimpleWidget extends SimpleTag {
      *    @access public
      */
     function isLabel($label) {
-        return $this->_label == trim($label);
+        return $this->_label == trim($label ?? '');
     }
 
     /**
@@ -429,7 +429,7 @@ class SimpleSubmitTag extends SimpleWidget {
      *    @access public
      */
     function isLabel($label) {
-        return trim($label) == trim($this->getLabel());
+        return trim($label ?? '') == trim($this->getLabel() ?? '');
     }
 }
 
@@ -487,7 +487,7 @@ class SimpleImageSubmitTag extends SimpleWidget {
      *    @access public
      */
     function isLabel($label) {
-        return trim($label) == trim($this->getLabel());
+        return trim($label ?? '') == trim($this->getLabel() ?? '');
     }
 
     /**
@@ -561,7 +561,7 @@ class SimpleButtonTag extends SimpleWidget {
      *    @access public
      */
     function isLabel($label) {
-        return trim($label) == trim($this->getLabel());
+        return trim($label ?? '') == trim($this->getLabel() ?? '');
     }
 }
 
@@ -626,14 +626,14 @@ class SimpleTextAreaTag extends SimpleWidget {
      *    @access private
      */
     function _wrap($text) {
-        $text = str_replace("\r\r\n", "\r\n", str_replace("\n", "\r\n", $text));
-        $text = str_replace("\r\n\n", "\r\n", str_replace("\r", "\r\n", $text));
-        if (strncmp($text, "\r\n", strlen("\r\n")) == 0) {
-            $text = substr($text, strlen("\r\n"));
+        $text = str_replace("\r\r\n", "\r\n", str_replace("\n", "\r\n", $text ?? '') ?? '');
+        $text = str_replace("\r\n\n", "\r\n", str_replace("\r", "\r\n", $text ?? '') ?? '');
+        if (strncmp($text ?? '', "\r\n", strlen("\r\n")) == 0) {
+            $text = substr($text ?? '', strlen("\r\n"));
         }
         if ($this->_wrapIsEnabled()) {
             return wordwrap(
-                    $text,
+                    $text ?? '',
                     (integer)$this->getAttribute('cols'),
                     "\r\n");
         }
@@ -681,13 +681,13 @@ class SimpleUploadTag extends SimpleWidget {
      *    @access public
      */
     function write(&$encoding, $x, $y) {
-        if (! file_exists($this->getValue())) {
+        if (! file_exists($this->getValue() ?? '')) {
             return;
         }
         $encoding->attach(
                 $this->getName(),
-                implode('', file($this->getValue())),
-                basename($this->getValue()));
+                implode('', file($this->getValue() ?? '')),
+                basename($this->getValue() ?? ''));
     }
 }
 
@@ -904,11 +904,11 @@ class SimpleOptionTag extends SimpleWidget {
      *    @access public
      */
     function isValue($compare) {
-        $compare = trim($compare);
-        if (trim($this->getValue()) == $compare) {
+        $compare = trim($compare ?? '');
+        if (trim($this->getValue() ?? '') == $compare) {
             return true;
         }
-        return trim($this->getContent()) == $compare;
+        return trim($this->getContent() ?? '') == $compare;
     }
 
     /**
@@ -1098,7 +1098,7 @@ class SimpleTagGroup {
      *    @access public
      */
     function getName() {
-        if (count($this->_widgets) > 0) {
+        if (count($this->_widgets ?? []) > 0) {
             return $this->_widgets[0]->getName();
         }
     }
@@ -1200,7 +1200,7 @@ class SimpleCheckboxGroup extends SimpleTagGroup {
         $widgets = &$this->_getWidgets();
         for ($i = 0, $count = count($widgets); $i < $count; $i++) {
             $possible = $widgets[$i]->getAttribute('value');
-            if (in_array($widgets[$i]->getAttribute('value'), $values)) {
+            if (in_array($widgets[$i]->getAttribute('value'), $values ?? [])) {
                 $widgets[$i]->setValue($possible);
             } else {
                 $widgets[$i]->setValue(false);
@@ -1222,7 +1222,7 @@ class SimpleCheckboxGroup extends SimpleTagGroup {
         $widgets = &$this->_getWidgets();
         for ($i = 0, $count = count($widgets); $i < $count; $i++) {
             $possible = $widgets[$i]->getAttribute('value');
-            if (in_array($possible, $values)) {
+            if (in_array($possible, $values ?? [])) {
                 $matches[] = $possible;
             }
         }
@@ -1238,9 +1238,9 @@ class SimpleCheckboxGroup extends SimpleTagGroup {
      *    @access private
      */
     function _coerceValues($values) {
-        if (count($values) == 0) {
+        if (count($values ?? []) == 0) {
             return false;
-        } elseif (count($values) == 1) {
+        } elseif (count($values ?? []) == 1) {
             return $values[0];
         } else {
             return $values;

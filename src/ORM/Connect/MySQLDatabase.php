@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\PaginatedList;
@@ -19,7 +21,7 @@ use Exception;
  * You are advised to backup your tables if changing settings on an existing database
  * `connection_charset` and `charset` should be equal, similarly so should `connection_collation` and `collation`
  */
-class MySQLDatabase extends Database
+class MySQLDatabase extends Database implements TransactionManager
 {
     use Configurable;
 
@@ -46,6 +48,22 @@ class MySQLDatabase extends Database
      * @var string
      */
     private static $charset = 'utf8';
+
+    /**
+     * SQL Mode used on connections to MySQL. Defaults to ANSI. For basic ORM
+     * compatibility, this setting must always include ANSI or ANSI_QUOTES.
+     *
+     * @config
+     * @var string
+     */
+    private static $sql_mode = 'ANSI';
+
+    /**
+     * Cache for getTransactionManager()
+     *
+     * @var TransactionManager
+     */
+    private $transactionManager = null;
 
     /**
      * Default collation
@@ -75,8 +93,8 @@ class MySQLDatabase extends Database
         // Notify connector of parameters
         $this->connector->connect($parameters);
 
-        // This is important!
-        $this->setSQLMode('ANSI');
+        // Set sql_mode
+        $this->setSQLMode(static::config()->get('sql_mode'));
 
         if (isset($parameters['timezone'])) {
             $this->selectTimezone($parameters['timezone']);
@@ -100,7 +118,7 @@ class MySQLDatabase extends Database
         if (empty($mode)) {
             return;
         }
-        $this->preparedQuery("SET sql_mode = ?", array($mode));
+        $this->preparedQuery("SET sql_mode = ?", [$mode]);
     }
 
     /**
@@ -113,7 +131,7 @@ class MySQLDatabase extends Database
         if (empty($timezone)) {
             return;
         }
-        $this->preparedQuery("SET SESSION time_zone = ?", array($timezone));
+        $this->preparedQuery("SET SESSION time_zone = ?", [$timezone]);
     }
 
     public function supportsCollations()
@@ -135,6 +153,12 @@ class MySQLDatabase extends Database
      * The core search engine, used by this class and its subclasses to do fun stuff.
      * Searches both SiteTree and File.
      *
+     * Caution: While the $keywords argument is escaped for safe use in a query context,
+     * you need to ensure that it is also a valid boolean expression when opting into $booleanSearch.
+     * For example, the "asterisk" and "greater than" characters have a special meaning in this context,
+     * and can only be placed in certain parts of the keywords. You will need to preprocess and sanitise
+     * user input accordingly in order to avoid query errors.
+     *
      * @param array $classesToSearch
      * @param string $keywords Keywords as a string.
      * @param int $start
@@ -144,7 +168,7 @@ class MySQLDatabase extends Database
      * @param bool $booleanSearch
      * @param string $alternativeFileFilter
      * @param bool $invertedMatch
-     * @return \SilverStripe\ORM\PaginatedList
+     * @return PaginatedList
      * @throws Exception
      */
     public function searchEngine(
@@ -158,21 +182,19 @@ class MySQLDatabase extends Database
         $alternativeFileFilter = "",
         $invertedMatch = false
     ) {
-        $pageClass = 'SilverStripe\\CMS\\Model\\SiteTree';
-        $fileClass = 'SilverStripe\\Assets\\File';
-        $pageTable = DataObject::getSchema()->tableName($pageClass);
-        $fileTable = DataObject::getSchema()->tableName($fileClass);
-        if (!class_exists($pageClass)) {
+        $pageClass = SiteTree::class;
+        $fileClass = File::class;
+        if (!class_exists($pageClass ?? '')) {
             throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
         }
-        if (!class_exists($fileClass)) {
+        if (!class_exists($fileClass ?? '')) {
             throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
         }
 
         $keywords = $this->escapeString($keywords);
-        $htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
+        $htmlEntityKeywords = htmlentities($keywords ?? '', ENT_NOQUOTES, 'UTF-8');
 
-        $extraFilters = array($pageClass => '', $fileClass => '');
+        $extraFilters = [$pageClass => '', $fileClass => ''];
 
         $boolean = '';
         if ($booleanSearch) {
@@ -194,12 +216,13 @@ class MySQLDatabase extends Database
 
         // File.ShowInSearch was added later, keep the database driver backwards compatible
         // by checking for its existence first
+        $fileTable = DataObject::getSchema()->tableName($fileClass);
         $fields = $this->getSchemaManager()->fieldList($fileTable);
-        if (array_key_exists('ShowInSearch', $fields)) {
+        if (array_key_exists('ShowInSearch', $fields ?? [])) {
             $extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
         }
 
-        $limit = $start . ", " . (int) $pageLength;
+        $limit = (int)$start . ", " . (int)$pageLength;
 
         $notMatch = $invertedMatch
                 ? "NOT "
@@ -213,8 +236,9 @@ class MySQLDatabase extends Database
             $match[$fileClass] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = '$fileClassSQL'";
 
             // We make the relevance search by converting a boolean mode search into a normal one
-            $relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
-            $htmlEntityRelevanceKeywords = str_replace(array('*', '+', '-'), '', $htmlEntityKeywords);
+            $booleanChars = ['*', '+', '@', '-', '(', ')', '<', '>'];
+            $relevanceKeywords = str_replace($booleanChars ?? '', '', $keywords ?? '');
+            $htmlEntityRelevanceKeywords = str_replace($booleanChars ?? '', '', $htmlEntityKeywords ?? '');
             $relevance[$pageClass] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
                     . "AGAINST ('$relevanceKeywords') "
                     . "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
@@ -225,8 +249,8 @@ class MySQLDatabase extends Database
         }
 
         // Generate initial DataLists and base table names
-        $lists = array();
-        $sqlTables = array($pageClass => '', $fileClass => '');
+        $lists = [];
+        $sqlTables = [$pageClass => '', $fileClass => ''];
         foreach ($classesToSearch as $class) {
             $lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class]);
             $sqlTables[$class] = '"' . DataObject::getSchema()->tableName($class) . '"';
@@ -235,36 +259,35 @@ class MySQLDatabase extends Database
         $charset = static::config()->get('charset');
 
         // Make column selection lists
-        $select = array(
-            $pageClass => array(
+        $select = [
+            $pageClass => [
                 "ClassName", "{$sqlTables[$pageClass]}.\"ID\"", "ParentID",
                 "Title", "MenuTitle", "URLSegment", "Content",
                 "LastEdited", "Created",
                 "Name" => "_{$charset}''",
                 "Relevance" => $relevance[$pageClass], "CanViewType"
-            ),
-            $fileClass => array(
+            ],
+            $fileClass => [
                 "ClassName", "{$sqlTables[$fileClass]}.\"ID\"", "ParentID",
                 "Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
                 "LastEdited", "Created",
                 "Name",
                 "Relevance" => $relevance[$fileClass], "CanViewType" => "NULL"
-            ),
-        );
+            ],
+        ];
 
         // Process and combine queries
-        $querySQLs = array();
-        $queryParameters = array();
+        $querySQLs = [];
+        $queryParameters = [];
         $totalCount = 0;
         foreach ($lists as $class => $list) {
-            $table = DataObject::getSchema()->tableName($class);
             /** @var SQLSelect $query */
             $query = $list->dataQuery()->query();
 
             // There's no need to do all that joining
             $query->setFrom($sqlTables[$class]);
             $query->setSelect($select[$class]);
-            $query->setOrderBy(array());
+            $query->setOrderBy([]);
 
             $querySQLs[] = $query->sql($parameters);
             $queryParameters = array_merge($queryParameters, $parameters);
@@ -276,10 +299,10 @@ class MySQLDatabase extends Database
         // Get records
         $records = $this->preparedQuery($fullQuery, $queryParameters);
 
-        $objects = array();
+        $objects = [];
 
         foreach ($records as $record) {
-            $objects[] = new $record['ClassName']($record);
+            $objects[] = new $record['ClassName']($record, DataObject::CREATE_HYDRATED);
         }
 
         $list = new PaginatedList(new ArrayList($objects));
@@ -293,42 +316,106 @@ class MySQLDatabase extends Database
         return $list;
     }
 
+
+    /**
+     * Returns the TransactionManager to handle transactions for this database.
+     *
+     * @return TransactionManager
+     */
+    protected function getTransactionManager()
+    {
+        if (!$this->transactionManager) {
+            // PDOConnector providers this
+            if ($this->connector instanceof TransactionManager) {
+                $this->transactionManager = new NestedTransactionManager($this->connector);
+            // Direct database access does not
+            } else {
+                $this->transactionManager = new NestedTransactionManager(new MySQLTransactionManager($this));
+            }
+        }
+        return $this->transactionManager;
+    }
     public function supportsTransactions()
     {
         return true;
     }
+    public function supportsSavepoints()
+    {
+        return $this->getTransactionManager()->supportsSavepoints();
+    }
 
     public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
     {
-        // This sets the isolation level for the NEXT transaction, not the current one.
-        if ($transactionMode) {
-            $this->query('SET TRANSACTION ' . $transactionMode);
-        }
-
-        $this->query('START TRANSACTION');
-
-        if ($sessionCharacteristics) {
-            $this->query('SET SESSION TRANSACTION ' . $sessionCharacteristics);
-        }
+        $this->getTransactionManager()->transactionStart($transactionMode, $sessionCharacteristics);
     }
 
     public function transactionSavepoint($savepoint)
     {
-        $this->query("SAVEPOINT $savepoint");
+        $this->getTransactionManager()->transactionSavepoint($savepoint);
     }
 
     public function transactionRollback($savepoint = false)
     {
-        if ($savepoint) {
-            $this->query('ROLLBACK TO ' . $savepoint);
-        } else {
-            $this->query('ROLLBACK');
-        }
+        return $this->getTransactionManager()->transactionRollback($savepoint);
+    }
+
+    public function transactionDepth()
+    {
+        return $this->getTransactionManager()->transactionDepth();
     }
 
     public function transactionEnd($chain = false)
     {
-        $this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN');
+        $result = $this->getTransactionManager()->transactionEnd();
+
+        if ($chain) {
+            Deprecation::notice('4.4', '$chain argument is deprecated');
+            return $this->getTransactionManager()->transactionStart();
+        }
+
+        return $result;
+    }
+
+    /**
+     * In error condition, set transactionNesting to zero
+     */
+    protected function resetTransactionNesting()
+    {
+        // Check whether to use a connector's built-in transaction methods
+        if ($this->connector instanceof TransactionalDBConnector) {
+            if ($this->transactionNesting > 0) {
+                $this->connector->transactionRollback();
+            }
+        }
+        $this->transactionNesting = 0;
+    }
+
+    public function query($sql, $errorLevel = E_USER_ERROR)
+    {
+        $this->inspectQuery($sql);
+        return parent::query($sql, $errorLevel);
+    }
+
+    public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
+    {
+        $this->inspectQuery($sql);
+        return parent::preparedQuery($sql, $parameters, $errorLevel);
+    }
+
+    /**
+     * Inspect a SQL query prior to execution
+     *
+     * @param string $sql
+     */
+    protected function inspectQuery($sql)
+    {
+        // Any DDL discards transactions.
+        // See https://dev.mysql.com/doc/internals/en/transactions-notes-on-ddl-and-normal-transaction.html
+        // on why we need to be over-eager
+        $isDDL = $this->getConnector()->isQueryDDL($sql);
+        if ($isDDL) {
+            $this->resetTransactionNesting();
+        }
     }
 
     public function comparisonClause(
@@ -357,16 +444,16 @@ class MySQLDatabase extends Database
 
     public function formattedDatetimeClause($date, $format)
     {
-        preg_match_all('/%(.)/', $format, $matches);
+        preg_match_all('/%(.)/', $format ?? '', $matches);
         foreach ($matches[1] as $match) {
-            if (array_search($match, array('Y', 'm', 'd', 'H', 'i', 's', 'U')) === false) {
+            if (array_search($match, ['Y', 'm', 'd', 'H', 'i', 's', 'U']) === false) {
                 user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
             }
         }
 
-        if (preg_match('/^now$/i', $date)) {
+        if (preg_match('/^now$/i', $date ?? '')) {
             $date = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date ?? '')) {
             $date = "'$date'";
         }
 
@@ -379,11 +466,11 @@ class MySQLDatabase extends Database
 
     public function datetimeIntervalClause($date, $interval)
     {
-        $interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval);
+        $interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval ?? '');
 
-        if (preg_match('/^now$/i', $date)) {
+        if (preg_match('/^now$/i', $date ?? '')) {
             $date = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date ?? '')) {
             $date = "'$date'";
         }
 
@@ -393,15 +480,15 @@ class MySQLDatabase extends Database
     public function datetimeDifferenceClause($date1, $date2)
     {
         // First date format
-        if (preg_match('/^now$/i', $date1)) {
+        if (preg_match('/^now$/i', $date1 ?? '')) {
             $date1 = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date1)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date1 ?? '')) {
             $date1 = "'$date1'";
         }
         // Second date format
-        if (preg_match('/^now$/i', $date2)) {
+        if (preg_match('/^now$/i', $date2 ?? '')) {
             $date2 = "NOW()";
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date2)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date2 ?? '')) {
             $date2 = "'$date2'";
         }
 
@@ -423,8 +510,9 @@ class MySQLDatabase extends Database
     {
         $id = $this->getLockIdentifier($name);
 
-        // MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
-        // in contrast to PostgreSQL and SQL Server who stack the locks.
+        // MySQL 5.7.4 and below auto-releases existing locks on subsequent GET_LOCK() calls.
+        // MySQL 5.7.5 and newer allow multiple locks per sessions even with the same name.
+        // https://dev.mysql.com/doc/refman/5.7/en/miscellaneous-functions.html#function_get-lock
         return (bool) $this->query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
     }
 
@@ -450,5 +538,25 @@ class MySQLDatabase extends Database
     public function random()
     {
         return 'RAND()';
+    }
+
+    /**
+     * Clear all data in a given table
+     *
+     * @param string $table Name of table
+     */
+    public function clearTable($table)
+    {
+        $this->query("DELETE FROM \"$table\"");
+
+        // Check if resetting the auto-increment is needed
+        $autoIncrement = $this->preparedQuery(
+            'SELECT "AUTO_INCREMENT" FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+            [ $this->getSelectedDatabase(), $table]
+        )->value();
+
+        if ($autoIncrement > 1) {
+            $this->query("ALTER TABLE \"$table\" AUTO_INCREMENT = 1");
+        }
     }
 }

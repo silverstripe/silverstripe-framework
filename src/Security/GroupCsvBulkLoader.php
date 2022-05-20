@@ -11,9 +11,9 @@ use SilverStripe\ORM\DataObject;
 class GroupCsvBulkLoader extends CsvBulkLoader
 {
 
-    public $duplicateChecks = array(
+    public $duplicateChecks = [
         'Code' => 'Code',
-    );
+    ];
 
     public function __construct($objectClass = Group::class)
     {
@@ -35,9 +35,9 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         // are imported to avoid missing "early" references to parents
         // which are imported later on in the CSV file.
         if (isset($record['ParentCode']) && $record['ParentCode']) {
-            $parentGroup = DataObject::get_one('SilverStripe\\Security\\Group', array(
+            $parentGroup = DataObject::get_one('SilverStripe\\Security\\Group', [
                 '"Group"."Code"' => $record['ParentCode']
-            ));
+            ]);
             if ($parentGroup) {
                 $group->ParentID = $parentGroup->ID;
                 $group->write();
@@ -47,13 +47,13 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         // set permission codes - these are all additive, meaning
         // existing permissions arent cleared.
         if (isset($record['PermissionCodes']) && $record['PermissionCodes']) {
-            foreach (explode(',', $record['PermissionCodes']) as $code) {
-                $p = DataObject::get_one('SilverStripe\\Security\\Permission', array(
+            foreach (explode(',', $record['PermissionCodes'] ?? '') as $code) {
+                $p = DataObject::get_one('SilverStripe\\Security\\Permission', [
                     '"Permission"."Code"' => $code,
                     '"Permission"."GroupID"' => $group->ID
-                ));
+                ]);
                 if (!$p) {
-                    $p = new Permission(array('Code' => $code));
+                    $p = new Permission(['Code' => $code]);
                     $p->write();
                 }
                 $group->Permissions()->add($p);

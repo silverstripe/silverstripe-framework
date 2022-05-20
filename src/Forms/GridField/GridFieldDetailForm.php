@@ -3,14 +3,18 @@
 namespace SilverStripe\Forms\GridField;
 
 use Closure;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 
@@ -27,10 +31,10 @@ use SilverStripe\ORM\Filterable;
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  */
-class GridFieldDetailForm implements GridField_URLHandler
+class GridFieldDetailForm extends AbstractGridFieldComponent implements GridField_URLHandler
 {
 
-    use Extensible;
+    use Extensible, GridFieldStateAware;
 
     /**
      * @var string
@@ -38,10 +42,19 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $template = null;
 
     /**
-     *
      * @var string
      */
     protected $name;
+
+    /**
+     * @var bool
+     */
+    protected $showPagination;
+
+    /**
+     * @var bool
+     */
+    protected $showAdd;
 
     /**
      * @var Validator The form validator used for both add and edit fields.
@@ -59,15 +72,21 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected $itemRequestClass;
 
     /**
+     * If true, will redirect to missing records if they are found elsewhere
+     * @var bool
+     */
+    protected $redirectMissingRecords = false;
+
+    /**
      * @var callable With two parameters: $form and $component
      */
     protected $itemEditFormCallback;
 
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'item/$ID' => 'handleItem'
-        );
+        ];
     }
 
     /**
@@ -79,10 +98,14 @@ class GridFieldDetailForm implements GridField_URLHandler
      * controller who wants to display the getCMSFields
      *
      * @param string $name The name of the edit form to place into the pop-up form
+     * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
+     * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($name = 'DetailForm')
+    public function __construct($name = null, $showPagination = null, $showAdd = null)
     {
-        $this->name = $name;
+        $this->setName($name ?: 'DetailForm');
+        $this->setShowPagination($showPagination);
+        $this->setShowAdd($showAdd);
     }
 
     /**
@@ -97,25 +120,96 @@ class GridFieldDetailForm implements GridField_URLHandler
         // It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
         // nested GridField.
         $requestHandler = $gridField->getForm()->getController();
+        $record = $this->getRecordFromRequest($gridField, $request);
+        if (!$record) {
+            // Look for the record elsewhere in the CMS
+            $redirectDest = $this->getLostRecordRedirection($gridField, $request);
+            // Don't allow infinite redirections
+            if ($redirectDest) {
+                // Mark the remainder of the URL as parsed to trigger an immediate redirection
+                while (!$request->allParsed()) {
+                    $request->shift();
+                }
+                return (new HTTPResponse())->redirect($redirectDest);
+            }
 
+            return $requestHandler->httpError(404, 'That record was not found');
+        }
+        $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
+        $manager = $this->getStateManager();
+        if ($gridStateStr = $manager->getStateFromRequest($gridField, $request)) {
+            $gridField->getState(false)->setValue($gridStateStr);
+        }
+
+        // if no validator has been set on the GridField then use the Validators from the record.
+        if (!$this->getValidator()) {
+            $this->setValidator($record->getCMSCompositeValidator());
+        }
+
+        return $handler->handleRequest($request);
+    }
+
+    /**
+     * @param GridField $gridField
+     * @param HTTPRequest $request
+     * @return DataObject|null
+     */
+    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?DataObject
+    {
         /** @var DataObject $record */
         if (is_numeric($request->param('ID'))) {
             /** @var Filterable $dataList */
             $dataList = $gridField->getList();
-            $record = $dataList->byID($request->param("ID"));
+            $record = $dataList->byID($request->param('ID'));
         } else {
             $record = Injector::inst()->create($gridField->getModelClass());
         }
 
-        $handler = $this->getItemRequestHandler($gridField, $record, $requestHandler);
+        return $record;
+    }
 
-        // if no validator has been set on the GridField and the record has a
-        // CMS validator, use that.
-        if (!$this->getValidator() && ClassInfo::hasMethod($record, 'getCMSValidator')) {
-            $this->setValidator($record->getCMSValidator());
+    /**
+     * Try and find another URL at which the given record can be edited.
+     * If redirectMissingRecords is true and the record has a CMSEditLink method, that value will be returned.
+     * This only works when the list passed to the GridField is a {@link DataList}.
+     *
+     * @param $gridField The current GridField
+     * @param $id The ID of the DataObject to open
+     */
+    public function getLostRecordRedirection(GridField $gridField, HTTPRequest $request, ?int $id = null): ?string
+    {
+
+        if (!$this->redirectMissingRecords) {
+            return null;
         }
 
-        return $handler->handleRequest($request);
+        // If not supplied, look up the ID from the request
+        if ($id === null && is_numeric($request->param('ID'))) {
+            $id = (int)$request->param('ID');
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        $list = $gridField->getList();
+        if (!$list instanceof DataList) {
+            throw new \LogicException('List is not of type DataList, cannot determine redirection target');
+        }
+
+        $existing = DataObject::get($list->dataClass())->byID($id);
+        if ($existing && $existing->hasMethod('CMSEditLink')) {
+            $link = $existing->CMSEditLink();
+        }
+
+        if ($link && $link == $request->getURL()) {
+            throw new \LogicException(sprintf(
+                'Infinite redirection to "%s" detected in GridFieldDetailForm->getLostRecordRedirection()',
+                $link
+            ));
+        }
+
+        return $link;
     }
 
     /**
@@ -129,11 +223,12 @@ class GridFieldDetailForm implements GridField_URLHandler
     protected function getItemRequestHandler($gridField, $record, $requestHandler)
     {
         $class = $this->getItemRequestClass();
-        $this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler);
+        $assignedClass = $this->itemRequestClass;
+        $this->extend('updateItemRequestClass', $class, $gridField, $record, $requestHandler, $assignedClass);
         /** @var GridFieldDetailForm_ItemRequest $handler */
         $handler = Injector::inst()->createWithArgs(
             $class,
-            array($gridField, $this, $record, $requestHandler, $this->name)
+            [$gridField, $this, $record, $requestHandler, $this->name]
         );
         if ($template = $this->getTemplate()) {
             $handler->setTemplate($template);
@@ -176,6 +271,90 @@ class GridFieldDetailForm implements GridField_URLHandler
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Enable redirection to missing records.
+     *
+     * If a GridField shows a filtered list, and the DataObject is not in the list but exists in the
+     * database, and the DataObject has a CMSEditLink method, then the system will redirect to the
+     * URL returned by that method.
+     */
+    public function setRedirectMissingRecords(bool $redirectMissingRecords): self
+    {
+        $this->redirectMissingRecords = $redirectMissingRecords;
+        return $this;
+    }
+
+    /**
+     * Return the status of redirection to missing records.
+     * @see setRedirectMissingRecordssetRedirectMissingRecords
+     */
+    public function getRedirectMissingRecords(): bool
+    {
+        return $this->redirectMissingRecords;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getDefaultShowPagination()
+    {
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showPagination']) ? (bool) $formActionsConfig['showPagination'] : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowPagination()
+    {
+        if ($this->showPagination === null) {
+            return $this->getDefaultShowPagination();
+        }
+
+        return (bool) $this->showPagination;
+    }
+
+    /**
+     * @param bool|null $showPagination
+     * @return GridFieldDetailForm
+     */
+    public function setShowPagination($showPagination)
+    {
+        $this->showPagination = $showPagination;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getDefaultShowAdd()
+    {
+        $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
+        return isset($formActionsConfig['showAdd']) ? (bool) $formActionsConfig['showAdd'] : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowAdd()
+    {
+        if ($this->showAdd === null) {
+            return $this->getDefaultShowAdd();
+        }
+
+        return (bool) $this->showAdd;
+    }
+
+    /**
+     * @param bool|null $showAdd
+     * @return GridFieldDetailForm
+     */
+    public function setShowAdd($showAdd)
+    {
+        $this->showAdd = $showAdd;
+        return $this;
     }
 
     /**
@@ -231,11 +410,10 @@ class GridFieldDetailForm implements GridField_URLHandler
     {
         if ($this->itemRequestClass) {
             return $this->itemRequestClass;
-        } elseif (ClassInfo::exists(static::class . "_ItemRequest")) {
-            return static::class . "_ItemRequest";
-        } else {
-            return __CLASS__ . '_ItemRequest';
+        } elseif (ClassInfo::exists(static::class . '_ItemRequest')) {
+            return static::class . '_ItemRequest';
         }
+        return GridFieldDetailForm_ItemRequest::class;
     }
 
     /**

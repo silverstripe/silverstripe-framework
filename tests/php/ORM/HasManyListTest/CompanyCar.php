@@ -7,13 +7,15 @@ use SilverStripe\ORM\DataObject;
 
 class CompanyCar extends DataObject implements TestOnly
 {
-    private static $db = array(
+    private static $db = [
         'Make' => 'Varchar(100)',
         'Model' => 'Varchar(100)',
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'User' => Employee::class,
         'Company' => Company::class,
-    );
+    ];
+
+    private static $default_sort = 'Make';
 }

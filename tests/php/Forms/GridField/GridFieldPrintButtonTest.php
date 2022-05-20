@@ -15,11 +15,11 @@ use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
 class GridFieldPrintButtonTest extends SapphireTest
 {
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         TestObject::class,
-    );
+    ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +36,7 @@ class GridFieldPrintButtonTest extends SapphireTest
         $list = TestObject::get();
 
         $button = new GridFieldPrintButton();
-        $button->setPrintColumns(array('Name' => 'My Name'));
+        $button->setPrintColumns(['Name' => 'My Name']);
 
         // Get paginated gridfield config
         $config = GridFieldConfig::create()

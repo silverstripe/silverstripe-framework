@@ -5,7 +5,9 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\Security\Member;
 use Exception;
 
 /**
@@ -16,6 +18,9 @@ use Exception;
 abstract class DataExtension extends Extension
 {
 
+    /**
+     * @deprecated 4.7.0 No longer used by internal code
+     */
     public static function unload_extra_statics($class, $extension)
     {
         throw new Exception('unload_extra_statics gone');
@@ -60,42 +65,121 @@ abstract class DataExtension extends Extension
     {
     }
 
+    /**
+     * Extend the owner's onBeforeWrite() logic
+     *
+     * See {@link DataObject::onBeforeWrite()} for context.
+     */
     public function onBeforeWrite()
     {
     }
 
+    /**
+     * Extend the owner's onAfterWrite() logic
+     *
+     * See {@link DataObject::onAfterWrite()} for context.
+     */
     public function onAfterWrite()
     {
     }
 
+    /**
+     * Extend the owner's onBeforeDelete() logic
+     *
+     * See {@link DataObject::onBeforeDelete()} for context.
+     */
     public function onBeforeDelete()
     {
     }
 
+    /**
+     * Extend the owner's onAfterDelete() logic
+     *
+     * See {@link DataObject::onAfterDelete()} for context.
+     */
     public function onAfterDelete()
     {
     }
 
+    /**
+     * Extend the owner's requireDefaultRecords() logic
+     *
+     * See {@link DataObject::requireDefaultRecords()} for context.
+     */
     public function requireDefaultRecords()
     {
     }
 
+    /**
+     * Extend the owner's populateDefaults() logic
+     *
+     * See {@link DataObject::populateDefaults()} for context.
+     */
     public function populateDefaults()
     {
     }
 
+    /**
+     * Extend the owner's onAfterBuild() logic
+     *
+     * See {@link DataObject::onAfterBuild()} for context.
+     */
+    public function onAfterBuild()
+    {
+    }
+
+    /**
+     * Influence the owner's can() permission check value to be disallowed (false),
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
+     *
+     * See {@link DataObject::can()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @return bool|null
+     */
     public function can($member)
     {
     }
 
+    /**
+     * Influence the owner's canEdit() permission check value to be disallowed (false),
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
+     *
+     * See {@link DataObject::canEdit()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @return bool|null
+     */
     public function canEdit($member)
     {
     }
 
+    /**
+     * Influence the owner's canDelete() permission check value to be disallowed (false),
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
+     *
+     * See {@link DataObject::canDelete()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @return bool|null
+     */
     public function canDelete($member)
     {
     }
 
+    /**
+     * Influence the owner's canCreate() permission check value to be disallowed (false),
+     * allowed (true) if no other processed results are to disallow, or open (null) to not
+     * affect the outcome.
+     *
+     * See {@link DataObject::canCreate()} and {@link DataObject::extendedCan()} for context.
+     *
+     * @param Member $member
+     * @return bool|null
+     */
     public function canCreate($member)
     {
     }
@@ -113,7 +197,7 @@ abstract class DataExtension extends Extension
      */
     public function extraStatics($class = null, $extension = null)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -130,6 +214,17 @@ abstract class DataExtension extends Extension
      * @param FieldList $fields FieldList with a contained TabSet
      */
     public function updateCMSFields(FieldList $fields)
+    {
+    }
+
+    /**
+     * This function is used to provide modifications to the Validators used on a DataObject.
+     *
+     * Caution: Use {@link CompositeValidator->addValidator()} to add Validators.
+     *
+     * @param CompositeValidator $compositeValidator
+     */
+    public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
     {
     }
 
@@ -169,8 +264,8 @@ abstract class DataExtension extends Extension
         if ($summary_fields) {
             // if summary_fields were passed in numeric array,
             // convert to an associative array
-            if ($summary_fields && array_key_exists(0, $summary_fields)) {
-                $summary_fields = array_combine(array_values($summary_fields), array_values($summary_fields));
+            if ($summary_fields && array_key_exists(0, $summary_fields ?? [])) {
+                $summary_fields = array_combine(array_values($summary_fields ?? []), array_values($summary_fields ?? []));
             }
             if ($summary_fields) {
                 $fields = array_merge($fields, $summary_fields);

@@ -66,7 +66,7 @@ class DataObjectSchemaTest extends SapphireTest
     }
 
     /**
-     * Test that the class name is convertable from the table
+     * Test that the class name is convertible from the table
      */
     public function testClassNameForTable()
     {
@@ -140,7 +140,7 @@ class DataObjectSchemaTest extends SapphireTest
             $schema->classForField(WithCustomTable::class, 'NotAField')
         );
 
-        // Non-existant fields shouldn't match any table
+        // Non-existent fields shouldn't match any table
         $this->assertNull(
             $schema->tableForField(BaseClass::class, 'Nonexist')
         );
@@ -179,29 +179,29 @@ class DataObjectSchemaTest extends SapphireTest
         );
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class.'.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class.'.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)',
-                'MoneyField' => DataObjectSchemaTest\HasFields::class.'.Money',
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
+                'MoneyField' => DataObjectSchemaTest\HasFields::class . '.Money',
             ],
             $schema->fieldSpecs(HasFields::class, DataObjectSchema::INCLUDE_CLASS)
         );
         // DB_ONLY excludes composite field MoneyField
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class.'.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class.'.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class.'.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)'
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)'
             ],
             $schema->fieldSpecs(
                 HasFields::class,
@@ -212,10 +212,10 @@ class DataObjectSchemaTest extends SapphireTest
         // Use all options at once
         $this->assertEquals(
             [
-                'ID' => DataObjectSchemaTest\HasFields::class.'.PrimaryKey',
-                'Description' => DataObjectSchemaTest\HasFields::class.'.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class.'.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class.'.Decimal(19,4)',
+                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
             ],
             $schema->fieldSpecs(
                 HasFields::class,
@@ -342,5 +342,36 @@ class DataObjectSchemaTest extends SapphireTest
             'type' => 'index',
             'columns' => ['IndexedMoneyCurrency', 'IndexedMoneyAmount']
         ], $indexes['IndexedMoney']);
+    }
+
+    /**
+     * Ensure that records with unique indexes can be written
+     */
+    public function testWriteUniqueIndexes()
+    {
+        // Create default object
+        $zeroObject = new AllIndexes();
+        $zeroObject->Number = 0;
+        $zeroObject->write();
+
+        $this->assertListEquals(
+            [
+                ['Number' => 0],
+            ],
+            AllIndexes::get()
+        );
+
+        // Test a new record can be created without clashing with default value
+        $validObject = new AllIndexes();
+        $validObject->Number = 1;
+        $validObject->write();
+
+        $this->assertListEquals(
+            [
+                ['Number' => 0],
+                ['Number' => 1],
+            ],
+            AllIndexes::get()
+        );
     }
 }

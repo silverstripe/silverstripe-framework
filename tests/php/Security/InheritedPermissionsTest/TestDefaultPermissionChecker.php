@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Security\Test\InheritedPermissionsTest;
+namespace SilverStripe\Security\Tests\InheritedPermissionsTest;
 
 use SilverStripe\Security\Member;
 use SilverStripe\Security\DefaultPermissionChecker;

@@ -73,13 +73,14 @@ class ThemeManifest implements ThemeList
     /**
      * @param bool $includeTests Include tests in the manifest
      * @param bool $forceRegen Force the manifest to be regenerated.
+     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false)
+    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
-                CacheInterface::class.'.thememanifest',
+                CacheInterface::class . '.thememanifest',
                 [ 'namespace' => 'thememanifest' . ($includeTests ? '_tests' : '') ]
             );
         }
@@ -87,7 +88,7 @@ class ThemeManifest implements ThemeList
         if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
             $this->themes = $data;
         } else {
-            $this->regenerate($includeTests);
+            $this->regenerate($includeTests, $ignoredCIConfigs);
         }
     }
 
@@ -129,16 +130,18 @@ class ThemeManifest implements ThemeList
      * Regenerates the manifest by scanning the base path.
      *
      * @param bool $includeTests
+     * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests = false)
+    public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
     {
         $finder = new ManifestFileFinder();
-        $finder->setOptions(array(
+        $finder->setOptions([
             'include_themes' => false,
-            'ignore_dirs' => array('node_modules', THEMES_DIR),
+            'ignore_dirs' => ['node_modules', THEMES_DIR],
             'ignore_tests'  => !$includeTests,
-            'dir_callback'  => array($this, 'handleDirectory')
-        ));
+            'ignored_ci_configs' => $ignoredCIConfigs,
+            'dir_callback'  => [$this, 'handleDirectory']
+        ]);
 
         $this->themes = [];
 
@@ -164,8 +167,8 @@ class ThemeManifest implements ThemeList
         if ($basename !== self::TEMPLATES_DIR) {
             return;
         }
-        $dir = trim(substr(dirname($pathname), strlen($this->base)), '/\\');
-        $this->themes[] = "/".$dir;
+        $dir = trim(substr(dirname($pathname ?? ''), strlen($this->base ?? '')), '/\\');
+        $this->themes[] = "/" . $dir;
     }
 
     /**

@@ -14,15 +14,19 @@ use SilverStripe\Security\PermissionRole;
  */
 class PermissionRoleCode extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         "Code" => "Varchar",
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         "Role" => PermissionRole::class,
-    );
+    ];
 
     private static $table_name = "PermissionRoleCode";
+    
+    private static $indexes = [
+        "Code" => true,
+    ];
 
     public function validate()
     {
@@ -31,7 +35,7 @@ class PermissionRoleCode extends DataObject
         // Check that new code doesn't increase privileges, unless an admin is editing.
         $privilegedCodes = Permission::config()->privileged_permissions;
         if ($this->Code
-            && in_array($this->Code, $privilegedCodes)
+            && in_array($this->Code, $privilegedCodes ?? [])
             && !Permission::check('ADMIN')
         ) {
             $result->addError(
@@ -46,7 +50,7 @@ class PermissionRoleCode extends DataObject
         return $result;
     }
 
-    public function canCreate($member = null, $context = array())
+    public function canCreate($member = null, $context = [])
     {
         return Permission::check('APPLY_ROLES', 'any', $member);
     }

@@ -1,14 +1,16 @@
+---
 title: i18n
 summary: Display templates and PHP code in different languages based on the preferences of your website users.
+---
 
 # i18n
 
-The i18n class (short for "internationalization") in SilverStripe enables you to display templates and PHP code in
+The i18n class (short for "internationalization") in Silverstripe CMS enables you to display templates and PHP code in
 different languages based on your global settings and the preferences of your website users. This process is also known
 as l10n (short for "localization").
 
-For translating any content managed through the CMS or stored in the database, please use the 
-[translatable](http://github.com/silverstripe/silverstripe-translatable) module.
+For translating any content managed through the CMS or stored in the database, we recommend using the 
+[Fluent](https://github.com/tractorcow/silverstripe-fluent) module.
 
 This page aims to describe the low-level functionality of the i18n API. It targets developers who:
 
@@ -29,9 +31,11 @@ you want to set.
 
 
 ```php
-    // mysite/_config.php
-    i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
-    i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
+use SilverStripe\i18n\i18n;
+
+// app/_config.php
+i18n::set_locale('de_DE'); // Setting the locale to German (Germany)
+i18n::set_locale('ca_AD'); // Setting to Catalan (Andorra)
 ```
 
 Once we set a locale, all the calls to the translator function will return strings according to the set locale value, if
@@ -39,9 +43,9 @@ these translations are available. See [unicode.org](http://unicode.org/cldr/data
 for a complete listing of available locales.
 
 The `i18n` logic doesn't set the PHP locale via [setlocale()](http://php.net/setlocale).
-Localisation methods in SilverStripe rely on explicit locale settings as documented below.
+Localisation methods in Silverstripe CMS rely on explicit locale settings as documented below.
 If you rely on PHP's built-in localisation such as [strftime()](http://php.net/strftime),
-please only change locale information selectively. Setting `LC_ALL` or `LC_NUMERIC` will cause issues with SilverStripe
+please only change locale information selectively. Setting `LC_ALL` or `LC_NUMERIC` will cause issues with Silverstripe CMS
 operations such as decimal separators in database queries.
 
 ### Getting the locale
@@ -54,12 +58,11 @@ To let browsers know which language they're displaying a document in, you can de
 
 
 ```html
+//'Page.ss' (HTML)
+<html lang="$ContentLocale">
 
-    //'Page.ss' (HTML)
-    <html lang="$ContentLocale">
-
-    //'Page.ss' (XHTML)
-    <html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
+//'Page.ss' (XHTML)
+<html lang="$ContentLocale" xml:lang="$ContentLocale" xmlns="http://www.w3.org/1999/xhtml">
 ```
 
 Setting the `<html>` attribute is the most commonly used technique. There are other ways to specify content languages
@@ -71,8 +74,7 @@ and default alignment of paragraphs and tables to browsers.
 
 
 ```html
-
-    <html lang="$ContentLocale" dir="$i18nScriptDirection">
+<html lang="$ContentLocale" dir="$i18nScriptDirection">
 ```
 
 ### Date and time formats
@@ -82,13 +84,17 @@ You can use these settings for your own view logic.
 
 
 ```php
-    Config::inst()->update('i18n', 'date_format', 'dd.MM.yyyy');
-    Config::inst()->update('i18n', 'time_format', 'HH:mm');
+use SilverStripe\Core\Config\Config;
+use SilverStripe\i18n\i18n;
+
+i18n::config()
+    ->set('date_format', 'dd.MM.yyyy')
+    ->set('time_format', 'HH:mm');
 ```
 
-Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
+Localization in Silverstripe CMS uses PHP's [intl extension](http://php.net/intl).
 Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
-are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
+are defined in [ICU format](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#simpledateformat),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
 
 These settings are not used for CMS presentation.
@@ -97,41 +103,28 @@ that gets presented to them. Currently this is a mix of PHP defaults (for readon
 browser defaults (for `DateField` on browsers supporting HTML5), and [Moment.JS](http://momentjs.com/)
 client-side logic (for `DateField` polyfills and other readonly dates and times).
 
-### Language Names
+### Adding locales
 
-SilverStripe comes with a built-in list of common languages, listed by locale and region.
-They can be accessed via the `i18n.common_languages` and `i18n.common_locales` [config setting](/developer_guides/configuration).
+Silverstripe CMS now uses the php-intl extension.  Before adding an extra locale, make sure the ICU library on your server supports it (see https://www.php.net/manual/en/resourcebundle.locales.php for more info).
+
+They can be accessed via the `SilverStripe\i18n\Data\Intl\IntlLocales.locales`  [config setting](/developer_guides/configuration).
 
 In order to add a value, add the following to your `config.yml`:
 
-
 ```yml
-
-    i18n:
-      common_locales:
-        de_CGN:
-          name: German (Cologne)
-          native: Kölsch
+SilverStripe\i18n\Data\Intl\IntlLocales:
+  locales:
+    fr_LU: French (Luxembourg)   
 ```
 
-Similarly, to change an existing language label, you can overwrite one of these keys:
-
-
-```yml
-
-    i18n:
-      common_locales:
-        en_NZ:
-          native: Niu Zillund
-```
 
 ### i18n in URLs
 
-By default, URLs for pages in SilverStripe (the `SiteTree->URLSegment` property)
+By default, URLs for pages in Silverstripe CMS (the `SiteTree->URLSegment` property)
 are automatically reduced to the allowed allowed subset of ASCII characters.
 If characters outside this subset are added, they are either removed or (if possible) "transliterated".
 This describes the process of converting from one character set to another
-while keeping characters recognizeable. For example, vowels with french accents
+while keeping characters recognizable. For example, vowels with french accents
 are replaced with their base characters, `pâté` becomes `pate`.
 
 It is advisable to set the `SS_Transliterator.use_iconv` setting to true via config for systems
@@ -155,22 +148,24 @@ followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 
 ```php
-    $field = new DateField();
-    $field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
-    $field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
+use SilverStripe\Forms\DateField;
+
+$field = new DateField();
+$field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
+$field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
 ```
 
 ## Translating text
 
-Adapting a module to make it localizable is easy with SilverStripe. You just need to avoid hardcoding strings that are
+Adapting a module to make it localizable is easy with Silverstripe CMS. You just need to avoid hardcoding strings that are
 language-dependent and use a translator function call instead.
 
 
 ```php
-    // without i18n
-    echo "This is a string";
-    // with i18n
-    echo _t("Namespace.Entity","This is a string");
+// without i18n
+echo "This is a string";
+// with i18n
+echo _t("Namespace.Entity","This is a string");
 ```
 
 All strings passed through the `_t()` function will be collected in a separate language table (see [Collecting text](#collecting-text)), which is the starting point for translations.
@@ -211,38 +206,35 @@ For instance, this is an example of how to correctly declare pluralisations for 
 
 
 ```php
- use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyObject extends DataObject, implements i18nEntityProvider
+class MyObject extends DataObject implements i18nEntityProvider
+{
+    public function provideI18nEntities()
     {
-        public function provideI18nEntities()
-        {
-            return [
-                'MyObject.SINGULAR_NAME' => 'object',
-                'MyObject.PLURAL_NAME' => 'objects',
-                'MyObject.PLURALS' => [
-                    'one' => 'An object',
-                    'other' => '{count} objects',
-                ],
-            ];
-        }
+        return [
+            'MyObject.SINGULARNAME' => 'object',
+            'MyObject.PLURALNAME' => 'objects',
+            'MyObject.PLURALS' => [
+                'one' => 'An object',
+                'other' => '{count} objects',
+            ],
+        ];
     }
+}
 ```
 
 In YML format this will be expressed as the below. This follows the
-[ruby i18n convention](guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
-
-
+[ruby i18n convention](https://guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
 
 ```yaml
-
-    en:
-      MyObject:
-        SINGULAR_NAME: 'object'
-        PLURAL_NAME: 'objects'
-        PLURALS:
-          one: 'An object',
-          other: '{count} objects'
+en:
+  MyObject:
+    SINGULARNAME: 'object'
+    PLURALNAME: 'objects'
+    PLURALS:
+      one: 'An object'
+      other: '{count} objects'
 ```
 
 Note: i18nTextCollector support for pluralisation is not yet available.
@@ -252,25 +244,28 @@ Please ensure that any required plurals are exposed via provideI18nEntities.
 
 
 ```php
-    // Simple string translation
-    _t('LeftAndMain.FILESIMAGES','Files & Images');
+// Simple string translation
+_t('SilverStripe\\Admin\\LeftAndMain.FILESIMAGES','Files & Images');
 
-    // Using injection to add variables into the translated strings.
-    _t('CMSMain.RESTORED',
-        "Restored {value} successfully",
-        ['value' => $itemRestored]
-    );
-    
-    // Plurals are invoked via a `|` pipe-delimeter with a {count} argument
-    _t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
+// Using injection to add variables into the translated strings.
+_t('SilverStripe\\CMS\\Controllers\\CMSMain.RESTORED',
+    "Restored {value} successfully",
+    ['value' => $itemRestored]
+);
 
+// Plurals are invoked via a `|` pipe-delimeter with a {count} argument
+_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => $count ]);
+
+// You can use __CLASS__ or self::class to reference the current (early bound) class name
+_t(self::class . '.GREETING', 'Welcome!');
+_t(__CLASS__ . '.GREETING', 'Welcome!');
 ```
 
 #### Usage in Template Files
 
-<div class="hint" markdown='1'>
+[hint]
 The preferred template syntax has changed somewhat since [version 2.x](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#usage-2).
-</div>
+[/hint]
 
 In `.ss` template files, instead of `_t(params)` the syntax `<%t params %>` is used. The syntax for passing parameters to the function is quite different to
 the PHP version of the function.
@@ -281,15 +276,14 @@ the PHP version of the function.
 
 
 ```ss
+// Simple string translation
+<%t Namespace.Entity "String to translate" %>
 
-    // Simple string translation
-    <%t Namespace.Entity "String to translate" %>
+// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
+<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
 
-    // Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
-    <%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
-    
-    // Plurals follow the same convention, required a `|` and `{count}` in the default string
-    <%t MyObject.PLURALS 'An item|{count} items' count=$Count %>
+// Plurals follow the same convention, required a `|` and `{count}` in the default string
+<%t MyObject.PLURALS 'An item|{count} items' count=$Count %>
 ```
 
 #### Caching in Template Files with locale switching
@@ -297,14 +291,12 @@ the PHP version of the function.
 When caching a `<% loop %>` or `<% with %>` with `<%t params %>`. It is important to add the Locale to the cache key 
 otherwise it won't pick up locale changes.
 
-
 ```ss
-
-    <% cached 'MyIdentifier', $CurrentLocale %>
-        <% loop $Students %>
-            $Name
-        <% end_loop %>
-    <% end_cached %>
+<% cached 'MyIdentifier', $CurrentLocale %>
+    <% loop $Students %>
+        $Name
+    <% end_loop %>
+<% end_cached %>
 ```
 
 ## Collecting text
@@ -317,9 +309,9 @@ underscore function, and tell you about the created files and any possible entit
 If you want to run the text collector for just one module you can use the 'module' parameter: 
 `http://localhost/dev/tasks/i18nTextCollectorTask/?module=cms`
 
-<div class="hint" markdown='1'>
+[hint]
 You'll need to install PHPUnit to run the text collector (see [testing-guide](/developer_guides/testing)).
-</div>
+[/hint]
 
 ## Module Priority
 
@@ -336,16 +328,17 @@ By default, the language files are loaded from modules in this order:
 This default order is configured in `framework/_config/i18n.yml`.  This file specifies two blocks of module ordering: `basei18n`, listing admin, and framework, and `defaulti18n` listing all other modules.
 
 To create a custom module order, you need to specify a config fragment that inserts itself either after or before those items.  For example, you may have a number of modules that have to come after the framework/admin, but before anyhting else.  To do that, you would use this
+
 ```yml
-    ---
-    Name: customi18n
-    Before: 'defaulti18n'
-    ---
-    i18n:
-      module_priority:
-        - module1
-        - module2
-        - module3
+---
+Name: customi18n
+Before: '#defaulti18n'
+---
+SilverStripe\i18n\i18n:
+  module_priority:
+    - module1
+    - module2
+    - module3
 ```
 The config option being set is `i18n.module_priority`, and it is a list of module names.
 
@@ -361,25 +354,29 @@ Each module can have one language table per locale, stored by convention in the 
 The translation is powered by [Zend_Translate](http://framework.zend.com/manual/current/en/modules/zend.i18n.translating.html),
 which supports different translation adapters, dealing with different storage formats.
 
-By default, SilverStripe uses a YAML format which is loaded via the
+By default, Silverstripe CMS uses a YAML format which is loaded via the
 [symfony/translate](http://symfony.com/doc/current/translation.html)  library.
 
 Example: framework/lang/en.yml (extract)
+
 ```yml
-    en:
-      ImageUploader:
-        Attach: 'Attach {title}'
-      UploadField:
-        NOTEADDFILES: 'You can add files once you have saved for the first time.'
+en:
+  ImageUploader:
+    Attach: 'Attach {title}'
+  UploadField:
+    NOTEADDFILES: 'You can add files once you have saved for the first time.'
 ```
+
 Translation table: framework/lang/de.yml (extract)
+
 ```yml
-    de:
-      ImageUploader:
-        ATTACH: '{title} anhängen'
-      UploadField:
-        NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
+de:
+  ImageUploader:
+    ATTACH: '{title} anhängen'
+  UploadField:
+    NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
 ```
+
 Note that translations are cached across requests.
 The cache can be cleared through the `?flush=1` query parameter,
 or explicitly through `Zend_Translate::getCache()->clean(Zend_Cache::CLEANING_MODE_ALL)`.
@@ -402,8 +399,15 @@ If using this on the frontend, it's also necessary to include the stand-alone i1
 js file.
 
 ```php
+use SilverStripe\View\Requirements;
+
 Requirements::javascript('silverstripe/admin:client/dist/js/i18n.js');
 Requirements::add_i18n_javascript('<my-module-dir>/javascript/lang');
+```
+
+You can also include the language files from the public resources folder with the resource syntax:
+```php
+Requirements::add_i18n_javascript('vendor/module:path/to/lang');
 ```
 
 ###  Translation Tables in JavaScript
@@ -415,24 +419,22 @@ Master Table (`<my-module-dir>/javascript/lang/en.js`)
 
 
 ```js
-
-    if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
-      console.error('Class ss.i18n not defined');
-    } else {
-      ss.i18n.addDictionary('en', {
-        'MYMODULE.MYENTITY' : "Really delete these articles?"
-      });
-    }
+if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
+  console.error('Class ss.i18n not defined');
+} else {
+  ss.i18n.addDictionary('en', {
+    'MYMODULE.MYENTITY' : "Really delete these articles?"
+  });
+}
 ```
 
 Example Translation Table (`<my-module-dir>/javascript/lang/de.js`)
 
 
 ```js
-
-    ss.i18n.addDictionary('de', {
-      'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
-    });
+ss.i18n.addDictionary('de', {
+  'MYMODULE.MYENTITY' : "Artikel wirklich löschen?"
+});
 ```
 
 For most core modules, these files are generated by a
@@ -444,8 +446,7 @@ format which can be processed more easily by external translation providers (see
 
 
 ```js
-
-    alert(ss.i18n._t('MYMODULE.MYENTITY'));
+alert(ss.i18n._t('MYMODULE.MYENTITY'));
 ```
 
 ### Advanced Use
@@ -454,33 +455,34 @@ The `ss.i18n` object contain a couple functions to help and replace dynamic vari
 
 #### Legacy sequential replacement with sprintf()
 
-	`sprintf()` will substitute occurencies of `%s` in the main string with each of the following arguments passed to the function. The substitution is done sequentially.
-
+`sprintf()` will substitute occurencies of `%s` in the main string with
+each of the following arguments passed to the function. The substitution
+is done sequentially.
 
 ```js
-
-    // MYMODULE.MYENTITY contains "Really delete %s articles by %s?"
-    alert(ss.i18n.sprintf(
-        ss.i18n._t('MYMODULE.MYENTITY'),
-        42,
-        'Douglas Adams'
-    ));
-    // Displays: "Really delete 42 articles by Douglas Adams?"
+// MYMODULE.MYENTITY contains "Really delete %s articles by %s?"
+alert(ss.i18n.sprintf(
+    ss.i18n._t('MYMODULE.MYENTITY'),
+    42,
+    'Douglas Adams'
+));
+// Displays: "Really delete 42 articles by Douglas Adams?"
 ```
 
 #### Variable injection with inject()
 
-	`inject()` will substitute variables in the main string like `{myVar}` by the keys in the object passed as second argument. Each variable can be in any order and appear multiple times.
+`inject()` will substitute variables in the main string like `{myVar}` by the
+keys in the object passed as second argument. Each variable can be in any order
+and appear multiple times.
 
 
 ```js
-
-    // MYMODULE.MYENTITY contains "Really delete {count} articles by {author}?"
-    alert(ss.i18n.inject(
-        ss.i18n._t('MYMODULE.MYENTITY'),
-        {count: 42, author: 'Douglas Adams'}
-    ));
-    // Displays: "Really delete 42 articles by Douglas Adams?"
+// MYMODULE.MYENTITY contains "Really delete {count} articles by {author}?"
+alert(ss.i18n.inject(
+    ss.i18n._t('MYMODULE.MYENTITY'),
+    {count: 42, author: 'Douglas Adams'}
+));
+// Displays: "Really delete 42 articles by Douglas Adams?"
 ```
 
 ## Limitations

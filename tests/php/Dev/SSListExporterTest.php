@@ -18,7 +18,7 @@ class SSListExporterTest extends SapphireTest
      */
     private $exporter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->exporter = new SSListExporter();
@@ -45,7 +45,7 @@ class SSListExporterTest extends SapphireTest
             ? $className::create($constructorParam)
             : $className::create();
 
-        $export = ltrim($this->exporter->export($obj));
+        $export = ltrim($this->exporter->export($obj) ?? '');
 
         $this->assertStringStartsWith(get_class($obj), $export, 'Export should start with object\'s class name');
     }
@@ -57,12 +57,13 @@ class SSListExporterTest extends SapphireTest
     public function testToMapReturnsDataOfDataObjects()
     {
         $data = [
+            'ID' => 5,
             'Foo' => 'Bar',
             'Baz' => 'Boom',
             'One' => 'Two'
         ];
 
-        $map = $this->exporter->toMap(DataObject::create($data));
+        $map = $this->exporter->toMap(DataObject::create($data, DataObject::CREATE_HYDRATED));
 
         $this->assertEquals($data, $map, 'Map should match data passed to DataObject');
     }

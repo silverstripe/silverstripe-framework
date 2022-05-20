@@ -15,11 +15,11 @@ class DecimalTest extends SapphireTest
      */
     protected $testDataObject;
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DecimalTest\TestObject::class
-    );
+    ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->testDataObject = $this->objFromFixture(DecimalTest\TestObject::class, 'test-dataobject');

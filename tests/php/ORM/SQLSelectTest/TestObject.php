@@ -9,10 +9,10 @@ class TestObject extends DataObject implements TestOnly
 {
     private static $table_name = 'SQLSelectTest_DO';
 
-    private static $db = array(
+    private static $db = [
         "Name" => "Varchar",
         "Meta" => "Varchar",
         "Common" => "Varchar",
         "Date" => "Datetime"
-    );
+    ];
 }

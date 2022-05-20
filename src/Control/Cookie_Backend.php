@@ -12,19 +12,19 @@ interface Cookie_Backend
 
     /**
      * When creating the backend we want to store the existing cookies in our
-     * "existing" array. This allows us to distinguish between cookies we recieved
+     * "existing" array. This allows us to distinguish between cookies we received
      * or we set ourselves (and didn't get from the browser)
      *
      * @param array $cookies The existing cookies to load into the cookie jar
      */
-    public function __construct($cookies = array());
+    public function __construct($cookies = []);
 
     /**
      * Set a cookie
      *
      * @param string $name The name of the cookie
      * @param string $value The value for the cookie to hold
-     * @param int $expiry The number of days until expiry
+     * @param float $expiry The number of days until expiry
      * @param string $path The path to save the cookie on (falls back to site base)
      * @param string $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?

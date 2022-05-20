@@ -40,6 +40,16 @@ class HTML
     ];
 
     /**
+     * List of attributes that should be rendered even if they contain no value
+     *
+     * @config
+     * @var array
+     */
+    private static $legal_empty_attributes = [
+        'alt',
+    ];
+
+    /**
      * Construct and return HTML tag.
      *
      * @param string $tag
@@ -49,13 +59,16 @@ class HTML
      */
     public static function createTag($tag, $attributes, $content = null)
     {
-        $tag = strtolower($tag);
+        $tag = strtolower($tag ?? '');
 
         // Build list of arguments
+        $legalEmptyAttributes = static::config()->get('legal_empty_attributes');
         $preparedAttributes = '';
         foreach ($attributes as $attributeKey => $attributeValue) {
+            $whitelisted = in_array($attributeKey, $legalEmptyAttributes ?? []);
+
             // Only set non-empty strings (ensures strlen(0) > 0)
-            if (strlen($attributeValue) > 0) {
+            if (strlen($attributeValue ?? '') > 0 || $whitelisted) {
                 $preparedAttributes .= sprintf(
                     ' %s="%s"',
                     $attributeKey,
@@ -65,7 +78,7 @@ class HTML
         }
 
         // Check void element type
-        if (in_array($tag, static::config()->get('void_elements'))) {
+        if (in_array($tag, static::config()->get('void_elements') ?? [])) {
             if ($content) {
                 throw new InvalidArgumentException("Void element \"{$tag}\" cannot have content");
             }

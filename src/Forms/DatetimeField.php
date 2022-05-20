@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 
@@ -195,7 +196,7 @@ class DatetimeField extends TextField
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
-            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern()));
+            $fromFormatter->setPattern(str_replace(':ss', '', $fromFormatter->getPattern() ?? ''));
             $timestamp = $fromFormatter->parse($datetime);
         }
 
@@ -258,7 +259,7 @@ class DatetimeField extends TextField
      * This can be set explicitly. If not, this will be generated from the current locale
      * with the current date length.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
     public function getDatetimeFormat()
     {
@@ -274,7 +275,7 @@ class DatetimeField extends TextField
      * Set date format in CLDR standard format.
      * Only applicable with {@link setHTML5(false)}.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      * @param string $format
      * @return $this
      */
@@ -287,7 +288,7 @@ class DatetimeField extends TextField
     /**
      * Get a date formatter for the ISO 8601 format
      *
-     * @param String $timezone Optional timezone identifier (defaults to server timezone)
+     * @param string $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
     protected function getInternalFormatter($timezone = null)
@@ -297,7 +298,7 @@ class DatetimeField extends TextField
         }
 
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            DBDate::ISO_LOCALE,
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::MEDIUM,
             $timezone
@@ -337,10 +338,10 @@ class DatetimeField extends TextField
         $internalFormatter = $this->getInternalFormatter();
         $timestamp = $internalFormatter->parse($value);
 
-        // Retry without "T" separator
+        // Retry with "T" separator
         if (!$timestamp) {
             $fallbackFormatter = $this->getInternalFormatter();
-            $fallbackFormatter->setPattern(DBDatetime::ISO_DATETIME);
+            $fallbackFormatter->setPattern(DBDatetime::ISO_DATETIME_NORMALISED);
             $timestamp = $fallbackFormatter->parse($value);
         }
 
@@ -410,7 +411,7 @@ class DatetimeField extends TextField
         $timestamp = $formatter->parse($datetime);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($datetime, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($datetime ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }
@@ -572,7 +573,7 @@ class DatetimeField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    __CLASS__.'.VALIDDATETIMEFORMAT',
+                    __CLASS__ . '.VALIDDATETIMEFORMAT',
                     "Please enter a valid date and time format ({format})",
                     ['format' => $this->getDatetimeFormat()]
                 )
@@ -583,12 +584,12 @@ class DatetimeField extends TextField
         // Check min date (in server timezone)
         $min = $this->getMinDatetime();
         if ($min) {
-            $oops = strtotime($this->value) < strtotime($min);
+            $oops = strtotime($this->value ?? '') < strtotime($min ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
                     _t(
-                        __CLASS__.'.VALIDDATETIMEMINDATE',
+                        __CLASS__ . '.VALIDDATETIMEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(
@@ -608,12 +609,12 @@ class DatetimeField extends TextField
         // Check max date (in server timezone)
         $max = $this->getMaxDatetime();
         if ($max) {
-            $oops = strtotime($this->value) > strtotime($max);
+            $oops = strtotime($this->value ?? '') > strtotime($max ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
                     _t(
-                        __CLASS__.'.VALIDDATEMAXDATETIME',
+                        __CLASS__ . '.VALIDDATEMAXDATETIME',
                         "Your date has to be older or matching the maximum allowed date and time ({datetime})",
                         [
                             'datetime' => sprintf(

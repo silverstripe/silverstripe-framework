@@ -5,8 +5,8 @@ namespace SilverStripe\Forms;
 use BadMethodCallException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
@@ -20,6 +20,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
@@ -66,10 +67,10 @@ use SilverStripe\View\ViewableData;
  */
 class Form extends ViewableData implements HasRequestHandler
 {
+    use AttributesHTML;
     use FormMessage;
 
     /**
-     * Default form Name property
      */
     const DEFAULT_NAME = 'Form';
 
@@ -170,10 +171,10 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * The SS template to render this form HTML into.
      * Default is "Form", but this can be changed to
-     * another template for customisation.
+     * another template for customization.
      *
-     * @see Form->setTemplate()
-     * @var string|null
+     * @see Form::setTemplate()
+     * @var string|array|null
      */
     protected $template;
 
@@ -200,13 +201,13 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @var array
      */
-    protected $extraClasses = array();
+    protected $extraClasses = [];
 
     /**
      * @config
      * @var array $default_classes The default classes to apply to the Form
      */
-    private static $default_classes = array();
+    private static $default_classes = [];
 
     /**
      * @var string|null
@@ -219,23 +220,23 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @var array
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * @var array
      */
-    protected $validationExemptActions = array();
+    protected $validationExemptActions = [];
 
     /**
      * @config
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'AttributesHTML' => 'HTMLFragment',
         'FormAttributes' => 'HTMLFragment',
         'FormName' => 'Text',
         'Legend' => 'HTMLFragment',
-    );
+    ];
 
     /**
      * @var FormTemplateHelper
@@ -286,6 +287,9 @@ class Form extends ViewableData implements HasRequestHandler
     ) {
         parent::__construct();
 
+        $fields = $fields ? $fields : FieldList::create();
+        $actions = $actions ? $actions : FieldList::create();
+
         $fields->setForm($this);
         $actions->setForm($this);
 
@@ -323,7 +327,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * @param bool
+     * @param bool $flag
      */
     public function setNotifyUnsavedChanges($flag)
     {
@@ -346,13 +350,13 @@ class Form extends ViewableData implements HasRequestHandler
         // load data in from previous submission upon error
         $data = $this->getSessionData();
         if (isset($data)) {
-            $this->loadDataFrom($data);
+            $this->loadDataFrom($data, self::MERGE_AS_INTERNAL_VALUE);
         }
         return $this;
     }
 
     /**
-     * Flush persistant form state details
+     * Flush persistent form state details
      *
      * @return $this
      */
@@ -429,7 +433,7 @@ class Form extends ViewableData implements HasRequestHandler
     {
         $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
-            return unserialize($resultData);
+            return unserialize($resultData ?? '');
         }
         return null;
     }
@@ -484,11 +488,13 @@ class Form extends ViewableData implements HasRequestHandler
         // Set message on either a field or the parent form
         foreach ($result->getMessages() as $message) {
             $fieldName = $message['fieldName'];
+
             if ($fieldName) {
                 $owner = $this->fields->dataFieldByName($fieldName) ?: $this;
             } else {
                 $owner = $this;
             }
+
             $owner->setMessage($message['message'], $message['messageType'], $message['messageCast']);
         }
         return $this;
@@ -519,7 +525,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function castingHelper($field)
     {
         // Override casting for field message
-        if (strcasecmp($field, 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
+        if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
             return $helper;
         }
         return parent::castingHelper($field);
@@ -563,12 +569,16 @@ class Form extends ViewableData implements HasRequestHandler
 
         return $this;
     }
+
     /**
      * Convert this form into a readonly form
+     *
+     * @return $this
      */
     public function makeReadonly()
     {
         $this->transform(new ReadonlyTransformation());
+        return $this;
     }
 
     /**
@@ -655,7 +665,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Set actions that are exempt from validation
      *
-     * @param array
+     * @param array $actions
      * @return $this
      */
     public function setValidationExemptActions($actions)
@@ -689,7 +699,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($action->getValidationExempt()) {
             return true;
         }
-        if (in_array($action->actionName(), $this->getValidationExemptActions())) {
+        if (in_array($action->actionName(), $this->getValidationExemptActions() ?? [])) {
             return true;
         }
         return false;
@@ -714,7 +724,7 @@ class Form extends ViewableData implements HasRequestHandler
         $this->securityTokenAdded = true;
 
         // add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
-        if (strtoupper($this->FormMethod()) != $this->FormHttpMethod()) {
+        if (strtoupper($this->FormMethod() ?? '') != $this->FormHttpMethod()) {
             $methodField = new HiddenField('_method', '', $this->FormHttpMethod());
             $methodField->setForm($this);
             $extraFields->push($methodField);
@@ -768,7 +778,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setFields($fields)
     {
+        $fields->setForm($this);
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -790,7 +802,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setActions($actions)
     {
+        $actions->setForm($this);
         $this->actions = $actions;
+
         return $this;
     }
 
@@ -803,42 +817,16 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     * @return $this
-     */
-    public function setAttribute($name, $value)
+    protected function getDefaultAttributes(): array
     {
-        $this->attributes[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function getAttribute($name)
-    {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        $attrs = array(
+        $attrs = [
             'id' => $this->FormName(),
             'action' => $this->FormAction(),
             'method' => $this->FormMethod(),
             'enctype' => $this->getEncType(),
             'target' => $this->target,
             'class' => $this->extraClass(),
-        );
+        ];
 
         if ($this->validator && $this->validator->getErrors()) {
             if (!isset($attrs['class'])) {
@@ -847,66 +835,7 @@ class Form extends ViewableData implements HasRequestHandler
             $attrs['class'] .= ' validationerror';
         }
 
-        $attrs = array_merge($attrs, $this->attributes);
-
         return $attrs;
-    }
-
-    /**
-     * Return the attributes of the form tag - used by the templates.
-     *
-     * @param array $attrs Custom attributes to process. Falls back to {@link getAttributes()}.
-     * If at least one argument is passed as a string, all arguments act as excludes by name.
-     *
-     * @return string HTML attributes, ready for insertion into an HTML tag
-     */
-    public function getAttributesHTML($attrs = null)
-    {
-        $exclude = (is_string($attrs)) ? func_get_args() : null;
-
-        // Figure out if we can cache this form
-        // - forms with validation shouldn't be cached, cos their error messages won't be shown
-        // - forms with security tokens shouldn't be cached because security tokens expire
-        $needsCacheDisabled = false;
-        if ($this->getSecurityToken()->isEnabled()) {
-            $needsCacheDisabled = true;
-        }
-        if ($this->FormMethod() != 'GET') {
-            $needsCacheDisabled = true;
-        }
-        if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
-            $needsCacheDisabled = true;
-        }
-
-        // If we need to disable cache, do it
-        if ($needsCacheDisabled) {
-            HTTP::set_cache_age(0);
-        }
-
-        $attrs = $this->getAttributes();
-
-        // Remove empty
-        $attrs = array_filter((array)$attrs, function ($value) {
-            return ($value || $value === 0);
-        });
-
-        // Remove excluded
-        if ($exclude) {
-            $attrs = array_diff_key($attrs, array_flip($exclude));
-        }
-
-        // Prepare HTML-friendly 'method' attribute (lower-case)
-        if (isset($attrs['method'])) {
-            $attrs['method'] = strtolower($attrs['method']);
-        }
-
-        // Create markup
-        $parts = array();
-        foreach ($attrs as $name => $value) {
-            $parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
-        }
-
-        return implode(' ', $parts);
     }
 
     public function FormAttributes()
@@ -918,7 +847,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
      * another frame
     *
-     * @param string|FormTemplateHelper
+     * @param string|FormTemplateHelper $helper
     */
     public function setTemplateHelper($helper)
     {
@@ -974,7 +903,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Set the SS template that this form should use
      * to render with. The default is "Form".
      *
-     * @param string $template The name of the template (without the .ss extension)
+     * @param string|array $template The name of the template (without the .ss extension) or array form
      * @return $this
      */
     public function setTemplate($template)
@@ -986,7 +915,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Return the template to render this form with.
      *
-     * @return string
+     * @return string|array
      */
     public function getTemplate()
     {
@@ -994,7 +923,7 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Returs the ordered list of preferred templates for rendering this form
+     * Returns the ordered list of preferred templates for rendering this form
      * If the template isn't set, then default to the
      * form class name e.g "Form".
      *
@@ -1072,7 +1001,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function FormMethod()
     {
-        if (in_array($this->formMethod, array('GET','POST'))) {
+        if (in_array($this->formMethod, ['GET','POST'])) {
             return $this->formMethod;
         } else {
             return 'POST';
@@ -1088,7 +1017,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function setFormMethod($method, $strict = null)
     {
-        $this->formMethod = strtoupper($method);
+        $this->formMethod = strtoupper($method ?? '');
         if ($strict !== null) {
             $this->setStrictFormMethodCheck($strict);
         }
@@ -1277,6 +1206,23 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
+     * Set an error message for a field in the session, for display next time this form is shown.
+     *
+     * @param string $message the text of the message
+     * @param string $fieldName Name of the field to set the error message on it.
+     * @param string $type Should be set to good, bad, or warning.
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     */
+    public function sessionFieldError($message, $fieldName, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
+    {
+        $this->setMessage($message, $type, $cast);
+        $result = $this->getSessionValidationResult() ?: ValidationResult::create();
+        $result->addFieldMessage($fieldName, $message, $type, null, $cast);
+        $this->setSessionValidationResult($result);
+    }
+
+    /**
      * Returns the DataObject that has given this form its data
      * through {@link loadDataFrom()}.
      *
@@ -1332,9 +1278,11 @@ class Form extends ViewableData implements HasRequestHandler
         return $result;
     }
 
-    const MERGE_DEFAULT = 0;
-    const MERGE_CLEAR_MISSING = 1;
-    const MERGE_IGNORE_FALSEISH = 2;
+    const MERGE_DEFAULT             = 0b0000;
+    const MERGE_CLEAR_MISSING       = 0b0001;
+    const MERGE_IGNORE_FALSEISH     = 0b0010;
+    const MERGE_AS_INTERNAL_VALUE   = 0b0100;
+    const MERGE_AS_SUBMITTED_VALUE  = 0b1000;
 
     /**
      * Load data from the given DataObject or array.
@@ -1354,8 +1302,9 @@ class Form extends ViewableData implements HasRequestHandler
      * Escaping happens automatically on saving the data through
      * {@link saveInto()}.
      *
-     * @uses FieldList->dataFields()
-     * @uses FormField->setValue()
+     * @uses FieldList::dataFields()
+     * @uses FormField::setSubmittedValue()
+     * @uses FormField::setValue()
      *
      * @param array|DataObject $data
      * @param int $mergeStrategy
@@ -1368,14 +1317,19 @@ class Form extends ViewableData implements HasRequestHandler
      *
      *  You can pass a bitmask here to change this behaviour.
      *
-     *  Passing CLEAR_MISSING means that any fields that don't match any property/key in
+     *  Passing MERGE_CLEAR_MISSING means that any fields that don't match any property/key in
      *  {@link $data} are cleared.
      *
-     *  Passing IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
+     *  Passing MERGE_IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
      *  a field's value.
      *
+     *  Passing MERGE_AS_INTERNAL_VALUE forces the data to be parsed using the internal representation of the matching
+     *  form field. This is helpful if you are loading an array of values retrieved from `Form::getData()` and you
+     *  do not want them parsed as submitted data. MERGE_AS_SUBMITTED_VALUE does the opposite and forces the data to be
+     *  parsed as it would be submitted from a form.
+     *
      *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
-     *  CLEAR_MISSING
+     *  MERGE_CLEAR_MISSING
      *
      * @param array $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
@@ -1404,8 +1358,17 @@ class Form extends ViewableData implements HasRequestHandler
             $submitted = false;
         }
 
-        // dont include fields without data
+        // Using the `MERGE_AS_INTERNAL_VALUE` or `MERGE_AS_SUBMITTED_VALUE` flags users can explicitly specify which
+        // `setValue` method to use.
+        if (($mergeStrategy & self::MERGE_AS_INTERNAL_VALUE) == self::MERGE_AS_INTERNAL_VALUE) {
+            $submitted = false;
+        } elseif (($mergeStrategy & self::MERGE_AS_SUBMITTED_VALUE) == self::MERGE_AS_SUBMITTED_VALUE) {
+            $submitted = true;
+        }
+
+        // Don't include fields without data
         $dataFields = $this->Fields()->dataFields();
+
         if (!$dataFields) {
             return $this;
         }
@@ -1415,7 +1378,7 @@ class Form extends ViewableData implements HasRequestHandler
             $name = $field->getName();
 
             // Skip fields that have been excluded
-            if ($fieldList && !in_array($name, $fieldList)) {
+            if ($fieldList && !in_array($name, $fieldList ?? [])) {
                 continue;
             }
 
@@ -1430,31 +1393,51 @@ class Form extends ViewableData implements HasRequestHandler
             $val = null;
 
             if (is_object($data)) {
-                $exists = (
-                    isset($data->$name) ||
-                    $data->hasMethod($name) ||
-                    ($data->hasMethod('hasField') && $data->hasField($name))
-                );
+                // Allow dot-syntax traversal of has-one relations fields
+                if (strpos($name ?? '', '.') !== false) {
+                    $exists = (
+                        $data->hasMethod('relField')
+                    );
+                    try {
+                        $val = $data->relField($name);
+                    } catch (\LogicException $e) {
+                        // There's no other way to tell whether the relation actually exists
+                        $exists = false;
+                    }
+                // Regular ViewableData access
+                } else {
+                    $exists = (
+                        isset($data->$name) ||
+                        $data->hasMethod($name) ||
+                        ($data->hasMethod('hasField') && $data->hasField($name))
+                    );
 
-                if ($exists) {
-                    $val = $data->__get($name);
+                    if ($exists) {
+                        $val = $data->__get($name);
+                    }
                 }
+
+            // Regular array access. Note that dot-syntax not supported here
             } elseif (is_array($data)) {
-                if (array_key_exists($name, $data)) {
+                if (array_key_exists($name, $data ?? [])) {
                     $exists = true;
                     $val = $data[$name];
-                } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
+                // PHP turns the '.'s in POST vars into '_'s
+                } elseif (array_key_exists($altName = str_replace('.', '_', $name ?? ''), $data ?? [])) {
+                    $exists = true;
+                    $val = $data[$altName];
+                } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name ?? '', $matches)) {
                     // If field is in array-notation we need to access nested data
                     //discard first match which is just the whole string
                     array_shift($matches);
                     $keys = array_pop($matches);
                     $name = array_shift($matches);
                     $name = array_shift($name);
-                    if (array_key_exists($name, $data)) {
+                    if (array_key_exists($name, $data ?? [])) {
                         $tmpData = &$data[$name];
                         // drill down into the data array looking for the corresponding value
                         foreach ($keys as $arrayKey) {
-                            if ($arrayKey !== '') {
+                            if ($tmpData && $arrayKey !== '') {
                                 $tmpData = &$tmpData[$arrayKey];
                             } else {
                                 //empty square brackets means new array
@@ -1508,7 +1491,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($dataFields) {
             foreach ($dataFields as $field) {
             // Skip fields that have been excluded
-                if ($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) {
+                if ($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList ?? [])) {
                     continue;
                 }
 
@@ -1540,7 +1523,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function getData()
     {
         $dataFields = $this->fields->dataFields();
-        $data = array();
+        $data = [];
 
         if ($dataFields) {
             /** @var FormField $field */
@@ -1564,6 +1547,10 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function forTemplate()
     {
+        if (!$this->canBeCached()) {
+            HTTPCacheControlMiddleware::singleton()->disableCache();
+        }
+
         $return = $this->renderWith($this->getTemplates());
 
         // Now that we're rendered, clear message
@@ -1626,9 +1613,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function renderWithoutActionButton($template)
     {
-        $custom = $this->customise(array(
+        $custom = $this->customise([
             "Actions" => "",
-        ));
+        ]);
 
         if (is_string($template)) {
             $template = SSViewer::create($template);
@@ -1720,7 +1707,26 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function extraClass()
     {
-        return implode(array_unique($this->extraClasses), ' ');
+        return implode(' ', array_unique($this->extraClasses ?? []));
+    }
+
+    /**
+     * Check if a CSS-class has been added to the form container.
+     *
+     * @param string $class A string containing a classname or several class
+     * names delimited by a single space.
+     * @return boolean True if all of the classnames passed in have been added.
+     */
+    public function hasExtraClass($class)
+    {
+        //split at white space
+        $classes = preg_split('/\s+/', $class ?? '');
+        foreach ($classes as $class) {
+            if (!isset($this->extraClasses[$class])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -1734,7 +1740,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function addExtraClass($class)
     {
         //split at white space
-        $classes = preg_split('/\s+/', $class);
+        $classes = preg_split('/\s+/', $class ?? '');
         foreach ($classes as $class) {
             //add classes one by one
             $this->extraClasses[$class] = $class;
@@ -1752,7 +1758,7 @@ class Form extends ViewableData implements HasRequestHandler
     public function removeExtraClass($class)
     {
         //split at white space
-        $classes = preg_split('/\s+/', $class);
+        $classes = preg_split('/\s+/', $class ?? '');
         foreach ($classes as $class) {
             //unset one by one
             unset($this->extraClasses[$class]);
@@ -1771,7 +1777,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         if ($this->validator) {
             /** @skipUpgrade */
-            $result .= '<h3>'._t(__CLASS__.'.VALIDATOR', 'Validator').'</h3>' . $this->validator->debug();
+            $result .= '<h3>' . _t(__CLASS__ . '.VALIDATOR', 'Validator') . '</h3>' . $this->validator->debug();
         }
 
         return $result;
@@ -1818,5 +1824,29 @@ class Form extends ViewableData implements HasRequestHandler
     protected function buildRequestHandler()
     {
         return FormRequestHandler::create($this);
+    }
+
+    /**
+     * Can the body of this form be cached?
+     *
+     * @return bool
+     */
+    protected function canBeCached()
+    {
+        if ($this->getSecurityToken()->isEnabled()) {
+            return false;
+        }
+
+        if ($this->FormMethod() !== 'GET') {
+            return false;
+        }
+
+        $validator = $this->getValidator();
+
+        if (!$validator) {
+            return true;
+        }
+
+        return $validator->canBeCached();
     }
 }

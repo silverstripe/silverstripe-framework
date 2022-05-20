@@ -10,6 +10,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
 
 /**
  * Provides introspection information about the class tree.
@@ -26,13 +27,13 @@ class ClassInfo
      * @internal
      * @var array
      */
-    private static $_cache_all_tables = array();
+    private static $_cache_all_tables = [];
 
     /**
      * @internal
      * @var array Cache for {@link ancestry()}.
      */
-    private static $_cache_ancestry = array();
+    private static $_cache_ancestry = [];
 
     /**
      * Cache for parse_class_spec
@@ -48,7 +49,7 @@ class ClassInfo
      * @internal
      * @var array
      */
-    private static $_cache_methods = array();
+    private static $_cache_methods = [];
 
     /**
      * Cache for class_name
@@ -76,8 +77,8 @@ class ClassInfo
      */
     public static function exists($class)
     {
-        return class_exists($class, false)
-            || interface_exists($class, false)
+        return class_exists($class ?? '', false)
+            || interface_exists($class ?? '', false)
             || ClassLoader::inst()->getItemPath($class);
     }
 
@@ -99,7 +100,7 @@ class ClassInfo
     public static function reset_db_cache()
     {
         self::$_cache_all_tables = null;
-        self::$_cache_ancestry = array();
+        self::$_cache_ancestry = [];
     }
 
     /**
@@ -112,8 +113,8 @@ class ClassInfo
      */
     public static function getValidSubClasses($class = SiteTree::class, $includeUnbacked = false)
     {
-        if (is_string($class) && !class_exists($class)) {
-            return array();
+        if (is_string($class) && !class_exists($class ?? '')) {
+            return [];
         }
 
         $class = self::class_name($class);
@@ -137,7 +138,7 @@ class ClassInfo
      */
     public static function dataClassesFor($nameOrObject)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
@@ -149,13 +150,13 @@ class ClassInfo
         );
 
         // Filter by table
-        return array_filter($classes, function ($next) {
+        return array_filter($classes ?? [], function ($next) {
             return DataObject::getSchema()->classHasTable($next);
         });
     }
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      * @param string $class
      * @return string
      */
@@ -182,22 +183,24 @@ class ClassInfo
      * </code>
      *
      * @param string|object $nameOrObject The classname or object
+     * @param bool $includeBaseClass Whether to include the base class or not. Defaults to true.
      * @return array List of class names with lowercase keys and correct-case values
+     * @throws \ReflectionException
      */
-    public static function subclassesFor($nameOrObject)
+    public static function subclassesFor($nameOrObject, $includeBaseClass = true)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
         // Get class names
         $className = self::class_name($nameOrObject);
-        $lowerClassName = strtolower($className);
+        $lowerClassName = strtolower($className ?? '');
 
         // Merge with descendants
         $descendants = ClassLoader::inst()->getManifest()->getDescendantsOf($className);
         return array_merge(
-            [$lowerClassName => $className],
+            $includeBaseClass ? [$lowerClassName => $className] : [],
             $descendants
         );
     }
@@ -208,6 +211,7 @@ class ClassInfo
      * eg: self::class_name('dataobJEct'); //returns 'DataObject'
      *
      * @param string|object $nameOrObject The classname or object you want to normalise
+     * @throws \ReflectionException
      * @return string The normalised class name
      */
     public static function class_name($nameOrObject)
@@ -216,7 +220,7 @@ class ClassInfo
             return get_class($nameOrObject);
         }
 
-        $key = strtolower($nameOrObject);
+        $key = strtolower($nameOrObject ?? '');
         if (!isset(static::$_cache_class_names[$key])) {
             // Get manifest name
             $name = ClassLoader::inst()->getManifest()->getItemName($nameOrObject);
@@ -242,13 +246,13 @@ class ClassInfo
      */
     public static function ancestry($nameOrObject, $tablesOnly = false)
     {
-        if (is_string($nameOrObject) && !class_exists($nameOrObject)) {
+        if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
         }
 
         $class = self::class_name($nameOrObject);
 
-        $lowerClass = strtolower($class);
+        $lowerClass = strtolower($class ?? '');
 
         $cacheKey = $lowerClass . '_' . (string)$tablesOnly;
         $parent = $class;
@@ -258,8 +262,8 @@ class ClassInfo
                 if (!$tablesOnly || DataObject::getSchema()->classHasTable($parent)) {
                     $ancestry[strtolower($parent)] = $parent;
                 }
-            } while ($parent = get_parent_class($parent));
-            self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);
+            } while ($parent = get_parent_class($parent ?? ''));
+            self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry ?? []);
         }
 
         return self::$_cache_ancestry[$cacheKey];
@@ -284,7 +288,7 @@ class ClassInfo
      */
     public static function classImplements($className, $interfaceName)
     {
-        $lowerClassName = strtolower($className);
+        $lowerClassName = strtolower($className ?? '');
         $implementors = self::implementorsOf($interfaceName);
         return isset($implementors[$lowerClassName]);
     }
@@ -304,7 +308,7 @@ class ClassInfo
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (strcasecmp($absFilePath, $compareFilePath) === 0) {
+            if (strcasecmp($absFilePath ?? '', $compareFilePath ?? '') === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
@@ -327,7 +331,7 @@ class ClassInfo
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (stripos($compareFilePath, $absFolderPath) === 0) {
+            if (stripos($compareFilePath ?? '', $absFolderPath ?? '') === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
@@ -345,14 +349,14 @@ class ClassInfo
      */
     public static function has_method_from($class, $method, $compclass)
     {
-        $lClass = strtolower($class);
-        $lMethod = strtolower($method);
-        $lCompclass = strtolower($compclass);
+        $lClass = strtolower($class ?? '');
+        $lMethod = strtolower($method ?? '');
+        $lCompclass = strtolower($compclass ?? '');
         if (!isset(self::$_cache_methods[$lClass])) {
-            self::$_cache_methods[$lClass] = array();
+            self::$_cache_methods[$lClass] = [];
         }
 
-        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass])) {
+        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass] ?? [])) {
             self::$_cache_methods[$lClass][$lMethod] = false;
 
             $classRef = new ReflectionClass($class);
@@ -363,11 +367,11 @@ class ClassInfo
             }
         }
 
-        return strtolower(self::$_cache_methods[$lClass][$lMethod]) === $lCompclass;
+        return strtolower(self::$_cache_methods[$lClass][$lMethod] ?? '') === $lCompclass;
     }
 
     /**
-     * @deprecated 4.0..5.0
+     * @deprecated 4.0.0:5.0.0
      */
     public static function table_for_object_field($candidateClass, $fieldName)
     {
@@ -384,7 +388,7 @@ class ClassInfo
     public static function shortName($nameOrObject)
     {
         $name = static::class_name($nameOrObject);
-        $parts = explode('\\', $name);
+        $parts = explode('\\', $name ?? '');
         return end($parts);
     }
 
@@ -397,10 +401,10 @@ class ClassInfo
      */
     public static function hasMethod($object, $method)
     {
-        if (empty($object)) {
+        if (empty($object) || (!is_object($object) && !is_string($object))) {
             return false;
         }
-        if (method_exists($object, $method)) {
+        if (method_exists($object, $method ?? '')) {
             return true;
         }
         return method_exists($object, 'hasMethod') && $object->hasMethod($method);
@@ -422,12 +426,12 @@ class ClassInfo
 
         $tokens = token_get_all("<?php $classSpec");
         $class = null;
-        $args = array();
+        $args = [];
 
         // Keep track of the current bucket that we're putting data into
         $bucket = &$args;
-        $bucketStack = array();
-        $hadNamespace = false;
+        $bucketStack = [];
+        $lastTokenWasNSSeparator = false;
         $currentKey = null;
 
         foreach ($tokens as $token) {
@@ -436,18 +440,24 @@ class ClassInfo
             $tokenName = is_array($token) ? $token[0] : $token;
 
             // Get the class name
-            if ($class === null && is_array($token) && $token[0] === T_STRING) {
+            if (\defined('T_NAME_QUALIFIED') && is_array($token) &&
+                ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
+            ) {
+                // PHP 8 exposes the FQCN as a single T_NAME_QUALIFIED or T_NAME_FULLY_QUALIFIED token
+                $class = $token[1];
+            } elseif ($class === null && is_array($token) && $token[0] === T_STRING) {
                 $class = $token[1];
             } elseif (is_array($token) && $token[0] === T_NS_SEPARATOR) {
                 $class .= $token[1];
-                $hadNamespace = true;
+                $lastTokenWasNSSeparator = true;
             } elseif ($token === '.') {
                 // Treat service name separator as NS separator
                 $class .= '.';
-                $hadNamespace = true;
-            } elseif ($hadNamespace && is_array($token) && $token[0] === T_STRING) {
+                $lastTokenWasNSSeparator = true;
+            } elseif ($lastTokenWasNSSeparator && is_array($token) && $token[0] === T_STRING) {
+                // Found another section of a namespaced class
                 $class .= $token[1];
-                $hadNamespace = false;
+                $lastTokenWasNSSeparator = false;
             // Get arguments
             } elseif (is_array($token)) {
                 switch ($token[0]) {
@@ -508,18 +518,18 @@ class ClassInfo
                         break;
 
                     case T_ARRAY:
-                        $result = array();
+                        $result = [];
                         break;
                 }
             } else {
                 if ($tokenName === '[') {
-                    $result = array();
+                    $result = [];
                 } elseif (($tokenName === ')' || $tokenName === ']') && !empty($bucketStack)) {
                     // Store the bucket we're currently working on
                     $oldBucket = $bucket;
                     // Fetch the key for the bucket at the top of the stack
                     end($bucketStack);
-                    $key = key($bucketStack);
+                    $key = key($bucketStack ?? []);
                     reset($bucketStack);
                     // Re-instate the bucket from the top of the stack
                     $bucket = &$bucketStack[$key];
@@ -540,10 +550,10 @@ class ClassInfo
                 }
 
                 // If we've just pushed an array, that becomes our new bucket
-                if ($result === array()) {
+                if ($result === []) {
                     // Fetch the key that the array was pushed to
                     end($bucket);
-                    $key = key($bucket);
+                    $key = key($bucket ?? []);
                     reset($bucket);
                     // Store reference to "old" bucket in the stack
                     $bucketStack[$key] = &$bucket;
@@ -556,5 +566,41 @@ class ClassInfo
         $result = [$class, $args];
         static::$_cache_parse[$classSpec] = $result;
         return $result;
+    }
+
+    /**
+     * Returns a list of classes with a particular extension applied
+     *
+     * This reflects all extensions added (or removed) both via the configuration API as well as dynamically
+     * using Extensible::add_extension() and Extensible::remove_extension().
+     *
+     * @param string $extensionClass        Extension class name
+     * @param string $baseClassOrObject     Class or object to find subclasses of with the extension applied
+     * @param bool $includeBaseClass        Include the base class itself if it has the extension applied?
+     * @return string[] Class names with the extension applied
+     * @throws \ReflectionException
+     */
+    public static function classesWithExtension(
+        string $extensionClass,
+        string $baseClassOrObject = DataObject::class,
+        bool $includeBaseClass = false
+    ): array {
+        // get class names
+        $baseClass = self::class_name($baseClassOrObject);
+
+        // get a list of all subclasses for a given class
+        $classes = ClassInfo::subclassesFor($baseClass, $includeBaseClass);
+
+        // include the base class if required
+        if ($includeBaseClass) {
+            $classes = array_merge([strtolower($baseClass) => $baseClass], $classes);
+        }
+
+        // only keep classes with the Extension applied
+        $classes = array_filter($classes ?? [], function ($class) use ($extensionClass) {
+            return ViewableData::has_extension($class, $extensionClass);
+        });
+
+        return $classes;
     }
 }

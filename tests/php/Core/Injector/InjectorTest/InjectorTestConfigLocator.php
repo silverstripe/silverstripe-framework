@@ -13,18 +13,18 @@ class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator 
 
         switch ($name) {
             case TestObject::class:
-                return $this->configs[$name] = array(
+                return $this->configs[$name] = [
                     'class' => ConstructableObject::class,
-                    'constructor' => array(
-                        '%$'.OtherTestObject::class
-                    )
-                );
+                    'constructor' => [
+                        '%$' . OtherTestObject::class
+                    ]
+                ];
 
             case 'ConfigConstructor':
-                return $this->configs[$name] = array(
+                return $this->configs[$name] = [
                     'class' => ConstructableObject::class,
-                    'constructor' => array('value')
-                );
+                    'constructor' => ['value']
+                ];
         }
 
         return parent::configFor($name);

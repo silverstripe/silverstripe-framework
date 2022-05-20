@@ -3,6 +3,10 @@
 namespace SilverStripe\Dev\Install;
 
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Flushable;
 
 /**
  * This class keeps track of the available database adapters
@@ -11,7 +15,7 @@ use InvalidArgumentException;
  *
  * @author Tom Rix
  */
-class DatabaseAdapterRegistry
+class DatabaseAdapterRegistry implements Flushable
 {
 
     /**
@@ -19,37 +23,37 @@ class DatabaseAdapterRegistry
      *
      * @var array
      */
-    private static $default_fields = array(
-        'server' => array(
+    private static $default_fields = [
+        'server' => [
             'title' => 'Database server',
             'envVar' => 'SS_DATABASE_SERVER',
             'default' => 'localhost'
-        ),
-        'username' => array(
+        ],
+        'username' => [
             'title' => 'Database username',
             'envVar' => 'SS_DATABASE_USERNAME',
             'default' => 'root'
-        ),
-        'password' => array(
+        ],
+        'password' => [
             'title' => 'Database password',
             'envVar' => 'SS_DATABASE_PASSWORD',
             'default' => 'password'
-        ),
-        'database' => array(
+        ],
+        'database' => [
             'title' => 'Database name',
             'default' => 'SS_mysite',
-            'attributes' => array(
+            'attributes' => [
                 "onchange" => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"
-            )
-        ),
-    );
+            ]
+        ],
+    ];
 
     /**
      * Internal array of registered database adapters
      *
      * @var array
      */
-    private static $adapters = array();
+    private static $adapters = [];
 
     /**
      * Add new adapter to the registry
@@ -68,7 +72,7 @@ class DatabaseAdapterRegistry
     public static function register($config)
     {
         // Validate config
-        $missing = array_diff(['title', 'class', 'helperClass', 'supported'], array_keys($config));
+        $missing = array_diff(['title', 'class', 'helperClass', 'supported'], array_keys($config ?? []));
         if ($missing) {
             throw new InvalidArgumentException(
                 "Missing database helper config keys: '" . implode("', '", $missing) . "'"
@@ -111,7 +115,7 @@ class DatabaseAdapterRegistry
 
     /**
      * Detects all _register_database.php files and invokes them.
-     * Searches through vendor/ folder only,
+     * Searches through vendor/*\/* folders only,
      * does not support "legacy" folder location in webroot
      */
     public static function autodiscover()
@@ -131,17 +135,71 @@ class DatabaseAdapterRegistry
      * Called by ConfigureFromEnv.php.
      * Searches through vendor/ folder only,
      * does not support "legacy" folder location in webroot
+     *
+     * @param array $config Config to update. If not provided fall back to global $databaseConfig.
+     * In 5.0.0 this will be mandatory and the global will be removed.
      */
-    public static function autoconfigure()
+    public static function autoconfigure(&$config = null)
     {
-        // Search through all composer packages in vendor
-        foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
-            foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
-                if (file_exists($directory . '/_configure_database.php')) {
-                    include_once($directory . '/_configure_database.php');
-                }
-            }
+        if (!isset($config)) {
+            Deprecation::notice('5.0', 'Configuration via global is deprecated');
+            global $databaseConfig;
+        } else {
+            $databaseConfig = $config;
         }
+        foreach (static::getConfigureDatabasePaths() as $configureDatabasePath) {
+            include_once $configureDatabasePath;
+        }
+        // Update modified variable
+        $config = $databaseConfig;
+    }
+
+    /**
+     * Including _configure_database.php is a legacy method of configuring a database
+     * It's still used by https://github.com/silverstripe/silverstripe-sqlite3
+     */
+    protected static function getConfigureDatabasePaths(): array
+    {
+        // autoconfigure() will get called before flush() on ?flush, so manually flush just to ensure no weirdness
+        if (isset($_GET['flush'])) {
+            static::flush();
+        }
+        try {
+            $cache = static::getCache();
+        } catch (\LogicException $e) {
+            // This try/catch statement is here rather than in getCache() for semver
+            // A LogicException may be thrown from `Symfony\Component\Finder\Finder::getIterator()`
+            // if the config manifest is empty.  There are some edge cases where this can happen, for instance
+            // running `sspak save` on a fresh install without ?flush
+            $cache = null;
+        }
+        $key = __FUNCTION__;
+        if ($cache && $cache->has($key)) {
+            return (array) $cache->get($key);
+        } else {
+            try {
+                $paths = glob(BASE_PATH . '/vendor/*/*/_configure_database.php');
+            } catch (Exception $e) {
+                $paths = [];
+            }
+            if ($cache) {
+                $cache->set($key, $paths);
+            }
+            return $paths;
+        }
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    public static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.DatabaseAdapterRegistry');
+    }
+
+    public static function flush()
+    {
+        static::getCache()->clear();
     }
 
     /**
@@ -198,6 +256,6 @@ class DatabaseAdapterRegistry
 
         // Construct
         $class = $adapters[$databaseClass]['helperClass'];
-        return (class_exists($class)) ? new $class() : null;
+        return (class_exists($class ?? '')) ? new $class() : null;
     }
 }

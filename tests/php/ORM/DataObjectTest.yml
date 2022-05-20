@@ -49,7 +49,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Player:
   captain1:
     FirstName: Captain
     Surname: Zookeeper
-    ShirtNumber: 007
+    ShirtNumber: '007'
     FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     Teams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     FoundingTeams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
@@ -70,6 +70,7 @@ SilverStripe\ORM\Tests\DataObjectTest\SubTeam:
   subteam1:
     Title: Subteam 1
     SubclassDatabaseField: Subclassed 1
+    SubclassFieldWithOverride: DB value of SubclassFieldWithOverride
     ExtendedDatabaseField: Extended 1
     ParentTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
     Sponsors:
@@ -142,7 +143,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Company:
   company1:
     Name: Company corp
     Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
-  company1:
+  company2:
     Name: 'Team co.'
     Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player2
 SilverStripe\ORM\Tests\DataObjectTest\Bracket:
@@ -179,3 +180,13 @@ SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst:
     ManyNext:
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test1
       - =>SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond.test3
+
+SilverStripe\ORM\Tests\DataObjectTest\TreeNode:
+  root:
+    Title: Root
+  child:
+    Title: Children
+    Parent: =>SilverStripe\ORM\Tests\DataObjectTest\TreeNode.root
+  grandchild:
+    Title: GrandChildren
+    Parent: =>SilverStripe\ORM\Tests\DataObjectTest\TreeNode.child

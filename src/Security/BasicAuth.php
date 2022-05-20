@@ -9,17 +9,23 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 /**
  * Provides an interface to HTTP basic authentication.
  *
- * This utility class can be used to secure any request with basic authentication.  To do so,
- * {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
+ * This utility class can be used to secure any request processed by SilverStripe with basic authentication.
+ * To do so, {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
  *
  * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
  * for more information. You can control this setting on controller-level by using {@link Controller->basicAuthEnabled}.
+ *
+ * CAUTION: Basic Auth is an oudated security measure which passes credentials without encryption over the network.
+ * It is considered insecure unless this connection itself is secured (via HTTPS).
+ * It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+ * Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
  */
 class BasicAuth
 {
@@ -68,7 +74,6 @@ class BasicAuth
      *
      * Used by {@link Controller::init()}.
      *
-     *
      * @param HTTPRequest $request
      * @param string $realm
      * @param string|array $permissionCode Optional
@@ -85,22 +90,6 @@ class BasicAuth
     ) {
         if ((Director::is_cli() && static::config()->get('ignore_cli'))) {
             return true;
-        }
-
-        /*
-		 * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
-		 * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
-		 * REDIRECT_HTTP_AUTHORIZATION
-		 *
-		 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
-		 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-		 */
-        $authHeader = $request->getHeader('Authorization');
-        $matches = array();
-        if ($authHeader && preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
-            list($name, $password) = explode(':', base64_decode($matches[1]));
-            $request->addHeader('PHP_AUTH_USER', strip_tags($name));
-            $request->addHeader('PHP_AUTH_PW', strip_tags($password));
         }
 
         $member = null;
@@ -123,10 +112,6 @@ class BasicAuth
         } catch (DatabaseException $e) {
             // Database isn't ready, let people in
             return true;
-        }
-
-        if ($member instanceof Member) {
-            Security::setCurrentUser($member);
         }
 
         if (!$member && $tryUsingSessionLogin) {
@@ -183,16 +168,19 @@ class BasicAuth
     }
 
     /**
-     * Enable protection of the entire site with basic authentication.
+     * Enable protection of all requests handed by SilverStripe with basic authentication.
      *
      * This log-in uses the Member database for authentication, but doesn't interfere with the
      * regular log-in form. This can be useful for test sites, where you want to hide the site
      * away from prying eyes, but still be able to test the regular log-in features of the site.
      *
      * You can also enable this feature by adding this line to your .env. Set this to a permission
-     * code you wish to require.
+     * code you wish to require: `SS_USE_BASIC_AUTH=ADMIN`
      *
-     * SS_USE_BASIC_AUTH=ADMIN
+     * CAUTION: Basic Auth is an oudated security measure which passes credentials without encryption over the network.
+     * It is considered insecure unless this connection itself is secured (via HTTPS).
+     * It also doesn't prevent access to web requests which aren't handled via SilverStripe (e.g. published assets).
+     * Consider using additional authentication and authorisation measures to secure access (e.g. IP whitelists).
      *
      * @param boolean $protect Set this to false to disable protection.
      * @param string $code {@link Permission} code that is required from the user.
@@ -216,11 +204,13 @@ class BasicAuth
      *
      * If you want to enabled protection (rather than enforcing it),
      * please use {@link protect_entire_site()}.
+     *
+     * @param HTTPRequest|null $request
+     * @throws HTTPResponse_Exception
      */
-    public static function protect_site_if_necessary()
+    public static function protect_site_if_necessary(HTTPRequest $request = null)
     {
         $config = static::config();
-        $request = Controller::curr()->getRequest();
 
         // Check if site is protected
         if ($config->get('entire_site_protected')) {
@@ -234,6 +224,11 @@ class BasicAuth
         } else {
             // Not enabled
             return;
+        }
+
+        // Get request
+        if (!$request && Injector::inst()->has(HTTPRequest::class)) {
+            $request = Injector::inst()->get(HTTPRequest::class);
         }
 
         // Require login

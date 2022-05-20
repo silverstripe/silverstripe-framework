@@ -15,11 +15,11 @@ use SilverStripe\Forms\FormAction;
 class ControllerWithSecurityToken extends Controller implements TestOnly
 {
 
-    private static $allowed_actions = array('Form');
+    private static $allowed_actions = ['Form'];
 
-    private static $url_handlers = array(
+    private static $url_handlers = [
         '$Action//$ID/$OtherID' => "handleAction",
-    );
+    ];
 
     protected $template = 'BlankPage';
 

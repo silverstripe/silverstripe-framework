@@ -17,33 +17,33 @@ use SilverStripe\Control\Util\IPUtils;
 class IPUtilsTest extends SapphireTest
 {
     /**
-     * @dataProvider testIPv4Provider
+     * @dataProvider iPv4Provider
      */
     public function testIPv4($matches, $remoteAddr, $cidr)
     {
         $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
     }
 
-    public function testIPv4Provider()
+    public function iPv4Provider()
     {
-        return array(
-            array(true, '192.168.1.1', '192.168.1.1'),
-            array(true, '192.168.1.1', '192.168.1.1/1'),
-            array(true, '192.168.1.1', '192.168.1.0/24'),
-            array(false, '192.168.1.1', '1.2.3.4/1'),
-            array(false, '192.168.1.1', '192.168.1.1/33'), // invalid subnet
-            array(true, '192.168.1.1', array('1.2.3.4/1', '192.168.1.0/24')),
-            array(true, '192.168.1.1', array('192.168.1.0/24', '1.2.3.4/1')),
-            array(false, '192.168.1.1', array('1.2.3.4/1', '4.3.2.1/1')),
-            array(true, '1.2.3.4', '0.0.0.0/0'),
-            array(true, '1.2.3.4', '192.168.1.0/0'),
-            array(false, '1.2.3.4', '256.256.256/0'), // invalid CIDR notation
-            array(false, 'an_invalid_ip', '192.168.1.0/24'),
-        );
+        return [
+            [true, '192.168.1.1', '192.168.1.1'],
+            [true, '192.168.1.1', '192.168.1.1/1'],
+            [true, '192.168.1.1', '192.168.1.0/24'],
+            [false, '192.168.1.1', '1.2.3.4/1'],
+            [false, '192.168.1.1', '192.168.1.1/33'], // invalid subnet
+            [true, '192.168.1.1', ['1.2.3.4/1', '192.168.1.0/24']],
+            [true, '192.168.1.1', ['192.168.1.0/24', '1.2.3.4/1']],
+            [false, '192.168.1.1', ['1.2.3.4/1', '4.3.2.1/1']],
+            [true, '1.2.3.4', '0.0.0.0/0'],
+            [true, '1.2.3.4', '192.168.1.0/0'],
+            [false, '1.2.3.4', '256.256.256/0'], // invalid CIDR notation
+            [false, 'an_invalid_ip', '192.168.1.0/24'],
+        ];
     }
 
     /**
-     * @dataProvider testIPv6Provider
+     * @dataProvider iPv6Provider
      */
     public function testIPv6($matches, $remoteAddr, $cidr)
     {
@@ -54,28 +54,28 @@ class IPUtilsTest extends SapphireTest
         $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
     }
 
-    public function testIPv6Provider()
+    public function iPv6Provider()
     {
-        return array(
-            array(true, '2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65'),
-            array(false, '2a00:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65'),
-            array(false, '2a01:198:603:0:396e:4789:8e99:890f', '::1'),
-            array(true, '0:0:0:0:0:0:0:1', '::1'),
-            array(false, '0:0:603:0:396e:4789:8e99:0001', '::1'),
-            array(true, '2a01:198:603:0:396e:4789:8e99:890f', array('::1', '2a01:198:603:0::/65')),
-            array(true, '2a01:198:603:0:396e:4789:8e99:890f', array('2a01:198:603:0::/65', '::1')),
-            array(false, '2a01:198:603:0:396e:4789:8e99:890f', array('::1', '1a01:198:603:0::/65')),
-            array(false, '}__test|O:21:&quot;JDatabaseDriverMysqli&quot;:3:{s:2', '::1'),
-            array(false, '2a01:198:603:0:396e:4789:8e99:890f', 'unknown'),
-        );
+        return [
+            [true, '2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65'],
+            [false, '2a00:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65'],
+            [false, '2a01:198:603:0:396e:4789:8e99:890f', '::1'],
+            [true, '0:0:0:0:0:0:0:1', '::1'],
+            [false, '0:0:603:0:396e:4789:8e99:0001', '::1'],
+            [true, '2a01:198:603:0:396e:4789:8e99:890f', ['::1', '2a01:198:603:0::/65']],
+            [true, '2a01:198:603:0:396e:4789:8e99:890f', ['2a01:198:603:0::/65', '::1']],
+            [false, '2a01:198:603:0:396e:4789:8e99:890f', ['::1', '1a01:198:603:0::/65']],
+            [false, '}__test|O:21:&quot;JDatabaseDriverMysqli&quot;:3:{s:2', '::1'],
+            [false, '2a01:198:603:0:396e:4789:8e99:890f', 'unknown'],
+        ];
     }
 
     /**
-     * @expectedException \RuntimeException
      * @requires extension sockets
      */
     public function testAnIPv6WithOptionDisabledIPv6()
     {
+        $this->expectException(\RuntimeException::class);
         if (defined('AF_INET6')) {
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }

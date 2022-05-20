@@ -1,51 +1,56 @@
+---
 title: GridField
 summary: How to use the GridField class for managing tabular data.
+icon: table
+---
 
 # GridField
 
-[GridField](api:SilverStripe\Forms\GridField\GridField) is SilverStripe's implementation of data grids. The main purpose of the `FormField` is to display 
+[GridField](api:SilverStripe\Forms\GridField\GridField) is Silverstripe CMS's implementation of data grids. The main purpose of the `FormField` is to display 
 tabular data in a format that is easy to view and modify. It can be thought of as a HTML table with some tricks.
 
 
 ```php
-    $field = new GridField($name, $title, $list);
+use SilverStripe\Forms\GridField\GridField;
+
+$field = GridField::create($name, $title, $list);
 ```
 
-<div class="hint" markdown='1'>
+[hint]
 GridField can only be used with `$list` data sets that are of the type `SS_List` such as `DataList` or `ArrayList`.
-</div>
+[/hint]
 
-<div class="notice" markdown="1">
+[notice]
 [GridField](api:SilverStripe\Forms\GridField\GridField) powers the automated data UI of [ModelAdmin](api:SilverStripe\Admin\ModelAdmin). For more information about `ModelAdmin` see the 
 [Customizing the CMS](/developer_guides/customising_the_admin_interface) guide.
-</div>
+[/notice]
 
 Each `GridField` is built from a number of components grouped into the [GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig). Without any components, 
 a `GridField` has almost no functionality. The `GridFieldConfig` instance and the attached [GridFieldComponent](api:SilverStripe\Forms\GridField\GridFieldComponent) are 
 responsible for all the user interactions including formatting data to be readable, modifying data and performing any 
 actions such as deleting records.
 
-**mysite/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
-    use SilverStripe\Forms\GridField\GridField;
-    use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\CMS\Model\SiteTree;
 
-    class Page extends SiteTree 
+class Page extends SiteTree 
+{
+    
+    public function getCMSFields() 
     {
-        
-        public function getCMSFields() 
-        {
-            $fields = parent::getCMSFields();
+        $fields = parent::getCMSFields();
 
-            $fields->addFieldToTab('Root.Pages', 
-                new GridField('Pages', 'All pages', SiteTree::get())
-            ); 
+        $fields->addFieldToTab('Root.Pages', 
+            GridField::create('Pages', 'All pages', SiteTree::get())
+        ); 
 
-            return $fields;
-        }
+        return $fields;
     }
+}
 ```
 
 This will display a bare bones `GridField` instance under `Pages` tab in the CMS. As we have not specified the 
@@ -61,91 +66,101 @@ This will display a bare bones `GridField` instance under `Pages` tab in the CMS
 The configuration of those `GridFieldComponent` instances and the addition or subtraction of components is done through 
 the `getConfig()` method on `GridField`.
 
-**mysite/code/Page.php**
+**app/src/Page.php**
 
 
 ```php
-    use SilverStripe\Forms\GridField\GridField;
-    use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\CMS\Model\SiteTree;
 
-    class Page extends SiteTree 
+class Page extends SiteTree 
+{
+    
+    public function getCMSFields() 
     {
+        $fields = parent::getCMSFields();
+
+        $fields->addFieldToTab('Root.Pages', 
+            $grid = GridField::create('Pages', 'All pages', SiteTree::get())
+        );
+
+        // GridField configuration
+        $config = $grid->getConfig();
+
+        //
+        // Modification of existing components can be done by fetching that component.
+        // Consult the API documentation for each component to determine the configuration
+        // you can do.
+        //
+        $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
         
-        public function getCMSFields() 
-        {
-            $fields = parent::getCMSFields();
+        $dataColumns->setDisplayFields([
+            'Title' => 'Title',
+            'Link'=> 'URL',
+            'LastEdited' => 'Changed'
+        ]);
 
-            $fields->addFieldToTab('Root.Pages', 
-                $grid = new GridField('Pages', 'All pages', SiteTree::get())
-            );
-
-            // GridField configuration
-            $config = $grid->getConfig();
-
-            //
-            // Modification of existing components can be done by fetching that component.
-            // Consult the API documentation for each component to determine the configuration
-            // you can do.
-            //
-            $dataColumns = $config->getComponentByType('GridFieldDataColumns');
-            
-            $dataColumns->setDisplayFields([
-                'Title' => 'Title',
-                'Link'=> 'URL',
-                'LastEdited' => 'Changed'
-            ]);
-
-            return $fields;
-        }
+        return $fields;
     }
+}
 
 ```
 
 With the `GridFieldConfig` instance, we can modify the behavior of the `GridField`.
 ```php
-    // `GridFieldConfig::create()` will create an empty configuration (no components).
-    $config = GridFieldConfig::create();
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
-    // add a component
-    $config->addComponent(new GridFieldDataColumns());
+// `GridFieldConfig::create()` will create an empty configuration (no components).
+$config = GridFieldConfig::create();
 
-    // Update the GridField with our custom configuration
-    $gridField->setConfig($config);
+// add a component
+$config->addComponent(GridFieldDataColumns::create());
+
+// Update the GridField with our custom configuration
+$gridField->setConfig($config);
 ```
 
 `GridFieldConfig` provides a number of methods to make setting the configuration easier. We can insert a component 
 before another component by passing the second parameter.
+
 ```php
-    $config->addComponent(new GridFieldFilterHeader(), 'GridFieldDataColumns');
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+
+$config->addComponent(GridFieldFilterHeader::create(), GridFieldDataColumns::class);
 ```
 
 We can add multiple components in one call.
 
 
 ```php
-    $config->addComponents(
-        new GridFieldDataColumns(), 
-        new GridFieldToolbarHeader()
-    );
+$config->addComponents(
+    GridFieldDataColumns::create(), 
+    GridFieldToolbarHeader::create()
+);
 ```
 
 Or, remove a component.
 
 
 ```php
-    $config->removeComponentsByType('GridFieldDeleteAction');
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+$config->removeComponentsByType(GridFieldDeleteAction::class);
 ```
 
 Fetch a component to modify it later on.
 
 
 ```php
-    $component = $config->getComponentByType('GridFieldFilterHeader')
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+$component = $config->getComponentByType(GridFieldFilterHeader::class)
 ```
 
 Here is a list of components for use bundled with the core framework. Many more components are provided by third-party
 modules and extensions.
 
+ - [GridField_ActionMenu](api:SilverStripe\Forms\GridField\GridField_ActionMenu)
  - [GridFieldToolbarHeader](api:SilverStripe\Forms\GridField\GridFieldToolbarHeader)
  - [GridFieldSortableHeader](api:SilverStripe\Forms\GridField\GridFieldSortableHeader)
  - [GridFieldFilterHeader](api:SilverStripe\Forms\GridField\GridFieldFilterHeader)
@@ -169,17 +184,19 @@ A simple read-only and paginated view of records with sortable and searchable he
 
 
 ```php
-    $config = GridFieldConfig_Base::create();
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 
-    $gridField->setConfig($config);
+$config = GridFieldConfig_Base::create();
 
-    // Is the same as adding the following components..
-    // .. new GridFieldToolbarHeader()
-    // .. new GridFieldSortableHeader()
-    // .. new GridFieldFilterHeader()
-    // .. new GridFieldDataColumns()
-    // .. new GridFieldPageCount('toolbar-header-right')
-    // .. new GridFieldPaginator($itemsPerPage)
+$gridField->setConfig($config);
+
+// Is the same as adding the following components..
+// .. GridFieldToolbarHeader::create()
+// .. GridFieldSortableHeader::create()
+// .. GridFieldFilterHeader::create()
+// .. GridFieldDataColumns::create()
+// .. GridFieldPageCount::create('toolbar-header-right')
+// .. GridFieldPaginator::create($itemsPerPage)
 ```
 
 ### GridFieldConfig_RecordViewer
@@ -187,61 +204,64 @@ A simple read-only and paginated view of records with sortable and searchable he
 Similar to `GridFieldConfig_Base` with the addition support of the ability to view a `GridFieldDetailForm` containing
 a read-only view of the data record.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the read-only view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 The `DataObject` class displayed must define a `canView()` method that returns a boolean on whether the user can view 
 this record.
-</div>
+[/alert]
 
 
 ```php
-    $config = GridFieldConfig_RecordViewer::create();
-    
-    $gridField->setConfig($config);
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
-    // Same as GridFieldConfig_Base with the addition of
-    // .. new GridFieldViewButton(),
-    // .. new GridFieldDetailForm()
+$config = GridFieldConfig_RecordViewer::create();
+
+$gridField->setConfig($config);
+
+// Same as GridFieldConfig_Base with the addition of
+// .. GridFieldViewButton::create(),
+// .. GridFieldDetailForm::create()
 ```
 
 ### GridFieldConfig_RecordEditor
 
 Similar to `GridFieldConfig_RecordViewer` with the addition support to edit or delete each of the records.
 
-<div class="info" markdown="1">
+[info]
 The data row show must be a `DataObject` subclass. The fields displayed in the edit view come from 
 `DataObject::getCMSFields()`.
-</div>
+[/info]
 
-<div class="alert" markdown="1">
+[alert]
 Permission control for editing and deleting the record uses the `canEdit()` and `canDelete()` methods on the 
 `DataObject` object.
-</div>
+[/alert]
 
 
 ```php
-    $config = GridFieldConfig_RecordEditor::create();
-    
-    $gridField->setConfig($config);
+$config = GridFieldConfig_RecordEditor::create();
 
-    // Same as GridFieldConfig_RecordViewer with the addition of
-    // .. new GridFieldAddNewButton(),
-    // .. new GridFieldEditButton(),
-    // .. new GridFieldDeleteAction()
+$gridField->setConfig($config);
+
+// Same as GridFieldConfig_RecordViewer with the addition of
+// .. GridFieldAddNewButton::create(),
+// .. GridFieldEditButton::create(),
+// .. GridFieldDeleteAction::create()
 ```
 
 ### GridFieldConfig_RelationEditor
 
 Similar to `GridFieldConfig_RecordEditor`, but adds features to work on a record's has-many or many-many relationships. 
 As such, it expects the list used with the `GridField` to be a instance of `RelationList`.
-```php
-    $config = GridFieldConfig_RelationEditor::create();
 
-    $gridField->setConfig($config);
+```php
+$config = GridFieldConfig_RelationEditor::create();
+
+$gridField->setConfig($config);
 ```
 
 This configuration adds the ability to searched for existing records and add a relationship 
@@ -249,6 +269,33 @@ This configuration adds the ability to searched for existing records and add a r
 
 Records created or deleted through the `GridFieldConfig_RelationEditor` automatically update the relationship in the
 database.
+
+## GridField_ActionMenu
+
+The `GridField_ActionMenu` component provides a dropdown menu which automatically bundles GridField actions into a react based dropdown. It is included by default on `GridFieldConfig_RecordEditor` and `GridFieldConfig_RelationEditor` configs.
+
+To add it to a GridField, add the `GridField_ActionMenu` component and any action(s) that implement `GridField_ActionMenuItem` (such as `GridFieldEditButton` or `GridFieldDeleteAction`) to the `GridFieldConfig`.
+
+```php
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+
+// `GridFieldConfig::create()` will create an empty configuration (no components).
+$config = GridFieldConfig::create();
+
+// add a component
+$config->addComponent();
+
+$config->addComponents(
+    GridFieldDataColumns::create(),
+    GridFieldEditButton::create(), 
+    GridField_ActionMenu::create()
+);
+
+// Update the GridField with our custom configuration
+$gridField->setConfig($config);
+
+```
 
 ## GridFieldDetailForm
 
@@ -258,10 +305,12 @@ The `GridFieldDetailForm` component drives the record viewing and editing form. 
 
 
 ```php
-    $form = $gridField->getConfig()->getComponentByType('GridFieldDetailForm');
-    $form->setFields(new FieldList(
-        new TextField('Title')
-    ));
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+
+$form = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+$form->setFields(FieldList::create(
+    TextField::create('Title')
+));
 ```
 
 ### many_many_extraFields
@@ -277,62 +326,62 @@ The namespace notation is `ManyMany[<extradata-field-name>]`, so for example `Ma
 
 
 ```php
-    use SilverStripe\Forms\TextField;
-    use SilverStripe\Forms\GridField\GridField;
-    use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\ORM\DataObject;
 
-    class Team extends DataObject 
-    {
-        
-        private static $db = [
-            'Name' => 'Text'
-        ];
-
-        public static $many_many = [
-            'Players' => 'Player'
-        ];
-    }
-    class Player extends DataObject 
-    {
+class Team extends DataObject 
+{
     
-        private static $db = [
-            'Name' => 'Text'
-        ];
-        
-        public static $many_many = [
-            'Teams' => 'Team'
-        ];
-        
-        public static $many_many_extraFields = [
-            'Teams' => [
-                'Position' => 'Text'
-            ]
-        ];
+    private static $db = [
+        'Name' => 'Text'
+    ];
 
-        public function getCMSFields() 
-        {
-            $fields = parent::getCMSFields();
+    public static $belongs_many_many = [
+        'Players' => 'Player'
+    ];
+}
+class Player extends DataObject 
+{
 
-            if($this->ID) {
-                $teamFields = singleton('Team')->getCMSFields();
-                $teamFields->addFieldToTab(
-                    'Root.Main',
-                    // The "ManyMany[<extradata-name>]" convention
-                    new TextField('ManyMany[Position]', 'Current Position')
-                );
+    private static $db = [
+        'Name' => 'Text'
+    ];
+    
+    public static $many_many = [
+        'Teams' => 'Team'
+    ];
+    
+    public static $many_many_extraFields = [
+        'Teams' => [
+            'Position' => 'Text'
+        ]
+    ];
 
-                $config = GridFieldConfig_RelationEditor::create();
-                $config->getComponentByType('GridFieldDetailForm')->setFields($teamFields);
+    public function getCMSFields() 
+    {
+        $fields = parent::getCMSFields();
 
-                $gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
-                $fields->findOrMakeTab('Root.Teams')->replaceField('Teams', $gridField);
-            }
+        if($this->ID) {
+            $teamFields = singleton('Team')->getCMSFields();
+            $teamFields->addFieldToTab(
+                'Root.Main',
+                // The "ManyMany[<extradata-name>]" convention
+                TextField::create('ManyMany[Position]', 'Current Position')
+            );
 
-            return $fields;
+            $config = GridFieldConfig_RelationEditor::create();
+            $config->getComponentByType(GridFieldDetailForm::class)->setFields($teamFields);
+
+            $gridField = GridField::create('Teams', 'Teams', $this->Teams(), $config);
+            $fields->findOrMakeTab('Root.Teams')->replaceField('Teams', $gridField);
         }
-    }
 
+        return $fields;
+    }
+}
 ```
 
 ## Flexible Area Assignment through Fragments
@@ -352,10 +401,12 @@ These built-ins can be used by passing the fragment names into the constructor o
 [GridFieldConfig](api:SilverStripe\Forms\GridField\GridFieldConfig) classes will already have rows added to them. The following example will add a print button at the 
 bottom right of the table.
 
-
 ```php
-    $config->addComponent(new GridFieldButtonRow('after'));
-    $config->addComponent(new GridFieldPrintButton('buttons-after-right'));
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+
+$config->addComponent(GridFieldButtonRow::create('after'));
+$config->addComponent(GridFieldPrintButton::create('buttons-after-right'));
 ```
 
 ### Creating your own Fragments
@@ -366,39 +417,45 @@ create an area rendered before the table wrapped in a simple `<div>`.
 
 
 ```php
-    class MyAreaComponent implements GridField_HTMLProvider 
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
+class MyAreaComponent extends AbstractGridFieldComponent implements GridField_HTMLProvider 
+{
+
+    public function getHTMLFragments($gridField) 
     {
-    
-        public function getHTMLFragments( $gridField) 
-        {
-            return [
-                'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
-            ];
-        }
+        return [
+            'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
+        ];
     }
+}
 
 ```
 
-<div class="notice" markdown="1">
+[notice]
 Please note that in templates, you'll need to escape the dollar sign on `\$DefineFragment`. These are specially 
 processed placeholders as opposed to native template syntax.
-</div>
+[/notice]
 
 Now you can add other components into this area by returning them as an array from your 
 [GridFieldComponent::getHTMLFragments()](api:SilverStripe\Forms\GridField\GridFieldComponent::getHTMLFragments()) implementation:
 
 
 ```php
-    class MyShareLinkComponent implements GridField_HTMLProvider 
-    {
-    
-        public function getHTMLFragments( $gridField) 
-        {        
-            return [
-                'my-area' => '<a href>...</a>'
-            ];
-        }
+use SilverStripe\Forms\GridField\AbstractGridFieldComponent;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
+class MyShareLinkComponent extends AbstractGridFieldComponent implements GridField_HTMLProvider 
+{
+
+    public function getHTMLFragments($gridField) 
+    {        
+        return [
+            'my-area' => '<a href>...</a>'
+        ];
     }
+}
 
 ```
 
@@ -406,7 +463,7 @@ Your new area can also be used by existing components, e.g. the [GridFieldPrintB
 
 
 ```php
-    new GridFieldPrintButton('my-component-area');
+GridFieldPrintButton::create('my-area');
 ```
 
 ## Creating a Custom GridFieldComponent
@@ -421,10 +478,28 @@ functionality. See [How to Create a GridFieldComponent](../how_tos/create_a_grid
 
 ## Saving the GridField State
 
-`GridState` is a class that is used to contain the current state and actions on the `GridField`. It's transfered 
+`GridState` is a class that is used to contain the current state and actions on the `GridField`. It's transferred 
 between page requests by being inserted as a hidden field in the form.
 
 The `GridState_Component` sets and gets data from the `GridState`.
+
+## Saving GridField_FormAction state
+
+By default state used for performing form actions is saved in the session and tagged with a key like `gf_abcd1234`. In 
+some cases session may not be an appropriate storage method. The storage method can be configured:
+
+```yaml
+Name: mysitegridfieldconfig
+After: gridfieldconfig
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\GridField\FormAction\StateStore:
+    class: SilverStripe\Forms\GridField\FormAction\AttributeStore
+```
+
+The `AttributeStore` class configures action state to be stored in the DOM and sent back on the request that performs 
+the action. Custom storage methods can be created and used by implementing the `StateStore` interface and configuring 
+`Injector` in a similar fashion.
 
 ## API Documentation
 

@@ -10,7 +10,7 @@ use SilverStripe\ORM\ManyManyThroughList;
  * Basic parent object
  *
  * @property string $Title
- * @method   ManyManyThroughList Items()
+ * @method ManyManyThroughList Items()
  */
 class TestObject extends DataObject implements TestOnly
 {

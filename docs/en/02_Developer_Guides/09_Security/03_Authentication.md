@@ -1,14 +1,29 @@
+---
 title: Authentication
-summary: Explains SilverStripe's Authentication options and custom authenticators. 
+summary: Explains Silverstripe CMS's Authentication options and custom authenticators. 
+icon: users-cog
+---
 
 # Authentication
 
-By default, SilverStripe provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
+By default, Silverstripe CMS provides a [MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator\MemberAuthenticator) class which hooks into its own internal
 authentication system.
+
+## User Interface
+
+Silverstripe CMS comes with a default login form interface,
+that's embedded into your page templates through the `$Form` placeholder.
+Since it's embedded into your own site styling and behaviour,
+it can require adjustments to your particular context. 
+
+Starting with Silverstripe CMS 4.5, the view logic may be handled through the
+[silverstripe/login-forms](https://github.com/silverstripe/silverstripe-login-forms) module (if present).
+
+## Controllers
 
 The main login system uses these controllers to handle the various security requests:
 
-[Security](api:SilverStripe\Security\Security) - Which is the controller which handles most front-end security requests, including logging in, logging out, resetting password, or changing password. This class also provides an interface to allow configured [Authenticator](api:SilverStripe\Security\Authenticator) classes to each display a custom login form.	
+[Security](api:SilverStripe\Security\Security) - Which is the controller which handles most front-end security requests, including logging in, logging out, resetting password, or changing password. This class also provides an interface to allow configured [Authenticator](api:SilverStripe\Security\Authenticator) classes to each display a custom login form.
 
 [CMSSecurity](api:SilverStripe\Security\CMSSecurity) - Which is the controller which handles security requests within the CMS, and allows users to re-login without leaving the CMS.
 
@@ -16,7 +31,7 @@ The main login system uses these controllers to handle the various security requ
 
 The default member authentication system is implemented in the following classes:
 
-[MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator) - Which is the default member authentication implementation. This uses the email and password stored internally for each member to authenticate them.	
+[MemberAuthenticator](api:SilverStripe\Security\MemberAuthenticator) - Which is the default member authentication implementation. This uses the email and password stored internally for each member to authenticate them.
 
 [MemberLoginForm](api:SilverStripe\Security\MemberAuthenticator\MemberLoginForm) - Is the default form used by `MemberAuthenticator`, and is displayed on the public site at the url `Security/login` by default.
 
@@ -33,16 +48,18 @@ following base classes:
 
 ## Default Admin
 
-When a new SilverStripe site is created for the first time, it may be necessary to create a default admin to provide
-CMS access for the first time. SilverStripe provides a default admin configuration system, which allows a username
+When a new Silverstripe CMS site is created for the first time, it may be necessary to create a default admin to provide
+CMS access for the first time. Silverstripe CMS provides a default admin configuration system, which allows a username
 and password to be configured for a single special user outside of the normal membership system.
 
 It is advisable to configure this user in your `.env` file inside of the web root, as below:
+
 ```
-    # Configure a default username and password to access the CMS on all sites in this environment.
-    SS_DEFAULT_ADMIN_USERNAME="admin"
-    SS_DEFAULT_ADMIN_PASSWORD="password"
+# Configure a default username and password to access the CMS on all sites in this environment.
+SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_PASSWORD="password"
 ```
+
 When a user logs in with these credentials, then a [Member](api:SilverStripe\Security\Member) with the Email 'admin' will be generated in
 the database, but without any password information. This means that the password can be reset or changed by simply
 updating the `.env` file.
@@ -58,6 +75,11 @@ SilverStripe\Core\Injector\Injector:
 ```
 If there is no authenticator registered, `Authenticator` will try to fall back on the default provided authenticator (`default`), which can be changed using the following config, replacing the MemberAuthenticator with your authenticator:
 ```yaml
+---
+Name: MyAuth
+After:
+  - '#coresecurity'
+---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Security\Security:
     properties:
@@ -68,24 +90,24 @@ SilverStripe\Core\Injector\Injector:
 By default, the `SilverStripe\Security\MemberAuthenticator\MemberAuthenticator` is seen as the default authenticator until it's explicitly set in the config.
 
 Every Authenticator is expected to handle services. The `Authenticator` Interface provides the available services:
+
 ```php
+const LOGIN = 1;
+const LOGOUT = 2;
+const CHANGE_PASSWORD = 4;
+const RESET_PASSWORD = 8;
+const CMS_LOGIN = 16;
 
-    const LOGIN = 1;
-    const LOGOUT = 2;
-    const CHANGE_PASSWORD = 4;
-    const RESET_PASSWORD = 8;
-    const CMS_LOGIN = 16;
-
-    /**
-     * Returns the services supported by this authenticator
-     *
-     * The number should be a bitwise-OR of 1 or more of the following constants:
-     * Authenticator::LOGIN, Authenticator::LOGOUT, Authenticator::CHANGE_PASSWORD,
-     * Authenticator::RESET_PASSWORD, or Authenticator::CMS_LOGIN
-     *
-     * @return int
-     */
-    public function supportedServices();
+/**
+ * Returns the services supported by this authenticator
+ *
+ * The number should be a bitwise-OR of 1 or more of the following constants:
+ * Authenticator::LOGIN, Authenticator::LOGOUT, Authenticator::CHANGE_PASSWORD,
+ * Authenticator::RESET_PASSWORD, or Authenticator::CMS_LOGIN
+ *
+ * @return int
+ */
+public function supportedServices();
 ```
 
 If there is no available authenticator for the required action (either one of the constants above), an error will be thrown.

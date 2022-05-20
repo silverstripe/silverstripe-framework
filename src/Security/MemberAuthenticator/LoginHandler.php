@@ -9,6 +9,7 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -41,9 +42,11 @@ class LoginHandler extends RequestHandler
     ];
 
     /**
-     * @var string Called link on this handler
+     * Link to this handler
+     *
+     * @var string
      */
-    private $link;
+    protected $link = null;
 
     /**
      * @param string $link The URL to recreate this request handler
@@ -59,16 +62,15 @@ class LoginHandler extends RequestHandler
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
+     *
      * @param null|string $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -129,7 +131,7 @@ class LoginHandler extends RequestHandler
             function ($message) {
                 return $message['message'];
             },
-            $result->getMessages()
+            $result->getMessages() ?? []
         ));
 
         $form->sessionMessage($message, 'bad');
@@ -137,7 +139,7 @@ class LoginHandler extends RequestHandler
         // Failed login
 
         /** @skipUpgrade */
-        if (array_key_exists('Email', $data)) {
+        if (array_key_exists('Email', $data ?? [])) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
             $this
                 ->getRequest()
@@ -152,7 +154,7 @@ class LoginHandler extends RequestHandler
 
     public function getReturnReferer()
     {
-        return $this->link();
+        return $this->Link();
     }
 
     /**
@@ -199,7 +201,7 @@ class LoginHandler extends RequestHandler
             // Welcome message
             $message = _t(
                 'SilverStripe\\Security\\Member.WELCOMEBACK',
-                'Welcome Back, {firstname}',
+                'Welcome back, {firstname}',
                 ['firstname' => $member->FirstName]
             );
             Security::singleton()->setSessionMessage($message, ValidationResult::TYPE_GOOD);
@@ -262,7 +264,8 @@ class LoginHandler extends RequestHandler
             'good'
         );
         $changedPasswordLink = Security::singleton()->Link('changepassword');
+        $changePasswordUrl = $this->addBackURLParam($changedPasswordLink);
 
-        return $this->redirect($this->addBackURLParam($changedPasswordLink));
+        return $this->redirect($changePasswordUrl);
     }
 }

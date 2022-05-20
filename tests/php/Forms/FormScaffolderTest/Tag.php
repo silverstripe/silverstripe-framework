@@ -9,15 +9,15 @@ class Tag extends DataObject implements TestOnly
 {
     private static $table_name = 'FormScaffolderTest_Tag';
 
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar',
-    );
+    ];
 
-    private static $belongs_many_many = array(
+    private static $belongs_many_many = [
         'Articles' => Article::class
-    );
+    ];
 
-    private static $has_many = array(
+    private static $has_many = [
         'SubjectOfArticles' => 'SilverStripe\\Forms\\Tests\\FormScaffolderTest\\Article.Subject'
-    );
+    ];
 }

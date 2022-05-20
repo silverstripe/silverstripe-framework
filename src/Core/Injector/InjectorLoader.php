@@ -18,7 +18,7 @@ class InjectorLoader
     /**
      * @var Injector[] map of injector instances
      */
-    protected $manifests = array();
+    protected $manifests = [];
 
     /**
      * @return self
@@ -82,7 +82,7 @@ class InjectorLoader
      */
     public function countManifests()
     {
-        return count($this->manifests);
+        return count($this->manifests ?? []);
     }
 
     /**

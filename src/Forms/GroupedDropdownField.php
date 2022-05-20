@@ -2,18 +2,19 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 /**
- * Grouped dropdown, using <optgroup> tags.
+ * Grouped dropdown, using optgroup tags.
  *
  * $source parameter (from DropdownField) must be a two dimensional array.
- * The first level of the array is used for the <optgroup>, and the second
+ * The first level of the array is used for the optgroup, and the second
  * level are the <options> for each group.
  *
- * Returns a <select> tag containing all the appropriate <option> tags, with
- * <optgroup> tags around the <option> tags as required.
+ * Returns a select tag containing all the appropriate option tags, with
+ * optgroup tags around the option tags as required.
  *
  * <b>Usage</b>
  *
@@ -79,10 +80,10 @@ class GroupedDropdownField extends DropdownField
             $options->push($this->getFieldOption($childValue, $childTitle));
         }
 
-        return new ArrayData(array(
+        return new ArrayData([
             'Title' => $valueOrGroup,
             'Options' => $options
-        ));
+        ]);
     }
 
     public function Type()
@@ -93,7 +94,7 @@ class GroupedDropdownField extends DropdownField
     public function getSourceValues()
     {
         // Flatten values
-        $values = array();
+        $values = [];
         $source = $this->getSource();
         array_walk_recursive(
             $source,
@@ -103,5 +104,15 @@ class GroupedDropdownField extends DropdownField
             }
         );
         return $values;
+    }
+
+    /**
+     * @return SingleLookupField
+     */
+    public function performReadonlyTransformation()
+    {
+        $field = parent::performReadonlyTransformation();
+        $field->setSource(ArrayLib::flatten($this->getSource()));
+        return $field;
     }
 }

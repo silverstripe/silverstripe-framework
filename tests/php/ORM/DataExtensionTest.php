@@ -11,7 +11,7 @@ class DataExtensionTest extends SapphireTest
 {
     protected static $fixture_file = 'DataExtensionTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         DataExtensionTest\TestMember::class,
         DataExtensionTest\Player::class,
         DataExtensionTest\RelatedObject::class,
@@ -19,7 +19,7 @@ class DataExtensionTest extends SapphireTest
         DataExtensionTest\CMSFieldsBase::class,
         DataExtensionTest\CMSFieldsChild::class,
         DataExtensionTest\CMSFieldsGrandChild::class
-    );
+    ];
 
     protected static $required_extensions = [
         DataObject::class => [
@@ -51,15 +51,15 @@ class DataExtensionTest extends SapphireTest
 
         $contact = DataObject::get_one(
             DataExtensionTest\TestMember::class,
-            array(
+            [
             '"DataExtensionTest_Member"."Website"' => 'http://www.example.com'
-            )
+            ]
         );
         $object = DataObject::get_one(
             DataExtensionTest\RelatedObject::class,
-            array(
+            [
             '"DataExtensionTest_RelatedObject"."ContactID"' => $contactID
-            )
+            ]
         );
 
         $this->assertNotNull($object, 'Related object not null');
@@ -259,9 +259,14 @@ class DataExtensionTest extends SapphireTest
         // Check child fields removed by grandchild in beforeUpdateCMSFields
         $this->assertEmpty($fields->dataFieldByName('ChildFieldBeforeExtension')); // Removed by grandchild class
 
+        // Check child fields removed by grandchild in afterUpdateCMSFields
+        $this->assertEmpty($fields->dataFieldByName('ChildFieldAfterExtension')); // Removed by grandchild class
+
         // Check grandchild field modified by extension
         $this->assertNotEmpty($preExtendedField = $fields->dataFieldByName('GrandchildFieldBeforeExtension'));
+        $this->assertNotEmpty($postExtendedField = $fields->dataFieldByName('GrandchildFieldAfterExtension'));
         $this->assertEquals($preExtendedField->Title(), 'GrandchildFieldBeforeExtension: Modified Title');
+        $this->assertEquals($postExtendedField->Title(), 'GrandchildFieldAfterExtension');
 
         // Post-extension fields
         $this->assertNotEmpty($fields->dataFieldByName('ChildField'));

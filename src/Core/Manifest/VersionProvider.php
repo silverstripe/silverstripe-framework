@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Core\Manifest;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Convert;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -24,6 +26,17 @@ use SilverStripe\Core\Injector\Injector;
  */
 class VersionProvider
 {
+    use Configurable;
+    use Injectable;
+
+    /**
+     * @var array
+     */
+    private static $modules = [
+        'silverstripe/framework' => 'Framework',
+        'silverstripe/recipe-core' => 'Core Recipe',
+    ];
+
     /**
      * Gets a comma delimited string of package titles and versions
      *
@@ -31,34 +44,143 @@ class VersionProvider
      */
     public function getVersion()
     {
-        $modules = $this->getModules();
-        $lockModules = $this->getModuleVersionFromComposer(array_keys($modules));
-        $output = [];
-        foreach ($modules as $module => $title) {
-            $version = isset($lockModules[$module])
-                ? $lockModules[$module]
-                : _t(__CLASS__.'.VERSIONUNKNOWN', 'Unknown');
-            $output[] = $title . ': ' . $version;
+        $key = sprintf('%s-%s', $this->getComposerLockPath(), 'all');
+        $version = $this->getCachedValue($key);
+        if ($version) {
+            return $version;
         }
-        return implode(', ', $output);
+        $modules = $this->getModules();
+        $lockModules = $this->getModuleVersionFromComposer(array_keys($modules ?? []));
+        $moduleVersions = [];
+        foreach ($modules as $module => $title) {
+            if (!array_key_exists($module, $lockModules ?? [])) {
+                continue;
+            }
+            $version = $lockModules[$module];
+            $moduleVersions[$module] = [$title, $version];
+        }
+        $moduleVersions = $this->filterModules($moduleVersions);
+        $ret = [];
+        foreach ($moduleVersions as $module => $value) {
+            list($title, $version) = $value;
+            $ret[] = "$title: $version";
+        }
+        $version = implode(', ', $ret);
+        if ($version) {
+            $this->setCacheValue($key, $version);
+        }
+        return $version;
     }
 
     /**
-     * Gets the configured core modules to use for the SilverStripe application version. Filtering
-     * is used to ensure that modules can turn the result off for other modules, e.g. CMS can disable Framework.
+     * Get the version of a specific module
+     *
+     * @param string $module - e.g. silverstripe/framework
+     * @return string - e.g. 4.11
+     */
+    public function getModuleVersion(string $module): string
+    {
+        $key = sprintf('%s-%s', $this->getComposerLockPath(), $module);
+        $version = $this->getCachedValue($key);
+        if ($version) {
+            return $version;
+        }
+        $version = $this->getModuleVersionFromComposer([$module])[$module] ?? '';
+        if ($version) {
+            $this->setCacheValue($key, $version);
+        }
+        return $version;
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    private function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.VersionProvider');
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    private function getCachedValue(string $key): string
+    {
+        $cache = $this->getCache();
+        try {
+            if ($cache->has($key)) {
+                return $cache->get($key);
+            }
+        } catch (InvalidArgumentException $e) {
+        }
+        return '';
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    private function setCacheValue(string $key, string $value): void
+    {
+        $cache = $this->getCache();
+        try {
+            $cache->set($key, $value);
+        } catch (InvalidArgumentException $e) {
+        }
+    }
+
+    /**
+     * Filter modules to only use the last module from a git repo, for example
+     *
+     * [
+     *   silverstripe/framework => ['Framework', 1.1.1'],
+     *   silverstripe/cms => ['CMS', 2.2.2'],
+     *   silverstripe/recipe-cms => ['CMS Recipe', '3.3.3'],
+     *   cwp/cwp-core => ['CWP', '4.4.4']
+     * ]
+     * =>
+     * [
+     *   silverstripe/recipe-cms => ['CMS Recipe', '3.3.3'],
+     *   cwp/cwp-core => ['CWP', '4.4.4']
+     * ]
+     *
+     * @param array $modules
+     * @return array
+     */
+    private function filterModules(array $modules)
+    {
+        $accountModule = [];
+        foreach ($modules as $module => $value) {
+            if (!preg_match('#^([a-z0-9\-]+)/([a-z0-9\-]+)$#', $module ?? '', $m)) {
+                continue;
+            }
+            $account = $m[1];
+            $accountModule[$account] = [$module, $value];
+        }
+        $ret = [];
+        foreach ($accountModule as $account => $arr) {
+            list($module, $value) = $arr;
+            $ret[$module] = $value;
+        }
+        return $ret;
+    }
+
+    /**
+     * Gets the configured core modules to use for the SilverStripe application version
      *
      * @return array
      */
     public function getModules()
     {
         $modules = Config::inst()->get(self::class, 'modules');
-        return $modules ? array_filter($modules) : [];
+        return !empty($modules) ? $modules : ['silverstripe/framework' => 'Framework'];
     }
 
     /**
      * Tries to obtain version number from composer.lock if it exists
      *
-     * @param  array $modules
+     * @param array $modules
      * @return array
      */
     public function getModuleVersionFromComposer($modules = [])
@@ -67,7 +189,7 @@ class VersionProvider
         $lockData = $this->getComposerLock();
         if ($lockData && !empty($lockData['packages'])) {
             foreach ($lockData['packages'] as $package) {
-                if (in_array($package['name'], $modules) && isset($package['version'])) {
+                if (in_array($package['name'], $modules ?? []) && isset($package['version'])) {
                     $versions[$package['name']] = $package['version'];
                 }
             }
@@ -78,29 +200,29 @@ class VersionProvider
     /**
      * Load composer.lock's contents and return it
      *
-     * @param  bool $cache
+     * @param bool $cache
      * @return array
      */
     protected function getComposerLock($cache = true)
     {
-        $composerLockPath = BASE_PATH . '/composer.lock';
-        if (!file_exists($composerLockPath)) {
+        $composerLockPath = $this->getComposerLockPath();
+        if (!file_exists($composerLockPath ?? '')) {
             return [];
         }
 
         $lockData = [];
-        $jsonData = file_get_contents($composerLockPath);
+        $jsonData = file_get_contents($composerLockPath ?? '');
 
         if ($cache) {
             $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
-            $cacheKey = md5($jsonData);
+            $cacheKey = md5($jsonData ?? '');
             if ($versions = $cache->get($cacheKey)) {
-                $lockData = Convert::json2array($versions);
+                $lockData = json_decode($versions ?? '', true);
             }
         }
 
         if (empty($lockData) && $jsonData) {
-            $lockData = Convert::json2array($jsonData);
+            $lockData = json_decode($jsonData ?? '', true);
 
             if ($cache) {
                 $cache->set($cacheKey, $jsonData);
@@ -108,5 +230,13 @@ class VersionProvider
         }
 
         return $lockData;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getComposerLockPath(): string
+    {
+        return BASE_PATH . '/composer.lock';
     }
 }

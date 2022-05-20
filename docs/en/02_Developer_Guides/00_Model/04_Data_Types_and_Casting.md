@@ -1,49 +1,50 @@
+---
 title: Data Types, Overloading and Casting
 summary: Learn how how data is stored going in and coming out of the ORM and how to modify it.
+icon: code
+---
 
 # Data Types and Casting
 
-Each model in a SilverStripe [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
+Each model in a Silverstripe CMS [DataObject](api:SilverStripe\ORM\DataObject) will handle data at some point. This includes database columns such as 
 the ones defined in a `$db` array or simply a method that returns data for the template. 
 
-A Data Type is represented in SilverStripe by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
+A Data Type is represented in Silverstripe CMS by a [DBField](api:SilverStripe\ORM\FieldType\DBField) subclass. The class is responsible for telling the ORM 
 about how to store its data in the database and how to format the information coming out of the database, i.e. on a template.
 
 In the `Player` example, we have four database columns each with a different data type (Int, Varchar).
 
-**mysite/code/Player.php**
+**app/src/Player.php**
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-        private static $db = [
-            'PlayerNumber' => 'Int',
-            'FirstName' => 'Varchar(255)',
-            'LastName' => 'Text',
-            'Birthday' => 'Date'
-        ];
-    }
-
+class Player extends DataObject 
+{
+    private static $db = [
+        'PlayerNumber' => 'Int',
+        'FirstName' => 'Varchar(255)',
+        'LastName' => 'Text',
+        'Birthday' => 'Date'
+    ];
+}
 ```
 
 ## Available Types
 
-*  [DBBoolean](api:SilverStripe\ORM\FieldType\DBBoolean): A boolean field.
-*  [DBCurrency](api:SilverStripe\ORM\FieldType\DBCurrency): A number with 2 decimal points of precision, designed to store currency values.
-*  [DBDate](api:SilverStripe\ORM\FieldType\DBDate): A date field
-*  [DBDecimal](api:SilverStripe\ORM\FieldType\DBDecimal): A decimal number.
-*  [DBEnum](api:SilverStripe\ORM\FieldType\DBEnum): An enumeration of a set of strings
-*  [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText): A variable-length string of up to 2MB, designed to store HTML
-*  [DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar): A variable-length string of up to 255 characters, designed to store HTML
-*  [DBInt](api:SilverStripe\ORM\FieldType\DBInt): An integer field.
-*  [DBPercentage](api:SilverStripe\ORM\FieldType\DBPercentage): A decimal number between 0 and 1 that represents a percentage.
-*  [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime): A date / time field
-*  [DBText](api:SilverStripe\ORM\FieldType\DBText): A variable-length string of up to 2MB, designed to store raw text
-*  [DBTime](api:SilverStripe\ORM\FieldType\DBTime): A time field
-*  [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar): A variable-length string of up to 255 characters, designed to store raw text.
+*  `'Boolean'`: A boolean field (see: [DBBoolean](api:SilverStripe\ORM\FieldType\DBBoolean)).
+*  `'Currency'`: A number with 2 decimal points of precision, designed to store currency values (see: [DBCurrency](api:SilverStripe\ORM\FieldType\DBCurrency)).
+*  `'Date'`: A date field (see: [DBDate](api:SilverStripe\ORM\FieldType\DBDate)).
+*  `'Decimal'`: A decimal number (see: [DBDecimal](api:SilverStripe\ORM\FieldType\DBDecimal)).
+*  `'Enum'`: An enumeration of a set of strings (see: [DBEnum](api:SilverStripe\ORM\FieldType\DBEnum)).
+*  `'HTMLText'`: A variable-length string of up to 2MB, designed to store HTML (see: [DBHTMLText](api:SilverStripe\ORM\FieldType\DBHTMLText)).
+*  `'HTMLVarchar'`: A variable-length string of up to 255 characters, designed to store HTML (see: [DBHTMLVarchar](api:SilverStripe\ORM\FieldType\DBHTMLVarchar)).
+*  `'Int'`: An integer field (see: [DBInt](api:SilverStripe\ORM\FieldType\DBInt)).
+*  `'Percentage'`: A decimal number between 0 and 1 that represents a percentage (see: [DBPercentage](api:SilverStripe\ORM\FieldType\DBPercentage)).
+*  `'Datetime'`: A date / time field (see: [DBDatetime](api:SilverStripe\ORM\FieldType\DBDatetime)).
+*  `'Text'`: A variable-length string of up to 2MB, designed to store raw text (see: [DBText](api:SilverStripe\ORM\FieldType\DBText)).
+*  `'Time'`: A time field (see: [DBTime](api:SilverStripe\ORM\FieldType\DBTime)).
+*  `'Varchar'`: A variable-length string of up to 255 characters, designed to store raw text (see: [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)).
 
 See the [API documentation](api:SilverStripe\ORM\FieldType\DBField) for a full list of available Data Types. You can define your own [DBField](api:SilverStripe\ORM\FieldType\DBField) instances if required as well. 
 
@@ -55,22 +56,20 @@ For complex default values for newly instantiated objects see [Dynamic Default V
 For simple values you can make use of the `$defaults` array. For example:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Car extends DataObject 
-    {
-        
-        private static $db = [
-            'Wheels' => 'Int',
-            'Condition' => 'Enum(array("New","Fair","Junk"))'
-        ];
-        
-        private static $defaults = [
-            'Wheels' => 4,
-            'Condition' => 'New'
-        ];
-    }
-
+class Car extends DataObject 
+{   
+    private static $db = [
+        'Wheels' => 'Int',
+        'Condition' => 'Enum(["New","Fair","Junk"])'
+    ];
+    
+    private static $defaults = [
+        'Wheels' => 4,
+        'Condition' => 'New'
+    ];
+}
 ```
 
 ### Default values for new database columns
@@ -78,7 +77,7 @@ For simple values you can make use of the `$defaults` array. For example:
 When adding a new `$db` field to a DataObject you can specify a default value
 to be applied to all existing records when the column is added in the database
 for the first time. This will also be applied to any newly created objects
-going forward. You do this be passing an argument for the default value in your 
+going forward. You do this by passing an argument for the default value in your 
 `$db` items. 
 
 For integer values, the default is the first parameter in the field specification.
@@ -88,18 +87,16 @@ For enum values, it's the second parameter.
 For example:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Car extends DataObject 
-    {
-        
-        private static $db = [
-            'Wheels' => 'Int(4)',
-            'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
-            'Make' => 'Varchar(["default" => "Honda"]),
-        );
-    }
-
+class Car extends DataObject 
+{   
+    private static $db = [
+        'Wheels' => 'Int(4)',
+        'Condition' => 'Enum(["New","Fair","Junk"], "New")',
+        'Make' => 'Varchar(["default" => "Honda"])',
+    );
+}
 ```
 
 ## Formatting Output
@@ -107,40 +104,37 @@ For example:
 The Data Type does more than setup the correct database schema. They can also define methods and formatting helpers for
 output. You can manually create instances of a Data Type and pass it through to the template. 
 
-If this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
+In this case, we'll create a new method for our `Player` that returns the full name. By wrapping this in a [DBVarchar](api:SilverStripe\ORM\FieldType\DBVarchar)
 object we can control the formatting and it allows us to call methods defined from `Varchar` as `LimitCharacters`.
 
-**mysite/code/Player.php**
-	
+**app/src/Player.php**
+
 ```php
-    use SilverStripe\ORM\FieldType\DBField;
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
+class Player extends DataObject 
+{
+    public function getName() 
     {
-
-        ..
-
-        public function getName() 
-        {
-            return DBField::create_field('Varchar', $this->FirstName . ' '. $this->LastName);
-        }
+        return DBField::create_field('Varchar', $this->FirstName . ' '. $this->LastName);
     }
+}
 ```
 
 Then we can refer to a new `Name` column on our `Player` instances. In templates we don't need to use the `get` prefix.
 
 ```php
-    $player = Player::get()->byId(1);
+$player = Player::get()->byId(1);
 
-    echo $player->Name;
-    // returns "Sam Minnée"
+echo $player->Name;
+// returns "Sam Minnée"
 
-    echo $player->getName();
-    // returns "Sam Minnée";
+echo $player->getName();
+// returns "Sam Minnée";
 
-    echo $player->getName()->LimitCharacters(2);
-    // returns "Sa.."
+echo $player->getName()->LimitCharacters(2);
+// returns "Sa…"
 ```
 
 ## Casting
@@ -148,24 +142,22 @@ Then we can refer to a new `Name` column on our `Player` instances. In templates
 Rather than manually returning objects from your custom functions. You can use the `$casting` property.
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
-    {
-
-      private static $casting = [
+class Player extends DataObject 
+{
+    private static $casting = [
         "Name" => 'Varchar',
-      ];
+    ];
     
-      public function getName() 
-      {
-          return $this->FirstName . ' '. $this->LastName;
-      }
+    public function getName() 
+    {
+        return $this->FirstName . ' '. $this->LastName;
     }
-
+}
 ```
 
-The properties on any SilverStripe object can be type casted automatically, by transforming its scalar value into an 
+The properties on any Silverstripe CMS object can be type casted automatically, by transforming its scalar value into an 
 instance of the [DBField](api:SilverStripe\ORM\FieldType\DBField) class, providing additional helpers. For example, a string can be cast as a [DBText](api:SilverStripe\ORM\FieldType\DBText) 
 type, which has a `FirstSentence()` method to retrieve the first sentence in a longer piece of text.
 
@@ -173,43 +165,44 @@ On the most basic level, the class can be used as simple conversion class from o
 number.
 
 ```php
-    DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
+use SilverStripe\ORM\FieldType\DBField;
+DBField::create_field('Double', 1.23456)->Round(2); // results in 1.23
 ```
 
 Of course that's much more verbose than the equivalent PHP call. The power of [DBField](api:SilverStripe\ORM\FieldType\DBField) comes with its more 
 sophisticated helpers, like showing the time difference to the current date:
 
 ```php
-    DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
+use SilverStripe\ORM\FieldType\DBField;
+DBField::create_field('Date', '1982-01-01')->TimeDiff(); // shows "30 years ago"
 ```
 
 ## Casting ViewableData
 
-Most objects in SilverStripe extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
+Most objects in Silverstripe CMS extend from [ViewableData](api:SilverStripe\View\ViewableData), which means they know how to present themselves in a view 
 context. Through a `$casting` array, arbitrary properties and getters can be casted:
 
 ```php
-    use SilverStripe\View\ViewableData;
+use SilverStripe\View\ViewableData;
 
-    class MyObject extends ViewableData 
+class MyObject extends ViewableData 
+{
+    
+    private static $casting = [
+        'MyDate' => 'Date'
+    ];
+
+    public function getMyDate() 
     {
-        
-        private static $casting = [
-            'MyDate' => 'Date'
-        ];
-
-        public function getMyDate() 
-        {
-            return '1982-01-01';
-        }
+        return '1982-01-01';
     }
+}
 
-    $obj = new MyObject;
-    $obj->getMyDate(); // returns string
-    $obj->MyDate; // returns string
-    $obj->obj('MyDate'); // returns object
-    $obj->obj('MyDate')->InPast(); // returns boolean
-
+$obj = new MyObject;
+$obj->getMyDate(); // returns string
+$obj->MyDate; // returns string
+$obj->obj('MyDate'); // returns object
+$obj->obj('MyDate')->InPast(); // returns boolean
 ```
 
 ## Casting HTML Text
@@ -223,28 +216,38 @@ See the [Template casting](/developer_guides/templates/casting) section for cont
 
 ## Overloading
 
-"Getters" and "Setters" are functions that help us save fields to our [DataObject](api:SilverStripe\ORM\DataObject) instances. By default, the 
+"Getters" and "Setters" are functions that help save fields to our [DataObject](api:SilverStripe\ORM\DataObject) instances. By default, the 
 methods `getField()` and `setField()` are used to set column data.  They save to the protected array, `$obj->record`. 
 We can overload the default behavior by making a function called "get`<fieldname>`" or "set`<fieldname>`".
 
 The following example will use the result of `getStatus` instead of the 'Status' database column. We can refer to the
-database column using `dbObject`.
+database column using `getField()`.
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class Player extends DataObject 
+/**
+ * @property Float $Cost
+ */
+class Product extends DataObject
+{
+
+    private static $db = [
+        'Title' => 'Varchar(255)',
+        'Cost' => 'Int', //cost in pennies/cents
+    ];
+
+    public function getCost()
     {
+        return $this->getField('Cost') / 100;
+    }
 
-      private static $db = [
-        "Status" => "Enum(array('Active', 'Injured', 'Retired'))"
-      ];
+    public function setCost($value)
+    {
+        return $this->setField('Cost', $value * 100);
+    }
 
-      public function getStatus() 
-      {
-          return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->dbObject('Status')->Value();
-      }
-
+}
 ```
 
 ## API Documentation

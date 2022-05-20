@@ -15,9 +15,9 @@ class PDODatabaseTest extends SapphireTest
 {
     protected static $fixture_file = 'MySQLDatabaseTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         MySQLDatabaseTest\Data::class
-    );
+    ];
 
     public function testPreparedStatements()
     {
@@ -28,12 +28,12 @@ class PDODatabaseTest extends SapphireTest
         // Test preparation of equivalent statemetns
         $result1 = DB::get_connector()->preparedQuery(
             'SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" WHERE "Sort" > ? ORDER BY "Sort"',
-            array(0)
+            [0]
         );
 
         $result2 = DB::get_connector()->preparedQuery(
             'SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" WHERE "Sort" > ? ORDER BY "Sort"',
-            array(2)
+            [2]
         );
         $this->assertInstanceOf(PDOQuery::class, $result1);
         $this->assertInstanceOf(PDOQuery::class, $result2);
@@ -44,35 +44,35 @@ class PDODatabaseTest extends SapphireTest
 
         // Iterating one level should not buffer, but return the right result
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 1,
                 'Title' => 'First Item'
-            ),
+            ],
             $result1->next()
         );
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 2,
                 'Title' => 'Second Item'
-            ),
+            ],
             $result1->next()
         );
 
         // Test first
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 1,
                 'Title' => 'First Item'
-            ),
+            ],
             $result1->first()
         );
 
         // Test seek
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 2,
                 'Title' => 'Second Item'
-            ),
+            ],
             $result1->seek(1)
         );
 
@@ -81,19 +81,19 @@ class PDODatabaseTest extends SapphireTest
 
         // Test second statement
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 3,
                 'Title' => 'Third Item'
-            ),
+            ],
             $result2->next()
         );
 
         // Test non-prepared query
         $this->assertEquals(
-            array(
+            [
                 'Sort' => 1,
                 'Title' => 'First Item'
-            ),
+            ],
             $result3->next()
         );
     }
@@ -104,17 +104,17 @@ class PDODatabaseTest extends SapphireTest
             $this->markTestSkipped('This test requires the current DB connector is PDO');
         }
 
-        $query = new SQLUpdate('MySQLDatabaseTest_Data');
-        $query->setAssignments(array('Title' => 'New Title'));
+        $query = new SQLUpdate('"MySQLDatabaseTest_Data"');
+        $query->setAssignments(['"Title"' => 'New Title']);
 
         // Test update which affects no rows
-        $query->setWhere(array('Title' => 'Bob'));
+        $query->setWhere(['"Title"' => 'Bob']);
         $result = $query->execute();
         $this->assertInstanceOf(PDOQuery::class, $result);
         $this->assertEquals(0, DB::affected_rows());
 
         // Test update which affects some rows
-        $query->setWhere(array('Title' => 'First Item'));
+        $query->setWhere(['"Title"' => 'First Item']);
         $result = $query->execute();
         $this->assertInstanceOf(PDOQuery::class, $result);
         $this->assertEquals(1, DB::affected_rows());

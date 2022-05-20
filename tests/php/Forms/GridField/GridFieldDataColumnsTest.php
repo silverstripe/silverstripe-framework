@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use InvalidArgumentException;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
@@ -32,7 +33,7 @@ class GridFieldDataColumnsTest extends SapphireTest
         /**
  * @skipUpgrade
 */
-        $expected = array('Email' => 'Email');
+        $expected = ['Email' => 'Email'];
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields($expected);
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
@@ -41,11 +42,10 @@ class GridFieldDataColumnsTest extends SapphireTest
     /**
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGridFieldDisplayFieldsWithBadArguments()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new GridField('testfield', 'testfield', Member::get());
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields(new stdClass());
@@ -59,9 +59,9 @@ class GridFieldDataColumnsTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
-        $this->assertEquals(array(), $columns->getFieldCasting());
-        $columns->setFieldCasting(array("MyShortText"=>"Text->FirstSentence"));
-        $this->assertEquals(array("MyShortText"=>"Text->FirstSentence"), $columns->getFieldCasting());
+        $this->assertEquals([], $columns->getFieldCasting());
+        $columns->setFieldCasting(["MyShortText"=>"Text->FirstSentence"]);
+        $this->assertEquals(["MyShortText"=>"Text->FirstSentence"], $columns->getFieldCasting());
     }
 
     /**
@@ -72,10 +72,10 @@ class GridFieldDataColumnsTest extends SapphireTest
     {
         $obj = new GridField('testfield', 'testfield');
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
-        $this->assertEquals(array(), $columns->getFieldFormatting());
-        $columns->setFieldFormatting(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'));
+        $this->assertEquals([], $columns->getFieldFormatting());
+        $columns->setFieldFormatting(["myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>']);
         $this->assertEquals(
-            array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'),
+            ["myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'],
             $columns->getFieldFormatting()
         );
     }

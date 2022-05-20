@@ -14,27 +14,27 @@ use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 class DevAdminControllerTest extends FunctionalTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         DevelopmentAdmin::config()->update(
             'registered_controllers',
-            array(
-            'x1' => array(
+            [
+            'x1' => [
                 'controller' => Controller1::class,
-                'links' => array(
+                'links' => [
                     'x1' => 'x1 link description',
                     'x1/y1' => 'x1/y1 link description'
-                )
-            ),
-            'x2' => array(
+                ]
+            ],
+            'x2' => [
                 'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
-                'links' => array(
+                'links' => [
                     'x2' => 'x2 link description'
-                )
-            )
-            )
+                ]
+            ]
+            ]
         );
     }
 
@@ -43,8 +43,8 @@ class DevAdminControllerTest extends FunctionalTest
     {
         // Check for the controller running from the registered url above
         // (we use contains rather than equals because sometimes you get a warning)
-        $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
-        $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
+        $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
+        $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
     }
 
     public function testGoodRegisteredControllerStatus()

@@ -15,7 +15,7 @@ class CSVParserTest extends SapphireTest
      */
     protected $csvPath = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->csvPath = __DIR__ . '/CsvBulkLoaderTest/csv/';
@@ -26,34 +26,47 @@ class CSVParserTest extends SapphireTest
         /* By default, a CSV file will be interpreted as having headers */
         $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the header row */
-            $this->assertEquals(array('FirstName','Biography','Birthday','IsRegistered'), array_keys($record));
+            $this->assertEquals(
+                ['FirstName','Biography','Birthday','IsRegistered'],
+                array_keys($record ?? [])
+            );
             $firstNames[] = $record['FirstName'];
             $biographies[] = $record['Biography'];
             $birthdays[] = $record['Birthday'];
             $registered[] = $record['IsRegistered'];
         }
 
-        $this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
+        $this->assertEquals(
+            ['John','Jane','Jamie','Järg','Jacob'],
+            $firstNames
+        );
 
         $this->assertEquals(
-            array(
-            "He's a good guy",
-            "She is awesome." . PHP_EOL
-                . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
-            "Pretty old, with an escaped comma",
-            "Unicode FTW"),
+            [
+                "He's a good guy",
+                "She is awesome."
+                    . PHP_EOL
+                    . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
+                "Pretty old, with an escaped comma",
+                "Unicode FTW",
+                "Likes leading tabs in his biography",
+            ],
             $biographies
         );
         $this->assertEquals([
             "1988-01-31",
             "1982-01-31",
             "1882-01-31",
-            "1982-06-30"
+            "1982-06-30",
+            "2000-04-30",
         ], $birthdays);
-        $this->assertEquals(array('1', '0', '1', '1'), $registered);
+        $this->assertEquals(
+            ['1', '0', '1', '1', '0'],
+            $registered
+        );
     }
 
     public function testParsingWithHeadersAndColumnMap()
@@ -62,54 +75,56 @@ class CSVParserTest extends SapphireTest
         $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
         /* We can set up column remapping.  The keys are case-insensitive. */
-        $csv->mapColumns(
-            array(
+        $csv->mapColumns([
             'FirstName' => '__fn',
             'bIoGrApHy' => '__BG',
-            )
-        );
+        ]);
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
             * left as-is. */
-            $this->assertEquals(array('__fn','__BG','Birthday','IsRegistered'), array_keys($record));
+            $this->assertEquals(['__fn','__BG','Birthday','IsRegistered'], array_keys($record ?? []));
             $firstNames[] = $record['__fn'];
             $biographies[] = $record['__BG'];
             $birthdays[] = $record['Birthday'];
             $registered[] = $record['IsRegistered'];
         }
 
-        $this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
+        $this->assertEquals(['John','Jane','Jamie','Järg','Jacob'], $firstNames);
         $this->assertEquals(
-            array(
-            "He's a good guy",
-            "She is awesome."
-                . PHP_EOL . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
-            "Pretty old, with an escaped comma",
-            "Unicode FTW"),
+            [
+                "He's a good guy",
+                "She is awesome."
+                    . PHP_EOL
+                    . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
+                "Pretty old, with an escaped comma",
+                "Unicode FTW",
+                "Likes leading tabs in his biography",
+            ],
             $biographies
         );
         $this->assertEquals([
             "1988-01-31",
             "1982-01-31",
             "1882-01-31",
-            "1982-06-30"
+            "1982-06-30",
+            "2000-04-30",
         ], $birthdays);
-        $this->assertEquals(array('1', '0', '1', '1'), $registered);
+        $this->assertEquals(['1', '0', '1', '1', '0'], $registered);
     }
 
     public function testParsingWithExplicitHeaderRow()
     {
         /* If your CSV file doesn't have a header row */
-        $csv = new CSVParser($this->csvPath .'PlayersWithHeader.csv');
+        $csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
-        $csv->provideHeaderRow(array('__fn','__bio','__bd','__reg'));
+        $csv->provideHeaderRow(['__fn','__bio','__bd','__reg']);
 
-        $firstNames = $birthdays = $biographies = $registered = array();
+        $firstNames = $birthdays = $biographies = $registered = [];
         foreach ($csv as $record) {
             /* Each row in the CSV file will be keyed with the header row that you gave */
-            $this->assertEquals(array('__fn','__bio','__bd','__reg'), array_keys($record));
+            $this->assertEquals(['__fn','__bio','__bd','__reg'], array_keys($record ?? []));
             $firstNames[] = $record['__fn'];
             $biographies[] = $record['__bio'];
             $birthdays[] = $record['__bd'];
@@ -117,15 +132,18 @@ class CSVParserTest extends SapphireTest
         }
 
         /* And the first row will be returned in the data */
-        $this->assertEquals(array('FirstName','John','Jane','Jamie','Järg'), $firstNames);
+        $this->assertEquals(['FirstName','John','Jane','Jamie','Järg','Jacob'], $firstNames);
         $this->assertEquals(
-            array(
-            'Biography',
-            "He's a good guy",
-            "She is awesome." . PHP_EOL
-                . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
-            "Pretty old, with an escaped comma",
-            "Unicode FTW"),
+            [
+                'Biography',
+                "He's a good guy",
+                "She is awesome."
+                    . PHP_EOL
+                    . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
+                "Pretty old, with an escaped comma",
+                "Unicode FTW",
+                "Likes leading tabs in his biography"
+            ],
             $biographies
         );
         $this->assertEquals([
@@ -133,8 +151,9 @@ class CSVParserTest extends SapphireTest
             "1988-01-31",
             "1982-01-31",
             "1882-01-31",
-            "1982-06-30"
+            "1982-06-30",
+            "2000-04-30",
         ], $birthdays);
-        $this->assertEquals(array('IsRegistered', '1', '0', '1', '1'), $registered);
+        $this->assertEquals(['IsRegistered', '1', '0', '1', '1', '0'], $registered);
     }
 }

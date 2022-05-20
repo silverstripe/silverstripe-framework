@@ -8,11 +8,11 @@ use SilverStripe\View\ViewableData;
 class ItemA extends ViewableData
 {
     // RSS-feed items must have $casting/$db information.
-    private static $casting = array(
+    private static $casting = [
         'Title' => 'Varchar',
         'Content' => 'Text',
         'AltContent' => 'Text',
-    );
+    ];
 
     public function getTitle()
     {

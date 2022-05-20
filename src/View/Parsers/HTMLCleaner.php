@@ -16,7 +16,7 @@ abstract class HTMLCleaner
     /**
      * @var array
      */
-    protected $defaultConfig = array();
+    protected $defaultConfig = [];
 
     /**
      * Configuration variables for HTMLCleaners that support configuration (like Tidy)
@@ -39,7 +39,7 @@ abstract class HTMLCleaner
     }
 
     /**
-     * @param array
+     * @param array $config
      */
     public function setConfig($config)
     {

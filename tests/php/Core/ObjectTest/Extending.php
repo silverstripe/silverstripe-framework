@@ -5,9 +5,9 @@ namespace SilverStripe\Core\Tests\ObjectTest;
 class Extending extends BaseObject
 {
 
-    private static $extensions = array(
+    private static $extensions = [
         Extending_Extension::class,
-    );
+    ];
 
     public function getResults(&$first, &$second, &$third)
     {
@@ -41,6 +41,6 @@ class Extending extends BaseObject
 
         // Function body invoked first
         $result = $this->extend('updateResult', $first, $second, $third);
-        return array($result);
+        return [$result];
     }
 }

@@ -1,9 +1,6 @@
 es_AR:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar Contraseña'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'no especificada'
-    TODAY: hoy
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Selecciona)
   SilverStripe\Forms\Form:

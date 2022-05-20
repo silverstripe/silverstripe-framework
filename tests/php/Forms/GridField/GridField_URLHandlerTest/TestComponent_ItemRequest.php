@@ -12,7 +12,7 @@ use SilverStripe\View\SSViewer;
 class TestComponent_ItemRequest extends RequestHandler
 {
 
-    private static $allowed_actions = array('Form', 'showform', 'testpage');
+    private static $allowed_actions = ['Form', 'showform', 'testpage'];
 
     protected $gridField;
 

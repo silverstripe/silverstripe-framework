@@ -7,10 +7,10 @@ namespace SilverStripe\ORM\FieldType;
  *
  * Example instantiation in {@link DataObject::$db}:
  * <code>
- * static $db = array(
+ * static $db = [
  *  "SuccessRatio" => "Percentage",
  *  "ReallyAccurate" => "Percentage(6)",
- * );
+ * ];
  * </code>
  */
 class DBPercentage extends DBDecimal

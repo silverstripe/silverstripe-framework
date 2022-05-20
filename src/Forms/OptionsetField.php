@@ -69,15 +69,16 @@ class OptionsetField extends SingleSelectField
      */
     protected function getFieldOption($value, $title, $odd)
     {
-        return new ArrayData(array(
+        return new ArrayData([
             'ID' => $this->getOptionID($value),
             'Class' => $this->getOptionClass($value, $odd),
+            'Role' => 'option',
             'Name' => $this->getOptionName(),
             'Value' => $value,
             'Title' => $title,
             'isChecked' => $this->isSelectedValue($value, $this->Value()),
             'isDisabled' => $this->isDisabledValue($value)
-        ));
+        ]);
     }
 
     /**
@@ -116,9 +117,9 @@ class OptionsetField extends SingleSelectField
     }
 
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $options = array();
+        $options = [];
         $odd = false;
 
         // Add all options striped
@@ -127,9 +128,9 @@ class OptionsetField extends SingleSelectField
             $options[] = $this->getFieldOption($value, $title, $odd);
         }
 
-        $properties = array_merge($properties, array(
+        $properties = array_merge($properties, [
             'Options' => new ArrayList($options)
-        ));
+        ]);
 
         return FormField::Field($properties);
     }
@@ -150,7 +151,7 @@ class OptionsetField extends SingleSelectField
     {
         $attributes = array_merge(
             parent::getAttributes(),
-            array('role' => 'listbox')
+            ['role' => 'listbox']
         );
 
         unset($attributes['name']);

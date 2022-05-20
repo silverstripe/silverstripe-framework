@@ -11,7 +11,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * There can be multiple HTMLEditorConfig's, which should always be created / accessed using HTMLEditorConfig::get.
  * You can then set the currently active config using set_active.
- * The order of precendence for which config is used is (lowest to highest):
+ * The order of precedence for which config is used is (lowest to highest):
  *
  * - default_config config setting
  * - Active config assigned
@@ -20,7 +20,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * Typically global config changes should set the active config.
  *
- * The defaut config class can be changed via dependency injection to replace HTMLEditorConfig.
+ * The default config class can be changed via dependency injection to replace HTMLEditorConfig.
  *
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  */
@@ -34,7 +34,7 @@ abstract class HTMLEditorConfig
      *
      * @var HTMLEditorConfig[]
      */
-    protected static $configs = array();
+    protected static $configs = [];
 
     /**
      * Identifier key of current config. This will match an array key in $configs.
@@ -59,7 +59,7 @@ abstract class HTMLEditorConfig
      * @var array
      */
     private static $user_themes = [];
-    
+
     /**
      * List of the current themes set for this config
      *
@@ -83,6 +83,7 @@ abstract class HTMLEditorConfig
         // Create new instance if unconfigured
         if (!isset(self::$configs[$identifier])) {
             self::$configs[$identifier] = static::create();
+            self::$configs[$identifier]->setOption('editorIdentifier', $identifier);
         }
         return self::$configs[$identifier];
     }
@@ -98,12 +99,13 @@ abstract class HTMLEditorConfig
     {
         if ($config) {
             self::$configs[$identifier] = $config;
+            self::$configs[$identifier]->setOption('editorIdentifier', $identifier);
         } else {
             unset(self::$configs[$identifier]);
         }
         return $config;
     }
-    
+
     /**
      * Gets the current themes, if it is not set this will fallback to config
      * @return array
@@ -115,7 +117,7 @@ abstract class HTMLEditorConfig
         }
         return Config::inst()->get(static::class, 'user_themes');
     }
-    
+
     /**
      * Sets the current theme
      *
@@ -125,7 +127,7 @@ abstract class HTMLEditorConfig
     {
         static::$current_themes = $themes;
     }
-    
+
     /**
      * Set the currently active configuration object. Note that the existing active
      * config will not be renamed to the new identifier.
@@ -180,7 +182,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_available_configs_map()
     {
-        $configs = array();
+        $configs = [];
 
         foreach (self::$configs as $identifier => $config) {
             $configs[$identifier] = $config->getOption('friendly_name');
@@ -224,4 +226,17 @@ abstract class HTMLEditorConfig
      * Initialise the editor on the client side
      */
     abstract public function init();
+
+    /**
+     * Provide additional schema data for the field this object configures
+     *
+     * @return array
+     */
+    public function getConfigSchemaData()
+    {
+        return [
+            'attributes' => $this->getAttributes(),
+            'editorjs' => null,
+        ];
+    }
 }

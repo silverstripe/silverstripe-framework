@@ -10,7 +10,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
 
 /**
- * Form used for editing a date stirng
+ * Form used for editing a date string
  *
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
@@ -42,7 +42,7 @@ use SilverStripe\ORM\ValidationResult;
  * # Formats
  *
  * All format strings should follow the CLDR standard as per
- * http://userguide.icu-project.org/formatparse/datetime. These will be converted
+ * https://unicode-org.github.io/icu/userguide/format_parse/datetime These will be converted
  * automatically to jquery UI format.
  *
  * The value of this field in PHP will be ISO 8601 standard (e.g. 2004-02-12), and
@@ -51,7 +51,7 @@ use SilverStripe\ORM\ValidationResult;
  * Note: Do NOT use php date format strings. Date format strings follow the date
  * field symbol table as below.
  *
- * @see http://userguide.icu-project.org/formatparse/datetime
+ * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime
  * @see http://api.jqueryui.com/datepicker/#utility-formatDate
  */
 class DateField extends TextField
@@ -169,13 +169,13 @@ class DateField extends TextField
      * This can be set explicitly. If not, this will be generated from the current locale
      * with the current date length.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
     public function getDateFormat()
     {
+        // Browsers expect ISO 8601 dates, localisation is handled on the client
         if ($this->getHTML5()) {
-            // Browsers expect ISO 8601 dates, localisation is handled on the client
-            $this->setDateFormat(DBDate::ISO_DATE);
+            return DBDate::ISO_DATE;
         }
 
         if ($this->dateFormat) {
@@ -190,7 +190,7 @@ class DateField extends TextField
      * Set date format in CLDR standard format.
      * Only applicable with {@link setHTML5(false)}.
      *
-     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      * @param string $format
      * @return $this
      */
@@ -220,7 +220,7 @@ class DateField extends TextField
             );
         }
 
-        if ($this->getHTML5() && $this->locale) {
+        if ($this->getHTML5() && $this->locale && $this->locale !== DBDate::ISO_LOCALE) {
             throw new \LogicException(
                 'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
             );
@@ -252,9 +252,8 @@ class DateField extends TextField
      */
     protected function getInternalFormatter()
     {
-        $locale = i18n::config()->uninherited('default_locale');
         $formatter = IntlDateFormatter::create(
-            i18n::config()->uninherited('default_locale'),
+            DBDate::ISO_LOCALE,
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::NONE
         );
@@ -353,9 +352,12 @@ class DateField extends TextField
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy(DateField_Disabled::class);
-        $field->setValue($this->dataValue());
-        $field->setReadonly(true);
+        $field = $this
+            ->castedCopy(DateField_Disabled::class)
+            ->setValue($this->dataValue())
+            ->setLocale($this->getLocale())
+            ->setReadonly(true);
+
         return $field;
     }
 
@@ -386,7 +388,7 @@ class DateField extends TextField
         // Check min date
         $min = $this->getMinDate();
         if ($min) {
-            $oops = strtotime($this->value) < strtotime($min);
+            $oops = strtotime($this->value ?? '') < strtotime($min ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
@@ -411,7 +413,7 @@ class DateField extends TextField
         // Check max date
         $max = $this->getMaxDate();
         if ($max) {
-            $oops = strtotime($this->value) > strtotime($max);
+            $oops = strtotime($this->value ?? '') > strtotime($max ?? '');
             if ($oops) {
                 $validator->validationError(
                     $this->name,
@@ -443,6 +445,10 @@ class DateField extends TextField
      */
     public function getLocale()
     {
+        // Use iso locale for html5
+        if ($this->getHTML5()) {
+            return DBDate::ISO_LOCALE;
+        }
         return $this->locale ?: i18n::get_locale();
     }
 
@@ -564,7 +570,7 @@ class DateField extends TextField
         $timestamp = $formatter->parse($date);
         if ($timestamp === false) {
             // Fallback to strtotime
-            $timestamp = strtotime($date, DBDatetime::now()->getTimestamp());
+            $timestamp = strtotime($date ?? '', DBDatetime::now()->getTimestamp());
             if ($timestamp === false) {
                 return null;
             }

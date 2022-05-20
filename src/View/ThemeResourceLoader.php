@@ -3,12 +3,16 @@
 namespace SilverStripe\View;
 
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Path;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
  */
-class ThemeResourceLoader
+class ThemeResourceLoader implements Flushable
 {
 
     /**
@@ -30,6 +34,11 @@ class ThemeResourceLoader
      * @var ThemeList[]
      */
     protected $sets = [];
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cache;
 
     /**
      * @return ThemeResourceLoader
@@ -95,20 +104,20 @@ class ThemeResourceLoader
      */
     public function getPath($identifier)
     {
-        $slashPos = strpos($identifier, '/');
-        $parts = explode(':', $identifier, 2);
+        $slashPos = strpos($identifier ?? '', '/');
+        $parts = explode(':', $identifier ?? '', 2);
 
         // If identifier starts with "/", it's a path from root
         if ($slashPos === 0) {
-            if (count($parts) > 1) {
+            if (count($parts ?? []) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
-            return ltrim($identifier, '/');
+            return Path::normalise($identifier, true);
         }
 
         // If there is no slash / colon it's a legacy theme
-        if ($slashPos === false && count($parts) === 1) {
-            return THEMES_DIR.'/'.$identifier;
+        if ($slashPos === false && count($parts ?? []) === 1) {
+            return Path::join(THEMES_DIR, $identifier);
         }
 
         // Extract from <vendor>/<module>:<theme> format.
@@ -125,8 +134,8 @@ class ThemeResourceLoader
         } else {
             // If no module could be found, assume based on basename
             // with a warning
-            if (strstr('/', $moduleName)) {
-                list(, $modulePath) = explode('/', $parts[0], 2);
+            if (strstr('/', $moduleName ?? '')) {
+                list(, $modulePath) = explode('/', $parts[0] ?? '', 2);
             } else {
                 $modulePath = $moduleName;
             }
@@ -134,21 +143,21 @@ class ThemeResourceLoader
         }
 
         // Parse relative path for this theme within this module
-        $theme = count($parts) > 1 ? $parts[1] : '';
+        $theme = count($parts ?? []) > 1 ? $parts[1] : '';
         if (empty($theme)) {
             // "module/vendor:"
             // "module/vendor"
             $subpath = '';
-        } elseif (strpos($theme, '/') === 0) {
+        } elseif (strpos($theme ?? '', '/') === 0) {
             // "module/vendor:/sub/path"
-            $subpath = rtrim($theme, '/');
+            $subpath = rtrim($theme ?? '', '/');
         } else {
             // "module/vendor:subtheme"
             $subpath = '/themes/' . $theme;
         }
 
         // Join module with subpath
-        return ltrim($modulePath . $subpath, '/');
+        return Path::normalise($modulePath . $subpath, true);
     }
 
     /**
@@ -160,31 +169,42 @@ class ThemeResourceLoader
      * format "type/name", where type is the type of template to search for
      * (e.g. Includes, Layout).
      *
+     * The results of this method will be cached for future use.
+     *
      * @param string|array $template Template name, or template spec in array format with the keys
      * 'type' (type string) and 'templates' (template hierarchy in order of precedence).
-     * If 'templates' is ommitted then any other item in the array will be treated as the template
+     * If 'templates' is omitted then any other item in the array will be treated as the template
      * list, or list of templates each in the array spec given.
      * Templates with an .ss extension will be treated as file paths, and will bypass
      * theme-coupled resolution.
-     * @param array $themes List of themes to use to resolve themes. In most cases
-     * you should pass in {@see SSViewer::get_themes()}
+     * @param array $themes List of themes to use to resolve themes. Defaults to {@see SSViewer::get_themes()}
      * @return string Absolute path to resolved template file, or null if not resolved.
      * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
      * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
      */
-    public function findTemplate($template, $themes)
+    public function findTemplate($template, $themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
+        // Look for a cached result for this data set
+        $cacheKey = md5(json_encode($template) . json_encode($themes));
+        if ($this->getCache()->has($cacheKey)) {
+            return $this->getCache()->get($cacheKey);
+        }
+
         $type = '';
         if (is_array($template)) {
             // Check if templates has type specified
-            if (array_key_exists('type', $template)) {
+            if (array_key_exists('type', $template ?? [])) {
                 $type = $template['type'];
                 unset($template['type']);
             }
             // Templates are either nested in 'templates' or just the rest of the list
-            $templateList = array_key_exists('templates', $template) ? $template['templates'] : $template;
+            $templateList = array_key_exists('templates', $template ?? []) ? $template['templates'] : $template;
         } else {
-            $templateList = array($template);
+            $templateList = [$template];
         }
 
         foreach ($templateList as $i => $template) {
@@ -192,6 +212,7 @@ class ThemeResourceLoader
             if (is_array($template)) {
                 $path = $this->findTemplate($template, $themes);
                 if ($path) {
+                    $this->getCache()->set($cacheKey, $path);
                     return $path;
                 }
                 continue;
@@ -200,13 +221,14 @@ class ThemeResourceLoader
             // If we have an .ss extension, this is a path, not a template name. We should
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
-            if (substr($template, -3) == '.ss' && file_exists($template)) {
+            if (substr($template ?? '', -3) == '.ss' && file_exists($template ?? '')) {
+                $this->getCache()->set($cacheKey, $template);
                 return $template;
             }
 
             // Check string template identifier
-            $template = str_replace('\\', '/', $template);
-            $parts = explode('/', $template);
+            $template = str_replace('\\', '/', $template ?? '');
+            $parts = explode('/', $template ?? '');
 
             $tail = array_pop($parts);
             $head = implode('/', $parts);
@@ -214,14 +236,20 @@ class ThemeResourceLoader
             foreach ($themePaths as $themePath) {
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
-                $path = implode('/', array_filter($pathParts)) . '.ss';
-                if (file_exists($path)) {
-                    return $path;
+                try {
+                    $path = Path::join($pathParts) . '.ss';
+                    if (file_exists($path ?? '')) {
+                        $this->getCache()->set($cacheKey, $path);
+                        return $path;
+                    }
+                } catch (InvalidArgumentException $e) {
+                    // No-op
                 }
             }
         }
 
         // No template found
+        $this->getCache()->set($cacheKey, null);
         return null;
     }
 
@@ -229,12 +257,16 @@ class ThemeResourceLoader
      * Resolve themed CSS path
      *
      * @param string $name Name of CSS file without extension
-     * @param array $themes List of themes
+     * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved CSS file (relative to base dir)
      */
-    public function findThemedCSS($name, $themes)
+    public function findThemedCSS($name, $themes = null)
     {
-        if (substr($name, -4) !== '.css') {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
+        if (substr($name ?? '', -4) !== '.css') {
             $name .= '.css';
         }
 
@@ -254,12 +286,16 @@ class ThemeResourceLoader
      * the module is used.
      *
      * @param string $name The name of the file - eg '/js/File.js' would have the name 'File'
-     * @param array $themes List of themes
+     * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved javascript file (relative to base dir)
      */
-    public function findThemedJavascript($name, $themes)
+    public function findThemedJavascript($name, $themes = null)
     {
-        if (substr($name, -3) !== '.js') {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
+        if (substr($name ?? '', -3) !== '.js') {
             $name .= '.js';
         }
 
@@ -277,21 +313,22 @@ class ThemeResourceLoader
      * A themed resource and be any file that resides in a theme folder.
      *
      * @param string $resource A file path relative to the root folder of a theme
-     * @param array $themes An order listed of themes to search
+     * @param array $themes An order listed of themes to search, Defaults to {@see SSViewer::get_themes()}
      * @return string
      */
-    public function findThemedResource($resource, $themes)
+    public function findThemedResource($resource, $themes = null)
     {
-        if ($resource[0] !== '/') {
-            $resource = '/' . $resource;
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
         }
 
         $paths = $this->getThemePaths($themes);
 
         foreach ($paths as $themePath) {
-            $abspath = $this->base . '/' . $themePath;
-            if (file_exists($abspath . $resource)) {
-                return $themePath . $resource;
+            $relativePath = Path::join($themePath, $resource);
+            $absolutePath = Path::join($this->base, $relativePath);
+            if (file_exists($absolutePath ?? '')) {
+                return $relativePath;
             }
         }
 
@@ -302,11 +339,15 @@ class ThemeResourceLoader
     /**
      * Resolve all themes to the list of root folders relative to site root
      *
-     * @param array $themes List of themes to resolve. Supports named theme sets.
-     * @return array List of root-relative folders in order of precendence.
+     * @param array $themes List of themes to resolve. Supports named theme sets. Defaults to {@see SSViewer::get_themes()}.
+     * @return array List of root-relative folders in order of precedence.
      */
-    public function getThemePaths($themes)
+    public function getThemePaths($themes = null)
     {
+        if ($themes === null) {
+            $themes = SSViewer::get_themes();
+        }
+
         $paths = [];
         foreach ($themes as $themename) {
             // Expand theme sets
@@ -319,5 +360,34 @@ class ThemeResourceLoader
             }
         }
         return $paths;
+    }
+
+    /**
+     * Flush any cached data
+     */
+    public static function flush()
+    {
+        self::inst()->getCache()->clear();
+    }
+
+    /**
+     * @return CacheInterface
+     */
+    public function getCache()
+    {
+        if (!$this->cache) {
+            $this->setCache(Injector::inst()->get(CacheInterface::class . '.ThemeResourceLoader'));
+        }
+        return $this->cache;
+    }
+
+    /**
+     * @param CacheInterface $cache
+     * @return ThemeResourceLoader
+     */
+    public function setCache(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+        return $this;
     }
 }

@@ -22,7 +22,7 @@ class FixtureBlueprint
     /**
      * @var array Map of field names to values. Supersedes {@link DataObject::$defaults}.
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * @var String Arbitrary name by which this fixture type can be referenced.
@@ -37,22 +37,22 @@ class FixtureBlueprint
     /**
      * @var array
      */
-    protected $callbacks = array(
-        'beforeCreate' => array(),
-        'afterCreate' => array(),
-    );
+    protected $callbacks = [
+        'beforeCreate' => [],
+        'afterCreate' => [],
+    ];
 
     /** @config */
-    private static $dependencies = array(
-        'factory' => '%$'.FixtureFactory::class,
-    );
+    private static $dependencies = [
+        'factory' => '%$' . FixtureFactory::class,
+    ];
 
     /**
-     * @param String $name
-     * @param String $class Defaults to $name
+     * @param string $name
+     * @param string $class Defaults to $name
      * @param array $defaults
      */
-    public function __construct($name, $class = null, $defaults = array())
+    public function __construct($name, $class = null, $defaults = [])
     {
         if (!$class) {
             $class = $name;
@@ -89,7 +89,7 @@ class FixtureBlueprint
         Config::modify()->set(DataObject::class, 'validation_enabled', false);
         Config::modify()->set(File::class, 'update_filesystem', false);
 
-        $this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
+        $this->invokeCallbacks('beforeCreate', [$identifier, &$data, &$fixtures]);
 
         try {
             $class = $this->class;
@@ -121,7 +121,7 @@ class FixtureBlueprint
                         continue;
                     }
 
-                    if (is_callable($fieldVal)) {
+                    if (!is_string($fieldVal) && is_callable($fieldVal)) {
                         $obj->$fieldName = $fieldVal($obj, $data, $fixtures);
                     } else {
                         $obj->$fieldName = $fieldVal;
@@ -147,7 +147,7 @@ class FixtureBlueprint
 
             // Save to fixture before relationship processing in case of reflexive relationships
             if (!isset($fixtures[$class])) {
-                $fixtures[$class] = array();
+                $fixtures[$class] = [];
             }
             $fixtures[$class][$identifier] = $obj->ID;
 
@@ -172,8 +172,8 @@ class FixtureBlueprint
                                 $extrafields = [];
                                 if (is_array($relVal)) {
                                     // Item is either first row, or key in yet another nested array
-                                    $item = key($relVal);
-                                    if (is_array($relVal[$item]) && count($relVal) === 1) {
+                                    $item = key($relVal ?? []);
+                                    if (is_array($relVal[$item]) && count($relVal ?? []) === 1) {
                                         // Extra fields from nested array
                                         $extrafields = $relVal[$item];
                                     } else {
@@ -194,13 +194,13 @@ class FixtureBlueprint
                         } else {
                             $items = is_array($fieldVal)
                             ? $fieldVal
-                            : preg_split('/ *, */', trim($fieldVal));
+                            : preg_split('/ *, */', trim($fieldVal ?? ''));
 
                             $parsedItems = [];
                             foreach ($items as $item) {
                                 // Check for correct format: =><relationname>.<identifier>.
                                 // Ignore if the item has already been replaced with a numeric DB identifier
-                                if (!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
+                                if (!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item ?? '')) {
                                     throw new InvalidArgumentException(sprintf(
                                         'Invalid format for relation "%s" on class "%s" ("%s")',
                                         $fieldName,
@@ -219,12 +219,12 @@ class FixtureBlueprint
                             }
                         }
                     } else {
-                        $hasOneField = preg_replace('/ID$/', '', $fieldName);
+                        $hasOneField = preg_replace('/ID$/', '', $fieldName ?? '');
                         if ($className = $schema->hasOneComponent($class, $hasOneField)) {
-                            $obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
+                            $obj->{$hasOneField . 'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
                             // Inject class for polymorphic relation
                             if ($className === 'SilverStripe\\ORM\\DataObject') {
-                                $obj->{$hasOneField.'Class'} = $fieldClass;
+                                $obj->{$hasOneField . 'Class'} = $fieldClass;
                             }
                         }
                     }
@@ -233,7 +233,7 @@ class FixtureBlueprint
             $obj->write();
 
             // If LastEdited was set in the fixture, set it here
-            if ($data && array_key_exists('LastEdited', $data)) {
+            if ($data && array_key_exists('LastEdited', $data ?? [])) {
                 $this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
             }
         } catch (Exception $e) {
@@ -242,7 +242,7 @@ class FixtureBlueprint
         }
 
         Config::unnest();
-        $this->invokeCallbacks('afterCreate', array($obj, $identifier, &$data, &$fixtures));
+        $this->invokeCallbacks('afterCreate', [$obj, $identifier, &$data, &$fixtures]);
 
         return $obj;
     }
@@ -282,7 +282,7 @@ class FixtureBlueprint
      */
     public function addCallback($type, $callback)
     {
-        if (!array_key_exists($type, $this->callbacks)) {
+        if (!array_key_exists($type, $this->callbacks ?? [])) {
             throw new InvalidArgumentException(sprintf('Invalid type "%s"', $type));
         }
 
@@ -297,7 +297,7 @@ class FixtureBlueprint
      */
     public function removeCallback($type, $callback)
     {
-        $pos = array_search($callback, $this->callbacks[$type]);
+        $pos = array_search($callback, $this->callbacks[$type] ?? []);
         if ($pos !== false) {
             unset($this->callbacks[$type][$pos]);
         }
@@ -305,10 +305,10 @@ class FixtureBlueprint
         return $this;
     }
 
-    protected function invokeCallbacks($type, $args = array())
+    protected function invokeCallbacks($type, $args = [])
     {
         foreach ($this->callbacks[$type] as $callback) {
-            call_user_func_array($callback, $args);
+            call_user_func_array($callback, $args ?? []);
         }
     }
 
@@ -324,9 +324,9 @@ class FixtureBlueprint
      */
     protected function parseValue($value, $fixtures = null, &$class = null)
     {
-        if (substr($value, 0, 2) == '=>') {
+        if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
-            list($class, $identifier) = explode('.', substr($value, 2), 2);
+            list($class, $identifier) = explode('.', substr($value ?? '', 2), 2);
 
             if ($fixtures && !isset($fixtures[$class][$identifier])) {
                 throw new InvalidArgumentException(sprintf(
@@ -353,14 +353,14 @@ class FixtureBlueprint
         $table = DataObject::getSchema()->tableForField($class, $fieldName);
         $value = $this->parseValue($value, $fixtures);
 
-        DB::manipulate(array(
-            $table => array(
+        DB::manipulate([
+            $table => [
                 "command" => "update",
                 "id" => $obj->ID,
                 "class" => $class,
-                "fields" => array($fieldName => $value),
-            )
-        ));
+                "fields" => [$fieldName => $value],
+            ]
+        ]);
         $obj->$fieldName = $value;
     }
 }

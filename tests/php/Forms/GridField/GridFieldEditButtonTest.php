@@ -45,20 +45,20 @@ class GridFieldEditButtonTest extends SapphireTest
     /**
      * @var array
      */
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Cheerleader::class,
         Player::class,
         Permissions::class,
-    );
+    ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);
         $config = GridFieldConfig::create()->addComponent(new GridFieldEditButton());
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList([$this->gridField]), new FieldList());
     }
 
     public function testShowEditLinks()
@@ -69,12 +69,12 @@ class GridFieldEditButtonTest extends SapphireTest
 
         $content = new CSSContentParser($this->gridField->FieldHolder());
         // Check that there are content
-        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item')));
+        $this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item') ?? []));
         // Make sure that there are edit links, even though the user doesn't have "edit" permissions
         // (they can still view the records)
         $this->assertEquals(
             3,
-            count($content->getBySelector('.edit-link')),
+            count($content->getBySelector('.edit-link') ?? []),
             'Edit links should show when not logged in.'
         );
     }
@@ -84,7 +84,7 @@ class GridFieldEditButtonTest extends SapphireTest
         $this->logInWithPermission('ADMIN');
         $content = new CSSContentParser($this->gridField->FieldHolder());
         $editLinks = $content->getBySelector('.edit-link');
-        $this->assertEquals(3, count($editLinks), 'Edit links should show when logged in.');
+        $this->assertEquals(3, count($editLinks ?? []), 'Edit links should show when logged in.');
     }
 
     public function testDefaultClassesAreSet()
@@ -100,7 +100,7 @@ class GridFieldEditButtonTest extends SapphireTest
         $result = $button->getExtraClass();
 
         foreach ($expected as $className) {
-            $this->assertContains($className, $result);
+            $this->assertStringContainsString($className, $result);
         }
     }
 
@@ -109,15 +109,15 @@ class GridFieldEditButtonTest extends SapphireTest
         $button = new GridFieldEditButton;
 
         $button->addExtraClass('foobar');
-        $this->assertContains('foobar', $button->getExtraClass());
+        $this->assertStringContainsString('foobar', $button->getExtraClass());
 
         $button->removeExtraClass('foobar');
-        $this->assertNotContains('foobar', $button->getExtraClass());
+        $this->assertStringNotContainsString('foobar', $button->getExtraClass());
 
         // Check that duplicates are removed
         $button->addExtraClass('foobar');
         $button->addExtraClass('foobar');
         $button->removeExtraClass('foobar');
-        $this->assertNotContains('foobar', $button->getExtraClass());
+        $this->assertStringNotContainsString('foobar', $button->getExtraClass());
     }
 }

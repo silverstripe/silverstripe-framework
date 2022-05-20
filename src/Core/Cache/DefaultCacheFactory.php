@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Cache;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Cache\Simple\ApcuCache;
@@ -46,7 +47,7 @@ class DefaultCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $args = array())
+    public function create($service, array $args = [])
     {
         // merge args with default
         $args = array_merge($this->args, $args);
@@ -55,8 +56,12 @@ class DefaultCacheFactory implements CacheFactory
         $directory = isset($args['directory']) ? $args['directory'] : null;
         $version = isset($args['version']) ? $args['version'] : null;
 
+        // In-memory caches are typically more resource constrained (number of items and storage space).
+        // Give cache consumers an opt-out if they are expecting to create large caches with long lifetimes.
+        $useInMemoryCache = isset($args['useInMemoryCache']) ? $args['useInMemoryCache'] : true;
+
         // Check support
-        $apcuSupported = $this->isAPCUSupported();
+        $apcuSupported = ($this->isAPCUSupported() && $useInMemoryCache);
         $phpFilesSupported = $this->isPHPFilesSupported();
 
         // If apcu isn't supported, phpfiles is the next best preference
@@ -64,15 +69,18 @@ class DefaultCacheFactory implements CacheFactory
             return $this->createCache(PhpFilesCache::class, [$namespace, $defaultLifetime, $directory]);
         }
 
-        // Create filessytem cache
+        // Create filesystem cache
         $fs = $this->createCache(FilesystemCache::class, [$namespace, $defaultLifetime, $directory]);
         if (!$apcuSupported) {
             return $fs;
         }
 
         // Chain this cache with ApcuCache
+        // Note that the cache lifetime will be shorter there by default, to ensure there's enough
+        // resources for "hot cache" items in APCu as a resource constrained in memory cache.
         $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
         $apcu = $this->createCache(ApcuCache::class, [$apcuNamespace, (int) $defaultLifetime / 5, $version]);
+
         return $this->createCache(ChainCache::class, [[$apcu, $fs]]);
     }
 
@@ -85,7 +93,8 @@ class DefaultCacheFactory implements CacheFactory
     {
         static $apcuSupported = null;
         if (null === $apcuSupported) {
-            $apcuSupported = ApcuAdapter::isSupported();
+            // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080
+            $apcuSupported = Director::is_cli() ? ini_get('apc.enable_cli') && ApcuAdapter::isSupported() : ApcuAdapter::isSupported();
         }
         return $apcuSupported;
     }

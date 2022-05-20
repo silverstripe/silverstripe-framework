@@ -15,7 +15,7 @@ use SilverStripe\View\SSViewer;
  * Only returns a button if {@link DataObject->canCreate()} for this record
  * returns true.
  */
-class GridFieldAddNewButton implements GridField_HTMLProvider
+class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
     protected $targetFragment;
@@ -52,7 +52,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider
         if (!$this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
             $objectName = $singleton->i18n_singular_name();
-            $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', array('name' => $objectName));
+            $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', ['name' => $objectName]);
         }
 
         $data = new ArrayData([

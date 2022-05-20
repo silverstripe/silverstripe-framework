@@ -1,42 +1,50 @@
+---
 title: Members
+summary: Learn how logged in users are managed in Silverstripe CMS
+icon: user
+---
 
 # Member
 
 ## Introduction
 
-The [Member](api:SilverStripe\Security\Member) class is used to represent user accounts on a SilverStripe site (including newsletter recipients).
+The [Member](api:SilverStripe\Security\Member) class is used to represent user accounts on a Silverstripe CMS site (including newsletter recipients).
  
 ## Testing For Logged In Users
 
-The [api:Security] class comes with a static method for getting information about the current logged in user.
+The [Security](api:SilverStripe\Security\Security) class comes with a static method for getting information about the current logged in user.
 
 **Security::getCurrentUser()**
 
 Retrieves the current logged in member.  Returns *null* if user is not logged in, otherwise, the Member object is returned.  
 
 ```php
-	if( $member = Security::getCurrentUser() ) {
-		// Work with $member
-	} else {
-		// Do non-member stuff
-	}
+use SilverStripe\Security\Security;
+
+if( $member = Security::getCurrentUser() ) {
+    // Work with $member
+} else {
+    // Do non-member stuff
+}
 ```
 
 ## Subclassing
 
-<div class="warning" markdown="1">
+[warning]
 This is the least desirable way of extending the [Member](api:SilverStripe\Security\Member) class. It's better to use [DataExtension](api:SilverStripe\ORM\DataExtension)
 (see below).
-</div>
+[/warning]
 
 You can define subclasses of [Member](api:SilverStripe\Security\Member) to add extra fields or functionality to the built-in membership system.
 
 ```php
+use SilverStripe\Security\Member;
+
 class MyMember extends Member {
-    private static $db = array(
+    private static $db = [
         "Age" => "Int",
         "Address" => "Text",
-    );
+    ];
 }
 ```
 
@@ -45,8 +53,8 @@ To ensure that all new members are created using this class, put a call to [api:
 
 ```yml
 SilverStripe\Core\Injector\Injector:
-    SilverStripe\Security\Member:
-        class: MyVendor\MyNamespace\MyMemberClass
+  SilverStripe\Security\Member:
+    class: MyVendor\MyNamespace\MyMemberClass
 ```
 
 Note that if you want to look this class-name up, you can call `Injector::inst()->get('Member')->ClassName`
@@ -58,28 +66,30 @@ details in the newsletter system.  This function returns a [FieldList](api:Silve
 parent::getCMSFields() and manipulate the [FieldList](api:SilverStripe\Forms\FieldList) from there.
 
 ```php
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->insertBefore("HTMLEmail", new TextField("Age"));
-		$fields->removeByName("JobTitle");
-		$fields->removeByName("Organisation");
-		return $fields;
-	}
+use SilverStripe\Forms\TextField;
+
+public function getCMSFields() {
+    $fields = parent::getCMSFields();
+    $fields->insertBefore("HTMLEmail", new TextField("Age"));
+    $fields->removeByName("JobTitle");
+    $fields->removeByName("Organisation");
+    return $fields;
+}
 ```
 
 ## Extending Member or DataObject?
 
-Basic rule: Class [api:Member] should just be extended for entities who have some kind of login.
-If you have different types of [api:Member]s in the system, you have to make sure that those with login-capabilities a unique field to be used for the login.
-For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [api:Member] to avoid conflicts
-with the Member-database. This enables us to have a different subclass of [api:Member] for an email-address with login-data,
+Basic rule: Class [Member](api:SilverStripe\Security\Member) should just be extended for entities who have some kind of login.
+If you have different types of [Member](api:SilverStripe\Security\Member)s in the system, you have to make sure that those with login-capabilities a unique field to be used for the login.
+For persons without login-capabilities (e.g. for an address-database), you shouldn't extend [Member](api:SilverStripe\Security\Member) to avoid conflicts
+with the Member-database. This enables us to have a different subclass of [Member](api:SilverStripe\Security\Member) for an email-address with login-data,
 and another subclass for the same email-address in the address-database.
 
 ## Member Role Extension
 
 Using inheritance to add extra behaviour or data fields to a member is limiting, because you can only inherit from 1
 class. A better way is to use role extensions to add this behaviour. Add the following to your
-`[config.yml](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules)`.
+[`config.yml`](/developer_guides/configuration/configuration/#configuration-yaml-syntax-and-rules).
 
 ```yml
 SilverStripe\Security\Member:
@@ -99,7 +109,6 @@ use SilverStripe\ORM\DataExtension;
 class MyMemberExtension extends DataExtension 
 {
     /**
-
     * Modify the field set to be displayed in the CMS detail pop-up
     */
     public function updateCMSFields(FieldList $currentFields) 
@@ -125,14 +134,15 @@ class MyMemberExtension extends DataExtension
 
 ```
 
-## Saved User Logins ##
+## Saved User Logins
 
 Logins can be "remembered" across multiple devices when user checks the "Remember Me" box. By default, a new login token
 will be created and associated with the device used during authentication. When user logs out, all previously saved tokens
-for all devices will be revoked, unless `[RememberLoginHash::$logout_across_devices](api:SilverStripe\Security\RememberLoginHash::$logout_across_devices) is set to false. For extra security,
-single tokens can be enforced by setting `[RememberLoginHash::$force_single_token](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.
+for all devices will be revoked, unless [`RememberLoginHash::$logout_across_devices`](api:SilverStripe\Security\RememberLoginHash::$logout_across_devices) is set to false. For extra security,
+single tokens can be enforced by setting [`RememberLoginHash::$force_single_token`](api:SilverStripe\Security\RememberLoginHash::$force_single_token) to true.  Tokens will be valid for 30 days by
+default and this can be modified via [`RememberLoginHash::$token_expiry_days`](api:SilverStripe\Security\RememberLoginHash::$token_expiry_days).
 
-## Acting as another user ##
+## Acting as another user
 
 Occasionally, it may be necessary not only to check permissions of a particular member, but also to
 temporarily assume the identity of another user for certain tasks. E.g. when running a CLI task,
@@ -149,8 +159,6 @@ Note: Take care not to invoke this method to perform any operation the current u
 reasonably be expected to be allowed to do.
 
 E.g.
-
-
 
 ```php
  use SilverStripe\Control\Director;

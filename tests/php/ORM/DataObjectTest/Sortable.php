@@ -9,8 +9,8 @@ class Sortable extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_Sortable';
 
-    private static $db = array(
+    private static $db = [
         'Sort' => 'Int',
         'Name' => 'Varchar',
-    );
+    ];
 }

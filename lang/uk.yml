@@ -4,9 +4,6 @@ uk:
     BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
     MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
     SHOWONCLICKTITLE: 'Змінити пароль'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'не встановлено'
-    TODAY: сьогодні
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Оберіть)
   SilverStripe\Forms\Form:

@@ -3,12 +3,14 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use Psr\Container\NotFoundExceptionInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -22,9 +24,11 @@ class ChangePasswordHandler extends RequestHandler
     protected $authenticator;
 
     /**
+     * Link to this handler
+     *
      * @var string
      */
-    protected $link;
+    protected $link = null;
 
     /**
      * @var array Allowed Actions
@@ -70,7 +74,7 @@ class ChangePasswordHandler extends RequestHandler
         }
         $token = $request->getVar('t');
 
-        // Check whether we are merely changin password, or resetting.
+        // Check whether we are merely changing password, or resetting.
         if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
             $this->setSessionToken($member, $token);
 
@@ -112,21 +116,19 @@ class ChangePasswordHandler extends RequestHandler
         }
         // Show a friendly message saying the login token has expired
         if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $message = [
-                'Content' => DBField::create_field(
-                    'HTMLFragment',
-                    _t(
-                        'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                        '<p>The password reset link is invalid or expired.</p>'
-                        . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                        . ' you <a href="{link2}">logged in</a>.</p>',
-                        [
-                            'link1' => $this->link('lostpassword'),
-                            'link2' => $this->link('login')
-                        ]
-                    )
+            $message = DBField::create_field(
+                'HTMLFragment',
+                _t(
+                    'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
+                    '<p>The password reset link is invalid or expired.</p>'
+                    . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                    . ' you <a href="{link2}">log in</a>.</p>',
+                    [
+                        'link1' => Security::lost_password_url(),
+                        'link2' => Security::login_url(),
+                    ]
                 )
-            ];
+            );
 
             return [
                 'Content' => $message,
@@ -156,6 +158,7 @@ class ChangePasswordHandler extends RequestHandler
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
 
+        $this->getRequest()->getSession()->regenerateSessionId();
         // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
         $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
     }
@@ -163,16 +166,15 @@ class ChangePasswordHandler extends RequestHandler
     /**
      * Return a link to this request handler.
      * The link returned is supplied in the constructor
-     * @param null $action
+     *
+     * @param string|null $action
      * @return string
      */
-    public function link($action = null)
+    public function Link($action = null)
     {
-        if ($action) {
-            return Controller::join_links($this->link, $action);
-        }
-
-        return $this->link;
+        $link = Controller::join_links($this->link, $action);
+        $this->extend('updateLink', $link, $action);
+        return $link;
     }
 
     /**
@@ -195,6 +197,8 @@ class ChangePasswordHandler extends RequestHandler
      * @param array $data The user submitted data
      * @param ChangePasswordForm $form
      * @return HTTPResponse
+     * @throws ValidationException
+     * @throws NotFoundExceptionInterface
      */
     public function doChangePassword(array $data, $form)
     {
@@ -272,13 +276,12 @@ class ChangePasswordHandler extends RequestHandler
         $member->AutoLoginExpired = DBDatetime::create()->now();
         $member->write();
 
-        if ($member->canLogIn()) {
+        if ($member->canLogin()) {
             /** @var IdentityStore $identityStore */
             $identityStore = Injector::inst()->get(IdentityStore::class);
             $identityStore->logIn($member, false, $this->getRequest());
         }
 
-        // TODO Add confirmation message to login redirect
         $session->clear('AutoLoginHash');
 
         // Redirect to backurl
@@ -290,6 +293,10 @@ class ChangePasswordHandler extends RequestHandler
             return $this->redirect($backURL);
         }
 
+        $backURL = Security::config()->get('default_reset_password_dest');
+        if ($backURL) {
+            return $this->redirect($backURL);
+        }
         // Redirect to default location - the login form saying "You are logged in as..."
         $url = Security::singleton()->Link('login');
 

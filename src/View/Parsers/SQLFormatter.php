@@ -16,7 +16,7 @@ class SQLFormatter
 {
     use Injectable;
 
-    protected static $newline_before_tokens = array(
+    protected static $newline_before_tokens = [
         'SELECT',
         'UPDATE',
         'INSERT',
@@ -30,7 +30,7 @@ class SQLFormatter
         'ORDER BY',
         'GROUP BY',
         'LIMIT',
-    );
+    ];
 
     public function formatPlain($sql)
     {
@@ -60,7 +60,7 @@ class SQLFormatter
         $eol = PHP_EOL;
         foreach (self::$newline_before_tokens as $token) {
             $breakToken = ($useHtmlFormatting) ? "<br />$eol" : $eol;
-            $sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql);
+            $sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql ?? '');
         }
 
         return $sql;

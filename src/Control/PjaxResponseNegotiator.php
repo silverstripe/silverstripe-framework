@@ -28,12 +28,12 @@ class PjaxResponseNegotiator
      *
      * @var array
      */
-    protected $callbacks = array();
+    protected $callbacks = [];
 
     protected $response = null;
 
     /**
-     * Overriden fragments (if any). Otherwise uses fragments from the request.
+     * Overridden fragments (if any). Otherwise uses fragments from the request.
      */
     protected $fragmentOverride = null;
 
@@ -41,7 +41,7 @@ class PjaxResponseNegotiator
      * @param array $callbacks
      * @param HTTPResponse $response An existing response to reuse (optional)
      */
-    public function __construct($callbacks = array(), $response = null)
+    public function __construct($callbacks = [], $response = null)
     {
         $this->callbacks = $callbacks;
         $this->response = $response;
@@ -71,18 +71,18 @@ class PjaxResponseNegotiator
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function respond(HTTPRequest $request, $extraCallbacks = array())
+    public function respond(HTTPRequest $request, $extraCallbacks = [])
     {
         // Prepare the default options and combine with the others
         $callbacks = array_merge($this->callbacks, $extraCallbacks);
         $response = $this->getResponse();
 
-        $responseParts = array();
+        $responseParts = [];
 
         if (isset($this->fragmentOverride)) {
             $fragments = $this->fragmentOverride;
         } elseif ($fragmentStr = $request->getHeader('X-Pjax')) {
-            $fragments = explode(',', $fragmentStr);
+            $fragments = explode(',', $fragmentStr ?? '');
         } else {
             if ($request->isAjax()) {
                 throw new HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
@@ -102,8 +102,8 @@ class PjaxResponseNegotiator
                 throw new HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
             }
         }
-        $response->setBody(Convert::raw2json($responseParts));
-        $response->addHeader('Content-Type', 'text/json');
+        $response->setBody(json_encode($responseParts));
+        $response->addHeader('Content-Type', 'application/json');
 
         return $response;
     }

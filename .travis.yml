@@ -1,101 +1,44 @@
-language: php
+version: ~> 1.0
 
-dist: trusty
+import:
+  - silverstripe/silverstripe-travis-shared:config/provision/standard.yml
 
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
-addons:
-  apt:
-    packages:
-      - tidy
-  firefox: "31.0"
-
-env:
-  global:
-    - COMPOSER_ROOT_VERSION=4.0.x-dev
-    - DISPLAY=":99"
-    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
-    - SS_BASE_URL="http://localhost:8080/"
-    - SS_ENVIRONMENT_TYPE="dev"
-
-matrix:
+# Using a manual matrix to exlude PHPUNIT_COVERAGE_TEST for now because it was causing some strange issues
+# e.g. https://travis-ci.com/github/silverstripe/silverstripe-framework/jobs/457096837
+jobs:
   fast_finish: true
   include:
-    - php: 5.6
+    - php: 7.4
       env:
         - DB=MYSQL
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
         - PHPCS_TEST=1
-        - PHPUNIT_TEST=framework
-    - php: 7.0
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+        - COMPOSER_INSTALL_ARG="--prefer-lowest"
+    - php: 7.4
       env:
         - DB=PGSQL
-        - PHPUNIT_TEST=framework
-    - php: 7.1
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+    - php: 7.4
       env:
         - DB=MYSQL
-        - PDO=1
-        - PHPUNIT_COVERAGE_TEST=framework
-    - php: 7.2
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="cms"
+    - php: 8.0
       env:
         - DB=MYSQL
-        - PDO=1
-        - PHPUNIT_TEST=framework
-    - php: 7.0
-      env:
-       - DB=MYSQL
-       - BEHAT_TEST=framework
-    - php: 7.0
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+    - php: 8.1.0
       env:
         - DB=MYSQL
-        - PHPUNIT_TEST=cms
-    - php: 7.0
-      env:
-        - DB=MYSQL
-        - BEHAT_TEST=cms
-
-before_script:
-# Init PHP
-  - pecl channel-update pecl.php.net
-  - travis_retry printf "\n" | pecl install imagick
-  - phpenv rehash
-  - phpenv config-rm xdebug.ini || true
-  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
-# Install composer dependencies
-  - export PATH=~/.composer/vendor/bin:$PATH
-  - composer validate
-  - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.0.x-dev --no-update; fi
-  - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.0.x-dev --no-update; fi
-  - composer require silverstripe/recipe-core:1.0.x-dev silverstripe/admin:1.0.x-dev silverstripe/versioned:1.0.x-dev --no-update
-  - if [[ $PHPUNIT_TEST == cms ]] || [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:1.0.x-dev --no-update; fi
-  - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest -o; fi
-  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
-
-# Log constants to CI for debugging purposes
-  - php ./tests/dump_constants.php
-
-# Start behat services
-  - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
-  - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
-  - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
-  - if [[ $BEHAT_TEST ]]; then (vendor/bin/selenium-server-standalone > artifacts/selenium.log 2>&1 &); fi
-  - if [[ $BEHAT_TEST == framework ]]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
-  - if [[ $BEHAT_TEST == cms ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
-
-script:
-  - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit --testsuite $PHPUNIT_TEST; fi
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --testsuite $PHPUNIT_COVERAGE_TEST --coverage-clover=coverage.xml; fi
-  - if [[ $BEHAT_TEST == framework ]]; then vendor/bin/behat @framework; fi
-  - if [[ $BEHAT_TEST == cms ]]; then vendor/bin/behat @cms; fi
-  - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
-  - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
-  - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
-  - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
-
-after_success:
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi
-
-after_failure:
-  - if [[ $BEHAT_TEST ]]; then php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/ --artifacts-path ./artifacts/; fi
+        - REQUIRE_INSTALLER="$REQUIRE_RECIPE"
+        - PHPUNIT_TEST=1
+        - PHPUNIT_SUITE="framework"
+  allow_failures:
+    - php: 8.1.0

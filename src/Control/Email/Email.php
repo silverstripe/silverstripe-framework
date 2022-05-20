@@ -2,6 +2,10 @@
 
 namespace SilverStripe\Control\Email;
 
+use DateTime;
+use RuntimeException;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
@@ -15,6 +19,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ViewableData;
 use Swift_Message;
+use Swift_Mime_SimpleMessage;
 use Swift_MimePart;
 
 /**
@@ -22,36 +27,36 @@ use Swift_MimePart;
  */
 class Email extends ViewableData
 {
+    /**
+     * @var array
+     * @config
+     */
+    private static $send_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $send_all_emails_to = array();
+    private static $cc_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $cc_all_emails_to = array();
+    private static $bcc_all_emails_to = [];
 
     /**
      * @var array
      * @config
      */
-    private static $bcc_all_emails_to = array();
-
-    /**
-     * @var array
-     * @config
-     */
-    private static $send_all_emails_from = array();
+    private static $send_all_emails_from = [];
 
     /**
      * This will be set in the config on a site-by-site basis
+     * @see https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
      *
      * @config
-     * @var string The default administrator email address.
+     * @var string|array The default administrator email address or array of [email => name]
      */
     private static $admin_email = null;
 
@@ -79,12 +84,12 @@ class Email extends ViewableData
      * @var array|ViewableData Additional data available in a template.
      * Used in the same way than {@link ViewableData->customize()}.
      */
-    private $data = array();
+    private $data = [];
 
     /**
      * @var array
      */
-    private $failedRecipients = array();
+    private $failedRecipients = [];
 
     /**
      * Checks for RFC822-valid email format.
@@ -98,7 +103,8 @@ class Email extends ViewableData
      */
     public static function is_valid_address($address)
     {
-        return \Swift_Validate::email($address);
+        $validator = new EmailValidator();
+        return $validator->isValid($address, new RFCValidation());
     }
 
     /**
@@ -187,13 +193,14 @@ class Email extends ViewableData
 
                 return '<span class="codedirection">' . strrev($email) . '</span>';
             case 'visible':
-                $obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
+                $obfuscated = ['@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] '];
 
                 return strtr($email, $obfuscated);
             case 'hex':
                 $encoded = '';
-                for ($x = 0; $x < strlen($email); $x++) {
-                    $encoded .= '&#x' . bin2hex($email{$x}) . ';';
+                $emailLength = strlen($email);
+                for ($x = 0; $x < $emailLength; $x++) {
+                    $encoded .= '&#x' . bin2hex($email[$x]) . ';';
                 }
 
                 return $encoded;
@@ -254,7 +261,10 @@ class Email extends ViewableData
     public function getSwiftMessage()
     {
         if (!$this->swiftMessage) {
-            $this->setSwiftMessage(new Swift_Message(null, null, 'text/html', 'utf-8'));
+            $message = new Swift_Message(null, null, 'text/html', 'utf-8');
+            // Set priority to fix PHP 8.1 SimpleMessage::getPriority() sscanf() null parameter
+            $message->setPriority(Swift_Mime_SimpleMessage::PRIORITY_NORMAL);
+            $this->setSwiftMessage($message);
         }
 
         return $this->swiftMessage;
@@ -267,13 +277,43 @@ class Email extends ViewableData
      */
     public function setSwiftMessage($swiftMessage)
     {
-        $swiftMessage->setDate(DBDatetime::now()->getTimestamp());
-        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->get('admin_email'))) {
-            $swiftMessage->setFrom($defaultFrom);
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
+        $swiftMessage->setDate($dateTime);
+        if (!$swiftMessage->getFrom()) {
+            $swiftMessage->setFrom($this->getDefaultFrom());
         }
         $this->swiftMessage = $swiftMessage;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultFrom(): string
+    {
+        // admin_email can have a string or an array config
+        // https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
+        $adminEmail = $this->config()->get('admin_email');
+        if (is_array($adminEmail) && count($adminEmail ?? []) > 0) {
+            $defaultFrom = array_keys($adminEmail)[0];
+        } else {
+            if (is_string($adminEmail)) {
+                $defaultFrom = $adminEmail;
+            } else {
+                $defaultFrom = '';
+            }
+        }
+        if (empty($defaultFrom)) {
+            $host = Director::host();
+            if (empty($host)) {
+                throw new RuntimeException('Host not defined');
+            }
+            $defaultFrom = sprintf('no-reply@%s', $host);
+        }
+        $this->extend('updateDefaultFrom', $defaultFrom);
+        return $defaultFrom;
     }
 
     /**
@@ -286,11 +326,24 @@ class Email extends ViewableData
 
     /**
      * @param string|array $address
+     * @return string|array
+     */
+    private function sanitiseAddress($address)
+    {
+        if (is_array($address)) {
+            return array_map('trim', $address ?? []);
+        }
+        return trim($address ?? '');
+    }
+
+    /**
+     * @param string|array $address
      * @param string|null $name
      * @return $this
      */
     public function setFrom($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setFrom($address, $name);
 
         return $this;
@@ -303,6 +356,7 @@ class Email extends ViewableData
      */
     public function addFrom($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addFrom($address, $name);
 
         return $this;
@@ -323,6 +377,7 @@ class Email extends ViewableData
      */
     public function setSender($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setSender($address, $name);
 
         return $this;
@@ -344,6 +399,7 @@ class Email extends ViewableData
      */
     public function setReturnPath($address)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReturnPath($address);
         return $this;
     }
@@ -360,7 +416,7 @@ class Email extends ViewableData
      * Set recipient(s) of the email
      *
      * To send to many, pass an array:
-     * array('me@example.com' => 'My Name', 'other@example.com');
+     * ['me@example.com' => 'My Name', 'other@example.com'];
      *
      * @param string|array $address The message recipient(s) - if sending to multiple, use an array of address => name
      * @param string|null $name The name of the recipient (if one)
@@ -368,6 +424,7 @@ class Email extends ViewableData
      */
     public function setTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setTo($address, $name);
 
         return $this;
@@ -380,6 +437,7 @@ class Email extends ViewableData
      */
     public function addTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addTo($address, $name);
 
         return $this;
@@ -400,6 +458,7 @@ class Email extends ViewableData
      */
     public function setCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setCc($address, $name);
 
         return $this;
@@ -412,6 +471,7 @@ class Email extends ViewableData
      */
     public function addCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addCc($address, $name);
 
         return $this;
@@ -432,6 +492,7 @@ class Email extends ViewableData
      */
     public function setBCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setBcc($address, $name);
 
         return $this;
@@ -444,11 +505,15 @@ class Email extends ViewableData
      */
     public function addBCC($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addBcc($address, $name);
 
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getReplyTo()
     {
         return $this->getSwiftMessage()->getReplyTo();
@@ -461,6 +526,7 @@ class Email extends ViewableData
      */
     public function setReplyTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReplyTo($address, $name);
 
         return $this;
@@ -473,6 +539,7 @@ class Email extends ViewableData
      */
     public function addReplyTo($address, $name = null)
     {
+        $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addReplyTo($address, $name);
 
         return $this;
@@ -568,6 +635,7 @@ class Email extends ViewableData
     public function setData($data)
     {
         $this->data = $data;
+        $this->invalidateBody();
 
         return $this;
     }
@@ -587,6 +655,8 @@ class Email extends ViewableData
             $this->data->$name = $value;
         }
 
+        $this->invalidateBody();
+
         return $this;
     }
 
@@ -603,6 +673,8 @@ class Email extends ViewableData
         } else {
             $this->data->$name = null;
         }
+
+        $this->invalidateBody();
 
         return $this;
     }
@@ -621,8 +693,24 @@ class Email extends ViewableData
      */
     public function setBody($body)
     {
+        $plainPart = $this->findPlainPart();
+        if ($plainPart) {
+            $this->getSwiftMessage()->detach($plainPart);
+        }
+        unset($plainPart);
+
         $body = HTTP::absoluteURLs($body);
         $this->getSwiftMessage()->setBody($body);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function invalidateBody()
+    {
+        $this->setBody(null);
 
         return $this;
     }
@@ -671,8 +759,8 @@ class Email extends ViewableData
      */
     public function setHTMLTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
-            $template = substr($template, 0, -3);
+        if (substr($template ?? '', -3) == '.ss') {
+            $template = substr($template ?? '', 0, -3);
         }
         $this->HTMLTemplate = $template;
 
@@ -697,8 +785,8 @@ class Email extends ViewableData
      */
     public function setPlainTemplate($template)
     {
-        if (substr($template, -3) == '.ss') {
-            $template = substr($template, 0, -3);
+        if (substr($template ?? '', -3) == '.ss') {
+            $template = substr($template ?? '', 0, -3);
         }
         $this->plainTemplate = $template;
 
@@ -784,9 +872,12 @@ class Email extends ViewableData
             return $this;
         }
 
+        // Do not interfere with emails styles
+        Requirements::clear();
+
         // Render plain part
         if ($plainTemplate && !$plainPart) {
-            $plainPart = $this->renderWith($plainTemplate, $this->getData());
+            $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
         }
 
         // Render HTML part, either if sending html email, or a plain part is lacking
@@ -800,6 +891,9 @@ class Email extends ViewableData
             $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
             $plainPart = $htmlPartObject->Plain();
         }
+
+        // Rendering is finished
+        Requirements::restore();
 
         // Fail if no email to send
         if (!$plainPart && !$htmlPart) {
@@ -856,6 +950,12 @@ class Email extends ViewableData
      */
     public function generatePlainPartFromBody()
     {
+        $plainPart = $this->findPlainPart();
+        if ($plainPart) {
+            $this->getSwiftMessage()->detach($plainPart);
+        }
+        unset($plainPart);
+
         $this->getSwiftMessage()->addPart(
             Convert::xml2raw($this->getBody()),
             'text/plain',

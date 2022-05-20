@@ -1,9 +1,6 @@
 pt:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Mudar password'
-  SilverStripe\Forms\DateField:
-    NOTSET: 'Não inserido'
-    TODAY: Hoje
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escolha)
   SilverStripe\Forms\Form:

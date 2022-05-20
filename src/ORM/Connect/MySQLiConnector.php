@@ -2,9 +2,10 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Core\Config\Config;
 use mysqli;
+use mysqli_sql_exception;
 use mysqli_stmt;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Connector for MySQL using the MySQLi method
@@ -55,7 +56,7 @@ class MySQLiConnector extends DBConnector
      * Retrieve a prepared statement for a given SQL string
      *
      * @param string $sql
-     * @param boolean &$success
+     * @param boolean $success (by reference)
      * @return mysqli_stmt
      */
     public function prepareStatement($sql, &$success)
@@ -63,7 +64,12 @@ class MySQLiConnector extends DBConnector
         // Record last statement for error reporting
         $statement = $this->dbConn->stmt_init();
         $this->setLastStatement($statement);
-        $success = $statement->prepare($sql);
+        try {
+            $success = $statement->prepare($sql);
+        } catch (mysqli_sql_exception $e) {
+            $success = false;
+            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
+        }
         return $statement;
     }
 
@@ -73,21 +79,33 @@ class MySQLiConnector extends DBConnector
         $selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
 
         // Connection charset and collation
-        $connCharset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_charset');
-        $connCollation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_collation');
+        $connCharset = Config::inst()->get(MySQLDatabase::class, 'connection_charset');
+        $connCollation = Config::inst()->get(MySQLDatabase::class, 'connection_collation');
 
         $this->dbConn = mysqli_init();
 
+        // Use native types (MysqlND only)
+        if (defined('MYSQLI_OPT_INT_AND_FLOAT_NATIVE')) {
+            $this->dbConn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
+
+        // The alternative is not ideal, throw a notice-level error
+        } else {
+            user_error(
+                'mysqlnd PHP library is not available, numeric values will be fetched from the DB as strings',
+                E_USER_NOTICE
+            );
+        }
+
         // Set SSL parameters if they exist. All parameters are required.
-        if (array_key_exists('ssl_key', $parameters) &&
-            array_key_exists('ssl_cert', $parameters) &&
-            array_key_exists('ssl_ca', $parameters)) {
+        if (array_key_exists('ssl_key', $parameters ?? []) &&
+            array_key_exists('ssl_cert', $parameters ?? []) &&
+            array_key_exists('ssl_ca', $parameters ?? [])) {
             $this->dbConn->ssl_set(
                 $parameters['ssl_key'],
                 $parameters['ssl_cert'],
                 $parameters['ssl_ca'],
-                dirname($parameters['ssl_ca']),
-                array_key_exists('ssl_cipher', $parameters)
+                dirname($parameters['ssl_ca'] ?? ''),
+                array_key_exists('ssl_cipher', $parameters ?? [])
                     ? $parameters['ssl_cipher']
                     : self::config()->get('ssl_cipher_default')
             );
@@ -178,15 +196,16 @@ class MySQLiConnector extends DBConnector
      * Prepares the list of parameters in preparation for passing to mysqli_stmt_bind_param
      *
      * @param array $parameters List of parameters
-     * @param array &$blobs Out parameter for list of blobs to bind separately
+     * @param array $blobs Out parameter for list of blobs to bind separately (by reference)
      * @return array List of parameters appropriate for mysqli_stmt_bind_param function
      */
     public function parsePreparedParameters($parameters, &$blobs)
     {
         $types = '';
-        $values = array();
-        $blobs = array();
-        for ($index = 0; $index < count($parameters); $index++) {
+        $values = [];
+        $blobs = [];
+        $parametersCount = count($parameters ?? []);
+        for ($index = 0; $index < $parametersCount; $index++) {
             $value = $parameters[$index];
             $phpType = gettype($value);
 
@@ -216,24 +235,22 @@ class MySQLiConnector extends DBConnector
                 case 'blob':
                     $types .= 'b';
                     // Blobs must be sent via send_long_data and set to null here
-                    $blobs[] = array(
+                    $blobs[] = [
                         'index' => $index,
                         'value' => $value
-                    );
+                    ];
                     $value = null;
                     break;
                 case 'array':
                 case 'unknown type':
                 default:
-                    user_error(
-                        "Cannot bind parameter \"$value\" as it is an unsupported type ($phpType)",
-                        E_USER_ERROR
+                    throw new \InvalidArgumentException(
+                        "Cannot bind parameter \"$value\" as it is an unsupported type ($phpType)"
                     );
-                    break;
             }
             $values[] = $value;
         }
-        return array_merge(array($types), $values);
+        return array_merge([$types], $values);
     }
 
     /**
@@ -247,12 +264,13 @@ class MySQLiConnector extends DBConnector
         // Because mysqli_stmt::bind_param arguments must be passed by reference
         // we need to do a bit of hackery
         $boundNames = [];
-        for ($i = 0; $i < count($parameters); $i++) {
+        $parametersCount = count($parameters ?? []);
+        for ($i = 0; $i < $parametersCount; $i++) {
             $boundName = "param$i";
             $$boundName = $parameters[$i];
             $boundNames[] = &$$boundName;
         }
-        call_user_func_array(array($statement, 'bind_param'), $boundNames);
+        $statement->bind_param(...$boundNames);
     }
 
     public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
@@ -293,10 +311,10 @@ class MySQLiConnector extends DBConnector
         $metaData = $statement->result_metadata();
         if ($metaData) {
             return new MySQLStatement($statement, $metaData);
-        } else {
-            // Replicate normal behaviour of ->query() on non-select calls
-            return new MySQLQuery($this, true);
         }
+
+        // Replicate normal behaviour of ->query() on non-select calls
+        return new MySQLQuery($this, true);
     }
 
     public function selectDatabase($name)
@@ -304,9 +322,9 @@ class MySQLiConnector extends DBConnector
         if ($this->dbConn->select_db($name)) {
             $this->databaseName = $name;
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function getSelectedDatabase()

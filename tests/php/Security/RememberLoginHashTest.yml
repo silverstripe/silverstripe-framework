@@ -1,0 +1,7 @@
+'SilverStripe\Security\Member':
+  main:
+    FirstName: Main
+    Surname: Test Subject
+  secondary:
+    FirstName: Secondary
+    Surname: Test Subject

@@ -10,20 +10,10 @@ use SilverStripe\Control\Cookie;
 class CookieTest extends SapphireTest
 {
 
-    private $cookieInst;
-
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        Injector::nest();
         Injector::inst()->registerService(new CookieJar($_COOKIE), 'SilverStripe\\Control\\Cookie_Backend');
-    }
-
-    protected function tearDown()
-    {
-        //restore the cookie_backend
-        Injector::unnest();
-        parent::tearDown();
     }
 
     /**
@@ -35,12 +25,12 @@ class CookieTest extends SapphireTest
         $existingCookies = $_COOKIE;
 
         //set a mock state for the superglobal
-        $_COOKIE = array(
+        $_COOKIE = [
             'cookie1' => 1,
             'cookie2' => 'cookies',
             'cookie3' => 'test',
             'cookie_4' => 'value',
-        );
+        ];
 
         Injector::inst()->unregisterNamedObject('SilverStripe\\Control\\Cookie_Backend');
 
@@ -60,7 +50,7 @@ class CookieTest extends SapphireTest
     /**
      * Check we don't mess with super globals when manipulating cookies
      *
-     * State should be managed sperately to the super global
+     * State should be managed separately to the super global
      */
     public function testCheckSuperglobalsArentTouched()
     {
@@ -86,7 +76,7 @@ class CookieTest extends SapphireTest
 
         $this->assertEquals('testvalue', Cookie::get('test'));
 
-        Injector::inst()->registerService(new CookieJar(array()), 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService(new CookieJar([]), 'SilverStripe\\Control\\Cookie_Backend');
 
         $this->assertEmpty(Cookie::get('test'));
     }
@@ -97,7 +87,7 @@ class CookieTest extends SapphireTest
     public function testGetInst()
     {
 
-        $inst = new CookieJar(array('test' => 'testvalue'));
+        $inst = new CookieJar(['test' => 'testvalue']);
 
         Injector::inst()->registerService($inst, 'SilverStripe\\Control\\Cookie_Backend');
 
@@ -131,9 +121,9 @@ class CookieTest extends SapphireTest
     {
         //load with a cookie
         $cookieJar = new CookieJar(
-            array(
-            'cookieExisting' => 'i woz here',
-            )
+            [
+                'cookieExisting' => 'i woz here',
+            ]
         );
         Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
 
@@ -155,18 +145,18 @@ class CookieTest extends SapphireTest
 
         //check we can get all cookies
         $this->assertEquals(
-            array(
-            'cookieExisting' => 'i woz changed',
-            'cookieNew' => 'i am new',
-            ),
+            [
+                'cookieExisting' => 'i woz changed',
+                'cookieNew' => 'i am new',
+            ],
             Cookie::get_all()
         );
 
         //check we can get all original cookies
         $this->assertEquals(
-            array(
-            'cookieExisting' => 'i woz here',
-            ),
+            [
+                'cookieExisting' => 'i woz here',
+            ],
             Cookie::get_all(false)
         );
     }
@@ -178,9 +168,9 @@ class CookieTest extends SapphireTest
     {
         //load an existing cookie
         $cookieJar = new CookieJar(
-            array(
-            'cookieExisting' => 'i woz here',
-            )
+            [
+                'cookieExisting' => 'i woz here',
+            ]
         );
         Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
 
@@ -200,7 +190,7 @@ class CookieTest extends SapphireTest
         //check we can add a new cookie and remove it and it doesn't leave any phantom values
         Cookie::set('newCookie', 'i am new');
 
-        //check it's set by not recieved
+        //check it's set by not received
         $this->assertEquals('i am new', Cookie::get('newCookie'));
         $this->assertEmpty(Cookie::get('newCookie', false));
 

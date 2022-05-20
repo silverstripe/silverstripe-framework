@@ -2,11 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTP;
-use SilverStripe\Forms\TextField;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\HTMLValue;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
@@ -28,13 +27,13 @@ class DBHTMLText extends DBText
 {
     private static $escape_type = 'xml';
 
-    private static $casting = array(
+    private static $casting = [
         "AbsoluteLinks" => "HTMLFragment",
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
         "LowerCase" => "HTMLFragment",
         "UpperCase" => "HTMLFragment",
-    );
+    ];
 
     /**
      * Enable shortcode parsing on this field
@@ -91,7 +90,7 @@ class DBHTMLText extends DBText
     public function setWhitelist($whitelist)
     {
         if (!is_array($whitelist)) {
-            $whitelist = preg_split('/\s*,\s*/', $whitelist);
+            $whitelist = preg_split('/\s*,\s*/', $whitelist ?? '');
         }
         $this->whitelist = $whitelist;
         return $this;
@@ -114,13 +113,13 @@ class DBHTMLText extends DBText
      *
      * @return $this
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
-        if (array_key_exists("shortcodes", $options)) {
+        if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
         }
 
-        if (array_key_exists("whitelist", $options)) {
+        if (array_key_exists("whitelist", $options ?? [])) {
             $this->setWhitelist($options['whitelist']);
         }
 
@@ -131,9 +130,8 @@ class DBHTMLText extends DBText
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**
@@ -160,7 +158,7 @@ class DBHTMLText extends DBText
     {
         return sprintf(
             '<![CDATA[%s]]>',
-            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW())
+            str_replace(']]>', ']]]]><![CDATA[>', $this->RAW() ?? '')
         );
     }
 
@@ -180,17 +178,17 @@ class DBHTMLText extends DBText
         if ($this->whitelist) {
             $dom = HTMLValue::create($value);
 
-            $query = array();
+            $query = [];
             $textFilter = ' | //body/text()';
             foreach ($this->whitelist as $tag) {
                 if ($tag === 'text()') {
                     $textFilter = ''; // Disable text filter if allowed
                 } else {
-                    $query[] = 'not(self::'.$tag.')';
+                    $query[] = 'not(self::' . $tag . ')';
                 }
             }
 
-            foreach ($dom->query('//body//*['.implode(' and ', $query).']'.$textFilter) as $el) {
+            foreach ($dom->query('//body//*[' . implode(' and ', $query) . ']' . $textFilter) as $el) {
                 if ($el->parentNode) {
                     $el->parentNode->removeChild($el);
                 }
@@ -203,7 +201,7 @@ class DBHTMLText extends DBText
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new HTMLEditorField($this->name, $title);
+        return HTMLEditorField::create($this->name, $title);
     }
 
     public function scaffoldSearchField($title = null)
@@ -219,19 +217,19 @@ class DBHTMLText extends DBText
     public function Plain()
     {
         // Preserve line breaks
-        $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $this->RAW());
+        $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $this->RAW() ?? '');
 
         // Convert paragraph breaks to multi-lines
-        $text = preg_replace('/\<\/p\>/i', "\n\n", $text);
+        $text = preg_replace('/\<\/p\>/i', "\n\n", $text ?? '');
 
         // Strip out HTML tags
-        $text = strip_tags($text);
+        $text = strip_tags($text ?? '');
 
         // Implode >3 consecutive linebreaks into 2
-        $text = preg_replace('~(\R){2,}~', "\n\n", $text);
+        $text = preg_replace('~(\R){2,}~u', "\n\n", $text ?? '');
 
         // Decode HTML entities back to plain text
-        return trim(Convert::xml2raw($text));
+        return trim(Convert::xml2raw($text) ?? '');
     }
 
     public function getSchemaValue()
@@ -249,6 +247,6 @@ class DBHTMLText extends DBText
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
-        return $value || (is_string($value) && strlen($value));
+        return $value || (is_string($value) && strlen($value ?? ''));
     }
 }

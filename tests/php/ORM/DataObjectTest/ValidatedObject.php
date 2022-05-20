@@ -10,9 +10,9 @@ class ValidatedObject extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_ValidatedObject';
 
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar(50)'
-    );
+    ];
 
     public function validate()
     {

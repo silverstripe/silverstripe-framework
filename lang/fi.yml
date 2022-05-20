@@ -19,8 +19,6 @@ fi:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
     REQUEST_ABORTED: 'Pyyntö keskeytetty'
-  SilverStripe\Core\Manifest\VersionProvider:
-    VERSIONUNKNOWN: Tuntematon
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ei
     YESANSWER: Kyllä
@@ -34,8 +32,6 @@ fi:
     LOGGED_IN_ERROR: 'Sinun täytyy olla kirjautuneena vaihtaaksesi salasanasi.'
     MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
-  SilverStripe\Forms\CurrencyField:
-    CURRENCYSYMBOL: $
   SilverStripe\Forms\DateField:
     NOTSET: 'ei asetettu'
     TODAY: tänään
@@ -48,7 +44,6 @@ fi:
     VALIDDATETIMEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava asetettuun päivämäärän ja ajan minimiarvoon  ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Valitse)
-    CHOOSE_MODEL: '(Valitse {name})'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -78,6 +73,7 @@ fi:
     LinkExisting: 'Linkitä olemassaoleva'
     NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
+    OpenFilter: 'Avaa haku ja suodin'
     PRINTEDAT: Tulostettu
     PRINTEDBY: Tulostaja
     PlaceHolder: 'Etsi {type}'
@@ -86,7 +82,6 @@ fi:
     RelationSearch: Relaatiohaku
     ResetFilter: Nollaa
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    DELETE_DESCRIPTION: Poista
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     EditPermissionsFailure: 'Ei oikeuksia purkaa linkitystä tietueeseen'
@@ -98,12 +93,19 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
-  SilverStripe\Forms\GridField\GridFieldEditButton_ss:
+  SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Muokkaa
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Hae "{name}"'
+    SearchFormFaliure: 'Hakulomaketta ei voitu luoda'
+  SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
+    UnlinkSelfFailure: 'Et voi siirtää itseäsi pois tästä ryhmästä: menettäisit pääkäyttäjän oikeudet'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: /
     Page: Sivu
     View: Näytä
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Näkymä
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -150,6 +152,8 @@ fi:
       other: '{count} vuotta'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Yhtään
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Liian monta samaan liittyvää objektia: oletuskenttä käytössä'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Liian monta lapsiobjektia ({count}}'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -200,6 +204,7 @@ fi:
     many_many_Members: Jäsenet
   SilverStripe\Security\LoginAttempt:
     Email: Sähköpostiosoite
+    EmailHashed: 'Sähköpostiosoite (tiivistetty)'
     IP: IP-osoite
     PLURALNAME: Kirjautumisyritykset
     PLURALS:
@@ -227,7 +232,6 @@ fi:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     FIRSTNAME: Etunimi
     INTERFACELANG: 'Käyttöliittymän kieli'
-    KEEPMESIGNEDIN: 'Pidä minut kirjautuneena'
     LOGGEDINAS: 'Olet kirjautuneena nimellä {name}.'
     NEWPASSWORD: 'Uusi salasana'
     PASSWORD: Salasana
@@ -236,13 +240,12 @@ fi:
     PLURALS:
       one: Käyttäjä
       other: '{count} Käyttäjää'
-    REMEMBERME: 'Muista minut? ({days} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
+    VALIDATIONADMINLOSTACCESS: 'Ylläpitäjäryhmää ei voi poistaa profiilistasi'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
-    WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'
     belongs_many_many_Groups: Ryhmät
     db_Locale: 'Käyttöliittymän kieli'
@@ -257,6 +260,8 @@ fi:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Antamasi tiedot eivät näytä oikeilta. Yritä uudelleen.'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    AUTHENTICATORNAME: 'Sähköpostiosoite & salasana'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Käyttäjän salasanat'
     PLURALS:
@@ -320,5 +325,5 @@ fi:
     NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle niin pääset eteenpäin.'
     NOTERESETLINKINVALID: '<p>Salasanan palautuslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
-    PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'
+    PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
+    PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'

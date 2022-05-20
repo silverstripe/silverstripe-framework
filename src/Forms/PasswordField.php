@@ -20,6 +20,12 @@ class PasswordField extends TextField
     protected $inputType = 'password';
 
     /**
+     * If true, the field can accept a value attribute, e.g. from posted form data
+     * @var bool
+     */
+    protected $allowValuePostback = false;
+
+    /**
      * Returns an input field.
      *
      * @param string $name
@@ -40,11 +46,34 @@ class PasswordField extends TextField
     }
 
     /**
+     * @param bool $bool
+     * @return $this
+     */
+    public function setAllowValuePostback($bool)
+    {
+        $this->allowValuePostback = (bool) $bool;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllowValuePostback()
+    {
+        return $this->allowValuePostback;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getAttributes()
     {
-        $attributes = array();
+        $attributes = [];
+
+        if (!$this->getAllowValuePostback()) {
+            $attributes['value'] = null;
+        }
 
         $autocomplete = $this->config()->get('autocomplete');
 

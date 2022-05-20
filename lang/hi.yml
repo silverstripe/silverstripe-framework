@@ -11,4 +11,4 @@ hi:
     ERRORNOTADMIN: 'वह उपयोगकर्ता एक व्यवस्थापक नहीं है.'
   SilverStripe\Security\Group:
     RolesAddEditLink: 'भूमिकाओं का प्रबंधन करे '
-    has_many_Permissions: 'अनुमतियाँ'
+    has_many_Permissions: अनुमतियाँ

@@ -1,5 +1,8 @@
+---
 title: Indexes
 summary: Add Indexes to your Data Model to optimize database queries.
+icon: database
+---
 
 # Indexes
 Indexes are a great way to improve performance in your application, especially as it grows. By adding indexes to your 
@@ -9,12 +12,12 @@ The addition of an indexes should be carefully evaluated as they can also increa
 `UPDATE`/`INSERT` and `DELETE`. An index on a column whose data is non unique will actually cost you performance.
 E.g. In most cases an index on `boolean` status flag, or `ENUM` state will not increase query performance.
 
-It's important to find the right balance to achieve fast queries using the optimal set of indexes; For SilverStripe 
+It's important to find the right balance to achieve fast queries using the optimal set of indexes; For Silverstripe CMS 
 applications it's a good practice to: 
 - add indexes on columns which are frequently used in `filter`, `where` or `orderBy` statements
 - for these, only include indexes for columns which are the most restrictive (return the least number of rows)
 
-The SilverStripe framework already places certain indexes for you by default:
+The Silverstripe CMS framework already places certain indexes for you by default:
 - The primary key for each model has a `PRIMARY KEY` unique index
 - The `ClassName` column if your model inherits from `DataObject`
 - All relationships defined in the model have indexes for their `has_one` entity (for `many_many` relationships 
@@ -25,20 +28,19 @@ Indexes are represented on a `DataObject` through the `DataObject::$indexes` arr
 descriptor. There are several supported notations:
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyObject extends DataObject 
-    {
-
-        private static $indexes = [
-            '<column-name>' => true,
-            '<index-name>' => [
-                'type' => '<type>', 
-                'columns' => ['<column-name>', '<other-column-name>'],
-            ],
-            '<index-name>' => ['<column-name>', '<other-column-name>'],
-        ];
-    }
+class MyObject extends DataObject 
+{
+    private static $indexes = [
+        '<column-name>' => true,
+        '<index-name>' => [
+            'type' => '<type>', 
+            'columns' => ['<column-name>', '<other-column-name>'],
+        ],
+        '<index-name>' => ['<column-name>', '<other-column-name>'],
+    ];
+}
 ```
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
@@ -52,29 +54,28 @@ support the following:
  * `unique`: Index plus uniqueness constraint on the value
  * `fulltext`: Fulltext content index
 
-**mysite/code/MyTestObject.php**
+**app/src/MyTestObject.php**
 
 ```php
-    use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObject;
 
-    class MyTestObject extends DataObject 
-    {
+class MyTestObject extends DataObject 
+{
+    private static $db = [
+        'MyField' => 'Varchar',
+        'MyOtherField' => 'Varchar',
+    ];
 
-        private static $db = [
-            'MyField' => 'Varchar',
-            'MyOtherField' => 'Varchar',
-        ];
-
-        private static $indexes = [
-            'MyIndexName' => ['MyField', 'MyOtherField'],
-        ];
-    }
+    private static $indexes = [
+        'MyIndexName' => ['MyField', 'MyOtherField'],
+    ];
+}
 ```
 
-<div class="alert" markdown="1">
-Please note that if you have previously used the removed `value` key to define an index's contents, SilverStripe will
+[alert]
+Please note that if you have previously used the removed `value` key to define an index's contents, Silverstripe CMS will
 now throw an error. Use `columns` instead.
-</div>
+[/alert]
 
 ## Complex/Composite Indexes
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 
@@ -94,6 +95,9 @@ other columns. If this is indexed, smaller and reasonably unique it might be fas
 ## Index Creation/Destruction
 Indexes are generated and removed automatically during a `dev/build`. Caution if you're working with large tables and 
 modify an index as the next `dev/build` will `DROP` the index, and then `ADD` it. 
+
+As of 3.7.0 `default_sort` fields will automatically become database indexes as this provides significant performance
+benefits.
 
 ## API Documentation
 

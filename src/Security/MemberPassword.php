@@ -15,11 +15,11 @@ use SilverStripe\ORM\DataObject;
  */
 class MemberPassword extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Password' => 'Varchar(160)',
         'Salt' => 'Varchar(50)',
         'PasswordEncryption' => 'Varchar(50)',
-    );
+    ];
 
     private static $has_one = [
         'Member' => Member::class,
@@ -53,6 +53,6 @@ class MemberPassword extends DataObject
     public function checkPassword($password)
     {
         $encryptor = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
-        return $encryptor->check($this->Password, $password, $this->Salt, $this->Member());
+        return $encryptor->check($this->Password ?? '', $password, $this->Salt, $this->Member());
     }
 }

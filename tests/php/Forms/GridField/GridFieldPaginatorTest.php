@@ -43,13 +43,13 @@ class GridFieldPaginatorTest extends FunctionalTest
     /**
      * @var array
      */
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Team::class,
         Player::class,
         Cheerleader::class,
-    );
+    ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->list = new DataList(Team::class);
@@ -59,7 +59,7 @@ class GridFieldPaginatorTest extends FunctionalTest
             new GridFieldPageCount('toolbar-header-right')
         );
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList([$this->gridField]), new FieldList());
     }
 
     public function testThereIsPaginatorWhenMoreThanOnePage()
@@ -67,10 +67,10 @@ class GridFieldPaginatorTest extends FunctionalTest
         $fieldHolder = $this->gridField->FieldHolder();
         $content = new CSSContentParser($fieldHolder);
         // Check that there is paginator render into the footer
-        $this->assertEquals(1, count($content->getBySelector('.datagrid-pagination')));
+        $this->assertEquals(1, count($content->getBySelector('.datagrid-pagination') ?? []));
 
         // Check that the header and footer both contains a page count
-        $this->assertEquals(2, count($content->getBySelector('.pagination-records-number')));
+        $this->assertEquals(2, count($content->getBySelector('.pagination-records-number') ?? []));
     }
 
     public function testThereIsNoPaginatorWhenOnlyOnePage()
@@ -83,10 +83,10 @@ class GridFieldPaginatorTest extends FunctionalTest
         $content = new CSSContentParser($fieldHolder);
 
         // Check that there is no paginator render into the footer
-        $this->assertEquals(0, count($content->getBySelector('.datagrid-pagination')));
+        $this->assertEquals(0, count($content->getBySelector('.datagrid-pagination') ?? []));
 
         // Check that there is still 'View 1 - 4 of 4' part on the left of the paginator
-        $this->assertEquals(2, count($content->getBySelector('.pagination-records-number')));
+        $this->assertEquals(2, count($content->getBySelector('.pagination-records-number') ?? []));
     }
 
     public function testUnlimitedRowCount()

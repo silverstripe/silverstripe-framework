@@ -9,7 +9,7 @@ class Article extends DataObject implements TestOnly
 {
     private static $table_name = 'CheckboxFieldTest_Article';
 
-    private static $db = array(
+    private static $db = [
         'IsChecked' => 'Boolean'
-    );
+    ];
 }

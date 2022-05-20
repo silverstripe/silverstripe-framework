@@ -30,7 +30,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     {
         $this->controller = $controller;
 
-        $this->authenticator_class = $authenticatorClass;
+        $this->setAuthenticatorClass($authenticatorClass);
 
         $fields = $this->getFormFields();
 
@@ -48,7 +48,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     {
         // Set default fields
         $fields = FieldList::create([
-            HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
+            HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         ]);
@@ -58,15 +58,20 @@ class CMSMemberLoginForm extends MemberLoginForm
                 'Password',
                 CheckboxField::create(
                     "Remember",
-                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
-                )->setAttribute(
-                    'title',
                     _t(
-                        'SilverStripe\\Security\\Member.REMEMBERME',
-                        "Remember me next time? (for {count} days on this device)",
+                        'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN',
+                        'Keep me signed in for {count} days',
                         [ 'count' => RememberLoginHash::config()->uninherited('token_expiry_days') ]
                     )
                 )
+                    ->setAttribute(
+                        'title',
+                        _t(
+                            'SilverStripe\\Security\\Member.KEEP_ME_SIGNED_IN_TOOLTIP',
+                            'You will remain authenticated on this device for {count} days. Only use this feature if you trust the device you are using.',
+                            ['count' => RememberLoginHash::config()->uninherited('token_expiry_days')]
+                        )
+                    )
             );
         }
 
@@ -81,19 +86,19 @@ class CMSMemberLoginForm extends MemberLoginForm
         // Determine returnurl to redirect to parent page
         $logoutLink = $this->getExternalLink('logout');
         if ($returnURL = $this->controller->getRequest()->requestVar('BackURL')) {
-            $logoutLink = Controller::join_links($logoutLink, '?BackURL=' . urlencode($returnURL));
+            $logoutLink = Controller::join_links($logoutLink, '?BackURL=' . urlencode($returnURL ?? ''));
         }
 
         // Make actions
         $actions = FieldList::create([
-            FormAction::create('doLogin', _t(__CLASS__.'.BUTTONLOGIN', "Let me back in"))
+            FormAction::create('doLogin', _t(__CLASS__ . '.BUTTONLOGIN', "Let me back in"))
                 ->addExtraClass('btn-primary'),
             LiteralField::create(
                 'doLogout',
                 sprintf(
                     '<a class="btn btn-secondary" href="%s" target="_top">%s</a>',
                     Convert::raw2att($logoutLink),
-                    _t(__CLASS__.'.BUTTONLOGOUT', "Log out")
+                    _t(__CLASS__ . '.BUTTONLOGOUT', "Log out")
                 )
             ),
             LiteralField::create(
@@ -101,7 +106,7 @@ class CMSMemberLoginForm extends MemberLoginForm
                 sprintf(
                     '<a href="%s" class="cms-security__container__form__forgotPassword btn btn-secondary" target="_top">%s</a>',
                     $this->getExternalLink('lostpassword'),
-                    _t(__CLASS__.'.BUTTONFORGOTPASSWORD', "Forgot password")
+                    _t(__CLASS__ . '.BUTTONFORGOTPASSWORD', "Forgot password")
                 )
             )
         ]);
@@ -125,6 +130,6 @@ class CMSMemberLoginForm extends MemberLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(__CLASS__.'.AUTHENTICATORNAME', 'CMS Member Login Form');
+        return _t(__CLASS__ . '.AUTHENTICATORNAME', 'CMS Member Login Form');
     }
 }

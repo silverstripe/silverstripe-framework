@@ -60,7 +60,7 @@ class Debug
     public static function caller()
     {
         $bt = debug_backtrace();
-        $caller = isset($bt[2]) ? $bt[2] : array();
+        $caller = isset($bt[2]) ? $bt[2] : [];
         $caller['line'] = $bt[1]['line'];
         $caller['file'] = $bt[1]['file'];
         if (!isset($caller['class'])) {
@@ -179,17 +179,17 @@ class Debug
         $accepted = $request->getAcceptMimetypes(false);
 
         // Explicit opt in
-        if (in_array('text/html', $accepted)) {
+        if (in_array('text/html', $accepted ?? [])) {
             return true;
         };
 
         // Implicit opt-out
-        if (in_array('application/json', $accepted)) {
+        if (in_array('application/json', $accepted ?? [])) {
             return false;
         }
 
         // Fallback to wildcard comparison
-        if (in_array('*/*', $accepted)) {
+        if (in_array('*/*', $accepted ?? [])) {
             return true;
         }
         return false;
@@ -221,11 +221,11 @@ class Debug
 				WHERE "Permission"."Code" = ?
 				AND "Permission"."Type" = ?
 				AND "Group_Members"."MemberID" = ?',
-                array(
+                [
                     'ADMIN', // Code
                     Permission::GRANT_PERMISSION, // Type
                     $memberID // MemberID
-                )
+                ]
             )->value();
 
             if ($permission) {

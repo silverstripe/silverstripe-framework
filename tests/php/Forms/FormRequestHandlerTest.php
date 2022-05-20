@@ -9,8 +9,10 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\FormRequestHandler;
+use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\Tests\FormRequestHandlerTest\TestForm;
 use SilverStripe\Forms\Tests\FormRequestHandlerTest\TestFormRequestHandler;
+use SilverStripe\Forms\TextField;
 
 /**
  * @skipUpgrade

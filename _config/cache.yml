@@ -15,10 +15,34 @@ SilverStripe\Core\Injector\Injector:
       namespace: "cacheblock"
       defaultLifetime: 600
   Psr\SimpleCache\CacheInterface.VersionProvider_composerlock:
-      factory: SilverStripe\Core\Cache\CacheFactory
-      constructor:
-        namespace: "VersionProvider_composerlock"
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "VersionProvider_composerlock"
+      disable-container: true
   Psr\SimpleCache\CacheInterface.RateLimiter:
-      factory: SilverStripe\Core\Cache\CacheFactory
-      constructor:
-        namespace: 'ratelimiter'
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'ratelimiter'
+      disable-container: true
+  Psr\SimpleCache\CacheInterface.InheritedPermissions:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "InheritedPermissions"
+      disable-container: true
+  Psr\SimpleCache\CacheInterface.ThemeResourceLoader:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'ThemeResourceLoader'
+  Psr\SimpleCache\CacheInterface.DatabaseAdapterRegistry:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'DatabaseAdapterRegistry'
+  Psr\SimpleCache\CacheInterface.EmbedShortcodeProvider:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'EmbedShortcodeProvider'
+      defaultLifetime: 86400
+  Psr\SimpleCache\CacheInterface.VersionProvider:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: 'VersionProvider'

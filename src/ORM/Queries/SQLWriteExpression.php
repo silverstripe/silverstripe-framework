@@ -20,27 +20,27 @@ interface SQLWriteExpression
      * <code>
      *
      * // Basic assignments
-     * $query->addAssignments(array(
+     * $query->addAssignments([
      *      '"Object"."Title"' => 'Bob',
      *      '"Object"."Description"' => 'Bob was here'
-     * ))
+     * ])
      *
      * // Parameterised assignments
-     * $query->addAssignments(array(
-     *      '"Object"."Title"' => array('?' => 'Bob')),
-     *      '"Object"."Description"' => array('?' => null))
-     * ))
+     * $query->addAssignments([
+     *      '"Object"."Title"' => ['?' => 'Bob'],
+     *      '"Object"."Description"' => ['?' => null]
+     * ])
      *
      * // Complex parameters
-     * $query->addAssignments(array(
-     *      '"Object"."Score"' => array('MAX(?,?)' => array(1, 3))
-     * ));
+     * $query->addAssignments([
+     *      '"Object"."Score"' => ['MAX(?,?)' => [1, 3]]
+     * ]);
      *
-     * // Assigment of literal SQL for a field. The empty array is
-     * // important to denote the zero-number paramater list
-     * $query->addAssignments(array(
-     *      '"Object"."Score"' => array('NOW()' => array())
-     * ));
+     * // Assignment of literal SQL for a field. The empty array is
+     * // important to denote the zero-number parameter list
+     * $query->addAssignments([
+     *      '"Object"."Score"' => ['NOW()' => []]
+     * ]);
      *
      * </code>
      *
@@ -66,9 +66,9 @@ interface SQLWriteExpression
      *
      * For multi-row objects returns assignments for the current row.
      *
-     * @return array List of assigments. The key of this array will be the
+     * @return array List of assignments. The key of this array will be the
      * column to assign, and the value a parameterised array in the format
-     * array('SQL' => array(parameters));
+     * ['SQL' => [parameters]];
      */
     public function getAssignments();
 
@@ -84,10 +84,10 @@ interface SQLWriteExpression
      * $query->assign('"Object"."Description"', 'lorum ipsum'));
      *
      * // Single parameter
-     * $query->assign('"Object"."Title"', array('?' => 'Bob'));
+     * $query->assign('"Object"."Title"', ['?' => 'Bob']);
      *
      * // Complex parameters
-     * $query->assign('"Object"."Score"', array('MAX(?,?)' => array(1, 3));
+     * $query->assign('"Object"."Score"', ['MAX(?,?)' => [1, 3]]);
      * </code>
      *
      * @param string $field The field name to update

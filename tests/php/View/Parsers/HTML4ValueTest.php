@@ -42,18 +42,18 @@ class HTML4ValueTest extends SapphireTest
     {
         $value = new HTML4Value();
 
-        $invalid = array(
+        $invalid = [
             '<p><div><a href="test-link"></p></div>',
             '<html><div><a href="test-link"></a></a></html_>',
             '""\'\'\'"""\'""<<<>/</<htmlbody><a href="test-link"<<>'
-        );
+        ];
 
         foreach ($invalid as $input) {
             $value->setContent($input);
             $this->assertEquals(
                 'test-link',
                 $value->getElementsByTagName('a')->item(0)->getAttribute('href'),
-                'Link data can be extraced from malformed HTML'
+                'Link data can be extracted from malformed HTML'
             );
         }
     }
@@ -79,5 +79,20 @@ class HTML4ValueTest extends SapphireTest
 
         $value->setContent('<a href="&quot;"></a>');
         $this->assertEquals('<a href="&quot;"></a>', $value->getContent(), "'\"' character is escaped");
+    }
+
+    public function testGetContent()
+    {
+        $value = new HTML4Value();
+
+        $value->setContent('<p>This is valid</p>');
+        $this->assertEquals('<p>This is valid</p>', $value->getContent(), "Valid content is returned");
+
+        $value->setContent('<p?< This is not really valid but it will get parsed into something valid');
+        // can sometimes get a this state where HTMLValue->valid is false
+        // for instance if a content editor saves something really weird in a LiteralField
+        // we can manually get to this state via ->setInvalid()
+        $value->setInvalid();
+        $this->assertEquals('', $value->getContent(), "Blank string is returned when invalid");
     }
 }

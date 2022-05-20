@@ -6,7 +6,7 @@ class HasManyGrandChild extends HasManyChild
 {
     private static $table_name = 'SearchFilterApplyRelationTest_HasManyGrandChild';
 
-    private static $has_one = array(
+    private static $has_one = [
         "SearchFilterApplyRelationTest_DO" => TestObject::class,
-    );
+    ];
 }

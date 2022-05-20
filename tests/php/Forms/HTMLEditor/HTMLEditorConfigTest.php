@@ -18,7 +18,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 class HTMLEditorConfigTest extends SapphireTest
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,23 +29,23 @@ class HTMLEditorConfigTest extends SapphireTest
     {
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1');
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByArray()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1', 'plugin2'));
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertContains('plugin2', array_keys($c->getPlugins()));
+        $c->enablePlugins(['plugin1', 'plugin2']);
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByMultipleStringParameters()
     {
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1', 'plugin2');
-        $this->assertContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testEnablePluginsByArrayWithPaths()
@@ -60,42 +60,42 @@ class HTMLEditorConfigTest extends SapphireTest
         $c->setOption('language', 'es');
         $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
         $c->enablePlugins(
-            array(
+            [
                 'plugin1' => 'mypath/plugin1.js',
                 'plugin2' => '/anotherbase/mypath/plugin2.js',
                 'plugin3' => 'https://www.google.com/plugin.js',
                 'plugin4' => null,
                 'plugin5' => null,
-            )
+            ]
         );
         $attributes = $c->getAttributes();
-        $config = Convert::json2array($attributes['data-config']);
+        $config = json_decode($attributes['data-config'] ?? '', true);
         $plugins = $config['external_plugins'];
         $this->assertNotEmpty($plugins);
 
         // Plugin specified via relative url
-        $this->assertContains('plugin1', array_keys($plugins));
+        $this->assertContains('plugin1', array_keys($plugins ?? []));
         $this->assertEquals(
             'http://mysite.com/subdir/mypath/plugin1.js',
             $plugins['plugin1']
         );
 
         // Plugin specified via root-relative url
-        $this->assertContains('plugin2', array_keys($plugins));
+        $this->assertContains('plugin2', array_keys($plugins ?? []));
         $this->assertEquals(
             'http://mysite.com/anotherbase/mypath/plugin2.js',
             $plugins['plugin2']
         );
 
         // Plugin specified with absolute url
-        $this->assertContains('plugin3', array_keys($plugins));
+        $this->assertContains('plugin3', array_keys($plugins ?? []));
         $this->assertEquals(
             'https://www.google.com/plugin.js',
             $plugins['plugin3']
         );
 
         // Plugin specified with standard location
-        $this->assertContains('plugin4', array_keys($plugins));
+        $this->assertContains('plugin4', array_keys($plugins ?? []));
         $this->assertEquals(
             '/subdir/test/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
             $plugins['plugin4']
@@ -110,16 +110,16 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1');
         $c->disablePlugins('plugin1');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByArray()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1', 'plugin2'));
-        $c->disablePlugins(array('plugin1', 'plugin2'));
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins()));
+        $c->enablePlugins(['plugin1', 'plugin2']);
+        $c->disablePlugins(['plugin1', 'plugin2']);
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByMultipleStringParameters()
@@ -127,18 +127,18 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->enablePlugins('plugin1', 'plugin2');
         $c->disablePlugins('plugin1', 'plugin2');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins()));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins()));
+        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
     }
 
     public function testDisablePluginsByArrayWithPaths()
     {
         $c = new TinyMCEConfig();
-        $c->enablePlugins(array('plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2'));
-        $c->disablePlugins(array('plugin1', 'plugin2'));
+        $c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
+        $c->disablePlugins(['plugin1', 'plugin2']);
         $plugins = $c->getPlugins();
-        $this->assertNotContains('plugin1', array_keys($plugins));
-        $this->assertNotContains('plugin2', array_keys($plugins));
+        $this->assertNotContains('plugin1', array_keys($plugins ?? []));
+        $this->assertNotContains('plugin2', array_keys($plugins ?? []));
     }
 
     public function testRequireJSIncludesAllConfigs()
@@ -161,7 +161,7 @@ class HTMLEditorConfigTest extends SapphireTest
         try {
             $config = new TinyMCEConfig();
             $this->expectException(Exception::class);
-            $this->expectExceptionMessageRegExp('/module is not installed/');
+            $this->expectExceptionMessageMatches('/module is not installed/');
             $config->getScriptURL();
         } finally {
             ModuleLoader::inst()->popManifest();

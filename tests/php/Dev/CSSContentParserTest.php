@@ -39,15 +39,25 @@ HTML
         );
 
         $result = $parser->getBySelector('div.one');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
         $result = $parser->getBySelector('div.two');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
         $result = $parser->getBySelector('div.three');
-        $this->assertEquals("A", $result[0]['id'].'');
+        $this->assertEquals("A", $result[0]['id'] . '');
 
         $result = $parser->getBySelector('div#A p.other');
         $this->assertEquals("result", $result[0] . '');
         $result = $parser->getBySelector('#A .other');
         $this->assertEquals("result", $result[0] . '');
+    }
+
+    public function testXmlEntitiesDisabled()
+    {
+        // CSSContentParser uses simplexml to parse html
+        // Ensure XML entities are not substituted in to prevent XXE attacks
+        $xml = '<!DOCTYPE html [<!ENTITY myentity "World">]><html><div>Hello &myentity;</div></html>';
+        $parser = new CSSContentParser($xml);
+        $div = $parser->getBySelector('div')[0]->asXML();
+        $this->assertEquals('<div>Hello &amp;myentity;</div>', $div);
     }
 }

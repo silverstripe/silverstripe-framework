@@ -1,9 +1,14 @@
+---
+title: CSS coding conventions
+summary: The CSS style guidelines we follow in our open source software
+iconBrand: css3
+---
 # CSS and SCSS Coding Conventions
 
 ## Overview
 
 This document provides guidelines for code formatting to developers contributing
-to SilverStripe. It applies to all CSS/Sass files in the `framework/` and `cms/` modules.
+to SilverStripe. It applies to all CSS/Sass files in the SilverStripe core modules.
 
 In 2016, SilverStripe started a rewrite of the styles of the CMS interface.
 This rewrite is work-in-progress so code written prior to this
@@ -16,20 +21,24 @@ Check our [requirements](/getting_started/server_requirements) documentation.
 ## Tools and libraries
 
 Styles are written in the [SCSS language](http://sass-lang.com/).
-We use [Bootstrap 4](http://v4-alpha.getbootstrap.com/) styles where possible.
+We use [Bootstrap 4](https://getbootstrap.com/) styles where possible.
 
 ## Conventions
 
 We follow the [AirBnB CSS Conventions](https://github.com/airbnb/css)
 and the [BEM](http://getbem.com/) methodology (block-element-modifier).
-File naming and style include ordering is inspired by
-[ITCSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/).
+
+Because we use [Bootstrap 4](https://getbootstrap.com/) which 
+does not follow [BEM](http://getbem.com/) naming convention there will be 
+a lot of places where class names voilate BEM. 
+However, please note that they are not a indicator of how to name classes. 
+Use BEM conventions where possible.
 
 ## Linting
 
-We use [sass-lint](hhttps://github.com/sasstools/sass-lint) to ensure all new SCSS
+We use [sass-lint](https://github.com/sasstools/sass-lint) to ensure all new SCSS
 written complies with the rules below. It will be provided as an npm dev dependency.
-Ther eare also quite a few [sass-lint IDE integrations]https://github.com/sasstools/sass-lint#ide-integration) 
+There are also quite a few [sass-lint IDE integrations](https://github.com/sasstools/sass-lint#ide-integration) 
 which highlight any linting errors right in your code.
 
 We strongly recommend installing one of these into the editor of your choice, to
@@ -51,8 +60,6 @@ via `yarn run lint`.
   For example, a `components/FormAction` component has styles named `FormAction.scss`).
 - The `client/src/styles` folder contains base styles (reset, typography, variables)
   as well as layout-related styles which arranges components together.
-  Naming and conventions in this folder follow
-  [ITCSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/).
 
 ## Icons and Graphics
 
@@ -70,7 +77,7 @@ consider porting them over into the new structure. Otherwise, follow these conve
 - Class naming: Use the `cms-` class prefix for major components in the cms interface,
   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
 - Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
-  to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
+  to highlight a specific component. See the [jQuery UI Theming API](https://api.jqueryui.com/category/theming/) for a full list.
 
 ## Related
 

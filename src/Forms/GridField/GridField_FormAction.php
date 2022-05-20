@@ -3,8 +3,10 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\GridField\FormAction\StateStore;
 
 /**
  * This class is the base class when you want to have an action that alters the state of the
@@ -12,6 +14,11 @@ use SilverStripe\Forms\FormAction;
  */
 class GridField_FormAction extends FormAction
 {
+    /**
+     * A common string prefix for keys generated to store form action "state" against
+     */
+    const STATE_KEY_PREFIX = 'gf_';
+
     /**
      * @var GridField
      */
@@ -25,7 +32,7 @@ class GridField_FormAction extends FormAction
     /**
      * @var array
      */
-    protected $args = array();
+    protected $args = [];
 
     /**
      * @var string
@@ -62,7 +69,7 @@ class GridField_FormAction extends FormAction
      */
     public function nameEncode($value)
     {
-        return (string)preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $value);
+        return (string)preg_replace_callback('/[^\w]/', [$this, '_nameEncode'], $value ?? '');
     }
 
     /**
@@ -72,7 +79,7 @@ class GridField_FormAction extends FormAction
      */
     public function _nameEncode($match)
     {
-        return '%' . dechex(ord($match[0]));
+        return '%' . dechex(ord($match[0] ?? ''));
     }
 
     /**
@@ -80,28 +87,35 @@ class GridField_FormAction extends FormAction
      */
     public function getAttributes()
     {
-        // Store state in session, and pass ID to client side.
-        $state = array(
+        // Determine the state that goes with this action
+        $state = [
             'grid' => $this->getNameFromParent(),
             'actionName' => $this->actionName,
             'args' => $this->args,
-        );
+        ];
 
-        // Ensure $id doesn't contain only numeric characters
-        $id = 'gf_' . substr(md5(serialize($state)), 0, 8);
+        // Generate a key and attach it to the action name
+        $key = static::STATE_KEY_PREFIX . substr(md5(serialize($state)), 0, 8);
+        // Note: This field needs to be less than 65 chars, otherwise Suhosin security patch will strip it
+        $name = 'action_gridFieldAlterAction?StateID=' . $key;
 
-        $session = Controller::curr()->getRequest()->getSession();
-        $session->set($id, $state);
-        $actionData['StateID'] = $id;
+        // Define attributes
+        $attributes = [
+            'name' => $name,
+            'data-url' => $this->gridField->Link(),
+            'type' => "button",
+        ];
 
+        // Create a "store" for the "state" of this action
+        /** @var StateStore $store */
+        $store = Injector::inst()->create(StateStore::class . '.' . $this->gridField->getName());
+        // Store the state and update attributes as required
+        $attributes += $store->save($key, $state);
+
+        // Return attributes
         return array_merge(
             parent::getAttributes(),
-            array(
-                // Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch
-                // will strip it from the requests
-                'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
-                'data-url' => $this->gridField->Link(),
-            )
+            $attributes
         );
     }
 
@@ -113,7 +127,7 @@ class GridField_FormAction extends FormAction
     protected function getNameFromParent()
     {
         $base = $this->gridField;
-        $name = array();
+        $name = [];
 
         do {
             array_unshift($name, $base->getName());

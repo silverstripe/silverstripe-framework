@@ -23,21 +23,21 @@ class CheckboxSetFieldTest extends SapphireTest
 
     protected static $fixture_file = 'CheckboxSetFieldTest.yml';
 
-    protected static $extra_dataobjects = array(
+    protected static $extra_dataobjects = [
         Article::class,
         Tag::class,
-    );
+    ];
 
     public function testSetDefaultItems()
     {
         $f = new CheckboxSetField(
             'Test',
             false,
-            array(0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three')
+            [0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three']
         );
 
-        $f->setValue(array(0,1));
-        $f->setDefaultItems(array(2));
+        $f->setValue([0,1]);
+        $f->setDefaultItems([2]);
         $p = new CSSContentParser($f->Field());
         $item0 = $p->getBySelector('#Test_0');
         $item1 = $p->getBySelector('#Test_1');
@@ -71,32 +71,32 @@ class CheckboxSetFieldTest extends SapphireTest
     public function testSources()
     {
         // Array
-        $items = array('a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry');
+        $items = ['a' => 'Apple', 'b' => 'Banana', 'c' => 'Cranberry'];
         $field = new CheckboxSetField('Field', null, $items);
         $this->assertEquals($items, $field->getSource());
 
         // SS_List
         $list = new ArrayList(
-            array(
+            [
             new ArrayData(
-                array(
+                [
                 'ID' => 'a',
                 'Title' => 'Apple'
-                )
+                ]
             ),
             new ArrayData(
-                array(
+                [
                 'ID' => 'b',
                 'Title' => 'Banana'
-                )
+                ]
             ),
             new ArrayData(
-                array(
+                [
                 'ID' => 'c',
                 'Title' => 'Cranberry'
-                )
+                ]
             )
-            )
+            ]
         );
         $field2 = new CheckboxSetField('Field', null, $list);
         $this->assertEquals($items, $field2->getSource());
@@ -120,7 +120,7 @@ class CheckboxSetFieldTest extends SapphireTest
                 "SELECT *
 				FROM \"CheckboxSetFieldTest_Article_Tags\"
 				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = ?",
-                array($article->ID)
+                [$article->ID]
             )->value(),
             'Nothing should go into manymany join table for a saved field without any ticked boxes'
         );
@@ -136,34 +136,34 @@ class CheckboxSetFieldTest extends SapphireTest
         /* Create a CheckboxSetField with 2 items selected.  Note that the array is a list of values */
         $field = new CheckboxSetField("Tags", "Test field", DataObject::get(Tag::class)->map());
         $field->setValue(
-            array(
+            [
             $tag1->ID,
             $tag2->ID
-            )
+            ]
         );
 
         /* Saving should work */
         $field->saveInto($article);
 
         $this->assertEquals(
-            array($tag1->ID,$tag2->ID),
+            [$tag1->ID,$tag2->ID],
             DB::prepared_query(
                 "SELECT \"CheckboxSetFieldTest_TagID\"
 				FROM \"CheckboxSetFieldTest_Article_Tags\"
 				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = ?",
-                array($article->ID)
+                [$article->ID]
             )->column(),
-            'Data shold be saved into CheckboxSetField manymany relation table on the "right end"'
+            'Data should be saved into CheckboxSetField manymany relation table on the "right end"'
         );
         $this->assertEquals(
-            array($articleWithTags->ID,$article->ID),
+            [$articleWithTags->ID,$article->ID],
             DB::query(
                 "SELECT \"CheckboxSetFieldTest_ArticleID\"
 				FROM \"CheckboxSetFieldTest_Article_Tags\"
 				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_TagID\" = $tag1->ID
 			"
             )->column(),
-            'Data shold be saved into CheckboxSetField manymany relation table on the "left end"'
+            'Data should be saved into CheckboxSetField manymany relation table on the "left end"'
         );
     }
 
@@ -185,10 +185,10 @@ class CheckboxSetFieldTest extends SapphireTest
         $value = $field->Value();
         sort($value);
         $this->assertEquals(
-            array(
+            [
                 $tag1->ID,
                 $tag2->ID
-            ),
+            ],
             $value,
             'CheckboxSetField loads data from a manymany relationship in an object through Form->loadDataFrom()'
         );
@@ -199,14 +199,14 @@ class CheckboxSetFieldTest extends SapphireTest
         $field = new CheckboxSetField(
             'Content',
             'Content',
-            array(
+            [
             'Test' => 'Test',
             'Another' => 'Another',
             'Something' => 'Something'
-            )
+            ]
         );
         $article = new CheckboxSetFieldTest\Article();
-        $field->setValue(array('Test' => 'Test', 'Another' => 'Another'));
+        $field->setValue(['Test' => 'Test', 'Another' => 'Another']);
         $field->saveInto($article);
         $article->write();
 
@@ -227,28 +227,28 @@ class CheckboxSetFieldTest extends SapphireTest
         $field = CheckboxSetField::create(
             'Test',
             'Testing',
-            array(
+            [
             "One" => "One",
             "Two" => "Two",
             "Three" => "Three"
-            )
+            ]
         );
         $validator = new RequiredFields();
-        $field->setValue(array("One", "Two"));
+        $field->setValue(["One", "Two"]);
         $this->assertTrue(
             $field->validate($validator),
             'Field validates values within source array'
         );
 
         // Non valid value should fail
-        $field->setValue(array("Four" => "Four"));
+        $field->setValue(["Four" => "Four"]);
         $this->assertFalse(
             $field->validate($validator),
             'Field does not validate values outside of source array'
         );
 
         // Non valid value, even if included with valid options, should fail
-        $field->setValue(array("One", "Two", "Four"));
+        $field->setValue(["One", "Two", "Four"]);
         $this->assertFalse(
             $field->validate($validator),
             'Field does not validate when presented with mixed valid and invalid values'
@@ -264,7 +264,7 @@ class CheckboxSetFieldTest extends SapphireTest
         $tag3 = $this->objFromFixture(Tag::class, 'tag3');
         $field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags());
         $validator = new RequiredFields();
-        $field->setValue(array( $tag1->ID, $tag2->ID ));
+        $field->setValue([ $tag1->ID, $tag2->ID ]);
         $isValid = $field->validate($validator);
         $this->assertTrue(
             $isValid,
@@ -274,7 +274,7 @@ class CheckboxSetFieldTest extends SapphireTest
         // Invalid value should fail
         $validator = new RequiredFields();
         $fakeID = CheckboxSetFieldTest\Tag::get()->max('ID') + 1;
-        $field->setValue(array($fakeID));
+        $field->setValue([$fakeID]);
         $this->assertFalse(
             $field->validate($validator),
             'Field does not valid values outside of source map'
@@ -285,7 +285,7 @@ class CheckboxSetFieldTest extends SapphireTest
             _t(
                 'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
-                array('value' => $fakeID)
+                ['value' => $fakeID]
             ),
             $error['message']
         );
@@ -293,7 +293,7 @@ class CheckboxSetFieldTest extends SapphireTest
         // Multiple invalid values should fail
         $validator = new RequiredFields();
         $fakeID = Tag::get()->max('ID') + 1;
-        $field->setValue(array($fakeID, $tag3->ID));
+        $field->setValue([$fakeID, $tag3->ID]);
         $this->assertFalse(
             $field->validate($validator),
             'Field does not valid values outside of source map'
@@ -304,7 +304,7 @@ class CheckboxSetFieldTest extends SapphireTest
             _t(
                 'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
-                array('value' => implode(',', [$fakeID, $tag3->ID]))
+                ['value' => implode(',', [$fakeID, $tag3->ID])]
             ),
             $error['message']
         );
@@ -322,7 +322,7 @@ class CheckboxSetFieldTest extends SapphireTest
             _t(
                 'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
-                array('value' => $fakeID)
+                ['value' => $fakeID]
             ),
             $error['message']
         );
@@ -330,11 +330,11 @@ class CheckboxSetFieldTest extends SapphireTest
         //non valid value included with valid options should succeed
         $validator = new RequiredFields();
         $field->setValue(
-            array(
+            [
             $tag1->ID,
             $tag2->ID,
             $tag3->ID
-            )
+            ]
         );
         $this->assertFalse(
             $field->validate($validator),
@@ -351,21 +351,21 @@ class CheckboxSetFieldTest extends SapphireTest
         $field1 = new CheckboxSetField(
             'Options',
             'Options',
-            array(
+            [
             'one' => 'One',
             'two' => 'Two & Three',
             'three' => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six'),
             'four' => $member->FirstName,
-            )
+            ]
         );
         $fieldHTML = (string)$field1->Field();
-        $this->assertContains('One', $fieldHTML);
-        $this->assertContains('Two &amp; Three', $fieldHTML);
-        $this->assertNotContains('Two & Three', $fieldHTML);
-        $this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
-        $this->assertNotContains('Four & Five & Six', $fieldHTML);
-        $this->assertContains('&lt;firstname&gt;', $fieldHTML);
-        $this->assertNotContains('<firstname>', $fieldHTML);
+        $this->assertStringContainsString('One', $fieldHTML);
+        $this->assertStringContainsString('Two &amp; Three', $fieldHTML);
+        $this->assertStringNotContainsString('Two & Three', $fieldHTML);
+        $this->assertStringContainsString('Four &amp; Five &amp; Six', $fieldHTML);
+        $this->assertStringNotContainsString('Four & Five & Six', $fieldHTML);
+        $this->assertStringContainsString('&lt;firstname&gt;', $fieldHTML);
+        $this->assertStringNotContainsString('<firstname>', $fieldHTML);
     }
 
     /**
@@ -385,8 +385,8 @@ class CheckboxSetFieldTest extends SapphireTest
         $this->assertTrue($field->Required());
 
         $attributes = $field->getAttributes();
-        $this->assertFalse(array_key_exists("aria-required", $attributes));
-        $this->assertFalse(array_key_exists("name", $attributes));
-        $this->assertFalse(array_key_exists("required", $attributes));
+        $this->assertFalse(array_key_exists("aria-required", $attributes ?? []));
+        $this->assertFalse(array_key_exists("name", $attributes ?? []));
+        $this->assertFalse(array_key_exists("required", $attributes ?? []));
     }
 }

@@ -9,7 +9,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Middleware that provides back-support for the deprecated RequestFilter API.
  *
- * @deprecated 4.0..5.0 Use HTTPMiddleware directly instead.
+ * @deprecated 4.0.0:5.0.0 Use HTTPMiddleware directly instead.
  */
 class RequestProcessor implements HTTPMiddleware
 {
@@ -20,14 +20,14 @@ class RequestProcessor implements HTTPMiddleware
      *
      * @var RequestFilter[]
      */
-    private $filters = array();
+    private $filters = [];
 
     /**
      * Construct new RequestFilter with a list of filter objects
      *
      * @param RequestFilter[] $filters
      */
-    public function __construct($filters = array())
+    public function __construct($filters = [])
     {
         $this->filters = $filters;
     }
@@ -59,7 +59,7 @@ class RequestProcessor implements HTTPMiddleware
         foreach ($this->filters as $filter) {
             $res = $filter->preRequest($request);
             if ($res === false) {
-                return new HTTPResponse(_t(__CLASS__.'.INVALID_REQUEST', 'Invalid request'), 400);
+                return new HTTPResponse(_t(__CLASS__ . '.INVALID_REQUEST', 'Invalid request'), 400);
             }
         }
 
