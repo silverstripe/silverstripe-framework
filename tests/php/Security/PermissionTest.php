@@ -163,4 +163,37 @@ class PermissionTest extends SapphireTest
         $this->assertFalse(Permission::checkMember($member, 'ADMIN'));
         $this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS_LeftAndMain'));
     }
+
+    public function testGrantPermission()
+    {
+        $id = rand(15, 20);
+
+        Permission::grant($id, 'CMS_ACCESS_CMSMain');
+        Permission::grant($id, 'CMS_ACCESS_AssetAdmin');
+        Permission::grant($id, 'CMS_ACCESS_ReportAdmin');
+
+        $groupPermission = Permission::get()->filter(['GroupID' => $id]);
+
+        $this->assertEquals(3, $groupPermission->count());
+        $this->assertEquals(0, $groupPermission->first()->Arg);
+
+
+        Permission::grant($id, 'CMS_ACCESS_CMSMain', 'all');
+        Permission::grant($id, 'CMS_ACCESS_AssetAdmin', 'all');
+        Permission::grant($id, 'CMS_ACCESS_ReportAdmin', 'all');
+
+        $groupPermission = Permission::get()->filter(['GroupID' => $id]);
+
+        $this->assertEquals(3, $groupPermission->count());
+        $this->assertEquals(-1, $groupPermission->first()->Arg);
+
+        Permission::grant($id, 'CMS_ACCESS_CMSMain', 'any');
+        Permission::grant($id, 'CMS_ACCESS_AssetAdmin', 'any');
+        Permission::grant($id, 'CMS_ACCESS_ReportAdmin', 'any');
+
+        $groupPermission = Permission::get()->filter(['GroupID' => $id]);
+
+        $this->assertEquals(3, $groupPermission->count());
+        $this->assertEquals(-1, $groupPermission->first()->Arg);
+    }
 }
