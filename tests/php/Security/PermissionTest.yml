@@ -33,6 +33,10 @@
     FirstName: Left
     Surname: AndMain
     Email: leftandmain@example.com
+  testcmseditormember:
+    FirstName: CMS
+    Surname: Editor
+    Email: testcmseditor@example.com
 
 'SilverStripe\Security\Group':
   author:
@@ -50,6 +54,14 @@
   leftandmain:
     Title: LeftAndMain
     Members: '=>SilverStripe\Security\Member.leftandmain'
+  cmsmaingroup:
+    Title: CMSMain
+    Members: '=>SilverStripe\Security\Member.testcmseditormember'
+  testpermissiongroup:
+    Title: TestPermissionGroup
+  testcmseditorgroup:
+    Title: TestCMSEditor
+    Members: '=>SilverStripe\Security\Member.testcmseditormember'
 
 'SilverStripe\Security\Permission':
   extra1:
@@ -61,3 +73,9 @@
   leftandmain:
     Code: CMS_ACCESS_LeftAndMain
     Group: '=>SilverStripe\Security\Group.leftandmain'
+  cmsmain:
+    Code: CMS_ACCESS_CMSMain
+    Group: '=>SilverStripe\Security\Group.cmsmaingroup'
+  testcmseditor:
+    Code: TEST_CMS_EDITOR
+    Group: '=>SilverStripe\Security\Group.testcmseditorgroup'
