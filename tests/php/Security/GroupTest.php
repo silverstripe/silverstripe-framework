@@ -334,8 +334,40 @@ class GroupTest extends FunctionalTest
         $this->assertEquals('duplicate-2', $group->Code);
 
         $group = new Group();
-        $group->Title = 'Duplicate';
+        $group->Title = 'Any Title';
+        $group->Code = 'duplicate';
         $group->write();
         $this->assertEquals('duplicate-3', $group->Code);
+
+        $group1 = new Group();
+        $group1->Title = 'Any Title1';
+        $group1->Code = 'some-code';
+        $group2 = new Group();
+        $group2->Title = 'Any Title2';
+        $group2->Code = 'some-code';
+        $group1->write();
+        $group2->write();
+        $this->assertEquals('some-code', $group1->Code);
+        $this->assertEquals('some-code-2', $group2->Code);
+    }
+
+    public function testSettingCodeRepeatedly()
+    {
+        // Setting the code to the code it already was doesn't modify it
+        $group = $this->objFromFixture(Group::class, 'group1');
+        $previousCode = $group->Code;
+        $group->Code = $previousCode;
+        $group->write();
+        $this->assertEquals($previousCode, $group->Code);
+
+        // Setting the code to a new code does modify it
+        $group->Code = 'new-code';
+        $group->write();
+        $this->assertEquals('new-code', $group->Code);
+
+        // The old code can be reused
+        $group->Code = $previousCode;
+        $group->write();
+        $this->assertEquals($previousCode, $group->Code);
     }
 }
