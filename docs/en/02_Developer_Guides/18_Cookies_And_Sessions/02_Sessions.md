@@ -101,7 +101,19 @@ including form and page comment information. None of this is vital but `clear_al
 $session->clearAll();
 ```
 
-## Secure Session Cookie
+## Cookies
+
+### Samesite attribute
+
+The session cookie is handled slightly differently than most cookies on the site, which provides the opportunity to handle the samesite attribute separately from other cookies.
+You can change the `samesite` attribute for session cookies like so:
+
+```yml
+SilverStripe\Control\Session:
+  cookie_samesite: 'Strict'
+```
+
+### Secure Session Cookie
 
 In certain circumstances, you may want to use a different `session_name` cookie when using the `https` protocol for security purposes. To do this, you may set the `cookie_secure` parameter to `true` on your `config.yml`
 
@@ -112,6 +124,8 @@ SilverStripe\Control\Session:
 ```
 
 This uses the session_name `SECSESSID` for `https` connections instead of the default `PHPSESSID`. Doing so adds an extra layer of security to your session cookie since you no longer share `http` and `https` sessions.
+
+Note that if you set `cookie_samesite` to `None` (which is _strongly_ discouraged), the `cookie_secure` value will _always_ be `true`.
 
 ## Relaxing checks around user agent strings
 

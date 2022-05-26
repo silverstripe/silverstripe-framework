@@ -2,11 +2,19 @@
 
 namespace SilverStripe\Control\Tests;
 
-use http\Exception\BadMessageException;
+use Exception;
+use LogicException;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use ReflectionMethod;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\NullHTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Tests to cover the {@link Session} class
@@ -358,5 +366,161 @@ class SessionTest extends SapphireTest
             ],
             $_SESSION
         );
+    }
+
+    public function testIsCookieSecure(): void
+    {
+        $session = new Session(null);
+        $methodIsCookieSecure = new ReflectionMethod($session, 'isCookieSecure');
+        $methodIsCookieSecure->setAccessible(true);
+
+        $this->assertFalse($methodIsCookieSecure->invoke($session, 'Lax', true));
+        $this->assertFalse($methodIsCookieSecure->invoke($session, 'Lax', false));
+        $this->assertTrue($methodIsCookieSecure->invoke($session, 'None', false));
+        $this->assertTrue($methodIsCookieSecure->invoke($session, 'None', true));
+
+        Config::modify()->set(Session::class, 'cookie_secure', true);
+        $this->assertTrue($methodIsCookieSecure->invoke($session, 'Lax', true));
+        $this->assertFalse($methodIsCookieSecure->invoke($session, 'Lax', false));
+        $this->assertTrue($methodIsCookieSecure->invoke($session, 'None', false));
+        $this->assertTrue($methodIsCookieSecure->invoke($session, 'None', true));
+    }
+
+    public function testBuildCookieParams(): void
+    {
+        $session = new Session(null);
+        $methodBuildCookieParams = new ReflectionMethod($session, 'buildCookieParams');
+        $methodBuildCookieParams->setAccessible(true);
+
+        $params = $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
+        $this->assertSame(
+            [
+                'lifetime' => Session::config()->get('timeout'), // 0 by default but kitchen sink sets this to 1440
+                'path' => '/',
+                'domain' => null,
+                'secure' => false,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ],
+            $params
+        );
+
+        Config::modify()->set(Session::class, 'timeout', 123);
+        Config::modify()->set(Session::class, 'cookie_path', 'test-path');
+        Config::modify()->set(Session::class, 'cookie_domain', 'test-domain');
+        $params = $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
+        $this->assertSame(
+            [
+                'lifetime' => 123,
+                'path' => 'test-path',
+                'domain' => 'test-domain',
+                'secure' => false,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ],
+            $params
+        );
+
+        Config::modify()->set(Session::class, 'cookie_path', '');
+        Config::modify()->set(Director::class, 'alternate_base_url', 'https://secure.example.com/some-path/');
+        $params = $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
+        $this->assertSame(
+            [
+                'lifetime' => 123,
+                'path' => '/some-path/',
+                'domain' => 'test-domain',
+                'secure' => false,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ],
+            $params
+        );
+    }
+
+    public function provideSecureSamesiteData(): array
+    {
+        $data = [];
+        foreach ([true, false] as $secure) {
+            foreach (['Strict', 'Lax', 'None'] as $sameSite) {
+                foreach (['https://secure.example.com/', 'http://insecure.example.com/'] as $alternateBase) {
+                    if ($sameSite === 'None') {
+                        // secure is always true if samesite is "None"
+                        $secure = true;
+                    } else {
+                        // secure cannot be true for insecure requests
+                        $secure = (strpos($alternateBase, 'https:') === 0) && $secure;
+                    }
+                    $data[] = [
+                        $secure,
+                        $sameSite,
+                        $alternateBase,
+                        [
+                            'secure' => $secure,
+                            'samesite' => $sameSite,
+                        ]
+                    ];
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * @dataProvider provideSecureSamesiteData
+     */
+    public function testBuildCookieParamsSecureAndSamesite(
+        bool $secure,
+        string $sameSite,
+        string $alternateBase,
+        array $expected
+    ): void {
+        $session = new Session(null);
+        $methodBuildCookieParams = new ReflectionMethod($session, 'buildCookieParams');
+        $methodBuildCookieParams->setAccessible(true);
+
+        Config::modify()->set(Session::class, 'cookie_secure', $secure);
+        Config::modify()->set(Session::class, 'cookie_samesite', $sameSite);
+        Config::modify()->set(Director::class, 'alternate_base_url', $alternateBase);
+        $params = $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
+        foreach ($expected as $key => $value) {
+            $secure = $secure ? 'true' : 'false';
+            $this->assertSame($value, $params[$key], "Inputs were 'secure': $secure, 'samesite': $sameSite, 'anternateBase': $alternateBase");
+        }
+    }
+
+    /**
+     * Check that the samesite value is being validated
+     */
+    public function testBuildCookieParamsSamesiteIsValidated(): void
+    {
+        $session = new Session(null);
+        $methodBuildCookieParams = new ReflectionMethod($session, 'buildCookieParams');
+        $methodBuildCookieParams->setAccessible(true);
+
+        // Throw an exception when a warning is logged so we can catch it
+        $mockLogger = $this->getMockBuilder(Logger::class)->setConstructorArgs(['testLogger'])->getMock();
+        $catchMessage = 'A warning was logged';
+        $mockLogger->expects($this->once())
+            ->method('warning')
+            ->willThrowException(new Exception($catchMessage));
+        Injector::inst()->registerService($mockLogger, LoggerInterface::class);
+
+        // samesite "None" should log a warning for non-https requests
+        Config::modify()->set(Director::class, 'alternate_base_url', 'http://insecure.example.com/some-path');
+        Config::modify()->set(Session::class, 'cookie_samesite', 'None');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage($catchMessage);
+        $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
+    }
+
+    public function testInvalidSamesite(): void
+    {
+        $session = new Session(null);
+        $methodBuildCookieParams = new ReflectionMethod($session, 'buildCookieParams');
+        $methodBuildCookieParams->setAccessible(true);
+
+        $this->expectException(LogicException::class);
+        Config::modify()->set(Session::class, 'cookie_samesite', 'invalid');
+        $methodBuildCookieParams->invoke($session, new NullHTTPRequest());
     }
 }

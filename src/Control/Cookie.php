@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Control;
 
+use LogicException;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 
@@ -18,6 +20,12 @@ class Cookie
      * @var bool
      */
     private static $report_errors = true;
+
+    /**
+     * Must be "Strict", "Lax", or "None"
+     * @config
+     */
+    private static string $default_samesite = 'Lax';
 
     /**
      * Fetch the current instance of the cookie backend.
@@ -91,5 +99,39 @@ class Cookie
     public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
         return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
+    }
+
+    /**
+     * Validate if the samesite value for a cookie is valid for the current request.
+     *
+     * Logs a warning if the samesite value is "None" for a non-https request.
+     * @throws LogicException if the value is not "Strict", "Lax", or "None".
+     */
+    public static function validateSameSite(string $sameSite): void
+    {
+        $validValues = [
+            'Strict',
+            'Lax',
+            'None',
+        ];
+        if (!in_array($sameSite, $validValues)) {
+            throw new LogicException('Cookie samesite must be "Strict", "Lax", or "None"');
+        }
+        if ($sameSite === 'None' && !Director::is_https(self::getRequest())) {
+            Injector::inst()->get(LoggerInterface::class)->warning('Cookie samesite cannot be "None" for non-https requests.');
+        }
+    }
+
+    /**
+     * Get the current request, if any.
+     */
+    private static function getRequest(): ?HTTPRequest
+    {
+        $request = null;
+        if (Controller::has_curr()) {
+            $request = Controller::curr()->getRequest();
+        }
+        // NullHTTPRequest always has a scheme of http - set to null so we can fallback on default_base_url
+        return ($request instanceof NullHTTPRequest) ? null : $request;
     }
 }
