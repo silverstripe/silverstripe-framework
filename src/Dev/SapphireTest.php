@@ -1359,6 +1359,22 @@ if (class_exists(IsEqualCanonicalizing::class)) {
                 $this->getName(false)
             );
         }
+
+        /**
+         * Test safe version of sleep()
+         *
+         * @param int $seconds
+         * @return DBDatetime
+         * @throws Exception
+         */
+        protected function mockSleep(int $seconds): DBDatetime
+        {
+            $now = DBDatetime::now();
+            $now->modify(sprintf('+ %d seconds', $seconds));
+            DBDatetime::set_mock_now($now);
+
+            return $now;
+        }
     }
 }
 
@@ -2654,5 +2670,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
             $rules[$route] = $class;
         }
         return $rules;
+    }
+
+    /**
+     * Test safe version of sleep()
+     *
+     * @param int $seconds
+     * @return DBDatetime
+     * @throws Exception
+     */
+    protected function mockSleep(int $seconds): DBDatetime
+    {
+        $now = DBDatetime::now();
+        $now->modify(sprintf('+ %d seconds', $seconds));
+        DBDatetime::set_mock_now($now);
+
+        return $now;
     }
 }
