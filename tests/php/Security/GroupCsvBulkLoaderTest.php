@@ -24,6 +24,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest
 
     public function testOverwriteExistingImport()
     {
+        // This group will be overwritten.
         $existinggroup = new Group();
         $existinggroup->Title = 'Old Group Title';
         $existinggroup->Code = 'newgroup1';
@@ -33,13 +34,15 @@ class GroupCsvBulkLoaderTest extends SapphireTest
         $results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
-        $this->assertEquals($created[0]->Code, 'newchildgroup1');
+        $this->assertEquals(1, count($created));
+        $this->assertEquals('newchildgroup1', $created[0]->Code);
+        $this->assertEquals('New Child Group 1', $created[0]->Title);
 
+        // This overrides the group because the code matches, which takes precedence over the ID.
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
-        $this->assertEquals($updated[0]->Code, 'newgroup1-2');
-        $this->assertEquals($updated[0]->Title, 'New Group 1');
+        $this->assertEquals(1, count($updated));
+        $this->assertEquals('newgroup1', $updated[0]->Code);
+        $this->assertEquals('New Group 1', $updated[0]->Title);
     }
 
     public function testImportPermissions()
@@ -48,17 +51,17 @@ class GroupCsvBulkLoaderTest extends SapphireTest
         $results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest_withExisting.csv');
 
         $created = $results->Created()->toArray();
-        $this->assertEquals(count($created), 1);
-        $this->assertEquals($created[0]->Code, 'newgroup1');
-        $this->assertEquals($created[0]->Permissions()->column('Code'), ['CODE1']);
+        $this->assertEquals(1, count($created));
+        $this->assertEquals('newgroup1', $created[0]->Code);
+        $this->assertEquals(['CODE1'], $created[0]->Permissions()->column('Code'));
 
         $updated = $results->Updated()->toArray();
-        $this->assertEquals(count($updated), 1);
-        $this->assertEquals($updated[0]->Code, 'existinggroup');
-        $array1=$updated[0]->Permissions()->column('Code');
-        $array2=['CODE1', 'CODE2'];
-        sort($array1);
-        sort($array2);
-        $this->assertEquals($array1, $array2);
+        $this->assertEquals(1, count($updated));
+        $this->assertEquals('existinggroup', $updated[0]->Code);
+        $actual = $updated[0]->Permissions()->column('Code');
+        $expected = ['CODE1', 'CODE2'];
+        sort($actual);
+        sort($expected);
+        $this->assertEquals($expected, $actual);
     }
 }
