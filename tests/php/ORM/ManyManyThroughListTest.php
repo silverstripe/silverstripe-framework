@@ -203,6 +203,64 @@ class ManyManyThroughListTest extends SapphireTest
         );
     }
 
+    public function testRemoveAll()
+    {
+        $first = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $first->Items()->add($this->objFromFixture(ManyManyThroughListTest\Item::class, 'child0'));
+        $second = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent2');
+
+        $firstItems = $first->Items();
+        $secondItems = $second->Items();
+        $initialJoins = ManyManyThroughListTest\JoinObject::get()->count();
+        $initialItems = ManyManyThroughListTest\Item::get()->count();
+        $initialRelations = $firstItems->count();
+        $initialSecondListRelations = $secondItems->count();
+
+        $firstItems->removeAll();
+
+        // Validate all items were removed from the first list, but none were removed from the second list
+        $this->assertEquals(0, count($firstItems));
+        $this->assertEquals($initialSecondListRelations, count($secondItems));
+
+        // Validate that the JoinObjects were actually removed from the database
+        $this->assertEquals($initialJoins - $initialRelations, ManyManyThroughListTest\JoinObject::get()->count());
+
+        // Confirm Item objects were not removed from the database
+        $this->assertEquals($initialItems, ManyManyThroughListTest\Item::get()->count());
+    }
+
+    public function testRemoveAllIgnoresLimit()
+    {
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $parent->Items()->add($this->objFromFixture(ManyManyThroughListTest\Item::class, 'child0'));
+        $initialJoins = ManyManyThroughListTest\JoinObject::get()->count();
+        // Validate there are enough items in the relation for this test
+        $this->assertTrue($initialJoins > 1);
+
+        $items = $parent->Items()->Limit(1);
+        $items->removeAll();
+
+        // Validate all items were removed from the list - not only one
+        $this->assertEquals(0, count($items));
+    }
+
+    public function testFilteredRemoveAll()
+    {
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $parent->Items()->add($this->objFromFixture(ManyManyThroughListTest\Item::class, 'child0'));
+        $items = $parent->Items();
+        $initialJoins = ManyManyThroughListTest\JoinObject::get()->count();
+        $initialRelations = $items->count();
+
+        $items->filter('Title:not', 'not filtered')->removeAll();
+
+        // Validate only the filtered items were removed
+        $this->assertEquals(1, $items->count());
+
+        // Validate the list only contains the correct remaining item
+        $this->assertEquals(['not filtered'], $items->column('Title'));
+    }
+
     /**
      * Test validation
      */
