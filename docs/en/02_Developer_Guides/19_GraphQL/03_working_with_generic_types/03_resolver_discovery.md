@@ -20,7 +20,10 @@ Docs for the current stable version (3.x) can be found
 When you define a query mutation, or any other field on a type, you can opt out of providing
 an explicit resolver and allow the system to discover one for you based on naming convention.
 
-Let's start by registering a resolver class(es) where we can define a bunch of these functions.
+Let's start by registering a resolver class where we can define a bunch of these methods.
+
+You can register as many classes as makes sense - and each resolver class can have multiple
+resolver methods.
 
 **app/_graphql/config.yml**
 ```yaml
@@ -42,7 +45,7 @@ public static function getResolverMethod(string $className, ?string $typeName = 
 
 #### The default resolver strategy
 
-By default, all schemas use `SilverStripe\GraphQL\Schema\Resolver\DefaultResolverStrategy::getResolerMethod`
+By default, all schemas use [`DefaultResolverStrategy::getResolverMethod()`](api:SilverStripe\GraphQL\Schema\Resolver\DefaultResolverStrategy::getResolverMethod())
 to discover resolver functions. The logic works like this:
 
 * Does `resolve<TypeName><FieldName>` exist?
@@ -140,13 +143,14 @@ ground between the rigor of hard coding everything and the opacity of discovery 
       fields:
         name: String
         code: String
-      fieldResolver: [ 'MyProject\MyResolver', 'resolveCountryField' ]
+      fieldResolver: [ 'MyProject\MyResolver', 'resolveCountryFields' ]
 ```
 
-You'll need to do explicit checks for the `fieldName` in your resolver to make this work.
+In this case the registered resolver method will be used to resolve any number of fields.
+You'll need to do explicit checks for the field name in your resolver to make this work.
 
 ```php
-public static function resolveCountryField($obj, $args, $context, ResolveInfo $info)
+public static function resolveCountryFields($obj, $args, $context, ResolveInfo $info)
 {
     $fieldName = $info->fieldName;
     if ($fieldName === 'image') {

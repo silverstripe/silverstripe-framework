@@ -63,7 +63,7 @@ The `*` value on `operations` tells the schema to create all available queries a
 * `update`
 * `delete`
 
-Now that we've changed our schema, we need to build it using the `build-schema` task:
+Now that we've changed our schema, we need to build it using the `dev/graphql/build` task:
 
 `$ vendor/bin/sake dev/graphql/build schema=default`
 

@@ -16,7 +16,7 @@ Docs for the current stable version (3.x) can be found
 
 ## Adding a custom model
 
-The only point of contact the `silverstripe-graphql` schema has with
+The only point of contact the `silverstripe/graphql` schema has with
 Silverstripe specifically is through the `DataObjectModel` adapter
 and its associated plugins. This is important, because it means you
 can plug in any schema-aware class as a model, and it will be afforded

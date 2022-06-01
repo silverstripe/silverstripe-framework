@@ -5,6 +5,14 @@ summary: Upgrade your Silverstripe CMS project to use graphQL version 4
 
 # Upgrading to GraphQL v4
 
+[alert]
+You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
+Help us improve it by joining #graphql on the [Community Slack](https://www.silverstripe.org/blog/community-slack-channel/),
+and report any issues at [github.com/silverstripe/silverstripe-graphql](https://github.com/silverstripe/silverstripe-graphql).
+Docs for the current stable version (3.x) can be found
+[here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
+[/alert]
+
 Silverstripe CMS Recipe 4.11 defaults to installing silverstripe/graphql v4. Previous releases installed version 3. 
 
 ## What does silverstripe/graphql do and why are you changing this?

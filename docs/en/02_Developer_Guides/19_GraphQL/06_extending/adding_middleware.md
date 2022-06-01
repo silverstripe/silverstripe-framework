@@ -21,8 +21,8 @@ a larger process. A key feature of middleware is that it can be used
 with other middlewares in sequence and not have to worry about the order
 of execution.
 
-In `silverstripe-graphql`, middleware is used for query execution,
-but could ostensibly be used elsewhere too if the API ever accommodates
+In `silverstripe/graphql`, middleware is used for query execution,
+but could ostensibly be used elsewhere too if the API ever accomodates
 such an expansion.
 
 [notice]
@@ -36,14 +36,14 @@ The signature for middleware looks like this:
 public function process(Schema $schema, $query, $context, $vars, callable $next)
 ```
 
- * `$schema`: The underlying [Schema](http://webonyx.github.io/graphql-php/type-system/schema/) object.
-   Useful to inspect whether types are defined in a schema.
- * `$query`: The raw query string.
- * `$context`: An arbitrary array which holds information shared between resolvers.
-   Use implementors of `SilverStripe\GraphQL\Schema\Interfaces\ContextProvider` to get and set
-   data, rather than relying on the array keys directly.
- * `$vars`: An array of (optional) [Query Variables](https://graphql.org/learn/queries/#variables).
- * `$next`: A callable referring to the next middleware in the chain
+* `$schema`: The underlying [Schema](http://webonyx.github.io/graphql-php/type-system/schema/) object.
+  Useful to inspect whether types are defined in a schema.
+* `$query`: The raw query string.
+* `$context`: An arbitrary array which holds information shared between resolvers.
+  Use implementors of `SilverStripe\GraphQL\Schema\Interfaces\ContextProvider` to get and set
+  data, rather than relying on the array keys directly.
+* `$vars`: An array of (optional) [Query Variables](https://graphql.org/learn/queries/#variables).
+* `$next`: A callable referring to the next middleware in the chain
 
 Let's write a simple middleware that logs our queries as they come in.
 
@@ -72,7 +72,6 @@ class LoggingMiddleware implements Middleware
 
 Now we can register the middleware with our query handler:
 
-
 ```yaml
   SilverStripe\GraphQL\QueryHandler\QueryHandlerInterface.default:
     class: SilverStripe\GraphQL\QueryHandler\QueryHandler
@@ -80,4 +79,3 @@ Now we can register the middleware with our query handler:
       Middlewares:
         logging: '%$MyProject\Middleware\LoggingMiddleware'
 ```
-

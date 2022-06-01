@@ -17,11 +17,11 @@ Docs for the current stable version (3.x) can be found
 
 ## Building the schema
 
-The primary API surface of the `silverstripe-graphql` module is the configuration YAML, and
-some [procedural configuration](using_procedual_code) as well. It is important to understand
+The primary API surface of the `silverstripe/graphql` module is the yaml configuration, along
+with some [procedural configuration](using_procedual_code). It is important to understand
 that **none of this configuration gets interpreted at runtime**. Loading the schema configuration
-at runtime and converting it to executable code has dire effects on performance, making
-API requests slower and slower as the schema grows larger.
+(which we refer to as the "schema definition") at runtime and converting it to executable code
+has dire effects on performance, making API requests slower and slower as the schema grows larger.
 
 To mitigate this problem, the schema that gets executed at runtime is **generated PHP code**.
 This code generation happens during a build step, and it is critical to run this build step
@@ -29,13 +29,24 @@ whenever the schema changes.
 
 ### Running the build
 
-The task that generates the schema code is `build-schema`. It takes a parameter of `schema`, whose value should be the name of the schema you want to build.
+The task that generates the schema code is `dev/graphql/build`.
 
-`$ vendor/bin/sake dev/graphql/build schema=default`
+`vendor/bin/sake dev/graphql/build`
+
+This task takes an optional `schema` parameter. If you only want to generate a specific schema
+(e.g. generate your custom schema, but not the CMS schema), you should pass in the name of the
+schema you want to build.
+
+`vendor/bin/sake dev/graphql/build schema=default`
+
+[info]
+Most of the time, the name of your custom schema is `default`. If you're editing DataObjects
+that are accessed with GraphQL in the CMS, you may have to build the `admin` schema as well.
+[/info]
 
 Keep in mind that many of your changes will be in YAML, which also requires a flush.
 
-`$ vendor/bin/sake dev/graphql/build schema=default flush=1`
+`vendor/bin/sake dev/graphql/build schema=default flush=1`
 
 [info]
 If you do not provide a `schema` parameter, the task will build all schemas.
@@ -51,7 +62,6 @@ SilverStripe\GraphQL\Extensions\DevBuildExtension:
   enabled: false
 ```
 
-
 ### Caching
 
 Generating code is a pretty expensive process. A large schema with 50 dataobject classes exposing
@@ -66,7 +76,7 @@ If the type hasn't changed, it doesn't re-render. This reduces build times to **
 
 Normally, we'd use `flush=1` to clear the cache, but since you almost always need to run `flush=1` with the build task, it isn't a good fit. Instead, use `clear=1`.
 
-`$ vendor/bin/sake dev/graphql/build schema=default clear=1`
+`vendor/bin/sake dev/graphql/build schema=default clear=1`
 
 If your schema is producing unexpected results, try using `clear=1` to eliminate the possibility
 of a caching issue. If the issue is resolved, record exactly what you changed and [create an issue](https://github.com/silverstripe/silverstripe-graphql/issues/new).
