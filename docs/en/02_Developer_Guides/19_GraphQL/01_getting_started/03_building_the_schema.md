@@ -89,7 +89,7 @@ Though it doesn't contain any highly sensitive data, we recommend you block this
 
 ### Viewing the generated code
 
-By default, the generated code is placed in the `.graphql/` directory in the root of your project.
+By default, the generated code is placed in the `.graphql-generated/` directory in the root of your project.
 It is not meant to be accessible through your webserver (which is ensured by dot-prefixing)
 and keeping it outside of the `public/` webroot. 
 
