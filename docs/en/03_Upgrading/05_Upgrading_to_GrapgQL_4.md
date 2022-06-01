@@ -1,9 +1,9 @@
 ---
-title: Upgrading from GraphQL 3
+title: Upgrading to GraphQL 4
 summary: A high-level view of what you'll need to change when upgrading to GraphQL 4
 ---
 
-# Upgrading from GraphQL 3
+# Upgrading to GraphQL 4
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
