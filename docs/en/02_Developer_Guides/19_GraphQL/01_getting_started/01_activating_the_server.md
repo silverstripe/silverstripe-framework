@@ -21,15 +21,21 @@ Docs for the current stable version (3.x) can be found
 GraphQL is used through a single route, typically `/graphql`. You need
 to define *types* and *queries* to expose your data via this endpoint. While this recommended
 route is left open for you to configure on your own, the modules contained in the [CMS recipe](https://github.com/silverstripe/recipe-cms),
- (e.g. `asset-admin`) run off a separate GraphQL server with its own endpoint
- (`admin/graphql`) with its own permissions and schema.
+(e.g. `silverstripe/asset-admin`) run off a separate GraphQL server with its own endpoint
+(`admin/graphql`) with its own permissions and schema.
 
 These separate endpoints have their own identifiers. `default` refers to the GraphQL server
-in the user space (e.g. `/graphql`) while `admin` refers to the GraphQL server used by CMS modules
-(`admin/graphql`). You can also [set up a new schema](#setting-up-a-custom-graphql-server) if you wish.
+in the user space (e.g. `/graphql`) - i.e. your custom schema, while `admin` refers to the
+GraphQL server used by CMS modules (`admin/graphql`). You can also [set up a new schema server](#setting-up-a-custom-graphql-server)
+if you wish.
 
-By default, this module does not route any GraphQL servers. To activate the default,
-public-facing GraphQL server that ships with the module, just add a rule to `Director`.
+[info]
+The word "server" here refers to a route with its own isolated GraphQL schema. It does
+not refer to a web server.
+[/info]
+
+By default, `silverstripe/graphql` does not route any GraphQL servers. To activate the default,
+public-facing GraphQL server that ships with the module, just add a rule to [`Director`](api:SilverStripe\Control\Director).
 
 ```yaml
 SilverStripe\Control\Director:
@@ -52,9 +58,7 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\GraphQL\Controller
     constructor:
       schemaKey: myNewSchema
-
 ```
-
 
 We'll now need to route the controller.
 
@@ -64,14 +68,8 @@ SilverStripe\Control\Director:
     'my-graphql': '%$SilverStripe\GraphQL\Controller.myNewSchema'
 ```
 
-Now, you're ready to [configure your schema](configuring_your_schema.md).
-
-```yaml
-SilverStripe\GraphQL\Schema\Schema:
-  schemas:
-    myNewSchema:
-      # ...
-```
+Now, once you have [configured](configuring_your_schema) and [built](building_the_schema) your schema, you
+can access it at `/my-graphql`.
 
 ### Further reading
 

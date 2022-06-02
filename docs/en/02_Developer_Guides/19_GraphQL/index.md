@@ -4,9 +4,7 @@ GraphQL is the content API layer for Silverstripe CMS. It is the
 recommended way of getting data in and out of the content management
 system.
 
-For more information on GraphQL, visit its [documentation site](https://graphql.org).
-
-[CHILDREN includeFolders]
+For more information on GraphQL in general, visit its [documentation site](https://graphql.org).
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
@@ -15,3 +13,5 @@ and report any issues at [github.com/silverstripe/silverstripe-graphql](https://
 Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
+
+[CHILDREN includeFolders]

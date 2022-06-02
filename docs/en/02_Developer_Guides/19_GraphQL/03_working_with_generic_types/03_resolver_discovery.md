@@ -17,7 +17,7 @@ Docs for the current stable version (3.x) can be found
 
 ## The resolver discovery pattern
 
-When you define a query mutation, or any other field on a type, you can opt out of providing
+When you define a query, mutation, or any other field on a type, you can opt out of providing
 an explicit resolver and allow the system to discover one for you based on naming convention.
 
 Let's start by registering a resolver class where we can define a bunch of these methods.
@@ -37,10 +37,16 @@ or many fields. How those functions will be discovered relies on the _resolver s
 ### Resolver strategy
 
 Each schema config accepts a `resolverStrategy` property. This should map to a callable that will return
-a method name given a class name, type name, and `Field` instance.
+a method name given a class name, type name, and [`Field`](api:SilverStripe\GraphQL\Schema\Field\Field) instance.
 
 ```php
-public static function getResolverMethod(string $className, ?string $typeName = null, ?Field $field = null): ?string;
+class Strategy
+{
+    public static function getResolverMethod(string $className, ?string $typeName = null, ?Field $field = null): ?string
+    {
+        // strategy logic here
+    }
+}
 ```
 
 #### The default resolver strategy
@@ -49,18 +55,17 @@ By default, all schemas use [`DefaultResolverStrategy::getResolverMethod()`](api
 to discover resolver functions. The logic works like this:
 
 * Does `resolve<TypeName><FieldName>` exist?
-  * Yes? Invoke
+  * Yes? Return that method name
   * No? Continue
 * Does `resolve<TypeName>` exist?
-  * Yes? Invoke
+  * Yes? Return that method name
   * No? Continue
 * Does `resolve<FieldName>` exist?
-  * Yes? Invoke
+  * Yes? Return that method name
   * No? Continue
 * Does `resolve` exist?
-  * Yes? Invoke
+  * Yes? Return that method name
   * No? Return null. This resolver cannot be discovered
-
 
 Let's look at our query again:
 
@@ -72,19 +77,26 @@ query {
 }
 ```
 
-Imagine we have two classes registered under `resolvers` -- `ClassA` and `ClassB`
+Imagine we have two classes registered under `resolvers` - `ClassA` and `ClassB`
 
-The logic will go like this:
+**app/_graphql/config.yml**
+```yaml
+resolvers:
+  - ClassA
+  - ClassB
+```
 
-* `ClassA::resolveCountryName`
-* `ClassA::resolveCountry`
-* `ClassA::resolveName`
-* `ClassA::resolve`
-* `ClassB::resolveCountryName`
-* `ClassB::resolveCountry`
-* `ClassB::resolveName`
-* `ClassB::resolve`
-* Return null.
+The `DefaultResolverStrategy` will check for methods in this order:
+
+* `ClassA::resolveCountryName()`
+* `ClassA::resolveCountry()`
+* `ClassA::resolveName()`
+* `ClassA::resolve()`
+* `ClassB::resolveCountryName()`
+* `ClassB::resolveCountry()`
+* `ClassB::resolveName()`
+* `ClassB::resolve()`
+* Return `null`.
 
 You can implement whatever strategy you like in your schema. Just register it to `resolverStrategy` in the config.
 
@@ -97,6 +109,7 @@ Let's add a resolver method to our resolver provider:
 
 **app/src/Resolvers/MyResolvers.php**
 ```php
+namespace MyApp\Resolvers;
 
 class MyResolvers
 {
@@ -116,8 +129,14 @@ class MyResolvers
 }
 ```
 
+Now that we're using logic to discover our resolver, we can remove our resolver method declarations from the individual
+queries and instead just register the resolver class.
 
-Now that we're using logic to discover our resolver, we can clean up the config a bit.
+**app/_graphql/config.yml**
+```yaml
+resolvers:
+  - MyApp\Resolvers\MyResolvers
+```
 
 **app/_graphql/schema.yml**
 ```yml
@@ -125,16 +144,15 @@ Now that we're using logic to discover our resolver, we can clean up the config 
     readCountries: '[Country]'
 ```
 
-Re-run the schema build, with a flush, and let's go!
+Re-run the schema build, with a flush (because we created a new PHP class), and let's go!
 
-`$ vendor/bin/sake dev/graphql/build schema=default flush=1`
-
+`vendor/bin/sake dev/graphql/build schema=default flush=1`
 
 ### Field resolvers
 
 A less magical approach to resolver discovery is defining a `fieldResolver` property on your
 types. This is a generic handler for all fields on a given type and can be a nice middle
-ground between the rigor of hard coding everything and the opacity of discovery logic.
+ground between the rigor of hard coding everything at a query level, and the opacity of discovery logic.
 
 **app/_graphql/schema.yml**
 ```yml

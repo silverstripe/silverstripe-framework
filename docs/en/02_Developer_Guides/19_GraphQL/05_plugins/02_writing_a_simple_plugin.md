@@ -20,9 +20,12 @@ Docs for the current stable version (3.x) can be found
 For this example, we want all `String` fields to have a `truncate` argument that will limit the length of the string
 in the response.
 
-Because it applies to fields, we'll want `FieldPlugin` for this.
+Because it applies to fields, we'll want to implement the [`FieldPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\FieldPlugin)
+interface for this.
 
 ```php
+namespace MyProject\Plugins;
+
 class Truncator implements FieldPlugin
 {
     public function getIdentifier(): string
@@ -37,10 +40,10 @@ class Truncator implements FieldPlugin
 }
 ```
 
-Now we've added an argument to any field that implements the `truncate` plugin. This is good, but it really
+Now we've added an argument to any field that uses the `truncate` plugin. This is good, but it really
 doesn't save us a whole lot of time. The real value here is that the field will automatically apply the truncation.
 
-For that, we'll need to augment the resolver with some _afterware_.
+For that, we'll need to augment our plugin with some _afterware_.
 
 ```php
 public function apply(Field $field, Schema $schema, array $config = [])

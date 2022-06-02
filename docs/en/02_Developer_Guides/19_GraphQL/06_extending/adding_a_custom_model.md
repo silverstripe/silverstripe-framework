@@ -17,20 +17,20 @@ Docs for the current stable version (3.x) can be found
 ## Adding a custom model
 
 The only point of contact the `silverstripe/graphql` schema has with
-Silverstripe specifically is through the `DataObjectModel` adapter
+the Silverstripe ORM specifically is through the `DataObjectModel` adapter
 and its associated plugins. This is important, because it means you
 can plug in any schema-aware class as a model, and it will be afforded
 all the same features as DataObjects.
 
-It is, however, hard to imagine a model-driven type that isn't 
+It is, however, hard to imagine a model-driven type that isn't
 related to an ORM, so we'll keep this section simple and just describe
 what the requirements are rather than think up an outlandish example
-of what a non-DataObject model might be.
+of what a non-`DataObject` model might be.
 
 ### SchemaModelInterface
 
-Models must implement the `SchemaModelInterface`, which has some
-hefty requirements. Let's walk through them:
+Models must implement the [`SchemaModelInterface`](api:SilverStripe\GraphQL\Schema\Interfaces\SchemaModelInterface),
+which has a lot of methods to implement. Let's walk through them:
 
 * `getIdentifier(): string`: A unique identifier for this model type,
 e.g. 'DataObject'
@@ -42,7 +42,7 @@ infer the type. If the field doesn't exist, return `null`
 the source class)
 * `getDefaultResolver(?array $context = []): ResolverReference`:
 Get the generic resolver that should be used for types that are built
-with this model. 
+with this model.
 * `getSourceClass(): string`: Get the name of the class that builds
 the type, e.g. `MyDataObject`
 * `getAllFields(): array`: Get all available fields on the object
@@ -52,60 +52,33 @@ model type.
 
 In addition, models may want to implement:
 
-* `OperationProvider` (if your model creates operations, like
+* [`OperationProvider`](api:SilverStripe\GraphQL\Schema\Interfaces\) (if your model creates operations, like
 read, create, etc)
-* `DefaultFieldsProvider` (if your model provides a default list
+* [`DefaultFieldsProvider`](api:SilverStripe\GraphQL\Schema\Interfaces\) (if your model provides a default list
 of fields, e.g. `id`)
-* `DefaultPluginProvider` (if your model can supply a default set
-of plugins, e.g. `default_plugins` on `DataObjectModel`)
 
 This is all a lot to take in out of context. A good exercise would be
-to look through how `DataObjectModel` implements all these methods.
+to look through how [`DataObjectModel`](api:SilverStripe\GraphQL\Schema\DataObject\DataObjectModel) implements all these methods.
 
 ### SchemaModelCreatorInterface
 
-Given a class name, create an instance of `SchemaModelInterface`. 
+Given a class name, create an instance of [`SchemaModelCreatorInterface`](api:SilverStripe\GraphQL\Schema\Interfaces\SchemaModelCreatorInterface).
 This layer of abstraction is necessary because we can't assume that
-all `SchemaModelInterfaces` will accept a class name in their 
+all implementations of `SchemaModelCreatorInterface` will accept a class name in their
 constructors.
 
 Implementors of this interface just need to be able to report
 whether they apply to a given class and create a model given a
 class name.
 
-Look at the DataObjectModel implementation:
-
-```php
-class ModelCreator implements SchemaModelCreatorInterface
-{
-    use Injectable;
-
-    /**
-     * @param string $class
-     * @return bool
-     */
-    public function appliesTo(string $class): bool
-    {
-        return is_subclass_of($class, DataObject::class);
-    }
-
-    /**
-     * @param string $class
-     * @return SchemaModelInterface
-     */
-    public function createModel(string $class): SchemaModelInterface
-    {
-        return DataObjectModel::create($class);
-    }
-}
-
-```
+Look at the [`ModelCreator`](api:SilverStripe\GraphQL\Schema\DataObject\ModelCreator) implementation
+for a good example of how this works.
 
 ### Registering your model creator
 
 Just add it to the registry:
 
-**app/_graphql/config.yml
+**app/_graphql/config.yml**
 ```yaml
 modelCreators:
   - 'SilverStripe\GraphQL\Schema\DataObject\ModelCreator'

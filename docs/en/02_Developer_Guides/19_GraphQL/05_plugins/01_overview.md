@@ -20,7 +20,7 @@ Docs for the current stable version (3.x) can be found
 Plugins are used to distribute reusable functionality across your schema. Some examples of commonly used plugins include:
 
 * Adding versioning arguments to versioned DataObjects
-* Adding a custom filter/sort arguments to DataObject queries
+* Adding a custom filter/sort arguments to `DataObject` queries
 * Adding a one-off `VerisionedStage` enum to the schema
 * Ensuring `Member` is in the schema
 * And many more...
@@ -29,46 +29,47 @@ Plugins are used to distribute reusable functionality across your schema. Some e
 
 By default, all schemas ship with some plugins installed that will benefit most use cases:
 
-* The `DataObject` model (i.e. any dataobject based type) has:
-    * An `inheritance` plugin that builds the interfaces, unions, and merges ancestral fields.
-    * An `inheritedPlugins` plugin (a bit meta!) that merges plugins from ancestral types into descendants.
+* The `DataObject` model (i.e. any `DataObject` based type) has:
+  * An `inheritance` plugin that builds the interfaces, unions, and merges ancestral fields.
+  * An `inheritedPlugins` plugin (a bit meta!) that merges plugins from ancestral types into descendants.
  installed).
 * The `read` and `readOne` operations have:
-    * A `canView` plugin for hiding records that do not pass a `canView()` check
- * The `read` operation has:
-    * A `paginateList` plugin for adding pagination arguments and types (e.g. `nodes`)
+  * A `canView` plugin for hiding records that do not pass a `canView()` check
+* The `read` operation has:
+  * A `paginateList` plugin for adding pagination arguments and types (e.g. `nodes`)
 
 In addition to the above, the `default` schema specifically ships with an even richer set of default
- plugins, including:
+plugins, including:
 
-* A `versioning` plugin that adds `version` fields to the dataobject type (if `silverstripe/versioned` is installed)
+* A `versioning` plugin that adds `version` fields to the `DataObject` type (if `silverstripe/versioned` is installed)
 * A `readVersion` plugin (if `silverstripe/versioned` is installed) that allows versioned operations on
 `read` and `readOne` queries.
 * A `filter` plugin for filtering queries (adds a `filter` argument)
 * A `sort` plugin for sorting queries (adds a `sort` argument)
 
+All of these are defined in the `modelConfig` section of the schema (see [configuring your schema](../getting_started/configuring_your_schema)).
+For reference, see the graphql configuration in `silverstripe/admin`, which applies
+these default plugins to the `admin` schema.
 
-All of these are defined in the `modelConfig` section of the schema (see [configuring your schema](../getting_started/configuring_your_schema)). For reference, see the graphql configuration in `silverstripe/admin`, which applies
-these default plugins to the `default` schema.
-
- #### Overriding default plugins
- You can override default plugins generically in the `modelConfig` section.
+#### Overriding default plugins
+You can override default plugins generically in the `modelConfig` section.
  
- **app/_graphql/modelConfig.yml**
- ```yaml
-DataObject:
-  plugins:
-    inheritance: false # No dataobject models get this plugin unless opted into
-  operations:
-    read:
-      plugins:
-        paginateList: false # No dataobject models have paginated read operations unless opted into
- ```
+**app/_graphql/config.yml**
+```yaml
+modelConfig:
+  DataObject:
+    plugins:
+      inheritance: false # No `DataObject` models get this plugin unless opted into
+    operations:
+      read:
+        plugins:
+          paginateList: false # No `DataObject` models have paginated read operations unless opted into
+```
 
- You can override default plugins on your specific dataobject type and these changes will be inherited by descendants.
+You can override default plugins on your specific `DataObject` type and these changes will be inherited by descendants.
  
- **app/_graphql/models.yml**
- ```yaml
+**app/_graphql/models.yml**
+```yaml
 Page:
   plugins:
     inheritance: false
@@ -77,8 +78,8 @@ MyProject\MyCustomPage: {} # now has no inheritance plugin
 
 Likewise, you can do the same for operations:
 
- **app/_graphql/models.yml**
- ```yaml
+**app/_graphql/models.yml**
+```yaml
 Page:
   operations:
     read:
@@ -89,7 +90,6 @@ MyProject\MyCustomPage:
     read: true # has no readVersion plugin 
 ```
 
-
 ### What plugins must do
 
 There isn't a huge API surface to a plugin. They just have to:
@@ -97,22 +97,21 @@ There isn't a huge API surface to a plugin. They just have to:
 * Implement at least one of several plugin interfaces
 * Declare an identifier
 * Apply themselves to the schema with the `apply(Schema $schema)` method
-* Be registered with the `PluginRegistry`
-
+* Be registered with the [`PluginRegistry`](api:SilverStripe\GraphQL\Schema\Registry\PluginRegistry)
 
 ### Available plugin interfaces
 
-Plugin interfaces are all found in the namespace `SilverStripe\GraphQL\Schema\Interfaces`
+Plugin interfaces are all found in the `SilverStripe\GraphQL\Schema\Interfaces` namespace
 
-* `SchemaUpdater`: Make a one-off, context-free update to the schema
-* `QueryPlugin`: Update a generic query
-* `MutationPlugin`: Update a generic mutation
-* `TypePlugin`: Update a generic type
-* `FieldPlugin`: Update a field on a generic type
-* `ModelQueryPlugin`: Update queries generated by a model, e.g. `readPages`
-* `ModelMutationPlugin`: Update mutations generated by a model, e.g. `createPage`
-* `ModelTypePlugin`: Update types that are generated by a model
-* `ModelFieldPlugin`: Update a field on types generated by a model
+* [`SchemaUpdater`](api:SilverStripe\GraphQL\Schema\Interfaces\SchemaUpdater): Make a one-off, context-free update to the schema
+* [`QueryPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\QueryPlugin): Update a generic query
+* [`MutationPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\MutationPlugin): Update a generic mutation
+* [`TypePlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\TypePlugin): Update a generic type
+* [`FieldPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\FieldPlugin): Update a field on a generic type
+* [`ModelQueryPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\ModelQueryPlugin): Update queries generated by a model, e.g. `readPages`
+* [`ModelMutationPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\ModelMutationPlugin): Update mutations generated by a model, e.g. `createPage`
+* [`ModelTypePlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\ModelTypePlugin): Update types that are generated by a model
+* [`ModelFieldPlugin`](api:SilverStripe\GraphQL\Schema\Interfaces\ModelFieldPlugin): Update a field on types generated by a model
 
 Wow, that's a lot of interfaces, right? This is owing mostly to issues around strict typing between interfaces,
 and allows for a more expressive developer experience. Almost all of these interfaces have the same requirements,
@@ -120,7 +119,7 @@ just for different types. It's pretty easy to navigate if you know what you want
 
 ### Registering plugins
 
-Plugins have to be registered with Injector.
+Plugins have to be registered to the `PluginRegistry` via the `Injector`.
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
@@ -128,10 +127,6 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - 'MyProject\Plugins\MyPlugin'
 ```
-
-[info]
-The key `myPlugin` is arbitrary. The identifier of the plugin is obtained procedurally.
-[/info]
 
 ### Resolver middleware and afterware
 

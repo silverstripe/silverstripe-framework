@@ -1,6 +1,6 @@
 ---
-title: DataObject operation permissions
-summary: A look at how permissions work for DataObject queries and mutations
+title: `DataObject` operation permissions
+summary: A look at how permissions work for `DataObject` queries and mutations
 ---
 
 # Working with DataObjects
@@ -15,16 +15,16 @@ Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
 
-## DataObject operation permissions
+## `DataObject` operation permissions
 
 Any of the operations that come pre-configured for DataObjects are secured by the appropriate permissions
 by default.
-Please see [Model-Level Permissions](/model/permissions/#model-level-permissions) for more information.
+Please see [Model-Level Permissions](/developer_guides/model/permissions/#model-level-permissions) for more information.
 
 ### Mutation permssions
 
 [info]
-When mutations fail due to permission checks, they throw a `PermissionsException`.
+When mutations fail due to permission checks, they throw a [`PermissionsException`](api:SilverStripe\GraphQL\Schema\Exception\PermissionsException).
 [/info]
 
 For `create`, if a singleton instance of the record being created doesn't pass a `canCreate($member)` check,
@@ -41,19 +41,16 @@ Query permissions are a bit more complicated, because they can either be in list
 or a single item. Rather than throw, these permission checks work as filters.
 
 [notice]
-It is critical that you have a `canView()` method defined on your dataobjects. Without this, only admins are
+It is critical that you have a `canView()` method defined on your DataObjects. Without this, only admins are
 assumed to have permission to view a record.
 [/notice]
-
 
 For `read` and `readOne` a plugin called `canView` will filter the result set by the `canView($member)` check.
 
 [notice]
 When paginated items fail a `canView()` check, the `pageInfo` field is not affected.
-Limits and pages are determined through database queries,
-it would be too inefficient to perform in-memory checks on large data sets. 
-This can result in pages
-showing a smaller number of items than what the page should contain, but keeps the pagination calls consistent
+Limits and pages are determined through database queries. It would be too inefficient to perform in-memory checks on large data sets.
+This can result in pages showing a smaller number of items than what the page should contain, but keeps the pagination calls consistent
 for `limit` and `offset` parameters.
 [/notice]
 
@@ -61,7 +58,7 @@ for `limit` and `offset` parameters.
 
 Though not recommended, you can disable query permissions by setting their plugins to `false`.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
   Page:
     operations:

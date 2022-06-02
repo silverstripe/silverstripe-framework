@@ -1,6 +1,7 @@
 ---
 title: Building a schema with procedural code
 summary: Use PHP code to build your schema
+icon: tools
 ---
 
 # Getting started
@@ -22,7 +23,8 @@ may have an enum containing a list of all the languages that are configured for 
 wouldn't make sense to build this statically. It makes more sense to have a single source
 of truth.
 
-Internally, model-driven types that conform to the shapes of their models must use procedural code to add fields, create operations, and more, because the entire premise of model-driven
+Internally, model-driven types that conform to the shapes of their models must use procedural
+code to add fields, create operations, and more, because the entire premise of model-driven
 types is that they're dynamic. So the procedural API for schemas has to be pretty robust.
 
 Lastly, if you just prefer writing PHP to writing YAML, this is a good option, too.
@@ -35,7 +37,7 @@ the schema build.
 
 ### Adding executable code
 
-We can use the `execute` section of the config to add an implementation of `SchemaUpdater`.
+We can use the `execute` section of the config to add an implementation of [`SchemaUpdater`](api:SilverStripe\GraphQL\Schema\Interfaces\SchemaUpdater).
 
 ```yaml
 SilverStripe\GraphQL\Schema\Schema:
@@ -46,7 +48,7 @@ SilverStripe\GraphQL\Schema\Schema:
           - 'MyProject\MySchema'
 ```
 
-Now just implement the `SilverStripe\GraphQL\Schema\Interfaces\SchemaUpdater` interface.
+Now just implement the [`SchemaUpdater`](api:SilverStripe\GraphQL\Schema\Interfaces\SchemaUpdater) interface.
 
 **app/src/MySchema.php**
 ```php
@@ -64,57 +66,56 @@ class MySchema implements SchemaUpdater
 
 ### Example code
 
-Most the API should be self-documenting, and a good IDE should autocomplete everything you
+Most of the API should be self-documenting, and a good IDE should autocomplete everything you
 need, but the key methods map directly to their configuration counterparts:
 
-* types (`->addType(Type $type)`)
-* models (`->addModel(ModelType $type)`)
-* queries (`->addQuery(Query $query)`)
-* mutations (`->addMutation(Mutation $mutation)`)
-* enums (`->addEnum(Enum $type)`)
-* interfaces (`->addInterface(InterfaceType $type)`)
-* unions (`->addUnion(UnionType $type)`)
-
+* types (`$schema->addType(Type $type)`)
+* models (`$schema->addModel(ModelType $type)`)
+* queries (`$schema->addQuery(Query $query)`)
+* mutations (`$schema->addMutation(Mutation $mutation)`)
+* enums (`$schema->addEnum(Enum $type)`)
+* interfaces (`$schema->addInterface(InterfaceType $type)`)
+* unions (`$schema->addUnion(UnionType $type)`)
 
 ```php
     public static function updateSchema(Schema $schema): void
     {
-        $myType = Type::create('Country')
+        $countryType = Type::create('Country')
             ->addField('name', 'String')
             ->addField('code', 'String');
-        $schema->addType($myType);
+        $schema->addType($countryType);
 
-        $myQuery = Query::create('readCountries', '[Country]')
+        $countriesQuery = Query::create('readCountries', '[Country]!')
             ->addArg('limit', 'Int');
+        $schema->addQuery($countriesQuery);
 
         $myModel = $schema->createModel(MyDataObject::class)
             ->addAllFields()
             ->addAllOperations();
         $schema->addModel($myModel);
-
     }
 ```
 
-#### Fluent setters
+#### Chainable setters
 
 To make your code chainable, when adding fields and arguments, you can invoke a callback
 to update it on the fly.
 
 ```php
-$myType = Type::create('Country')
+$countryType = Type::create('Country')
     ->addField('name', 'String', function (Field $field) {
-
         // Must be a callable. No inline closures allowed!
-        $field->setResolver([MyClass::class, 'myResolver'])
+        $field->setResolver([MyResolverClass::class, 'countryResolver'])
             ->addArg('myArg', 'String!');
     })
     ->addField('code', 'String');
-$schema->addType($myType);
+$schema->addType($countryType);
 
-$myQuery = Query::create('readCountries', '[Country]')
+$countriesQuery = Query::create('readCountries', '[Country]!')
     ->addArg('limit', 'Int', function (Argument $arg) {
         $arg->setDefaultValue(20);
      });
+$schema->addQuery($countriesQuery);
 ```
 
 ### Further reading

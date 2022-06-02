@@ -18,7 +18,7 @@ Docs for the current stable version (3.x) can be found
 
 By default, we get basic operations for our models, like `read`, `create`,
 `update`, and `delete`, but we can add to this list by creating
-an implementation of `OperationProvider` and registering it.
+an implementation of [`OperationProvider`](api:SilverStripe\GraphQL\Schema\Interfaces\OperationProvider) and registering it.
 
 Let's build a new operation that **duplicates** DataObjects.
 
@@ -41,6 +41,7 @@ class DuplicateCreator implements OperationCreator
                 'dataClass' => $model->getSourceClass(),
             ]);
     }
+}
 ```
 
 We add **resolver context** to the mutation because we need to know
@@ -50,7 +51,7 @@ static function.
 The signature for resolvers with context is:
 
 ```php
-public static function (array $context): Closure;
+public static function (array $context): Closure
 ```
 
 We use the context to pass to a function that we'll create dynamically.
@@ -65,13 +66,13 @@ public static function resolve(array $resolverContext = []): Closure
             return null;
         }
         return DataObject::get_by_id($dataClass, $args['id'])
-        	->duplicate();
+            ->duplicate();
     };
 }
 ```
 
 Now, just add the operation to the `DataObjectModel` configuration
-to make it available to all DataObject types.
+to make it available to all `DataObject` types.
 
 **app/_graphql/config.yml**
 ```yaml
