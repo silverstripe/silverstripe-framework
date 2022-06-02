@@ -2,10 +2,15 @@
 
 namespace SilverStripe\Control\Tests;
 
+use Exception;
+use LogicException;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\CookieJar;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Director;
 
 class CookieTest extends SapphireTest
 {
@@ -200,5 +205,68 @@ class CookieTest extends SapphireTest
         //check it's neither set nor reveived
         $this->assertEmpty(Cookie::get('newCookie'));
         $this->assertEmpty(Cookie::get('newCookie', false));
+    }
+
+    /**
+     * Check that warnings are not logged for https requests and when samesite is not "None"
+     * Test passes if no warning is logged
+     */
+    public function testValidateSameSiteNoWarning(): void
+    {
+        // Throw an exception when a warning is logged so we can catch it
+        $mockLogger = $this->getMockBuilder(Logger::class)->setConstructorArgs(['testLogger'])->getMock();
+        $catchMessage = 'A warning was logged';
+        $mockLogger->expects($this->never())
+            ->method('warning')
+            ->willThrowException(new Exception($catchMessage));
+        Injector::inst()->registerService($mockLogger, LoggerInterface::class);
+
+        // Only samesite === 'None' should log a warning on non-https requests
+        Director::config()->set('alternate_base_url', 'http://insecure.example.com/');
+        Cookie::validateSameSite('Lax');
+        Cookie::validateSameSite('Strict');
+
+        // There should be no warnings logged for secure requests
+        Director::config()->set('alternate_base_url', 'https://secure.example.com/');
+        Cookie::validateSameSite('None');
+        Cookie::validateSameSite('Lax');
+        Cookie::validateSameSite('Strict');
+    }
+
+    /**
+     * Check whether warnings are correctly logged for non-https requests and samesite === "None"
+     */
+    public function testValidateSameSiteWarning(): void
+    {
+        // Throw an exception when a warning is logged so we can catch it
+        $mockLogger = $this->getMockBuilder(Logger::class)->setConstructorArgs(['testLogger'])->getMock();
+        $catchMessage = 'A warning was logged';
+        $mockLogger->expects($this->once())
+            ->method('warning')
+            ->willThrowException(new Exception($catchMessage));
+        Injector::inst()->registerService($mockLogger, LoggerInterface::class);
+        Director::config()->set('alternate_base_url', 'http://insecure.example.com/');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage($catchMessage);
+        Cookie::validateSameSite('None');
+    }
+
+    /**
+     * An exception should be thrown for an empty samesite value
+     */
+    public function testValidateSameSiteInvalidEmpty(): void
+    {
+        $this->expectException(LogicException::class);
+        Cookie::validateSameSite('');
+    }
+
+    /**
+     * An exception should be thrown for an invalid samesite value
+     */
+    public function testValidateSameSiteInvalidNotEmpty(): void
+    {
+        $this->expectException(LogicException::class);
+        Cookie::validateSameSite('invalid');
     }
 }

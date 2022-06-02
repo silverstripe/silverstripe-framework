@@ -5,6 +5,10 @@ icon: cookie-bite
 ---
 
 # Cookies
+
+Note that cookies can have security implications - before setting your own cookies, make sure to read through the
+[secure coding](/developer_guides/security/secure_coding#secure-sessions-cookies-and-tls-https) documentation.
+
 ## Accessing and Manipulating Cookies
 
 Cookies are a mechanism for storing data in the remote browser and thus tracking or identifying return users. 
@@ -51,6 +55,20 @@ Cookie::force_expiry($name, $path = null, $domain = null);
 
 // Cookie::force_expiry('MyApplicationPreference')
 ```
+
+### Samesite attribute
+
+The `samesite` attribute is set on all cookies with a default value of `Lax`. You can change the default value by setting the `default_samesite` value on the
+[Cookie](api:SilverStripe\Control\Cookie) class:
+
+```yml
+SilverStripe\Control\Cookie:
+  default_samesite: 'Strict'
+```
+
+[info]
+Note that this _doesn't_ apply for the session cookie, which is handled separately. See [Sessions](/developer_guides/cookies_and_sessions/sessions#samesite-attribute).
+[/info]
 
 ## Cookie_Backend
 

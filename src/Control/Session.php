@@ -136,6 +136,12 @@ class Session
     private static $cookie_name_secure = 'SECSESSID';
 
     /**
+     * Must be "Strict", "Lax", or "None".
+     * @config
+     */
+    private static string $cookie_samesite = 'Lax';
+
+    /**
      * Name of session cache limiter to use.
      * Defaults to '' to disable cache limiter entirely.
      *
@@ -283,31 +289,15 @@ class Session
             throw new BadMethodCallException("Session has already started");
         }
 
-        $path = $this->config()->get('cookie_path');
-        if (!$path) {
-            $path = Director::baseURL();
-        }
-        $domain = $this->config()->get('cookie_domain');
-        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $session_path = $this->config()->get('session_store_path');
-        $timeout = $this->config()->get('timeout');
-
-        // Director::baseURL can return absolute domain names - this extracts the relevant parts
-        // for the session otherwise we can get broken session cookies
-        if (Director::is_absolute_url($path)) {
-            $urlParts = parse_url($path ?? '');
-            $path = $urlParts['path'];
-            if (!$domain) {
-                $domain = $urlParts['host'];
-            }
-        }
 
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
         $data = [];
         if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
             if (!headers_sent()) {
-                session_set_cookie_params($timeout ?: 0, $path, $domain ?: null, $secure, true);
+                $cookieParams = $this->buildCookieParams($request);
+                session_set_cookie_params($cookieParams);
 
                 $limiter = $this->config()->get('sessionCacheLimiter');
                 if (isset($limiter)) {
@@ -323,7 +313,7 @@ class Session
                 // separate (less secure) session for non-HTTPS requests
                 // if headers_sent() is true then it's best to throw the resulting error rather than risk
                 // a security hole.
-                if ($secure) {
+                if ($cookieParams['secure']) {
                     session_name($this->config()->get('cookie_name_secure'));
                 }
 
@@ -331,8 +321,16 @@ class Session
 
                 // Session start emits a cookie, but only if there's no existing session. If there is a session timeout
                 // tied to this request, make sure the session is held for the entire timeout by refreshing the cookie age.
-                if ($timeout && $this->requestContainsSessionId($request)) {
-                    Cookie::set(session_name(), session_id(), $timeout / 86400, $path, $domain ?: null, $secure, true);
+                if ($cookieParams['lifetime'] && $this->requestContainsSessionId($request)) {
+                    Cookie::set(
+                        session_name(),
+                        session_id(),
+                        $cookieParams['lifetime'] / 86400,
+                        $cookieParams['path'],
+                        $cookieParams['domain'],
+                        $cookieParams['secure'],
+                        true
+                    );
                 }
             } else {
                 // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
@@ -352,6 +350,53 @@ class Session
         $this->data = $data;
 
         $this->started = true;
+    }
+
+    /**
+     * Build the parameters used for setting the session cookie.
+     */
+    private function buildCookieParams(HTTPRequest $request): array
+    {
+        $timeout = $this->config()->get('timeout');
+        $path = $this->config()->get('cookie_path');
+        $domain = $this->config()->get('cookie_domain');
+        if (!$path) {
+            $path = Director::baseURL();
+        }
+
+        // Director::baseURL can return absolute domain names - this extracts the relevant parts
+        // for the session otherwise we can get broken session cookies
+        if (Director::is_absolute_url($path)) {
+            $urlParts = parse_url($path ?? '');
+            $path = $urlParts['path'];
+            if (!$domain) {
+                $domain = $urlParts['host'];
+            }
+        }
+
+        $sameSite = static::config()->get('cookie_samesite');
+        Cookie::validateSameSite($sameSite);
+        $secure = $this->isCookieSecure($sameSite, Director::is_https($request));
+
+        return [
+            'lifetime' => $timeout ?: 0,
+            'path' => $path,
+            'domain' => $domain ?: null,
+            'secure' => $secure,
+            'httponly' => true,
+            'samesite' => $sameSite,
+        ];
+    }
+
+    /**
+     * Determines what the value for the `secure` cookie attribute should be.
+     */
+    private function isCookieSecure(string $sameSite, bool $isHttps): bool
+    {
+        if ($sameSite === 'None') {
+            return true;
+        }
+        return $isHttps && $this->config()->get('cookie_secure');
     }
 
     /**

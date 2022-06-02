@@ -762,11 +762,15 @@ disable this behaviour using `CanonicalURLMiddleware::singleton()->setForceBasic
 configuration in YAML.
 
 We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell Silverstripe CMS to 
-use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie). 
-To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`
+use a [secure session](/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie).
+To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`.
+
+It is also a good idea to set the `samesite` attribute for the session cookie to `Strict` unless you have a specific use case for
+sharing the session cookie across domains.
 
 ```yml
 SilverStripe\Control\Session:
+  cookie_samesite: 'Strict'
   cookie_secure: true
 ```
 
@@ -783,6 +787,11 @@ SilverStripe\Core\Injector\Injector:
     properties:
       TokenCookieSecure: true
 ```
+
+[info]
+There is not currently an easy way to pass a `samesite` attribute value for setting this cookie - but you can set the
+default value for the attribute for all cookies. See [the main cookies documentation](/developer_guides/cookies_and_sessions/cookies#samesite-attribute) for more information.
+[/info]
 
 For other cookies set by your application we should also ensure the users are provided with secure cookies by setting 
 the "Secure" and "HTTPOnly" flags. These flags prevent them from being stolen by an attacker through javascript. 
