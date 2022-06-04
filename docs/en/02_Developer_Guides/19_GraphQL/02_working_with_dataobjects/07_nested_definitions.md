@@ -44,7 +44,7 @@ MyProject\Pages\Blog:
     author: true
     categories: true
 SilverStripe\Security\Member:
-  fields
+  fields:
     firstName: true
     surname: true
     email: true
