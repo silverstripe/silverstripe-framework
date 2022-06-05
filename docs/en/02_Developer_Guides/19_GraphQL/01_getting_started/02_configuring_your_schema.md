@@ -145,7 +145,7 @@ There are two approaches to namespacing:
 If you use a parent directory name (at any depth) of one of the four keywords above, it will
 be implicitly placed in the corresponding section of the schema.
 
-**app/_graphql/types/config.yml**
+**app/_graphql/config/config.yml**
 ```yaml
 # my schema config here
 ```
