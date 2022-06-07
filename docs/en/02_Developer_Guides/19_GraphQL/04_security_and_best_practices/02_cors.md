@@ -143,7 +143,7 @@ SilverStripe\GraphQL\Controller:
 ```yaml
 ## CORS Config
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\GraphQL\Controller.default
+  SilverStripe\GraphQL\Controller.default:
     properties:
       corsConfig:
         Enabled: false
