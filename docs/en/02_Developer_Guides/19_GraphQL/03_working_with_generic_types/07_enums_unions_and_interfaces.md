@@ -19,11 +19,10 @@ Docs for the current stable version (3.x) can be found
 In more complex schemas, you may want to define types that aren't simply a list of fields, or
 "object types." These include enums, unions and interfaces.
 
-
 ### Enum types
 
 Enum types are simply a list of string values that are possible for a given field. They are
-often used in arguments to queries, such as `{sort: DESC }`.
+often used in arguments to queries, such as `{sort: DESC}`.
 
 It's very easy to add enum types to your schema. Just use the `enums` section of the config.
 
@@ -36,28 +35,28 @@ It's very easy to add enum types to your schema. Just use the `enums` section of
         ASC: Ascending order
 ```
 
-
 ### Interfaces
 
 An interface is a specification of fields that must be included on a type that implements it.
 For example, an interface `Person` could include `firstName: String`, `surname: String`, and
-`age: Int`. The types `Actor` and `Chef` would implement the `Person` interface. Actors and
-chefs must have names and ages.
+`age: Int`. The types `Actor` and `Chef` would implement the `Person` interface, and therefore
+querying for `Person` types can also give you `Actor` and `Chef` types in the result. Actors and
+chefs must also have the `firstName`, `surname`, and `age` fields for such a query to work.
 
 To define an interface, use the `interfaces` section of the config.
 
 **app/_graphql/schema.yml**
 ```yaml
-  interfaces:
-    Person:
-      fields:
-        firstName: String!
-        surname: String!
-        age: Int!
-      resolveType: [ 'MyProject\MyResolver', 'resolvePersonType' ]
+interfaces:
+  Person:
+    fields:
+      firstName: String!
+      surname: String!
+      age: Int!
+    resolveType: [ 'MyProject\MyResolver', 'resolvePersonType' ]
 ```
 
-Interfaces must define a `resolveType` resolver method to inform the interface
+Interfaces must define a `resolve[Typename]Type` resolver method to inform the interface
 which type it is applied to given a specific result. This method is non-discoverable and
 must be applied explicitly.
 
@@ -94,7 +93,7 @@ non-discoverable and must be applied explicitly.
 ```php
     public static function resolveArticleUnion(Article $object): string
     {
-        if ($object->category === 'blogs')
+        if ($object->category === 'blogs') {
             return 'Blog';
         }
         if ($object->category === 'news') {
@@ -106,4 +105,3 @@ non-discoverable and must be applied explicitly.
 ### Further reading
 
 [CHILDREN]
-

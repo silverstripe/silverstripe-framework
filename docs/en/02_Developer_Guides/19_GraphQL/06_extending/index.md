@@ -1,13 +1,12 @@
 ---
 title: Extending the schema
 summary: Add new functionality to the schema
+icon: code
 ---
 
 In this section of the documentation, we'll look at some advanced
-features for developers who want to extend their GraphQL server 
+features for developers who want to extend their GraphQL server
 using custom models, middleware, and new operations.
-
-[CHILDREN]
 
 [alert]
 You are viewing docs for a pre-release version of silverstripe/graphql (4.x).
@@ -16,3 +15,5 @@ and report any issues at [github.com/silverstripe/silverstripe-graphql](https://
 Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
+
+[CHILDREN]
