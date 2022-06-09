@@ -605,8 +605,36 @@ class Injector implements ContainerInterface
             $constructorParams = [null, DataObject::CREATE_SINGLETON];
         }
 
-        $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
-        $object = $factory->create($class, $constructorParams);
+        if (isset($spec['factory']) && isset($spec['factory_method'])) {
+            if (!method_exists($spec['factory'], $spec['factory_method'])) {
+                throw new InvalidArgumentException(sprintf(
+                    'Factory method "%s::%s" does not exist.',
+                    $spec['factory'],
+                    $spec['factory_method']
+                ));
+            }
+
+            // If factory_method is statically callable, do not instantiate
+            // factory i.e. just call factory_method statically.
+            $factory = is_callable([$spec['factory'], $spec['factory_method']])
+                ? $spec['factory']
+                : $this->get($spec['factory']);
+            $method = $spec['factory_method'];
+            $object = call_user_func_array([$factory, $method], $constructorParams);
+        } else {
+            $factory = isset($spec['factory']) ? $this->get($spec['factory']) : $this->getObjectCreator();
+            if (!$factory instanceof Factory) {
+                throw new InvalidArgumentException(sprintf(
+                    'Factory class "%s" does not implement "%s" interface.',
+                    get_class($factory),
+                    Factory::class
+                ));
+            }
+            $object = $factory->create($class, $constructorParams);
+        }
+        if (!is_object($object)) {
+            throw new InjectorNotFoundException('Factory does not return an object');
+        }
 
         // Handle empty factory responses
         if (!$object) {
