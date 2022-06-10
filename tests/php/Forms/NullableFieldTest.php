@@ -11,7 +11,7 @@ use SilverStripe\Forms\NullableField;
  *
  * @author Pete Bacon Darwin
  */
-class NullableFieldTests extends SapphireTest
+class NullableFieldTest extends SapphireTest
 {
 
     /**
