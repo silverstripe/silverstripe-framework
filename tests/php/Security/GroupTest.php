@@ -305,6 +305,11 @@ class GroupTest extends FunctionalTest
         $newGroup->Title = 'Title';
         $result = $newGroup->validate();
         $this->assertTrue($result->isValid());
+
+        // Title can be empty to avoid breaking backwards-compatibility.
+        $newGroup->Title = '';
+        $result = $newGroup->validate();
+        $this->assertTrue($result->isValid());
     }
 
     public function testGroupTitleDuplication()
