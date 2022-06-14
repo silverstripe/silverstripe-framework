@@ -1,6 +1,6 @@
 ---
 title: Adding DataObjects to the schema
-summary: An overview of how the `DataObject` model can influence the creation of types, queries, and mutations
+summary: An overview of how the DataObject model can influence the creation of types, queries, and mutations
 ---
 
 # Working with DataObjects

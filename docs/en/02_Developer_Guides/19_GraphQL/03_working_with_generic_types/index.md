@@ -1,6 +1,6 @@
 ---
 title: Working with generic types
-summary: Break away from the magic of `DataObject` models and build types and queries from scratch.
+summary: Break away from the magic of DataObject models and build types and queries from scratch.
 icon: clipboard
 ---
 
