@@ -24,7 +24,7 @@ SilverStripe\Reports\Report:
 
 [notice]
 Note that some reports may have overridden the `getCount` method, and for those reports this may not apply.
-[notice]
+[/notice]
 
 ## Default reports
 
