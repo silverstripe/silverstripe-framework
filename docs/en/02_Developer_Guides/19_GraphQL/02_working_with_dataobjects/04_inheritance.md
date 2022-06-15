@@ -1,6 +1,6 @@
 ---
-title: `DataObject` inheritance
-summary: Learn how inheritance is handled in `DataObject` types
+title: DataObject inheritance
+summary: Learn how inheritance is handled in DataObject types
 ---
 
 # Working with DataObjects

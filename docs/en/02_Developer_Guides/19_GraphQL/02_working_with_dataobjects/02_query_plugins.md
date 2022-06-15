@@ -1,6 +1,6 @@
 ---
-title: `DataObject` query plugins
-summary: Learn about some of the useful goodies that come pre-packaged with `DataObject` queries
+title: DataObject query plugins
+summary: Learn about some of the useful goodies that come pre-packaged with DataObject queries
 ---
 
 # Working with DataObjects

@@ -1,6 +1,6 @@
 ---
-title: `DataObject` operation permissions
-summary: A look at how permissions work for `DataObject` queries and mutations
+title: DataObject operation permissions
+summary: A look at how permissions work for DataObject queries and mutations
 ---
 
 # Working with DataObjects
