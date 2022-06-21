@@ -242,6 +242,8 @@ class LostPasswordHandler extends RequestHandler
             ))
             ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
             ->setTo($member->Email);
+
+        $member->extend('updateForgotPasswordEmail', $email);
         return $email->send();
     }
 

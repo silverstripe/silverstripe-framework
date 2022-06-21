@@ -58,6 +58,25 @@ class DBDatetimeTest extends SapphireTest
         });
     }
 
+    public function testMockSleep()
+    {
+        DBDatetime::set_mock_now('2010-01-01 10:00:00');
+
+        $this->mockSleep(1);
+        $this->assertEquals(
+            '2010-01-01 10:00:01',
+            DBDatetime::now()->Rfc2822(),
+            'We expect the time to move forward by 1 second'
+        );
+
+        $this->mockSleep(10);
+        $this->assertEquals(
+            '2010-01-01 10:00:11',
+            DBDatetime::now()->Rfc2822(),
+            'We expect the time to move forward by 10 seconds'
+        );
+    }
+
     public function testSetNullAndZeroValues()
     {
         $date = DBDatetime::create_field('Datetime', '');

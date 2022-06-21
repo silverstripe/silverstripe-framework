@@ -16,7 +16,8 @@ Docs for the current stable version (3.x) can be found
 
 ## Adding pagination
 
-We've created a simple generic query for our `Country` type called `readCounties` that takes a `limit` argument.
+So far in this section we've created a simple generic query for a `Country` type called `readCountries` that takes a
+`limit` argument.
 
 ```graphql
 query {
@@ -29,14 +30,16 @@ query {
 
 Let's take this a step further and paginate it using a plugin.
 
-### The "paginate" plugin
+### The `paginate` plugin
 
 Since pagination is a fairly common task, we can take advantage of some reusable code here and just add a generic
 plugin for paginating.
 
 [notice]
-If you're paginating a DataList, you might want to consider using models with read operations, which paginate
-by default using the `paginateList` plugin. This will work, too, but requires a bit of code.
+If you're paginating a `DataList`, you might want to consider using models with read operations (instead of declaring
+them as generic types with generic queries), which paginate by default using the `paginateList` plugin.
+You can use generic typing and follow the below instructions too but it requires code that, for `DataObject` models,
+you get for free.
 [/notice]
 
 Let's add the plugin to our query:
@@ -48,10 +51,9 @@ Let's add the plugin to our query:
       type: '[Country]'
       plugins:
         paginate: {}
-
 ```
 
-Right now the plugin will add the necessary arguments to the query, build and update the return types. But
+Right now the plugin will add the necessary arguments to the query, and update the return types. But
 we still need to provide this generic plugin a way of actually limiting the result set, so we need a resolver.
 
 **app/_graphql/schema.yml**
@@ -88,13 +90,15 @@ public static function paginateCountries(array $context): Closure
 
 A couple of things are going on here:
 
-* Notice the new design pattern of a **context-aware resolver**. Since the plugin be configured with a `maxLimit`
+* Notice the new design pattern of a **context-aware resolver**. Since the plugin is configured with a `maxLimit`
 parameter, we need to get this information to the function that is ultimately used in the schema. Therefore,
 we create a dynamic function in a static method by wrapping it with context. It's kind of like a decorator.
+* As long as we can do the work of counting and limiting the array, the [`PaginationPlugin`](api:SilverStripe\GraphQL\Schema\Plugin\PaginationPlugin)
+can handle the rest. It will return an array including `edges`, `nodes`, and `pageInfo`.
 
-* As long as we can do the work of counting and limiting the array, the `PaginationPlugin` can handle the rest. It will return an array including `edges`, `nodes`, and `pageInfo`.
+Rebuild the schema and test it out:
 
-Rebuild the schema, and test it out:
+`vendor/bin/sake dev/graphql/build schema=default`
 
 ```graphql
 query {

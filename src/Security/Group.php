@@ -488,16 +488,7 @@ class Group extends DataObject
      */
     public function setCode($val)
     {
-        $currentGroups = Group::get()
-            ->map('Code', 'Title')
-            ->toArray();
-        $code = Convert::raw2url($val);
-        $count = 2;
-        while (isset($currentGroups[$code])) {
-            $code = Convert::raw2url($val . '-' . $count);
-            $count++;
-        }
-        $this->setField("Code", $code);
+        $this->setField('Code', Convert::raw2url($val));
     }
 
     public function validate()
@@ -528,17 +519,7 @@ class Group extends DataObject
             ->map('Code', 'Title')
             ->toArray();
 
-        if (isset($currentGroups[$this->Code])) {
-            $result->addError(
-                _t(
-                    'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
-                    'A Group ({group}) already exists with the same {identifier}',
-                    ['group' => $this->Code, 'identifier' => 'Code']
-                )
-            );
-        }
-
-        if (in_array($this->Title, $currentGroups ?? [])) {
+        if (in_array($this->Title, $currentGroups)) {
             $result->addError(
                 _t(
                     'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
@@ -572,6 +553,9 @@ class Group extends DataObject
         if (!$this->Code && $this->Title != _t(__CLASS__ . '.NEWGROUP', "New Group")) {
             $this->setCode($this->Title);
         }
+
+        // Make sure the code for this group is unique.
+        $this->dedupeCode();
     }
 
     public function onBeforeDelete()
@@ -731,5 +715,26 @@ class Group extends DataObject
         }
 
         // Members are populated through Member->requireDefaultRecords()
+    }
+
+    /**
+     * Code needs to be unique as it is used to identify a specific group. Ensure no duplicate
+     * codes are created.
+     *
+     * @deprecated 5.0 Remove deduping in favour of throwing a validation error for duplicates.
+     */
+    private function dedupeCode(): void
+    {
+        $currentGroups = Group::get()
+            ->exclude('ID', $this->ID)
+            ->map('Code', 'Title')
+            ->toArray();
+        $code = $this->Code;
+        $count = 2;
+        while (isset($currentGroups[$code])) {
+            $code = $this->Code . '-' . $count;
+            $count++;
+        }
+        $this->setField('Code', $code);
     }
 }

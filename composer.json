@@ -25,6 +25,7 @@
         "bramus/monolog-colored-line-formatter": "^2",
         "composer/installers": "^1 || ^2",
         "composer/semver": "^1 || ^3",
+        "guzzlehttp/guzzle": "^7",
         "guzzlehttp/psr7": "^2",
         "embed/embed": "^4",
         "league/csv": "^8 || ^9",

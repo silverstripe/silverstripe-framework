@@ -6,6 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
 use SilverStripe\ORM\DB;
+use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
 
 /**
  * @requires extension mysqli
@@ -31,6 +32,10 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
 
         $cset = $connection->get_charset();
 
+        // Note: we do not need to update the utf charset here because mysqli with newer
+        // version of mysql/mariadb still self-reports as 'utf8' rather than 'utf8mb3'
+        // This is unlike self::testConnectionCollationControl()
+        // And also unlike MySQLPDOConnectorTest::testConnectionCharsetControl()
         $this->assertEquals($charset, $cset->charset);
         $this->assertEquals($defaultCollation, $cset->collation);
 
@@ -77,8 +82,9 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $cset = $connection->query('show variables like "character_set_connection"')->fetch_array()[1];
         $collation = $connection->query('show variables like "collation_connection"')->fetch_array()[1];
 
-        $this->assertEquals($charset, $cset);
-        $this->assertEquals($customCollation, $collation);
+        $helper = new Utf8TestHelper();
+        $this->assertEquals($helper->getUpdatedUtfCharsetForCurrentDB($charset), $cset);
+        $this->assertEquals($helper->getUpdatedUtfCollationForCurrentDB($customCollation), $collation);
 
         $connection->close();
         unset($cset, $connection, $connector, $config);

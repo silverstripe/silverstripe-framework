@@ -20,7 +20,7 @@ For readability and ergonomics, you can take advantage of nested type definition
 we have a `Blog` and we want to expose `Author` and `Categories`, but while we're at it, we want
 to specify what fields they should have.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Pages\Blog:
   fields:
@@ -36,7 +36,7 @@ MyProject\Pages\Blog:
 
 Alternatively, we could flatten that out:
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Pages\Blog:
   fields:
@@ -44,7 +44,7 @@ MyProject\Pages\Blog:
     author: true
     categories: true
 SilverStripe\Security\Member:
-  fields
+  fields:
     firstName: true
     surname: true
     email: true

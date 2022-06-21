@@ -17,16 +17,18 @@ Docs for the current stable version (3.x) can be found
 
 ## Versioned content
 
-For the most part, if your DataObject has the `Versioned` extension applied, there is nothing you need to do
-explicitly, but be aware that it will affect the operations and fields of your type.
+For the most part, if your `DataObject` has the `Versioned` extension applied, there is nothing you need to do
+explicitly - but be aware that it will affect the operations and fields of your type.
 You can also [disable](#disable) versioning for your schema if you don't need it.
+
+See [model versioning](/developer_guides/model/versioning) for general information about versioning your DataObjects.
 
 ### Versioned plugins
 
-There are several plugins provided by the `silverstripe-versioned` module that affect how versioned DataObjects
+There are several plugins provided by the `silverstripe/versioned` module that affect how versioned DataObjects
 appear in the schema. These include:
 
-* The `versioning` plugin, applied to the DataObject type
+* The `versioning` plugin, applied to the `DataObject` type
 * The `readVersion` plugin, applied to the queries for the DataObject
 * The `unpublishOnDelete` plugin, applied to the delete mutation
 
@@ -34,18 +36,24 @@ Let's walk through each one.
 
 #### The `versioning` plugin
 
-Defined in the `SilverStripe\Versioned\GraphQL\Plugins\VersionedDataObject` class, this plugin adds
-several fields to the DataObject type, including:
+Defined in the [`VersionedDataObject`](api:SilverStripe\Versioned\GraphQL\Plugins\VersionedDataObject) class, this plugin adds
+several fields to the `DataObject` type, including:
 
 ##### The `version` field
 
-The `version` field on your DataObject will include the following fields:
+The `version` field on your `DataObject` will include the following fields:
 
 * `author`: Member (Object -- the author of the version)
 * `publisher`: Member (Object -- the publisher of the version)
 * `published`: Boolean (True if the version is published)
 * `liveVersion`: Boolean (True if the version is the one that is currently live)
 * `latestDraftVersion`: Boolean (True if the version is the latest draft version)
+
+[info]
+Note that `author` and `publisher` are in relation to the given _version_ of the object - these are
+not necessarily the same as the author and publisher of the _original_ record (i.e. the author may not
+be the person who created the object, they're the person who saved a specific version of it).
+[/info]
 
 Let's look at it in context:
 
@@ -65,7 +73,7 @@ query readPages {
 
 ##### The `versions` field
 
-The `versions` field on your DataObject will return a list of the `version` objects described above.
+The `versions` field on your `DataObject` will return a list of the `version` objects described above.
 The list is sortable by version number, using the `sort` parameter.
 
 ```graphql
@@ -95,8 +103,7 @@ fields:
 The query will automatically apply the settings from the `versioning` input type to the query and affect
 the resulting `DataList`.
 
-
-#### The "unpublishOnDelete" plugin
+#### The `unpublishOnDelete` plugin
 
 This is mostly for internal use. It's an escape hatch for tidying up after a delete.
 
@@ -111,9 +118,9 @@ by default. They include:
 * `rollback`
 
 All of these identifiers can be used in the `operations` config for your versioned
-DataObject. They will all be included if you use `operations: '*'`.
+`DataObject`. They will all be included if you use `operations: '*'`.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
   MyProject\Models\MyObject:
     fields: '*'

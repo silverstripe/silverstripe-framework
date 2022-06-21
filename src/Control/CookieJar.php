@@ -18,7 +18,6 @@ use LogicException;
  */
 class CookieJar implements Cookie_Backend
 {
-
     /**
      * Hold the cookies that were existing at time of instantiation (ie: The ones
      * sent to PHP by the browser)
@@ -168,9 +167,18 @@ class CookieJar implements Cookie_Backend
         $secure = false,
         $httpOnly = true
     ) {
+        $sameSite = $this->getSameSite($name);
+        Cookie::validateSameSite($sameSite);
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
-            return setcookie($name ?? '', $value ?? '', $expiry ?? 0, $path ?? '', $domain ?? '', $secure ?? false, $httpOnly ?? false);
+            return setcookie($name ?? '', $value ?? '', [
+                'expires' => $expiry ?? 0,
+                'path' => $path ?? '',
+                'domain' => $domain ?? '',
+                'secure' => $this->cookieIsSecure($sameSite, (bool) $secure),
+                'httponly' => $httpOnly ?? false,
+                'samesite' => $sameSite,
+            ]);
         }
 
         if (Cookie::config()->uninherited('report_errors')) {
@@ -179,5 +187,26 @@ class CookieJar implements Cookie_Backend
             );
         }
         return false;
+    }
+
+    /**
+     * Cookies must be secure if samesite is "None"
+     */
+    private function cookieIsSecure(string $sameSite, bool $secure): bool
+    {
+        return $sameSite === 'None' ? true : $secure;
+    }
+
+    /**
+     * Get the correct samesite value - Session cookies use a different configuration variable.
+     *
+     * @deprecated 5.0 The relevant methods will include a `$sameSite` parameter instead.
+     */
+    private function getSameSite(string $name): string
+    {
+        if ($name === session_name()) {
+            return Session::config()->get('cookie_samesite');
+        }
+        return Cookie::config()->get('default_samesite');
     }
 }

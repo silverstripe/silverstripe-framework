@@ -389,7 +389,6 @@ class ManyManyList extends RelationList
      */
     public function removeAll()
     {
-
         // Remove the join to the join table to avoid MySQL row locking issues.
         $query = $this->dataQuery();
         $foreignFilter = $query->getQueryParam('Foreign.Filter');

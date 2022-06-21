@@ -193,9 +193,14 @@ Note: undefined variables will be replaced with null.
 
 ## Factories
 
-Some services require non-trivial construction which means they must be created by a factory class. To do this, create
-a factory class which implements the [Factory](api:SilverStripe\Framework\Injector\Factory) interface. You can then specify
-the `factory` key in the service definition, and the factory service will be used.
+Some services require non-trivial construction which means they must be created
+by a factory.
+
+### Factory interface
+
+Create a factory class which implements the [Factory](api:SilverStripe\Framework\Injector\Factory)
+interface. You can then specify the `factory` key in the service definition,
+and the factory service will be used.
 
 An example using the `MyFactory` service to create instances of the `MyService` service is shown below:
 
@@ -222,6 +227,32 @@ class MyFactory implements SilverStripe\Core\Injector\Factory
 
 // Will use MyFactoryImplementation::create() to create the service instance.
 $instance = Injector::inst()->get('MyService');
+```
+
+### Factory method
+
+To use any class that not implements Factory interface as a service factory
+specify `factory` and `factory_method` keys.
+
+An example of HTTP Client service with extra logging middleware:
+
+**app/_config/app.yml**
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  LogMiddleware:
+    factory: 'GuzzleHttp\Middleware'
+    factory_method: 'log'
+    constructor: ['%$Psr\Log\LoggerInterface', '%$GuzzleHttp\MessageFormatter', 'info']
+  GuzzleHttp\HandlerStack:
+    factory: 'GuzzleHttp\HandlerStack'
+    factory_method: 'create'
+    calls:
+      - [push, ['%$LogMiddleware']]
+  GuzzleHttp\Client:
+    constructor:
+      -
+        handler: '%$GuzzleHttp\HandlerStack'
 ```
 
 ## Dependency overrides

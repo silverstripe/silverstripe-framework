@@ -15,22 +15,22 @@ Docs for the current stable version (3.x) can be found
 [here](https://github.com/silverstripe/silverstripe-graphql/tree/3)
 [/alert]
 
-## DataObject query plugins
+## `DataObject` query plugins
 
 This module has a [plugin system](../plugins) that affords extensibility to queries, mutations,
 types, fields, and just about every other thread of the schema. Model types can define default
-plugins to include, and for DataObject queries, these include:
+plugins to include, and for `DataObject` queries, these include:
 
-* filter
-* sort
-* dbFieldArgs
-* paginateList
-* inheritance
-* canView (read, readOne)
-* firstResult (readOne)
+* `filter`
+* `sort`
+* `dbFieldArgs`
+* `paginateList`
+* `inheritance`
+* `canView` (read, readOne)
+* `firstResult` (readOne)
 
 When the `silverstripe/cms` module is installed, a plugin known as `getByLink` is also added.
-Other modules, such as `silverstripe-versioned` may augment that list with even more.
+Other modules, such as `silverstripe/versioned` may augment that list with even more.
 
 ### The pagination plugin
 
@@ -60,6 +60,7 @@ query {
         hasNextPage
         hasPrevPage
     }
+  }
 }
 ```
 
@@ -67,14 +68,15 @@ query {
 If you're not familiar with the jargon of `edges` and `node`, don't worry too much about it
 for now. It's just a pretty well-established convention for pagination in GraphQL, mostly owing
 to its frequent use with [cursor-based pagination](https://graphql.org/learn/pagination/), which
-isn't something we do in Silverstripe CMS.
+isn't something we do in Silverstripe CMS. You can ignore `edges.node` and just use `nodes` if
+you want to.
 [/notice]
 
 #### Disabling pagination
 
 Just set it to `false` in the configuration.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   operations:
@@ -85,33 +87,35 @@ MyProject\Models\ProductCategory:
 
 To disable pagination globally, use `modelConfig`:
 
-*app/_graphql/modelConfig.yml*
+**app/_graphql/config.yml**
 ```yaml
-DataObject:
-  operations:
-    read:
-      plugins:
-        paginateList: false
+modelConfig:
+  DataObject:
+    operations:
+      read:
+        plugins:
+          paginateList: false
 ```
 
 ### The filter plugin
 
-The filter plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QueryFilter`) adds a
+The filter plugin ([`QueryFilter`](api:SilverStripe\GraphQL\Schema\DataObject\Plugin\QueryFilter)) adds a
 special `filter` argument to the `read` and `readOne` operations.
 
-```yaml
+```graphql
 query {
   readPages(
     filter: { title: { eq: "Blog" } }
   ) {
-  nodes {
-    title
-    created
+    nodes {
+      title
+      created
+    }
   }
 }
 ```
 
-In the above example, the `eq` is known as a *comparator*. There are several of these
+In the above example, the `eq` is known as a "comparator". There are several of these
 included with the the module, including:
 
 * `eq` (exact match)
@@ -134,9 +138,10 @@ query {
       created: { gt: "2020-06-01", lte: "2020-09-01" }
     }
   ) {
-  nodes {
-    title
-    created
+    nodes {
+      title
+      created
+    }
   }
 }
 ```
@@ -161,21 +166,22 @@ query {
       }
     }
   ) {
-  nodes {
-    title
+    nodes {
+      title
+    }
   }
 }
 ```
 
-Filters are only querying against the database by default,
-it is not possible to filter by fields with custom resolvers.
+Filters are only querying against the database by default - it is not possible to filter by
+fields with custom resolvers.
 
 #### Customising the filter fields
 
-By default, all fields on the dataobject, including relationships, are included. To customise
+By default, all fields on the DataObject, including relationships, are included. To customise
 this, just add a `fields` config to the plugin definition:
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   fields:
@@ -193,7 +199,7 @@ MyProject\Models\ProductCategory:
 
 Just set it to `false` in the configuration.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   operations:
@@ -204,18 +210,19 @@ MyProject\Models\ProductCategory:
 
 To disable filtering globally, use `modelConfig`:
 
-*app/_graphql/modelConfig.yml*
+**app/_graphql/config.yml**
 ```yaml
-DataObject:
-  operations:
-    read:
-      plugins:
-        filter: false
+modelConfig:
+  DataObject:
+    operations:
+      read:
+        plugins:
+          filter: false
 ```
 
 ### The sort plugin
 
-The sort plugin (`SilverStripe\GraphQL\Schema\DataObject\Plugin\QuerySort`) adds a
+The sort plugin ([`QuerySort`](api:SilverStripe\GraphQL\Schema\DataObject\Plugin\QuerySort)) adds a
 special `sort` argument to the `read` and `readOne` operations.
 
 ```graphql
@@ -223,10 +230,10 @@ query {
   readPages (
     sort: { created: DESC }
   ) {
-      nodes {
-        title
-        created
-      }
+    nodes {
+      title
+      created
+    }
   }
 }
 ```
@@ -242,20 +249,19 @@ query {
       }
     }
   ) {
-      nodes {
-        title
-      }
+    nodes {
+      title
+    }
   }
 }
 ```
 
-
 #### Customising the sort fields
 
-By default, all fields on the dataobject, including `has_one` relationships, are included.
+By default, all fields on the DataObject, including `has_one` relationships, are included.
 To customise this, just add a `fields` config to the plugin definition:
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   fields:
@@ -273,7 +279,7 @@ MyProject\Models\ProductCategory:
 
 Just set it to `false` in the configuration.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   operations:
@@ -294,11 +300,11 @@ modelConfig:
           sort: false
 ```
 
-### The DBFieldArgs plugin  {#dbfieldargs}
+### The `DBFieldArgs` plugin  {#dbfieldargs}
 
 When fields are introspected from a model and reference a `DBField` instance,
 they get populated with a default set of arguments that map to methods on that
-`DBField` class, for instance `->Nice()` or `->LimitSentences(4)`.
+`DBField` class, for instance `$field->Nice()` or `$field->LimitSentences(4)`.
 
 Let's have a look at this query:
 
@@ -328,7 +334,7 @@ The primary field types that are affected by this include:
 
 #### All available arguments
 
-##### DBText
+##### `DBText`
 
 * `format: CONTEXT_SUMMARY` (optional "limit" arg)
 * `format: FIRST_PARAGRAPH`
@@ -336,7 +342,7 @@ The primary field types that are affected by this include:
 * `format: SUMMARY` (optional "limit" arg)
 * `parseShortcodes: Boolean` (DBHTMLText only)
 
-##### DBDate
+##### `DBDate`
 
 * `format: TIMESTAMP`
 * `format: NICE`
@@ -350,29 +356,28 @@ The primary field types that are affected by this include:
 * `format: FULL`
 * `format: CUSTOM` (requires `customFormat: String` arg)
 
-##### DBTime
+##### `DBTime`
 
 * `format: TIMESTAMP`
 * `format: NICE`
 * `format: SHORT`
 * `format: CUSTOM` (requires `customFormat: String` arg)
 
-##### DBDecimal
+##### `DBDecimal`
 
 * `format: INT`
 
-##### DBFloat
+##### `DBFloat`
 
 * `format: NICE`
 * `format: ROUND`
 * `format: NICE_ROUND`
 
-
 #### Enum naming strategy and deduplication
 
-By default, auto-generated Enum types will use as generic name as possible, which is `<FieldName>Enum`, e.g.
-`OrderStatusEnum`. On occasion, this may collide with other types, e.g. `OptionsEnum`. In this case, the
-second enum generated will use `<TypeName><FieldName>Enum`.
+By default, auto-generated Enum types will use as generic a name as possible using the convention `<FieldName>Enum` (e.g.
+`OrderStatusEnum`). On occasion, this may collide with other types (e.g. `OptionsEnum` is quite generic and likely to be used already).
+In this case, the second enum generated will use `<TypeName><FieldName>Enum` (e.g. `MyTypeOptionsEnum`).
 
 If an enum already exists with the same fields and name, it will be reused. For instance, if `OptionsEnum`
 is found and has exactly the same defined values (in the same order) as the Enum being generated,
@@ -382,7 +387,8 @@ it will be reused rather than proceeding to the deduplication strategy.
 
 You can specify custom enum names in the plugin config:
 
-```
+**app/_graphql/config.yml**
+```yaml
 modelConfig:
   DataObject:
     plugins:
@@ -396,7 +402,8 @@ modelConfig:
 You can also specify enums to be ignored. (`ClassName` does this on all DataObjects to prevent inheritance
 issues)
 
-```
+**app/_graphql/config.yml**
+```yaml
 modelConfig:
   DataObject:
     plugins:
@@ -410,7 +417,7 @@ modelConfig:
 ### The getByLink plugin
 
 When the `silverstripe/cms` module is installed (it is in most cases), a plugin called `getByLink`
-will ensure that queries that return a single DataObject model (e.g. readOne) get a new query argument
+will ensure that queries that return a single `DataObject` model (e.g. `readOne`) get a new query argument
 called `link` (configurable on the `field_name` property of `LinkablePlugin`).
 
 ```graphql

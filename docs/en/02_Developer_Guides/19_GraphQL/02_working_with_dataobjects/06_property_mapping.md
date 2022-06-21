@@ -3,7 +3,6 @@ title: Property mapping and dot syntax
 summary: Learn how to customise field names, use dot syntax, and use aggregate functions
 ---
 
-
 # Working with DataObjects
 
 [CHILDREN asList]
@@ -18,10 +17,13 @@ Docs for the current stable version (3.x) can be found
 
 ## Property mapping and dot syntax
 
-For the most part, field names are inferred through the DataObject model, but its API affords developers full
-control over naming:
+For the most part, field names are inferred through the `DataObject` model, but its API affords developers full
+control over naming.
 
-*app/_graphql/models.yml*
+In this example, we are taking a property `content` (which will be defined as `Content` in php) and defining it
+as `pageContent` for GraphQL queries and mutations.
+
+**app/_graphql/models.yml**
 ```yaml
 Page:
   fields:
@@ -35,12 +37,11 @@ When using explicit property mapping, you must also define an explicit type, as 
 no longer be inferred.
 [/notice]
 
-
 ### Dot-separated accessors
 
 Property mapping is particularly useful when using **dot syntax** to access fields.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Pages\Blog:
   fields:
@@ -50,9 +51,9 @@ MyProject\Pages\Blog:
       property: 'Author.FirstName'
 ```
 
-Fields on plural relationships will automatically convert to a `column` array:
+Fields on `has_many` or `many_many` relationships will automatically convert to a `column` array:
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Pages\Blog:
   fields:
@@ -67,7 +68,7 @@ MyProject\Pages\Blog:
 
 We can even use a small subset of **aggregates**, including `Count()`, `Max()`, `Min()` and `Avg()`.
 
-*app/_graphql/models.yml*
+**app/_graphql/models.yml**
 ```yaml
 MyProject\Models\ProductCategory:
   fields:

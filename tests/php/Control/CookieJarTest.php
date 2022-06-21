@@ -2,8 +2,11 @@
 
 namespace SilverStripe\Control\Tests;
 
+use ReflectionMethod;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\CookieJar;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Testing CookieJar
@@ -163,5 +166,37 @@ class CookieJarTest extends SapphireTest
         //check it's neither set nor received
         $this->assertEmpty($cookieJar->get('newCookie'));
         $this->assertEmpty($cookieJar->get('newCookie', false));
+    }
+
+    /**
+     * Check that the session cookie samesite configuration is used for session cookies.
+     */
+    public function testGetSameSite(): void
+    {
+        $cookieJar = new CookieJar();
+        $methodGetSameSite = new ReflectionMethod($cookieJar, 'getSameSite');
+        $methodGetSameSite->setAccessible(true);
+        Config::modify()->set(Session::class, 'cookie_samesite', 'None');
+
+        $this->assertSame('None', $methodGetSameSite->invoke($cookieJar, session_name()));
+        $this->assertSame('Lax', $methodGetSameSite->invoke($cookieJar, 'some-random-cookie'));
+    }
+
+    /**
+     * Check that the cookies are correctly set as secure for samesite === "None"
+     * The passed in value for secure should be respected otherwise.
+     */
+    public function testCookieIsSecure(): void
+    {
+        $cookieJar = new CookieJar();
+        $methodCookieIsSecure = new ReflectionMethod($cookieJar, 'cookieIsSecure');
+        $methodCookieIsSecure->setAccessible(true);
+
+        $this->assertTrue($methodCookieIsSecure->invoke($cookieJar, 'None', false));
+        $this->assertTrue($methodCookieIsSecure->invoke($cookieJar, 'None', true));
+        $this->assertTrue($methodCookieIsSecure->invoke($cookieJar, 'Lax', true));
+        $this->assertFalse($methodCookieIsSecure->invoke($cookieJar, 'Lax', false));
+        $this->assertTrue($methodCookieIsSecure->invoke($cookieJar, 'Strict', true));
+        $this->assertFalse($methodCookieIsSecure->invoke($cookieJar, 'Strict', false));
     }
 }

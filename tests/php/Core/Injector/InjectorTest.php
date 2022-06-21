@@ -118,6 +118,22 @@ class InjectorTest extends SapphireTest
         $injector->create('SomeClass');
     }
 
+    /**
+     * Fail creating object by factory that does not implement Factory
+     * interface.
+     */
+    public function testNotFactoryInterfaceFactory()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $injector = new Injector([
+            'service' => [
+                'factory' => 'stdClass',
+            ],
+        ]);
+        $injector->get('service');
+    }
+
     public function testConfiguredInjector()
     {
         $injector = new Injector();
@@ -904,6 +920,80 @@ class InjectorTest extends SapphireTest
         $injector->registerService($factory, 'factory');
 
         $this->assertInstanceOf(TestObject::class, $injector->get('service'));
+    }
+
+    /**
+     * Creating object by factory method.
+     */
+    public function testByFactoryMethodObjectCreator()
+    {
+        // Dummy service giving DateTime of tommorow.
+        $injector = new Injector([
+            'service' => [
+                'factory' => 'DateTime',
+                'factory_method' => 'add',
+                'constructor' => ['%$DateInterval'],
+            ],
+            'DateInterval' => [
+                'constructor' => ['P1D'],
+            ],
+        ]);
+
+        $this->assertInstanceOf(\DateTime::class, $injector->get('service'));
+        $this->assertEquals(
+            (new \DateTime())->add(new \DateInterval('P1D'))->format('%Y%m%d'),
+            $injector->get('service')->format('%Y%m%d')
+        );
+    }
+
+    /**
+     * Creating object by static factory method.
+     */
+    public function testByStaticFactoryMethodObjectCreator()
+    {
+        // Dummy service changing any callable to injector service with
+        // `strtoupper` as default one. Constructor disallows instantiation.
+        $injector = new Injector([
+            'service' => [
+                'factory' => 'Closure',
+                'factory_method' => 'fromCallable',
+                'constructor' => ['strtoupper'],
+            ],
+        ]);
+
+        $this->assertInstanceOf(\Closure::class, $injector->get('service'));
+
+        // Default service.
+        $this->assertEquals('ABC', $injector->get('service')('abc'));
+
+        // Create service with arguments.
+        $this->assertEquals('abc', $injector->create('service', 'strtolower')('ABC'));
+    }
+
+    public function testFactoryMethodNotReturnsObject()
+    {
+        $this->expectException(InjectorNotFoundException::class);
+
+        $injector = new Injector([
+            'service' => [
+                'factory' => 'DateTime',
+                'factory_method' => 'getTimeStamp',
+            ],
+        ]);
+        $injector->get('service');
+    }
+
+    public function testFactoryMethodNotExists()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $injector = new Injector([
+            'service' => [
+                'factory' => 'stdClass',
+                'factory_method' => 'method',
+            ],
+        ]);
+        $injector->get('service');
     }
 
     public function testMethods()
