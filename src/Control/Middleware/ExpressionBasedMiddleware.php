@@ -19,7 +19,7 @@ class ExpressionBasedMiddleware implements HTTPMiddleware
 
     protected $context;
 
-    protected $expressions;
+    protected $expressions = [];
 
     public function __construct(array $context = [])
     {
@@ -47,6 +47,7 @@ class ExpressionBasedMiddleware implements HTTPMiddleware
         }
         $response = $delegate($request);
         if (isset($this->expressions['res'])) {
+            $this->context['res'] = $response;
             $this->expressionLanguage->evaluate($this->expressions['res'], $this->context);
         }
 
