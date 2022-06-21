@@ -14,6 +14,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * A simple injection manager that manages creating objects and injecting
@@ -521,6 +522,11 @@ class Injector implements ContainerInterface
         if (is_string($value) && strpos($value ?? '', '%$') === 0) {
             $id = substr($value ?? '', 2);
             return $this->get($id);
+        }
+
+        // Evaluate ExpressionLanguage expression
+        if (is_string($value) && 0 === strpos($value ?? '', '@=')) {
+            return $this->get(ExpressionLanguage::class)->evaluate(substr($value ?? '', 2));
         }
 
         // Evaluate constants surrounded by back ticks

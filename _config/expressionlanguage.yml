@@ -1,0 +1,39 @@
+SilverStripe\Core\Injector\Injector:
+  ExpressionFunctionSrvProvider:
+    factory: Symfony\Component\ExpressionLanguage\ExpressionFunction
+    factory_method: fromPhp
+    constructor: [srv]
+  ExpressionFunctionEnvProvider:
+    factory: Symfony\Component\ExpressionLanguage\ExpressionFunction
+    factory_method: fromPhp
+    constructor: [env]
+  ExpressionFunctionSiteProvider:
+    factory: Symfony\Component\ExpressionLanguage\ExpressionFunction
+    factory_method: fromPhp
+    constructor: [site]
+---
+Only:
+  classexists: SebastiaanLuca\PipeOperator\PipeProxy
+---
+# ExpressionLanguage service with registered pipe operator `take` function.
+# @see https://github.com/sebastiaanluca/php-pipe-operator
+SilverStripe\Core\Injector\Injector:
+  Symfony\Component\ExpressionLanguage\ExpressionLanguage:
+    calls: [[addFunction, ['%$ExpressionFunctionSrvProvider']]]
+    calls: [[addFunction, ['%$ExpressionFunctionEnvProvider']]]
+    calls: [[addFunction, ['%$ExpressionFunctionSiteProvider']]]
+    calls: [[addFunction, ['%$ExpressionFunctionTakeProvider']]]
+  ExpressionFunctionTakeProvider:
+    factory: Symfony\Component\ExpressionLanguage\ExpressionFunction
+    factory_method: fromPhp
+    constructor: [take]
+---
+Except:
+  classexists: SebastiaanLuca\PipeOperator\PipeProxy
+---
+SilverStripe\Core\Injector\Injector:
+  Symfony\Component\ExpressionLanguage\ExpressionLanguage:
+    calls: [[addFunction, ['%$ExpressionFunctionSrvProvider']]]
+    calls: [[addFunction, ['%$ExpressionFunctionEnvProvider']]]
+    calls: [[addFunction, ['%$ExpressionFunctionSiteProvider']]]
+

@@ -40,6 +40,7 @@
         "swiftmailer/swiftmailer": "^6.2",
         "symfony/cache": "^3.4 || ^4.0",
         "symfony/config": "^3.4 || ^4.0",
+        "symfony/expression-language": "^3.4 || ^4.0 || ^5.4",
         "symfony/translation": "^3.4 || ^4.0",
         "symfony/yaml": "^3.4 || ^4.0",
         "php": "^7.4 || ^8.0",
@@ -63,6 +64,9 @@
         "egulias/email-validator": "^2",
         "phpunit/phpunit": "^6 || ^7 || ^8",
         "cwp/cwp-core": "<2.11.0"
+    },
+    "suggest": {
+        "sebastiaanluca/php-pipe-operator": "Fluent interface for any function chaining"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"

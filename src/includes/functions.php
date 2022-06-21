@@ -1,9 +1,11 @@
 <?php
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\SiteConfig\SiteConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -61,4 +63,38 @@ function _t($entity, $arg = null)
 {
     // Pass args directly to handle deprecation
     return call_user_func_array([i18n::class, '_t'], func_get_args());
+}
+
+/**
+ * ExpressionLanguage service getter function. Substitute for '%$' in spec expression 
+ * based syntax.
+ *
+ * @param string $service
+ * @return object
+ */
+function srv($service)
+{
+    return Injector::inst()->get($service);
+}
+
+/**
+ * ExpressionLanguage environment variable getter function.
+ *
+ * @param string $name
+ * @return string|false
+ */
+function env($name)
+{
+    return Environment::getEnv($name);
+}
+
+/**
+ * ExpressionLanguage current site config getter function.
+ *
+ * @param string $key
+ * @return string
+ */
+function site($key)
+{
+    return SiteConfig::current_site_config()->{$key};
 }
