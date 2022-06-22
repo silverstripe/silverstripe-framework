@@ -753,7 +753,29 @@ The URL endpoints `{$AdminURL}mytabs/tab1` and `{$AdminURL}mytabs/tab2`
 should return HTML fragments suitable for inserting into the content area,
 through the `PjaxResponseNegotiator` class (see above).
 
+### Lazy loading fields on tab activation
+            
+When a tab is not lazy loaded via ajax, it might still be necessary to 
+delay some work (eg: when doing http requests) until the tab is activated. This is how, for example, the
+[GridFieldLazyLoader](https://api.silverstripe.org/4/SilverStripe/Forms/GridField/GridFieldLazyLoader.html) works.
+            
+In order to open up the same kind of features to other fields, a custom event is fired on all nodes with the `lazy-loadable` class inside the activated tab panel.
+They will receive a `lazyload` even that can be listened in the following way:
+            
+```js
+el.addEventListener(
+    "lazyload",
+    (e) => {
+        // Some init code here
+    },
+    {
+        once: true,
+    }
+);    
+```
 
+It is recommended to use the "once" parameter to avoid multiple initializations if the tab is activated multiple times.
+            
 ## Related
 
  * [Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface)
