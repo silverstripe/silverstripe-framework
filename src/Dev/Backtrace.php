@@ -13,11 +13,12 @@ class Backtrace
     use Configurable;
 
     /**
-     * @var array Replaces all arguments with a '<filtered>' string,
+     * Replaces all arguments with a '<filtered>' string,
      * mostly for security reasons. Use string values for global functions,
      * and array notation for class methods.
      * PHP's debug_backtrace() doesn't allow to inspect the argument names,
      * so all arguments of the provided functions will be filtered out.
+     * @var array
      */
     private static $ignore_function_args = [
         'mysql_connect',
@@ -107,22 +108,22 @@ class Backtrace
         // Filter out arguments
         foreach ($bt as $i => $frame) {
             $match = false;
-            if (!empty($bt[$i]['class'])) {
+            if (!empty($frame['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
                     if (is_array($fnSpec) &&
-                        ('*' == $fnSpec[0] || $bt[$i]['class'] == $fnSpec[0]) &&
-                        $bt[$i]['function'] == $fnSpec[1]
+                        ('*' == $fnSpec[0] || $frame['class'] == $fnSpec[0]) &&
+                        $frame['function'] == $fnSpec[1]
                     ) {
                         $match = true;
                     }
                 }
             } else {
-                if (in_array($bt[$i]['function'], $ignoredArgs ?? [])) {
+                if (in_array($frame['function'], $ignoredArgs ?? [])) {
                     $match = true;
                 }
             }
             if ($match) {
-                foreach ($bt[$i]['args'] as $j => $arg) {
+                foreach ($frame['args'] as $j => $arg) {
                     $bt[$i]['args'][$j] = '<filtered>';
                 }
             }
