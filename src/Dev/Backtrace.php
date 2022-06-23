@@ -81,9 +81,9 @@ class Backtrace
             $match = false;
             if (!empty($frame['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
-                    if (is_array($fnSpec) &&
-                        ('*' == $fnSpec[0] || $frame['class'] == $fnSpec[0]) &&
-                        $frame['function'] == $fnSpec[1]
+                    if (is_array($fnSpec)
+                        && self::matchesFilterableClass($frame['class'], $fnSpec[0])
+                        && $frame['function'] == $fnSpec[1]
                     ) {
                         $match = true;
                         break;
@@ -201,5 +201,14 @@ class Backtrace
             $result .= '</ul>';
         }
         return $result;
+    }
+
+    /**
+     * Checks if the filterable class is wildcard, of if the class name is the filterable class, or a subclass of it,
+     * or implements it.
+     */
+    private static function matchesFilterableClass(string $className, string $filterableClass): bool
+    {
+        return $filterableClass === '*' || $className === $filterableClass || is_subclass_of($className, $filterableClass);
     }
 }
