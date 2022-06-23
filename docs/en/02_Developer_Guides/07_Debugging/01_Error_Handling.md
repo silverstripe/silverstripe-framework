@@ -303,6 +303,30 @@ SilverStripe\Core\Injector\Injector:
 
 You should register something with a `start()` method.
 
+## Filtering sensitive arguments
+
+Depending on your PHP settings, error stacktraces may include arguments passed into functions. This could include sensitive
+information such as passwords or API keys that you do not want leaking into your logs. The [Backtrace](api:SilverStripe\Dev\Backtrace)
+class is responsible for rendering this backtrace and has a configuration variable `ignore_function_args` which holds the
+names of functions for which arguments should be filtered. For functions in this list, the arguments are replaced with the
+string "<filtered>".
+
+You can add either functions or class methods to this list - for functions just add them as a string. For class methods,
+add an array which contains the fully namespaced class name and the name of the method. If the method is declared on an
+interface, or on a class which is subclassed by other classes, just put the name of the interface or the superclass and
+`Backtrace` will automatically filter out the classes which implement the interface or are subclasses of your superclass.
+
+```yml
+SilverStripe\Dev\Backtrace:
+  ignore_function_args:
+    - 'some_php_function'
+    - ['App\MyClass', 'someMethod']
+```
+
+You should include any functions or methods here which have arguments that may be sensitive. If you are the author of a
+module that other developers may use, it is best practice to include this configuration in the module. Developers should
+not be expected to scan every Silverstripe module they use and add those declarations in their project configuration.
+
 ## Differences from Silverstripe CMS 3
 
 In Silverstripe CMS 3, logging was based on the Zend Log module. Customisations were added using `SS_Log::add_writer()`.
