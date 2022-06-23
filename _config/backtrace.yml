@@ -1,0 +1,33 @@
+---
+Name: framework-backtrace
+---
+SilverStripe\Dev\Backtrace:
+  ignore_function_args:
+    - 'mysql_connect'
+    - 'mssql_connect'
+    - 'pg_connect'
+    - ['PDO', '__construct']
+    - ['mysqli', 'mysqli']
+    - ['mysqli', 'select_db']
+    - ['mysqli', 'real_connect']
+    - ['SilverStripe\\ORM\\DB', 'connect']
+    - ['SilverStripe\\Security\\Security', 'check_default_admin']
+    - ['SilverStripe\\Security\\Security', 'encrypt_password']
+    - ['SilverStripe\\Security\\Security', 'setDefaultAdmin']
+    - ['SilverStripe\\ORM\\DB', 'createDatabase']
+    - ['SilverStripe\\Security\\Member', 'checkPassword']
+    - ['SilverStripe\\Security\\Member', 'changePassword']
+    - ['SilverStripe\\Security\\MemberAuthenticator\\MemberAuthenticator', 'checkPassword']
+    - ['SilverStripe\\Security\\MemberPassword', 'checkPassword']
+    - ['SilverStripe\\Security\\PasswordValidator', 'validate']
+    - ['SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'encrypt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'salt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'encrypt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'salt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'encrypt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'salt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'encrypt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'salt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'encrypt']
+    - ['SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'salt']
+    - ['*', 'updateValidatePassword'],
