@@ -86,6 +86,7 @@ class Backtrace
                         $frame['function'] == $fnSpec[1]
                     ) {
                         $match = true;
+                        break;
                     }
                 }
             } else {
