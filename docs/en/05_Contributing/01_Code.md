@@ -127,34 +127,30 @@ A core committer will also "label" your PR using the labels defined in GitHub, t
 
 The current GitHub labels are grouped into five sections:
 
-1. *Changes* - These are designed to signal what kind of change they are and how they fit into the [Semantic Versioning](http://semver.org/) schema
-2. *Impact* - What impact does this bug/issue/fix have, does it break a feature completely, is it just a side effect or is it trivial and not a bit problem (but a bit annoying)
-3. *Effort* - How much effort is required to fix this issue?
-4. *Type* - What aspect of the system the PR/issue covers
-5. *Feedback* - Are we waiting on feedback, if so who from? Typically used for issues that are likely to take a while to have feedback given
+1. *Impact* - What impact does this bug/issue/fix have, does it break a feature completely, is it just a side effect or is it trivial and not a bit problem (but a bit annoying). Impact is evaluated in the context of the CMS as a whole, rather than against the individual module the issue is raised on.
+2. *Complexity* - What level of technical proficiency is required to address this issue?
+3. *Type* - The type of solution required to address this issue
+4. *Affects* - The release line this issue is relevant to
+5. *RFC* - The issue is a request-for-comment
 
 | Label | Purpose |
 | ----- | ------- |
-| change/major | A change for the next major release (eg: 4.0) |
-| change/minor | A change for the next minor release (eg: 3.x) |
-| change/patch | A change for the next patch release (eg: 3.1.x) |
-| impact/critical | Broken functionality/experience without any workarounds, or an enhancement that is required to enable a critical task. Typically affecting major usage flows or core interactions. If the issue is `type/bug`, the fix for it will target all [supported minor release](release_process#supported-versions) lines |
-| impact/high | Broken functionality/experience with no obvious workarounds available, or an enhancement that provides a clear benefit to users. Typically affecting major usage flows or core interactions |
-| impact/medium | Unexpected behaviour, or broken functionality on less common usage flows |
-| impact/low | A nuisance but doesn't break any functionality (typos, etc) |
-| effort/easy | Someone with limited Silverstripe CMS experience could resolve |
-| effort/medium | Someone with a good understanding of Silverstripe CMS could resolve |
-| effort/hard | Only an expert with Silverstripe CMS could resolve |
-| type/docs | A docs change |
+| impact/critical | Website breaking issue with no workarounds. Reserved only for bugs. Bugfix's will target all supported minor release lines. |
+| impact/high | Affects a major usage flow. Broken functionality with no obvious workarounds available, or an enhancement that provides a clear benefit to users |
+| impact/medium | When affecting a major usage flow, for bugs there is a workaround available and for enhancements there would be a reasonable benefit to users. For a less common usage flow there is broken functionality and for enhancements there is a clear benefit to users. |
+| impact/low | A nuisance but doesn't break any functionality (typos, etc). For enhancements there would only be a limited benefit to users. |
+| complexity/low | Someone with limited Silverstripe CMS experience could resolve |
+| complexity/medium | Someone with a good understanding of Silverstripe CMS could resolve |
+| complexity/high | Only an expert with Silverstripe CMS could resolve |
 | type/bug | Does not function as intended, or is inadequate for the purpose it was created for |
-| type/frontend | A change to front-end (CSS, HTML, etc) |
 | type/enhancement | New feature or improvement for either users or developers |
-| type/ux | Impact on the CMS user or user interface |
-| feedback-required/core-team | Core team members need to give an in-depth consideration |
-| feedback-required/author | This issue is awaiting feedback from the original author of the PR |
+| type/api-break | An API-breaking change requiring a new major release |
+| type/ux | Impact on the CMS user interface |
+| type/docs | A docs change |
+| type/userhelp | A userhelp documentation change |
+| affects/* | Issue has been observed on a specific CMS release line |
 | rfc/draft | [RFC](request_for_comment) under discussion |
 | rfc/accepted | [RFC](request_for_comment) where agreement has been reached |
-| affects/* | Issue has been observed on a specific release line |
 
 ### Quickfire Do's and Don't's
 
