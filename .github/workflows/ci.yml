@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  # Every Tuesday at 2:20pm UTC
+  schedule:
+    - cron: '20 14 * * 2'
+
+jobs:
+  ci:
+    uses: silverstripe/gha-ci/.github/workflows/ci.yml@v1
+    with:
+      # Turn phpcoverage off because it causes a segfault
+      phpcoverage_force_off: true
+      # There is a strange behat.yml file in framework that runs behat tests in the admin module
+      endtoend: false
