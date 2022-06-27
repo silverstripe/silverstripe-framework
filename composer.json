@@ -35,7 +35,7 @@
         "psr/container": "^1",
         "silverstripe/config": "^1@dev",
         "silverstripe/assets": "^1@dev",
-        "silverstripe/vendor-plugin": "^1.4",
+        "silverstripe/vendor-plugin": "^1.6",
         "sminnee/callbacklist": "^0.1",
         "swiftmailer/swiftmailer": "^6.2",
         "symfony/cache": "^3.4 || ^4.0",

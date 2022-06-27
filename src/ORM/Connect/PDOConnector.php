@@ -7,6 +7,7 @@ use SilverStripe\Dev\Deprecation;
 use PDO;
 use PDOStatement;
 use InvalidArgumentException;
+use PDOException;
 
 /**
  * PDO driver database connector
@@ -558,7 +559,15 @@ class PDOConnector extends DBConnector implements TransactionManager
         }
 
         $this->inTransaction = false;
-        return $this->pdoConnection->rollBack();
+        try {
+            return $this->pdoConnection->rollBack();
+        } catch (PDOException $e) {
+            // A PDOException will be thrown if there is no active transaction in PHP 8+
+            // Prior to PHP 8, this failed silently, so returning false here is backwards compatible
+            // Note: $this->inTransaction may not match the 'in-transaction' state in PDO
+            // https://www.php.net/manual/en/pdo.rollback.php
+            return false;
+        }
     }
 
     public function transactionDepth()
