@@ -1,3 +1,5 @@
+This is a test, do not merge
+
 ## Silverstripe Framework
 
 [![Build Status](https://api.travis-ci.com/silverstripe/silverstripe-framework.svg?branch=4)](https://travis-ci.com/silverstripe/silverstripe-framework)
