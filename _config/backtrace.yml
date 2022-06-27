@@ -1,0 +1,43 @@
+---
+Name: framework-backtrace
+---
+SilverStripe\Dev\Backtrace:
+  ignore_function_args:
+    - 'mssql_connect'
+    - 'mysql_connect'
+    - 'pg_connect'
+    - ['mysqli', 'mysqli']
+    - ['mysqli', 'real_connect']
+    - ['mysqli', 'select_db']
+    - ['PDO', '__construct']
+    - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter', buildConfirmationItem]
+    - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\Url', buildConfirmationItem]
+    - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith', buildConfirmationItem]
+    - ['SilverStripe\Core\Startup\AbstractConfirmationToken', 'checkToken']
+    - ['SilverStripe\Core\Startup\AbstractConfirmationToken', 'pathForToken']
+    - ['SilverStripe\Core\Startup\AbstractConfirmationToken', 'prepare_tokens']
+    - ['SilverStripe\ORM\DB', 'connect']
+    - ['SilverStripe\ORM\DB', 'createDatabase']
+    - ['SilverStripe\Security\Confirmation\Item', '__construct']
+    - ['SilverStripe\Security\DefaultAdminService', 'isDefaultAdminCredentials']
+    - ['SilverStripe\Security\DefaultAdminService', 'setDefaultAdmin']
+    - ['SilverStripe\Security\Member', 'changePassword']
+    - ['SilverStripe\Security\MemberAuthenticator\ChangePasswordHandler', 'setSessionToken']
+    - ['SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler', 'setTokenCookieName']
+    - ['SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler', 'setTokenCookieSecure']
+    - ['SilverStripe\Security\MemberAuthenticator\LostPasswordHandler', 'sendEmail']
+    - ['SilverStripe\Security\PasswordEncryptor', 'check']
+    - ['SilverStripe\Security\PasswordEncryptor', 'encrypt']
+    - ['SilverStripe\Security\PasswordEncryptor', 'salt']
+    - ['SilverStripe\Security\PasswordEncryptor_Blowfish', 'encryptA']
+    - ['SilverStripe\Security\PasswordEncryptor_Blowfish', 'encryptX']
+    - ['SilverStripe\Security\PasswordEncryptor_Blowfish', 'encryptY']
+    - ['SilverStripe\Security\PasswordValidator', 'validate']
+    - ['SilverStripe\Security\RememberLoginHash', 'setToken']
+    - ['SilverStripe\Security\Security', 'check_default_admin']
+    - ['SilverStripe\Security\Security', 'encrypt_password']
+    - ['SilverStripe\Security\Security', 'setDefaultAdmin']
+    - ['*', 'checkPassword']
+    - ['*', 'onAfterChangePassword']
+    - ['*', 'onBeforeChangePassword']
+    - ['*', 'updateValidatePassword']
