@@ -151,7 +151,7 @@ class MySQLiConnector extends DBConnector
 
     public function escapeString($value)
     {
-        return $this->dbConn->real_escape_string($value);
+        return $this->dbConn->real_escape_string($value ?? '');
     }
 
     public function quoteString($value)
@@ -181,7 +181,7 @@ class MySQLiConnector extends DBConnector
         $this->beforeQuery($sql);
 
         // Benchmark query
-        $handle = $this->dbConn->query($sql, MYSQLI_STORE_RESULT);
+        $handle = $this->dbConn->query($sql ?? '', MYSQLI_STORE_RESULT);
 
         if (!$handle || $this->dbConn->error) {
             $this->databaseError($this->getLastError(), $errorLevel, $sql);
@@ -319,7 +319,7 @@ class MySQLiConnector extends DBConnector
 
     public function selectDatabase($name)
     {
-        if ($this->dbConn->select_db($name)) {
+        if ($this->dbConn->select_db($name ?? '')) {
             $this->databaseName = $name;
             return true;
         }
