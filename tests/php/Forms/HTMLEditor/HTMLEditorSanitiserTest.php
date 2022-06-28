@@ -74,6 +74,30 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 '<a href="/test" target="_blank">Test</a>',
                 'noopener rel attribute is unchanged when link_rel_value is null'
             ],
+            [
+                'a[href|target|rel]',
+                '<a href="javascript:alert(0);">Test</a>',
+                '<a>Test</a>',
+                'Javascript in the href attribute of a link is completely removed'
+            ],
+            [
+                'a[href|target|rel]',
+                '<a href="' . implode("\n", str_split(' javascript:')) . '">Test</a>',
+                '<a>Test</a>',
+                'Javascript in the href attribute of a link is completely removed even for multiline markup'
+            ],
+            [
+                'map[name],area[href|shape|coords]',
+                '<map name="test"><area shape="rect" coords="34,44,270,350" href="javascript:alert(0);"></map>',
+                '<map name="test"><area shape="rect" coords="34,44,270,350"></map>',
+                'Javascript in the href attribute of a map\'s clickable area is completely removed'
+            ],
+            [
+                'iframe[src]',
+                '<iframe src="javascript:alert(0);"></iframe>',
+                '<iframe></iframe>',
+                'Javascript in the src attribute of an iframe is completely removed'
+            ],
         ];
 
         $config = HTMLEditorConfig::get('htmleditorsanitisertest');

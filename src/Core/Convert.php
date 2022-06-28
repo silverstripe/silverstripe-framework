@@ -2,12 +2,11 @@
 
 namespace SilverStripe\Core;
 
+use InvalidArgumentException;
+use SimpleXMLElement;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
-use InvalidArgumentException;
-use SimpleXMLElement;
-use Exception;
 
 /**
  * Library of conversion functions, implemented as static methods.
@@ -29,7 +28,6 @@ use Exception;
  */
 class Convert
 {
-
     /**
      * Convert a value to be suitable for an XML attribute.
      *
@@ -296,40 +294,34 @@ class Convert
      * @param string $val
      * @param boolean $disableDoctypes Disables the use of DOCTYPE, and will trigger an error if encountered.
      * false by default.
-     * @param boolean $disableExternals Disables the loading of external entities. false by default. No-op in PHP 8.
+     * @param boolean $disableExternals Does nothing because xml entities are removed
+     * @deprecated 4.11.0:5.0.0
      * @return array
      * @throws Exception
      */
     public static function xml2array($val, $disableDoctypes = false, $disableExternals = false)
     {
-        // PHP 8 deprecates libxml_disable_entity_loader() as it is no longer needed
-        if (\PHP_VERSION_ID >= 80000) {
-            $disableExternals = false;
-        }
+        Deprecation::notice('4.10', 'Use a dedicated XML library instead');
 
         // Check doctype
-        if ($disableDoctypes && preg_match('/\<\!DOCTYPE.+]\>/', $val ?? '')) {
+        if ($disableDoctypes && strpos($val ?? '', '<!DOCTYPE') !== false) {
             throw new InvalidArgumentException('XML Doctype parsing disabled');
         }
 
-        // Disable external entity loading
-        $oldVal = null;
-        if ($disableExternals) {
-            $oldVal = libxml_disable_entity_loader($disableExternals ?? false);
+        // CVE-2021-41559 Ensure entities are removed due to their inherent security risk via
+        // XXE attacks and quadratic blowup attacks, and also lack of consistent support
+        $val = preg_replace('/(?s)<!ENTITY.*?>/', '', $val ?? '');
+
+        // If there's still an <!ENTITY> present, then it would be the result of a maliciously
+        // crafted XML document e.g. <!ENTITY><!<!ENTITY>ENTITY ext SYSTEM "http://evil.com">
+        if (strpos($val ?? '', '<!ENTITY') !== false) {
+            throw new InvalidArgumentException('Malicious XML entity detected');
         }
-        try {
-            $xml = new SimpleXMLElement($val);
-            $result = self::recursiveXMLToArray($xml);
-        } catch (Exception $ex) {
-            if ($disableExternals) {
-                libxml_disable_entity_loader($oldVal);
-            }
-            throw $ex;
-        }
-        if ($disableExternals) {
-            libxml_disable_entity_loader($oldVal ?? false);
-        }
-        return $result;
+
+        // This will throw an exception if the XML contains references to any internal entities
+        // that were defined in an <!ENTITY /> before it was removed
+        $xml = new SimpleXMLElement($val ?? '');
+        return self::recursiveXMLToArray($xml);
     }
 
     /**
