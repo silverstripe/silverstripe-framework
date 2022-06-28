@@ -415,9 +415,10 @@ configuration layer.
 **app/_graphql/enums.yml**
 ```yaml
 Status:
-  SHIPPED: Shipped
-  CANCELLED: Cancelled
-  PENDING: Pending
+  values:
+    SHIPPED: Shipped
+    CANCELLED: Cancelled
+    PENDING: Pending
 ```
 
 See the [Enums, unions, and interfaces](/developer_guides/graphql/working_with_generic_types/enums_unions_and_interfaces/#enum-types)
