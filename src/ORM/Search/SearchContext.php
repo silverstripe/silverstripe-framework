@@ -74,7 +74,8 @@ class SearchContext
     protected $searchParams = [];
 
     /**
-     * The logical connective used to join WHERE clauses. Defaults to AND.
+     * The logical connective used to join WHERE clauses. Must be "AND".
+     * @deprecated 5.0
      * @var string
      */
     public $connective = 'AND';
@@ -146,6 +147,10 @@ class SearchContext
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
+        if ($this->connective != "AND") {
+            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+        }
+
         /** DataList $query */
         $query = null;
         if ($existingQuery) {
@@ -202,10 +207,6 @@ class SearchContext
                     }
                 }
             }
-        }
-
-        if ($this->connective != "AND") {
-            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
         }
 
         return $query;
