@@ -17,6 +17,7 @@ use SilverStripe\Forms\SelectField;
 use SilverStripe\Forms\CheckboxField;
 use InvalidArgumentException;
 use Exception;
+use SilverStripe\ORM\DataQuery;
 
 /**
  * Manages searching of properties on one or more {@link DataObject}
@@ -179,28 +180,25 @@ class SearchContext
         $query = $query->sort($sort);
         $this->setSearchParams($searchParams);
 
+        $modelObj = Injector::inst()->create($this->modelClass);
+        $searchableFields = $modelObj->searchableFields();
         foreach ($this->searchParams as $key => $value) {
             $key = str_replace('__', '.', $key ?? '');
             if ($filter = $this->getFilter($key)) {
                 $filter->setModel($this->modelClass);
                 $filter->setValue($value);
                 if (!$filter->isEmpty()) {
-                    $modelObj = Injector::inst()->create($this->modelClass);
-                    if (isset($modelObj->searchableFields()[$key]['match_any'])) {
-                        $query = $query->alterDataQuery(function ($dataQuery) use ($modelObj, $key, $value) {
-                            $searchFields = $modelObj->searchableFields()[$key]['match_any'];
-                            $sqlSearchFields = [];
-                            foreach ($searchFields as $dottedRelation) {
-                                $relation = substr($dottedRelation ?? '', 0, strpos($dottedRelation ?? '', '.'));
-                                $relations = explode('.', $dottedRelation ?? '');
-                                $fieldName = array_pop($relations);
-                                $relationModelName = $dataQuery->applyRelation($relation);
-                                $relationPrefix = $dataQuery->applyRelationPrefix($relation);
-                                $columnName = $modelObj->getSchema()
-                                    ->sqlColumnForField($relationModelName, $fieldName, $relationPrefix);
-                                $sqlSearchFields[$columnName] = $value;
+                    if (isset($searchableFields[$key]['match_any'])) {
+                        $searchFields = $searchableFields[$key]['match_any'];
+                        $filterClass = get_class($filter);
+                        $modifiers = $filter->getModifiers();
+                        $query = $query->alterDataQuery(function (DataQuery $dataQuery) use ($searchFields, $filterClass, $modifiers, $value) {
+                            $subGroup = $dataQuery->disjunctiveGroup();
+                            foreach ($searchFields as $matchField) {
+                                /** @var SearchFilter $filterClass */
+                                $filter = new $filterClass($matchField, $value, $modifiers);
+                                $filter->apply($subGroup);
                             }
-                            $dataQuery = $dataQuery->whereAny($sqlSearchFields);
                         });
                     } else {
                         $query = $query->alterDataQuery([$filter, 'apply']);
