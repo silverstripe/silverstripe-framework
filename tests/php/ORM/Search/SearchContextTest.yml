@@ -74,12 +74,29 @@ SilverStripe\ORM\Tests\Search\SearchContextTest\AllFilterTypes:
 SilverStripe\ORM\Tests\Search\SearchContextTest\Customer:
   customer1:
     FirstName: Bill
+  customer2:
+    FirstName: Bailey
+  customer3:
+    FirstName: Billy
 
 SilverStripe\ORM\Tests\Search\SearchContextTest\Address:
   address1:
     FirstName: Bob
+  address2:
+    FirstName: Barley
+  address3:
+    FirstName: Billy
 
 SilverStripe\ORM\Tests\Search\SearchContextTest\Order:
   order1:
+    Name: 'Jane'
     Customer: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Customer.customer1
     ShippingAddress: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Address.address1
+  order2:
+    Name: 'Jill'
+    Customer: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Customer.customer2
+    ShippingAddress: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Address.address1
+  order3:
+    Name: 'Jack'
+    Customer: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Customer.customer3
+    ShippingAddress: =>SilverStripe\ORM\Tests\Search\SearchContextTest\Address.address3
