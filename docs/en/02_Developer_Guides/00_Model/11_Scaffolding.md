@@ -61,10 +61,19 @@ public function getCMSFields()
 You can also alter the fields of built-in and module `DataObject` classes through your own 
 [DataExtension](/developer_guides/extending/extensions), and a call to `DataExtension->updateCMSFields`.
 
+[info]
+`FormField` scaffolding takes [`$field_labels` config](#field-labels) into account as well.
+[/info]
+
 ## Searchable Fields
 
 The `$searchable_fields` property uses a mixed array format that can be used to further customise your generated admin
 system. The default is a set of array values listing the fields.
+
+[info]
+`$searchable_fields` will default to use the [`$summary_fields` config](#summary-fields) if not defined. This works fine unless 
+your `$summary_fields` config specifies fields that are not stored in the database.
+[/info]
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -78,6 +87,8 @@ class MyDataObject extends DataObject
    ];
 }
 ```
+
+### Specify a form field or search filter
 
 Searchable fields will appear in the search interface with a default form field (usually a [TextField](api:SilverStripe\Forms\TextField)) and a 
 default search filter assigned (usually an [ExactMatchFilter](api:SilverStripe\ORM\Filters\ExactMatchFilter)). To override these defaults, you can specify 
@@ -119,6 +130,8 @@ class MyDataObject extends DataObject
 }
 ```
 
+### Searching on relations
+
 To include relations (`$has_one`, `$has_many` and `$many_many`) in your search, you can use a dot-notation.
 
 ```php
@@ -154,23 +167,29 @@ class Player extends DataObject
 
 ```
 
-Use a single search field that matches on multiple database fields with `'match_any'`
+### Searching many db fields on a single search field
+
+Use a single search field that matches on multiple database fields with `'match_any'`. This also supports specifying a field and a filter, though it is not necessary to do so.
 
 ```php
 class Order extends DataObject
 {
+    private static $db = [
+        'Name' => 'Varchar',
+    ];
+
     private static $has_one = [
         'Customer' => Customer::class,
         'ShippingAddress' => Address::class,
     ];
 
     private static $searchable_fields = [
-        'CustomFirstName' => [
+        'CustomName' => [
             'title' => 'First Name',
             'field' => TextField::class,
-            'filter' => 'PartialMatchFilter',
             'match_any' => [
-                // Searching with the "First Name" field will show Orders matching either Customer.FirstName or ShippingAddress.FirstName
+                // Searching with the "First Name" field will show Orders matching either Name, Customer.FirstName, or ShippingAddress.FirstName
+                'Name',
                 'Customer.FirstName',
                 'ShippingAddress.FirstName',
             ]
@@ -179,7 +198,11 @@ class Order extends DataObject
 }
 ```
 
-### Summary Fields
+[alert]
+If you don't specify a field, you must use the name of a real database field instead of a custom name so that a default field can be determined.
+[/alert]
+
+## Summary Fields
 
 Summary fields can be used to show a quick overview of the data for a specific [DataObject](api:SilverStripe\ORM\DataObject) record. The most common use 
 is their display as table columns, e.g. in the search results of a [ModelAdmin](api:SilverStripe\Admin\ModelAdmin) CMS interface.
@@ -201,6 +224,8 @@ class MyDataObject extends DataObject
     ];
 }
 ```
+
+### Relations in summary fields
 
 To include relations or field manipulations in your summaries, you can use a dot-notation.
 
@@ -234,6 +259,8 @@ class MyDataObject extends DataObject
 
 ```
 
+### Images in summary fields
+
 Non-textual elements (such as images and their manipulations) can also be used in summaries.
 
 ```php
@@ -257,7 +284,9 @@ class MyDataObject extends DataObject
 
 ```
 
-In order to re-label any summary fields, you can use the `$field_labels` static.
+## Field labels
+
+In order to re-label any summary fields, you can use the `$field_labels` static. This will also affect the output of `$object->fieldLabels()` and `$object->fieldLabel()`.
 
 ```php
 use SilverStripe\ORM\DataObject;
@@ -283,6 +312,7 @@ class MyDataObject extends DataObject
     ];
 }
 ```
+
 ## Related Documentation
 
 * [SearchFilters](searchfilters)
