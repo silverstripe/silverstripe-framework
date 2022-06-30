@@ -110,10 +110,15 @@ class PDOConnector extends DBConnector implements TransactionManager
         }
 
         // Generate new statement
-        $statement = $this->pdoConnection->prepare(
-            $sql,
-            [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
-        );
+        try {
+            $statement = $this->pdoConnection->prepare(
+                $sql,
+                [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
+            );
+        } catch (PDOException $e) {
+            $statement = false;
+            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
+        }
 
         // Wrap in a PDOStatementHandle, to cache column metadata
         $statementHandle = ($statement === false) ? false : new PDOStatementHandle($statement);
@@ -558,16 +563,13 @@ class PDOConnector extends DBConnector implements TransactionManager
             }
         }
 
+        // Note: $this->inTransaction may not match the 'in-transaction' state in PDO
         $this->inTransaction = false;
-        try {
+        if ($this->pdoConnection->inTransaction()) {
             return $this->pdoConnection->rollBack();
-        } catch (PDOException $e) {
-            // A PDOException will be thrown if there is no active transaction in PHP 8+
-            // Prior to PHP 8, this failed silently, so returning false here is backwards compatible
-            // Note: $this->inTransaction may not match the 'in-transaction' state in PDO
-            // https://www.php.net/manual/en/pdo.rollback.php
-            return false;
         }
+        // return false because it did not rollback.
+        return false;
     }
 
     public function transactionDepth()

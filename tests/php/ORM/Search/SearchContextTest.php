@@ -262,10 +262,48 @@ class SearchContextTest extends SapphireTest
 
         // Search should match Order's customer FirstName
         $results = $context->getResults(['CustomFirstName' => 'Bill']);
-        $this->assertEquals(1, $results->Count());
+        $this->assertCount(2, $results);
+        $this->assertListContains([
+            ['Name' => 'Jane'],
+            ['Name' => 'Jack'],
+        ], $results);
 
         // Search should match Order's shipping address FirstName
         $results = $context->getResults(['CustomFirstName' => 'Bob']);
-        $this->assertEquals(1, $results->Count());
+        $this->assertCount(2, $results);
+        $this->assertListContains([
+            ['Name' => 'Jane'],
+            ['Name' => 'Jill'],
+        ], $results);
+
+        // Search should match Order's Name db field
+        $results = $context->getResults(['CustomFirstName' => 'Jane']);
+        $this->assertCount(1, $results);
+        $this->assertSame('Jane', $results->first()->Name);
+
+        // Search should not match any Order
+        $results = $context->getResults(['CustomFirstName' => 'NoMatches']);
+        $this->assertCount(0, $results);
+    }
+
+    public function testMatchAnySearchWithFilters()
+    {
+        $order1 = $this->objFromFixture(SearchContextTest\Order::class, 'order1');
+        $context = $order1->getDefaultSearchContext();
+
+        $results = $context->getResults(['ExactMatchField' => 'Bil']);
+        $this->assertCount(0, $results);
+        $results = $context->getResults(['PartialMatchField' => 'Bil']);
+        $this->assertCount(2, $results);
+
+        $results = $context->getResults(['ExactMatchField' => 'ob']);
+        $this->assertCount(0, $results);
+        $results = $context->getResults(['PartialMatchField' => 'ob']);
+        $this->assertCount(2, $results);
+
+        $results = $context->getResults(['ExactMatchField' => 'an']);
+        $this->assertCount(0, $results);
+        $results = $context->getResults(['PartialMatchField' => 'an']);
+        $this->assertCount(1, $results);
     }
 }
