@@ -7,6 +7,7 @@ use SilverStripe\Dev\Deprecation;
 use PDO;
 use PDOStatement;
 use InvalidArgumentException;
+use PDOException;
 
 /**
  * PDO driver database connector
@@ -109,10 +110,15 @@ class PDOConnector extends DBConnector implements TransactionManager
         }
 
         // Generate new statement
-        $statement = $this->pdoConnection->prepare(
-            $sql,
-            [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
-        );
+        try {
+            $statement = $this->pdoConnection->prepare(
+                $sql,
+                [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
+            );
+        } catch (PDOException $e) {
+            $statement = false;
+            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
+        }
 
         // Wrap in a PDOStatementHandle, to cache column metadata
         $statementHandle = ($statement === false) ? false : new PDOStatementHandle($statement);
@@ -557,8 +563,13 @@ class PDOConnector extends DBConnector implements TransactionManager
             }
         }
 
+        // Note: $this->inTransaction may not match the 'in-transaction' state in PDO
         $this->inTransaction = false;
-        return $this->pdoConnection->rollBack();
+        if ($this->pdoConnection->inTransaction()) {
+            return $this->pdoConnection->rollBack();
+        }
+        // return false because it did not rollback.
+        return false;
     }
 
     public function transactionDepth()
