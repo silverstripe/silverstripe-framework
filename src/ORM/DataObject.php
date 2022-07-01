@@ -16,6 +16,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -23,6 +24,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
@@ -2375,6 +2377,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Name of the field which is used as a stand-in for searching across all searchable fields.
+     *
+     * If this is a blank string, general search functionality is disabled
+     * and the general search field falls back to using the first field in
+     * the searchable fields array.
+     */
+    public function getGeneralSearchFieldName(): string
+    {
+        return $this->config()->get('general_search_field_name');
+    }
+
+    /**
      * Determine which properties on the DataObject are
      * searchable, and map them to their default {@link FormField}
      * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
@@ -2399,6 +2413,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             (array)$_params
         );
         $fields = new FieldList();
+
         foreach ($this->searchableFields() as $fieldName => $spec) {
             if ($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'] ?? [])) {
                 continue;
@@ -2451,6 +2466,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             $fields->push($field);
         }
+
+        // Only include general search if there are fields it can search on
+        $generalSearch = $this->getGeneralSearchFieldName();
+        if ($generalSearch !== '' && $fields->count() > 0) {
+            if ($fields->fieldByName($generalSearch) || $fields->dataFieldByName($generalSearch)) {
+                throw new LogicException('General search field name must be unique.');
+            }
+            $fields->unshift(HiddenField::create($generalSearch, _t(self::class . 'GENERALSEARCH', 'General Search')));
+        }
+
         return $fields;
     }
 
@@ -4195,6 +4220,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      */
     private static $searchable_fields = null;
+
+    /**
+     * Name of the field which is used as a stand-in for searching across all searchable fields.
+     *
+     * If this is a blank string, general search functionality is disabled
+     * and the general search field falls back to using the first field in
+     * the searchable_fields array.
+     */
+    private static string $general_search_field_name = 'q';
+
+    /**
+     * The search filter to use when searching with the general search field.
+     * If this is an empty string, the search filters configured for each field are used instead.
+     */
+    private static string $general_search_field_filter = PartialMatchFilter::class;
 
     /**
      * User defined labels for searchable_fields, used to override

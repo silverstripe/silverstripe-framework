@@ -148,6 +148,7 @@ en:
       one: 'A Data Object'
       other: '{count} Data Objects'
     SINGULARNAME: 'Data Object'
+    GENERALSEARCH: 'General Search'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Any
     NOANSWER: 'No'

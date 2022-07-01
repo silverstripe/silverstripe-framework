@@ -59,7 +59,7 @@ class PartialMatchFilter extends SearchFilter
         );
 
         $clause = [$comparisonClause => $this->getMatchPattern($this->getValue())];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);
