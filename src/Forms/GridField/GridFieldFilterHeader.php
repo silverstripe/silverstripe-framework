@@ -362,7 +362,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
 
         foreach ($searchFields->getIterator() as $field) {
-            $field->addExtraClass('stacked');
+            $field->addExtraClass('stacked no-change-track');
         }
 
         $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
