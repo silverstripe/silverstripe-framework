@@ -144,6 +144,10 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      */
     protected function getExportColumnsForGridField(GridField $gridField)
     {
+        $singleton = DataObject::singleton($gridField->getModelClass());
+        if($singleton->hasMethod('getModelAdminExportFields')) {
+            return $singleton->getModelAdminExportFields();
+        }
         if ($this->exportColumns) {
             return $this->exportColumns;
         }
@@ -154,7 +158,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             return $dataCols->getDisplayFields($gridField);
         }
 
-        return DataObject::singleton($gridField->getModelClass())->summaryFields();
+        return $singleton->summaryFields();
     }
 
     /**
