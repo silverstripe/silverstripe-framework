@@ -232,7 +232,8 @@ class Form extends ViewableData implements HasRequestHandler
      * @var array
      */
     private static $casting = [
-        'AttributesHTML' => 'HTMLFragment',
+        'AttributesHTML' => 'HTMLFragment', // property $AttributesHTML version
+        'getAttributesHTML' => 'HTMLFragment', // method $getAttributesHTML($arg) version
         'FormAttributes' => 'HTMLFragment',
         'FormName' => 'Text',
         'Legend' => 'HTMLFragment',
