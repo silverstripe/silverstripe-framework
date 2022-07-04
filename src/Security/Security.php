@@ -948,7 +948,7 @@ class Security extends Controller implements TemplateGlobalProvider
         static::clearSessionMessage();
 
         // Ensure title is present - in case getResponseController() didn't return a page controller
-        $fragments = array_merge($fragments, ['Title' => $title]);
+        $fragments = array_merge(['Title' => $title], $fragments);
         if ($message) {
             $messageResult = [
                 'Content'     => DBField::create_field('HTMLFragment', $message),
