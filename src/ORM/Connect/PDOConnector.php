@@ -292,7 +292,7 @@ class PDOConnector extends DBConnector implements TransactionManager
 
     public function quoteString($value)
     {
-        return $this->pdoConnection->quote($value);
+        return $this->pdoConnection->quote($value ?? '');
     }
 
     /**
