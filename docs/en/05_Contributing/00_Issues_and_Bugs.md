@@ -8,7 +8,7 @@ icon: bug
 
 ## Reporting Bugs
 
-If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
+If you have discovered a bug in Silverstripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 
 Before submitting a bug:
@@ -52,13 +52,17 @@ expected to be closed as soon as they're reviewed.
 In order to gain interest and feedback in your feature, we encourage you to 
 present it to the community through the [community channels](https://www.silverstripe.org/community).
 
-## Reporting Security Issues
+## Reporting Security Issues {#security-issue}
 
-Report security issues to [security@silverstripe.org](mailto:security@silverstripe.org). 
+If you think a bug may have security implications, do not create a GitHub issue for it. This may lead to a zero-day vulnerability.
+
+Report potential security issues to [security@silverstripe.org](mailto:security@silverstripe.org). 
 See our "[Release Process](/contributing/release_process/#security-releases)" documentation for more info, and 
 read our guide on [how to write secure code](/developer_guides/security/secure_coding/).
 
 Silverstripe CMS does not operate a *bug bounty* program.
+
+Review our [Managing Security Guidelines](Managing-Security-Issues) guidelines to understand what happens once a vulnerability reported. 
 
 ## Sharing your Opinion
 

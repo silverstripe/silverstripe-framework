@@ -1,10 +1,10 @@
 ---
-title: Making a SilverStripe core release
+title: Making a Silverstripe CMS core release
 summary: Development guide for core contributors to build and publish a new release
 iconBrand: github-alt
 ---
 
-# Making a SilverStripe core release
+# Making a Silverstripe CMS core release
 
 ## Introduction
 
@@ -112,144 +112,6 @@ For doing security releases the following additional setup tasks are necessary:
 * Permissions to write to the [security releases page](http://www.silverstripe.org/download/security-releases)
   and the [silverstripe.org CMS](http://www.silverstripe.org/admin).
 * Permission on [security pre-announcement mailing list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
-
-## Security release process
-
-### Overview
-
-When doing a security release, typically one or more (or sometimes all) of the below
-steps will need to be performed manually. As such, this guide should not be followed
-exactly the same for these.
-
-Standard practice is to produce a pre-release for any patched modules on the security 
-forks, e.g. for cms and framework (see [silverstripe-security](https://github.com/silverstripe-security)).
-
-[warning]
-Security issues are never disclosed until a public stable release containing this fix
-is available, or within a reasonable period of time of such a release.
-[/warning]
-
-### When receiving a report
-
-   * Perform initial criticality assessment, and ensure that the reporter is given a justification for all issues we classify or demote as non-security vulnerabilities.
-   * If encrypted information is provided, add pass phrases into the SilverStripe Ltd. LastPass account. Keep encrypted documents in Google Drive and only share directly with relevant participants
-   * Add a new issue in the "Backlog" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1).
-     Add a link to the [Google Groups](https://groups.google.com/a/silverstripe.com/forum/#!forum/security) discussion thread so it's easy to review follow up messages.
-   * Use the [CVSS Calculator](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator) to determine the issue severity
-   * Once the issue is confirmed, [request a CVE identifier](https://cveform.mitre.org/) under the security@silverstripe.org contact email (see "Acknowledgement and disclosure").
-   * Once a CVE has been assigned, respond to issue reporter and add it to the Github issue 
-   * Clarify who picks up and owns the issue (assign in Github).
-     The owner can be separate from the developer resolving the issue,
-     their primary responsibility is to ensure the issue keeps moving through the process correctly.
-
-### When developing a fix
-
-   * Ensure you're working on the oldest supported minor release branch of every supported major release (see [Supported Versions](#supported-versions))
-   * Move the issue into "In Progress" on the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-   * Add fixes on the [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repo. Don't forget to update branches from the upstream repo.
-   * Ensure that all security commit messages are prefixed with the CVE. E.g. "[CVE-2019-001] Fixed invalid XSS"
-   * Get them peer reviewed by posting on security@silverstripe.org with a link to the Github issue
-
-### Before release (or release candidate)
-
-   * For issues rated "high" or "critical" (CVSS of >=7.0), post a pre-announcement to the [security pre-announcement list](https://groups.google.com/a/silverstripe.com/forum/#!forum/security-preannounce).
-     It should include a basic "preannouncement description" which doesn't give away too much,
-     the CVSS score as well as the CVE identifier.
-   * Create a draft page under [Open Source > Download > Security Releases](https://www.silverstripe.org/admin/pages/edit/show/794).
-     Populate it with the information from the [Github project board](https://github.com/silverstripe-security/security-issues/projects/1).
-   * Link to silverstripe.org security release page in the changelog.
-   * Move the issue to "Awaiting Release" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-
-### Perform release
-
-   * Public disclosure of security vulnerabilities need to happen in stable releases (not pre-releases)
-   * Merge back from [http://github.com/silverstripe-security](http://github.com/silverstripe-security) repos shortly at the release (minimise early disclosure through source code)
-   * Merge up to newer minor release branches (see [Supported Versions](#supported-versions))
-   * Setup a temporary [satis](https://github.com/composer/satis) repository which points to all relevant repositories
-  containing security fixes. See below for setting up a temporary satis repository.
-   * Once release testing is completed and the release is ready for stabilisation, then these fixes
-  can then be pushed to the upstream module fork, and the release completed as per normal.
-   * Follow the steps for [making a core release](making_a_silverstripe_core_release)
- 
-### After release
-
-   * Publish silverstripe.org security release page
-   * Respond to issue reporter with reference to the release on the same discussion thread (cc security@silverstripe.org)
-   * File a [CVE Publication Request](https://cveform.mitre.org/), and add a link to the security release
-     through the "Link to the advisory" field. Note on the security issue thread
-     that you've requested publication (to avoid double ups)
-   * Move the issue to "Done" in the [project board](https://github.com/silverstripe-security/security-issues/projects/1)
-
-
-### Setting up satis for hosting private security releases
-
-When installing a project from protected repositories, it's necessary prior to creating your project
-to override the public repository URLs with the private repositories containing undisclosed fixes. For
-this we use [satis](https://github.com/composer/satis).
-
-To setup a Satis project for a release:
-
-* Ensure Satis is installed globally: `composer global require composer/satis ^1` 
-* `cd ~/Sites/` (or wherever your web-root is located)
-* `mkdir satis-security && cd satis-security` (or some directory specific to your release)
-* Create a config file (e.g. config.json) of the given format (add only those repositories necessary).
-
-Note:
-- The homepage path should match the eventual location of the package content
-- You should add the root repository (silverstripe/installer) to ensure
- `create-project` works (even if not a private security fork).
-- You should add some package version constraints to prevent having to parse
- all legacy tags and all branches.
-
-```json
-{
-    "name": "SilverStripe Security Repository",
-    "homepage": "http://localhost/satis-security/public",
-    "repositories": {
-        "installer": {
-            "type": "vcs",
-            "url": "https://github.com/silverstripe/silverstripe-installer.git"
-        },
-        "framework": {
-            "type": "vcs",
-            "url": "https://github.com/silverstripe-security/silverstripe-framework.git"
-        }
-    },
-    "require": {
-		"silverstripe/installer": "^3.5 || ^4",
-		"silverstripe/framework": "^3.5 || ^4"
-	},
-    "require-all": true
-}
-```
-
-* Build the repository:
-  `satis build config.json ./public`
-* Test you can view the satis home page at `http://localhost/satis-security/public/`
-* When performing the release ensure you use `--repository=http://localhost/satis-security/public` (below)
-
-[warning]
-It's important that you re-run `satis build` step after EVERY change that is pushed upstream; E.g. between
-each release, if making multiple releases.
-[/warning]
-
-### Detailed CVE and CVSS Guidance
-
- * In the [CVE Request Form](https://cveform.mitre.org/), we follow certain conventions on fields:
-   * Request with the `security@silverstripe.org` group email
-   * **Vendor of the product(s):** SilverStripe
-   * **Affected product(s)/code base - Product:** Composer module name (e.g. `silverstripe/framework`).
-     Indirectly affected dependencies of the module should not be listed here.
-   * **Affected product(s)/code base - Version:** Use Composer constraint notation,
-     with one entry per major release line.
-     Example for an issue affecting all framework releases: First line `^3.0`, second line `^4.0`.
-     We don't know the target release version at this point, so can't set an upper constraint yet.
-     It should include all affected versions, including any unsupported release lines.
-   * **Affected component(s):** E.g. ORM, Template layer
-   * **Suggested description of the vulnerability:** Keep this short, usually the issue title only.
-     We want to retain control over editing the description in our own systems without going
-     through lengthy CVE change processes.
-   * **Reference(s):** Leave this blank. We'll send through a "Link to the advisory" as part of the publication request
 
 ## Standard release process
 
