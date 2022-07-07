@@ -6,7 +6,7 @@ If you require support there are two types of support available: community suppo
 
 ## Community support
 
-Community support is provided by members of our open source community and is provided out of their good will. Please be kind, polite and corteous to those that try to help you; you may wish to refer to our [code of conduct](docs/en/05_Contributing/10_Code_of_conduct.md).
+Community support is provided by members of our open source community and is provided out of their good will. Please be kind, polite and corteous to those that try to help you; you may wish to refer to our [code of conduct](https://docs.silverstripe.org/en/4/contributing/code_of_conduct/).
 
 You can find support via:
 

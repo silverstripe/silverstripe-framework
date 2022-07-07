@@ -12,4 +12,4 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Contributing code
 
-See [contributing code](docs/en/05_Contributing/01_Code.md)
+See [contributing code](https://docs.silverstripe.org/en/4/contributing/code/)
