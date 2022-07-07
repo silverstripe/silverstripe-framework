@@ -764,7 +764,7 @@ They will receive a `lazyload` event that can be listened to in the following wa
             
 ```js
 el.addEventListener(
-    "lazyload",
+    'lazyload',
     (e) => {
         // Some init code here
     },
