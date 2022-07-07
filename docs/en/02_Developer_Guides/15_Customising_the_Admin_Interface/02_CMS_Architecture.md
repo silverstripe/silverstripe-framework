@@ -760,7 +760,7 @@ delay some work (eg: when doing http requests) until the tab is activated. This 
 [GridFieldLazyLoader](api:SilverStripe\Forms\GridField\GridFieldLazyLoader) works.
             
 In order to open up the same kind of features to other fields, a custom event is fired on all nodes with the `lazy-loadable` class inside the activated tab panel.
-They will receive a `lazyload` event that can be listened to in the following way:
+They will receive a `lazyload` event that can be listened to in the following way (you will have to implement your own logic for "loading" the content):
             
 ```js
 el.addEventListener(
