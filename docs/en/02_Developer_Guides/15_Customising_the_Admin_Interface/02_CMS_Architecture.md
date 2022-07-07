@@ -757,7 +757,7 @@ through the `PjaxResponseNegotiator` class (see above).
             
 When a tab is not lazy loaded via ajax, it might still be necessary to 
 delay some work (eg: when doing http requests) until the tab is activated. This is how, for example, the
-[GridFieldLazyLoader](https://api.silverstripe.org/4/SilverStripe/Forms/GridField/GridFieldLazyLoader.html) works.
+[GridFieldLazyLoader](api:SilverStripe\Forms\GridField\GridFieldLazyLoader) works.
             
 In order to open up the same kind of features to other fields, a custom event is fired on all nodes with the `lazy-loadable` class inside the activated tab panel.
 They will receive a `lazyload` event that can be listened to in the following way:
