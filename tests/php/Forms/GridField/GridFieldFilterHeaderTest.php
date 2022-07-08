@@ -139,4 +139,21 @@ class GridFieldFilterHeaderTest extends SapphireTest
             'GridFieldFilterHeader::handleAction resets the gridstate filter when the user resets the search.'
         );
     }
+
+    public function testGetSearchForm()
+    {
+        $searchForm = $this->component->getSearchForm($this->gridField);
+
+        $this->assertTrue($searchForm instanceof Form);
+        $this->assertEquals('Search__Name', $searchForm->fields[0]->Name);
+        $this->assertEquals('Search__City', $searchForm->fields[1]->Name);
+        $this->assertEquals('Search__Cheerleader__Hat__Colour', $searchForm->fields[2]->Name);
+        $this->assertEquals('TeamsSearchForm', $searchForm->Name);
+        $this->assertEquals('cms-search-form', $searchForm->extraClasses['cms-search-form']);
+
+        foreach ($searchForm->fields as $field) {
+            $this->assertEquals('stacked', $field->extraClasses['stacked']);
+            $this->assertEquals('no-change-track', $field->extraClasses['no-change-track']);
+        }
+    }
 }
