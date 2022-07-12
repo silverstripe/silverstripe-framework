@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\Connect\MySQLDatabase;
@@ -63,11 +64,14 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\RelationChildSecond::class,
         DataObjectTest\MockDynamicAssignmentDataObject::class,
         DataObjectTest\TreeNode::class,
+        DataObjectTest\OverriddenDataObject::class,
+        DataObjectTest\InjectedDataObject::class,
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
+        Config::modify()->merge(Injector::class, DataObjectTest\OverriddenDataObject::class, ['class' => DataObjectTest\InjectedDataObject::class]);
 
         $validator = Member::password_validator();
         if ($validator) {
@@ -184,6 +188,26 @@ class DataObjectTest extends SapphireTest
             array_slice(array_keys($dbFields ?? []), 4, 2),
             'DataObject::db returns fields in correct order'
         );
+    }
+
+    public function testTableBuiltForInjectedDataObject()
+    {
+        // Test we get the correct injected class
+        $obj = DataObjectTest\OverriddenDataObject::create();
+        $this->assertSame(DataObjectTest\InjectedDataObject::class, get_class($obj));
+
+        // Test both tables are built
+        $schema = DataObject::getSchema();
+        $this->assertTrue($schema->classHasTable(DataObjectTest\OverriddenDataObject::class));
+        $this->assertTrue($schema->classHasTable(DataObjectTest\InjectedDataObject::class));
+
+        // Test fields from both the overridden and injected class exist
+        $obj->EmploymentType = 'Some type';
+        $obj->NewField = 'Some value';
+        $obj->write();
+        $objFromOrm = DataObjectTest\OverriddenDataObject::get()->first();
+        $this->assertSame('Some type', $objFromOrm->EmploymentType);
+        $this->assertSame('Some value', $objFromOrm->NewField);
     }
 
     public function testConstructAcceptsValues()

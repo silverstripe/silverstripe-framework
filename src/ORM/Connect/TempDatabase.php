@@ -244,29 +244,9 @@ class TempDatabase
 
         $schema = $this->getConn()->getSchemaManager();
         $schema->quiet();
-        $schema->schemaUpdate(
-            function () use ($dataClasses, $extraDataObjects) {
-                foreach ($dataClasses as $dataClass) {
-                    // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                    if (class_exists($dataClass ?? '')) {
-                        $SNG = singleton($dataClass);
-                        if (!($SNG instanceof TestOnly)) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
 
-                // If we have additional dataobjects which need schema, do so here:
-                if ($extraDataObjects) {
-                    foreach ($extraDataObjects as $dataClass) {
-                        $SNG = singleton($dataClass);
-                        if (singleton($dataClass) instanceof DataObject) {
-                            $SNG->requireTable();
-                        }
-                    }
-                }
-            }
-        );
+        $tableBuilder = TableBuilder::singleton();
+        $tableBuilder->buildTables($schema, $dataClasses, $extraDataObjects, true);
 
         Config::modify()->set(DBSchemaManager::class, 'check_and_repair_on_build', $oldCheckAndRepairOnBuild);
 

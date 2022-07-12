@@ -14,6 +14,7 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\Connect\TableBuilder;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -304,46 +305,8 @@ class DatabaseAdmin extends Controller
 
         // Initiate schema update
         $dbSchema = DB::get_schema();
-        $dbSchema->schemaUpdate(function () use ($dataClasses, $testMode, $quiet, $showRecordCounts) {
-            $dataObjectSchema = DataObject::getSchema();
-
-            foreach ($dataClasses as $dataClass) {
-                // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-                if (!class_exists($dataClass ?? '')) {
-                    continue;
-                }
-
-                // Check if this class should be excluded as per testing conventions
-                $SNG = singleton($dataClass);
-                if (!$testMode && $SNG instanceof TestOnly) {
-                    continue;
-                }
-                $tableName = $dataObjectSchema->tableName($dataClass);
-
-                // Log data
-                if (!$quiet) {
-                    if ($showRecordCounts && DB::get_schema()->hasTable($tableName)) {
-                        try {
-                            $count = DB::query("SELECT COUNT(*) FROM \"$tableName\"")->value();
-                            $countSuffix = " ($count records)";
-                        } catch (Exception $e) {
-                            $countSuffix = " (error getting record count)";
-                        }
-                    } else {
-                        $countSuffix = "";
-                    }
-
-                    if (Director::is_cli()) {
-                        echo " * $tableName$countSuffix\n";
-                    } else {
-                        echo "<li>$tableName$countSuffix</li>\n";
-                    }
-                }
-
-                // Instruct the class to apply its schema to the database
-                $SNG->requireTable();
-            }
-        });
+        $tableBuilder = TableBuilder::singleton();
+        $tableBuilder->buildTables($dbSchema, $dataClasses, [], $quiet, $testMode, $showRecordCounts);
         ClassInfo::reset_db_cache();
 
         if (!$quiet && !Director::is_cli()) {
