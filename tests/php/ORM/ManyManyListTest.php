@@ -11,7 +11,6 @@ use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Product;
-use InvalidArgumentException;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -73,12 +72,42 @@ class ManyManyListTest extends SapphireTest
 
         // the actual test is that this does not generate an error in the sql.
         $obj->Products()->add($product, [
-            'Reference' => 'Foo'
+            'Reference' => 'Foo',
         ]);
 
         $result = $obj->Products()->First();
         $this->assertEquals('Foo', $result->Reference, 'Basic scalar fields should exist');
         $this->assertEquals('Test Product', $result->Title);
+    }
+
+    public function testSetExtraData()
+    {
+        $obj = new ManyManyListTest\ExtraFieldsObject();
+        $obj->write();
+
+        $obj2 = new ManyManyListTest\ExtraFieldsObject();
+        $obj2->write();
+
+        $money = new DBMoney();
+        $money->setAmount(100);
+        $money->setCurrency('USD');
+
+        // Set some data on add
+        $obj->Clients()->add($obj2, [
+            'Worth' => $money,
+            'Reference' => 'Foo',
+        ]);
+        // Change the data afterward
+        $money->setAmount(50);
+        $obj->Clients()->setExtraData($obj2->ID, [
+            'Worth' => $money,
+            'Reference' => 'Bar',
+        ]);
+
+        $result = $obj->Clients()->First();
+        $this->assertEquals('Bar', $result->Reference, 'Basic scalar fields should exist');
+        $this->assertInstanceOf(DBMoney::class, $result->Worth, 'Composite fields should exist on the record');
+        $this->assertEquals(50, $result->Worth->getAmount());
     }
 
     public function testCreateList()
