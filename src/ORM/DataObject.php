@@ -847,7 +847,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function exists()
     {
-        return (isset($this->record['ID']) && $this->record['ID'] > 0);
+        return $this->isInDB();
     }
 
     /**
