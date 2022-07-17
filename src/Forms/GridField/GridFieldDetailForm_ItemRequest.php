@@ -481,7 +481,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $backlink = $toplevelController->Link();
         }
 
-        return $backlink;
+        return $this->gridField->addAllStateToUrl($backlink);
     }
 
     /**
@@ -815,6 +815,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
                 'Link' => false
             ]));
+        }
+
+        foreach ($items as $item) {
+            if ($item->Link) {
+                $item->Link = $this->gridField->addAllStateToUrl($item->Link);
+            }
         }
 
         $this->extend('updateBreadcrumbs', $items);

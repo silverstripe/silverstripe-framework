@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -462,9 +463,7 @@ class GridField extends FormField
         if (($request instanceof NullHTTPRequest) && Controller::has_curr()) {
             $request = Controller::curr()->getRequest();
         }
-        if ($request->params()['Action']) {
-            return;
-        }
+        
         $stateStr = $this->getStateManager()->getStateFromRequest($this, $request);
         if ($stateStr) {
             $oldState = $this->getState(false);
@@ -474,6 +473,32 @@ class GridField extends FormField
             $newState->setValue($oldState->Value());
             $this->state = $newState;
         }
+    }
+
+    /**
+     * Add GET and POST parameters pertaining to other gridfield's state to the URL.
+     * Also add this gridfield's own state to the URL.
+     */
+    public function addAllStateToUrl(string $link): string
+    {
+        $request = $this->getRequest();
+        if ($request->param('Action')) {
+            $requestVars = $request->requestVars();
+            $params = [];
+            foreach ($requestVars as $key => $val) {
+                // Get gridfield states that are for other gridfields
+                if (stripos($key, 'gridState') === 0
+                    && $key !== $this->getStateManager()->getStateKey($this)
+                ) {
+                    $params[$key] = $val;
+                }
+            }
+            foreach ($params as $key => $val) {
+                $link = HTTP::setGetVar($key, $val, $link);
+            }
+        }
+
+        return $this->getStateManager()->addStateToURL($this, $link);
     }
 
     /**

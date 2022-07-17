@@ -341,10 +341,11 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
         $this->assertEquals(
             sprintf(
-                'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
-                . '/item/%d/edit',
+                '/GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+                . '/item/%d/edit%s',
                 $group->ID,
-                $person->ID
+                $person->ID,
+                '?gridState-People-1=%7B%22GridFieldAddRelation%22%3Anull%7D'
             ),
             (string)$personEditLink[0]['href']
         );
@@ -359,11 +360,12 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
         $this->assertEquals(
             sprintf(
-                'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
-                . '/item/%d/ItemEditForm/field/Categories/item/%d/edit',
+                '/GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+                . '/item/%d/ItemEditForm/field/Categories/item/%d/edit%s',
                 $group->ID,
                 $person->ID,
-                $category->ID
+                $category->ID,
+                '?gridState-Categories-2=%7B%22GridFieldAddRelation%22%3Anull%7D'
             ),
             (string)$categoryEditLink[0]['href']
         );

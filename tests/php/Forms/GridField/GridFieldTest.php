@@ -4,6 +4,8 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -658,5 +660,70 @@ class GridFieldTest extends SapphireTest
         $form->validationResult();
         $gridfieldOutput = $gridField->FieldHolder();
         $this->assertStringNotContainsString('<p class="message ' . ValidationResult::TYPE_ERROR . '">', $gridfieldOutput);
+    }
+
+    public function testAddRequestToURL()
+    {
+        $gridField = new GridField('testfield', 'testfield');
+        $link = Controller::join_links('class-name', 'item', '1');
+
+        // The actual URL path here is arbitrary
+        $request = new HTTPRequest(
+            'POST',
+            'admin/gridfield',
+            [
+                'gridState-Test-0' => [
+                    'State' => [
+                        'Column' => 'Name'
+                    ],
+                ]
+            ],
+            [
+                'action_gridFieldAlterAction?StateID=1',
+                'ActionState' => json_encode([
+                    'grid' => $gridField->getName(),
+                    'actionName' => 'edit',
+                    'args' => [],
+                ]),
+                'gridState-Test-1' => [
+                    'State' => [
+                        'Column' => 'Name'
+                    ],
+                ]
+            ]
+        );
+
+        $request->setRouteParams(['Action' => 'edit']);
+        $gridField->setRequest($request);
+
+        $this->assertEquals(
+            $gridField->addAllStateToUrl($link),
+            '/class-name/item/1?gridState-Test-0%5BState%5D%5BColumn%5D=Name&gridState-Test-1%5BState%5D%5BColumn%5D=Name'
+        );
+        // The actual URL path here is arbitrary
+        $request = new HTTPRequest(
+            'GET',
+            'admin/gridfield',
+            [
+                'action_gridFieldAlterAction?StateID=1',
+                'ActionState' => json_encode([
+                    'grid' => $gridField->getName(),
+                    'actionName' => 'edit',
+                    'args' => [],
+                ]),
+                'gridState-Test' => [
+                    'State' => [
+                        'Column' => 'Name'
+                    ],
+                ]
+            ]
+        );
+        $request->setRouteParams(['Action' => 'edit']);
+        $gridField->setRequest($request);
+
+        $this->assertEquals(
+            $gridField->addAllStateToUrl($link),
+            '/class-name/item/1?gridState-Test%5BState%5D%5BColumn%5D=Name'
+        );
     }
 }

@@ -44,7 +44,8 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
      */
     public function getUrl($gridField, $record, $columnName)
     {
-        return Controller::join_links($gridField->Link('item'), $record->ID, 'view');
+        $link = Controller::join_links($gridField->Link('item'), $record->ID, 'view');
+        return $gridField->addAllStateToUrl($link);
     }
 
     public function augmentColumns($field, &$columns)
