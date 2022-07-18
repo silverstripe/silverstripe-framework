@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use mysqli;
+use mysqli_sql_exception;
 use mysqli_stmt;
 use SilverStripe\Core\Config\Config;
 
@@ -63,7 +64,12 @@ class MySQLiConnector extends DBConnector
         // Record last statement for error reporting
         $statement = $this->dbConn->stmt_init();
         $this->setLastStatement($statement);
-        $success = $statement->prepare($sql);
+        try {
+            $success = $statement->prepare($sql);
+        } catch (mysqli_sql_exception $e) {
+            $success = false;
+            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
+        }
         return $statement;
     }
 
