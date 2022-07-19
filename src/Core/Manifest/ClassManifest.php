@@ -67,6 +67,8 @@ class ClassManifest
         'implementors',
         'traits',
         'traitNames',
+        'enums',
+        'enumNames',
     ];
 
     /**
@@ -149,6 +151,20 @@ class ClassManifest
      * @var array
      */
     protected $traitNames = [];
+
+    /**
+     * Map of lowercase enum names to paths
+     *
+     * @var array
+     */
+    protected $enums = [];
+
+    /**
+     * Map of lowercase enum names to proper case
+     *
+     * @var array
+     */
+    protected $enumNames = [];
 
     /**
      * PHP Parser for parsing found files
@@ -334,10 +350,11 @@ class ClassManifest
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
-             $this->classes,
-             $this->interfaces,
-             $this->traits,
-         ] as $source) {
+                     $this->classes,
+                     $this->interfaces,
+                     $this->traits,
+                     $this->enums,
+                 ] as $source) {
             if (isset($source[$lowerName]) && file_exists($source[$lowerName] ?? '')) {
                 return $source[$lowerName];
             }
@@ -355,10 +372,11 @@ class ClassManifest
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
-             $this->classNames,
-             $this->interfaceNames,
-             $this->traitNames,
-         ] as $source) {
+                     $this->classNames,
+                     $this->interfaceNames,
+                     $this->traitNames,
+                     $this->enumNames,
+                 ] as $source) {
             if (isset($source[$lowerName])) {
                 return $source[$lowerName];
             }
@@ -404,6 +422,26 @@ class ClassManifest
     public function getTraitNames()
     {
         return $this->traitNames;
+    }
+
+    /**
+     * Returns a map of lowercased enum names to file paths.
+     *
+     * @return array
+     */
+    public function getEnums()
+    {
+        return $this->enums;
+    }
+
+    /**
+     * Returns a map of lowercase enum names to proper enum names in the manifest
+     *
+     * @return array
+     */
+    public function getEnumNames()
+    {
+        return $this->enumNames;
     }
 
     /**
@@ -562,6 +600,7 @@ class ClassManifest
             $classes = $data['classes'];
             $interfaces = $data['interfaces'];
             $traits = $data['traits'];
+            $enums = $data['enums'];
         } else {
             $changed = true;
             // Build from php file parser
@@ -579,6 +618,7 @@ class ClassManifest
             $classes = $this->getVisitor()->getClasses();
             $interfaces = $this->getVisitor()->getInterfaces();
             $traits = $this->getVisitor()->getTraits();
+            $enums = $this->getVisitor()->getEnums();
         }
 
         // Merge raw class data into global list
@@ -639,6 +679,13 @@ class ClassManifest
             $lowerTrait = strtolower($traitName ?? '');
             $this->traits[$lowerTrait] = $pathname;
             $this->traitNames[$lowerTrait] = $traitName;
+        }
+
+        // Merge all enums
+        foreach ($enums as $enumName => $enumInfo) {
+            $lowerEnum = strtolower($enumName ?? '');
+            $this->enums[$lowerEnum] = $pathname;
+            $this->enumNames[$lowerEnum] = $enumName;
         }
 
         // Save back to cache if configured
@@ -725,7 +772,7 @@ class ClassManifest
         if (!$data || !is_array($data)) {
             return false;
         }
-        foreach (['classes', 'interfaces', 'traits'] as $key) {
+        foreach (['classes', 'interfaces', 'traits', 'enums'] as $key) {
             // Must be set
             if (!isset($data[$key])) {
                 return false;
