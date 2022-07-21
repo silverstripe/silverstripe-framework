@@ -9,6 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Tests\MySQLPDOConnectorTest\PDOConnector;
 use SilverStripe\ORM\DB;
+use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
 
 /**
  * @requires extension PDO
@@ -38,8 +39,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $cset = $connection->query('show variables like "character_set_connection"')->fetch(PDO::FETCH_NUM)[1];
         $collation = $connection->query('show variables like "collation_connection"')->fetch(PDO::FETCH_NUM)[1];
 
-        $this->assertEquals($charset, $cset);
-        $this->assertEquals($defaultCollation, $collation);
+        $helper = new Utf8TestHelper();
+        $this->assertEquals($helper->getUpdatedUtfCharsetForCurrentDB($charset), $cset);
+        $this->assertEquals($helper->getUpdatedUtfCollationForCurrentDB($defaultCollation), $collation);
 
         unset($cset, $connection, $connector, $config);
     }
@@ -66,8 +68,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
         $cset = $connection->query('show variables like "character_set_connection"')->fetch(PDO::FETCH_NUM)[1];
         $collation = $connection->query('show variables like "collation_connection"')->fetch(PDO::FETCH_NUM)[1];
 
-        $this->assertEquals($charset, $cset);
-        $this->assertEquals($customCollation, $collation);
+        $helper = new Utf8TestHelper();
+        $this->assertEquals($helper->getUpdatedUtfCharsetForCurrentDB($charset), $cset);
+        $this->assertEquals($helper->getUpdatedUtfCollationForCurrentDB($customCollation), $collation);
 
         unset($cset, $connection, $connector, $config);
     }
