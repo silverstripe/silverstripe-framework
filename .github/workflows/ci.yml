@@ -14,5 +14,3 @@ jobs:
     with:
       # Turn phpcoverage off because it causes a segfault
       phpcoverage_force_off: true
-      # There is a strange behat.yml file in framework that runs behat tests in the admin module
-      endtoend: false
