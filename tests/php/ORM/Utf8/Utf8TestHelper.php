@@ -7,7 +7,10 @@ use SilverStripe\ORM\DB;
 
 class Utf8TestHelper implements TestOnly
 {
-    private ?string $dbVersion = null;
+    /**
+     * @var string|null
+     */
+    private $dbVersion = null;
 
     public function getUpdatedUtfCharsetForCurrentDB(string $charset): string
     {
