@@ -156,6 +156,9 @@ trait CustomMethods
      */
     protected function getExtraMethodConfig($method)
     {
+        if (empty($method)) {
+            return null;
+        }
         // Lazy define methods
         if (!isset(self::$extra_methods[static::class])) {
             $this->defineMethods();
