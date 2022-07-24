@@ -4023,9 +4023,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * identified by their class name (extending from {@link SS_Database}).
      *
      * <code>
-     * array(
-     *  'MySQLDatabase' => 'ENGINE=MyISAM'
-     * )
+     * private static $create_table_options = [
+     *     MySQLSchemaManager::ID => 'ENGINE=MyISAM',
+     * ];
      * </code>
      *
      * Caution: This API is experimental, and might not be
@@ -4069,10 +4069,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * behaviour such as publishing and ParentNodes.
      *
      * Example:
-     * array(
-     *  array('Title' => "DefaultPage1", 'PageTitle' => 'page1'),
-     *  array('Title' => "DefaultPage2")
-     * ).
+     * <code>
+     * private static $default_records = [
+     *     [ 'Title' => 'DefaultPage1', 'PageTitle' => 'page1' ],
+     *     [ 'Title' => 'DefaultPage2' ],
+     * ];
+     * </code>
      *
      * @var array
      * @config
@@ -4131,11 +4133,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * Example code:
      * <code>
-     * public static $many_many_extraFields = array(
-     *  'Members' => array(
-     *          'Role' => 'Varchar(100)'
-     *      )
-     * );
+     * private static $many_many_extraFields = [
+     *     'Members' => [
+     *         'Role' => 'Varchar(100)',
+     *     ],
+     * ];
      * </code>
      *
      * @var array
@@ -4165,31 +4167,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * Overriding the default filter, with a custom defined filter:
      * <code>
-     *  static $searchable_fields = array(
-     *     "Name" => "PartialMatchFilter"
-     *  );
+     * private static $searchable_fields = [
+     *     'Name' => 'PartialMatchFilter',
+     * ];
      * </code>
      *
      * Overriding the default form fields, with a custom defined field.
      * The 'filter' parameter will be generated from {@link DBField::$default_search_filter_class}.
      * The 'title' parameter will be generated from {@link DataObject->fieldLabels()}.
      * <code>
-     *  static $searchable_fields = array(
-     *    "Name" => array(
-     *      "field" => "TextField"
-     *    )
-     *  );
+     * private static $searchable_fields = [
+     *     'Name' => [
+     *         'field' => 'TextField',
+     *     ],
+     * ];
      * </code>
      *
      * Overriding the default form field, filter and title:
      * <code>
-     *  static $searchable_fields = array(
-     *    "Organisation.ZipCode" => array(
-     *      "field" => "TextField",
-     *      "filter" => "PartialMatchFilter",
-     *      "title" => 'Organisation ZIP'
-     *    )
-     *  );
+     * private static $searchable_fields = [
+     *     'Organisation.ZipCode' => [
+     *         'field' => 'TextField',
+     *         'filter' => 'PartialMatchFilter',
+     *         'title' => 'Organisation ZIP',
+     *     ],
+     * ];
      * </code>
      * @config
      * @var array
