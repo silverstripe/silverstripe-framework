@@ -11,6 +11,3 @@ on:
 jobs:
   ci:
     uses: silverstripe/gha-ci/.github/workflows/ci.yml@v1
-    with:
-      # Turn phpcoverage off because it causes a segfault
-      phpcoverage_force_off: true
