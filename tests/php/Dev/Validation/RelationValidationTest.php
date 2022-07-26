@@ -51,6 +51,9 @@ class RelationValidationTest extends SapphireTest
      */
     public function testIgnoredClass(string $class, ?string $relation, array $config, bool $expected): void
     {
+        if (!class_exists($class)) {
+            $this->markTestSkipped("This test requires the $class class");
+        }
         $service = RelationValidationService::singleton();
 
         foreach ($config as $name => $value) {
