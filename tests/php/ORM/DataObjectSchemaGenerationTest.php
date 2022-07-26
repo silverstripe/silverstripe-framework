@@ -3,12 +3,10 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\SortedObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
@@ -68,26 +66,11 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         );
     }
 
-    private function isMySQL8(): bool
-    {
-        $connector = DB::get_conn()->getConnector();
-        if ($connector instanceof MySQLiConnector &&
-            preg_match('#^8\.#', $connector->getVersion())
-        ) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Check that once a schema has been generated, then it doesn't need any more updating
      */
     public function testFieldsDontRerequestChanges()
     {
-        // TODO: remove the MySQL8 skip when `int(11)` is no longer the default field type for integers and has been replaced with `int`
-        if ($this->isMySQL8()) {
-            $this->markTestSkipped();
-        }
         $schema = DB::get_schema();
         $test = $this;
         DB::quiet();
@@ -142,10 +125,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest
      */
     public function testIndexesDontRerequestChanges()
     {
-        // TODO: remove the MySQL8 skip when `int(11)` is no longer the default field type for integers and has been replaced with `int`
-        if ($this->isMySQL8()) {
-            $this->markTestSkipped();
-        }
         $schema = DB::get_schema();
         $test = $this;
         DB::quiet();
