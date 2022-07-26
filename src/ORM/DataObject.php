@@ -4237,6 +4237,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static string $general_search_field_filter = PartialMatchFilter::class;
 
     /**
+     * If true, the search phrase is split into individual terms, and checks all searchable fields for each search term.
+     * If false, all fields are checked for the entire search phrase as a whole.
+     *
+     * Note that splitting terms may cause unexpected resuls if using an ExactMatchFilter.
+     */
+    private static bool $general_search_split_terms = true;
+
+    /**
      * User defined labels for searchable_fields, used to override
      * default display in the search form.
      * @config

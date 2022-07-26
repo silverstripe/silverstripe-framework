@@ -327,8 +327,26 @@ class SearchContextTest extends SapphireTest
         $this->assertCount(0, $results);
     }
 
+    public function testGeneralSearchSplitTerms()
+    {
+        $general1 = $this->objFromFixture(SearchContextTest\GeneralSearch::class, 'general1');
+        $context = $general1->getDefaultSearchContext();
+        $generalField = $general1->getGeneralSearchFieldName();
+
+        // These terms don't exist in a single field in this order on any object, but they do exist in separate fields.
+        $results = $context->getResults([$generalField => 'general blue']);
+        $this->assertCount(1, $results);
+        $this->assertEquals('General Zero', $results->first()->Name);
+
+        // These terms exist in a single field, but not in this order.
+        $results = $context->getResults([$generalField => 'matches partial']);
+        $this->assertCount(1, $results);
+        $this->assertEquals('General One', $results->first()->Name);
+    }
+
     public function testGeneralSearchNoSplitTerms()
     {
+        Config::modify()->set(SearchContextTest\GeneralSearch::class, 'general_search_split_terms', false);
         $general1 = $this->objFromFixture(SearchContextTest\GeneralSearch::class, 'general1');
         $context = $general1->getDefaultSearchContext();
         $generalField = $general1->getGeneralSearchFieldName();
@@ -394,6 +412,16 @@ class SearchContextTest extends SapphireTest
         $context = $general1->getDefaultSearchContext();
         $generalField = $general1->getGeneralSearchFieldName();
 
+        // Respects ExactMatchFilter
+        $results = $context->getResults([$generalField => 'exact']);
+        $this->assertCount(0, $results);
+        // No match when splitting terms
+        $results = $context->getResults([$generalField => 'This requires an exact match']);
+        $this->assertCount(0, $results);
+
+
+        // When not splitting terms, the behaviour of `ExactMatchFilter` is slightly different.
+        Config::modify()->set(SearchContextTest\GeneralSearch::class, 'general_search_split_terms', false);
         // Respects ExactMatchFilter
         $results = $context->getResults([$generalField => 'exact']);
         $this->assertCount(0, $results);

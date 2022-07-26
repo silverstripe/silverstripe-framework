@@ -209,30 +209,60 @@ class SearchContext
     }
 
     /**
+     * Takes a search phrase or search term and searches for it across all searchable fields.
+     *
+     * @param string|array $searchPhrase
+     */
+    private function generalSearchAcrossFields($searchPhrase, DataQuery $subGroup, array $searchableFields): void
+    {
+        $formFields = $this->getSearchFields();
+        foreach ($searchableFields as $field => $spec) {
+            $formFieldName = str_replace('.', '__', $field);
+            $filter = $this->getGeneralSearchFilter($this->modelClass, $field);
+            // Only apply filter if the field is allowed to be general and is backed by a form field.
+            // Otherwise we could be dealing with, for example, a DataObject which implements scaffoldSearchField
+            // to provide some unexpected field name, where the below would result in a DatabaseException.
+            if ((!isset($spec['general']) || $spec['general'])
+                && ($formFields->fieldByName($formFieldName) || $formFields->dataFieldByName($formFieldName))
+                && $filter !== null
+            ) {
+                $filter->setModel($this->modelClass);
+                $filter->setValue($searchPhrase);
+                $this->applyFilter($filter, $subGroup, $spec);
+            }
+        }
+    }
+
+    /**
      * Use the global general search for searching across multiple fields.
-     * Results in a where clause that looks like "WHERE (field1 LIKE %lorem ipsum% OR field2 LIKE %lorem ipsum%)"
      *
      * @param string|array $searchPhrase
      */
     private function generalFieldSearch(DataList $query, array $searchableFields, $searchPhrase): DataList
     {
         return $query->alterDataQuery(function (DataQuery $dataQuery) use ($searchableFields, $searchPhrase) {
-            $formFields = $this->getSearchFields();
-            $subGroup = $dataQuery->disjunctiveGroup();
-            foreach ($searchableFields as $field => $spec) {
-                $formFieldName = str_replace('.', '__', $field);
-                $filter = $this->getGeneralSearchFilter($this->modelClass, $field);
-                // Only apply filter if the field is allowed to be general and is backed by a form field.
-                // Otherwise we could be dealing with, for example, a DataObject which implements scaffoldSearchField
-                // to provide some unexpected field name, where the below would result in a DatabaseException.
-                if ((!isset($spec['general']) || $spec['general'])
-                    && ($formFields->fieldByName($formFieldName) || $formFields->dataFieldByName($formFieldName))
-                    && $filter !== null
-                ) {
-                    $filter->setModel($this->modelClass);
-                    $filter->setValue($searchPhrase);
-                    $this->applyFilter($filter, $subGroup, $spec);
+            // If necessary, split search phrase into terms, then search across fields.
+            if (Config::inst()->get($this->modelClass, 'general_search_split_terms')) {
+                if (is_array($searchPhrase)) {
+                    // Allow matches from ANY query in the array (i.e. return $obj where query1 matches OR query2 matches)
+                    $dataQuery = $dataQuery->disjunctiveGroup();
+                    foreach ($searchPhrase as $phrase) {
+                        // where ((field1 LIKE %lorem% OR field2 LIKE %lorem%) AND (field1 LIKE %ipsum% OR field2 LIKE %ipsum%))
+                        $generalSubGroup = $dataQuery->conjunctiveGroup();
+                        foreach (explode(' ', $phrase) as $searchTerm) {
+                            $this->generalSearchAcrossFields($searchTerm, $generalSubGroup->disjunctiveGroup(), $searchableFields);
+                        }
+                    }
+                } else {
+                    // where ((field1 LIKE %lorem% OR field2 LIKE %lorem%) AND (field1 LIKE %ipsum% OR field2 LIKE %ipsum%))
+                    $generalSubGroup = $dataQuery->conjunctiveGroup();
+                    foreach (explode(' ', $searchPhrase) as $searchTerm) {
+                        $this->generalSearchAcrossFields($searchTerm, $generalSubGroup->disjunctiveGroup(), $searchableFields);
+                    }
                 }
+            } else {
+                // where (field1 LIKE %lorem ipsum% OR field2 LIKE %lorem ipsum%)
+                $this->generalSearchAcrossFields($searchPhrase, $dataQuery->disjunctiveGroup(), $searchableFields);
             }
         });
     }
