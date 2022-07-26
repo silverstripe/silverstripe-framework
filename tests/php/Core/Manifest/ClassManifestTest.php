@@ -43,7 +43,7 @@ class ClassManifestTest extends SapphireTest
      */
     public function providerTestGetItemPath()
     {
-        return [
+        $paths = [
             ['CLASSA', 'module/classes/ClassA.php'],
             ['ClassA', 'module/classes/ClassA.php'],
             ['classa', 'module/classes/ClassA.php'],
@@ -55,6 +55,14 @@ class ClassManifestTest extends SapphireTest
             ['VendorClassA', 'vendor/silverstripe/modulec/code/VendorClassA.php'],
             ['VendorTraitA', 'vendor/silverstripe/modulec/code/VendorTraitA.php'],
         ];
+
+        if (version_compare(phpversion(), '8.1.0', '>')) {
+            $paths[] = ['ENUMA', 'module/enums/EnumA.php'];
+            $paths[] = ['EnumA', 'module/enums/EnumA.php'];
+            $paths[] = ['enuma', 'module/enums/EnumA.php'];
+        }
+
+        return $paths;
     }
 
     /**
@@ -167,6 +175,34 @@ class ClassManifestTest extends SapphireTest
         foreach ($expect as $interface => $impl) {
             $this->assertEquals($impl, $this->manifest->getImplementorsOf($interface));
         }
+    }
+
+    public function testGetEnums()
+    {
+        if (!version_compare(phpversion(), '8.1.0', '>')) {
+            $this->markTestSkipped('Enums are only available on PHP 8.1+');
+        }
+
+        $expect = [
+            'enuma' => "{$this->base}/module/enums/EnumA.php",
+            'enumb' => "{$this->base}/module/enums/EnumB.php",
+        ];
+        $this->assertEquals($expect, $this->manifest->getEnums());
+    }
+
+    public function testGetEnumNames()
+    {
+        if (!version_compare(phpversion(), '8.1.0', '>')) {
+            $this->markTestSkipped('Enums are only available on PHP 8.1+');
+        }
+
+        $this->assertEquals(
+            [
+                'enuma' => 'EnumA',
+                'enumb' => 'EnumB',
+            ],
+            $this->manifest->getEnumNames()
+        );
     }
 
     public function testTestManifestIncludesTestClasses()

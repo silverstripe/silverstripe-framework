@@ -31,7 +31,7 @@
         "league/csv": "^8 || ^9",
         "m1/env": "^2.1",
         "monolog/monolog": "^1.16",
-        "nikic/php-parser": "^3 || ^4",
+        "nikic/php-parser": "^4.10.5",
         "psr/container": "^1",
         "silverstripe/config": "^1@dev",
         "silverstripe/assets": "^1@dev",
