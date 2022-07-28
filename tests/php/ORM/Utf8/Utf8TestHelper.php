@@ -23,10 +23,12 @@ class Utf8TestHelper implements TestOnly
     public function getUpdatedUtfCollationForCurrentDB(string $collation): string
     {
         if ($collation === 'utf8_general_ci') {
-            return $this->isMariaDBGte106() ? 'utf8mb3_general_ci' : 'utf8_general_ci';
+            return $this->isMariaDBGte106() || $this->isMySqlGte8030()
+                ? 'utf8mb3_general_ci' : 'utf8_general_ci';
         }
         if ($collation === 'utf8_unicode_520_ci') {
-            return $this->isMariaDBGte106() ? 'utf8mb3_unicode_520_ci' : 'utf8_unicode_520_ci';
+            return $this->isMariaDBGte106() || $this->isMySqlGte8030()
+                ? 'utf8mb3_unicode_520_ci' : 'utf8_unicode_520_ci';
         }
         return $collation;
     }
@@ -44,6 +46,28 @@ class Utf8TestHelper implements TestOnly
         }
         return false;
     }
+
+    /**
+     * Starting with 8.0.30, utf8mb3 is reported for the collation as well
+     * https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-30.html
+     */
+    private function isMySqlGte8030(): bool
+    {
+        // Example MySQL version: 8.0.29
+        if (preg_match('#^([0-9]+)\.([0-9]+)\.([0-9]+)$#', $this->getDBVersion(), $m)) {
+            if ((int) $m[1] >= 8) {
+                if ((int) $m[2] === 0) {
+                    if ((int) $m[3] >= 30) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Until MariaDB 10.5, utf8mb3 was an alias for utf8.
