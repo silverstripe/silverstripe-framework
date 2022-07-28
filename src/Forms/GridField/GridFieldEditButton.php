@@ -61,6 +61,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
 
     /**
      * @inheritdoc
+     * @param bool $addState DEPRECATED: Should be removed in major release
      */
     public function getUrl($gridField, $record, $columnName, $addState = true)
     {
@@ -70,11 +71,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
             'edit'
         );
 
-        if ($addState) {
-            $link = $this->getStateManager()->addStateToURL($gridField, $link);
-        }
-
-        return $link;
+        return $gridField->addAllStateToUrl($link, $addState);
     }
 
     /**

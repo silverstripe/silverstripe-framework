@@ -4,10 +4,13 @@ namespace SilverStripe\Forms\GridField;
 
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HasRequestHandler;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -45,6 +48,8 @@ use SilverStripe\View\HTML;
  */
 class GridField extends FormField
 {
+    use GridFieldStateAware;
+
     /**
      * @var array
      */
@@ -435,6 +440,8 @@ class GridField extends FormField
     {
         $this->state = new GridState($this);
 
+        $this->addStateFromRequest();
+
         $data = $this->state->getData();
 
         foreach ($this->getComponents() as $item) {
@@ -442,6 +449,56 @@ class GridField extends FormField
                 $item->initDefaultState($data);
             }
         }
+    }
+
+    /**
+     * Adds state for this gridfield from the request variables.
+     *
+     * If there is state already set on this GridField, that takes precedent
+     * over state from the request.
+     */
+    private function addStateFromRequest(): void
+    {
+        $request = $this->getRequest();
+        if (($request instanceof NullHTTPRequest) && Controller::has_curr()) {
+            $request = Controller::curr()->getRequest();
+        }
+        
+        $stateStr = $this->getStateManager()->getStateFromRequest($this, $request);
+        if ($stateStr) {
+            $oldState = $this->getState(false);
+            // Create a dummy state so that we can merge the current state with the request state.
+            $newState = new GridState($this, $stateStr);
+            // Put the current state on top of the request state.
+            $newState->setValue($oldState->Value());
+            $this->state = $newState;
+        }
+    }
+
+    /**
+     * Add GET and POST parameters pertaining to other gridfield's state to the URL.
+     * Also add this gridfield's own state to the URL.
+     */
+    public function addAllStateToUrl(string $link): string
+    {
+        $request = $this->getRequest();
+        if ($request->param('Action')) {
+            $requestVars = $request->requestVars();
+            $params = [];
+            foreach ($requestVars as $key => $val) {
+                // Get gridfield states that are for other gridfields
+                if (stripos($key, 'gridState') === 0
+                    && $key !== $this->getStateManager()->getStateKey($this)
+                ) {
+                    $params[$key] = $val;
+                }
+            }
+            foreach ($params as $key => $val) {
+                $link = HTTP::setGetVar($key, $val, $link);
+            }
+        }
+
+        return $this->getStateManager()->addStateToURL($this, $link);
     }
 
     /**
