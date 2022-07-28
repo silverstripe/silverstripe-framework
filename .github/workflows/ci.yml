@@ -10,6 +10,9 @@ on:
 
 jobs:
   ci:
+    name: CI
+    # Only run cron on the silverstripe account
+    if: (github.event_name == 'schedule' && github.repository_owner == 'silverstripe') || (github.event_name != 'schedule')
     uses: silverstripe/gha-ci/.github/workflows/ci.yml@v1
     with:
       # Turn phpcoverage off because it causes a segfault
