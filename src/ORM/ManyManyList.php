@@ -434,6 +434,58 @@ class ManyManyList extends RelationList
     }
 
     /**
+     * Set the extra field data for a single row of the relationship join
+     * table, given the known child ID.
+     *
+     * @param int $itemID The ID of the child for the relationship
+     * @param array $data The data to set, with field names as keys and values as values
+     * @throws InvalidArgumentException if the $data array is invalid
+     */
+    public function setExtraData(int $itemID, array $data): void
+    {
+        // Don't bother doing anything if we aren't given any data
+        if (empty($data)) {
+            return;
+        }
+
+        // Prepare db manipulation
+        $foreignID = $this->getForeignID();
+        $manipulation = [
+            $this->joinTable => [
+                'command' => 'update',
+                'fields' => [],
+                'where' => [
+                    "\"{$this->joinTable}\".\"{$this->foreignKey}\"" => $foreignID,
+                    "\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+                ],
+            ],
+        ];
+
+        /** @var DBField[] $fieldObjects */
+        $fieldObjects = [];
+        // Write extra field to manipluation in the same way
+        // that DataObject::prepareManipulationTable writes fields
+        foreach ($data as $fieldName => $value) {
+            if (!array_key_exists($fieldName, $this->extraFields)) {
+                throw new InvalidArgumentException("Field '$fieldName' is not defined in many_many_extraFields for this relationship");
+            }
+            $fieldObject = Injector::inst()->create($this->extraFields[$fieldName], $fieldName);
+            // Make sure the field assignment is not an array unless the field allows non-scalar values
+            if (is_array($value) && $fieldObject->scalarValueOnly()) {
+                throw new InvalidArgumentException(
+                    'ManyManyList::setExtraData: parameterised field assignments are disallowed'
+                );
+            }
+            // Set the value into the manipulation
+            $fieldObject->setValue($value);
+            $fieldObject->writeToManipulation($manipulation[$this->joinTable]);
+            $fieldObjects[$fieldName] = $fieldObject;
+        }
+
+        DB::manipulate($manipulation);
+    }
+
+    /**
      * Find the extra field data for a single row of the relationship join
      * table, given the known child ID.
      *
