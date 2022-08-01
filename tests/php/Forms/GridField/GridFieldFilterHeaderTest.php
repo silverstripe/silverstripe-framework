@@ -14,8 +14,8 @@ use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\CheerleaderHat;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Mom;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Team;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
-use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TestController;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 
 class GridFieldFilterHeaderTest extends SapphireTest
 {
@@ -89,9 +89,12 @@ class GridFieldFilterHeaderTest extends SapphireTest
     public function testSearchFieldSchema()
     {
         $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
+        $modelClass = $this->gridField->getModelClass();
+        /** @var DataObject $obj */
+        $obj = new $modelClass();
 
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
-        $this->assertEquals('Name', $searchSchema->name);
+        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
         $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
         $this->assertEquals(new \stdClass, $searchSchema->filters);
 
@@ -110,9 +113,12 @@ class GridFieldFilterHeaderTest extends SapphireTest
         );
         $this->gridField->setRequest($request);
         $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
+        $modelClass = $this->gridField->getModelClass();
+        /** @var DataObject $obj */
+        $obj = new $modelClass();
 
         $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
-        $this->assertEquals('Name', $searchSchema->name);
+        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
         $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
         $this->assertEquals('test', $searchSchema->filters->Search__Name);
         $this->assertEquals('place', $searchSchema->filters->Search__City);
@@ -145,9 +151,10 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $searchForm = $this->component->getSearchForm($this->gridField);
 
         $this->assertTrue($searchForm instanceof Form);
-        $this->assertEquals('Search__Name', $searchForm->fields[0]->Name);
-        $this->assertEquals('Search__City', $searchForm->fields[1]->Name);
-        $this->assertEquals('Search__Cheerleader__Hat__Colour', $searchForm->fields[2]->Name);
+        $this->assertEquals('Search__q', $searchForm->fields[0]->Name);
+        $this->assertEquals('Search__Name', $searchForm->fields[1]->Name);
+        $this->assertEquals('Search__City', $searchForm->fields[2]->Name);
+        $this->assertEquals('Search__Cheerleader__Hat__Colour', $searchForm->fields[3]->Name);
         $this->assertEquals('TeamsSearchForm', $searchForm->Name);
         $this->assertEquals('cms-search-form', $searchForm->extraClasses['cms-search-form']);
 

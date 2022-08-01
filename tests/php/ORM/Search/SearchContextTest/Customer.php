@@ -10,6 +10,7 @@ class Customer extends DataObject implements TestOnly
     private static $table_name = 'SearchContextTest_Customer';
 
     private static $db = [
-        'FirstName' => 'Text'
+        'FirstName' => 'Text',
+        'MatchAny' => 'Varchar',
     ];
 }
