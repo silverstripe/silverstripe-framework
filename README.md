@@ -1,13 +1,7 @@
 ## Silverstripe Framework
 
 [![CI](https://github.com/silverstripe/silverstripe-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/silverstripe/silverstripe-framework/actions/workflows/ci.yml)
-[![Build Docs](https://github.com/silverstripe/silverstripe-framework/workflows/Build%20Docs/badge.svg)](https://docs.silverstripe.org/)
-[![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](https://www.silverstripe.org/stable-download/)
-[![Latest Unstable Version](https://poser.pugx.org/silverstripe/framework/v/unstable.svg)](https://packagist.org/packages/silverstripe/framework)
-[![codecov](https://codecov.io/gh/silverstripe/silverstripe-framework/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-framework)
-[![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
-[![Total Downloads](https://poser.pugx.org/silverstripe/framework/downloads.svg)](https://packagist.org/packages/silverstripe/framework)
-[![License](https://poser.pugx.org/silverstripe/framework/license.svg)](https://github.com/silverstripe/silverstripe-framework#license)
+[![Silverstripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
 
 PHP framework forming the base for the Silverstripe CMS ([https://silverstripe.org](https://silverstripe.org)). 
 Requires a [`silverstripe-installer`](https://github.com/silverstripe/silverstripe-installer) base project. Typically used alongside the [`cms`](https://github.com/silverstripe/silverstripe-cms) module.
