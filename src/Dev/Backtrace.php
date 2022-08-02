@@ -95,7 +95,7 @@ class Backtrace
                 }
             }
             if ($match) {
-                foreach ($frame['args'] as $j => $arg) {
+                foreach ($bt[$i]['args'] ?? [] as $j => $arg) {
                     $bt[$i]['args'][$j] = '<filtered>';
                 }
             }
