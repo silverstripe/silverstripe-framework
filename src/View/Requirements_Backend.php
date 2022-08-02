@@ -19,6 +19,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBField;
+use Symfony\Component\Filesystem\Path as FilesystemPath;
 
 class Requirements_Backend
 {
@@ -1454,19 +1455,12 @@ MESSAGE
         }
         $fileUrl = Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($filePath);
         $fileUrlDir = dirname($fileUrl);
-        $content = preg_replace_callback('#([\s\'"\(])((:?[\.]{1,2}/)+)#', function ($a) use ($fileUrlDir) {
-            [ $_, $prefix, $match ] = $a;
-            $full = $fileUrlDir . '/' . $match;
-            $full = preg_replace('#/{2,}#', '/', $full); // ensure there's no repeated slashes
-            while (strpos($full, './') > 0) {
-                $post = $full;
-                $post = preg_replace('#([^/\.]+)/\.\./#', '', $post); // erase 'something/../' with the predecessor
-                $post = preg_replace('#([^/\.]+)/\./#', '\\1/', $post); // erase './'
-                if ($post == $full) {
-                    break; // nothing changed
-                }
-                $full = $post;
+        $content = preg_replace_callback('#(url\([\n\r\s\'"]*)([^\s\)\?\'"]+)#i', function ($match) use ($fileUrlDir) {
+            [ $_, $prefix, $relativePath ] = $match;
+            if ($relativePath[0] === '/' || false !== strpos($relativePath, '://')) {
+                return $prefix . $relativePath;
             }
+            $full = FilesystemPath::canonicalize($fileUrlDir . '/' . $relativePath);
             return $prefix . $full;
         }, $content);
         return $content;

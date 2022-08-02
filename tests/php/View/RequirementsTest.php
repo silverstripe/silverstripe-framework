@@ -164,11 +164,32 @@ class RequirementsTest extends SapphireTest
 
         $content = file_get_contents($combinedFilePath);
 
+        /* COMBINED CSS URL RESOLVER IGNORE FULL URLS */
+        $this->assertStringContainsString(
+            ".url { background: url(http://example.com/zero.gif); }",
+            $content,
+            'combined css url resolver ignore full urls'
+        );
+
         /* COMBINED CSS URL RESOLVER DECODED ONE DOT */
         $this->assertStringContainsString(
             ".p0 { background: url(/css/deep/deeper/zero.gif); }",
             $content,
             'combined css url resolver decoded one dot'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED NO DOTS */
+        $this->assertStringContainsString(
+            ".p0-plain { background: url(/css/deep/deeper/zero.gif); }",
+            $content,
+            'combined css url resolver decoded no dots'
+        );
+
+        /* COMBINED CSS URL RESOLVER DAMAGED A QUERYSTRING */
+        $this->assertStringContainsString(
+            ".p0-qs { background: url(/css/deep/deeper/zero.gif?some=param); }",
+            $content,
+            'combined css url resolver damaged a querystring'
         );
 
         /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH SINGLE QUOTES */
@@ -255,11 +276,18 @@ class RequirementsTest extends SapphireTest
             'combined css url resolver decoded 3 double-dot'
         );
 
-        /* COMBINED CSS URL RESOLVER DECODED 4 DOUBLE-DOT */
+        /* COMBINED CSS URL RESOLVER DECODED 4 DOUBLE-DOT WHEN ONLY 3 LEVELS AVAILABLE*/
         $this->assertStringContainsString(
-            ".p4 { background: url(/../four.gif); }",
+            ".p4 { background: url(/four.gif); }",
             $content,
-            'combined css url resolver decoded 4 double-dot'
+            'combined css url resolver decoded 4 double-dot when only 4 levels available'
+        );
+
+        /* COMBINED CSS URL RESOLVER MODIFIED AN ARBITRARY VALUE */
+        $this->assertStringContainsString(
+            ".weird { content: \"./keepme.gif\"; }",
+            $content,
+            'combined css url resolver modified an arbitrary value'
         );
     }
 

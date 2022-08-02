@@ -1,4 +1,7 @@
+.url { background: url(http://example.com/zero.gif); } /* don't touch this */
 .p0 { background: url(./zero.gif); }
+.p0-plain { background: url(zero.gif); }
+.p0-qs { background: url(./zero.gif?some=param); } /* keep the query string */
 .p0-nl { background: url(
   ./zero-nl.gif );
 }
@@ -20,3 +23,4 @@
 .p2dq { background: url("../../two-dq.gif"); }
 .p3 { background: url(../../../three.gif); }
 .p4 { background: url(../../../../four.gif); }
+.weird { content: "./keepme.gif"; }
