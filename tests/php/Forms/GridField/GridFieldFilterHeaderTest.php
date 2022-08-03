@@ -168,7 +168,9 @@ class GridFieldFilterHeaderTest extends SapphireTest
     public function testCustomSearchField()
     {
         $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
-        $this->assertEquals('Name', $searchSchema->name);
+        $modelClass = $this->gridField->getModelClass();
+        $obj = new $modelClass();
+        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
 
         Config::modify()->set(Team::class, 'general_search_field', 'CustomSearch');
         $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
