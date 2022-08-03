@@ -148,20 +148,6 @@ class Module implements Serializable
     }
 
     /**
-     * Name of the resource directory where vendor resources should be exposed as defined by the `extra.resources-dir`
-     * key in the composer file. A blank string will be returned if the key is undefined.
-     *
-     * Only applicable when reading the composer file for the main project.
-     * @return string
-     */
-    public function getResourcesDir()
-    {
-        return isset($this->composerData['extra']['resources-dir'])
-            ? $this->composerData['extra']['resources-dir']
-            : '';
-    }
-
-    /**
      * Get base path for this module
      *
      * @return string Path with no trailing slash E.g. /var/www/module
