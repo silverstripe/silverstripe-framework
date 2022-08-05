@@ -65,7 +65,7 @@ class Requirements_Backend
      * @config
      * @var bool
      */
-    private static $resolve_relative_css_refs = true;
+    private static $resolve_relative_css_refs = false;
 
     /**
      * Paths to all required JavaScript files relative to docroot
@@ -1456,11 +1456,11 @@ MESSAGE
         $fileUrl = Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($filePath);
         $fileUrlDir = dirname($fileUrl);
         $content = preg_replace_callback('#(url\([\n\r\s\'"]*)([^\s\)\?\'"]+)#i', function ($match) use ($fileUrlDir) {
-            [ $_, $prefix, $relativePath ] = $match;
+            [ $fullMatch, $prefix, $relativePath ] = $match;
             if ($relativePath[0] === '/' || false !== strpos($relativePath, '://')) {
                 return $prefix . $relativePath;
             }
-            $full = FilesystemPath::canonicalize($fileUrlDir . '/' . $relativePath);
+            $full = FilesystemPath::canonicalize(FilesystemPath::join($fileUrlDir, $relativePath));
             return $prefix . $full;
         }, $content);
         return $content;

@@ -280,7 +280,7 @@ class RequirementsTest extends SapphireTest
         $this->assertStringContainsString(
             ".p4 { background: url(/four.gif); }",
             $content,
-            'combined css url resolver decoded 4 double-dot when only 4 levels available'
+            'combined css url resolver decoded 4 double-dot when only 3 levels available'
         );
 
         /* COMBINED CSS URL RESOLVER MODIFIED AN ARBITRARY VALUE */
