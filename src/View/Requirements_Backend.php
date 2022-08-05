@@ -1458,10 +1458,10 @@ MESSAGE
         $content = preg_replace_callback('#(url\([\n\r\s\'"]*)([^\s\)\?\'"]+)#i', function ($match) use ($fileUrlDir) {
             [ $fullMatch, $prefix, $relativePath ] = $match;
             if ($relativePath[0] === '/' || false !== strpos($relativePath, '://')) {
-                return $prefix . $relativePath;
+                return $fullMatch;
             }
-            $full = FilesystemPath::canonicalize(FilesystemPath::join($fileUrlDir, $relativePath));
-            return $prefix . $full;
+            $substitute = FilesystemPath::canonicalize(FilesystemPath::join($fileUrlDir, $relativePath));
+            return $prefix . $substitute;
         }, $content);
         return $content;
     }
