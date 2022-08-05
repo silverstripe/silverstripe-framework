@@ -40,6 +40,7 @@
         "swiftmailer/swiftmailer": "^6.2",
         "symfony/cache": "^3.4 || ^4.0",
         "symfony/config": "^3.4 || ^4.0",
+        "symfony/filesystem": "^5.4 || ^6.0",
         "symfony/translation": "^3.4 || ^4.0",
         "symfony/yaml": "^3.4 || ^4.0",
         "php": "^7.4 || ^8.0",
