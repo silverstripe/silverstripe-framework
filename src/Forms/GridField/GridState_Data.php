@@ -40,6 +40,11 @@ class GridState_Data
         return $this->getData($name, $default);
     }
 
+    public function __clone()
+    {
+        $this->data = $this->toArray();
+    }
+
     /**
      * Initialise the defaults values for the grid field state
      * These values won't be included in getChangesArray()

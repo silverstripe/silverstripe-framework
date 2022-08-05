@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
@@ -328,7 +329,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
         $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
-        $gridState = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
+        $gridState = $this->getGridField()->getState();
         if ($component && $paginator && $component->getShowPagination()) {
             $previousIsDisabled = !$this->getPreviousRecordID();
             $nextIsDisabled = !$this->getNextRecordID();
@@ -337,8 +338,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 LiteralField::create(
                     'previous-record',
                     HTML::createTag($previousIsDisabled ? 'span' : 'a', [
-                        'href' => $previousIsDisabled ? '#' : $this->getEditLink($this->getPreviousRecordID()),
-                        'data-grid-state' => $gridState,
+                        'href' => $previousIsDisabled ? '#' : $this->getEditLinkForAdjacentRecord(-1),
+                        'data-grid-state' => $previousIsDisabled ? $gridState : $this->getGridStateForAdjacentRecord(-1),
                         'title' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
                         'aria-label' => _t(__CLASS__ . '.PREVIOUS', 'Go to previous record'),
                         'class' => 'btn btn-secondary font-icon-left-open action--previous discard-confirmation'
@@ -351,8 +352,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 LiteralField::create(
                     'next-record',
                     HTML::createTag($nextIsDisabled ? 'span' : 'a', [
-                        'href' => $nextIsDisabled ? '#' : $this->getEditLink($this->getNextRecordID()),
-                        'data-grid-state' => $gridState,
+                        'href' => $nextIsDisabled ? '#' : $this->getEditLinkForAdjacentRecord(+1),
+                        'data-grid-state' => $nextIsDisabled ? $gridState : $this->getGridStateForAdjacentRecord(+1),
                         'title' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
                         'aria-label' => _t(__CLASS__ . '.NEXT', 'Go to next record'),
                         'class' => 'btn btn-secondary font-icon-right-open action--next discard-confirmation'
@@ -413,8 +414,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
             }
 
-            $gridState = $manager->getStateFromRequest($this->gridField, $this->getRequest());
-            $this->gridField->getState(false)->setValue($gridState);
+            $gridState = $this->gridField->getState(false);
             $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
 
             $actions->push($this->getRightGroupField());
@@ -561,7 +561,88 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $id
         );
 
-        return $this->getStateManager()->addStateToURL($this->gridField, $link);
+        return $this->gridField->addAllStateToUrl($link);
+    }
+
+    /**
+     * Return array of GridField items on current page plus
+     * first item on the next page and last item on the previous page
+     */
+    private function getGridFieldItemAdjacencies(): array
+    {
+        $list = $this->getGridField()->getManipulatedList();
+        $paginator = $this->getGridFieldPaginatorState();
+        if (!$paginator) {
+            return [];
+        }
+        $currentPage = $paginator->getData('currentPage');
+        $itemsPerPage = $paginator->getData('itemsPerPage');
+
+        $limit = $itemsPerPage + 2;
+        $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
+
+        return $list->limit($limit, $limitOffset)->column('ID');
+    }
+
+    /**
+     * Get the current paginator state
+     */
+    private function getGridFieldPaginatorState(): GridState_Data
+    {
+        $state = $this->getGridField()->getState(false);
+        $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
+        if (!empty($gridStateStr)) {
+            $state->setValue($gridStateStr);
+        }
+
+        return $state->getData()->getData('GridFieldPaginator');
+    }
+
+    /**
+     * Get the grid state for an adjacent record
+     */
+    private function getGridStateForAdjacentRecord(int $offset): GridState_Data
+    {
+        $gridField = $this->getGridField();
+        $map = $this->getGridFieldItemAdjacencies();
+        if (empty($map)) {
+            throw new LogicException('No adjacent records exist');
+        }
+
+        $state = clone $gridField->getState();
+        $index = array_search($this->record->ID, $map);
+        $position = $index + $offset;
+
+        $currentPage = $this->getGridFieldPaginatorState()->getData('currentPage');
+        $itemsPerPage = $this->getGridFieldPaginatorState()->getData('itemsPerPage');
+        $page = $currentPage;
+        $hasMorePages = $this->getNumPages($gridField) > $currentPage;
+
+        if ($position === 0 && $currentPage > 1) {
+            $page = $currentPage - 1;
+        } elseif ($hasMorePages && $position >= $itemsPerPage + 1) {
+            $page = $currentPage + 1;
+        }
+        $state->GridFieldPaginator->currentPage = (int)$page;
+
+        return $state;
+    }
+
+    /**
+     * Get the edit link for an adjacent record
+     */
+    private function getEditLinkForAdjacentRecord(int $offset): string
+    {
+        $link = Controller::join_links(
+            $this->gridField->Link(),
+            'item',
+            $this->getAdjacentRecordID($offset)
+        );
+        $state = $this->getGridStateForAdjacentRecord($offset);
+        // Get a dummy gridfield so we can set some future state without affecting the current gridfield
+        $gridField = clone $this->gridField;
+        $gridField->getState(false)->setValue($state);
+        return $gridField->addAllStateToUrl($link);
     }
 
     /**
@@ -570,28 +651,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     private function getAdjacentRecordID($offset)
     {
-        $gridField = $this->getGridField();
-        $list = $gridField->getManipulatedList();
-        $state = $gridField->getState(false);
-        $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
-        if (!empty($gridStateStr)) {
-            $state->setValue($gridStateStr);
-        }
-        $data = $state->getData();
-        $paginator = $data->getData('GridFieldPaginator');
-        if (!$paginator) {
+        $map = $this->getGridFieldItemAdjacencies();
+        if (empty($map)) {
             return false;
         }
-
-        $currentPage = $paginator->getData('currentPage');
-        $itemsPerPage = $paginator->getData('itemsPerPage');
-
-        $limit = $itemsPerPage + 2;
-        $limitOffset = max(0, $itemsPerPage * ($currentPage-1) -1);
-
-        $map = $list->limit($limit, $limitOffset)->column('ID');
         $index = array_search($this->record->ID, $map ?? []);
-        return isset($map[$index+$offset]) ? $map[$index+$offset] : false;
+        $position = $index + $offset;
+        return isset($map[$position]) ? $map[$position] : false;
+    }
+
+    /**
+     * Gets the number of GridField pages
+     */
+    private function getNumPages(GridField $gridField): int
+    {
+        return $gridField
+                ->getConfig()
+                ->getComponentByType(GridFieldPaginator::class)
+                ->getTemplateParameters($gridField)
+                ->toMap()['NumPages'];
     }
 
     /**
