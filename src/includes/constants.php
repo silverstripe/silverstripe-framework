@@ -219,7 +219,7 @@ if (!defined('TEMP_FOLDER')) {
 // Define the resource dir constant that will be use to exposed vendor assets
 if (!defined('RESOURCES_DIR')) {
     $project = new SilverStripe\Core\Manifest\Module(BASE_PATH, BASE_PATH);
-    $resourcesDir = $project->getResourcesDir() ?: 'resources';
+    $resourcesDir = $project->getResourcesDir() ?: '_resources';
     if (preg_match('/^[_\-a-z0-9]+$/i', $resourcesDir ?? '')) {
         define('RESOURCES_DIR', $resourcesDir);
     } else {
