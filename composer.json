@@ -60,9 +60,6 @@
         "psr/container-implementation": "1.0.0"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "5.x-dev"
-        },
         "expose": [
             "client/images",
             "client/styles"
