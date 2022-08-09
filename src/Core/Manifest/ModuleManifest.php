@@ -121,9 +121,8 @@ class ModuleManifest
     /**
      * @param bool $includeTests
      * @param bool $forceRegen Force the manifest to be regenerated.
-     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init($includeTests = false, $forceRegen = false)
     {
         // build cache from factory
         if ($this->cacheFactory) {
@@ -138,7 +137,7 @@ class ModuleManifest
             $this->modules = $this->cache->get($this->cacheKey) ?: [];
         }
         if (empty($this->modules)) {
-            $this->regenerate($includeTests, $ignoredCIConfigs);
+            $this->regenerate($includeTests);
         }
     }
 
@@ -163,9 +162,8 @@ class ModuleManifest
      * Does _not_ build the actual variant
      *
      * @param bool $includeTests
-     * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
+    public function regenerate($includeTests = false)
     {
         $this->modules = [];
 
@@ -173,7 +171,6 @@ class ModuleManifest
         $finder->setOptions([
             'min_depth' => 0,
             'ignore_tests' => !$includeTests,
-            'ignored_ci_configs' => $ignoredCIConfigs,
             'dir_callback' => function ($basename, $pathname, $depth) use ($finder) {
                 if ($finder->isDirectoryModule($basename, $pathname, $depth)) {
                     $this->addModule($pathname);

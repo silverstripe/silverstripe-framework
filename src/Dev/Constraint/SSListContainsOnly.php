@@ -2,25 +2,9 @@
 
 namespace SilverStripe\Dev\Constraint;
 
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_ExpectationFailedException;
-use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
-
-/* -------------------------------------------------
- *
- * This version of SSListContains is for both phpunit5 and phpunit 9 because it extends SSListContains
- * phpunit 6, 7 and 8 are not supported
- *
- * @see SilverStripe\Dev\SapphireTest
- *
- * -------------------------------------------------
- */
-if (!class_exists(Constraint::class) && !class_exists(PHPUnit_Framework_Constraint::class)) {
-    return;
-}
 
 /**
  * Constraint for checking if a SS_List contains only items matching the given
@@ -49,9 +33,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
      * @param string $description Additional information about the test
      * @param bool $returnResult Whether to return a result or throw an exception
      *
-     * @return null|bool
-     *
-     * @throws PHPUnit_Framework_ExpectationFailedException|ExpectationFailedException
+     * @throws ExpectationFailedException
      */
     public function evaluate($other, $description = '', $returnResult = false): ?bool
     {

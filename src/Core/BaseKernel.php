@@ -180,18 +180,10 @@ abstract class BaseKernel implements Kernel
     protected function bootManifests($flush)
     {
         // Setup autoloader
-        $this->getClassLoader()->init(
-            $this->getIncludeTests(),
-            $flush,
-            $this->getIgnoredCIConfigs()
-        );
+        $this->getClassLoader()->init($this->getIncludeTests(), $flush);
 
         // Find modules
-        $this->getModuleLoader()->init(
-            $this->getIncludeTests(),
-            $flush,
-            $this->getIgnoredCIConfigs()
-        );
+        $this->getModuleLoader()->init($this->getIncludeTests(), $flush);
 
         // Flush config
         if ($flush) {
@@ -209,11 +201,7 @@ abstract class BaseKernel implements Kernel
             $defaultSet->setProject(
                 ModuleManifest::config()->get('project')
             );
-            $defaultSet->init(
-                $this->getIncludeTests(),
-                $flush,
-                $this->getIgnoredCIConfigs()
-            );
+            $defaultSet->init($this->getIncludeTests(), $flush);
         }
     }
 
@@ -370,18 +358,6 @@ abstract class BaseKernel implements Kernel
             'namespace' => 'manifestcache',
             'directory' => TEMP_PATH,
         ]);
-    }
-
-    /**
-     * When manifests are discovering files, tests files in modules using the following CI library type will be ignored.
-     *
-     * The purpose of this method is to avoid loading PHPUnit test files with incompatible definitions.
-     *
-     * @return string[] List of CI types to ignore as defined by `Module`.
-     */
-    protected function getIgnoredCIConfigs(): array
-    {
-        return [];
     }
 
     /**

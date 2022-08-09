@@ -276,9 +276,8 @@ class ClassManifest
      *
      * @param bool $includeTests
      * @param bool $forceRegen
-     * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init($includeTests = false, $forceRegen = false)
     {
         $this->cache = $this->buildCache($includeTests);
 
@@ -292,7 +291,7 @@ class ClassManifest
         }
 
         // Build
-        $this->regenerate($includeTests, $ignoredCIConfigs);
+        $this->regenerate($includeTests);
     }
 
     /**
@@ -539,9 +538,8 @@ class ClassManifest
      * Completely regenerates the manifest file.
      *
      * @param bool $includeTests
-     * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests, array $ignoredCIConfigs = [])
+    public function regenerate($includeTests)
     {
         // Reset the manifest so stale info doesn't cause errors.
         $this->loadState([]);
@@ -553,7 +551,6 @@ class ClassManifest
             'name_regex' => '/^[^_].*\\.php$/',
             'ignore_files' => ['index.php', 'cli-script.php'],
             'ignore_tests' => !$includeTests,
-            'ignored_ci_configs' => $ignoredCIConfigs,
             'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },

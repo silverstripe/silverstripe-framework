@@ -4,7 +4,6 @@ namespace SilverStripe\Core\Tests\Manifest;
 
 use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Core\Manifest\Module;
 
 /**
  * Tests for the {@link ManifestFileFinder} class.
@@ -56,8 +55,6 @@ class ManifestFileFinderTest extends SapphireTest
             [
                 'module/module.txt',
                 'vendor/myvendor/thismodule/module.txt',
-                'vendor/myvendor/phpunit5module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/code/logic.txt',
             ]
         );
     }
@@ -78,56 +75,6 @@ class ManifestFileFinderTest extends SapphireTest
                 'vendor/myvendor/thismodule/module.txt',
                 'vendor/myvendor/thismodule/tests/tests.txt',
                 'vendor/myvendor/thismodule/code/tests/tests2.txt',
-                'vendor/myvendor/phpunit5module/code/logic.txt',
-                'vendor/myvendor/phpunit5module/tests/phpunit5tests.txt',
-                'vendor/myvendor/phpunit9module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/tests/phpunit9tests.txt',
-            ]
-        );
-    }
-
-    public function testIgnorePHPUnit5Tests()
-    {
-        $finder = new ManifestFileFinder();
-        $finder->setOption('name_regex', '/\.txt$/');
-        $finder->setOption('ignore_tests', false);
-        $finder->setOption('ignored_ci_configs', [Module::CI_PHPUNIT_FIVE]);
-
-        $this->assertFinderFinds(
-            $finder,
-            null,
-            [
-                'module/module.txt',
-                'module/tests/tests.txt',
-                'module/code/tests/tests2.txt',
-                'vendor/myvendor/thismodule/module.txt',
-                'vendor/myvendor/thismodule/tests/tests.txt',
-                'vendor/myvendor/thismodule/code/tests/tests2.txt',
-                'vendor/myvendor/phpunit5module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/tests/phpunit9tests.txt',
-            ]
-        );
-    }
-
-    public function testIgnoreNonePHPUnit9Tests()
-    {
-        $finder = new ManifestFileFinder();
-        $finder->setOption('name_regex', '/\.txt$/');
-        $finder->setOption('ignore_tests', false);
-        $finder->setOption('ignored_ci_configs', [Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
-
-        $this->assertFinderFinds(
-            $finder,
-            null,
-            [
-                'module/module.txt',
-                'module/tests/tests.txt',
-                'module/code/tests/tests2.txt',
-                'vendor/myvendor/thismodule/module.txt',
-                'vendor/myvendor/phpunit5module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/tests/phpunit9tests.txt',
             ]
         );
     }
@@ -145,8 +92,6 @@ class ManifestFileFinderTest extends SapphireTest
                 'module/module.txt',
                 'themes/themes.txt',
                 'vendor/myvendor/thismodule/module.txt',
-                'vendor/myvendor/phpunit5module/code/logic.txt',
-                'vendor/myvendor/phpunit9module/code/logic.txt',
             ]
         );
     }
