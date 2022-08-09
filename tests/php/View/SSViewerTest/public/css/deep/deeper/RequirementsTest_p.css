@@ -1,0 +1,26 @@
+.url { background: url(http://example.com/zero.gif); } /* don't touch this */
+.p0 { background: url(./zero.gif); }
+.p0-plain { background: url(zero.gif); }
+.p0-qs { background: url(./zero.gif?some=param); } /* keep the query string */
+.p0-nl { background: url(
+  ./zero-nl.gif );
+}
+.p0sq { background: url('./zero-sq.gif'); }
+.p0dq { background: url("./zero-dq.gif"); }
+.p0dq-nl { background: url(
+"./zero-dq-nl.gif"
+); }
+.p0dq-nls { background: url(
+  "./zero-dq-nls.gif"
+); }
+.p1 { background: url(../one.gif); }
+.p2 { background: url(../../two.gif); }
+.p2abs { background: url(/foo/bar/../../two-abs.gif); } /* don't touch this */
+.p2abs-ln { background: url(
+  /foo/bar/../../two-abs-ln.gif
+); } /* don't touch this */
+.p2sq { background: url('../../two-sq.gif'); }
+.p2dq { background: url("../../two-dq.gif"); }
+.p3 { background: url(../../../three.gif); }
+.p4 { background: url(../../../../four.gif); }
+.weird { content: "./keepme.gif"; }

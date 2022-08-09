@@ -19,6 +19,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBField;
+use Symfony\Component\Filesystem\Path as FilesystemPath;
 
 class Requirements_Backend
 {
@@ -51,6 +52,20 @@ class Requirements_Backend
      * @var bool
      */
     private static $combine_in_dev = false;
+
+    /**
+     * Determine if relative urls in the combined files should be converted to absolute.
+     *
+     * By default combined files will be parsed for relative URLs to image/font assets and those
+     * URLs will be changed to absolute to accomodate the fact that the combined css is placed
+     * in a totally different folder than the source css files.
+     *
+     * Turn this off if you see some unexpected results.
+     *
+     * @config
+     * @var bool
+     */
+    private static $resolve_relative_css_refs = false;
 
     /**
      * Paths to all required JavaScript files relative to docroot
@@ -1395,6 +1410,10 @@ MESSAGE
                             throw new InvalidArgumentException("Combined file {$file} does not exist");
                         }
                         $fileContent = file_get_contents($filePath ?? '');
+                        if ($type == 'css') {
+                            // resolve relative paths for css files
+                            $fileContent = $this->resolveCSSReferences($fileContent, $file);
+                        }
                         // Use configured minifier
                         if ($minify) {
                             $fileContent = $this->minifier->minify($fileContent, $type, $file);
@@ -1419,6 +1438,32 @@ MESSAGE
         }
 
         return $combinedURL;
+    }
+
+    /**
+     * Resolves relative paths in CSS files which are lost when combining them
+     *
+     * @param string $content
+     * @param string $filePath
+     * @return string New content with paths resolved
+     */
+    protected function resolveCSSReferences($content, $filePath)
+    {
+        $doResolving = Config::inst()->get(__CLASS__, 'resolve_relative_css_refs');
+        if (!$doResolving) {
+            return $content;
+        }
+        $fileUrl = Injector::inst()->get(ResourceURLGenerator::class)->urlForResource($filePath);
+        $fileUrlDir = dirname($fileUrl);
+        $content = preg_replace_callback('#(url\([\n\r\s\'"]*)([^\s\)\?\'"]+)#i', function ($match) use ($fileUrlDir) {
+            [ $fullMatch, $prefix, $relativePath ] = $match;
+            if ($relativePath[0] === '/' || false !== strpos($relativePath, '://')) {
+                return $fullMatch;
+            }
+            $substitute = FilesystemPath::canonicalize(FilesystemPath::join($fileUrlDir, $relativePath));
+            return $prefix . $substitute;
+        }, $content);
+        return $content;
     }
 
     /**
