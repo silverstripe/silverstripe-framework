@@ -331,9 +331,11 @@ class Module implements Serializable
      * that is observed is `PHP`
      * @return array List of configuration aspects e.g.: `['PHP' => 'CI_PHPUNIT_NINE']`
      * @internal
+     * @deprecated 5.0.0
      */
     public function getCIConfig(): array
     {
+        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
         return [
             'PHP' => $this->getPhpCiConfig()
         ];

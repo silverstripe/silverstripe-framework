@@ -6,6 +6,7 @@ use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
@@ -135,6 +136,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
 
     public function __construct($match)
     {
+        Deprecation::notice('5.0.0', 'This class will be removed in CMS 5', Deprecation::SCOPE_CLASS);
         $this->exporter = new SSListExporter();
 
         $this->constraint = new ViewableDataContains($match);
