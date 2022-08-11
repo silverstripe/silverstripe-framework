@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use ArrayIterator;
 use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Dev\SapphireTest;
@@ -34,8 +35,9 @@ class ListDecoratorTest extends SapphireTest
 
     public function testGetIterator()
     {
-        $this->list->expects($this->once())->method('getIterator')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->getIterator());
+        $iterator = new ArrayIterator();
+        $this->list->expects($this->once())->method('getIterator')->willReturn($iterator);
+        $this->assertSame($iterator, $this->decorator->getIterator());
     }
 
     public function testCanSortBy()
