@@ -791,20 +791,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this;
     }
 
-    /**
-     * Returns a generator for this DataList
-     *
-     * @return \Generator&DataObject[]
-     */
-    public function getGenerator()
-    {
-        $query = $this->dataQuery->query()->execute();
-
-        while ($row = $query->record()) {
-            yield $this->createDataObject($row);
-        }
-    }
-
     public function debug()
     {
         $val = "<h2>" . static::class . "</h2><ul>";
@@ -1206,7 +1192,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function removeAll()
     {
-        foreach ($this->getGenerator() as $item) {
+        foreach ($this as $item) {
             $this->remove($item);
         }
         return $this;
