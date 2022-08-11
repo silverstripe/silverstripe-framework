@@ -1357,14 +1357,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $currentChunk = 0;
 
         // Keep looping until we run out of chunks
-        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)->getIterator()) {
+        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)) {
             // Loop over all the item in our chunk
+            $count = 0;
             foreach ($chunk as $item) {
+                $count++;
                 yield $item;
             }
 
-
-            if ($chunk->count() < $chunkSize) {
+            if ($count < $chunkSize) {
                 // If our last chunk had less item than our chunkSize, we've reach the end.
                 break;
             }
