@@ -223,10 +223,6 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
 
         // Remove limit as the list may be paginated, we want the full list for the export
         $items = $items->limit(null);
-        // Use Generator in applicable cases to reduce memory consumption
-        $items = $items instanceof DataList
-            ? $items->getGenerator()
-            : $items;
 
         /** @var DataObject $item */
         foreach ($items as $item) {
