@@ -7,6 +7,7 @@ use PHPUnit_Framework_ExpectationFailedException;
 use PHPUnit_Util_InvalidArgumentHelper;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
 use SilverStripe\Dev\SapphireTest;
@@ -141,6 +142,7 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      */
     public function __construct($match)
     {
+        Deprecation::notice('5.0.0', 'This class will be removed in CMS 5', Deprecation::SCOPE_CLASS);
         parent::__construct();
         if (!is_array($match)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(

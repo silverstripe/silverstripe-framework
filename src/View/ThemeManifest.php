@@ -6,6 +6,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")
@@ -77,6 +78,10 @@ class ThemeManifest implements ThemeList
      */
     public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
@@ -134,6 +139,10 @@ class ThemeManifest implements ThemeList
      */
     public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         $finder = new ManifestFileFinder();
         $finder->setOptions([
             'include_themes' => false,

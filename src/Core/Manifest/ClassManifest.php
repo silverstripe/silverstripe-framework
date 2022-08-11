@@ -11,6 +11,7 @@ use PhpParser\ParserFactory;
 use PhpParser\ErrorHandler\ErrorHandler;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 
 /**
@@ -280,6 +281,10 @@ class ClassManifest
      */
     public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         $this->cache = $this->buildCache($includeTests);
 
         // Check if cache is safe to use
@@ -543,6 +548,10 @@ class ClassManifest
      */
     public function regenerate($includeTests, array $ignoredCIConfigs = [])
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         // Reset the manifest so stale info doesn't cause errors.
         $this->loadState([]);
         $this->roots = [];
