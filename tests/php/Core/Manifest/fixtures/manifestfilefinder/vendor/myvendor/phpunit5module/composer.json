@@ -1,6 +1,0 @@
-{
-    "type": "silverstripe-vendor-module",
-    "require-dev": {
-        "sminnee/phpunit": "^5.7"
-    }
-}

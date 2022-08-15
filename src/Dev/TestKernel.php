@@ -9,11 +9,6 @@ use SilverStripe\Core\CoreKernel;
  */
 class TestKernel extends CoreKernel
 {
-
-    /** @var string[] $ciConfigs */
-    private $ciConfigs = [];
-
-
     public function __construct($basePath)
     {
         $this->setEnvironment(self::DEV);
@@ -44,22 +39,6 @@ class TestKernel extends CoreKernel
     protected function getIncludeTests()
     {
         return true;
-    }
-
-
-    /**
-     * Set a list of CI configurations that should cause a module's test not to be added to a manifest
-     * @param string[] $ciConfigs
-     */
-    public function setIgnoredCIConfigs(array $ciConfigs): self
-    {
-        $this->ciConfigs = $ciConfigs;
-        return $this;
-    }
-
-    protected function getIgnoredCIConfigs(): array
-    {
-        return $this->ciConfigs;
     }
 
     protected function bootErrorHandling()

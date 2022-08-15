@@ -1,6 +1,0 @@
-{
-    "type": "silverstripe-vendor-module",
-    "require-dev": {
-        "phpunit/phpunit": "^9"
-    }
-}

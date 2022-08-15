@@ -25,7 +25,6 @@
         "php": "^8.1",
         "bramus/monolog-colored-line-formatter": "^2.0.3",
         "composer/installers": "^2.1.1",
-        "composer/semver": "^3.3.2",
         "guzzlehttp/guzzle": "^7.4.5",
         "guzzlehttp/psr7": "^2.4.0",
         "embed/embed": "^4.4.4",
@@ -60,9 +59,7 @@
         "squizlabs/php_codesniffer": "^3.7"
     },
     "conflict": {
-        "egulias/email-validator": "^2",
-        "phpunit/phpunit": "^6 || ^7 || ^8",
-        "cwp/cwp-core": "<2.11.0"
+        "egulias/email-validator": "^2"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
